@@ -1,0 +1,42 @@
+@(inputs: Seq[(String, String)], projects: Seq[(String, String)])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(util.Version.projectName) {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.form()">Add Project</a></div>
+      <h5><i class="fa fa-gear"></i> Projects</h5>
+      @projects.size available projects
+      @if(projects.size > 1) {
+        (<a class="theme-text" href="@controllers.routes.BulkProjectController.exportAll()">export</a> or
+        <a class="theme-text" href="@controllers.routes.BulkProjectController.refreshAll()">refresh</a> all)
+      }
+    </div>
+    @if(projects.isEmpty) {
+      <div class="collection-item">
+        You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.ProjectController.form()">add one</a>.
+      </div>
+    }
+    @projects.map { project =>
+      <a class="collection-item theme-text" href="@controllers.routes.ProjectController.detail(project._1)">@project._1</a>
+    }
+  </div>
+
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.routes.InputController.form()">Add Input</a></div>
+      <h5><i class="fa fa-star-o"></i> Inputs</h5>
+      @inputs.size available inputs
+      @if(inputs.size > 1) {
+        (<a class="theme-text" href="@controllers.routes.InputController.refreshAll()">refresh</a> all)
+      }
+    </div>
+    @if(inputs.isEmpty) {
+      <div class="collection-item">
+        You have no inputs configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.InputController.form()">add one</a>.
+      </div>
+    }
+    @inputs.map { input =>
+      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input._1)">@input._1</a>
+    }
+  </div>
+}

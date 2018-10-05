@@ -1,0 +1,180 @@
+// Theme modifications
+
+@theme-color: #849974;
+
+.tabs .tab a {
+  color: @theme-color;
+}
+.tabs .tab a:hover {
+  color: @theme-color;
+}
+.tabs .tab.disabled a {
+  color: @theme-color;
+}
+.tabs .indicator {
+  background-color: @theme-color;
+}
+
+ul#main-menu li.search .search-wrapper input#search:focus { border-bottom: 2px solid @theme-color !important; }
+
+[type="radio"]:checked+label:after, [type="radio"]:checked + span::after {
+  border-color: @theme-color;
+  background-color: @theme-color;
+}
+
+.input-field label {
+  color: #000;
+}
+.input-field input[type=text]:focus + label, .input-field input[type=password]:focus + label, .input-field input[type=email]:focus + label {
+  color: @theme-color;
+}
+.input-field input[type=text]:focus, .input-field input[type=password]:focus, .input-field input[type=email]:focus {
+  border-bottom: 1px solid @theme-color;
+  box-shadow: 0 1px 0 0 @theme-color;
+}
+.input-field .prefix.active {
+  color: @theme-color;
+}
+
+.dropdown-content.select-dropdown span {
+  color: @theme-color !important;
+}
+
+.theme {
+  background-color: @theme-color !important;
+}
+.theme-text {
+  color: @theme-color !important;
+}
+.theme-text.active {
+  color: #ffffff !important;
+}
+a.theme-text:hover {
+  color: #999 !important;
+}
+
+.collection .collection-item.active {
+  background-color: @theme-color;
+}
+
+[type="checkbox"]:checked + label:before {
+  border-right: 2px solid @theme-color;
+  border-bottom: 2px solid @theme-color;
+}
+
+.dropdown-content li > a, .dropdown-content li > span {
+  color: @theme-color;
+}
+
+.tree li .node:hover+ul li::after,
+.tree li .node:hover+ul li::before,
+.tree li .node:hover+ul::before,
+.tree li .node:hover+ul ul::before{
+  border-color: @theme-color;
+}
+
+.picker__date-display {
+  background-color: @theme-color;
+}
+
+.picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
+  background-color: @theme-color;
+}
+
+.picker__today, .picker__close {
+  color: @theme-color;
+}
+
+.picker__day.picker__day--today {
+  color: @theme-color;
+}
+
+// Materialize fixes
+
+.flash-error, .flash-success {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.flash-error {
+  background-color: #ffffff;
+  color: #8b0000;
+}
+
+pre {
+  margin: 0;
+}
+
+td {
+  vertical-align: top;
+}
+
+h5 {
+  margin-top: 6px;
+}
+
+footer.page-footer {
+  margin: 0;
+  padding: 0;
+  .footer-copyright {
+    height: 48px;
+    line-height: 48px;
+    padding: 0 10px;
+  }
+}
+
+.collection {
+  overflow: inherit;
+}
+
+.right-link {
+  float: right !important;
+  margin-right: 0 !important;
+}
+
+.remove-link {
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.cancel-link {
+  display: inline-block;
+  margin-right: 12px;
+  margin-top: 8px;
+}
+
+.flash {
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.btn, .btn-flat {
+  text-transform: none !important;
+}
+
+input[type=text]:not(.browser-default) {
+  margin-bottom: 0;
+}
+
+.input-field {
+  margin-top: 0;
+  .prefix {
+    margin-top: 12px;
+    font-size: 130%;
+    width: 1rem;
+  }
+}
+
+.input-field .prefix ~ input {
+  margin-left: 2rem;
+  margin-right: 1rem;
+}
+
+th {
+  vertical-align: top;
+}
+
+pre {
+  margin: 0;
+}

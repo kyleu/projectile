@@ -1,0 +1,13 @@
+@(title: String, result: String, durationMs: Long)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(title) {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="fa fa-gear"></i> @title</h5>
+      Completed in @util.NumberUtils.withCommas(durationMs)ms
+    </div>
+    <div class="collection-item">
+      <pre>@result</pre>
+    </div>
+  </div>
+}

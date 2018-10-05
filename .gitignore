@@ -1,0 +1,15 @@
+logs
+conf/generated.keystore
+project/project/target
+project/target
+target
+tmp
+.history
+dist
+/.idea
+/*.iml
+/out
+/.classpath
+/.project
+/RUNNING_PID
+/.settings
