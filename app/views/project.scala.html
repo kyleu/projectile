@@ -1,0 +1,14 @@
+@(project: (String, String))(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(project._1 + " Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="fa fa-gear"></i> @project._1</h5>
+      @project._2
+    </div>
+    <div class="collection-item">
+      <a class="btn theme" href="@controllers.routes.ProjectController.export(project._1)">Export</a>
+      <a class="btn theme" href="@controllers.routes.ProjectController.refresh(project._1)">Refresh</a>
+    </div>
+  </div>
+}

@@ -1,0 +1,13 @@
+@(input: (String, String))(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(input._1 + " Input Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="fa fa-star-o"></i> @input._1</h5>
+      @input._2
+    </div>
+    <div class="collection-item">
+      <a class="btn theme" href="@controllers.routes.ProjectController.refresh(input._1)">Refresh</a>
+    </div>
+  </div>
+}
