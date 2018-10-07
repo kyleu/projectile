@@ -9,13 +9,15 @@ import services.project.ProjectService
 import util.web.PlayServerHelper
 import play.core.server._
 
-class ProjectileService(path: String = ".") {
+class ProjectileService(val path: String = ".") {
   private[this] val cfg = new ConfigService(path)
 
   private[this] val projectSvc = new ProjectService(cfg)
   private[this] val inputSvc = new InputService(cfg)
 
   private[this] var serverOpt: Option[(RealServerProcess, Server)] = None
+
+  val fullPath = better.files.File(path).pathAsString
 
   def process(cmd: ProjectileCommand, verbose: Boolean = false) = {
     import models.command.ProjectileCommand._

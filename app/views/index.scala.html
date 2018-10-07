@@ -1,10 +1,22 @@
-@(inputs: Seq[models.input.Input], projects: Seq[models.project.Project])(
+@(rootDir: String, inputs: Seq[models.input.Input], projects: Seq[models.project.Project])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(util.Version.projectName) {
   <div class="collection with-header">
     <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.refreshAll()">Refresh All</a></div>
+      <h5><i class="@models.template.Icons.projectile"></i> Projectile</h5>
+      It makes projects.
+    </div>
+    <div class="collection-item">
+      Working Directory: @rootDir
+    </div>
+  </div>
+
+
+  <div class="collection with-header">
+    <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.form()">Add Project</a></div>
-      <h5><i class="fa fa-gear"></i> Projects</h5>
+      <h5><i class="@models.template.Icons.project"></i> Projects</h5>
       @if(projects.size == 1) {
         @projects.size available project
       } else {
@@ -26,7 +38,7 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.InputController.form()">Add Input</a></div>
-      <h5><i class="fa fa-star-o"></i> Inputs</h5>
+      <h5><i class="@models.template.Icons.input"></i> Inputs</h5>
       @if(inputs.size == 1) {
         @inputs.size available input
       } else {
