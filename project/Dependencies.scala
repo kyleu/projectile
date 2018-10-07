@@ -55,9 +55,9 @@ object Dependencies {
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
-    val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.17"
+    val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
-    val schwatcher = "com.beachape.filemanagement" %% "schwatcher" % "0.3.2"
+    val schwatcher = "com.beachape.filemanagement" %% "schwatcher" % "0.3.5"
     val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
   }
 

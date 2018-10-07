@@ -1,11 +1,9 @@
 package controllers
 
-import play.api.mvc.InjectedController
-
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class BulkProjectController @javax.inject.Inject() () extends InjectedController {
+class BulkProjectController @javax.inject.Inject() () extends BaseController {
   private[this] def getProject(key: String) = key -> s"""An "$key" project"""
 
   def auditAll() = Action.async { implicit request =>

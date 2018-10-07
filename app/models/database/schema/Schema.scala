@@ -1,7 +1,5 @@
 package models.database.schema
 
-import java.util.UUID
-
 import util.JsonSerializers._
 
 object Schema {

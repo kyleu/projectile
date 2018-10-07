@@ -1,4 +1,4 @@
-@(inputs: Seq[(String, String)], projects: Seq[(String, String)])(
+@(inputs: Seq[models.input.Input], projects: Seq[models.project.Project])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(util.Version.projectName) {
   <div class="collection with-header">
@@ -16,8 +16,8 @@
         You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.ProjectController.form()">add one</a>.
       </div>
     }
-    @projects.map { project =>
-      <a class="collection-item theme-text" href="@controllers.routes.ProjectController.detail(project._1)">@project._1</a>
+    @projects.sortBy(_.title).map { project =>
+      <a class="collection-item theme-text" href="@controllers.routes.ProjectController.detail(project.key)">@project.title</a>
     }
   </div>
 
@@ -35,8 +35,8 @@
         You have no inputs configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.InputController.form()">add one</a>.
       </div>
     }
-    @inputs.map { input =>
-      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input._1)">@input._1</a>
+    @inputs.sortBy(_.title).map { input =>
+      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input.key)">@input.title</a>
     }
   </div>
 }

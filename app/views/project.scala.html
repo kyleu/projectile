@@ -1,14 +1,14 @@
-@(project: (String, String))(
+@(project: models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(project._1 + " Detail") {
+)@layout.simple(project.title + " Project Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="fa fa-gear"></i> @project._1</h5>
-      @project._2
+      <h5><i class="fa fa-gear"></i> @project.title</h5>
+      @project.description
     </div>
     <div class="collection-item">
-      <a class="btn theme" href="@controllers.routes.ProjectController.export(project._1)">Export</a>
-      <a class="btn theme" href="@controllers.routes.ProjectController.refresh(project._1)">Refresh</a>
+      <a class="btn theme" href="@controllers.routes.ProjectController.export(project.key)">Export</a>
+      <a class="btn theme" href="@controllers.routes.ProjectController.refresh(project.key)">Refresh</a>
     </div>
   </div>
 }

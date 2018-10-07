@@ -1,15 +1,11 @@
 package controllers
 
-import play.api.mvc.InjectedController
-
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class InputController @javax.inject.Inject() () extends InjectedController {
-  private[this] def getInput(key: String) = key -> s"""An "$key" input"""
-
+class InputController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input(getInput(key))))
+    Future.successful(Ok(views.html.input(service.getInput(key))))
   }
 
   def refresh(key: String) = Action.async { implicit request =>
@@ -25,6 +21,6 @@ class InputController @javax.inject.Inject() () extends InjectedController {
   }
 
   def form = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input(getInput("unsaved"))))
+    Future.successful(Ok(views.html.input(service.getInput("unsaved"))))
   }
 }

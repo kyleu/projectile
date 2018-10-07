@@ -1,15 +1,14 @@
 package controllers
 
-import play.api.mvc.InjectedController
+import models.command.{ProjectileCommand, ProjectileResponse}
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ProjectController @javax.inject.Inject() () extends InjectedController {
-  private[this] def getProject(key: String) = key -> s"""An "$key" project"""
-
+class ProjectController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project(getProject(key))))
+    val p = service.getProject(key)
+    Future.successful(Ok(views.html.project(p)))
   }
 
   def refresh(key: String) = Action.async { implicit request =>
@@ -25,6 +24,6 @@ class ProjectController @javax.inject.Inject() () extends InjectedController {
   }
 
   def form = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project(getProject("unsaved"))))
+    Future.successful(Ok(views.html.project(service.getProject("unsaved"))))
   }
 }

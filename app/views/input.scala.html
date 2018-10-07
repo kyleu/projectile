@@ -1,13 +1,13 @@
-@(input: (String, String))(
+@(input: models.input.Input)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(input._1 + " Input Detail") {
+)@layout.simple(input.title + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="fa fa-star-o"></i> @input._1</h5>
-      @input._2
+      <h5><i class="fa fa-star-o"></i> @input.title</h5>
+      @input.description
     </div>
     <div class="collection-item">
-      <a class="btn theme" href="@controllers.routes.ProjectController.refresh(input._1)">Refresh</a>
+      <a class="btn theme" href="@controllers.routes.ProjectController.refresh(input.key)">Refresh</a>
     </div>
   </div>
 }
