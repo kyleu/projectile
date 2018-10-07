@@ -1,8 +1,5 @@
 package controllers
 
-import models.command.ProjectileCommand._
-import models.command.ProjectileResponse._
-
 import scala.concurrent.Future
 
 @javax.inject.Singleton

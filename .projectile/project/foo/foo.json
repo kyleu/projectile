@@ -1,4 +1,6 @@
 {
   "t": "project",
+  "key": "foo",
+  "title": "Foo",
   "description": "Lorem ipsum. Foo."
 }

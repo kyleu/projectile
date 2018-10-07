@@ -5,8 +5,10 @@
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.form()">Add Project</a></div>
       <h5><i class="fa fa-gear"></i> Projects</h5>
-      @projects.size available projects
-      @if(projects.size > 1) {
+      @if(projects.size == 1) {
+        @projects.size available project
+      } else {
+        @projects.size available projects
         (<a class="theme-text" href="@controllers.routes.BulkProjectController.exportAll()">export</a> or
         <a class="theme-text" href="@controllers.routes.BulkProjectController.refreshAll()">refresh</a> all)
       }
@@ -25,9 +27,10 @@
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.InputController.form()">Add Input</a></div>
       <h5><i class="fa fa-star-o"></i> Inputs</h5>
-      @inputs.size available inputs
-      @if(inputs.size > 1) {
-        (<a class="theme-text" href="@controllers.routes.InputController.refreshAll()">refresh</a> all)
+      @if(inputs.size == 1) {
+        @inputs.size available input
+      } else {
+        @inputs.size available inputs (<a class="theme-text" href="@controllers.routes.InputController.refreshAll()">refresh</a> all)
       }
     </div>
     @if(inputs.isEmpty) {

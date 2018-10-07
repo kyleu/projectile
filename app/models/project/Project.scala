@@ -11,4 +11,6 @@ case class Project(
     key: String,
     title: String,
     description: String
-)
+) extends Ordered[Project] {
+  override def compare(p: Project) = title.compare(p.title)
+}

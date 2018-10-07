@@ -1,7 +1,5 @@
 package controllers
 
-import models.command.{ProjectileCommand, ProjectileResponse}
-
 import scala.concurrent.Future
 
 @javax.inject.Singleton
@@ -13,8 +11,13 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def refresh(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val result = s"TODO: project [$key] refresh"
-    Future.successful(Ok(views.html.result("Refresh Result", result, System.currentTimeMillis - startMs)))
+    val result = service.refreshProject(key)
+    Future.successful(Ok(views.html.result("Refresh Result", result.toString, System.currentTimeMillis - startMs)))
+  }
+  def refreshAll = Action.async { implicit request =>
+    val startMs = System.currentTimeMillis
+    val results = service.listProjects().map(_.toString)
+    Future.successful(Ok(views.html.result("Refresh All Result", results.mkString("\n"), System.currentTimeMillis - startMs)))
   }
 
   def export(key: String) = Action.async { implicit request =>

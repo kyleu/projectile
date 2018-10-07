@@ -11,4 +11,6 @@ case class Input(
     key: String,
     title: String,
     description: String
-)
+) extends Ordered[Input] {
+  override def compare(p: Input) = title.compare(p.title)
+}

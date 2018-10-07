@@ -1,4 +1,6 @@
 {
   "t": "postgres",
-  "description": "The database schema describing our coco product"
+  "key": "coco",
+  "title": "Coco Database",
+  "description": "This is coco!"
 }

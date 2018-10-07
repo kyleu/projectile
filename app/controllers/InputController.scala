@@ -10,14 +10,14 @@ class InputController @javax.inject.Inject() () extends BaseController {
 
   def refresh(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val result = s"TODO: input [$key] refresh"
-    Future.successful(Ok(views.html.result("Input Refresh Result", result, System.currentTimeMillis - startMs)))
+    val result = service.refreshInput(key)
+    Future.successful(Ok(views.html.result("Input Refresh Result", result.toString, System.currentTimeMillis - startMs)))
   }
 
   def refreshAll = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val result = s"TODO: input refresh all"
-    Future.successful(Ok(views.html.result("Refresh All Result", result, System.currentTimeMillis - startMs)))
+    val results = service.listInputs().map(_.toString)
+    Future.successful(Ok(views.html.result("Refresh All Result", results.mkString("\n"), System.currentTimeMillis - startMs)))
   }
 
   def form = Action.async { implicit request =>
