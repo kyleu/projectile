@@ -47,5 +47,6 @@ object CommandLineParser {
         throw new IllegalStateException("Batch must be be handled outside the parser")
       }
     )
+    cmd("testbed").hidden().action((_, c) => c.withCommand(Testbed)).text("runs the local developmer testbed")
   }
 }

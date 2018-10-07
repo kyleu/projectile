@@ -1,4 +1,4 @@
-@(rootDir: String, inputs: Seq[models.input.Input], projects: Seq[models.project.Project])(
+@(rootDir: String, inputs: Seq[models.input.InputSummary], projects: Seq[models.project.ProjectSummary])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(util.Version.projectName) {
   <div class="collection with-header">

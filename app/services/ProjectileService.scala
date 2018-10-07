@@ -1,5 +1,6 @@
 package services
 
+import io.circe.Json
 import models.command.{ProjectileCommand, ProjectileResponse}
 import models.command.ProjectileCommand._
 import models.command.ProjectileResponse._
@@ -24,6 +25,7 @@ class ProjectileService(val path: String = ".") {
 
     cmd match {
       case Doctor => ConfigValidator.validate(new ConfigService(path), verbose)
+
       case RefreshAll => throw new IllegalStateException("TODO")
 
       case StartServer(port) => startServer(port)
@@ -37,9 +39,13 @@ class ProjectileService(val path: String = ".") {
       case GetInput(key) => ProjectileResponse.InputDetail(inputSvc.get(key))
       case RefreshInput(key) => ProjectileResponse.InputDetail(inputSvc.refresh(Some(key)).head)
 
+      case Testbed => JsonResponse(Json.True)
+
       case unhandled => throw new IllegalStateException(s"Unhandled action [$unhandled]")
     }
   }
+
+  def testbed() = process(Testbed).asInstanceOf[JsonResponse]
 
   def listProjects() = process(ListProjects).asInstanceOf[ProjectList].projects
   def getProject(key: String) = process(GetProject(key)).asInstanceOf[ProjectDetail].project

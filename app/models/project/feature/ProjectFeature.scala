@@ -1,4 +1,4 @@
-package models.feature
+package models.project.feature
 
 import enumeratum.{CirceEnum, Enum, EnumEntry}
 

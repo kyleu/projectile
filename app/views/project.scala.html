@@ -1,4 +1,4 @@
-@(project: models.project.Project)(
+@(project: models.project.ProjectSummary)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(project.title + " Project Detail") {
   <div class="collection with-header">

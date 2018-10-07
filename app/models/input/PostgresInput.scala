@@ -1,18 +1,16 @@
 package models.input
 
+import models.database.schema.Schema
 import util.JsonSerializers._
 
 object PostgresInput {
-  val t = "postgres"
-
   implicit val jsonEncoder: Encoder[PostgresInput] = deriveEncoder
   implicit val jsonDecoder: Decoder[PostgresInput] = deriveDecoder
 }
 
 case class PostgresInput(
-    override val key: String,
-    override val title: String,
-    override val description: String
-) extends Input {
-  override val t = PostgresInput.t
-}
+    key: String,
+    title: String,
+    description: String,
+    schema: Schema
+)
