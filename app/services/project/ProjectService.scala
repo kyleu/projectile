@@ -15,10 +15,10 @@ class ProjectService(val cfg: ConfigService) {
     if (f.exists && f.isRegularFile && f.isReadable) {
       decodeJson[ProjectSummary](f.contentAsString) match {
         case Right(is) => is
-        case Left(x) => throw x
+        case Left(x) => ProjectSummary(key = key, title = key, description = s"Error loading project: ${x.getMessage}", status = Some("Error"))
       }
     } else {
-      throw new IllegalStateException(s"Cannot load [$fn] for input [$key]")
+      ProjectSummary(key = key, title = key, description = s"Cannot load [$fn] for input [$key]", status = Some("Error"))
     }
   }
 }

@@ -21,7 +21,8 @@ object Server {
       Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
       Database.postgres, Database.hikariCp, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       WebJars.jquery, WebJars.fontAwesome, WebJars.materialize,
-      Utils.betterFiles, Utils.commonsIo, Utils.commonsLang, Utils.enumeratum, Utils.scalaGuice, Utils.schwatcher, Utils.scopts,
+      Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang,
+      Utils.enumeratum, Utils.scalaGuice, Utils.schwatcher, Utils.scopts,
       Akka.testkit, Play.test, Testing.scalaTest
     )
   }

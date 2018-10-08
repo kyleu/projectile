@@ -53,6 +53,7 @@ object Dependencies {
     val scapegoatVersion = "1.3.8"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
+    val chimney = "io.scalaland" %% "chimney" % "0.2.1"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
