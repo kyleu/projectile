@@ -10,11 +10,9 @@ sealed abstract class ProjectTemplate(
     val description: String,
     val icon: String,
     val features: Set[ProjectFeature]
-) extends StringEnumEntry {
-}
+) extends StringEnumEntry
 
 object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[ProjectTemplate] {
-
   case object Simple extends ProjectTemplate(
     value = "simple-play-template",
     title = "Simple",

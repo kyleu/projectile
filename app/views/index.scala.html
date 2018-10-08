@@ -1,17 +1,6 @@
-@(rootDir: String, inputs: Seq[models.input.InputSummary], projects: Seq[models.project.ProjectSummary])(
+@(service: services.ProjectileService, inputs: Seq[models.input.InputSummary], projects: Seq[models.project.ProjectSummary])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(util.Version.projectName) {
-  <div class="collection with-header">
-    <div class="collection-header">
-      <h5><i class="@models.template.Icons.projectile"></i> Projectile</h5>
-      It makes projects.
-    </div>
-    <div class="collection-item">
-      Working Directory: @rootDir
-    </div>
-  </div>
-
-
+)@layout.simple(service, util.Version.projectName) {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.form()">Add Project</a></div>

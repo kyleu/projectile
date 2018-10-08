@@ -1,6 +1,6 @@
-@(project: models.project.Project)(
+@(service: services.ProjectileService, project: models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(project.title + " Project Detail") {
+)@layout.simple(service, project.title + " Project Detail") {
   <div class="collection with-header">
     <div class="collection-header">
       <h5><i class="@project.template.icon"></i> @project.title</h5>

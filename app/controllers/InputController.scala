@@ -8,7 +8,7 @@ import scala.concurrent.Future
 class InputController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
     val view = service.getInput(key) match {
-      case i: PostgresInput => views.html.input.postgresInput(i)
+      case i: PostgresInput => views.html.input.postgresInput(service, i)
       case x => throw new IllegalStateException(s"Cannot render view for [$x]")
     }
     Future.successful(Ok(view))
@@ -29,6 +29,6 @@ class InputController @javax.inject.Inject() () extends BaseController {
   }
 
   def form = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input.form()))
+    Future.successful(Ok(views.html.input.form(service)))
   }
 }

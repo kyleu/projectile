@@ -1,6 +1,6 @@
-@()(
+@(service: services.ProjectileService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple("New Input") {
+)@layout.simple(service, "New Input") {
   <div class="collection with-header">
     <div class="collection-header">
       <h5><i class="@models.template.Icons.input"></i> New Input</h5>
