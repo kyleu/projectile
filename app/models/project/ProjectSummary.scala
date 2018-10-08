@@ -2,7 +2,6 @@ package models.project
 
 import java.time.LocalDateTime
 
-import models.project.template.ProjectTemplate
 import util.DateUtils
 import util.JsonSerializers._
 

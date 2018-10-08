@@ -29,7 +29,10 @@
       </div>
     }
     @projects.sortBy(_.title).map { project =>
-      <a class="collection-item theme-text" href="@controllers.routes.ProjectController.detail(project.key)">@project.title</a>
+      <a class="collection-item theme-text" href="@controllers.routes.ProjectController.detail(project.key)">
+        <i class="@project.template.icon"></i>
+        @project.title
+      </a>
     }
   </div>
 
@@ -49,7 +52,10 @@
       </div>
     }
     @inputs.sortBy(_.title).map { input =>
-      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input.key)">@input.title</a>
+      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input.key)">
+        <i class="@input.t.icon"></i>
+        @input.title
+      </a>
     }
   </div>
 }

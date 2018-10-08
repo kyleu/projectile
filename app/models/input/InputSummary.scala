@@ -8,7 +8,7 @@ object InputSummary {
 }
 
 case class InputSummary(
-    t: String,
+    t: InputTemplate,
     key: String,
     title: String,
     description: String

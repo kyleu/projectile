@@ -15,6 +15,12 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.result("Export Result", result, System.currentTimeMillis - startMs)))
   }
 
+  def audit(key: String) = Action.async { implicit request =>
+    val startMs = System.currentTimeMillis
+    val result = s"TODO: project [$key] audit"
+    Future.successful(Ok(views.html.result("Audit Result", result, System.currentTimeMillis - startMs)))
+  }
+
   def form = Action.async { implicit request =>
     Future.successful(Ok(views.html.project(service.getProject("unsaved"))))
   }

@@ -1,11 +1,9 @@
-package models.input
+package models.database.input
 
 import models.database.schema.{EnumType, Procedure, Table, View}
 import util.JsonSerializers._
 
 object PostgresInput {
-  val key = "postgres"
-
   implicit val jsonEncoder: Encoder[PostgresInput] = deriveEncoder
   implicit val jsonDecoder: Decoder[PostgresInput] = deriveDecoder
 }

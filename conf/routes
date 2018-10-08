@@ -18,6 +18,7 @@ GET        /project/all/export                      controllers.BulkProjectContr
 
 GET        /project/:key                            controllers.ProjectController.detail(key)
 GET        /project/:key/export                     controllers.ProjectController.export(key)
+GET        /project/:key/audit                      controllers.ProjectController.audit(key)
 
 
 # Assets
