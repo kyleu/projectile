@@ -15,11 +15,17 @@ object MetadataTables extends Logging {
     new JdbcRow.Iter(rs).map(row => fromRow(row)).toList.sortBy(_.name)
   }
 
-  def withTableDetails(conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table], enums: Seq[EnumType]) = {
-    tables.zipWithIndex.map { table =>
+  def withTableDetails(conn: Connection, metadata: DatabaseMetaData, tables: Seq[Table], enums: Seq[EnumType]) = if (tables.isEmpty) {
+    Nil
+  } else {
+    val startMs = System.currentTimeMillis
+    log.info(s"Loading [${tables.size}] tables...")
+    val ret = tables.zipWithIndex.map { table =>
       if (table._2 > 0 && table._2 % 25 == 0) { log.info(s"Processed [${table._2}/${tables.size}] tables...") }
       getTableDetails(conn, metadata, table._1, enums)
     }
+    log.info(s"[${tables.size}] tables loaded in [${System.currentTimeMillis - startMs}ms]")
+    ret
   }
 
   private[this] def getTableDetails(conn: Connection, metadata: DatabaseMetaData, table: Table, enums: Seq[EnumType]) = try {

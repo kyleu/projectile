@@ -14,11 +14,17 @@ object MetadataViews extends Logging {
     new JdbcRow.Iter(rs).map(row => fromRow(row)).toList.sortBy(_.name)
   }
 
-  def withViewDetails(metadata: DatabaseMetaData, views: Seq[View], enums: Seq[EnumType]) = {
-    views.zipWithIndex.map { view =>
+  def withViewDetails(metadata: DatabaseMetaData, views: Seq[View], enums: Seq[EnumType]) = if (views.isEmpty) {
+    Nil
+  } else {
+    val startMs = System.currentTimeMillis
+    log.info(s"Loading [${views.size}] views...")
+    val ret = views.zipWithIndex.map { view =>
       if (view._2 > 0 && view._2 % 25 == 0) { log.info(s"Processed [${view._2}/${views.size}] views...") }
       getViewDetails(metadata, view._1, enums)
     }
+    log.info(s"[${views.size}] views loaded in [${System.currentTimeMillis - startMs}ms]")
+    ret
   }
 
   private[this] def getViewDetails(metadata: DatabaseMetaData, view: View, enums: Seq[EnumType]) = try {

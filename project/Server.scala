@@ -19,7 +19,7 @@ object Server {
     Dependencies.Serialization.all ++ Seq(
       Akka.actor, Akka.logging, Akka.protobuf, Akka.stream, Akka.visualMailbox,
       Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
-      Database.postgres, Database.hikariCp, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
+      Database.postgres, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       WebJars.jquery, WebJars.fontAwesome, WebJars.materialize,
       Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang,
       Utils.enumeratum, Utils.scalaGuice, Utils.schwatcher, Utils.scopts,

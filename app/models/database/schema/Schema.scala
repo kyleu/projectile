@@ -17,7 +17,6 @@ case class Schema(
     enums: Seq[EnumType],
     tables: Seq[Table],
     views: Seq[View],
-    procedures: Seq[Procedure],
 
     detailsLoadedAt: Option[Long] = None
 ) {
@@ -25,5 +24,4 @@ case class Schema(
 
   def getTable(name: String) = tables.find(_.name.equalsIgnoreCase(name))
   def getView(name: String) = views.find(_.name.equalsIgnoreCase(name))
-  def getProcedure(name: String) = procedures.find(_.name.equalsIgnoreCase(name))
 }

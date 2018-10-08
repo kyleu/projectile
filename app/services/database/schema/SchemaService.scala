@@ -21,5 +21,4 @@ object SchemaService extends Logging {
 
   def getTable(connectionId: UUID, name: String) = get(connectionId).flatMap(_.tables.find(_.name == name))
   def getView(connectionId: UUID, name: String) = get(connectionId).flatMap(_.views.find(_.name == name))
-  def getProcedure(connectionId: UUID, name: String) = get(connectionId).flatMap(_.procedures.find(_.name == name))
 }
