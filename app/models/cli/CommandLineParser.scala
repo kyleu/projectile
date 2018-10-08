@@ -27,19 +27,13 @@ object CommandLineParser {
       )
     )
     cmd("refresh").text("updates cached data for inputs and projects").children(
-      cmd("project").text("reload the the project's definition and verify input compatibility").action((_, c) => c.withCommand(ListProjects)).children(
-        arg[String]("<id>").optional().text("optional project id, will refresh all if not provided").action((x, c) => c.withCommand(RefreshProject(x)))
-      ),
       cmd("input").text("reload the the input's definition").action((_, c) => c.withCommand(ListInputs)).children(
         arg[String]("<id>").optional().text("optional input id, will refresh all if not provided").action((x, c) => c.withCommand(RefreshInput(x)))
       )
     )
     cmd("remove").abbr("rm").text("removes cached data for inputs and projects").children(
-      cmd("project").text("reload the the project's definition and verify input compatibility").action((_, c) => c.withCommand(ListProjects)).children(
-        arg[String]("<id>").optional().text("optional project id, will refresh all if not provided").action((x, c) => c.withCommand(RefreshProject(x)))
-      ),
       cmd("input").text("reload the the input's definition").action((_, c) => c.withCommand(ListInputs)).children(
-        arg[String]("<id>").optional().text("optional input id, will refresh all if not provided").action((x, c) => c.withCommand(RefreshInput(x)))
+        arg[String]("<id>").optional().text("optional input id, will refresh all if not provided").action((x, c) => c.withCommand(RemoveInput(x)))
       )
     )
     cmd("batch").text("runs each entry within a file").children(

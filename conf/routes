@@ -1,11 +1,10 @@
 GET        /                                        controllers.HomeController.index
 GET        /testbed                                 controllers.HomeController.testbed
-GET        /refreshAll                              controllers.HomeController.refreshAll
+
 
 # Inputs
 GET        /input/new                               controllers.InputController.form
-
-GET        /input/all/refresh                       controllers.InputController.refreshAll
+GET        /input/refresh                           controllers.InputController.refreshAll
 
 GET        /input/:key                              controllers.InputController.detail(key)
 GET        /input/:key/refresh                      controllers.InputController.refresh(key)
@@ -15,11 +14,9 @@ GET        /input/:key/refresh                      controllers.InputController.
 GET        /project/new                             controllers.ProjectController.form
 
 GET        /project/all/audit                       controllers.BulkProjectController.auditAll
-GET        /project/all/refresh                     controllers.BulkProjectController.refreshAll
 GET        /project/all/export                      controllers.BulkProjectController.exportAll
 
 GET        /project/:key                            controllers.ProjectController.detail(key)
-GET        /project/:key/refresh                    controllers.ProjectController.refresh(key)
 GET        /project/:key/export                     controllers.ProjectController.export(key)
 
 

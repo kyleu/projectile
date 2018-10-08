@@ -9,17 +9,6 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.project(p)))
   }
 
-  def refresh(key: String) = Action.async { implicit request =>
-    val startMs = System.currentTimeMillis
-    val result = service.refreshProject(key)
-    Future.successful(Ok(views.html.result("Refresh Result", result.toString, System.currentTimeMillis - startMs)))
-  }
-  def refreshAll = Action.async { implicit request =>
-    val startMs = System.currentTimeMillis
-    val results = service.listProjects().map(_.toString)
-    Future.successful(Ok(views.html.result("Refresh All Result", results.mkString("\n"), System.currentTimeMillis - startMs)))
-  }
-
   def export(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     val result = s"TODO: project [$key] export"

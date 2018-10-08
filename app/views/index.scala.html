@@ -3,7 +3,6 @@
 )@layout.simple(util.Version.projectName) {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.refreshAll()">Refresh All</a></div>
       <h5><i class="@models.template.Icons.projectile"></i> Projectile</h5>
       It makes projects.
     </div>
@@ -21,8 +20,7 @@
         @projects.size available project
       } else {
         @projects.size available projects
-        (<a class="theme-text" href="@controllers.routes.BulkProjectController.exportAll()">export</a> or
-        <a class="theme-text" href="@controllers.routes.BulkProjectController.refreshAll()">refresh</a> all)
+        (<a class="theme-text" href="@controllers.routes.BulkProjectController.exportAll()">export</a> all)
       }
     </div>
     @if(projects.isEmpty) {

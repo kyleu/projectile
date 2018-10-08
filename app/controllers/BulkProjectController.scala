@@ -12,12 +12,6 @@ class BulkProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.result("Audit Result", result, System.currentTimeMillis - startMs)))
   }
 
-  def refreshAll() = Action.async { implicit request =>
-    val startMs = System.currentTimeMillis
-    val result = s"TODO: project refresh all"
-    Future.successful(Ok(views.html.result("Refresh All Result", result, System.currentTimeMillis - startMs)))
-  }
-
   def exportAll() = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     val result = s"TODO: project export all"
