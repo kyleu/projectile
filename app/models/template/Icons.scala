@@ -12,4 +12,9 @@ object Icons {
 
   val input = fa("star-o")
   val database = fa("database")
+
+  val table = fa("folder-open-o")
+  val view = fa("bar-chart")
+
+  val enum = fa("sort-alpha-asc")
 }

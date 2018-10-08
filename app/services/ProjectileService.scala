@@ -30,12 +30,12 @@ class ProjectileService(val path: String = ".") {
       case StopServer => stopServer()
 
       case ListProjects => ProjectileResponse.ProjectList(projectSvc.list())
-      case AddProject(p) => ProjectileResponse.ProjectList(Seq(projectSvc.save(p)))
+      case AddProject(p) => ProjectileResponse.ProjectList(Seq(projectSvc.add(p)))
       case RemoveProject(key) => ProjectileResponse.ProjectList(Seq(projectSvc.remove(key)))
       case GetProject(key) => ProjectileResponse.ProjectDetail(projectSvc.load(key))
 
       case ListInputs => ProjectileResponse.InputList(inputSvc.list())
-      case AddInput(i) => ProjectileResponse.InputList(Seq(inputSvc.save(i)))
+      case AddInput(i) => ProjectileResponse.InputList(Seq(inputSvc.add(i)))
       case RemoveInput(key) => ProjectileResponse.InputList(Seq(inputSvc.remove(key)))
       case GetInput(key) => ProjectileResponse.InputDetail(inputSvc.load(key))
       case RefreshInput(key) => ProjectileResponse.InputDetail(inputSvc.refresh(key))

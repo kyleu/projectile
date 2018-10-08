@@ -1,16 +1,22 @@
 package controllers
 
+import models.database.input.PostgresInput
+
 import scala.concurrent.Future
 
 @javax.inject.Singleton
 class InputController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input(service.getInput(key))))
+    val view = service.getInput(key) match {
+      case i: PostgresInput => views.html.input.postgresInput(i)
+      case x => throw new IllegalStateException(s"Cannot render view for [$x]")
+    }
+    Future.successful(Ok(view))
   }
 
   def refresh(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val result = service.refreshInput(key)
+    service.refreshInput(key)
     val msg = s"Refreshed input [$key] in [${System.currentTimeMillis - startMs}ms]"
     Future.successful(Redirect(controllers.routes.InputController.detail(key)).flashing("success" -> msg))
   }
@@ -23,6 +29,6 @@ class InputController @javax.inject.Inject() () extends BaseController {
   }
 
   def form = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input(service.getInput("unsaved"))))
+    Future.successful(Ok(views.html.input.form()))
   }
 }

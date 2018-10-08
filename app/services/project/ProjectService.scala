@@ -28,7 +28,7 @@ class ProjectService(val cfg: ConfigService) {
     summ.into[Project].transform
   }
 
-  def save(p: ProjectSummary) = {
+  def add(p: ProjectSummary) = {
     // TODO
     p
   }

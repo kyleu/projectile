@@ -1,0 +1,85 @@
+@(input: models.database.input.PostgresInput)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(input.title + " Input Detail") {
+  <div class="right">
+    <a class="btn theme" href="@controllers.routes.InputController.refresh(input.key)">Refresh</a>
+  </div>
+
+  <div>
+    <h5><i class="@input.t.icon"></i> @input.title</h5>
+    @input.description
+  </div>
+
+
+  <ul class="tabs">
+    <li class="tab"><a href="#schema-detail"><i class="@models.template.Icons.database"></i> Summary</a></li>
+    @if(input.enums.nonEmpty) {
+      <li class="tab"><a href="#schema-enums"><i class="@models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
+    }
+    @if(input.tables.nonEmpty) {
+      <li class="tab"><a href="#schema-tables"><i class="@models.template.Icons.enum"></i> @input.tables.size Tables</a></li>
+    }
+    @if(input.views.nonEmpty) {
+      <li class="tab"><a href="#schema-views"><i class="@models.template.Icons.enum"></i> @input.views.size Views</a></li>
+    }
+  </ul>
+
+  <div id="schema-detail">
+    <div class="collection">
+      <div class="collection-item">
+        <div>@input.title</div>
+        <em>@input.description</em>
+      </div>
+      <div class="collection-item">@input.url</div>
+      <div class="collection-item">Username: @input.username</div>
+    </div>
+  </div>
+
+  @if(input.enums.nonEmpty) {
+    <div id="schema-enums">
+      <div class="collection">
+        @input.enums.map { e =>
+          <div class="collection-item">
+            <div class="right">@e.values.size values</div>
+            @e.key
+            <div style="margin-top: 4px;">
+              @e.values.map { v =>
+                <div class="chip">@v</div>
+              }
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if(input.tables.nonEmpty) {
+    <div id="schema-tables">
+      <div class="collection">
+        @input.tables.map { t =>
+          <div class="collection-item">
+            <div class="right">@t.columns.size columns</div>
+            @t.name
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if(input.views.nonEmpty) {
+    <div id="schema-views">
+      <div class="collection">
+        <div class="collection-item">
+          ...
+        </div>
+      </div>
+    </div>
+  }
+
+  <script>
+    $(function() {
+      $('.tabs').tabs();
+    });
+  </script>
+}

@@ -2,10 +2,13 @@
 
 @theme-color: #849974;
 
+.tabs .tab {
+  text-transform: inherit;
+}
 .tabs .tab a {
   color: @theme-color;
 }
-.tabs .tab a:hover {
+.tabs .tab a:hover, .tabs .tab a.active {
   color: @theme-color;
 }
 .tabs .tab.disabled a {
