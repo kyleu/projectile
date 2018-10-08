@@ -9,7 +9,7 @@ class ProjectService(val cfg: ConfigService) {
   private[this] val dir = cfg.projectDirectory
   private[this] val fn = "project.json"
 
-  def list() = dir.children.toSeq.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
+  def list() = dir.children.toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
 
   def getSummary(key: String) = {
     val f = dir / key / fn
@@ -35,6 +35,6 @@ class ProjectService(val cfg: ConfigService) {
 
   def remove(key: String) = {
     // TODO
-    "OK"
+    getSummary(key)
   }
 }

@@ -13,17 +13,7 @@ class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory
   private[this] val fn = "input.json"
 
-  def list() = dir.children.toSeq.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
-
-  def save(i: InputSummary) = {
-    // TODO
-    i
-  }
-
-  def remove(key: String) = {
-    // TODO
-    "OK"
-  }
+  def list() = dir.children.toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
 
   def getSummary(key: String) = loadFile[InputSummary](dir / key / s"input.json", "input summary")
 
@@ -33,6 +23,16 @@ class InputService(val cfg: ConfigService) {
       case InputTemplate.Postgres => toPostgres(summ)
       case t => throw new IllegalStateException(s"Unhandled template [$t]")
     }
+  }
+
+  def save(i: InputSummary) = {
+    // TODO
+    i
+  }
+
+  def remove(key: String) = {
+    // TODO
+    getSummary(key)
   }
 
   def refresh(key: String) = load(key) match {

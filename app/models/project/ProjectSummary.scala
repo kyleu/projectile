@@ -12,8 +12,8 @@ object ProjectSummary {
 
 case class ProjectSummary(
     template: ProjectTemplate = ProjectTemplate.Simple,
-    key: String,
-    title: String,
+    key: String = "new",
+    title: String = "New Project",
     description: String = "...",
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,

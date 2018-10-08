@@ -20,7 +20,7 @@ class ProjectileService(val path: String = ".") {
 
   val fullPath = better.files.File(path).pathAsString
 
-  def process(cmd: ProjectileCommand, verbose: Boolean = false) = {
+  def process(cmd: ProjectileCommand, verbose: Boolean = false): ProjectileResponse = {
     import models.command.ProjectileCommand._
 
     cmd match {
@@ -30,13 +30,13 @@ class ProjectileService(val path: String = ".") {
       case StopServer => stopServer()
 
       case ListProjects => ProjectileResponse.ProjectList(projectSvc.list())
-      case AddProject(p) => projectSvc.save(p)
-      case RemoveProject(key) => projectSvc.remove(key)
+      case AddProject(p) => ProjectileResponse.ProjectList(Seq(projectSvc.save(p)))
+      case RemoveProject(key) => ProjectileResponse.ProjectList(Seq(projectSvc.remove(key)))
       case GetProject(key) => ProjectileResponse.ProjectDetail(projectSvc.load(key))
 
       case ListInputs => ProjectileResponse.InputList(inputSvc.list())
-      case AddInput(i) => inputSvc.save(i)
-      case RemoveInput(key) => inputSvc.remove(key)
+      case AddInput(i) => ProjectileResponse.InputList(Seq(inputSvc.save(i)))
+      case RemoveInput(key) => ProjectileResponse.InputList(Seq(inputSvc.remove(key)))
       case GetInput(key) => ProjectileResponse.InputDetail(inputSvc.load(key))
       case RefreshInput(key) => ProjectileResponse.InputDetail(inputSvc.refresh(key))
 

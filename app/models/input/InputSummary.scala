@@ -8,10 +8,10 @@ object InputSummary {
 }
 
 case class InputSummary(
-    t: InputTemplate,
-    key: String,
-    title: String,
-    description: String
+    t: InputTemplate = InputTemplate.Postgres,
+    key: String = "new",
+    title: String = "New Input",
+    description: String = "..."
 ) extends Ordered[InputSummary] {
   override def compare(that: InputSummary) = title.compare(that.title)
 }

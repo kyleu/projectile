@@ -13,18 +13,18 @@ object PostgresInput {
 }
 
 case class PostgresInput(
-    override val key: String,
+    override val key: String = "new",
     override val title: String = "New Postgres Imput",
     override val description: String = "...",
     url: String = "jdbc:postgresql://localhost/db",
-    username: String,
-    password: String,
+    username: String = "",
+    password: String = "",
     ssl: Boolean = false,
-    db: String,
-    catalog: Option[String],
-    enums: Seq[EnumType],
-    tables: Seq[Table],
-    views: Seq[View],
+    db: String = "db",
+    catalog: Option[String] = None,
+    enums: Seq[EnumType] = Nil,
+    tables: Seq[Table] = Nil,
+    views: Seq[View] = Nil
 ) extends Input {
   override def t = InputTemplate.Postgres
 
