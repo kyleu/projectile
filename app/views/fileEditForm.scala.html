@@ -1,0 +1,18 @@
+@(service: services.ProjectileService, path: String, content: String)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(service, path) {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="@models.template.Icons.file"></i> @path</h5>
+    </div>
+    <div class="collection-item">
+      <form method="post" action="@controllers.routes.HomeController.editFile(path)">
+        <textarea class="materialize-textarea">@content</textarea>
+        <input type="submit" class="btn theme" value="Save Changes" />
+      </form>
+    </div>
+  </div>
+  <script>
+    M.textareaAutoResize($('.materialize-textarea'));
+  </script>
+}

@@ -41,13 +41,7 @@
         @input.enums.map { e =>
           <div class="collection-item">
             <div class="right">@e.values.size values</div>
-            @e.key
-            <div style="margin-top: 4px;">
-              @e.values.map { v =>
-                <div class="chip">@v</div>
-              }
-              <div style="clear: both;"></div>
-            </div>
+            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/enums/${e.key}.json")" class="theme-text">@e.key</a>
           </div>
         }
       </div>
@@ -60,7 +54,7 @@
         @input.tables.map { t =>
           <div class="collection-item">
             <div class="right">@t.columns.size columns</div>
-            @t.name
+            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/tables/${t.name}.json")" class="theme-text">@t.name</a>
           </div>
         }
       </div>
@@ -71,7 +65,12 @@
     <div id="schema-views">
       <div class="collection">
         <div class="collection-item">
-          ...
+          @input.views.map { v =>
+            <div class="collection-item">
+              <div class="right">@v.columns.size columns</div>
+              <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/views/${v.name}.json")" class="theme-text">@v.name</a>
+            </div>
+          }
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
 GET        /                                        controllers.HomeController.index
+GET        /file/view/*path                         controllers.HomeController.viewFile(path)
+POST       /file/edit/*path                         controllers.HomeController.editFile(path)
 GET        /testbed                                 controllers.HomeController.testbed
 
 

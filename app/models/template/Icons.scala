@@ -11,10 +11,12 @@ object Icons {
   val web = fa("calendar")
 
   val input = fa("star-o")
+
+  val file = fa("file-o")
+
   val database = fa("database")
 
+  val enum = fa("sort-alpha-asc")
   val table = fa("folder-open-o")
   val view = fa("bar-chart")
-
-  val enum = fa("sort-alpha-asc")
 }

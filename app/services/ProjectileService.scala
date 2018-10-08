@@ -18,7 +18,8 @@ class ProjectileService(val path: String = ".") {
 
   private[this] var serverOpt: Option[(RealServerProcess, Server)] = None
 
-  val fullPath = better.files.File(path).pathAsString
+  val rootDir = better.files.File(path)
+  val fullPath = rootDir.pathAsString
 
   def process(cmd: ProjectileCommand, verbose: Boolean = false): ProjectileResponse = {
     import models.command.ProjectileCommand._
