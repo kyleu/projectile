@@ -1,7 +1,5 @@
 package controllers
 
-import io.circe.Json
-
 import scala.concurrent.Future
 
 @javax.inject.Singleton
@@ -12,17 +10,31 @@ class HomeController @javax.inject.Inject() () extends BaseController {
 
   def viewFile(path: String) = Action.async { implicit request =>
     val f = service.rootDir / ".projectile" / path
-    Future.successful(Ok(views.html.fileEditForm(service, path, f.contentAsString)))
+    Future.successful(Ok(views.html.file.fileEditForm(service, path, f.contentAsString)))
   }
 
   def editFile(path: String) = Action.async { implicit request =>
     val f = service.rootDir / ".projectile" / path
-    Future.successful(Redirect(controllers.routes.HomeController.viewFile(path)))
+    val originalContent = if (f.exists && f.isReadable) {
+      Some(f.contentAsString)
+    } else {
+      None
+    }
+    val newContent = request.body.asFormUrlEncoded.get("content").head
+
+    val msg = if (originalContent.contains(newContent)) {
+      "No change needed"
+    } else {
+      f.overwrite(newContent)
+      "Saved"
+    }
+
+    Future.successful(Redirect(controllers.routes.HomeController.viewFile(path)).flashing("success" -> msg))
   }
 
   def testbed = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    Future.successful(Ok(views.html.result(service, "Testbed", service.testbed().json.spaces2, System.currentTimeMillis - startMs)))
+    Future.successful(Ok(views.html.file.result(service, "Testbed", service.testbed().json.spaces2, System.currentTimeMillis - startMs)))
   }
 
   def refreshAll = Action.async { implicit request =>

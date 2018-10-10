@@ -1,4 +1,4 @@
-import models.cli.{CommandLineOptions, CommandLineParser}
+import models.cli.{CommandLineOptions, CommandLineOutput, CommandLineParser}
 import services.ProjectileService
 import util.Logging
 
@@ -8,11 +8,10 @@ object ProjectileCLI extends Logging {
     val result = if (args.headOption.contains("batch")) {
       runBatch(args).flatMap(_._2)
     } else {
-      runArgs(args).foreach { result =>
-        log.info(s"${result.getClass.getSimpleName} Result:\n${result.toString}")
-      }
+      runArgs(args).toSeq
     }
     log.info(s"${util.Version.projectName} completed successfully in [${System.currentTimeMillis - startMs}ms]")
+    result.foreach(CommandLineOutput.logResponse)
   }
 
   private[this] def runArgs(args: Seq[String], svc: Option[ProjectileService] = None) = {

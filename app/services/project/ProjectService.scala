@@ -1,7 +1,7 @@
 package services.project
 
 import io.scalaland.chimney.dsl._
-import models.project.{Project, ProjectSummary}
+import models.project.{Project, ProjectSummary, ProjectTemplate}
 import services.config.ConfigService
 import util.JsonSerializers._
 
@@ -29,12 +29,22 @@ class ProjectService(val cfg: ConfigService) {
   }
 
   def add(p: ProjectSummary) = {
-    // TODO
-    p
+    // TODO save summary
+    p.into[Project].transform
   }
 
   def remove(key: String) = {
     // TODO
-    getSummary(key)
+    "TODO: Project Remove"
+  }
+
+  def audit(key: String) = {
+    // TODO
+    "TODO: Project Audit"
+  }
+
+  def export(key: String) = {
+    // TODO
+    "TODO: Project Export"
   }
 }

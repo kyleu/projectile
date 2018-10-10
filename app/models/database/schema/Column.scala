@@ -9,16 +9,16 @@ object Column {
 
 case class Column(
     name: String,
-    description: Option[String],
-    definition: Option[String],
-    primaryKey: Boolean,
-    notNull: Boolean,
-    autoIncrement: Boolean,
-    columnType: ColumnType,
-    sqlTypeCode: Int,
-    sqlTypeName: String,
-    size: String,
-    sizeAsInt: Int,
-    scale: Int,
-    defaultValue: Option[String]
+    description: Option[String] = None,
+    definition: Option[String] = None,
+    primaryKey: Boolean = false,
+    notNull: Boolean = false,
+    autoIncrement: Boolean = false,
+    columnType: ColumnType = ColumnType.StringType,
+    sqlTypeCode: Int = 12,
+    sqlTypeName: String = "varchar",
+    size: String = Int.MaxValue.toString,
+    sizeAsInt: Int = Int.MaxValue,
+    scale: Int = 0,
+    defaultValue: Option[String] = None
 )

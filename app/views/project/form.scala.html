@@ -1,0 +1,38 @@
+@(service: services.ProjectileService, project: models.project.Project)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(service, project.title + " Project Edit") {
+  <form method="post" action="@controllers.routes.ProjectController.save()">
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="@project.template.icon"></i> Edit [@project.key]</h5>
+      <div>@project.template.title Project</div>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        <input id="title" name="title" type="text" value="@project.title" />
+        <label for="title">Title</label>
+      </div>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        <input id="description" name="description" type="text" value="@project.description" />
+        <label for="description">Description</label>
+      </div>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        Features...
+      </div>
+    </div>
+    <div class="collection-item">
+      <input class="btn theme" type="submit" value="Save" />
+      <a class="btn-flat theme-text" href="@controllers.routes.ProjectController.detail(project.key)">Cancel</a>
+    </div>
+  </div>
+  </form>
+  <style>
+    .input-field {
+      margin-top: 16px;
+    }
+  </style>
+}

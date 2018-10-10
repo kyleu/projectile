@@ -1,0 +1,53 @@
+@(service: services.ProjectileService)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(service, s"New Input") {
+  <form method="post" action="@controllers.routes.InputController.save()">
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="@models.template.Icons.input"></i> New Input</h5>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        <input id="key" name="key" type="text" required class="validate" />
+        <label for="key">Key</label>
+      </div>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        <input id="title" name="title" type="text" required class="validate" />
+        <label for="title">Title</label>
+      </div>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        <input id="description" name="description" type="text" />
+        <label for="description">Description</label>
+      </div>
+    </div>
+    <div class="collection-item">
+      <div class="input-field">
+        <select id="template" name="template">
+        @models.input.InputTemplate.values.map { t =>
+          <option value="@t.value">@t.title</option>
+        }
+        </select>
+        <label for="template">Template</label>
+      </div>
+    </div>
+    <div class="collection-item">
+      <input class="btn theme" type="submit" value="Create Input" />
+      <a class="btn-flat theme-text" href="@controllers.routes.HomeController.index()">Cancel</a>
+    </div>
+  </div>
+  </form>
+  <style>
+      .input-field {
+        margin-top: 16px;
+      }
+  </style>
+  <script>
+      $(function(){
+        $('select').formSelect();
+      });
+  </script>
+}

@@ -24,7 +24,7 @@ object CommandLineParser {
       cmd("input").text("Add the input's definition").action((_, c) => c.withCommand(AddInput(InputSummary()))).children(
         arg[String]("type").text("Input type, either \"postgres\" or \"filesystem\"").action { (x, c) =>
           val cmd = c.command.get.asInstanceOf[AddInput]
-          c.withCommand(cmd.copy(input = cmd.input.copy(t = InputTemplate.withValue(x))))
+          c.withCommand(cmd.copy(input = cmd.input.copy(template = InputTemplate.withValue(x))))
         },
         arg[String]("key").text("Key that identifies this input").action { (x, c) =>
           val cmd = c.command.get.asInstanceOf[AddInput]

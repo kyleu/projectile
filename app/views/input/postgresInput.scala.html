@@ -2,11 +2,11 @@
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(service, input.title + " Input Detail") {
   <div class="right">
-    <a class="btn theme" href="@controllers.routes.InputController.refresh(input.key)">Refresh</a>
+    <a class="theme-text" href="@controllers.routes.InputController.form(input.key)">Edit</a>
   </div>
 
   <div>
-    <h5><i class="@input.t.icon"></i> @input.title</h5>
+    <h5><i class="@input.template.icon"></i> @input.title</h5>
     @input.description
   </div>
 
@@ -29,6 +29,9 @@
       <div class="collection-item">
         <div>@input.title</div>
         <em>@input.description</em>
+      </div>
+      <div class="collection-item">
+      <a class="btn theme" href="@controllers.routes.InputController.refresh(input.key)">Refresh</a>
       </div>
       <div class="collection-item">@input.url</div>
       <div class="collection-item">Username: @input.username</div>

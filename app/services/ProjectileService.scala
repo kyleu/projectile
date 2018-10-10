@@ -4,10 +4,13 @@ import io.circe.Json
 import models.command.{ProjectileCommand, ProjectileResponse}
 import models.command.ProjectileCommand._
 import models.command.ProjectileResponse._
+import models.input.InputSummary
+import models.project.ProjectSummary
 import services.config.{ConfigService, ConfigValidator}
 import services.input.InputService
 import services.project.ProjectService
 import util.web.PlayServerHelper
+import util.JsonSerializers._
 import play.core.server._
 
 class ProjectileService(val path: String = ".") {
@@ -31,14 +34,16 @@ class ProjectileService(val path: String = ".") {
       case StopServer => stopServer()
 
       case ListProjects => ProjectileResponse.ProjectList(projectSvc.list())
-      case AddProject(p) => ProjectileResponse.ProjectList(Seq(projectSvc.add(p)))
-      case RemoveProject(key) => ProjectileResponse.ProjectList(Seq(projectSvc.remove(key)))
       case GetProject(key) => ProjectileResponse.ProjectDetail(projectSvc.load(key))
+      case AddProject(p) => ProjectileResponse.ProjectDetail(projectSvc.add(p))
+      case RemoveProject(key) => ProjectileResponse.JsonResponse(projectSvc.remove(key).asJson)
+      case ExportProject(key) => ProjectileResponse.JsonResponse(projectSvc.export(key).asJson)
+      case AuditProject(key) => ProjectileResponse.JsonResponse(projectSvc.audit(key).asJson)
 
       case ListInputs => ProjectileResponse.InputList(inputSvc.list())
-      case AddInput(i) => ProjectileResponse.InputList(Seq(inputSvc.add(i)))
-      case RemoveInput(key) => ProjectileResponse.InputList(Seq(inputSvc.remove(key)))
       case GetInput(key) => ProjectileResponse.InputDetail(inputSvc.load(key))
+      case AddInput(i) => ProjectileResponse.InputDetail(inputSvc.add(i))
+      case RemoveInput(key) => ProjectileResponse.InputList(Seq(inputSvc.remove(key)))
       case RefreshInput(key) => ProjectileResponse.InputDetail(inputSvc.refresh(key))
 
       case Testbed => JsonResponse(Json.True)
@@ -51,10 +56,15 @@ class ProjectileService(val path: String = ".") {
 
   def listProjects() = process(ListProjects).asInstanceOf[ProjectList].projects
   def getProject(key: String) = process(GetProject(key)).asInstanceOf[ProjectDetail].project
-  def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[String]
+  def addProject(summary: ProjectSummary) = process(AddProject(summary)).asInstanceOf[ProjectDetail].project
+  def removeProject(key: String) = process(RemoveProject(key)).asInstanceOf[String]
+  def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[JsonResponse].json
+  def auditProject(key: String) = process(AuditProject(key)).asInstanceOf[JsonResponse].json
 
   def listInputs() = process(ListInputs).asInstanceOf[InputList].inputs
   def getInput(key: String) = process(GetInput(key)).asInstanceOf[InputDetail].input
+  def addInput(summary: InputSummary) = process(AddInput(summary)).asInstanceOf[InputDetail].input
+  def removeInput(key: String) = process(RemoveInput(key)).asInstanceOf[String]
   def refreshInput(key: String) = process(RefreshInput(key)).asInstanceOf[InputDetail].input
 
   def startServer(port: Int) = {

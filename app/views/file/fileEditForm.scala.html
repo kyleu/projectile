@@ -7,7 +7,7 @@
     </div>
     <div class="collection-item">
       <form method="post" action="@controllers.routes.HomeController.editFile(path)">
-        <textarea class="materialize-textarea">@content</textarea>
+        <textarea name="content" class="materialize-textarea">@content</textarea>
         <input type="submit" class="btn theme" value="Save Changes" />
       </form>
     </div>

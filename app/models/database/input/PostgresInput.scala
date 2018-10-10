@@ -26,7 +26,7 @@ case class PostgresInput(
     tables: Seq[Table] = Nil,
     views: Seq[View] = Nil
 ) extends Input {
-  override def t = InputTemplate.Postgres
+  override def template = InputTemplate.Postgres
 
   def newConnection() = {
     val props = new Properties()

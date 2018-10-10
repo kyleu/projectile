@@ -1,45 +1,50 @@
-GET        /                                        controllers.HomeController.index
-GET        /file/view/*path                         controllers.HomeController.viewFile(path)
-POST       /file/edit/*path                         controllers.HomeController.editFile(path)
-GET        /testbed                                 controllers.HomeController.testbed
+GET         /                                        controllers.HomeController.index
+GET         /file/view/*path                         controllers.HomeController.viewFile(path)
+POST        /file/edit/*path                         controllers.HomeController.editFile(path)
+GET         /testbed                                 controllers.HomeController.testbed
 
 
 # Inputs
-GET        /input/new                               controllers.InputController.form
-GET        /input/refresh                           controllers.InputController.refreshAll
+GET         /input/new                               controllers.InputController.formNew()
+POST        /input/save                              controllers.InputController.save()
 
-GET        /input/:key                              controllers.InputController.detail(key)
-GET        /input/:key/refresh                      controllers.InputController.refresh(key)
+GET         /input/all/refresh                       controllers.InputController.refreshAll
+
+GET         /input/:key                              controllers.InputController.detail(key)
+GET         /input/:key/form                         controllers.InputController.form(key)
+GET         /input/:key/refresh                      controllers.InputController.refresh(key)
 
 
 # Projects
-GET        /project/new                             controllers.ProjectController.form
+GET         /project/new                             controllers.ProjectController.formNew()
+POST        /project/save                            controllers.ProjectController.save()
 
-GET        /project/all/audit                       controllers.BulkProjectController.auditAll
-GET        /project/all/export                      controllers.BulkProjectController.exportAll
+GET         /project/all/audit                       controllers.BulkProjectController.auditAll
+GET         /project/all/export                      controllers.BulkProjectController.exportAll
 
-GET        /project/:key                            controllers.ProjectController.detail(key)
-GET        /project/:key/export                     controllers.ProjectController.export(key)
-GET        /project/:key/audit                      controllers.ProjectController.audit(key)
+GET         /project/:key                            controllers.ProjectController.detail(key)
+GET         /project/:key/form                       controllers.ProjectController.form(key)
+GET         /project/:key/export                     controllers.ProjectController.export(key)
+GET         /project/:key/audit                      controllers.ProjectController.audit(key)
 
 
 # Assets
-GET        /browserconfig.xml                       controllers.Assets.at(file = "browserconfig.xml")
-GET        /manifest.json                           controllers.Assets.at(file = "manifest.json")
+GET         /browserconfig.xml                       controllers.Assets.at(file = "browserconfig.xml")
+GET         /manifest.json                           controllers.Assets.at(file = "manifest.json")
 
-GET        /android-chrome-192x192.png              controllers.Assets.at(file = "images/ui/favicon/android-chrome-192x192.png")
-GET        /android-chrome-512x512.png              controllers.Assets.at(file = "images/ui/favicon/android-chrome-512x512.png")
-GET        /apple-touch-icon-precomposed.png        controllers.Assets.at(file = "images/ui/favicon/apple-touch-icon-precomposed.png")
-GET        /apple-touch-icon.png                    controllers.Assets.at(file = "images/ui/favicon/apple-touch-icon.png")
-GET        /favicon-16x16.png                       controllers.Assets.at(file = "images/ui/favicon/favicon-16x16.png")
-GET        /favicon-32x32.png                       controllers.Assets.at(file = "images/ui/favicon/favicon-32x32.png")
-GET        /favicon.ico                             controllers.Assets.at(file = "images/ui/favicon/favicon.ico")
-GET        /favicon.png                             controllers.Assets.at(file = "images/ui/favicon/favicon-32x32.png")
-GET        /mstile-144x144.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-144x144.png")
-GET        /mstile-150x150.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-150x150.png")
-GET        /mstile-310x150.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-310x150.png")
-GET        /mstile-310x310.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-310x310.png")
-GET        /mstile-70x70.png                        controllers.Assets.at(file = "images/ui/favicon/mstile-70x70.png")
-GET        /safari-pinned-tab.svg                   controllers.Assets.at(file = "images/ui/favicon/safari-pinned-tab.svg")
+GET         /android-chrome-192x192.png              controllers.Assets.at(file = "images/ui/favicon/android-chrome-192x192.png")
+GET         /android-chrome-512x512.png              controllers.Assets.at(file = "images/ui/favicon/android-chrome-512x512.png")
+GET         /apple-touch-icon-precomposed.png        controllers.Assets.at(file = "images/ui/favicon/apple-touch-icon-precomposed.png")
+GET         /apple-touch-icon.png                    controllers.Assets.at(file = "images/ui/favicon/apple-touch-icon.png")
+GET         /favicon-16x16.png                       controllers.Assets.at(file = "images/ui/favicon/favicon-16x16.png")
+GET         /favicon-32x32.png                       controllers.Assets.at(file = "images/ui/favicon/favicon-32x32.png")
+GET         /favicon.ico                             controllers.Assets.at(file = "images/ui/favicon/favicon.ico")
+GET         /favicon.png                             controllers.Assets.at(file = "images/ui/favicon/favicon-32x32.png")
+GET         /mstile-144x144.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-144x144.png")
+GET         /mstile-150x150.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-150x150.png")
+GET         /mstile-310x150.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-310x150.png")
+GET         /mstile-310x310.png                      controllers.Assets.at(file = "images/ui/favicon/mstile-310x310.png")
+GET         /mstile-70x70.png                        controllers.Assets.at(file = "images/ui/favicon/mstile-70x70.png")
+GET         /safari-pinned-tab.svg                   controllers.Assets.at(file = "images/ui/favicon/safari-pinned-tab.svg")
 
-GET        /assets/*file                            controllers.Assets.versioned(file)
+GET         /assets/*file                            controllers.Assets.versioned(file)

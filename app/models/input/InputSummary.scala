@@ -8,7 +8,7 @@ object InputSummary {
 }
 
 case class InputSummary(
-    t: InputTemplate = InputTemplate.Postgres,
+    template: InputTemplate = InputTemplate.Postgres,
     key: String = "new",
     title: String = "New Input",
     description: String = "..."

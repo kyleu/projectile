@@ -14,16 +14,16 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case object StopServer extends ProjectileCommand
 
   case object ListProjects extends ProjectileCommand
+  case class GetProject(key: String) extends ProjectileCommand
   case class AddProject(project: ProjectSummary) extends ProjectileCommand
   case class RemoveProject(key: String) extends ProjectileCommand
-  case class GetProject(key: String) extends ProjectileCommand
   case class ExportProject(key: String) extends ProjectileCommand
   case class AuditProject(key: String) extends ProjectileCommand
 
   case object ListInputs extends ProjectileCommand
+  case class GetInput(key: String) extends ProjectileCommand
   case class AddInput(input: InputSummary) extends ProjectileCommand
   case class RemoveInput(key: String) extends ProjectileCommand
-  case class GetInput(key: String) extends ProjectileCommand
   case class RefreshInput(key: String) extends ProjectileCommand
 
   case object Testbed extends ProjectileCommand

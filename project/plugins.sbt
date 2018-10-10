@@ -1,7 +1,7 @@
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.19")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.20")
 
 // SBT-Web plugins
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.3")

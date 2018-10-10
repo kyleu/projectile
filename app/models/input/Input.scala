@@ -1,7 +1,7 @@
 package models.input
 
 abstract class Input() extends Ordered[Input] {
-  def t: InputTemplate
+  def template: InputTemplate
   def key: String
   def title: String
   def description: String

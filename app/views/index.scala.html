@@ -3,7 +3,30 @@
 )@layout.simple(service, util.Version.projectName) {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.form()">Add Project</a></div>
+      <div class="right"><a class="theme-text" href="@controllers.routes.InputController.formNew()">Add Input</a></div>
+      <h5><i class="@models.template.Icons.input"></i> Inputs</h5>
+      @if(inputs.size == 1) {
+        @inputs.size available input
+      } else {
+        @inputs.size available inputs (<a class="theme-text" href="@controllers.routes.InputController.refreshAll()">refresh</a> all)
+      }
+    </div>
+    @if(inputs.isEmpty) {
+      <div class="collection-item">
+        You have no inputs configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.InputController.formNew()">add one</a>.
+      </div>
+    }
+    @inputs.sortBy(_.title).map { input =>
+      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input.key)">
+        <i class="@input.template.icon"></i>
+        @input.title
+      </a>
+    }
+  </div>
+
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.formNew()">Add Project</a></div>
       <h5><i class="@models.template.Icons.project"></i> Projects</h5>
       @if(projects.size == 1) {
         @projects.size available project
@@ -14,36 +37,13 @@
     </div>
     @if(projects.isEmpty) {
       <div class="collection-item">
-        You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.ProjectController.form()">add one</a>.
+        You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.ProjectController.formNew()">add one</a>.
       </div>
     }
     @projects.sortBy(_.title).map { project =>
       <a class="collection-item theme-text" href="@controllers.routes.ProjectController.detail(project.key)">
         <i class="@project.template.icon"></i>
         @project.title
-      </a>
-    }
-  </div>
-
-  <div class="collection with-header">
-    <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.InputController.form()">Add Input</a></div>
-      <h5><i class="@models.template.Icons.input"></i> Inputs</h5>
-      @if(inputs.size == 1) {
-        @inputs.size available input
-      } else {
-        @inputs.size available inputs (<a class="theme-text" href="@controllers.routes.InputController.refreshAll()">refresh</a> all)
-      }
-    </div>
-    @if(inputs.isEmpty) {
-      <div class="collection-item">
-        You have no inputs configured at this path, go ahead and <a class="theme-text" href="@controllers.routes.InputController.form()">add one</a>.
-      </div>
-    }
-    @inputs.sortBy(_.title).map { input =>
-      <a class="collection-item theme-text" href="@controllers.routes.InputController.detail(input.key)">
-        <i class="@input.t.icon"></i>
-        @input.title
       </a>
     }
   </div>
