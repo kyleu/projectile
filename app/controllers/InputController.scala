@@ -9,8 +9,8 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class InputController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
-    val view = service.getInput(key) match {
-      case i: PostgresInput => views.html.input.postgresInput(service, i)
+    val view = projectile.getInput(key) match {
+      case i: PostgresInput => views.html.input.postgresInput(projectile, i)
       case x => throw new IllegalStateException(s"Cannot render view for [$x]")
     }
     Future.successful(Ok(view))
@@ -18,24 +18,24 @@ class InputController @javax.inject.Inject() () extends BaseController {
 
   def refresh(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    service.refreshInput(key)
+    projectile.refreshInput(key)
     val msg = s"Refreshed input [$key] in [${System.currentTimeMillis - startMs}ms]"
     Future.successful(Redirect(controllers.routes.InputController.detail(key)).flashing("success" -> msg))
   }
 
   def refreshAll = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val results = service.listInputs().map(i => service.refreshInput(i.key))
+    val results = projectile.listInputs().map(i => projectile.refreshInput(i.key))
     val msg = s"Refreshed [${results.size}] inputs in [${System.currentTimeMillis - startMs}ms]"
     Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> msg))
   }
 
   def formNew = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input.formNew(service)))
+    Future.successful(Ok(views.html.input.formNew(projectile)))
   }
 
   def form(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.input.form(service, service.getInput(key))))
+    Future.successful(Ok(views.html.input.form(projectile, projectile.getInput(key))))
   }
 
   def save() = Action.async { implicit request =>
@@ -46,7 +46,12 @@ class InputController @javax.inject.Inject() () extends BaseController {
       title = form("title"),
       description = form("description")
     )
-    val input = service.addInput(summary)
+    val input = projectile.addInput(summary)
     Future.successful(Redirect(controllers.routes.InputController.detail(input.key)).flashing("success" -> s"Saved input [${input.key}]"))
+  }
+
+  def remove(key: String) = Action.async { implicit request =>
+    val removed = projectile.removeInput(key)
+    Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed input [$key]: $removed"))
   }
 }

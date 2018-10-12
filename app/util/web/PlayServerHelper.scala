@@ -3,6 +3,7 @@ package util.web
 import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
 import services.ProjectileService
+import services.config.ConfigService
 
 object PlayServerHelper {
   private[this] var activeService: Option[ProjectileService] = None
@@ -10,7 +11,7 @@ object PlayServerHelper {
   def setSvc(svc: ProjectileService) = activeService = Some(svc)
 
   def svc = activeService.getOrElse {
-    activeService = Some(new ProjectileService("."))
+    activeService = Some(new ProjectileService(new ConfigService(".")))
     activeService.getOrElse(throw new IllegalStateException("Cannot initialize service"))
   }
 

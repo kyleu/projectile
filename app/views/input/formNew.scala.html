@@ -1,6 +1,6 @@
-@(service: services.ProjectileService)(
+@(projectile: services.ProjectileService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, s"New Input") {
+)@layout.simple(projectile, s"New Input") {
   <form method="post" action="@controllers.routes.InputController.save()">
   <div class="collection with-header">
     <div class="collection-header">

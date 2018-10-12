@@ -1,6 +1,7 @@
-package services.database
+package services.input
 
 import io.scalaland.chimney.dsl._
+
 import models.database.input.{PostgresConnection, PostgresInput}
 import models.database.schema.{EnumType, Table, View}
 import models.input.{InputSummary, InputTemplate}

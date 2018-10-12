@@ -5,16 +5,16 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class HomeController @javax.inject.Inject() () extends BaseController {
   def index = Action.async { implicit request =>
-    Future.successful(Ok(views.html.index(service, service.listInputs(), service.listProjects())))
+    Future.successful(Ok(views.html.index(projectile, projectile.listInputs(), projectile.listProjects())))
   }
 
   def viewFile(path: String) = Action.async { implicit request =>
-    val f = service.rootDir / ".projectile" / path
-    Future.successful(Ok(views.html.file.fileEditForm(service, path, f.contentAsString)))
+    val f = projectile.rootDir / ".projectile" / path
+    Future.successful(Ok(views.html.file.fileEditForm(projectile, path, f.contentAsString)))
   }
 
   def editFile(path: String) = Action.async { implicit request =>
-    val f = service.rootDir / ".projectile" / path
+    val f = projectile.rootDir / ".projectile" / path
     val originalContent = if (f.exists && f.isReadable) {
       Some(f.contentAsString)
     } else {
@@ -34,7 +34,7 @@ class HomeController @javax.inject.Inject() () extends BaseController {
 
   def testbed = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    Future.successful(Ok(views.html.file.result(service, "Testbed", service.testbed().json.spaces2, System.currentTimeMillis - startMs)))
+    Future.successful(Ok(views.html.file.result(projectile, "Testbed", projectile.testbed().json.spaces2, System.currentTimeMillis - startMs)))
   }
 
   def refreshAll = Action.async { implicit request =>

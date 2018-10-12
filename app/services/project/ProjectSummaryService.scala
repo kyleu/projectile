@@ -1,11 +1,12 @@
 package services.project
 
 import io.scalaland.chimney.dsl._
-import models.project.{Project, ProjectSummary, ProjectTemplate}
+import models.command.ProjectileResponse
+import models.project._
 import services.config.ConfigService
 import util.JsonSerializers._
 
-class ProjectService(val cfg: ConfigService) {
+class ProjectSummaryService(val cfg: ConfigService) {
   private[this] val dir = cfg.projectDirectory
   private[this] val fn = "project.json"
 
@@ -15,7 +16,7 @@ class ProjectService(val cfg: ConfigService) {
     val f = dir / key / fn
     if (f.exists && f.isRegularFile && f.isReadable) {
       decodeJson[ProjectSummary](f.contentAsString) match {
-        case Right(is) => is
+        case Right(is) => is.copy(key = key)
         case Left(x) => ProjectSummary(key = key, title = key, description = s"Error loading project: ${x.getMessage}", status = Some("Error"))
       }
     } else {
@@ -23,10 +24,11 @@ class ProjectService(val cfg: ConfigService) {
     }
   }
 
-  def load(key: String) = {
-    val summ = getSummary(key)
-    summ.into[Project].transform
-  }
+  def load(key: String) = getSummary(key).into[Project]
+    .withFieldComputed(_.enums, _ => loadDir[ProjectEnum]("enums"))
+    .withFieldComputed(_.models, _ => loadDir[ProjectModel]("models"))
+    .withFieldComputed(_.services, _ => loadDir[ProjectSvc]("services"))
+    .transform
 
   def add(p: ProjectSummary) = {
     // TODO save summary
@@ -34,17 +36,16 @@ class ProjectService(val cfg: ConfigService) {
   }
 
   def remove(key: String) = {
-    // TODO
-    "TODO: Project Remove"
+    (dir / key).delete(swallowIOExceptions = true)
+    ProjectileResponse.OK
   }
 
-  def audit(key: String) = {
-    // TODO
-    "TODO: Project Audit"
-  }
-
-  def export(key: String) = {
-    // TODO
-    "TODO: Project Export"
+  private[this] def loadDir[A: Decoder](k: String) = {
+    val d = dir / k
+    if (d.exists && d.isDirectory && d.isReadable) {
+      d.children.map(f => loadFile[A](f, k)).toList
+    } else {
+      Nil
+    }
   }
 }

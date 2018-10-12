@@ -1,17 +1,18 @@
 package services.input
 
+import models.command.ProjectileResponse
 import models.database.input.{PostgresConnection, PostgresInput}
 import models.input.{Input, InputSummary, InputTemplate}
 import services.config.ConfigService
-import services.database.PostgresInputService
 import services.database.schema.SchemaHelper
 import util.JsonSerializers._
 
 class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory
+
   def list() = dir.children.toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
 
-  def getSummary(key: String) = loadFile[InputSummary](dir / key / s"input.json", "input summary")
+  def getSummary(key: String) = loadFile[InputSummary](dir / key / s"input.json", "input summary").copy(key = key)
 
   def load(key: String): Input = {
     val summ = getSummary(key)
@@ -32,8 +33,8 @@ class InputService(val cfg: ConfigService) {
   }
 
   def remove(key: String) = {
-    // TODO
-    getSummary(key)
+    (dir / key).delete(swallowIOExceptions = true)
+    ProjectileResponse.OK
   }
 
   def refresh(key: String) = load(key) match {

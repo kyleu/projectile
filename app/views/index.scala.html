@@ -1,6 +1,6 @@
-@(service: services.ProjectileService, inputs: Seq[models.input.InputSummary], projects: Seq[models.project.ProjectSummary])(
+@(projectile: services.ProjectileService, inputs: Seq[models.input.InputSummary], projects: Seq[models.project.ProjectSummary])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, util.Version.projectName) {
+)@layout.simple(projectile, util.Version.projectName) {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.InputController.formNew()">Add Input</a></div>

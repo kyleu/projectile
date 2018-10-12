@@ -1,15 +1,87 @@
-@(service: services.ProjectileService, project: models.project.Project)(
+@(projectile: services.ProjectileService, project: models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, project.title + " Project Detail") {
+)@layout.simple(projectile, project.title + " Project Detail") {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.ProjectController.form(project.key)">Edit</a></div>
       <h5><i class="@project.template.icon"></i> @project.title</h5>
       @project.description
     </div>
-    <div class="collection-item">
-      <a class="btn theme" href="@controllers.routes.ProjectController.export(project.key)">Export</a>
-      <a class="btn theme" href="@controllers.routes.ProjectController.audit(project.key)">Audit</a>
+  </div>
+
+  <ul class="tabs">
+    <li class="tab"><a href="#project-detail"><i class="@models.template.Icons.project"></i> Summary</a></li>
+    <li class="tab"><a href="#project-enums"><i class="@models.template.Icons.enum"></i> @project.enums.size Enums</a></li>
+    <li class="tab"><a href="#project-models"><i class="@models.template.Icons.model"></i> @project.models.size Models</a></li>
+    <li class="tab"><a href="#project-services"><i class="@models.template.Icons.service"></i> @project.services.size Services</a></li>
+  </ul>
+
+  <div id="project-detail">
+    <div class="collection">
+      <div class="collection-item">
+        <h6>Features</h6>
+        <div>
+          @project.template.features.toSeq.sortBy(_.title).map { feature =>
+            @if(project.features.contains(feature)) {
+              @feature!
+            } else {
+              @feature?
+            }
+          }
+        </div>
+      </div>
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.routes.ProjectController.export(project.key)">Export</a>
+        <a class="btn theme" href="@controllers.routes.ProjectController.audit(project.key)">Audit</a>
+      </div>
     </div>
   </div>
+
+  <div id="project-enums">
+    <div class="collection">
+      @if(project.enums.isEmpty) {
+        <div class="collection-item">No project enumerations.</div>
+      }
+      @project.enums.map { e =>
+        <div class="collection-item">@e</div>
+      }
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.routes.ProjectEnumController.formNew(project.key)"><i class="@models.template.Icons.enum"></i> Add Enum</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="project-models">
+    <div class="collection">
+      @if(project.models.isEmpty) {
+        <div class="collection-item">No project models.</div>
+      }
+      @project.models.map { m =>
+        <div class="collection-item">@m</div>
+      }
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.routes.ProjectModelController.formNew(project.key)"><i class="@models.template.Icons.model"></i> Add Model</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="project-services">
+    <div class="collection">
+      @if(project.services.isEmpty) {
+        <div class="collection-item">No project services.</div>
+      }
+      @project.services.map { s =>
+        <div class="collection-item">@s</div>
+      }
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.routes.ProjectServiceController.formNew(project.key)"><i class="@models.template.Icons.service"></i> Add Service</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('.tabs').tabs();
+    });
+  </script>
 }

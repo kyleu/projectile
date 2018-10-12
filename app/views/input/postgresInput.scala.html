@@ -1,83 +1,74 @@
-@(service: services.ProjectileService, input: models.database.input.PostgresInput)(
+@(projectile: services.ProjectileService, input: models.database.input.PostgresInput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, input.title + " Input Detail") {
-  <div class="right">
-    <a class="theme-text" href="@controllers.routes.InputController.form(input.key)">Edit</a>
+) @layout.simple(projectile, input.title + " Input Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.routes.InputController.form(input.key)">Edit</a></div>
+      <h5><i class="@input.template.icon"></i> @input.title</h5>
+      @input.description
+    </div>
   </div>
-
-  <div>
-    <h5><i class="@input.template.icon"></i> @input.title</h5>
-    @input.description
-  </div>
-
 
   <ul class="tabs">
-    <li class="tab"><a href="#schema-detail"><i class="@models.template.Icons.database"></i> Summary</a></li>
-    @if(input.enums.nonEmpty) {
-      <li class="tab"><a href="#schema-enums"><i class="@models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
-    }
-    @if(input.tables.nonEmpty) {
-      <li class="tab"><a href="#schema-tables"><i class="@models.template.Icons.enum"></i> @input.tables.size Tables</a></li>
-    }
-    @if(input.views.nonEmpty) {
-      <li class="tab"><a href="#schema-views"><i class="@models.template.Icons.enum"></i> @input.views.size Views</a></li>
-    }
+    <li class="tab"><a href="#input-detail"><i class="@models.template.Icons.database"></i> Summary</a></li>
+    <li class="tab"><a href="#input-enums"><i class="@models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
+    <li class="tab"><a href="#input-tables"><i class="@models.template.Icons.enum"></i> @input.tables.size Tables</a></li>
+    <li class="tab"><a href="#input-views"><i class="@models.template.Icons.enum"></i> @input.views.size Views</a></li>
   </ul>
 
-  <div id="schema-detail">
+  <div id="input-detail">
     <div class="collection">
-      <div class="collection-item">
-        <div>@input.title</div>
-        <em>@input.description</em>
-      </div>
-      <div class="collection-item">
-      <a class="btn theme" href="@controllers.routes.InputController.refresh(input.key)">Refresh</a>
-      </div>
       <div class="collection-item">@input.url</div>
       <div class="collection-item">Username: @input.username</div>
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.routes.InputController.refresh(input.key)">Refresh</a>
+      </div>
     </div>
   </div>
 
-  @if(input.enums.nonEmpty) {
-    <div id="schema-enums">
-      <div class="collection">
-        @input.enums.map { e =>
-          <div class="collection-item">
-            <div class="right">@e.values.size values</div>
-            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/enums/${e.key}.json")" class="theme-text">@e.key</a>
-          </div>
-        }
-      </div>
-    </div>
-  }
-
-  @if(input.tables.nonEmpty) {
-    <div id="schema-tables">
-      <div class="collection">
-        @input.tables.map { t =>
-          <div class="collection-item">
-            <div class="right">@t.columns.size columns</div>
-            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/tables/${t.name}.json")" class="theme-text">@t.name</a>
-          </div>
-        }
-      </div>
-    </div>
-  }
-
-  @if(input.views.nonEmpty) {
-    <div id="schema-views">
-      <div class="collection">
+  <div id="input-enums">
+    <div class="collection">
+      @if(input.enums.isEmpty) {
+        <div class="collection-item">No database enumerations.</div>
+      }
+      @input.enums.map { e =>
         <div class="collection-item">
-          @input.views.map { v =>
-            <div class="collection-item">
-              <div class="right">@v.columns.size columns</div>
-              <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/views/${v.name}.json")" class="theme-text">@v.name</a>
-            </div>
-          }
+          <div class="right">@e.values.size values</div>
+          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/enums/${e.key}.json")" class="theme-text">@e.key</a>
         </div>
+      }
+    </div>
+  </div>
+
+  <div id="input-tables">
+    <div class="collection">
+      @if(input.tables.isEmpty) {
+        <div class="collection-item">No database tables.</div>
+      }
+      @input.tables.map { t =>
+        <div class="collection-item">
+          <div class="right">@t.columns.size columns</div>
+          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/tables/${t.name}.json")" class="theme-text">@t.name</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div id="input-views">
+    <div class="collection">
+      <div class="collection-item">
+        @if(input.views.isEmpty) {
+          <div class="collection-item">No database views.</div>
+        }
+        @input.views.map { v =>
+          <div class="collection-item">
+            <div class="right">@v.columns.size columns</div>
+            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/views/${v.name}.json")" class="theme-text">@v.name</a>
+          </div>
+        }
       </div>
     </div>
-  }
+  </div>
 
   <script>
     $(function() {

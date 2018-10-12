@@ -1,9 +1,14 @@
-@(service: services.ProjectileService, project: models.project.Project)(
+@(projectile: services.ProjectileService, project: models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, project.title + " Project Edit") {
+)@layout.simple(projectile, project.title + " Project Edit") {
   <form method="post" action="@controllers.routes.ProjectController.save()">
   <div class="collection with-header">
     <div class="collection-header">
+      <div class="right">
+        <a onclick="return confirm('Are you sure you wish to remove project [@project.key]?')" href="@controllers.routes.ProjectController.remove(project.key)" class="theme-text">
+          Remove
+        </a>
+      </div>
       <h5><i class="@project.template.icon"></i> Edit [@project.key]</h5>
       <div>@project.template.title Project</div>
     </div>

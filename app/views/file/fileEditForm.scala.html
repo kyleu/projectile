@@ -1,6 +1,6 @@
-@(service: services.ProjectileService, path: String, content: String)(
+@(projectile: services.ProjectileService, path: String, content: String)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, path) {
+)@layout.simple(projectile, path) {
   <div class="collection with-header">
     <div class="collection-header">
       <h5><i class="@models.template.Icons.file"></i> @path</h5>

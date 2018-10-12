@@ -16,7 +16,11 @@ object Icons {
 
   val database = fa("database")
 
-  val enum = fa("sort-alpha-asc")
+  val enum = fa("tag")
+
+  val model = fa("puzzle-piece")
+  val service = fa("rocket")
+
   val table = fa("folder-open-o")
   val view = fa("bar-chart")
 }

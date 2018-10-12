@@ -24,7 +24,7 @@ object SchemaHelper extends Logging {
       timezone = 0,
       enums = Nil,
       tables = Nil,
-      views = Nil,
+      views = Nil
     )
 
     val timezone = MetadataTimezone.getTimezone(conn)

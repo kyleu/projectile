@@ -8,33 +8,28 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class ProjectController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
-    val p = service.getProject(key)
-    Future.successful(Ok(views.html.project.project(service, p)))
+    val p = projectile.getProject(key)
+    Future.successful(Ok(views.html.project.project(projectile, p)))
   }
 
   def export(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     val result = s"TODO: project [$key] export"
-    Future.successful(Ok(views.html.file.result(service, "Export Result", result, System.currentTimeMillis - startMs)))
+    Future.successful(Ok(views.html.file.result(projectile, "Export Result", result, System.currentTimeMillis - startMs)))
   }
 
   def audit(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     val result = s"TODO: project [$key] audit"
-    Future.successful(Ok(views.html.file.result(service, "Audit Result", result, System.currentTimeMillis - startMs)))
-  }
-
-  def remove(key: String) = Action.async { implicit request =>
-    service.removeProject(key)
-    Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]"))
+    Future.successful(Ok(views.html.file.result(projectile, "Audit Result", result, System.currentTimeMillis - startMs)))
   }
 
   def formNew = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.formNew(service)))
+    Future.successful(Ok(views.html.project.formNew(projectile)))
   }
 
   def form(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.form(service, service.getProject(key))))
+    Future.successful(Ok(views.html.project.form(projectile, projectile.getProject(key))))
   }
 
   def save() = Action.async { implicit request =>
@@ -45,7 +40,12 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
       title = form("title"),
       description = form("description")
     )
-    val project = service.addProject(summary)
+    val project = projectile.addProject(summary)
     Future.successful(Redirect(controllers.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
+  }
+
+  def remove(key: String) = Action.async { implicit request =>
+    val removed = projectile.removeProject(key)
+    Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]: $removed"))
   }
 }

@@ -1,9 +1,9 @@
-@(service: services.ProjectileService, title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+@(projectile: services.ProjectileService, title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.materialize(title, scripts = scripts, stylesheets = controllers.routes.Assets.versioned(s"stylesheets/${util.Version.projectId}.min.css").url +: stylesheets) {
   <header>
     <nav id="topnav" class="theme">
-      <a title="@service.fullPath" href="@controllers.routes.HomeController.index()" class="brand-logo center">
+      <a title="@projectile.fullPath" href="@controllers.routes.HomeController.index()" class="brand-logo center">
         <i class="@models.template.Icons.projectile"></i>
         @util.Config.projectName
       </a>

@@ -1,9 +1,17 @@
-@(service: services.ProjectileService, input: models.input.Input)(
+@(projectile: services.ProjectileService, input: models.input.Input)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(service, input.title + " Input Edit") {
+)@layout.simple(projectile, input.title + " Input Edit") {
   <form method="post" action="@controllers.routes.InputController.save()">
+    <input id="key" name="key" type="hidden" value="@input.key" />
+    <input id="template" name="template" type="hidden" value="@input.template.value" />
+
     <div class="collection with-header">
       <div class="collection-header">
+        <div class="right">
+          <a onclick="return confirm('Are you sure you wish to remove input [@input.key]?')" href="@controllers.routes.InputController.remove(input.key)" class="theme-text">
+            Remove
+          </a>
+        </div>
         <h5><i class="@input.template.icon"></i> Edit [@input.key]</h5>
         <div>@input.template.title Input</div>
       </div>

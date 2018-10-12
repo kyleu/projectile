@@ -2,6 +2,7 @@ package models.project
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import models.project.feature.ProjectFeature
+import models.project.feature.ProjectFeature._
 import models.template.Icons
 
 sealed abstract class ProjectTemplate(
@@ -18,7 +19,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     title = "Simple",
     description = "A simple Scala Play Framework application with some useful defaults and helper classes",
     icon = Icons.library,
-    features = Set.empty[ProjectFeature]
+    features = Set(Core, Wiki)
   )
 
   case object Boilerplay extends ProjectTemplate(
@@ -26,7 +27,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     title = "Boilerplay",
     description = "Constantly updated, Boilerplay is a starter web application with loads of features",
     icon = Icons.web,
-    features = Set.empty[ProjectFeature]
+    features = Set(Core, Wiki)
   )
 
   case object Custom extends ProjectTemplate(
@@ -34,7 +35,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     title = "Custom",
     description = "A custom template allows you to specify default options manually",
     icon = Icons.project,
-    features = Set.empty[ProjectFeature]
+    features = ProjectFeature.values.toSet
   )
 
   override val values = findValues

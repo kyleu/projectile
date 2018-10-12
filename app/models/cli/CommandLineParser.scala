@@ -1,5 +1,6 @@
 package models.cli
 
+import models.command.ProjectileCommand
 import models.command.ProjectileCommand._
 import models.input.{InputSummary, InputTemplate}
 import models.project.{ProjectSummary, ProjectTemplate}
@@ -22,23 +23,32 @@ object CommandLineParser {
     )
     cmd("add").text("Adds a basic configuration for inputs and projects").children(
       cmd("input").text("Add the input's definition").action((_, c) => c.withCommand(AddInput(InputSummary()))).children(
-        arg[String]("type").text("Input type, either \"postgres\" or \"filesystem\"").action { (x, c) =>
-          val cmd = c.command.get.asInstanceOf[AddInput]
-          c.withCommand(cmd.copy(input = cmd.input.copy(template = InputTemplate.withValue(x))))
+        arg[String]("type").text(s"Input type, any of [${InputTemplate.values.map(_.value).mkString(", ")}]").action { (x, c) =>
+          withCommand[AddInput](c, ai => ai.copy(input = ai.input.copy(template = InputTemplate.withValue(x))))
         },
         arg[String]("key").text("Key that identifies this input").action { (x, c) =>
-          val cmd = c.command.get.asInstanceOf[AddInput]
-          c.withCommand(cmd.copy(input = cmd.input.copy(key = x)))
+          withCommand[AddInput](c, ai => ai.copy(input = ai.input.copy(key = x)))
+        },
+        arg[String]("title").optional().text("Optional title for this input").action { (x, c) =>
+          withCommand[AddInput](c, ai => ai.copy(input = ai.input.copy(title = x)))
+        },
+        arg[String]("description").optional().text("Optional description for this input").action { (x, c) =>
+          withCommand[AddInput](c, ai => ai.copy(input = ai.input.copy(description = x)))
         }
       ),
       cmd("project").text("Removes the project's definition").action((_, c) => c.withCommand(AddProject(ProjectSummary()))).children(
         arg[String]("template").text(s"Project template, any of [${ProjectTemplate.values.map(_.value).mkString(", ")}]").action { (x, c) =>
-          val cmd = c.command.get.asInstanceOf[AddProject]
-          c.withCommand(cmd.copy(project = cmd.project.copy(template = ProjectTemplate.withValue(x))))
+          withCommand[AddProject](c, ap => ap.copy(project = ap.project.copy(template = ProjectTemplate.withValue(x))))
         },
         arg[String]("key").text("Key that identifies this project").action { (x, c) =>
+          withCommand[AddProject](c, ap => ap.copy(project = ap.project.copy(key = x)))
+        },
+        arg[String]("title").optional().text("Optional title for this project").action { (x, c) =>
+          withCommand[AddProject](c, ap => ap.copy(project = ap.project.copy(title = x)))
+        },
+        arg[String]("description").optional().text("Optional description for this project").action { (x, c) =>
           val cmd = c.command.get.asInstanceOf[AddProject]
-          c.withCommand(cmd.copy(project = cmd.project.copy(key = x)))
+          c.withCommand(cmd.copy(project = cmd.project.copy(description = x)))
         }
       )
     )
@@ -70,5 +80,10 @@ object CommandLineParser {
       }
     )
     cmd("testbed").hidden().action((_, c) => c.withCommand(Testbed)).text("Runs the local developmer testbed")
+  }
+
+  private[this] def withCommand[Cmd <: ProjectileCommand](c: CommandLineOptions, f: Cmd => Cmd) = {
+    val cmd = c.command.get.asInstanceOf[Cmd]
+    c.withCommand(f(cmd))
   }
 }

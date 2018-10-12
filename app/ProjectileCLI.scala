@@ -1,5 +1,6 @@
 import models.cli.{CommandLineOptions, CommandLineOutput, CommandLineParser}
 import services.ProjectileService
+import services.config.ConfigService
 import util.Logging
 
 object ProjectileCLI extends Logging {
@@ -16,7 +17,7 @@ object ProjectileCLI extends Logging {
 
   private[this] def runArgs(args: Seq[String], svc: Option[ProjectileService] = None) = {
     CommandLineParser.parser.parse(args, CommandLineOptions()) match {
-      case Some(opts) => execute(svc.getOrElse(new ProjectileService(opts.workingDir)), opts)
+      case Some(opts) => execute(svc.getOrElse(new ProjectileService(new ConfigService(opts.workingDir))), opts)
       case None => None // Noop, error already displayed
     }
   }
@@ -34,9 +35,9 @@ object ProjectileCLI extends Logging {
     }
     val f = better.files.File(args(1))
     if (f.exists && f.isRegularFile && f.isReadable) {
-      val svc = new ProjectileService(".")
+      val svc = new ProjectileService(new ConfigService("."))
       f.lines.toList.map { l =>
-        l -> runArgs(l.split('\n').map(_.trim), Some(svc))
+        l -> runArgs(l.split(' ').map(_.trim).filter(_.nonEmpty), Some(svc))
       }
     } else {
       throw new IllegalStateException(s"Cannot read batch file [${f.pathAsString}]")

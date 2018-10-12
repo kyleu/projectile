@@ -10,12 +10,6 @@ import util.Logging
 object CommandLineOutput extends Logging {
   def logResponse(r: ProjectileResponse) = log.info(logFor(r))
 
-  def logForInputSummary(inputSummary: InputSummary) = inputSummary.asJson.spaces2
-  def logForInput(input: Input) = "Input!"
-
-  def logForProjectSummary(projectSummary: ProjectSummary) = projectSummary.asJson.spaces2
-  def logForProject(project: Project) = "Project!"
-
   def logFor(r: ProjectileResponse) = r match {
     case OK => "Success: OK"
     case Error(msg) => s"Error: $msg"
@@ -29,4 +23,10 @@ object CommandLineOutput extends Logging {
 
     case x => x.toString
   }
+
+  private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.title} (${is.template.title})"
+  private[this] def logForInput(input: Input) = "Input!"
+
+  private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.title} (${ps.template.title})"
+  private[this] def logForProject(project: Project) = "Project!"
 }
