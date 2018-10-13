@@ -1,6 +1,6 @@
-package models.database.output
+package models.export
 
-import models.database.schema.ColumnType._
+import models.database.schema.ColumnType.{ArrayType, BigDecimalType, BooleanType, ByteArrayType, ByteType, CodeType, DateType, DoubleType, EncryptedStringType, EnumType, FloatType, IntegerType, JsonType, LongType, ObjectType, RefType, ShortType, StringType, StructType, TagsType, TimeType, TimestampType, TimestampZonedType, UnknownType, UuidType, XmlType}
 
 object ExportFieldGraphQL {
   private[this] def graphQLType(field: ExportField) = field.t match {

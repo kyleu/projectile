@@ -1,7 +1,7 @@
-package models.database.output
+package models.export
 
-import models.database.output.config.ExportConfiguration
 import models.database.schema.{Column, ColumnType, ForeignKey}
+import models.export.config.ExportConfiguration
 import models.output.ExportHelper
 import util.JsonSerializers._
 

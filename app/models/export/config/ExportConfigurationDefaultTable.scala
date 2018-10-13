@@ -1,8 +1,8 @@
-package models.database.output.config
+package models.export.config
 
-import models.database.output.{ExportEnum, ExportModel}
 import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import models.database.schema._
+import models.export.{ExportEnum, ExportModel}
 
 object ExportConfigurationDefaultTable {
   def loadTableModel(tables: Seq[Table], t: Table, enums: Seq[ExportEnum]) = {

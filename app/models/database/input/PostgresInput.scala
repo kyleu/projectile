@@ -3,9 +3,9 @@ package models.database.input
 import java.sql.DriverManager
 import java.util.Properties
 
-import models.database.output.config.{ExportConfigurationDefaultTable, ExportConfigurationDefaultView}
-import models.database.output.{ExportEnum, ExportModel}
-import models.database.schema.{EnumType, Schema, Table, View}
+import models.export.config.{ExportConfigurationDefaultTable, ExportConfigurationDefaultView}
+import models.database.schema.{EnumType, Table, View}
+import models.export.ExportEnum
 import models.input.{Input, InputTemplate}
 import models.output.ExportHelper
 import util.JsonSerializers._
@@ -45,7 +45,7 @@ case class PostgresInput(
 
   override def exportEnum(key: String) = {
     val e = getEnum(key)
-    ExportEnum(name = e.key, className = ExportHelper.toClassName(e.key), values = e.values)
+    ExportEnum(name = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
   }
 
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))

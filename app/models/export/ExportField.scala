@@ -1,9 +1,9 @@
-package models.database.output
+package models.export
 
-import models.output.file.ScalaFile
 import models.database.schema.ColumnType
 import models.database.schema.ColumnType._
 import models.output.ExportHelper
+import models.output.file.ScalaFile
 import util.JsonSerializers._
 
 object ExportField {

@@ -1,6 +1,6 @@
-package models.database.output
+package models.export
 
-import models.database.output.config.ExportConfiguration
+import models.export.config.ExportConfiguration
 import models.output.file.OutputFile
 
 case class ExportResult(

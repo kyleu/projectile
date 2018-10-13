@@ -24,7 +24,9 @@ class ProjectSummaryService(val cfg: ConfigService) {
   }
 
   def add(p: ProjectSummary) = {
-    // TODO save summary
+    val f = dir / p.key / fn
+    f.createFileIfNotExists(createParents = true)
+    f.overwrite(p.asJson.spaces2)
     p.into[Project].transform
   }
 }

@@ -28,5 +28,7 @@ case class Project(
     case ProjectMember.OutputType.Model => getModel(member)
   }
 
+  val allMembers = enums ++ models
+
   override def compare(p: Project) = title.compare(p.title)
 }

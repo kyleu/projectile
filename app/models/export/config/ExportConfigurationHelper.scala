@@ -1,7 +1,7 @@
-package models.database.output.config
+package models.export.config
 
-import models.database.output.ExportModel
-import models.database.schema.{Schema, Table}
+import models.database.schema.Table
+import models.export.ExportModel
 import models.output.ExportHelper
 
 object ExportConfigurationHelper {

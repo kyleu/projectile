@@ -1,6 +1,6 @@
 package models.input
 
-import models.database.output.{ExportEnum, ExportModel}
+import models.export.{ExportEnum, ExportModel}
 
 abstract class Input() extends Ordered[Input] {
   def template: InputTemplate

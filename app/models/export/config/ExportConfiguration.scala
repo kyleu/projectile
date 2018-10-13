@@ -1,7 +1,7 @@
-package models.database.output.config
+package models.export.config
 
 import better.files._
-import models.database.output.{ExportEnum, ExportModel}
+import models.export.{ExportEnum, ExportModel}
 import util.JsonSerializers._
 
 object ExportConfiguration {

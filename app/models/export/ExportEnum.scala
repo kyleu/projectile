@@ -1,4 +1,4 @@
-package models.database.output
+package models.export
 
 import models.output.ExportHelper
 import util.JsonSerializers._

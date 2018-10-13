@@ -1,4 +1,4 @@
-package models.database.output.config
+package models.export.config
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 

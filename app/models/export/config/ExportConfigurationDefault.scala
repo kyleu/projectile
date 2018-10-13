@@ -1,7 +1,7 @@
-package models.database.output.config
+package models.export.config
 
-import models.database.output.{ExportEnum, ExportField}
 import models.database.schema._
+import models.export.{ExportEnum, ExportField}
 import models.output.ExportHelper
 import models.output.ExportHelper.{toDefaultTitle, toIdentifier}
 
