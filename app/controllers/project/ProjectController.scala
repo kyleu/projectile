@@ -13,18 +13,6 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.project.project(projectile, p)))
   }
 
-  def export(key: String) = Action.async { implicit request =>
-    val startMs = System.currentTimeMillis
-    val result = s"TODO: project [$key] export"
-    Future.successful(Ok(views.html.file.result(projectile, "Export Result", result, System.currentTimeMillis - startMs)))
-  }
-
-  def audit(key: String) = Action.async { implicit request =>
-    val startMs = System.currentTimeMillis
-    val result = s"TODO: project [$key] audit"
-    Future.successful(Ok(views.html.file.result(projectile, "Audit Result", result, System.currentTimeMillis - startMs)))
-  }
-
   def formNew = Action.async { implicit request =>
     Future.successful(Ok(views.html.project.formNew(projectile)))
   }
@@ -48,5 +36,17 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
   def remove(key: String) = Action.async { implicit request =>
     projectile.removeProject(key)
     Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]"))
+  }
+
+  def audit(key: String) = Action.async { implicit request =>
+    val startMs = System.currentTimeMillis
+    val result = projectile.auditProject(key).spaces2
+    Future.successful(Ok(views.html.file.result(projectile, "Audit Result", result, System.currentTimeMillis - startMs)))
+  }
+
+  def export(key: String) = Action.async { implicit request =>
+    val startMs = System.currentTimeMillis
+    val result = projectile.exportProject(key).spaces2
+    Future.successful(Ok(views.html.file.result(projectile, "Export Result", result, System.currentTimeMillis - startMs)))
   }
 }

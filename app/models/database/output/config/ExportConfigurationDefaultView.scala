@@ -5,7 +5,7 @@ import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import models.database.schema._
 
 object ExportConfigurationDefaultView {
-  def loadViewModel(schema: Schema, v: View, enums: Seq[ExportEnum]) = {
+  def loadViewModel(v: View, enums: Seq[ExportEnum]) = {
     val cn = toClassName(v.name)
     val title = toDefaultTitle(cn)
     val plural = title + "s"

@@ -5,7 +5,7 @@ import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import models.database.schema._
 
 object ExportConfigurationDefaultTable {
-  def loadTableModel(schema: Schema, t: Table, enums: Seq[ExportEnum]) = {
+  def loadTableModel(tables: Seq[Table], t: Table, enums: Seq[ExportEnum]) = {
     val audited = t.name match {
       case "system_users" => true
       case _ => false
@@ -58,9 +58,9 @@ object ExportConfigurationDefaultTable {
       description = t.description,
       plural = plural,
       fields = loadTableFields(t, enums),
-      pkColumns = ExportConfigurationHelper.pkColumns(schema, t),
+      pkColumns = ExportConfigurationHelper.pkColumns(t),
       foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
-      references = ExportConfigurationHelper.references(schema, t, Map.empty),
+      references = ExportConfigurationHelper.references(tables, t, Map.empty),
       audited = audited,
       provided = provided
     )

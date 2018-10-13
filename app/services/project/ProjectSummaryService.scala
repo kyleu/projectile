@@ -1,9 +1,7 @@
 package services.project
 
 import io.scalaland.chimney.dsl._
-import models.command.ProjectileResponse
 import models.project._
-import models.project.member.ProjectMember
 import services.config.ConfigService
 import util.JsonSerializers._
 
@@ -25,27 +23,8 @@ class ProjectSummaryService(val cfg: ConfigService) {
     }
   }
 
-  def load(key: String) = getSummary(key).into[Project]
-    .withFieldComputed(_.enums, _ => loadDir[ProjectMember](s"$key/enum"))
-    .withFieldComputed(_.models, _ => loadDir[ProjectMember](s"$key/model"))
-    .transform
-
   def add(p: ProjectSummary) = {
     // TODO save summary
     p.into[Project].transform
-  }
-
-  def remove(key: String) = {
-    (dir / key).delete(swallowIOExceptions = true)
-    ProjectileResponse.OK
-  }
-
-  private[this] def loadDir[A: Decoder](k: String) = {
-    val d = dir / k
-    if (d.exists && d.isDirectory && d.isReadable) {
-      d.children.map(f => loadFile[A](f, k)).toList
-    } else {
-      Nil
-    }
   }
 }

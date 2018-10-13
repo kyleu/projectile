@@ -1,30 +1,34 @@
 package services.helper
 
+import io.scalaland.chimney.dsl._
 import models.command.ProjectileCommand._
 import models.command.ProjectileResponse._
 import models.command.{ProjectileCommand, ProjectileResponse}
-import models.project.ProjectSummary
+import models.project.{Project, ProjectSummary}
 import models.project.member.ProjectMember
 import services.ProjectileService
 import services.project._
 import util.JsonSerializers._
 
 trait ProjectHelper { this: ProjectileService =>
-  private[this] val projectSummarySvc = new ProjectSummaryService(cfg)
-  private[this] lazy val projectMemberSvc = new ProjectMemberService(cfg)
-  private[this] lazy val projectActionSvc = new ProjectActionService(cfg)
+  private[this] lazy val summarySvc = new ProjectSummaryService(cfg)
+  private[this] lazy val memberSvc = new ProjectMemberService(cfg)
+  private[this] lazy val exportSvc = new ProjectExportService(cfg)
+  private[this] lazy val auditSvc = new ProjectAuditService(cfg)
+
+  private[this] val dir = cfg.projectDirectory
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-    case ListProjects => ProjectList(projectSummarySvc.list())
-    case GetProject(key) => ProjectDetail(projectSummarySvc.load(key))
-    case AddProject(p) => ProjectDetail(projectSummarySvc.add(p))
-    case RemoveProject(key) => projectSummarySvc.remove(key)
+    case ListProjects => ProjectList(summarySvc.list())
+    case GetProject(key) => ProjectDetail(load(key))
+    case AddProject(p) => ProjectDetail(summarySvc.add(p))
+    case RemoveProject(key) => remove(key)
 
-    case RemoveProjectMember(p, t, member) => JsonResponse(projectMemberSvc.remove(p, t, member).asJson)
-    case SaveProjectMember(p, member) => JsonResponse(projectMemberSvc.save(p, member).asJson)
+    case RemoveProjectMember(p, t, member) => JsonResponse(memberSvc.remove(p, t, member).asJson)
+    case SaveProjectMember(p, member) => JsonResponse(memberSvc.save(p, member).asJson)
 
-    case ExportProject(key) => JsonResponse(projectActionSvc.export(key).asJson)
-    case AuditProject(key) => JsonResponse(projectActionSvc.audit(key).asJson)
+    case ExportProject(key) => JsonResponse(exportSvc.export(key, this).asJson)
+    case AuditProject(key) => JsonResponse(auditSvc.audit(key).asJson)
   }
 
   def listProjects() = process(ListProjects).asInstanceOf[ProjectList].projects
@@ -42,4 +46,23 @@ trait ProjectHelper { this: ProjectileService =>
 
   def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[JsonResponse].json
   def auditProject(key: String) = process(AuditProject(key)).asInstanceOf[JsonResponse].json
+
+  def remove(key: String) = {
+    (dir / key).delete(swallowIOExceptions = true)
+    ProjectileResponse.OK
+  }
+
+  private[this] def load(key: String) = summarySvc.getSummary(key).into[Project]
+    .withFieldComputed(_.enums, _ => loadDir[ProjectMember](s"$key/enum"))
+    .withFieldComputed(_.models, _ => loadDir[ProjectMember](s"$key/model"))
+    .transform
+
+  private[this] def loadDir[A: Decoder](k: String) = {
+    val d = dir / k
+    if (d.exists && d.isDirectory && d.isReadable) {
+      d.children.map(f => loadFile[A](f, k)).toList
+    } else {
+      Nil
+    }
+  }
 }

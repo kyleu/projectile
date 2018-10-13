@@ -21,8 +21,8 @@ object ExportConfigurationDefault {
       projectTitle = ExportHelper.toClassName(key),
       flags = ExportFlag.values,
       enums = enums,
-      models = schema.tables.map(t => ExportConfigurationDefaultTable.loadTableModel(schema, t, enums)),
-      views = schema.views.map(v => ExportConfigurationDefaultView.loadViewModel(schema, v, enums)),
+      models = schema.tables.map(t => ExportConfigurationDefaultTable.loadTableModel(schema.tables, t, enums)),
+      views = schema.views.map(v => ExportConfigurationDefaultView.loadViewModel(v, enums)),
       projectLocation = loc
     )
   }

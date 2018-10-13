@@ -4,7 +4,6 @@ import io.circe.Json
 import models.command.{ProjectileCommand, ProjectileResponse}
 import models.command.ProjectileCommand._
 import models.command.ProjectileResponse._
-import models.project.member.ProjectMember
 import services.config.{ConfigService, ConfigValidator}
 import services.helper.{InputHelper, ProjectHelper, ServerHelper}
 

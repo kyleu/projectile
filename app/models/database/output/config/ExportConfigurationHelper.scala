@@ -5,14 +5,14 @@ import models.database.schema.{Schema, Table}
 import models.output.ExportHelper
 
 object ExportConfigurationHelper {
-  def pkColumns(schema: Schema, t: Table) = {
+  def pkColumns(t: Table) = {
     t.primaryKey.map(_.columns).getOrElse(Nil).map(c => t.columns.find(_.name == c).getOrElse {
       throw new IllegalStateException(s"Cannot derive primary key for [${t.name}] with key [${t.primaryKey}].")
     })
   }
 
-  def references(schema: Schema, t: Table, form: Map[String, String]) = {
-    val referencingTables = schema.tables.filter(tbl => tbl.name != t.name && tbl.foreignKeys.exists(_.targetTable == t.name))
+  def references(tables: Seq[Table], t: Table, form: Map[String, String]) = {
+    val referencingTables = tables.filter(tbl => tbl.name != t.name && tbl.foreignKeys.exists(_.targetTable == t.name))
 
     referencingTables.toList.flatMap { refTable =>
       refTable.foreignKeys.filter(_.targetTable == t.name).flatMap { fk =>

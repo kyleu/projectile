@@ -3,8 +3,11 @@ package models.database.input
 import java.sql.DriverManager
 import java.util.Properties
 
-import models.database.schema.{EnumType, Table, View}
+import models.database.output.config.{ExportConfigurationDefaultTable, ExportConfigurationDefaultView}
+import models.database.output.{ExportEnum, ExportModel}
+import models.database.schema.{EnumType, Schema, Table, View}
 import models.input.{Input, InputTemplate}
+import models.output.ExportHelper
 import util.JsonSerializers._
 
 object PostgresInput {
@@ -39,6 +42,25 @@ case class PostgresInput(
   def getView(k: String) = views.find(_.name == k).getOrElse {
     throw new IllegalStateException(s"Cannot find view [$k] in input [$key] among candidates [${views.map(_.name).mkString(", ")}]")
   }
+
+  override def exportEnum(key: String) = {
+    val e = getEnum(key)
+    ExportEnum(name = e.key, className = ExportHelper.toClassName(e.key), values = e.values)
+  }
+
+  override lazy val exportEnums = enums.map(e => exportEnum(e.key))
+
+  override def exportModel(key: String) = {
+    tables.find(_.name == key) match {
+      case Some(table) => ExportConfigurationDefaultTable.loadTableModel(tables, table, exportEnums)
+      case None => views.find(_.name == key) match {
+        case Some(view) => ExportConfigurationDefaultView.loadViewModel(view, exportEnums)
+        case None => throw new IllegalStateException(s"Cannot find view or table [$key] in input [$key]")
+      }
+    }
+  }
+
+  override lazy val exportModels = tables.map(e => exportModel(e.name))
 
   def newConnection() = {
     val props = new Properties()
