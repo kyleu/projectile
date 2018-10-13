@@ -13,8 +13,8 @@ import util.JsonSerializers._
 trait ProjectHelper { this: ProjectileService =>
   private[this] lazy val summarySvc = new ProjectSummaryService(cfg)
   private[this] lazy val memberSvc = new ProjectMemberService(cfg)
-  private[this] lazy val exportSvc = new ProjectExportService(cfg)
-  private[this] lazy val auditSvc = new ProjectAuditService(cfg)
+  private[this] lazy val exportSvc = new ProjectExportService(this)
+  private[this] lazy val auditSvc = new ProjectAuditService()
 
   private[this] val dir = cfg.projectDirectory
 
@@ -22,12 +22,12 @@ trait ProjectHelper { this: ProjectileService =>
     case ListProjects => ProjectList(summarySvc.list())
     case GetProject(key) => ProjectDetail(load(key))
     case AddProject(p) => ProjectDetail(summarySvc.add(p))
-    case RemoveProject(key) => remove(key)
+    case RemoveProject(key) => removeProjectFiles(key)
 
     case RemoveProjectMember(p, t, member) => JsonResponse(memberSvc.remove(p, t, member).asJson)
     case SaveProjectMember(p, member) => JsonResponse(memberSvc.save(p, member).asJson)
 
-    case ExportProject(key) => JsonResponse(exportSvc.export(key, this).asJson)
+    case ExportProject(key) => JsonResponse(exportSvc.exportProject(key).asJson)
     case AuditProject(key) => JsonResponse(auditSvc.audit(key).asJson)
   }
 
@@ -47,7 +47,7 @@ trait ProjectHelper { this: ProjectileService =>
   def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[JsonResponse].json
   def auditProject(key: String) = process(AuditProject(key)).asInstanceOf[JsonResponse].json
 
-  def remove(key: String) = {
+  private[this] def removeProjectFiles(key: String) = {
     (dir / key).delete(swallowIOExceptions = true)
     ProjectileResponse.OK
   }

@@ -3,7 +3,6 @@ package models.database.input
 import java.sql.DriverManager
 import java.util.Properties
 
-import models.export.config.{ExportConfigurationDefaultTable, ExportConfigurationDefaultView}
 import models.database.schema.{EnumType, Table, View}
 import models.export.ExportEnum
 import models.input.{Input, InputTemplate}
@@ -52,9 +51,9 @@ case class PostgresInput(
 
   override def exportModel(key: String) = {
     tables.find(_.name == key) match {
-      case Some(table) => ExportConfigurationDefaultTable.loadTableModel(tables, table, exportEnums)
+      case Some(table) => TableExportModel.loadTableModel(tables, table, exportEnums)
       case None => views.find(_.name == key) match {
-        case Some(view) => ExportConfigurationDefaultView.loadViewModel(view, exportEnums)
+        case Some(view) => ViewExportModel.loadViewModel(view, exportEnums)
         case None => throw new IllegalStateException(s"Cannot find view or table [$key] in input [$key]")
       }
     }

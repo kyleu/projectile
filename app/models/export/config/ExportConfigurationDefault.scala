@@ -2,31 +2,9 @@ package models.export.config
 
 import models.database.schema._
 import models.export.{ExportEnum, ExportField}
-import models.output.ExportHelper
 import models.output.ExportHelper.{toDefaultTitle, toIdentifier}
 
 object ExportConfigurationDefault {
-  def forSchema(schema: Schema, loc: Option[String]) = {
-    val key = ExportHelper.toIdentifier(schema.id)
-    val enums = schema.enums.map { e =>
-      val (name, pkg) = e.key match {
-        case "setting_key" => "SettingKey" -> List("settings")
-        case _ => ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)) -> Nil
-      }
-      ExportEnum(pkg, e.key, name, Nil, e.values)
-    }
-    ExportConfiguration(
-      key = key,
-      projectId = key,
-      projectTitle = ExportHelper.toClassName(key),
-      flags = ExportFlag.values,
-      enums = enums,
-      models = schema.tables.map(t => ExportConfigurationDefaultTable.loadTableModel(schema.tables, t, enums)),
-      views = schema.views.map(v => ExportConfigurationDefaultView.loadViewModel(v, enums)),
-      projectLocation = loc
-    )
-  }
-
   private[this] def clean(str: String) = str match {
     case "type" => "typ"
     case _ => str

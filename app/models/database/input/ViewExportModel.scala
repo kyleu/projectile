@@ -1,10 +1,11 @@
-package models.export.config
+package models.database.input
 
-import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
-import models.database.schema._
+import models.database.schema.View
+import models.export.config.ExportConfigurationDefault
 import models.export.{ExportEnum, ExportModel}
+import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 
-object ExportConfigurationDefaultView {
+object ViewExportModel {
   def loadViewModel(v: View, enums: Seq[ExportEnum]) = {
     val cn = toClassName(v.name)
     val title = toDefaultTitle(cn)

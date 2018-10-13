@@ -1,12 +1,12 @@
 package models.project.feature
 
-import enumeratum.{CirceEnum, Enum, EnumEntry}
+import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 
-sealed abstract class ProjectFeature(val title: String, val tech: String, val description: String) extends EnumEntry
+sealed abstract class ProjectFeature(override val value: String, val title: String, val tech: String, val description: String) extends StringEnumEntry
 
-object ProjectFeature extends Enum[ProjectFeature] with CirceEnum[ProjectFeature] {
-  case object Core extends ProjectFeature("Core", "Scala", "Generates Scala case classes")
-  case object Wiki extends ProjectFeature("Wiki", "Markdown", "Generates markdown documentation")
+object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[ProjectFeature] {
+  case object Core extends ProjectFeature("core", "Core", "Scala", "Scala case classes and Circe Json serializers")
+  case object Wiki extends ProjectFeature("wiki", "Wiki", "Markdown", "Markdown documentation in Github wiki format")
 
   override val values = findValues
 }

@@ -1,10 +1,11 @@
-package models.export.config
+package models.database.input
 
-import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
-import models.database.schema._
+import models.database.schema.Table
+import models.export.config.{ExportConfigurationDefault, ExportConfigurationHelper}
 import models.export.{ExportEnum, ExportModel}
+import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 
-object ExportConfigurationDefaultTable {
+object TableExportModel {
   def loadTableModel(tables: Seq[Table], t: Table, enums: Seq[ExportEnum]) = {
     val audited = t.name match {
       case "system_users" => true

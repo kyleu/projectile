@@ -5,6 +5,12 @@ import java.time.LocalDateTime
 import models.project.feature.ProjectFeature
 import models.project.member.ProjectMember
 import util.DateUtils
+import util.JsonSerializers._
+
+object Project {
+  implicit val jsonEncoder: Encoder[Project] = deriveEncoder
+  implicit val jsonDecoder: Decoder[Project] = deriveDecoder
+}
 
 case class Project(
     template: ProjectTemplate = ProjectTemplate.Simple,

@@ -78,7 +78,7 @@ case class ExportModel(
 
   val routesPackage = controllerPackage :+ "routes"
   val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
-  def iconHtml(config: ExportConfiguration) = s"""<i class="fa @${config.corePrefix}models.template.Icons.$propertyName"></i>"""
+  def iconHtml(config: ExportConfiguration) = s"""<i class="fa @models.template.Icons.$propertyName"></i>"""
 
   val pkArgs = pkFields.zipWithIndex.map(pkf => pkf._1.t match {
     case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"
