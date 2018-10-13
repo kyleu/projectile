@@ -22,7 +22,7 @@ object Server {
       Database.postgres, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       WebJars.jquery, WebJars.fontAwesome, WebJars.materialize,
       Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang,
-      Utils.enumeratum, Utils.scalaGuice, Utils.schwatcher, Utils.scopts,
+      Utils.enumeratum, Utils.scalaGuice, Utils.schwatcher, Utils.clist, Utils.clistMacros,
       Akka.testkit, Play.test, Testing.scalaTest
     )
   }

@@ -15,6 +15,7 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     import models.command.ProjectileCommand._
 
     val processCore: PartialFunction[ProjectileCommand, ProjectileResponse] = {
+      case Init => cfg.init()
       case Doctor => ConfigValidator.validate(cfg, verbose)
       case Testbed => JsonResponse(Json.True)
     }
@@ -22,6 +23,7 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     processCore.orElse(processInput).orElse(processProject).orElse(processServer).apply(cmd)
   }
 
+  def init() = process(Init)
   def doctor() = process(Doctor)
   def testbed() = process(Testbed).asInstanceOf[JsonResponse]
 }

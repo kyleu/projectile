@@ -4,24 +4,23 @@ import models.command.ProjectileResponse
 import models.command.ProjectileResponse._
 import models.input.{Input, InputSummary}
 import models.project.{Project, ProjectSummary}
-import util.JsonSerializers._
 import util.Logging
 
 object CommandLineOutput extends Logging {
-  def logResponse(r: ProjectileResponse) = log.info(logFor(r))
+  def logResponse(r: ProjectileResponse) = logFor(r).foreach(s => log.info(s))
 
-  def logFor(r: ProjectileResponse) = r match {
-    case OK => "Success: OK"
-    case Error(msg) => s"Error: $msg"
-    case JsonResponse(json) => json.spaces2
+  def logFor(r: ProjectileResponse): Seq[String] = r match {
+    case OK => Seq("Success: OK")
+    case Error(msg) => Seq(s"Error: $msg")
+    case JsonResponse(json) => Seq(json.spaces2)
 
-    case InputDetail(input) => logForInput(input)
-    case InputList(inputs) => inputs.map(logForInputSummary).mkString("\n")
+    case InputDetail(input) => Seq(logForInput(input))
+    case InputList(inputs) => inputs.map(logForInputSummary)
 
-    case ProjectDetail(p) => logForProject(p)
-    case ProjectList(projects) => projects.map(logForProjectSummary).mkString("\n")
+    case ProjectDetail(p) => Seq(logForProject(p))
+    case ProjectList(projects) => projects.map(logForProjectSummary)
 
-    case x => x.toString
+    case x => Seq(x.toString)
   }
 
   private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.title} (${is.template.title})"

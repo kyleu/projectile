@@ -1,7 +1,10 @@
-import models.cli.{CommandLineOptions, CommandLineOutput, CommandLineParser}
+import models.cli.{CommandLineAction, CommandLineOutput}
+import org.backuity.clist.Cli
+import models.cli.CommandLineAction._
 import services.ProjectileService
 import services.config.ConfigService
 import util.Logging
+import util.Version.{projectId, projectName, version}
 
 object ProjectileCLI extends Logging {
   def main(args: Array[String]): Unit = {
@@ -15,18 +18,8 @@ object ProjectileCLI extends Logging {
     result.foreach(CommandLineOutput.logResponse)
   }
 
-  private[this] def runArgs(args: Seq[String], svc: Option[ProjectileService] = None) = {
-    CommandLineParser.parser.parse(args, CommandLineOptions()) match {
-      case Some(opts) => execute(svc.getOrElse(new ProjectileService(new ConfigService(opts.workingDir))), opts)
-      case None => None // Noop, error already displayed
-    }
-  }
-
-  private[this] def execute(svc: ProjectileService, opts: CommandLineOptions) = opts.command match {
-    case None =>
-      System.out.print(CommandLineParser.parser.renderTwoColumnsUsage + "\n")
-      None
-    case Some(cmd) => Some(svc.process(cmd, opts.verbose))
+  private[this] def runArgs(args: Array[String]) = parse(args).map { c =>
+    new ProjectileService(new ConfigService(c.dir)).process(c.toCommand, c.verbose)
   }
 
   private[this] def runBatch(args: Array[String]) = {
@@ -36,11 +29,13 @@ object ProjectileCLI extends Logging {
     val f = better.files.File(args(1))
     if (f.exists && f.isRegularFile && f.isReadable) {
       val svc = new ProjectileService(new ConfigService("."))
-      f.lines.toList.map { l =>
-        l -> runArgs(l.split(' ').map(_.trim).filter(_.nonEmpty), Some(svc))
-      }
+      f.lines.toList.map(l => l -> runArgs(l.split(' ').map(_.trim).filter(_.nonEmpty)))
     } else {
       throw new IllegalStateException(s"Cannot read batch file [${f.pathAsString}]")
     }
+  }
+
+  def parse(args: Seq[String]) = {
+    Cli.parse(args.toArray).withProgramName(projectId).version(version, projectName).exitCode(0).withCommands(CommandLineAction.actions: _*)
   }
 }

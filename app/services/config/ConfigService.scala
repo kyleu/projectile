@@ -1,5 +1,7 @@
 package services.config
 
+import models.command.ProjectileResponse
+
 class ConfigService(val path: String) {
   val workingDirectory = better.files.File.apply(path)
   val configDirectory = workingDirectory / ".projectile"
@@ -21,5 +23,6 @@ class ConfigService(val path: String) {
   def init() = {
     inputDirectory.createDirectories()
     projectDirectory.createDirectories()
+    ProjectileResponse.OK
   }
 }

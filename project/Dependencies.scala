@@ -58,7 +58,8 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
     val schwatcher = "com.beachape.filemanagement" %% "schwatcher" % "0.3.5"
-    val scopts = "com.github.scopt" %% "scopt" % "3.7.0"
+    val clist = "org.backuity.clist" %% "clist-core"   % "3.4.0"
+    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.4.0" % "provided"
   }
 
   object Testing {
