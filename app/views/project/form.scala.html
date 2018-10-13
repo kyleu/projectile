@@ -1,11 +1,11 @@
 @(projectile: services.ProjectileService, project: models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, project.title + " Project Edit") {
-  <form method="post" action="@controllers.routes.ProjectController.save()">
+  <form method="post" action="@controllers.project.routes.ProjectController.save()">
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a onclick="return confirm('Are you sure you wish to remove project [@project.key]?')" href="@controllers.routes.ProjectController.remove(project.key)" class="theme-text">
+        <a onclick="return confirm('Are you sure you wish to remove project [@project.key]?')" href="@controllers.project.routes.ProjectController.remove(project.key)" class="theme-text">
           Remove
         </a>
       </div>
@@ -31,7 +31,7 @@
     </div>
     <div class="collection-item">
       <input class="btn theme" type="submit" value="Save" />
-      <a class="btn-flat theme-text" href="@controllers.routes.ProjectController.detail(project.key)">Cancel</a>
+      <a class="btn-flat theme-text" href="@controllers.project.routes.ProjectController.detail(project.key)">Cancel</a>
     </div>
   </div>
   </form>

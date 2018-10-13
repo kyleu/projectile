@@ -83,7 +83,6 @@ object CommandLineParser {
   }
 
   private[this] def withCommand[Cmd <: ProjectileCommand](c: CommandLineOptions, f: Cmd => Cmd) = {
-    val cmd = c.command.get.asInstanceOf[Cmd]
-    c.withCommand(f(cmd))
+    c.withCommand(f(c.command.get.asInstanceOf[Cmd]))
   }
 }

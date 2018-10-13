@@ -1,5 +1,6 @@
-package controllers
+package controllers.project
 
+import controllers.BaseController
 import models.project.{ProjectSummary, ProjectTemplate}
 import util.web.ControllerUtils
 
@@ -41,11 +42,11 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
       description = form("description")
     )
     val project = projectile.addProject(summary)
-    Future.successful(Redirect(controllers.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
 
   def remove(key: String) = Action.async { implicit request =>
-    val removed = projectile.removeProject(key)
-    Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]: $removed"))
+    projectile.removeProject(key)
+    Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]"))
   }
 }

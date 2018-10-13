@@ -3,7 +3,7 @@
 ) @layout.simple(projectile, input.title + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.InputController.form(input.key)">Edit</a></div>
+      <div class="right"><a class="theme-text" href="@controllers.input.routes.InputController.form(input.key)">Edit</a></div>
       <h5><i class="@input.template.icon"></i> @input.title</h5>
       @input.description
     </div>
@@ -21,7 +21,7 @@
       <div class="collection-item">@input.url</div>
       <div class="collection-item">Username: @input.username</div>
       <div class="collection-item">
-        <a class="btn theme" href="@controllers.routes.InputController.refresh(input.key)">Refresh</a>
+        <a class="btn theme" href="@controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@
       @input.enums.map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/enums/${e.key}.json")" class="theme-text">@e.key</a>
+          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/enum/${e.key}.json")" class="theme-text">@e.key</a>
         </div>
       }
     </div>
@@ -48,7 +48,7 @@
       @input.tables.map { t =>
         <div class="collection-item">
           <div class="right">@t.columns.size columns</div>
-          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/tables/${t.name}.json")" class="theme-text">@t.name</a>
+          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/table/${t.name}.json")" class="theme-text">@t.name</a>
         </div>
       }
     </div>
@@ -63,7 +63,7 @@
         @input.views.map { v =>
           <div class="collection-item">
             <div class="right">@v.columns.size columns</div>
-            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/views/${v.name}.json")" class="theme-text">@v.name</a>
+            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/view/${v.name}.json")" class="theme-text">@v.name</a>
           </div>
         }
       </div>

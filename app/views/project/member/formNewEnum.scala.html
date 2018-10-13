@@ -1,0 +1,28 @@
+@(projectile: services.ProjectileService, key: String, inputEnums: Seq[(String, Seq[(String, String, Boolean)])])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile, "New Enum") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="@models.template.Icons.enum"></i> New [@key] Enum</h5>
+    </div>
+    @inputEnums.map { e =>
+      <div class="collection-item">
+        <h6>@e._1</h6>
+        @if(e._2.isEmpty) {
+          <em>No available enums</em>
+        }
+        <ul>
+          @e._2.sortBy(_._1).map { enum =>
+            <li>
+              @if(enum._3) {
+                @enum._1 <em>(already added)</em>
+              } else {
+                <a href="@controllers.project.routes.ProjectEnumController.add(key, e._1, enum._2, enum._1)" class="theme-text">@enum._1</a>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+}

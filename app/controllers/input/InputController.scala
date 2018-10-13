@@ -1,5 +1,6 @@
-package controllers
+package controllers.input
 
+import controllers.BaseController
 import models.database.input.PostgresInput
 import models.input.{InputSummary, InputTemplate}
 import util.web.ControllerUtils
@@ -20,7 +21,7 @@ class InputController @javax.inject.Inject() () extends BaseController {
     val startMs = System.currentTimeMillis
     projectile.refreshInput(key)
     val msg = s"Refreshed input [$key] in [${System.currentTimeMillis - startMs}ms]"
-    Future.successful(Redirect(controllers.routes.InputController.detail(key)).flashing("success" -> msg))
+    Future.successful(Redirect(controllers.input.routes.InputController.detail(key)).flashing("success" -> msg))
   }
 
   def refreshAll = Action.async { implicit request =>
@@ -47,7 +48,7 @@ class InputController @javax.inject.Inject() () extends BaseController {
       description = form("description")
     )
     val input = projectile.addInput(summary)
-    Future.successful(Redirect(controllers.routes.InputController.detail(input.key)).flashing("success" -> s"Saved input [${input.key}]"))
+    Future.successful(Redirect(controllers.input.routes.InputController.detail(input.key)).flashing("success" -> s"Saved input [${input.key}]"))
   }
 
   def remove(key: String) = Action.async { implicit request =>

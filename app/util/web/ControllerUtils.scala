@@ -1,13 +1,13 @@
 package util.web
 
 import play.api.data.FormError
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.AnyContent
 import util.JsonSerializers.Json
 
 object ControllerUtils {
   def getForm(body: AnyContent, prefix: Option[String] = None) = body.asFormUrlEncoded match {
     case Some(f) =>
-      val fullMap = f.mapValues(x => x.headOption.getOrElse(throw new IllegalStateException("Empty form element.")))
+      val fullMap = f.mapValues(x => x.mkString(","))
       prefix.map(p => fullMap.filterKeys(_.startsWith(p)).map(x => x._1.stripPrefix(p) -> x._2)).getOrElse(fullMap)
     case None => throw new IllegalStateException("Missing form post.")
   }

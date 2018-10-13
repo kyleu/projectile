@@ -4,6 +4,7 @@ import io.circe.Json
 import models.command.{ProjectileCommand, ProjectileResponse}
 import models.command.ProjectileCommand._
 import models.command.ProjectileResponse._
+import models.project.member.ProjectMember
 import services.config.{ConfigService, ConfigValidator}
 import services.helper.{InputHelper, ProjectHelper, ServerHelper}
 
@@ -22,6 +23,6 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     processCore.orElse(processInput).orElse(processProject).orElse(processServer).apply(cmd)
   }
 
-  def doctor() = process(Doctor).asInstanceOf[ProjectileResponse]
+  def doctor() = process(Doctor)
   def testbed() = process(Testbed).asInstanceOf[JsonResponse]
 }

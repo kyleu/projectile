@@ -3,6 +3,7 @@ package services.project
 import io.scalaland.chimney.dsl._
 import models.command.ProjectileResponse
 import models.project._
+import models.project.member.ProjectMember
 import services.config.ConfigService
 import util.JsonSerializers._
 
@@ -25,9 +26,8 @@ class ProjectSummaryService(val cfg: ConfigService) {
   }
 
   def load(key: String) = getSummary(key).into[Project]
-    .withFieldComputed(_.enums, _ => loadDir[ProjectEnum]("enums"))
-    .withFieldComputed(_.models, _ => loadDir[ProjectModel]("models"))
-    .withFieldComputed(_.services, _ => loadDir[ProjectSvc]("services"))
+    .withFieldComputed(_.enums, _ => loadDir[ProjectMember](s"$key/enum"))
+    .withFieldComputed(_.models, _ => loadDir[ProjectMember](s"$key/model"))
     .transform
 
   def add(p: ProjectSummary) = {

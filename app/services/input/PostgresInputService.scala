@@ -22,19 +22,19 @@ object PostgresInputService {
     (dir / "dbconn.json").overwrite(dbconn)
 
     if (pgi.enums.nonEmpty) {
-      val enumDir = dir / "enums"
+      val enumDir = dir / "enum"
       enumDir.createDirectories()
       pgi.enums.foreach(e => (enumDir / s"${e.key}.json").overwrite(e.asJson.spaces2))
     }
 
     if (pgi.tables.nonEmpty) {
-      val tableDir = dir / "tables"
+      val tableDir = dir / "table"
       tableDir.createDirectories()
       pgi.tables.foreach(t => (tableDir / s"${t.name}.json").overwrite(t.asJson.spaces2))
     }
 
     if (pgi.views.nonEmpty) {
-      val viewDir = dir / "views"
+      val viewDir = dir / "view"
       viewDir.createDirectories()
       pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(v.asJson.spaces2))
     }
@@ -62,6 +62,6 @@ object PostgresInputService {
       }
     }
 
-    toPostgresInput(summ, pc, loadDir[EnumType]("enums"), loadDir[Table]("tables"), loadDir[View]("views"))
+    toPostgresInput(summ, pc, loadDir[EnumType]("enum"), loadDir[Table]("table"), loadDir[View]("view"))
   }
 }

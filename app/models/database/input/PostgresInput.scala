@@ -28,6 +28,18 @@ case class PostgresInput(
 ) extends Input {
   override def template = InputTemplate.Postgres
 
+  def getEnum(k: String) = enums.find(_.key == k).getOrElse {
+    throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${enums.map(_.key).mkString(", ")}]")
+  }
+
+  def getTable(k: String) = tables.find(_.name == k).getOrElse {
+    throw new IllegalStateException(s"Cannot find table [$k] in input [$key] among candidates [${tables.map(_.name).mkString(", ")}]")
+  }
+
+  def getView(k: String) = views.find(_.name == k).getOrElse {
+    throw new IllegalStateException(s"Cannot find view [$k] in input [$key] among candidates [${views.map(_.name).mkString(", ")}]")
+  }
+
   def newConnection() = {
     val props = new Properties()
     props.setProperty("user", username)

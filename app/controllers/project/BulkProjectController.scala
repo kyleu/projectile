@@ -1,4 +1,6 @@
-package controllers
+package controllers.project
+
+import controllers.BaseController
 
 import scala.concurrent.Future
 
