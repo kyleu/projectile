@@ -18,7 +18,7 @@ object ExportModel {
 }
 
 case class ExportModel(
-    key: String,
+    name: String,
     pkg: List[String] = Nil,
     propertyName: String,
     className: String,

@@ -3,7 +3,7 @@
 )@layout.simple(projectile, "Enum") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.key}.json")">Edit</a></div>
+      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.name}.json")">Edit</a></div>
       <h5><i class="@models.template.Icons.model"></i> @m.className</h5>
     </div>
     @m.fields.map { f =>

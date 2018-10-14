@@ -3,6 +3,7 @@
 )@layout.simple(projectile, "Enum") {
   <div class="collection with-header">
     <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.name}.json")">Edit</a></div>
       <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
     </div>
     @e.values.map { v =>

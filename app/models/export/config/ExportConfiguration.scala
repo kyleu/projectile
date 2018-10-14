@@ -18,5 +18,5 @@ case class ExportConfiguration(
   def getEnumOpt(k: String) = enums.find(e => e.name == k || e.propertyName == k || e.className == k)
 
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with name [$k]."))
-  def getModelOpt(k: String) = models.find(m => m.key == k || m.propertyName == k || m.className == k)
+  def getModelOpt(k: String) = models.find(m => m.name == k || m.propertyName == k || m.className == k)
 }
