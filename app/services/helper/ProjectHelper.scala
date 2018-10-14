@@ -27,7 +27,7 @@ trait ProjectHelper { this: ProjectileService =>
     case RemoveProjectMember(p, t, member) => JsonResponse(memberSvc.remove(p, t, member).asJson)
     case SaveProjectMember(p, member) => JsonResponse(memberSvc.save(p, member).asJson)
 
-    case ExportProject(key) => JsonResponse(exportSvc.exportProject(key).asJson)
+    case ExportProject(key) => ProjectExportResult(exportSvc.exportProject(key = key, verbose = false))
     case AuditProject(key) => JsonResponse(auditSvc.audit(key).asJson)
   }
 
@@ -44,8 +44,8 @@ trait ProjectHelper { this: ProjectileService =>
     process(RemoveProjectMember(key, t, member)).asInstanceOf[JsonResponse].json
   }
 
-  def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[JsonResponse].json
-  def auditProject(key: String) = process(AuditProject(key)).asInstanceOf[JsonResponse].json
+  def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[ProjectExportResult]
+  def auditProject(key: String) = process(AuditProject(key)).asInstanceOf[ProjectAuditResult]
 
   private[this] def removeProjectFiles(key: String) = {
     (dir / key).delete(swallowIOExceptions = true)

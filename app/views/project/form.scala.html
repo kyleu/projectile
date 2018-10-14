@@ -31,7 +31,7 @@
         <div class="collection-item">
           <p>
             <label>
-              <input name="features" type="checkbox" value="@feat" />
+              <input name="features" type="checkbox" value="@feat.value" @if(project.features(feat)) { checked="checked" } />
               <span>@feat.title</span>
             </label>
           </p>

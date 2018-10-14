@@ -1,7 +1,9 @@
 package models.output.file
 
+import services.output.OutputPath
+
 case class JsonFile(
-    override val pkg: Seq[String], override val key: String, root: Option[String] = None
-) extends OutputFile(dir = root.getOrElse("conf/openapi"), pkg = pkg, key = key, filename = key + ".json") {
+    override val path: OutputPath, override val dir: Seq[String], override val key: String
+) extends OutputFile(path = path, dir = dir, key = key, filename = key + ".json") {
   override def prefix = s"// Generated File\n"
 }

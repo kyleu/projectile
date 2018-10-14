@@ -78,12 +78,6 @@ case class ExportField(
     case pkg => pkg.mkString(".") + "." + e.className
   }).getOrElse(t.asScalaFull)
 
-  val graphQlArgType = ExportFieldGraphQL.argType(this)
-  val graphQlSeqArgType = ExportFieldGraphQL.listArgType(this)
-
-  val thriftType = ExportFieldThrift.thriftType(t, sqlTypeName, enumOpt)
-  val thriftVisibility = if (notNull) { "required" } else { "optional" }
-
   def addImport(file: ScalaFile, pkg: Seq[String] = Nil) = {
     enumOpt match {
       case Some(enum) if enum.modelPackage == pkg => // noop

@@ -1,12 +1,10 @@
 package models.output.file
 
-object ScalaFile {
-  val sharedSrc = "shared/src/main/scala"
-}
+import services.output.OutputPath
 
 case class ScalaFile(
-    override val pkg: Seq[String], override val key: String, root: Option[String] = None, override val core: Boolean = false, override val test: Boolean = false
-) extends OutputFile(dir = root.getOrElse("app"), pkg = pkg, key = key, filename = key + ".scala", core = core, test = test) {
+    override val path: OutputPath, override val dir: Seq[String], override val key: String
+) extends OutputFile(path = path, dir = dir, key = key, filename = key + ".scala") {
 
   private[this] var imports = Set.empty[(String, String)]
 
@@ -26,6 +24,6 @@ case class ScalaFile(
       }.mkString("\n") + "\n\n"
     }
 
-    s"/* Generated File */\npackage ${pkg.mkString(".")}\n\n$importString"
+    s"/* Generated File */\npackage ${dir.mkString(".")}\n\n$importString"
   }
 }

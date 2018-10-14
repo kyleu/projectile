@@ -1,6 +1,19 @@
 package models.output.file
 
-abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String, val filename: String, val core: Boolean = false, val test: Boolean = false) {
+import services.output.OutputPath
+
+import util.JsonSerializers._
+
+object OutputFile {
+  object Rendered {
+    implicit val jsonEncoder: Encoder[Rendered] = deriveEncoder
+    implicit val jsonDecoder: Decoder[Rendered] = deriveDecoder
+  }
+
+  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String)
+}
+
+abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: String, val filename: String) {
   private[this] var hasRendered = false
   private[this] var currentIndent = 0
   private[this] val lines = collection.mutable.ArrayBuffer.empty[String]
@@ -25,13 +38,6 @@ abstract class OutputFile(val dir: String, val pkg: Seq[String], val key: String
 
     lines += (ws + line + "\n")
   }
-
-  val packageDir = pkg match {
-    case Nil => dir
-    case _ => dir + "/" + pkg.mkString("/")
-  }
-
-  val path = packageDir + "/" + filename
 
   def prefix: String = ""
   def suffix: String = ""
