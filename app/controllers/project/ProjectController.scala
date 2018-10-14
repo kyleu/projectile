@@ -43,13 +43,13 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def audit(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val result = projectile.auditProject(key).logs.asJson.spaces2
+    val result = projectile.auditProject(key).asJson.spaces2
     Future.successful(Ok(views.html.file.result(projectile, "Audit Result", result, System.currentTimeMillis - startMs)))
   }
 
   def export(key: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val result = projectile.exportProject(key).output.asJson.spaces2
+    val result = projectile.exportProject(key).asJson.spaces2
     Future.successful(Ok(views.html.file.result(projectile, "Export Result", result, System.currentTimeMillis - startMs)))
   }
 }

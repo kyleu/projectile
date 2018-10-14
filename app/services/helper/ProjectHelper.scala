@@ -18,34 +18,30 @@ trait ProjectHelper { this: ProjectileService =>
 
   private[this] val dir = cfg.projectDirectory
 
+  def listProjects() = summarySvc.list()
+
+  def getProject(key: String) = load(key)
+  def addProject(summary: ProjectSummary) = summarySvc.add(summary)
+  def removeProject(key: String) = removeProjectFiles(key)
+
+  def saveProjectMember(key: String, member: ProjectMember) = memberSvc.save(key, member)
+  def removeProjectMember(key: String, t: ProjectMember.OutputType, member: String) = memberSvc.remove(key, t, member)
+
+  def exportProject(key: String) = exportSvc.exportProject(key = key, verbose = false)
+  def auditProject(key: String) = auditSvc.audit(key)
+
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-    case ListProjects => ProjectList(summarySvc.list())
-    case GetProject(key) => ProjectDetail(load(key))
-    case AddProject(p) => ProjectDetail(summarySvc.add(p))
-    case RemoveProject(key) => removeProjectFiles(key)
+    case ListProjects => ProjectList(listProjects())
+    case GetProject(key) => ProjectDetail(getProject(key))
+    case AddProject(p) => ProjectDetail(addProject(p))
+    case RemoveProject(key) => removeProject(key)
 
-    case RemoveProjectMember(p, t, member) => JsonResponse(memberSvc.remove(p, t, member).asJson)
-    case SaveProjectMember(p, member) => JsonResponse(memberSvc.save(p, member).asJson)
+    case SaveProjectMember(p, member) => JsonResponse(saveProjectMember(p, member).asJson)
+    case RemoveProjectMember(p, t, member) => JsonResponse(removeProjectMember(p, t, member).asJson)
 
-    case ExportProject(key) => ProjectExportResult(exportSvc.exportProject(key = key, verbose = false))
-    case AuditProject(key) => JsonResponse(auditSvc.audit(key).asJson)
+    case ExportProject(key) => ProjectExportResult(exportProject(key))
+    case AuditProject(key) => JsonResponse(auditProject(key).asJson)
   }
-
-  def listProjects() = process(ListProjects).asInstanceOf[ProjectList].projects
-
-  def getProject(key: String) = process(GetProject(key)).asInstanceOf[ProjectDetail].project
-  def addProject(summary: ProjectSummary) = process(AddProject(summary)).asInstanceOf[ProjectDetail].project
-  def removeProject(key: String) = process(RemoveProject(key))
-
-  def saveProjectMember(key: String, member: ProjectMember) = {
-    process(SaveProjectMember(key, member)).asInstanceOf[JsonResponse].json
-  }
-  def removeProjectMember(key: String, t: ProjectMember.OutputType, member: String) = {
-    process(RemoveProjectMember(key, t, member)).asInstanceOf[JsonResponse].json
-  }
-
-  def exportProject(key: String) = process(ExportProject(key)).asInstanceOf[ProjectExportResult]
-  def auditProject(key: String) = process(AuditProject(key)).asInstanceOf[ProjectAuditResult]
 
   private[this] def removeProjectFiles(key: String) = {
     (dir / key).delete(swallowIOExceptions = true)
