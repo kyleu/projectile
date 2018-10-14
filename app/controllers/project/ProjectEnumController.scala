@@ -13,7 +13,11 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
   def detail(key: String, enum: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val m = p.getEnum(enum)
-    Future.successful(Ok(views.html.project.member.detailEnum(projectile, key, m)))
+
+    val i = projectile.getInput(m.input)
+    val ee = i.exportEnum(enum)
+
+    Future.successful(Ok(views.html.project.member.detailEnum(projectile, key, ee)))
   }
 
   def formNew(key: String) = Action.async { implicit request =>

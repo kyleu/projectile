@@ -51,7 +51,7 @@ object TableExportModel {
     }
 
     ExportModel(
-      tableName = t.name,
+      key = t.name,
       pkg = pkg,
       propertyName = toIdentifier(cn),
       className = cn,

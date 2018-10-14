@@ -10,8 +10,73 @@
       <h5><i class="@output.project.template.icon"></i> @output.project.title Export Result</h5>
       <em>@output.fileCount files generated in @{output.duration}ms</em>
     </div>
+
+    <div class="collection-item">
+      <h6>Root</h6>
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header">
+            <i class="@models.template.Icons.logs"></i> Logs
+            <span class="badge">@output.rootLogs.size</span>
+          </div>
+          <div class="collapsible-body">
+            @if(output.rootLogs.isEmpty) {
+              <div>No root logs...</div>
+            }
+            @output.rootLogs.map { l =>
+              <div>
+                <div class="right">@{l.occurred}ms</div>
+                @l.content
+              </div>
+            }
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    @output.featureOutput.map { fo =>
+      <div class="collection-item">
+        <h6>@fo.feature.title</h6>
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header">
+              <i class="@models.template.Icons.logs"></i> Logs
+              <span class="badge">@fo.logs.size</span>
+            </div>
+            <div class="collapsible-body">
+              @if(fo.logs.isEmpty) {
+                <div>No logs...</div>
+              }
+              @fo.logs.map { l =>
+                <div>
+                  <div class="right">@{l.occurred}ms</div>
+                  @l.content
+                </div>
+              }
+            </div>
+          </li>
+          @fo.files.map { f =>
+            <li>
+              <div class="collapsible-header">
+                <i class="@f.icon"></i> @f.filename
+                <span class="badge">@f.path.value</span>
+              </div>
+              <div class="collapsible-body">
+                <pre style="overflow: auto;">@f.content</pre>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    }
     <div class="collection-item">
       <pre>@json</pre>
     </div>
   </div>
+
+  <script>
+    $(function(){
+      $('.collapsible').collapsible();
+    });
+  </script>
 }

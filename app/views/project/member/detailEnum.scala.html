@@ -1,9 +1,14 @@
-@(projectile: services.ProjectileService, key: String, member: models.project.member.ProjectMember)(
+@(projectile: services.ProjectileService, key: String, e: models.export.ExportEnum)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "Enum") {
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="@models.template.Icons.enum"></i> TODO</h5>
+      <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
     </div>
+    @e.values.map { v =>
+      <div class="collection-item">
+        @v
+      </div>
+    }
   </div>
 }

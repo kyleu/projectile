@@ -10,13 +10,15 @@ object OutputFile {
     implicit val jsonDecoder: Decoder[Rendered] = deriveDecoder
   }
 
-  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String)
+  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String)
 }
 
 abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: String, val filename: String) {
   private[this] var hasRendered = false
   private[this] var currentIndent = 0
   private[this] val lines = collection.mutable.ArrayBuffer.empty[String]
+
+  protected def icon: String
 
   private[this] val markers = collection.mutable.HashMap.empty[String, Seq[String]]
   def markersFor(key: String) = markers.getOrElseUpdate(key, Nil)
@@ -44,6 +46,7 @@ abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: S
 
   lazy val rendered = {
     hasRendered = true
-    prefix + lines.mkString + suffix
+    val content = prefix + lines.mkString + suffix
+    OutputFile.Rendered(path = path, dir = dir, key = key, filename = filename, content = content, icon = icon)
   }
 }

@@ -23,4 +23,9 @@ object Icons {
 
   val table = fa("folder-open-o")
   val view = fa("bar-chart")
+
+  val logs = fa("reorder")
+
+  val json = fa("wrench")
+  val scala = fa("sitemap")
 }

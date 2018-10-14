@@ -10,7 +10,11 @@ class HomeController @javax.inject.Inject() () extends BaseController {
 
   def viewFile(path: String) = Action.async { implicit request =>
     val f = projectile.rootDir / ".projectile" / path
-    Future.successful(Ok(views.html.file.fileEditForm(projectile, path, f.contentAsString)))
+    if (f.isReadable && f.isRegularFile) {
+      Future.successful(Ok(views.html.file.fileEditForm(projectile, path, f.contentAsString)))
+    } else {
+      throw new IllegalStateException(s"Cannot load file [${f.pathAsString}]")
+    }
   }
 
   def editFile(path: String) = Action.async { implicit request =>

@@ -18,7 +18,7 @@ object ExportModel {
 }
 
 case class ExportModel(
-    tableName: String,
+    key: String,
     pkg: List[String] = Nil,
     propertyName: String,
     className: String,
@@ -31,7 +31,6 @@ case class ExportModel(
     references: List[ExportModel.Reference],
     extendsClass: Option[String] = None,
     icon: Option[String] = None,
-    pkgPrefix: List[String] = Nil,
     scalaJs: Boolean = false,
     ignored: Boolean = false,
     audited: Boolean = false,
@@ -53,32 +52,15 @@ case class ExportModel(
   val pkgString = pkg.mkString(".")
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
 
-  val viewPackage = pkgPrefix ++ Seq("views", "admin") ++ pkg
-  val viewHtmlPackage = pkgPrefix ++ Seq("views", "html", "admin") ++ pkg
-
-  val modelPackage = pkgPrefix ++ Seq("models") ++ pkg
+  val modelPackage = Seq("models") ++ pkg
   val modelClass = (modelPackage :+ className).mkString(".")
 
-  val queriesPackage = pkgPrefix ++ Seq("models", "queries") ++ pkg
-  val tablePackage = pkgPrefix ++ Seq("models", "table") ++ pkg
-  val doobiePackage = pkgPrefix ++ Seq("models", "doobie") ++ pkg
-
-  val servicePackage = pkgPrefix ++ Seq("services") ++ pkg
-  val serviceDirectory = "app"
+  val servicePackage = Seq("services") ++ pkg
   val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
   val serviceReference = pkg match {
     case Nil => "services." + propertyName + "Service"
     case _ => "services." + pkg.head + "Services." + propertyName + "Service"
   }
-
-  val controllerPackage = pkgPrefix ++ Seq("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
-  val controllerDirectory = "app"
-  val controllerClass = (controllerPackage :+ (className + "Controller")).mkString(".")
-  val truncatedController = tableName == "system_users"
-
-  val routesPackage = controllerPackage :+ "routes"
-  val routesClass = (routesPackage :+ (className + "Controller")).mkString(".")
-  def iconHtml(config: ExportConfiguration) = s"""<i class="fa @models.template.Icons.$propertyName"></i>"""
 
   val pkArgs = pkFields.zipWithIndex.map(pkf => pkf._1.t match {
     case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"

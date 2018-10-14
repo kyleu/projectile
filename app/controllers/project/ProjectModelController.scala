@@ -13,7 +13,11 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
   def detail(key: String, model: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val m = p.getModel(model)
-    Future.successful(Ok(views.html.project.member.detailModel(projectile, key, m)))
+
+    val i = projectile.getInput(m.input)
+    val em = i.exportModel(model)
+
+    Future.successful(Ok(views.html.project.member.detailModel(projectile, key, em)))
   }
 
   def formNew(key: String) = Action.async { implicit request =>

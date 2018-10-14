@@ -12,7 +12,7 @@ object ViewExportModel {
     val plural = title + "s"
 
     ExportModel(
-      tableName = v.name,
+      key = v.name,
       pkg = Nil,
       propertyName = toIdentifier(cn),
       className = cn,

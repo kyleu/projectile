@@ -13,6 +13,8 @@ case class ScalaFile(
   }
 
   override def prefix = {
+    val pkgString = if (dir.isEmpty) { "" } else { s"\npackage ${dir.mkString(".")}\n" }
+
     val importString = if (imports.isEmpty) {
       ""
     } else {
@@ -24,6 +26,8 @@ case class ScalaFile(
       }.mkString("\n") + "\n\n"
     }
 
-    s"/* Generated File */\npackage ${dir.mkString(".")}\n\n$importString"
+    s"/* Generated File */$pkgString\n$importString"
   }
+
+  override protected val icon = models.template.Icons.scala
 }

@@ -2,6 +2,7 @@ package models.output.feature
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import models.export.config.ExportConfiguration
+import models.output.OutputLog
 import models.output.feature.core.CoreLogic
 import models.output.feature.wiki.WikiLogic
 import models.output.file.OutputFile
@@ -15,19 +16,29 @@ sealed abstract class Feature(
 ) extends StringEnumEntry {
   def export(config: ExportConfiguration, verbose: Boolean) = {
     val startMs = System.currentTimeMillis
-    val (files, logs) = logic.export(config, verbose)
-    FeatureOutput(feature = this, files = files, logs = logs, duration = System.currentTimeMillis - startMs)
+
+    val logs = collection.mutable.ArrayBuffer.empty[OutputLog]
+
+    def info(s: String) = {
+      logs += OutputLog(s, System.currentTimeMillis - startMs)
+    }
+    def debug(s: String) = if (verbose) { info(s) }
+
+    val files = logic.export(config = config, info = info, debug = debug)
+    val duration = System.currentTimeMillis - startMs
+    debug(s"Feature [$title] completed in [${duration}ms]")
+    FeatureOutput(feature = this, files = files, logs = logs, duration = duration)
   }
 }
 
 object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
   trait Logic {
-    def export(config: ExportConfiguration, verbose: Boolean): (Seq[OutputFile.Rendered], Seq[String])
+    def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit): Seq[OutputFile.Rendered]
   }
 
   case object Core extends Feature(
     value = "core", title = "Core", tech = "Scala", logic = CoreLogic,
-    description = "Scala case classes and Circe Json serializers",
+    description = "Scala case classes and Circe Json serializers"
   )
 
   case object Wiki extends Feature(

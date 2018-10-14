@@ -2,10 +2,17 @@ package models.output.feature.core
 
 import models.export.config.ExportConfiguration
 import models.output.feature.Feature
-import models.output.file.OutputFile
 
 object CoreLogic extends Feature.Logic {
-  override def export(config: ExportConfiguration, verbose: Boolean) = {
-    (Seq.empty[OutputFile.Rendered], Seq.empty[String])
+
+  override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
+    val enums = config.enums.flatMap { enum =>
+      Seq(EnumFile.export(enum).rendered)
+    }
+    val models = config.models.flatMap { model =>
+      Seq(ModelFile.export(config, model).rendered)
+    }
+    debug(s"Exported [${enums.size}] enums and [${models.size}] models, creating [${models.size + enums.size}] files")
+    enums ++ models
   }
 }
