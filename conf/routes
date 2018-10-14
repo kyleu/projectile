@@ -26,8 +26,8 @@ GET         /project/all/export                      controllers.project.BulkPro
 GET         /project/:key                            controllers.project.ProjectController.detail(key)
 GET         /project/:key/remove                     controllers.project.ProjectController.remove(key)
 GET         /project/:key/form                       controllers.project.ProjectController.form(key)
-GET         /project/:key/export                     controllers.project.ProjectController.export(key)
-GET         /project/:key/audit                      controllers.project.ProjectController.audit(key)
+GET         /project/:key/export                     controllers.project.ProjectController.export(key, verbose: Boolean ?= false)
+GET         /project/:key/audit                      controllers.project.ProjectController.audit(key, verbose: Boolean ?= false)
 
 GET         /project/:key/enum                       controllers.project.ProjectEnumController.formNew(key)
 POST        /project/:key/enum                       controllers.project.ProjectEnumController.save(key)

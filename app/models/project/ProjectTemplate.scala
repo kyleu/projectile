@@ -1,8 +1,8 @@
 package models.project
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
-import models.project.feature.ProjectFeature
-import models.project.feature.ProjectFeature._
+import models.output.feature.Feature
+import models.output.feature.Feature._
 import models.template.Icons
 
 sealed abstract class ProjectTemplate(
@@ -10,7 +10,7 @@ sealed abstract class ProjectTemplate(
     val title: String,
     val description: String,
     val icon: String,
-    val features: Set[ProjectFeature]
+    val features: Set[Feature]
 ) extends StringEnumEntry
 
 object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[ProjectTemplate] {
@@ -35,7 +35,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     title = "Custom",
     description = "A custom template allows you to specify default options manually",
     icon = Icons.project,
-    features = ProjectFeature.values.toSet
+    features = Feature.values.toSet
   )
 
   override val values = findValues

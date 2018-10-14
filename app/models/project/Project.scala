@@ -2,7 +2,8 @@ package models.project
 
 import java.time.LocalDateTime
 
-import models.project.feature.ProjectFeature
+import io.scalaland.chimney.dsl._
+import models.output.feature.Feature
 import models.project.member.ProjectMember
 import util.DateUtils
 import util.JsonSerializers._
@@ -17,7 +18,7 @@ case class Project(
     key: String,
     title: String,
     description: String = "...",
-    features: Set[ProjectFeature] = Set.empty,
+    features: Set[Feature] = Set.empty,
     enums: Seq[ProjectMember] = Nil,
     models: Seq[ProjectMember] = Nil,
     status: Option[String] = None,
@@ -37,4 +38,6 @@ case class Project(
   val allMembers = enums ++ models
 
   override def compare(p: Project) = title.compare(p.title)
+
+  lazy val toSummary = this.into[ProjectSummary].transform
 }

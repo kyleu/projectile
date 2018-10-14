@@ -2,7 +2,7 @@ package models.project
 
 import java.time.LocalDateTime
 
-import models.project.feature.ProjectFeature
+import models.output.feature.Feature
 import util.DateUtils
 import util.JsonSerializers._
 
@@ -16,7 +16,7 @@ case class ProjectSummary(
     key: String = "new",
     title: String = "New Project",
     description: String = "...",
-    features: Set[ProjectFeature] = Set.empty,
+    features: Set[Feature] = Set.empty,
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,
     updated: LocalDateTime = DateUtils.now

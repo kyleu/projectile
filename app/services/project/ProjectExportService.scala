@@ -1,8 +1,8 @@
 package services.project
 
 import models.export.config.ExportConfiguration
+import models.output.feature.{FeatureOutput, Feature}
 import models.project.ProjectOutput
-import models.project.feature.{FeatureOutput, ProjectFeature}
 import services.ProjectileService
 
 class ProjectExportService(val projectile: ProjectileService) {
@@ -28,18 +28,18 @@ class ProjectExportService(val projectile: ProjectileService) {
       Nil
     }
 
-    val featureOutputs = ProjectFeature.values.flatMap {
+    val featureOutputs = Feature.values.flatMap {
       case feature if config.project.features(feature) => Seq(exportFeature(config, feature, verbose))
       case feature if verbose => Seq(FeatureOutput(feature, Nil, Seq(s"Skipping disabled feature [${feature.value}]"), 0L))
       case _ => Nil
     }
 
-    ProjectOutput(project = config.project.key, rootLogs = rootLogs, featureOutput = featureOutputs, duration = System.currentTimeMillis - startMs)
+    ProjectOutput(project = config.project.toSummary, rootLogs = rootLogs, featureOutput = featureOutputs, duration = System.currentTimeMillis - startMs)
   }
 
-  private[this] def exportFeature(config: ExportConfiguration, feature: ProjectFeature, verbose: Boolean) = {
+  private[this] def exportFeature(config: ExportConfiguration, feature: Feature, verbose: Boolean) = {
     val startMs = System.currentTimeMillis
     val logs = Seq(s"${feature.title}...")
-    FeatureOutput(feature = feature, files = Nil, logs = logs, duration = System.currentTimeMillis - startMs)
+    feature.export(config, verbose)
   }
 }

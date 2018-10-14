@@ -1,7 +1,6 @@
-package models.project.feature
+package models.output.feature
 
 import models.output.file.OutputFile
-
 import util.JsonSerializers._
 
 object FeatureOutput {
@@ -10,7 +9,7 @@ object FeatureOutput {
 }
 
 case class FeatureOutput(
-    feature: ProjectFeature,
+    feature: Feature,
     files: Seq[OutputFile.Rendered],
     logs: Seq[String],
     duration: Long

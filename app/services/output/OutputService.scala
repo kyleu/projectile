@@ -19,8 +19,10 @@ class OutputService(cfg: ConfigService) {
     ret
   }
 
-  def write(key: String, file: OutputFile) = {
-    val f = dirForProjectPath(key, file.path) / file.filename
-    throw new IllegalStateException("TODO: Write")
+  def write(key: String, file: OutputFile.Rendered) = {
+    val f = dirForProjectPath(key, file.path) / file.dir.mkString("/") / file.filename
+    f.createFileIfNotExists(createParents = true)
+    f.overwrite(file.content)
+    f
   }
 }

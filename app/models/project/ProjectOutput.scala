@@ -1,7 +1,6 @@
 package models.project
 
-import models.project.feature.FeatureOutput
-
+import models.output.feature.FeatureOutput
 import util.JsonSerializers._
 
 object ProjectOutput {
@@ -10,8 +9,11 @@ object ProjectOutput {
 }
 
 case class ProjectOutput(
-    project: String,
+    project: ProjectSummary,
     rootLogs: Seq[String],
     featureOutput: Seq[FeatureOutput],
     duration: Long
-)
+) {
+  lazy val fileCount = featureOutput.map(_.files.size).sum
+
+}

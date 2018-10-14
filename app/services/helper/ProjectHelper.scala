@@ -27,8 +27,8 @@ trait ProjectHelper { this: ProjectileService =>
   def saveProjectMember(key: String, member: ProjectMember) = memberSvc.save(key, member)
   def removeProjectMember(key: String, t: ProjectMember.OutputType, member: String) = memberSvc.remove(key, t, member)
 
-  def exportProject(key: String) = exportSvc.exportProject(key = key, verbose = false)
-  def auditProject(key: String) = auditSvc.audit(key)
+  def exportProject(key: String, verbose: Boolean) = exportSvc.exportProject(key = key, verbose = verbose)
+  def auditProject(key: String, verbose: Boolean) = auditSvc.audit(key, verbose)
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
     case ListProjects => ProjectList(listProjects())
@@ -39,8 +39,8 @@ trait ProjectHelper { this: ProjectileService =>
     case SaveProjectMember(p, member) => JsonResponse(saveProjectMember(p, member).asJson)
     case RemoveProjectMember(p, t, member) => JsonResponse(removeProjectMember(p, t, member).asJson)
 
-    case ExportProject(key) => ProjectExportResult(exportProject(key))
-    case AuditProject(key) => JsonResponse(auditProject(key).asJson)
+    case ExportProject(key) => ProjectExportResult(exportProject(key, verbose = false))
+    case AuditProject(key) => JsonResponse(auditProject(key, verbose = false).asJson)
   }
 
   private[this] def removeProjectFiles(key: String) = {
