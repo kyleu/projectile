@@ -1,6 +1,7 @@
 package models.command
 
 import enumeratum.{Enum, EnumEntry}
+import models.database.input.PostgresConnection
 import models.input.InputSummary
 import models.project._
 import models.project.member.ProjectMember
@@ -28,6 +29,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case object ListInputs extends ProjectileCommand
   case class GetInput(key: String) extends ProjectileCommand
   case class AddInput(input: InputSummary) extends ProjectileCommand
+  case class SetPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
   case class RemoveInput(key: String) extends ProjectileCommand
   case class RefreshInput(key: String) extends ProjectileCommand
 

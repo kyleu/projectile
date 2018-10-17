@@ -12,7 +12,7 @@ import util.JsonSerializers._
 
 trait ProjectHelper { this: ProjectileService =>
   private[this] lazy val summarySvc = new ProjectSummaryService(cfg)
-  private[this] lazy val memberSvc = new ProjectMemberService(cfg)
+  private[this] lazy val memberSvc = new ProjectMemberService(this)
   private[this] lazy val exportSvc = new ProjectExportService(this)
   private[this] lazy val auditSvc = new ProjectAuditService()
 

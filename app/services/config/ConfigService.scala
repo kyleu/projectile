@@ -18,14 +18,11 @@ class ConfigService(val path: String) {
     }
   }
 
-  val buildDirectory = configDirectory / "build"
-
   val available = inputDirectory.isDirectory && inputDirectory.isWriteable && projectDirectory.isDirectory && projectDirectory.isWriteable
 
   def init() = {
     inputDirectory.createDirectories()
     projectDirectory.createDirectories()
-    buildDirectory.createDirectories()
     ProjectileResponse.OK
   }
 }

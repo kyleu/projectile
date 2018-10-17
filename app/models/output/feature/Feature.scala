@@ -47,4 +47,5 @@ object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
   )
 
   override val values = findValues
+  val set = values.toSet
 }

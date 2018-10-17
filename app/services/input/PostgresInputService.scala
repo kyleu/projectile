@@ -38,6 +38,8 @@ object PostgresInputService {
       viewDir.createDirectories()
       pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(v.asJson.spaces2))
     }
+
+    pgi
   }
 
   def toPostgresInput(summ: InputSummary, pc: PostgresConnection, enums: Seq[EnumType] = Nil, tables: Seq[Table] = Nil, views: Seq[View] = Nil) = {

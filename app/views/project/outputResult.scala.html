@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, output: models.project.ProjectOutput, json: String)(
+@(projectile: services.ProjectileService, output: models.project.ProjectOutput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, output.project.title + " Export Result") {
   <div class="collection with-header">
@@ -13,7 +13,7 @@
 
     <div class="collection-item">
       <h6>Root</h6>
-      <ul class="collapsible">
+      <ul class="collapsible expandable">
         <li>
           <div class="collapsible-header">
             <i class="@models.template.Icons.logs"></i> Logs
@@ -37,7 +37,7 @@
     @output.featureOutput.map { fo =>
       <div class="collection-item">
         <h6>@fo.feature.title</h6>
-        <ul class="collapsible">
+        <ul class="collapsible expandable">
           <li>
             <div class="collapsible-header">
               <i class="@models.template.Icons.logs"></i> Logs
@@ -69,9 +69,6 @@
         </ul>
       </div>
     }
-    <div class="collection-item">
-      <pre>@json</pre>
-    </div>
   </div>
 
   <script>

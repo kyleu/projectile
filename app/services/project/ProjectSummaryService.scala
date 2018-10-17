@@ -19,7 +19,8 @@ class ProjectSummaryService(val cfg: ConfigService) {
         case Left(x) => ProjectSummary(key = key, title = key, description = s"Error loading project: ${x.getMessage}", status = Some("Error"))
       }
     } else {
-      ProjectSummary(key = key, title = key, description = s"Cannot load [$fn] for input [$key]", status = Some("Error"))
+      // ProjectSummary(key = key, title = key, description = s"Cannot load [$fn] for input [$key]", status = Some("Error"))
+      throw new IllegalStateException(s"No project found with key [$key]")
     }
   }
 

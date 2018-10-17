@@ -1,11 +1,9 @@
 package services.output
 
+import better.files.File
 import models.output.file.OutputFile
-import services.config.ConfigService
 
-class OutputService(cfg: ConfigService) {
-  val buildDir = cfg.buildDirectory / "build"
-
+class OutputService(val buildDir: File) {
   def clean(key: Option[String]) = key match {
     case Some(k) => (buildDir / k).delete(swallowIOExceptions = true)
     case None => buildDir.delete(swallowIOExceptions = true)

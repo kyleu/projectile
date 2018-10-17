@@ -49,6 +49,6 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.exportProject(key, verbose)
-    Future.successful(Ok(views.html.project.outputResult(projectile, result, result.asJson.spaces2)))
+    Future.successful(Ok(views.html.project.outputResult(projectile, result)))
   }
 }

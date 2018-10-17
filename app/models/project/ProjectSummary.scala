@@ -16,6 +16,7 @@ case class ProjectSummary(
     key: String = "new",
     title: String = "New Project",
     description: String = "...",
+    paths: Map[String, String] = Map.empty,
     features: Set[Feature] = Set.empty,
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,
