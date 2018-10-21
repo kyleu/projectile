@@ -1,6 +1,7 @@
 package models.project
 
-import models.output.OutputLog
+import better.files._
+import models.output.{OutputLog, OutputPath}
 import models.output.feature.FeatureOutput
 import util.JsonSerializers._
 
@@ -15,5 +16,10 @@ case class ProjectOutput(
     featureOutput: Seq[FeatureOutput],
     duration: Long
 ) {
+  def getDirectory(projectRoot: File, path: OutputPath): File = path match {
+    case OutputPath.Root => projectRoot / project.paths.getOrElse(path, project.template.path(path))
+    case _ => getDirectory(projectRoot, OutputPath.Root) / project.paths.getOrElse(path, project.template.path(path))
+  }
+
   lazy val fileCount = featureOutput.map(_.files.size).sum
 }

@@ -1,6 +1,6 @@
 @(projectile: services.ProjectileService, key: String, e: models.export.ExportEnum)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, "Enum") {
+)@layout.simple(projectile, e.className + " Enum") {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.name}.json")">Edit</a></div>

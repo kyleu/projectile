@@ -1,10 +1,10 @@
 @(projectile: services.ProjectileService, key: String, m: models.export.ExportModel)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, "Enum") {
+)@layout.simple(projectile, m.title + " Model") {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.name}.json")">Edit</a></div>
-      <h5><i class="@models.template.Icons.model"></i> @m.className</h5>
+      <h5><i class="@models.template.Icons.model"></i> @m.title</h5>
     </div>
     @m.fields.map { f =>
       <div class="collection-item">

@@ -1,7 +1,6 @@
 package models.output.file
 
-import services.output.OutputPath
-
+import models.output.OutputPath
 import util.JsonSerializers._
 
 object OutputFile {
@@ -10,7 +9,10 @@ object OutputFile {
     implicit val jsonDecoder: Decoder[Rendered] = deriveDecoder
   }
 
-  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String)
+  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String) {
+    val filePath = s"${dir.map(_ + "/").mkString}$filename"
+    override def toString = s"$path:$filePath"
+  }
 }
 
 abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: String, val filename: String) {

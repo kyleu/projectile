@@ -7,6 +7,7 @@ import models.command.{ProjectileCommand, ProjectileResponse}
 import models.project.{Project, ProjectSummary}
 import models.project.member.ProjectMember
 import services.ProjectileService
+import services.output.OutputService
 import services.project._
 import util.JsonSerializers._
 
@@ -14,7 +15,7 @@ trait ProjectHelper { this: ProjectileService =>
   private[this] lazy val summarySvc = new ProjectSummaryService(cfg)
   private[this] lazy val memberSvc = new ProjectMemberService(this)
   private[this] lazy val exportSvc = new ProjectExportService(this)
-  private[this] lazy val auditSvc = new ProjectAuditService()
+  private[this] lazy val outputSvc = new OutputService(cfg.workingDirectory)
 
   private[this] val dir = cfg.projectDirectory
 
@@ -27,8 +28,11 @@ trait ProjectHelper { this: ProjectileService =>
   def saveProjectMember(key: String, member: ProjectMember) = memberSvc.save(key, member)
   def removeProjectMember(key: String, t: ProjectMember.OutputType, member: String) = memberSvc.remove(key, t, member)
 
-  def exportProject(key: String, verbose: Boolean) = exportSvc.exportProject(key = key, verbose = verbose)
-  def auditProject(key: String, verbose: Boolean) = auditSvc.audit(key, verbose)
+  def exportProject(key: String, verbose: Boolean) = {
+    val o = exportSvc.exportProject(key = key, verbose = verbose)
+    o -> outputSvc.persist(o = o, verbose = verbose)
+  }
+  def auditProject(key: String, verbose: Boolean) = exportSvc.getOutput(key = key, verbose = verbose)
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
     case ListProjects => ProjectList(listProjects())
@@ -39,7 +43,9 @@ trait ProjectHelper { this: ProjectileService =>
     case SaveProjectMember(p, member) => JsonResponse(saveProjectMember(p, member).asJson)
     case RemoveProjectMember(p, t, member) => JsonResponse(removeProjectMember(p, t, member).asJson)
 
-    case ExportProject(key) => ProjectExportResult(exportProject(key, verbose = false))
+    case ExportProject(key) =>
+      val r = exportProject(key, verbose = false)
+      ProjectExportResult(r._1, r._2.toMap)
     case AuditProject(key) => JsonResponse(auditProject(key, verbose = false).asJson)
   }
 

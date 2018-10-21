@@ -3,6 +3,7 @@ package models.project
 import java.time.LocalDateTime
 
 import io.scalaland.chimney.dsl._
+import models.output.{OutputPackage, OutputPath}
 import models.output.feature.Feature
 import models.project.member.ProjectMember
 import util.DateUtils
@@ -14,11 +15,13 @@ object Project {
 }
 
 case class Project(
-    template: ProjectTemplate = ProjectTemplate.Simple,
+    template: ProjectTemplate = ProjectTemplate.Custom,
     key: String,
     title: String,
     description: String = "...",
     features: Set[Feature] = Set.empty,
+    paths: Map[OutputPath, String] = Map.empty,
+    packages: Map[OutputPackage, Seq[String]] = Map.empty,
     enums: Seq[ProjectMember] = Nil,
     models: Seq[ProjectMember] = Nil,
     status: Option[String] = None,

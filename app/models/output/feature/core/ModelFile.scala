@@ -3,21 +3,22 @@ package models.output.feature.core
 import models.database.schema.ColumnType
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
+import models.output.OutputPath
+import models.output.feature.Feature
 import models.output.file.ScalaFile
-import services.output.OutputPath
 
 object ModelFile {
   val includeDefaults = false
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = OutputPath.ServerSource
-    val file = ScalaFile(path = path, dir = model.pkg, key = model.className)
+    val file = ScalaFile(path = path, dir = "models" +: model.pkg, key = model.className)
 
     file.addImport("models.result.data", "DataField")
     file.addImport("models.result.data", "DataSummary")
     file.addImport("models.result.data", "DataFieldModel")
     file.addImport("util.JsonSerializers", "_")
-    if (model.scalaJs) {
+    if (model.features(Feature.ScalaJS)) {
       file.addImport("scala.scalajs.js.annotation", "JSExport")
       file.addImport("scala.scalajs.js.annotation", "JSExportTopLevel")
     }
@@ -32,7 +33,7 @@ object ModelFile {
 
     model.description.foreach(d => file.add(s"/** $d */"))
 
-    if (model.scalaJs) {
+    if (model.features(Feature.ScalaJS)) {
       file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
     file.add(s"final case class ${model.className}(", 2)

@@ -3,6 +3,7 @@ package models.export
 import models.database.schema.{Column, ColumnType, ForeignKey}
 import models.export.config.ExportConfiguration
 import models.output.ExportHelper
+import models.output.feature.Feature
 import util.JsonSerializers._
 
 object ExportModel {
@@ -29,11 +30,10 @@ case class ExportModel(
     pkColumns: List[Column],
     foreignKeys: List[ForeignKey],
     references: List[ExportModel.Reference],
+    features: Set[Feature] = Set.empty,
     extendsClass: Option[String] = None,
     icon: Option[String] = None,
-    scalaJs: Boolean = false,
     ignored: Boolean = false,
-    audited: Boolean = false,
     provided: Boolean = false,
     readOnly: Boolean = false
 ) {

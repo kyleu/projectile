@@ -7,8 +7,24 @@ import models.project.ProjectOutput
 import services.ProjectileService
 
 class ProjectExportService(val projectile: ProjectileService) {
+  def getOutput(key: String, verbose: Boolean) = {
+    out(loadConfig(key), verbose)
+  }
+
   def exportProject(key: String, verbose: Boolean) = {
-    export(loadConfig(key), verbose)
+    val o = getOutput(key, verbose)
+
+    /*
+    val dir = "./tmp/boilerplay".toFile
+    if (!dir.exists) {
+      "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
+      (dir / ".git").delete()
+      (dir / "databaseflow.json").delete()
+    }
+    dir
+    */
+
+    o
   }
 
   private[this] def loadConfig(key: String) = {
@@ -22,7 +38,7 @@ class ProjectExportService(val projectile: ProjectileService) {
     ExportConfiguration(project = p, enums = exportEnums, models = exportModels)
   }
 
-  private[this] def export(config: ExportConfiguration, verbose: Boolean) = {
+  private[this] def out(config: ExportConfiguration, verbose: Boolean) = {
     val startMs = System.currentTimeMillis
 
     val rootLogs = if (verbose) {

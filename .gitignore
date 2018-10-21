@@ -3,6 +3,7 @@ conf/generated.keystore
 project/project/target
 project/target
 target
+templates
 tmp
 .history
 dist

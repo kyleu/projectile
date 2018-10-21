@@ -2,6 +2,7 @@ package models.project
 
 import java.time.LocalDateTime
 
+import models.output.{OutputPackage, OutputPath}
 import models.output.feature.Feature
 import util.DateUtils
 import util.JsonSerializers._
@@ -12,12 +13,13 @@ object ProjectSummary {
 }
 
 case class ProjectSummary(
-    template: ProjectTemplate = ProjectTemplate.Simple,
+    template: ProjectTemplate = ProjectTemplate.Custom,
     key: String = "new",
     title: String = "New Project",
     description: String = "...",
-    paths: Map[String, String] = Map.empty,
     features: Set[Feature] = Set.empty,
+    paths: Map[OutputPath, String] = Map.empty,
+    packages: Map[OutputPackage, Seq[String]] = Map.empty,
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,
     updated: LocalDateTime = DateUtils.now

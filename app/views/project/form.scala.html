@@ -27,6 +27,15 @@
           <label for="description">Description</label>
         </div>
       </div>
+      <div class="collection-item">
+        <h6>Paths</h6>
+        @models.output.OutputPath.values.map { p =>
+          <div>
+            <label for="path.@p.value">@p.value</label>
+            <input name="path.@p.value" id="path.@p.value" value="@project.paths.getOrElse(p, project.template.path(p))" />
+          </div>
+        }
+      </div>
       @project.template.features.map { feat =>
         <div class="collection-item">
           <p>

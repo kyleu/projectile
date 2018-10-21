@@ -11,7 +11,7 @@ sealed abstract class Feature(
     override val value: String,
     val title: String,
     val tech: String,
-    val logic: Feature.Logic,
+    val logic: Option[Feature.Logic],
     val description: String
 ) extends StringEnumEntry {
   def export(config: ExportConfiguration, verbose: Boolean) = {
@@ -24,9 +24,9 @@ sealed abstract class Feature(
     }
     def debug(s: String) = if (verbose) { info(s) }
 
-    val files = logic.export(config = config, info = info, debug = debug)
+    val files = logic.map(_.export(config = config, info = info, debug = debug)).getOrElse(Nil)
     val duration = System.currentTimeMillis - startMs
-    debug(s"Feature [$title] completed in [${duration}ms]")
+    debug(s"Feature [$title] produced [${files.length}] files in [${duration}ms]")
     FeatureOutput(feature = this, files = files, logs = logs, duration = duration)
   }
 }
@@ -37,12 +37,27 @@ object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
   }
 
   case object Core extends Feature(
-    value = "core", title = "Core", tech = "Scala", logic = CoreLogic,
+    value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic),
     description = "Scala case classes and Circe Json serializers"
   )
 
+  case object DataModel extends Feature(
+    value = "datamodel", title = "Data Model", tech = "Scala", logic = None,
+    description = "Defines methods to export models to a common schema"
+  )
+
+  case object ScalaJS extends Feature(
+    value = "scalajs", title = "Scala.js", tech = "Scala", logic = None,
+    description = "Exports models to Scala.js for use from JavaScript"
+  )
+
+  case object Audit extends Feature(
+    value = "audit", title = "Audit", tech = "Scala", logic = None,
+    description = "Logs audits of changed properties for models"
+  )
+
   case object Wiki extends Feature(
-    value = "wiki", title = "Wiki", tech = "Markdown", logic = WikiLogic,
+    value = "wiki", title = "Wiki", tech = "Markdown", logic = Some(WikiLogic),
     description = "Markdown documentation in Github wiki format"
   )
 

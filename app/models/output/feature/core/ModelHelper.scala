@@ -2,13 +2,14 @@ package models.output.feature.core
 
 import models.database.schema.ColumnType
 import models.export.ExportModel
+import models.output.feature.Feature
 import models.output.file.ScalaFile
 
 object ModelHelper {
   def addFields(providedPrefix: String, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.addImport(file, model.modelPackage)
 
-    val scalaJsPrefix = if (model.scalaJs) { "@JSExport " } else { "" }
+    val scalaJsPrefix = if (model.features(Feature.ScalaJS)) { "@JSExport " } else { "" }
 
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)

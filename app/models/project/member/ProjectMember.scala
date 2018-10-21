@@ -2,6 +2,7 @@ package models.project.member
 
 import util.JsonSerializers._
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
+import models.output.feature.Feature
 
 object ProjectMember {
   sealed abstract class OutputType(override val value: String) extends StringEnumEntry
@@ -35,6 +36,7 @@ case class ProjectMember(
     outputKey: String,
     outputPackage: Seq[String] = Nil,
 
+    features: Set[Feature] = Set.empty,
     ignored: Seq[String] = Nil,
     overrides: Seq[MemberOverride] = Nil
 ) {

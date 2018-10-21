@@ -88,6 +88,12 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
     }
   }
 
+  it should "audit projects correctly" in {
+    val result = svc.auditProject(key = projectKey, verbose = true)
+    result.project.key should be(projectKey)
+    result.fileCount should be(2)
+  }
+
   it should "export projects correctly" in {
     val result = svc.exportProject(key = projectKey, verbose = true)
     result.project.key should be(projectKey)

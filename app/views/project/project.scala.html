@@ -19,6 +19,18 @@
       }
       </div>
     </div>
+    @if(project.paths.nonEmpty) {
+      <div class="collection-item">
+        <h6>Path Overrides</h6>
+        <div>
+        @models.output.OutputPath.values.map { p =>
+          @project.paths.get(p).map { path =>
+            <div>@p.value: @path</div>
+          }
+        }
+        </div>
+      </div>
+    }
     <div class="collection-item">
       <a class="btn theme" href="@controllers.project.routes.ProjectController.export(project.key, verbose = false)">Export</a>
       <a class="btn theme" href="@controllers.project.routes.ProjectController.audit(project.key, verbose = false)">Audit</a>

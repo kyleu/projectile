@@ -1,6 +1,6 @@
 package models.output.file
 
-import services.output.OutputPath
+import models.output.OutputPath
 
 case class JsonFile(
     override val path: OutputPath, override val dir: Seq[String], override val key: String

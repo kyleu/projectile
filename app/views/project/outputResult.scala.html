@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, output: models.project.ProjectOutput)(
+@(projectile: services.ProjectileService, output: models.project.ProjectOutput, files: Seq[(String, Seq[String])] = Nil)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, output.project.title + " Export Result") {
   <div class="collection with-header">
@@ -31,6 +31,24 @@
             }
           </div>
         </li>
+        @if(files.nonEmpty) {
+          <li>
+            <div class="collapsible-header">
+              <i class="@models.template.Icons.file"></i> Files
+              <span class="badge">@files.size</span>
+            </div>
+            <div class="collapsible-body">
+              @files.map { f =>
+                <div>
+                  <div class="right">@f._2.map { log =>
+                    <div>@log</div>
+                  }</div>
+                  @f._1
+                </div>
+              }
+            </div>
+          </li>
+        }
       </ul>
     </div>
 
@@ -73,7 +91,7 @@
 
   <script>
     $(function(){
-      $('.collapsible').collapsible();
+      $('.collapsible').collapsible({accordion: false});
     });
   </script>
 }
