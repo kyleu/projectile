@@ -1,13 +1,14 @@
 package models.output.feature.core
 
 import models.export.ExportEnum
+import models.export.config.ExportConfiguration
 import models.output.OutputPath
 import models.output.file.ScalaFile
 
 object EnumFile {
-  def export(enum: ExportEnum) = {
+  def export(config: ExportConfiguration, enum: ExportEnum) = {
     val path = OutputPath.ServerSource
-    val file = ScalaFile(path = path, dir = "models" +: enum.pkg, key = enum.className)
+    val file = ScalaFile(path = path, dir = (config.applicationPackage :+ "models") ++ enum.pkg, key = enum.className)
 
     file.addImport("enumeratum.values", "StringEnumEntry")
     file.addImport("enumeratum.values", "StringEnum")

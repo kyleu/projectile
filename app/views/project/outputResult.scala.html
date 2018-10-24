@@ -38,7 +38,7 @@
               <span class="badge">@files.size</span>
             </div>
             <div class="collapsible-body">
-              @files.map { f =>
+              @files.sortBy(_._1).map { f =>
                 <div>
                   <div class="right">@f._2.map { log =>
                     <div>@log</div>
@@ -73,7 +73,7 @@
               }
             </div>
           </li>
-          @fo.files.map { f =>
+          @fo.files.sortBy(_.filename).map { f =>
             <li>
               <div class="collapsible-header">
                 <i class="@f.icon"></i> @f.filename

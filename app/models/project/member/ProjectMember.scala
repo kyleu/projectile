@@ -40,5 +40,7 @@ case class ProjectMember(
     ignored: Seq[String] = Nil,
     overrides: Seq[MemberOverride] = Nil
 ) {
+  def getOverride(key: String, default: String) = overrides.find(_.prop == key).map(_.v).getOrElse(default)
+
   lazy val outputType = inputType.out
 }

@@ -4,6 +4,7 @@ import io.scalaland.chimney.dsl._
 import models.command.ProjectileCommand._
 import models.command.ProjectileResponse._
 import models.command.{ProjectileCommand, ProjectileResponse}
+import models.export.config.ExportConfiguration
 import models.project.{Project, ProjectSummary}
 import models.project.member.ProjectMember
 import services.ProjectileService
@@ -22,25 +23,40 @@ trait ProjectHelper { this: ProjectileService =>
   def listProjects() = summarySvc.list()
 
   def getProject(key: String) = load(key)
-  def addProject(summary: ProjectSummary) = summarySvc.add(summary)
+  def getProjectSummary(key: String) = summarySvc.getSummary(key)
+  def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
   def removeProject(key: String) = removeProjectFiles(key)
 
-  def saveProjectMember(key: String, member: ProjectMember) = memberSvc.save(key, member)
+  def saveProjectMembers(key: String, members: Seq[ProjectMember]) = memberSvc.save(key, members)
   def removeProjectMember(key: String, t: ProjectMember.OutputType, member: String) = memberSvc.remove(key, t, member)
 
   def exportProject(key: String, verbose: Boolean) = {
     val o = exportSvc.exportProject(key = key, verbose = verbose)
     o -> outputSvc.persist(o = o, verbose = verbose)
   }
-  def auditProject(key: String, verbose: Boolean) = exportSvc.getOutput(key = key, verbose = verbose)
+  def auditProject(key: String, verbose: Boolean) = {
+    val c = loadConfig(key)
+    c -> ProjectAuditService.audit(c)
+  }
+
+  def loadConfig(key: String) = {
+    val p = getProject(key)
+    val inputs = p.allMembers.map(_.input).distinct.map(getInput).map(i => i.key -> i).toMap
+
+    // TODO apply overrides
+    val exportEnums = p.enums.map(e => inputs(e.input).exportEnum(e.inputKey).apply(e))
+    val exportModels = p.models.map(e => inputs(e.input).exportModel(e.inputKey).apply(e))
+
+    ExportConfiguration(project = p, enums = exportEnums, models = exportModels)
+  }
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
     case ListProjects => ProjectList(listProjects())
     case GetProject(key) => ProjectDetail(getProject(key))
-    case AddProject(p) => ProjectDetail(addProject(p))
+    case AddProject(p) => ProjectDetail(saveProject(p))
     case RemoveProject(key) => removeProject(key)
 
-    case SaveProjectMember(p, member) => JsonResponse(saveProjectMember(p, member).asJson)
+    case SaveProjectMembers(p, members) => JsonResponse(saveProjectMembers(p, members).asJson)
     case RemoveProjectMember(p, t, member) => JsonResponse(removeProjectMember(p, t, member).asJson)
 
     case ExportProject(key) =>
@@ -54,7 +70,9 @@ trait ProjectHelper { this: ProjectileService =>
     ProjectileResponse.OK
   }
 
-  private[this] def load(key: String) = summarySvc.getSummary(key).into[Project]
+  private[this] def load(key: String) = summarySvc.getSummary(key)
+    .getOrElse(throw new IllegalStateException(s"No project found with key [$key]"))
+    .into[Project]
     .withFieldComputed(_.enums, _ => loadDir[ProjectMember](s"$key/enum"))
     .withFieldComputed(_.models, _ => loadDir[ProjectMember](s"$key/model"))
     .transform

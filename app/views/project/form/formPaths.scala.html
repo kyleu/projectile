@@ -1,0 +1,36 @@
+@(projectile: services.ProjectileService, project: models.project.Project)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile, project.title + " Path Edit") {
+  <form method="post" action="@controllers.project.routes.ProjectFormController.savePaths()">
+    <input id="key" name="key" type="hidden" value="@project.key" />
+    <input id="template" name="template" type="hidden" value="@project.template.value" />
+
+    <div class="collection with-header">
+      <div class="collection-header">
+        <h5><i class="@project.template.icon"></i> Edit [@project.key] Paths</h5>
+        <div>@project.template.title Project</div>
+      </div>
+      @models.output.OutputPath.values.map { p =>
+        @if(project.pathset.apply(p)) {
+          <div class="collection-item">
+            <div>
+              <label for="path.@p.value">@p.value</label>
+              <input name="path.@p.value" id="path.@p.value" value="@project.paths.getOrElse(p, project.template.path(p))" />
+            </div>
+            <div class="right">default: "@project.template.path(p)"</div>
+            <em>@p.description</em>
+          </div>
+        }
+      }
+      <div class="collection-item">
+        <input class="btn theme" type="submit" value="Save" />
+        <a class="btn-flat theme-text" href="@controllers.project.routes.ProjectController.detail(project.key)">Cancel</a>
+      </div>
+    </div>
+  </form>
+  <style>
+    .input-field {
+      margin-top: 16px;
+    }
+  </style>
+}

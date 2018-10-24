@@ -4,6 +4,7 @@ import models.database.schema.Table
 import models.export.config.{ExportConfigurationDefault, ExportConfigurationHelper}
 import models.export.{ExportEnum, ExportModel}
 import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
+import models.project.member.ProjectMember.InputType
 
 object TableExportModel {
   def loadTableModel(t: Table, tables: Seq[Table], enums: Seq[ExportEnum]) = {
@@ -51,6 +52,7 @@ object TableExportModel {
     }
 
     ExportModel(
+      inputType = InputType.PostgresTable,
       name = t.name,
       pkg = pkg,
       propertyName = toIdentifier(cn),

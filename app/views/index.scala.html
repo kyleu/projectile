@@ -26,7 +26,7 @@
 
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectController.formNew()">Add Project</a></div>
+      <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formNew()">Add Project</a></div>
       <h5><i class="@models.template.Icons.project"></i> Projects</h5>
       @if(projects.size == 1) {
         @projects.size available project
@@ -37,7 +37,7 @@
     </div>
     @if(projects.isEmpty) {
       <div class="collection-item">
-        You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.project.routes.ProjectController.formNew()">add one</a>.
+        You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.project.routes.ProjectFormController.formNew()">add one</a>.
       </div>
     }
     @projects.sortBy(_.title).map { project =>

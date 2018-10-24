@@ -36,6 +36,16 @@ class HomeController @javax.inject.Inject() () extends BaseController {
     Future.successful(Redirect(controllers.routes.HomeController.viewFile(path)).flashing("success" -> msg))
   }
 
+  def deleteFile(path: String) = Action.async { implicit request =>
+    val f = projectile.rootDir / ".projectile" / path
+    if (f.isReadable && f.isRegularFile) {
+      f.delete()
+      Future.successful(Ok(s"Deleted [$path]"))
+    } else {
+      throw new IllegalStateException(s"Cannot find file [${f.pathAsString}]")
+    }
+  }
+
   def testbed = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     Future.successful(Ok(views.html.file.result(projectile, "Testbed", projectile.testbed().json.spaces2, System.currentTimeMillis - startMs)))

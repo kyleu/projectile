@@ -1,6 +1,7 @@
 GET         /                                        controllers.HomeController.index
 GET         /file/view/*path                         controllers.HomeController.viewFile(path)
 POST        /file/edit/*path                         controllers.HomeController.editFile(path)
+GET         /file/delete/*path                       controllers.HomeController.deleteFile(path)
 GET         /testbed                                 controllers.HomeController.testbed
 
 
@@ -17,17 +18,25 @@ GET         /input/:key/refresh                      controllers.input.InputCont
 
 
 # Projects
-GET         /project                                 controllers.project.ProjectController.formNew()
-POST        /project                                 controllers.project.ProjectController.save()
+GET         /project                                 controllers.project.ProjectFormController.formNew()
+POST        /project/summary                         controllers.project.ProjectFormController.saveSummary()
+POST        /project/features                        controllers.project.ProjectFormController.saveFeatures()
+POST        /project/packages                        controllers.project.ProjectFormController.savePackages()
+POST        /project/paths                           controllers.project.ProjectFormController.savePaths()
 
 GET         /project/all/audit                       controllers.project.BulkProjectController.auditAll
 GET         /project/all/export                      controllers.project.BulkProjectController.exportAll
 
 GET         /project/:key                            controllers.project.ProjectController.detail(key)
 GET         /project/:key/remove                     controllers.project.ProjectController.remove(key)
-GET         /project/:key/form                       controllers.project.ProjectController.form(key)
+
 GET         /project/:key/export                     controllers.project.ProjectController.export(key, verbose: Boolean ?= false)
 GET         /project/:key/audit                      controllers.project.ProjectController.audit(key, verbose: Boolean ?= false)
+
+GET         /project/:key/summary                    controllers.project.ProjectFormController.formSummary(key)
+GET         /project/:key/features                   controllers.project.ProjectFormController.formFeatures(key)
+GET         /project/:key/packages                   controllers.project.ProjectFormController.formPackages(key)
+GET         /project/:key/paths                      controllers.project.ProjectFormController.formPaths(key)
 
 GET         /project/:key/enum                       controllers.project.ProjectEnumController.formNew(key)
 POST        /project/:key/enum                       controllers.project.ProjectEnumController.save(key)

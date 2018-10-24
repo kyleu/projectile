@@ -7,7 +7,7 @@ object CoreLogic extends Feature.Logic {
 
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val enums = config.enums.flatMap { enum =>
-      Seq(EnumFile.export(enum).rendered)
+      Seq(EnumFile.export(config, enum).rendered)
     }
     val models = config.models.flatMap { model =>
       Seq(ModelFile.export(config, model).rendered)

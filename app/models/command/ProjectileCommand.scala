@@ -21,7 +21,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class AddProject(project: ProjectSummary) extends ProjectileCommand
   case class SaveProject(project: Project) extends ProjectileCommand
   case class RemoveProject(key: String) extends ProjectileCommand
-  case class SaveProjectMember(project: String, member: ProjectMember) extends ProjectileCommand
+  case class SaveProjectMembers(project: String, members: Seq[ProjectMember]) extends ProjectileCommand
   case class RemoveProjectMember(key: String, t: ProjectMember.OutputType, member: String) extends ProjectileCommand
   case class ExportProject(key: String) extends ProjectileCommand
   case class AuditProject(key: String) extends ProjectileCommand

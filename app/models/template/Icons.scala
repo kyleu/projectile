@@ -28,4 +28,5 @@ object Icons {
 
   val json = fa("wrench")
   val scala = fa("sitemap")
+  val markdown = fa("bookmark-o")
 }

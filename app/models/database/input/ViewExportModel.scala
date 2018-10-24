@@ -4,6 +4,7 @@ import models.database.schema.View
 import models.export.config.ExportConfigurationDefault
 import models.export.{ExportEnum, ExportModel}
 import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
+import models.project.member.ProjectMember.InputType
 
 object ViewExportModel {
   def loadViewModel(v: View, enums: Seq[ExportEnum]) = {
@@ -12,6 +13,7 @@ object ViewExportModel {
     val plural = title + "s"
 
     ExportModel(
+      inputType = InputType.PostgresView,
       name = v.name,
       pkg = Nil,
       propertyName = toIdentifier(cn),

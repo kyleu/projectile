@@ -3,11 +3,12 @@
 )@layout.simple(projectile, project.title + " Project Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectController.form(project.key)">Edit</a></div>
+      <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formSummary(project.key)">Edit</a></div>
       <h5><i class="@project.template.icon"></i> @project.title</h5>
       @project.description
     </div>
     <div class="collection-item">
+      <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formFeatures(project.key)">Edit</a></div>
       <h6>Features</h6>
       <div>
       @project.template.features.toSeq.sortBy(_.title).map { feature =>
@@ -21,6 +22,7 @@
     </div>
     @if(project.paths.nonEmpty) {
       <div class="collection-item">
+        <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formPaths(project.key)">Edit</a></div>
         <h6>Path Overrides</h6>
         <div>
         @models.output.OutputPath.values.map { p =>
@@ -31,9 +33,22 @@
         </div>
       </div>
     }
+    @if(project.packages.nonEmpty) {
+      <div class="collection-item">
+        <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formPackages(project.key)">Edit</a></div>
+        <h6>Package Overrides</h6>
+        <div>
+        @models.output.OutputPackage.values.map { p =>
+          @project.packages.get(p).map { pkg =>
+            <div>@p.value: @pkg.mkString(".")</div>
+          }
+        }
+        </div>
+      </div>
+    }
     <div class="collection-item">
-      <a class="btn theme" href="@controllers.project.routes.ProjectController.export(project.key, verbose = false)">Export</a>
-      <a class="btn theme" href="@controllers.project.routes.ProjectController.audit(project.key, verbose = false)">Audit</a>
+      <a class="btn theme" href="@controllers.project.routes.ProjectController.export(project.key)">Export</a>
+      <a class="btn theme" href="@controllers.project.routes.ProjectController.audit(project.key)">Audit</a>
     </div>
   </div>
 
@@ -49,6 +64,7 @@
     }
     @project.enums.map { e =>
       <div class="collection-item">
+        <div class="right">@e.input</div>
         <a class="theme-text" href="@controllers.project.routes.ProjectEnumController.detail(project.key, e.outputKey)">
           <i class="@models.template.Icons.enum"></i> @e.outputKey
         </a>
@@ -68,6 +84,7 @@
     }
     @project.models.map { m =>
       <div class="collection-item">
+        <div class="right">@m.input</div>
         <a class="theme-text" href="@controllers.project.routes.ProjectModelController.detail(project.key, m.outputKey)">
           <i class="@models.template.Icons.model"></i> @m.outputKey
         </a>

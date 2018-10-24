@@ -18,6 +18,7 @@ sealed abstract class ProjectTemplate(
     case OutputPath.Root => "."
     case OutputPath.ServerSource => "src/main/scala"
     case OutputPath.SharedSource => "src/main/scala"
+    case OutputPath.WikiMarkdown => "wiki"
   }
 }
 
@@ -28,7 +29,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "A simple Scala library, built with sbt, that depends on Circe and Enumeratum",
     repo = "https://github.com/KyleU/projectile-template-scala-library.git",
     icon = Icons.library,
-    features = Set(Core, DataModel)
+    features = Set(Core, DataModel, Wiki)
   )
 
   case object Play extends ProjectTemplate(

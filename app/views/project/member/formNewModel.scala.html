@@ -1,12 +1,15 @@
 @(projectile: services.ProjectileService, key: String, inputModels: Seq[(String, Seq[(String, String, Boolean)])])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, "New Enum") {
+)@layout.simple(projectile, "New Model") {
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="@models.template.Icons.enum"></i> New [@key] Model</h5>
+      <h5><i class="@models.template.Icons.model"></i> New [@key] Model</h5>
     </div>
     @inputModels.map { m =>
       <div class="collection-item">
+        <div class="right">
+          <a href="@controllers.project.routes.ProjectModelController.add(key, m._1, "model", "all")" class="theme-text">Add All</a>
+        </div>
         <h6>@m._1</h6>
         @if(m._2.isEmpty) {
           <em>No available models</em>

@@ -3,6 +3,9 @@
 )@layout.simple(projectile, path) {
   <div class="collection with-header">
     <div class="collection-header">
+      <div class="right">
+        <a href="@controllers.routes.HomeController.deleteFile(path)" class="theme-text" onclick="return confirm('Are you sure you want to delete this file?');">Delete File</a>
+      </div>
       <h5><i class="@models.template.Icons.file"></i> @path</h5>
     </div>
     <div class="collection-item">

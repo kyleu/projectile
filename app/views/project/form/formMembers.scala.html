@@ -1,0 +1,30 @@
+@(projectile: services.ProjectileService, project: models.project.Project)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile, project.title + " Members") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class="@project.template.icon"></i> [@project.key] Members</h5>
+      <div>@util.NumberUtils.withCommas(project.allMembers.size) Available</div>
+    </div>
+    <div class="collection-item">
+      <table>
+        <thead>
+          <tr>
+            <th>X</th>
+            <th>Y</th>
+            <th>Z</th>
+          </tr>
+        </thead>
+        <tbody>
+          @project.allMembers.sortBy(_.inputKey).map { m =>
+            <tr>
+              <td>@m</td>
+              <td>2</td>
+              <td>3</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

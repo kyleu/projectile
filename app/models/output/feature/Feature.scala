@@ -2,18 +2,28 @@ package models.output.feature
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import models.export.config.ExportConfiguration
-import models.output.OutputLog
+import models.output.{OutputLog, OutputPath}
 import models.output.feature.core.CoreLogic
+import models.output.feature.datamodel.DataModelLogic
 import models.output.feature.wiki.WikiLogic
 import models.output.file.OutputFile
+import models.output.OutputPath._
+import models.output.feature.doobie.DoobieLogic
+import models.output.feature.graphql.GraphQLLogic
+import models.output.feature.service.ServiceLogic
+import models.output.feature.slick.SlickLogic
 
 sealed abstract class Feature(
     override val value: String,
     val title: String,
     val tech: String,
     val logic: Option[Feature.Logic],
+    val paths: Set[OutputPath],
     val description: String
 ) extends StringEnumEntry {
+  def appliesToModel = false
+  def appliesToEnum = false
+
   def export(config: ExportConfiguration, verbose: Boolean) = {
     val startMs = System.currentTimeMillis
 
@@ -37,27 +47,53 @@ object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
   }
 
   case object Core extends Feature(
-    value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic),
+    value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic), paths = Set(Root),
     description = "Scala case classes and Circe Json serializers"
   )
 
   case object DataModel extends Feature(
-    value = "datamodel", title = "Data Model", tech = "Scala", logic = None,
-    description = "Defines methods to export models to a common schema"
-  )
+    value = "datamodel", title = "Data Model", tech = "Scala", logic = Some(DataModelLogic), paths = Set(SharedSource, ServerSource),
+    description = "Defines methods to export models to a common schema, and creates search result response classes"
+  ) {
+    override val appliesToModel = true
+  }
 
   case object ScalaJS extends Feature(
-    value = "scalajs", title = "Scala.js", tech = "Scala", logic = None,
+    value = "scalajs", title = "Scala.js", tech = "Scala", logic = None, paths = Set(SharedSource),
     description = "Exports models to Scala.js for use from JavaScript"
-  )
+  ) {
+    override val appliesToModel = true
+  }
 
   case object Audit extends Feature(
-    value = "audit", title = "Audit", tech = "Scala", logic = None,
+    value = "audit", title = "Audit", tech = "Scala", logic = None, paths = Set(ServerSource),
     description = "Logs audits of changed properties for models"
+  ) {
+    override val appliesToModel = true
+  }
+
+  case object GraphQL extends Feature(
+    value = "graphql", title = "GraphQL", tech = "Scala", logic = Some(GraphQLLogic), paths = Set(ServerSource),
+    description = "Sangria bindings for an exported GraphQL schema"
+  )
+
+  case object Service extends Feature(
+    value = "service", title = "Service", tech = "Scala", logic = Some(ServiceLogic), paths = Set(ServerSource),
+    description = "Custom service and supporting queries for common operations"
+  )
+
+  case object Slick extends Feature(
+    value = "slick", title = "Slick", tech = "Scala", logic = Some(SlickLogic), paths = Set(ServerSource),
+    description = "Slick JDBC classes and supporting queries"
+  )
+
+  case object Doobie extends Feature(
+    value = "doobie", title = "Doobie", tech = "Scala", logic = Some(DoobieLogic), paths = Set(ServerSource),
+    description = "Doobie JDBC classes and supporting queries"
   )
 
   case object Wiki extends Feature(
-    value = "wiki", title = "Wiki", tech = "Markdown", logic = Some(WikiLogic),
+    value = "wiki", title = "Wiki", tech = "Markdown", logic = Some(WikiLogic), paths = Set(WikiMarkdown),
     description = "Markdown documentation in Github wiki format"
   )
 

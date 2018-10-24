@@ -2,11 +2,12 @@ package models.output.feature.core
 
 import models.database.schema.ColumnType
 import models.export.ExportModel
+import models.export.config.ExportConfiguration
 import models.output.feature.Feature
 import models.output.file.ScalaFile
 
 object ModelHelper {
-  def addFields(providedPrefix: String, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
+  def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.addImport(file, model.modelPackage)
 
     val scalaJsPrefix = if (model.features(Feature.ScalaJS)) { "@JSExport " } else { "" }
@@ -14,7 +15,7 @@ object ModelHelper {
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case ColumnType.TagsType =>
-        file.addImport(providedPrefix + "models.tag", "Tag")
+        file.addImport(config.tagsPackage.mkString("."), "Tag")
         field.scalaType
       case _ => field.scalaType
     }
@@ -25,9 +26,12 @@ object ModelHelper {
     file.add(propDecl + comma)
   }
 
-  def addEmpty(providedPrefix: String, model: ExportModel, file: ScalaFile) = {
+  def addEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val fieldStrings = model.fields.map { field =>
-      field.addImport(file, model.modelPackage)
+      field.t match {
+        case x if x.requiredImport.contains("java.time") => file.addImport(config.utilitiesPackage.mkString("."), "DateUtils")
+        case _ => // noop
+      }
 
       val colScala = field.t match {
         case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
@@ -35,7 +39,7 @@ object ModelHelper {
       }
       val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
       val propDefault = if (field.notNull) {
-        " = " + field.defaultString(providedPrefix)
+        " = " + field.defaultString
       } else {
         " = None"
       }

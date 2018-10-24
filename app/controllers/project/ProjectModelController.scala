@@ -25,8 +25,8 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
     val inputModels = projectile.listInputs().map { input =>
       input.key -> (projectile.getInput(input.key) match {
         case pi: PostgresInput =>
-          val ts = pi.tables.map(e => (e.name, InputType.PostgresTable.value, p.models.exists(_.inputKey == e.name)))
-          val vs = pi.views.map(e => (e.name, InputType.PostgresView.value, p.models.exists(_.inputKey == e.name)))
+          val ts = pi.tables.map(m => (m.name, InputType.PostgresTable.value, p.models.exists(x => x.input == pi.key && x.inputKey == m.name)))
+          val vs = pi.views.map(v => (v.name, InputType.PostgresView.value, p.models.exists(x => x.input == pi.key && x.inputKey == v.name)))
           ts ++ vs
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
@@ -41,10 +41,25 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
   }
 
   def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
-    val m = ProjectMember(input = input, inputType = ProjectMember.InputType.withValue(inputType), inputKey = inputKey, outputKey = inputKey)
-    projectile.saveProjectMember(key, m)
-    val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.outputKey))
-    Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [${m.outputKey}]"))
+    val p = projectile.getProject(key)
+    val modelFeatures = p.features.filter(_.appliesToModel)
+    inputKey match {
+      case "all" =>
+        val i = projectile.getInput(input)
+        val toSave = i.exportModels.flatMap {
+          case m if p.getModelOpt(m.name).isDefined => None
+          case m => Some(ProjectMember(input = input, inputType = m.inputType, inputKey = m.name, outputKey = m.name, features = modelFeatures))
+        }
+        val saved = projectile.saveProjectMembers(key, toSave)
+        val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
+        Future.successful(redir.flashing("success" -> s"Saved ${saved.size} models"))
+      case _ =>
+        val it = ProjectMember.InputType.withValue(inputType)
+        val m = ProjectMember(input = input, inputType = it, inputKey = inputKey, outputKey = inputKey, features = modelFeatures)
+        projectile.saveProjectMembers(key, Seq(m))
+        val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.outputKey))
+        Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [${m.outputKey}]"))
+    }
   }
 
   def save(key: String) = Action.async { implicit request =>
@@ -57,7 +72,7 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
       ignored = form("ignored").split(',').map(_.trim).filter(_.nonEmpty),
       overrides = Nil
     )
-    projectile.saveProjectMember(key, m)
+    projectile.saveProjectMembers(key, Seq(m))
     val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.outputKey))
     Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [${m.outputKey}]"))
   }

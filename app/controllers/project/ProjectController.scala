@@ -15,44 +15,6 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.project.project(projectile, p)))
   }
 
-  def formNew = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.formNew(projectile)))
-  }
-
-  def form(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.form(projectile, projectile.getProject(key))))
-  }
-
-  def save() = Action.async { implicit request =>
-    val form = ControllerUtils.getForm(request.body)
-    val template = ProjectTemplate.withValue(form("template"))
-    val summary = ProjectSummary(
-      template = template,
-      key = form("key"),
-      title = form("title"),
-      description = form("description"),
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(Feature.withValue).toSet,
-      paths = models.output.OutputPath.values.flatMap { p =>
-        form.get(s"path.${p.value}").flatMap {
-          case x if x == template.path(p) => None
-          case x => Some(p -> x)
-        }
-      }.toMap,
-      packages = models.output.OutputPackage.values.flatMap { p =>
-        form.get(s"package.${p.value}").flatMap { pkg =>
-          val x = pkg.split('.').map(_.trim).filter(_.nonEmpty).toSeq
-          if (x == p.defaultVal) {
-            None
-          } else {
-            Some(p -> x)
-          }
-        }
-      }.toMap
-    )
-    val project = projectile.addProject(summary)
-    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
-  }
-
   def remove(key: String) = Action.async { implicit request =>
     projectile.removeProject(key)
     Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]"))
@@ -60,7 +22,7 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def audit(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.auditProject(key, verbose)
-    Future.successful(Ok(views.html.project.outputResult(projectile, result)))
+    Future.successful(Ok(views.html.project.auditResult(projectile, result._1, result._2)))
   }
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>

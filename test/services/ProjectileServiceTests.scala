@@ -57,7 +57,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
 
   // Project
   it should "create a project" in {
-    svc.addProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, title = "Test Project", features = Feature.set))
+    svc.saveProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, title = "Test Project", features = Feature.set))
     val p = svc.getProject(projectKey)
     p.key should be(projectKey)
     p.features should be(Feature.set)

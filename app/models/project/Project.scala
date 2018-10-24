@@ -30,8 +30,14 @@ case class Project(
 ) extends Ordered[Project] {
   private[this] def notFound(t: String, k: String) = throw new IllegalStateException(s"No $t in project [$key] with key [$k]")
 
-  def getEnum(enum: String) = enums.find(_.outputKey == enum).getOrElse(notFound("enum", enum))
-  def getModel(model: String) = models.find(_.outputKey == model).getOrElse(notFound("model", model))
+  def getPath(p: OutputPath) = paths.getOrElse(p, template.path(p))
+  def getPackage(p: OutputPackage) = packages.getOrElse(p, p.defaultVal)
+
+  def getEnumOpt(enum: String) = enums.find(e => e.inputKey == enum || e.outputKey == enum)
+  def getEnum(enum: String) = getEnumOpt(enum).getOrElse(notFound("enum", enum))
+
+  def getModelOpt(model: String) = models.find(m => m.inputKey == model || m.outputKey == model)
+  def getModel(model: String) = getModelOpt(model).getOrElse(notFound("model", model))
 
   def getMember(t: ProjectMember.OutputType, member: String) = t match {
     case ProjectMember.OutputType.Enum => getEnum(member)
@@ -43,4 +49,6 @@ case class Project(
   override def compare(p: Project) = title.compare(p.title)
 
   lazy val toSummary = this.into[ProjectSummary].transform
+
+  val pathset = features.flatMap(_.paths)
 }

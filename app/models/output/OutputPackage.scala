@@ -8,7 +8,9 @@ object OutputPackage extends StringEnum[OutputPackage] with StringCirceEnum[Outp
   case object System extends OutputPackage("system", Nil)
   case object Application extends OutputPackage("application", Nil)
 
-  case object ResultModel extends OutputPackage("result-model", Seq("models", "result"))
+  case object Utils extends OutputPackage("utilities", Seq("util"))
+  case object Results extends OutputPackage("results", Seq("models", "result"))
+  case object Tags extends OutputPackage("tags", Seq("models", "tag"))
 
   override val values = findValues
 }

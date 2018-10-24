@@ -4,6 +4,8 @@ import models.database.schema.{Column, ColumnType, ForeignKey}
 import models.export.config.ExportConfiguration
 import models.output.ExportHelper
 import models.output.feature.Feature
+import models.project.member.ProjectMember
+import models.project.member.ProjectMember.InputType
 import util.JsonSerializers._
 
 object ExportModel {
@@ -19,6 +21,7 @@ object ExportModel {
 }
 
 case class ExportModel(
+    inputType: InputType,
     name: String,
     pkg: List[String] = Nil,
     propertyName: String,
@@ -37,6 +40,13 @@ case class ExportModel(
     provided: Boolean = false,
     readOnly: Boolean = false
 ) {
+  def apply(m: ProjectMember) = copy(
+    pkg = m.outputPackage.toList,
+    propertyName = m.outputKey,
+    className = m.getOverride("className", ExportHelper.toClassName(m.outputKey)),
+    features = m.features
+  )
+
   val fullClassName = (pkg :+ className).mkString(".")
   val propertyPlural = ExportHelper.toIdentifier(plural)
   val pkFields = pkColumns.map(c => getField(c.name))

@@ -7,6 +7,7 @@ import models.database.schema.{EnumType, Table, View}
 import models.export.ExportEnum
 import models.input.{Input, InputTemplate}
 import models.output.ExportHelper
+import models.project.member.ProjectMember.InputType
 import util.JsonSerializers._
 
 object PostgresInput {
@@ -44,7 +45,7 @@ case class PostgresInput(
 
   override def exportEnum(key: String) = {
     val e = getEnum(key)
-    ExportEnum(name = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
+    ExportEnum(inputType = InputType.PostgresEnum, name = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
   }
 
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))
