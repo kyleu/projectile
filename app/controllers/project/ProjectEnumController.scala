@@ -15,7 +15,7 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
     val m = p.getEnum(enum)
 
     val i = projectile.getInput(m.input)
-    val ee = i.exportEnum(enum)
+    val ee = i.exportEnum(enum).apply(m)
 
     Future.successful(Ok(views.html.project.member.detailEnum(projectile, key, ee)))
   }

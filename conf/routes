@@ -33,6 +33,9 @@ GET         /project/:key/remove                     controllers.project.Project
 GET         /project/:key/export                     controllers.project.ProjectController.export(key, verbose: Boolean ?= false)
 GET         /project/:key/audit                      controllers.project.ProjectController.audit(key, verbose: Boolean ?= false)
 
+GET         /project/:key/members                    controllers.project.ProjectController.bulkEditForm(key)
+POST        /project/:key/members                    controllers.project.ProjectController.bulkEdit(key)
+
 GET         /project/:key/summary                    controllers.project.ProjectFormController.formSummary(key)
 GET         /project/:key/features                   controllers.project.ProjectFormController.formFeatures(key)
 GET         /project/:key/packages                   controllers.project.ProjectFormController.formPackages(key)

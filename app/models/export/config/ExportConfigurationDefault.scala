@@ -18,12 +18,6 @@ object ExportConfigurationDefault {
     idx = idx,
     t = col.columnType,
     sqlTypeName = col.sqlTypeName,
-    enumOpt = col.columnType match {
-      case ColumnType.EnumType => Some(enums.find(_.name == col.sqlTypeName).getOrElse {
-        throw new IllegalStateException(s"Cannot find enum [${col.sqlTypeName}] among [${enums.size}] enums.")
-      })
-      case _ => None
-    },
     defaultValue = col.defaultValue,
     notNull = col.notNull,
     indexed = indexed,

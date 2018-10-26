@@ -43,7 +43,6 @@ trait ProjectHelper { this: ProjectileService =>
     val p = getProject(key)
     val inputs = p.allMembers.map(_.input).distinct.map(getInput).map(i => i.key -> i).toMap
 
-    // TODO apply overrides
     val exportEnums = p.enums.map(e => inputs(e.input).exportEnum(e.inputKey).apply(e))
     val exportModels = p.models.map(e => inputs(e.input).exportModel(e.inputKey).apply(e))
 

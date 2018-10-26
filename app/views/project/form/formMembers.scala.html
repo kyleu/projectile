@@ -1,8 +1,12 @@
 @(projectile: services.ProjectileService, project: models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, project.title + " Members") {
+)@layout.simple(projectile = projectile, title = project.title + " Members") {
+  <form action="" method="post">
   <div class="collection with-header">
     <div class="collection-header">
+      <div class="right">
+        <input type="submit" class="btn theme" value="Save" />
+      </div>
       <h5><i class="@project.template.icon"></i> [@project.key] Members</h5>
       <div>@util.NumberUtils.withCommas(project.allMembers.size) Available</div>
     </div>
@@ -10,21 +14,45 @@
       <table>
         <thead>
           <tr>
-            <th>X</th>
-            <th>Y</th>
-            <th>Z</th>
+            <th>Package</th>
+            <th>Name</th>
+            @project.features.toSeq.sortBy(_.title).map { f =>
+              <th style="width: 120px;">
+                @f.title
+                <div>
+                  <a href="" onclick="checkAll('@f.value'); return false;" class="theme-text">All</a> /
+                  <a href="" onclick="uncheckAll('@f.value'); return false;" class="theme-text">None</a>
+                </div>
+              </th>
+            }
           </tr>
         </thead>
         <tbody>
           @project.allMembers.sortBy(_.inputKey).map { m =>
             <tr>
-              <td>@m</td>
-              <td>2</td>
-              <td>3</td>
+              <td><input id="@m.outputKey-package" name="@m.outputKey-package" type="text" value="@m.outputPackage.mkString(".")" /></td>
+              <td>@m.outputKey</td>
+              @project.features.toSeq.sortBy(_.title).map { f =>
+                <td>
+                  <label for="@m.outputKey-feature-@f.value">
+                    <input id="@m.outputKey-feature-@f.value" name="@m.outputKey-feature-@f.value" class="input-@f.value" value="true" type="checkbox" @if(m.features(f)) { checked="checked" } />
+                    <span></span>
+                  </label>
+                </td>
+              }
             </tr>
           }
         </tbody>
       </table>
     </div>
   </div>
+  </form>
+  <script>
+    function checkAll(k) {
+      $(".input-" + k).attr("checked", "checked");
+    }
+    function uncheckAll(k) {
+      $(".input-" + k).removeAttr("checked");
+    }
+  </script>
 }

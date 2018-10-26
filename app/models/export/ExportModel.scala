@@ -50,11 +50,6 @@ case class ExportModel(
   val fullClassName = (pkg :+ className).mkString(".")
   val propertyPlural = ExportHelper.toIdentifier(plural)
   val pkFields = pkColumns.map(c => getField(c.name))
-  val pkType = pkFields match {
-    case Nil => "???"
-    case h :: Nil => h.scalaType
-    case cols => "(" + cols.map(_.scalaType).mkString(", ") + ")"
-  }
 
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
@@ -62,20 +57,18 @@ case class ExportModel(
   val pkgString = pkg.mkString(".")
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
 
-  val modelPackage = Seq("models") ++ pkg
+  val modelPackage = List("models") ++ pkg
+  val slickPackage = List("models", "table") ++ pkg
+  val doobiePackage = List("models", "doobie") ++ pkg
+
   val modelClass = (modelPackage :+ className).mkString(".")
 
-  val servicePackage = Seq("services") ++ pkg
+  val servicePackage = List("services") ++ pkg
   val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
   val serviceReference = pkg match {
     case Nil => "services." + propertyName + "Service"
     case _ => "services." + pkg.head + "Services." + propertyName + "Service"
   }
-
-  val pkArgs = pkFields.zipWithIndex.map(pkf => pkf._1.t match {
-    case ColumnType.EnumType => s"enumArg(${pkf._1.enumOpt.getOrElse(throw new IllegalStateException("Cannot load enum.")).fullClassName})(arg(${pkf._2}))"
-    case _ => s"${pkf._1.t.value}Arg(arg(${pkf._2}))"
-  }).mkString(", ")
 
   def validReferences(config: ExportConfiguration) = {
     references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)

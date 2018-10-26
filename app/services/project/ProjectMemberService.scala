@@ -21,8 +21,8 @@ class ProjectMemberService(val svc: ProjectileService) {
 
   private[this] def saveMember(p: String, i: Input, member: ProjectMember) = {
     val m = member.inputType.out match {
-      case ProjectMember.OutputType.Model => i.exportModel(member.inputKey)
-      case ProjectMember.OutputType.Enum => i.exportEnum(member.inputKey)
+      case ProjectMember.OutputType.Model => i.exportModel(member.inputKey).apply(member)
+      case ProjectMember.OutputType.Enum => i.exportEnum(member.inputKey).apply(member)
     }
 
     val f = fileFor(p, member.outputType, member.outputKey)

@@ -39,10 +39,7 @@ case class Project(
   def getModelOpt(model: String) = models.find(m => m.inputKey == model || m.outputKey == model)
   def getModel(model: String) = getModelOpt(model).getOrElse(notFound("model", model))
 
-  def getMember(t: ProjectMember.OutputType, member: String) = t match {
-    case ProjectMember.OutputType.Enum => getEnum(member)
-    case ProjectMember.OutputType.Model => getModel(member)
-  }
+  def getMember(member: String) = getModelOpt(member).orElse(getEnumOpt(member)).getOrElse(notFound("member", member))
 
   val allMembers = enums ++ models
 

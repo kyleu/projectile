@@ -17,7 +17,9 @@ sealed abstract class ProjectTemplate(
   def path(p: OutputPath) = p match {
     case OutputPath.Root => "."
     case OutputPath.ServerSource => "src/main/scala"
+    case OutputPath.ServerTest => "src/test/scala"
     case OutputPath.SharedSource => "src/main/scala"
+    case OutputPath.SharedTest => "src/test/scala"
     case OutputPath.WikiMarkdown => "wiki"
   }
 }
@@ -42,7 +44,9 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.ServerSource => "app"
+      case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "app"
+      case OutputPath.SharedTest => "test"
       case _ => super.path(p)
     }
   }
@@ -57,7 +61,9 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.ServerSource => "app"
+      case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "shared/src/main/scala"
+      case OutputPath.SharedTest => "shared/src/test/scala"
       case _ => super.path(p)
     }
   }

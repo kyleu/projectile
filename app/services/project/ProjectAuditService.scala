@@ -1,5 +1,6 @@
 package services.project
 
+import models.database.schema.ColumnType
 import models.export.config.ExportConfiguration
 import util.JsonSerializers._
 
@@ -19,9 +20,9 @@ object ProjectAuditService {
 
   def audit(c: ExportConfiguration) = {
     c.models.flatMap { m =>
-      val missingEnums = m.fields.flatMap(f => f.enumOpt.flatMap {
-        case e if c.getEnumOpt(e.name).isEmpty => Some(AuditResult(
-          srcModel = m.name, src = f.columnName, t = "enum", tgt = e.name, message = "Missing enum definition"
+      val missingEnums = m.fields.filter(_.t == ColumnType.EnumType).flatMap(f => f.enumOpt(c) match {
+        case None => Some(AuditResult(
+          srcModel = m.name, src = f.columnName, t = "enum", tgt = f.sqlTypeName, message = "Missing enum definition"
         ))
         case _ => None
       })

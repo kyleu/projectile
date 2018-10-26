@@ -2,6 +2,7 @@ package models.export
 
 import models.database.schema.ColumnType
 import models.database.schema.ColumnType._
+import models.export.config.ExportConfiguration
 import models.output.ExportHelper
 import models.output.file.ScalaFile
 import util.JsonSerializers._
@@ -51,7 +52,6 @@ case class ExportField(
     idx: Int = 0,
     t: ColumnType,
     sqlTypeName: String,
-    enumOpt: Option[ExportEnum] = None,
     defaultValue: Option[String] = None,
     notNull: Boolean = false,
     indexed: Boolean = false,
@@ -63,32 +63,26 @@ case class ExportField(
 ) {
   val nullable = !notNull
 
-  val className = enumOpt.map(_.className).getOrElse(ExportHelper.toClassName(propertyName))
-  def classNameForSqlType = t match {
-    case EnumType => enumOpt.map { e =>
-      s"EnumType(${e.className})"
-    }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$sqlTypeName]."))
-    case ArrayType => ArrayType.typForSqlType(sqlTypeName)
-    case _ => t.className
+  val className = ExportHelper.toClassName(propertyName)
+
+  def enumOpt(config: ExportConfiguration) = t match {
+    case ColumnType.EnumType => config.getEnumOpt(sqlTypeName)
+    case _ => None
   }
 
-  val scalaType = enumOpt.map(_.className).getOrElse(t.asScala)
-  val scalaTypeFull = enumOpt.map(e => e.modelPackage match {
-    case Nil => e.className
-    case pkg => pkg.mkString(".") + "." + e.className
-  }).getOrElse(t.asScalaFull)
+  def scalaType(config: ExportConfiguration) = enumOpt(config).map(_.className).getOrElse(t.asScala)
 
-  def addImport(file: ScalaFile, pkg: Seq[String] = Nil) = {
-    enumOpt match {
-      case Some(enum) if enum.modelPackage == pkg => // noop
-      case Some(enum) => file.addImport(enum.modelPackage.mkString("."), scalaType)
-      case None => t.requiredImport.foreach(pkg => file.addImport(pkg, scalaType))
+  def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String]) = {
+    enumOpt(config) match {
+      case Some(enum) if enum.modelPackage == pkg => // Noop
+      case Some(enum) => file.addImport((config.applicationPackage ++ enum.modelPackage).mkString("."), enum.className)
+      case None => t.requiredImport.foreach(pkg => file.addImport(pkg, t.asScala))
     }
   }
 
-  val defaultString = ExportField.getDefaultString(t, enumOpt, defaultValue)
+  def defaultString(config: ExportConfiguration) = ExportField.getDefaultString(t, enumOpt(config), defaultValue)
 
-  def fromString(s: String) = enumOpt.map { enum =>
+  def fromString(config: ExportConfiguration, s: String) = enumOpt(config).map { enum =>
     s"${enum.className}.withValue($s)"
   }.getOrElse(t.fromString.replaceAllLiterally("xxx", s))
 }

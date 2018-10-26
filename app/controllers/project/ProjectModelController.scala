@@ -15,7 +15,7 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
     val m = p.getModel(model)
 
     val i = projectile.getInput(m.input)
-    val em = i.exportModel(model)
+    val em = i.exportModel(model).apply(m)
 
     Future.successful(Ok(views.html.project.member.detailModel(projectile, key, em)))
   }

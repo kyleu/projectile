@@ -29,4 +29,23 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     val result = projectile.exportProject(key, verbose)
     Future.successful(Ok(views.html.project.outputResult(projectile, result._1, result._2)))
   }
+
+  def bulkEditForm(key: String) = Action.async { implicit request =>
+    val p = projectile.getProject(key)
+    Future.successful(Ok(views.html.project.form.formMembers(projectile, p)))
+  }
+
+  def bulkEdit(key: String) = Action.async { implicit request =>
+    val p = projectile.getProject(key)
+    val form = ControllerUtils.getForm(request.body)
+    val memberKeys = form.keys.filter(_.endsWith("-package")).map(_.stripSuffix("-package")).toSeq.sorted
+    val newMembers = memberKeys.map { k =>
+      val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
+      val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(Feature.withValue).toSet
+      p.getMember(k).copy(outputPackage = pkg, features = features)
+    }
+    val updated = projectile.saveProjectMembers(key, newMembers)
+    val msg = s"Saved [${memberKeys.size}] project members"
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
+  }
 }

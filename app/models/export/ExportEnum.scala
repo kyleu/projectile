@@ -32,7 +32,8 @@ case class ExportEnum(
   val propertyName = ExportHelper.toIdentifier(className)
 
   val modelPackage = List("models") ++ pkg
-  val tablePackage = List("models", "table") ++ pkg
+  val slickPackage = List("models", "table") ++ pkg
+  val doobiePackage = List("models", "doobie") ++ pkg
 
   val fullClassName = (modelPackage :+ className).mkString(".")
 }

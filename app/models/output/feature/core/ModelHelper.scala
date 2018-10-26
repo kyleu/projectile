@@ -8,7 +8,7 @@ import models.output.file.ScalaFile
 
 object ModelHelper {
   def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
-    field.addImport(file, model.modelPackage)
+    field.addImport(config, file, model.modelPackage)
 
     val scalaJsPrefix = if (model.features(Feature.ScalaJS)) { "@JSExport " } else { "" }
 
@@ -16,8 +16,8 @@ object ModelHelper {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case ColumnType.TagsType =>
         file.addImport(config.tagsPackage.mkString("."), "Tag")
-        field.scalaType
-      case _ => field.scalaType
+        field.scalaType(config)
+      case _ => field.scalaType(config)
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     val propDecl = s"$scalaJsPrefix${field.propertyName}: $propType"
@@ -35,11 +35,11 @@ object ModelHelper {
 
       val colScala = field.t match {
         case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
-        case _ => field.scalaType
+        case _ => field.scalaType(config)
       }
       val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
       val propDefault = if (field.notNull) {
-        " = " + field.defaultString
+        " = " + field.defaultString(config)
       } else {
         " = None"
       }

@@ -8,16 +8,18 @@ import models.output.file.ScalaFile
 
 object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = "table" +: model.pkg, key = model.className + "Table")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.slickPackage, key = model.className + "Table")
 
     file.addImport((config.systemPackage ++ Seq("services", "database", "SlickQueryService", "imports")).mkString("."), "_")
 
-    model.fields.foreach(_.enumOpt.foreach(e => file.addImport(s"${e.tablePackage.mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")))
+    model.fields.foreach(_.enumOpt(config).foreach { e =>
+      file.addImport(s"${(config.applicationPackage ++ e.slickPackage).mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")
+    })
 
     file.add(s"object ${model.className}Table {", 1)
     file.add(s"val query = TableQuery[${model.className}Table]")
-    addQueries(file, model)
-    addReferences(file, model)
+    addQueries(config, file, model)
+    addReferences(config, file, model)
     file.add("}", -1)
     file.add()
 
@@ -57,49 +59,49 @@ object TableFile {
   }
 
   private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
-    field.addImport(file)
+    field.addImport(config = config, file = file, pkg = model.modelPackage)
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case ColumnType.TagsType =>
         file.addImport(config.tagsPackage.mkString("."), "Tag")
         s"List[Tag]"
-      case _ => field.scalaType
+      case _ => field.scalaType(config)
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
     file.add(s"""val ${field.propertyName} = column[$propType]("${field.columnName}")""")
   }
 
-  private[this] def addQueries(file: ScalaFile, model: ExportModel) = {
-    model.pkFields.foreach(_.addImport(file))
+  private[this] def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
+    model.pkFields.foreach(_.addImport(config = config, file = file, pkg = model.modelPackage))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
         file.add()
         val colProp = field.propertyName
-        file.add(s"def getByPrimaryKey($colProp: ${field.scalaType}) = query.filter(_.$colProp === $colProp).result.headOption")
-        val seqArgs = s"${colProp}Seq: Seq[${field.scalaType}]"
+        file.add(s"def getByPrimaryKey($colProp: ${field.scalaType(config)}) = query.filter(_.$colProp === $colProp).result.headOption")
+        val seqArgs = s"${colProp}Seq: Seq[${field.scalaType(config)}]"
         file.add(s"def getByPrimaryKeySeq($seqArgs) = query.filter(_.$colProp.inSet(${colProp}Seq)).result")
       case fields => // multiple columns
         file.add()
-        val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType).mkString(", ")
+        val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType(config)).mkString(", ")
         val queryArgs = fields.map(f => "o." + f.propertyName + " === " + f.propertyName).mkString(" && ")
         file.add(s"def getByPrimaryKey($colArgs) = query.filter(o => $queryArgs).result.headOption")
     }
   }
 
-  private[this] def addReferences(file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
+  private[this] def addReferences(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
     model.foreignKeys.foreach { fk =>
       fk.references match {
         case h :: Nil =>
           val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-          col.addImport(file)
+          col.addImport(config = config, file = file, pkg = model.modelPackage)
           val propId = col.propertyName
           val propCls = col.className
 
           file.add()
-          file.add(s"""def getBy$propCls($propId: ${col.scalaType}) = query.filter(_.$propId === $propId).result""")
-          file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.scalaType}]) = query.filter(_.$propId.inSet(${propId}Seq)).result""")
+          file.add(s"""def getBy$propCls($propId: ${col.scalaType(config)}) = query.filter(_.$propId === $propId).result""")
+          file.add(s"""def getBy${propCls}Seq(${propId}Seq: Seq[${col.scalaType(config)}]) = query.filter(_.$propId.inSet(${propId}Seq)).result""")
         case _ => // noop
       }
     }
