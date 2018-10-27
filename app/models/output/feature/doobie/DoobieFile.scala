@@ -13,7 +13,6 @@ object DoobieFile {
     val cols = model.fields.map(_.columnName)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 
-    file.addImport("cats.data", "NonEmptyList")
     file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
     if (model.pkg.nonEmpty) {
       file.addImport((config.systemPackage ++ Seq("services", "database", "doobie")).mkString("."), "DoobieQueries")
@@ -42,7 +41,6 @@ object DoobieFile {
     addReferences(config, file, model)
 
     file.add("}", -1)
-    file.add()
     file
   }
 
@@ -51,6 +49,8 @@ object DoobieFile {
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
+        file.addImport("cats.data", "NonEmptyList")
+
         file.add()
         val colProp = field.propertyName
 
@@ -71,6 +71,8 @@ object DoobieFile {
     model.foreignKeys.foreach { fk =>
       fk.references match {
         case h :: Nil =>
+          file.addImport("cats.data", "NonEmptyList")
+
           val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           col.addImport(config = config, file = file, pkg = model.doobiePackage)
           val propId = col.propertyName
