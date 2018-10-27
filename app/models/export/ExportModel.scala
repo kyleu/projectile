@@ -61,8 +61,6 @@ case class ExportModel(
   val slickPackage = List("models", "table") ++ pkg
   val doobiePackage = List("models", "doobie") ++ pkg
 
-  val modelClass = (modelPackage :+ className).mkString(".")
-
   val servicePackage = List("services") ++ pkg
   val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
   val serviceReference = pkg match {

@@ -60,7 +60,7 @@ trait ProjectHelper { this: ProjectileService =>
 
     case ExportProject(key) =>
       val r = exportProject(key, verbose = false)
-      ProjectExportResult(r._1, r._2.toMap)
+      ProjectExportResult(r._1, r._2)
     case AuditProject(key) => JsonResponse(auditProject(key, verbose = false).asJson)
   }
 

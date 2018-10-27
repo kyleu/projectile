@@ -11,7 +11,7 @@ object OutputFile {
 
   case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String) {
     val filePath = s"${dir.map(_ + "/").mkString}$filename"
-    override def toString = s"$path:$filePath"
+    override val toString = s"$path:$filePath"
   }
 }
 

@@ -8,9 +8,9 @@ import models.output.file.ScalaFile
 
 object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.slickPackage, key = model.className + "Table")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ model.slickPackage, key = model.className + "Table")
 
-    file.addImport((config.systemPackage ++ Seq("services", "database", "SlickQueryService", "imports")).mkString("."), "_")
+    file.addImport((config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports")).mkString("."), "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
       file.addImport(s"${(config.applicationPackage ++ e.slickPackage).mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")
@@ -23,7 +23,9 @@ object TableFile {
     file.add("}", -1)
     file.add()
 
-    file.add(s"""class ${model.className}Table(tag: Tag) extends Table[${model.modelClass}](tag, "${model.name}") {""", 1)
+    val cls = (config.applicationPackage ++ model.modelPackage :+ model.className).mkString(".")
+
+    file.add(s"""class ${model.className}Table(tag: slick.lifted.Tag) extends Table[$cls](tag, "${model.name}") {""", 1)
 
     addFields(config, model, file, config.enums)
     file.add()
@@ -42,13 +44,13 @@ object TableFile {
       file.addImport("slickless", "_")
 
       val fieldStr = model.fields.map(_.propertyName).mkString(" :: ")
-      file.addImport((config.applicationPackage ++ Seq("models") ++ model.pkg).mkString("."), model.className)
+      file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
       file.add(s"override val * = ($fieldStr :: HNil).mappedWith(Generic[${model.className}])")
     } else {
       val propSeq = model.fields.map(_.propertyName).mkString(", ")
       file.add(s"override val * = ($propSeq) <> (", 1)
-      file.add(s"(${model.modelClass}.apply _).tupled,")
-      file.add(s"${model.modelClass}.unapply")
+      file.add(s"($cls.apply _).tupled,")
+      file.add(s"$cls.unapply")
       file.add(")", -1)
     }
 
@@ -59,7 +61,7 @@ object TableFile {
   }
 
   private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
-    field.addImport(config = config, file = file, pkg = model.modelPackage)
+    field.addImport(config = config, file = file, pkg = model.slickPackage)
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case ColumnType.TagsType =>
@@ -73,7 +75,7 @@ object TableFile {
   }
 
   private[this] def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
-    model.pkFields.foreach(_.addImport(config = config, file = file, pkg = model.modelPackage))
+    model.fields.foreach(_.addImport(config = config, file = file, pkg = model.slickPackage))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>

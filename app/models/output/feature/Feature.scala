@@ -36,7 +36,7 @@ sealed abstract class Feature(
 
     val files = logic.map(_.export(config = config, info = info, debug = debug)).getOrElse(Nil)
     val duration = System.currentTimeMillis - startMs
-    debug(s"Feature [$title] produced [${files.length}] files in [${duration}ms]")
+    info(s"Feature [$title] produced [${files.length}] files in [${duration}ms]")
     FeatureOutput(feature = this, files = files, logs = logs, duration = duration)
   }
 }

@@ -7,10 +7,10 @@ import models.output.file.ScalaFile
 
 object EnumDoobieFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = enum.doobiePackage, key = enum.className + "Doobie")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ enum.doobiePackage, key = enum.className + "Doobie")
 
-    file.addImport(enum.modelPackage.mkString("."), enum.className)
-    file.addImport((config.systemPackage ++ Seq("services", "database", "DoobieQueryService", "imports")).mkString("."), "_")
+    file.addImport((config.applicationPackage ++ enum.modelPackage).mkString("."), enum.className)
+    file.addImport((config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports")).mkString("."), "_")
 
     file.add(s"object ${enum.className}Doobie {", 1)
     val cn = enum.className

@@ -10,7 +10,7 @@ object ResultFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = OutputPath.ServerSource
-    val file = ScalaFile(path = path, dir = (config.applicationPackage :+ "models") ++ model.pkg, key = model.className + "Result")
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className + "Result")
 
     file.addImport("java.time", "LocalDateTime")
     file.addImport(config.resultsPackage.mkString("."), "BaseResult")

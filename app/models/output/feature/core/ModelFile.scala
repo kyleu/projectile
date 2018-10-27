@@ -12,7 +12,7 @@ object ModelFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = OutputPath.ServerSource
-    val file = ScalaFile(path = path, dir = (config.applicationPackage :+ "models") ++ model.pkg, key = model.className)
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className)
 
     if (model.features(Feature.DataModel)) {
       val pkg = (config.resultsPackage :+ "data").mkString(".")

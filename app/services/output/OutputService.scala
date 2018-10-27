@@ -3,13 +3,23 @@ package services.output
 import better.files.File
 import models.output.file.OutputFile
 import models.project.ProjectOutput
+import util.JsonSerializers._
+
+object OutputService {
+  object WriteResult {
+    implicit val jsonEncoder: Encoder[WriteResult] = deriveEncoder
+    implicit val jsonDecoder: Decoder[WriteResult] = deriveDecoder
+  }
+
+  case class WriteResult(file: String, path: String, logs: Seq[String])
+}
 
 class OutputService(projectRoot: File) {
   def persist(o: ProjectOutput, verbose: Boolean) = {
     o.featureOutput.flatMap { fo =>
       fo.files.map { f =>
-        val d = o.getDirectory(projectRoot, f.path)
-        write(o.project.key, f, d, verbose)
+        val result = write(o.project.key, f, o.getDirectory(projectRoot, f.path), verbose)
+        OutputService.WriteResult(f.toString, result._1, result._2)
       }
     }
   }

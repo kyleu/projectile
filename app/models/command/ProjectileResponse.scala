@@ -4,6 +4,7 @@ import enumeratum.{Enum, EnumEntry}
 import io.circe.Json
 import models.input.{Input, InputSummary}
 import models.project.{Project, ProjectOutput, ProjectSummary}
+import services.output.OutputService
 
 sealed trait ProjectileResponse extends EnumEntry
 
@@ -19,7 +20,7 @@ object ProjectileResponse extends Enum[ProjectileResponse] {
   case class ProjectDetail(project: Project) extends ProjectileResponse
 
   case class ProjectAuditResult(logs: Seq[String]) extends ProjectileResponse
-  case class ProjectExportResult(output: ProjectOutput, files: Map[String, Seq[String]]) extends ProjectileResponse
+  case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputService.WriteResult]) extends ProjectileResponse
 
   override val values = findValues
 }

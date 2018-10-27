@@ -9,19 +9,19 @@ object DoobieFile {
   private[this] val tq = "\"\"\""
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.doobiePackage, key = model.className + "Doobie")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "Doobie")
     val cols = model.fields.map(_.columnName)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 
     file.addImport("cats.data", "NonEmptyList")
     file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
     if (model.pkg.nonEmpty) {
-      file.addImport((config.applicationPackage ++ model.modelPackage ++ Seq("models", "doobie")).mkString("."), "DoobieQueries")
+      file.addImport((config.systemPackage ++ Seq("services", "database", "doobie")).mkString("."), "DoobieQueries")
     }
-    file.addImport((config.systemPackage ++ Seq("services", "database", "DoobieQueryService", "imports")).mkString("."), "_")
+    file.addImport((config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports")).mkString("."), "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(s"${e.doobiePackage.mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")
+      file.addImport(s"${(config.applicationPackage ++ e.doobiePackage).mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")
     })
 
     file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.name}") {""", 1)
@@ -47,7 +47,7 @@ object DoobieFile {
   }
 
   private[this] def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
-    model.pkFields.foreach(_.addImport(config = config, file = file, pkg = model.modelPackage))
+    model.pkFields.foreach(_.addImport(config = config, file = file, pkg = model.doobiePackage))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
@@ -72,7 +72,7 @@ object DoobieFile {
       fk.references match {
         case h :: Nil =>
           val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-          col.addImport(config = config, file = file, pkg = model.modelPackage)
+          col.addImport(config = config, file = file, pkg = model.doobiePackage)
           val propId = col.propertyName
           val propCls = col.className
 

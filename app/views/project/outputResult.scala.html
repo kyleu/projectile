@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, output: models.project.ProjectOutput, files: Seq[(String, Seq[String])] = Nil)(
+@(projectile: services.ProjectileService, output: models.project.ProjectOutput, files: Seq[services.output.OutputService.WriteResult], verbose: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, output.project.title + " Export Result") {
   <div class="collection with-header">
@@ -38,12 +38,12 @@
               <span class="badge">@files.size</span>
             </div>
             <div class="collapsible-body">
-              @files.sortBy(_._1).map { f =>
+              @files.filter(x => verbose || x.logs.nonEmpty).sortBy(_.path).map { f =>
                 <div>
-                  <div class="right">@f._2.map { log =>
+                  <div class="right">@f.logs.map { log =>
                     <div>@log</div>
                   }</div>
-                  @f._1
+                  @f.path
                 </div>
               }
             </div>
@@ -73,16 +73,28 @@
               }
             </div>
           </li>
-          @fo.files.sortBy(_.filename).map { f =>
-            <li>
-              <div class="collapsible-header">
-                <i class="@f.icon"></i> @f.filename
-                <span class="badge">@f.path.value</span>
-              </div>
-              <div class="collapsible-body">
-                <pre style="overflow: auto;">@f.content</pre>
-              </div>
-            </li>
+          @defining(fo.files.filter(f => verbose || files.exists(x => x.file == f.toString && x.logs.nonEmpty)).sortBy(_.filename)) { changedFiles =>
+            @if(changedFiles.isEmpty) {
+              <li>
+                <div class="collapsible-header">
+                  No files updated
+                </div>
+                <div class="collapsible-body">
+                  Run in verbose mode to see all generated files
+                </div>
+              </li>
+            }
+            @changedFiles.map { f =>
+              <li>
+                <div class="collapsible-header">
+                  <i class="@f.icon"></i> @f.filename
+                  <span class="badge">@f.path.value</span>
+                </div>
+                <div class="collapsible-body">
+                  <pre style="overflow: auto;">@f.content</pre>
+                </div>
+              </li>
+            }
           }
         </ul>
       </div>

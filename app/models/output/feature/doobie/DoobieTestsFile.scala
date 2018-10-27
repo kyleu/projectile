@@ -7,11 +7,11 @@ import models.output.file.ScalaFile
 
 object DoobieTestsFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerTest, dir = model.doobiePackage, key = model.className + "DoobieTests")
+    val file = ScalaFile(path = OutputPath.ServerTest, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "DoobieTests")
 
     file.addImport("org.scalatest", "_")
-    file.addImport(model.modelPackage.mkString("."), model.className)
-    file.addImport((config.systemPackage ++ Seq("services", "database", "DoobieQueryService", "imports")).mkString("."), "_")
+    file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
+    file.addImport((config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports")).mkString("."), "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
       file.addImport(s"${(config.applicationPackage ++ e.doobiePackage).mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")

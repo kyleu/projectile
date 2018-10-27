@@ -27,7 +27,7 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.exportProject(key, verbose)
-    Future.successful(Ok(views.html.project.outputResult(projectile, result._1, result._2)))
+    Future.successful(Ok(views.html.project.outputResult(projectile, result._1, result._2, verbose)))
   }
 
   def bulkEditForm(key: String) = Action.async { implicit request =>

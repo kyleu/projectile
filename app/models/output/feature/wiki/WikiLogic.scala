@@ -7,15 +7,15 @@ object WikiLogic extends Feature.Logic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val listPages = WikiListFiles.export(config).map(_.rendered)
 
-    val modelResults = config.models.flatMap { model =>
+    val models = config.models.filter(_.features(Feature.Wiki)).flatMap { model =>
       Seq(WikiModelFile.export(config, model).rendered)
     }
 
-    val enumResults = config.enums.flatMap { e =>
+    val enums = config.enums.filter(_.features(Feature.Wiki)).flatMap { e =>
       Seq(WikiEnumFile.export(config, e).rendered)
     }
 
-    debug(s"Exported [${modelResults.size}] models and [${enumResults.size}] enums")
-    listPages ++ modelResults ++ enumResults
+    debug(s"Exported [${models.size}] models and [${enums.size}] enums")
+    listPages ++ models ++ enums
   }
 }
