@@ -49,7 +49,13 @@ case class ExportModel(
 
   val fullClassName = (pkg :+ className).mkString(".")
   val propertyPlural = ExportHelper.toIdentifier(plural)
+
   val pkFields = pkColumns.map(c => getField(c.name))
+  def pkType(config: ExportConfiguration) = pkFields match {
+    case Nil => "???"
+    case h :: Nil => h.scalaType(config)
+    case cols => "(" + cols.map(_.scalaType(config)).mkString(", ") + ")"
+  }
 
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
@@ -58,6 +64,7 @@ case class ExportModel(
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
 
   val modelPackage = List("models") ++ pkg
+  val queriesPackage = List("models", "queries") ++ pkg
   val slickPackage = List("models", "table") ++ pkg
   val doobiePackage = List("models", "doobie") ++ pkg
 

@@ -65,6 +65,14 @@ case class ExportField(
 
   val className = ExportHelper.toClassName(propertyName)
 
+  def classNameForSqlType(config: ExportConfiguration) = t match {
+    case EnumType => enumOpt(config).map { e =>
+      s"EnumType(${e.className})"
+    }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$sqlTypeName]."))
+    case ArrayType => ArrayType.typForSqlType(sqlTypeName)
+    case _ => t.className
+  }
+
   def enumOpt(config: ExportConfiguration) = t match {
     case ColumnType.EnumType => config.getEnumOpt(sqlTypeName)
     case _ => None
