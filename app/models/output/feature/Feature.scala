@@ -49,7 +49,10 @@ object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
   case object Core extends Feature(
     value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic), paths = Set(Root),
     description = "Scala case classes and Circe Json serializers"
-  )
+  ) {
+    override val appliesToEnum = true
+    override val appliesToModel = true
+  }
 
   case object DataModel extends Feature(
     value = "datamodel", title = "Data Model", tech = "Scala", logic = Some(DataModelLogic), paths = Set(SharedSource, ServerSource),
@@ -62,6 +65,7 @@ object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
     value = "scalajs", title = "Scala.js", tech = "Scala", logic = None, paths = Set(SharedSource),
     description = "Exports models to Scala.js for use from JavaScript"
   ) {
+    override val appliesToEnum = true
     override val appliesToModel = true
   }
 
@@ -75,27 +79,42 @@ object Feature extends StringEnum[Feature] with StringCirceEnum[Feature] {
   case object GraphQL extends Feature(
     value = "graphql", title = "GraphQL", tech = "Scala", logic = Some(GraphQLLogic), paths = Set(ServerSource),
     description = "Sangria bindings for an exported GraphQL schema"
-  )
+  ) {
+    override val appliesToEnum = true
+    override val appliesToModel = true
+  }
 
   case object Service extends Feature(
     value = "service", title = "Service", tech = "Scala", logic = Some(ServiceLogic), paths = Set(ServerSource),
     description = "Custom service and supporting queries for common operations"
-  )
+  ) {
+    override val appliesToEnum = true
+    override val appliesToModel = true
+  }
 
   case object Slick extends Feature(
     value = "slick", title = "Slick", tech = "Scala", logic = Some(SlickLogic), paths = Set(ServerSource),
     description = "Slick JDBC classes and supporting queries"
-  )
+  ) {
+    override val appliesToEnum = true
+    override val appliesToModel = true
+  }
 
   case object Doobie extends Feature(
     value = "doobie", title = "Doobie", tech = "Scala", logic = Some(DoobieLogic), paths = Set(ServerSource),
     description = "Doobie JDBC classes and supporting queries"
-  )
+  ) {
+    override val appliesToEnum = true
+    override val appliesToModel = true
+  }
 
   case object Wiki extends Feature(
     value = "wiki", title = "Wiki", tech = "Markdown", logic = Some(WikiLogic), paths = Set(WikiMarkdown),
     description = "Markdown documentation in Github wiki format"
-  )
+  ) {
+    override val appliesToEnum = true
+    override val appliesToModel = true
+  }
 
   override val values = findValues
   val set = values.toSet

@@ -1,15 +1,62 @@
-@(projectile: services.ProjectileService, key: String, e: models.export.ExportEnum)(
+@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, e: models.export.ExportEnum)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, e.className + " Enum") {
-  <div class="collection with-header">
-    <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.name}.json")">Edit</a></div>
-      <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
-    </div>
-    @e.values.map { v =>
-      <div class="collection-item">
-        @v
+  <form method="post" action="@controllers.project.routes.ProjectEnumController.save(e.name)">
+    <div class="collection with-header">
+      <div class="collection-header">
+        <div class="right">
+          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.name}.json")">Edit Json</a>
+          <input class="theme btn" type="submit" value="Save" />
+        </div>
+        <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
       </div>
-    }
-  </div>
+      <div class="collection-item">
+        <label for="package">Package</label>
+        <input id="package" name="package" value="@e.pkg.mkString(".")" />
+      </div>
+      <div class="collection-item">
+        <label for="propertyName">Property Name</label>
+        <input id="propertyName" name="propertyName" value="@e.propertyName" />
+      </div>
+      <div class="collection-item">
+        <label for="className">Class Name</label>
+        <input id="className" name="className" value="@e.className" />
+      </div>
+      <div class="collection-item">
+        <h6>Features</h6>
+        @models.output.feature.Feature.values.filter(p.features.apply).filter(_.appliesToEnum).map { feat =>
+          <div>
+            <label>
+              <input name="features" type="checkbox" value="@feat.value" @if(e.features(feat)) { checked="checked" } />
+              <span>@feat.title</span>
+            </label>
+          </div>
+        }
+      </div>
+      <div class="collection-item">
+        <h6>Values</h6>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Ignored</th>
+            </tr>
+          </thead>
+          <tbody>
+          @e.values.map { v =>
+            <tr>
+              <td>@v</td>
+              <td>
+                <label>
+                  <input id="value-@v-ignored" name="value-@v-ignored" type="checkbox" />
+                  <span></span>
+                </label>
+              </td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
 }

@@ -71,7 +71,7 @@
     @if(project.enums.isEmpty) {
       <div class="collection-item">No project enumerations.</div>
     }
-    @project.enums.map { e =>
+    @project.enums.sortBy(_.outputKey).map { e =>
       <div class="collection-item">
         <div class="right">@e.input</div>
         <a class="theme-text" href="@controllers.project.routes.ProjectEnumController.detail(project.key, e.outputKey)">
@@ -91,7 +91,7 @@
     @if(project.models.isEmpty) {
       <div class="collection-item">No project models.</div>
     }
-    @project.models.map { m =>
+    @project.models.sortBy(_.outputKey).map { m =>
       <div class="collection-item">
         <div class="right">@m.input</div>
         <a class="theme-text" href="@controllers.project.routes.ProjectModelController.detail(project.key, m.outputKey)">

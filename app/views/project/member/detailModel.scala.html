@@ -1,15 +1,90 @@
-@(projectile: services.ProjectileService, key: String, m: models.export.ExportModel)(
+@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, m: models.export.ExportModel)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, m.title + " Model") {
-  <div class="collection with-header">
-    <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.name}.json")">Edit</a></div>
-      <h5><i class="@models.template.Icons.model"></i> @m.title</h5>
-    </div>
-    @m.fields.map { f =>
-      <div class="collection-item">
-        @f.title
+  <form method="post" action="@controllers.project.routes.ProjectModelController.save(m.name)">
+    <div class="collection with-header">
+      <div class="collection-header">
+        <div class="right">
+          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.name}.json")">Edit Json</a>
+          <input class="theme btn" type="submit" value="Save" />
+        </div>
+        <h5><i class="@models.template.Icons.model"></i> @m.title</h5>
+        <em>Model</em>
       </div>
-    }
-  </div>
+      <div class="collection-item">
+        <label for="package">Package</label>
+        <input id="package" name="package" value="@m.pkg.mkString(".")" />
+      </div>
+      <div class="collection-item">
+        <label for="propertyName">Property Name</label>
+        <input id="propertyName" name="propertyName" value="@m.propertyName" />
+      </div>
+      <div class="collection-item">
+        <label for="className">Class Name</label>
+        <input id="className" name="className" value="@m.className" />
+      </div>
+      <div class="collection-item">
+        <label for="title">Title</label>
+        <input id="title" name="title" value="@m.title" />
+      </div>
+      <div class="collection-item">
+        <label for="plural">Plural</label>
+        <input id="plural" name="plural" value="@m.plural" />
+      </div>
+      <div class="collection-item">
+        <h6>Features</h6>
+        @models.output.feature.Feature.values.filter(p.features.apply).filter(_.appliesToModel).map { feat =>
+          <div>
+            <label>
+              <input name="features" type="checkbox" value="@feat.value" @if(m.features(feat)) { checked="checked" } />
+              <span>@feat.title</span>
+            </label>
+          </div>
+        }
+      </div>
+      <div class="collection-item">
+        <h6>Fields</h6>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Property</th>
+              <th>Class</th>
+              <th>Title</th>
+              <th>Search</th>
+              <th>Ignored</th>
+            </tr>
+          </thead>
+          <tbody>
+            @m.fields.map { f =>
+              <tr>
+                <td>@f.columnName</td>
+                <td>
+                  <input id="field-@f.columnName-property" name="field-@f.columnName-property" value="@f.propertyName" />
+                </td>
+                <td>
+                  <input id="field-@f.columnName-className" name="field-@f.columnName-className" value="@f.className" />
+                </td>
+                <td>
+                  <input id="field-@f.columnName-title" name="field-@f.columnName-title" value="@f.title" />
+                </td>
+                <td>
+                  <label>
+                    <input id="field-@f.columnName-search" name="field-@f.columnName-search" type="checkbox" />
+                    <span></span>
+                  </label>
+                </td>
+                <td>
+                  <label>
+                    <input id="field-@f.columnName-ignored" name="field-@f.columnName-ignored" type="checkbox" />
+                    <span></span>
+                  </label>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
 }

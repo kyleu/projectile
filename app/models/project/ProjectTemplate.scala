@@ -64,6 +64,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
       case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "shared/src/main/scala"
       case OutputPath.SharedTest => "shared/src/test/scala"
+      case OutputPath.WikiMarkdown => "doc/src/main/paradox"
       case _ => super.path(p)
     }
   }
