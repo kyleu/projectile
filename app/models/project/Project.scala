@@ -33,10 +33,10 @@ case class Project(
   def getPath(p: OutputPath) = paths.getOrElse(p, template.path(p))
   def getPackage(p: OutputPackage) = packages.getOrElse(p, p.defaultVal)
 
-  def getEnumOpt(enum: String) = enums.find(e => e.inputKey == enum || e.outputKey == enum)
+  def getEnumOpt(enum: String) = enums.find(_.key == enum)
   def getEnum(enum: String) = getEnumOpt(enum).getOrElse(notFound("enum", enum))
 
-  def getModelOpt(model: String) = models.find(m => m.inputKey == model || m.outputKey == model)
+  def getModelOpt(model: String) = models.find(_.key == model)
   def getModel(model: String) = getModelOpt(model).getOrElse(notFound("model", model))
 
   def getMember(member: String) = getModelOpt(member).orElse(getEnumOpt(member)).getOrElse(notFound("member", member))

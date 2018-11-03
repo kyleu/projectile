@@ -15,15 +15,15 @@ object ModelFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className)
 
     if (model.features(Feature.DataModel)) {
-      val pkg = (config.resultsPackage :+ "data").mkString(".")
+      val pkg = config.resultsPackage :+ "data"
       file.addImport(pkg, "DataField")
       file.addImport(pkg, "DataSummary")
       file.addImport(pkg, "DataFieldModel")
     }
-    file.addImport((config.utilitiesPackage :+ "JsonSerializers").mkString("."), "_")
+    file.addImport(config.utilitiesPackage :+ "JsonSerializers", "_")
     if (model.features(Feature.ScalaJS)) {
-      file.addImport("scala.scalajs.js.annotation", "JSExport")
-      file.addImport("scala.scalajs.js.annotation", "JSExportTopLevel")
+      file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExport")
+      file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExportTopLevel")
     }
 
     file.add(s"object ${model.className} {", 1)

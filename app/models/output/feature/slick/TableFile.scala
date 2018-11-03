@@ -10,10 +10,10 @@ object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ model.slickPackage, key = model.className + "Table")
 
-    file.addImport((config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports")).mkString("."), "_")
+    file.addImport(config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports"), "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(s"${(config.applicationPackage ++ e.slickPackage).mkString(".")}.${e.className}ColumnType", s"${e.propertyName}ColumnType")
+      file.addImport(config.applicationPackage ++ e.slickPackage :+ s"${e.className}ColumnType", s"${e.propertyName}ColumnType")
     })
 
     file.add(s"object ${model.className}Table {", 1)
@@ -23,9 +23,9 @@ object TableFile {
     file.add("}", -1)
     file.add()
 
-    val cls = (config.applicationPackage ++ model.modelPackage :+ model.className).mkString(".")
+    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
 
-    file.add(s"""class ${model.className}Table(tag: slick.lifted.Tag) extends Table[$cls](tag, "${model.name}") {""", 1)
+    file.add(s"""class ${model.className}Table(tag: slick.lifted.Tag) extends Table[${model.className}](tag, "${model.key}") {""", 1)
 
     addFields(config, model, file, config.enums)
     file.add()
@@ -35,22 +35,22 @@ object TableFile {
         case h :: Nil => h.propertyName
         case x => "(" + x.map(_.propertyName).mkString(", ") + ")"
       }
-      file.add(s"""val modelPrimaryKey = primaryKey("pk_${model.name}", $pkProps)""")
+      file.add(s"""val modelPrimaryKey = primaryKey("pk_${model.key}", $pkProps)""")
       file.add()
     }
     if (model.fields.lengthCompare(22) > 0) {
-      file.addImport("shapeless", "HNil")
-      file.addImport("shapeless", "Generic")
-      file.addImport("slickless", "_")
+      file.addImport(Seq("shapeless"), "HNil")
+      file.addImport(Seq("shapeless"), "Generic")
+      file.addImport(Seq("slickless"), "_")
 
       val fieldStr = model.fields.map(_.propertyName).mkString(" :: ")
-      file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
+      file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
       file.add(s"override val * = ($fieldStr :: HNil).mappedWith(Generic[${model.className}])")
     } else {
       val propSeq = model.fields.map(_.propertyName).mkString(", ")
       file.add(s"override val * = ($propSeq) <> (", 1)
-      file.add(s"($cls.apply _).tupled,")
-      file.add(s"$cls.unapply")
+      file.add(s"(${model.className}.apply _).tupled,")
+      file.add(s"${model.className}.unapply")
       file.add(")", -1)
     }
 
@@ -65,13 +65,13 @@ object TableFile {
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case ColumnType.TagsType =>
-        file.addImport(config.tagsPackage.mkString("."), "Tag")
+        file.addImport(config.tagsPackage, "Tag")
         s"List[Tag]"
       case _ => field.scalaType(config)
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
-    file.add(s"""val ${field.propertyName} = column[$propType]("${field.columnName}")""")
+    file.add(s"""val ${field.propertyName} = column[$propType]("${field.key}")""")
   }
 
   private[this] def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
@@ -96,7 +96,7 @@ object TableFile {
     model.foreignKeys.foreach { fk =>
       fk.references match {
         case h :: Nil =>
-          val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+          val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           col.addImport(config = config, file = file, pkg = model.modelPackage)
           val propId = col.propertyName
           val propCls = col.className

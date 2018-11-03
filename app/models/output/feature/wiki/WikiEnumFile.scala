@@ -8,7 +8,7 @@ import models.output.file.MarkdownFile
 object WikiEnumFile {
   def export(config: ExportConfiguration, e: ExportEnum) = {
     val file = MarkdownFile(OutputPath.WikiMarkdown, "database" +: e.pkg, "DatabaseEnum" + e.className)
-    file.addHeader(e.name)
+    file.addHeader(e.key)
     e.values.foreach(v => file.add(s" - $v"))
     file
   }

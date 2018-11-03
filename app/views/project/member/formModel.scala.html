@@ -1,9 +1,0 @@
-@(projectile: services.ProjectileService, key: String, member: models.project.member.ProjectMember)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, "Model") {
-  <div class="collection with-header">
-    <div class="collection-header">
-      <h5><i class="@models.template.Icons.model"></i> TODO</h5>
-    </div>
-  </div>
-}

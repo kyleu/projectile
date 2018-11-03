@@ -1,15 +1,15 @@
-@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, m: models.export.ExportModel)(
+@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, member: models.project.member.ProjectMember, m: models.export.ExportModel)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, m.title + " Model") {
-  <form method="post" action="@controllers.project.routes.ProjectModelController.save(m.name)">
+  <form method="post" action="@controllers.project.routes.ProjectModelController.save(p.key, m.key)">
     <div class="collection with-header">
       <div class="collection-header">
         <div class="right">
-          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.name}.json")">Edit Json</a>
+          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/model/${m.key}.json")">Edit Json</a>
           <input class="theme btn" type="submit" value="Save" />
         </div>
         <h5><i class="@models.template.Icons.model"></i> @m.title</h5>
-        <em>Model</em>
+        <em><a class="theme-text" href="@controllers.project.routes.ProjectController.detail(p.key)">@p.title</a> Model</em>
       </div>
       <div class="collection-item">
         <label for="package">Package</label>
@@ -36,7 +36,7 @@
         @models.output.feature.Feature.values.filter(p.features.apply).filter(_.appliesToModel).map { feat =>
           <div>
             <label>
-              <input name="features" type="checkbox" value="@feat.value" @if(m.features(feat)) { checked="checked" } />
+              <input name="features" type="checkbox" value="@feat.value" @if(member.features(feat)) { checked="checked" } />
               <span>@feat.title</span>
             </label>
           </div>
@@ -49,7 +49,6 @@
             <tr>
               <th>Name</th>
               <th>Property</th>
-              <th>Class</th>
               <th>Title</th>
               <th>Search</th>
               <th>Ignored</th>
@@ -58,25 +57,22 @@
           <tbody>
             @m.fields.map { f =>
               <tr>
-                <td>@f.columnName</td>
+                <td>@f.key</td>
                 <td>
-                  <input id="field-@f.columnName-property" name="field-@f.columnName-property" value="@f.propertyName" />
+                  <input id="field-@f.key-propertyName" name="field-@f.key-propertyName" value="@f.propertyName" />
                 </td>
                 <td>
-                  <input id="field-@f.columnName-className" name="field-@f.columnName-className" value="@f.className" />
-                </td>
-                <td>
-                  <input id="field-@f.columnName-title" name="field-@f.columnName-title" value="@f.title" />
+                  <input id="field-@f.key-title" name="field-@f.key-title" value="@f.title" />
                 </td>
                 <td>
                   <label>
-                    <input id="field-@f.columnName-search" name="field-@f.columnName-search" type="checkbox" />
+                    <input id="field-@f.key-search" name="field-@f.key-search" type="checkbox" />
                     <span></span>
                   </label>
                 </td>
                 <td>
                   <label>
-                    <input id="field-@f.columnName-ignored" name="field-@f.columnName-ignored" type="checkbox" />
+                    <input name="ignored" value="@f.key" type="checkbox" @if(member.ignored(f.key)) { checked="checked" } />
                     <span></span>
                   </label>
                 </td>

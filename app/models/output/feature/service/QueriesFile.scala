@@ -9,32 +9,32 @@ object QueriesFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, dir = model.queriesPackage, key = model.className + "Queries")
 
-    file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
-    file.addImport((config.systemPackage ++ Seq("models", "database")).mkString("."), "Row")
-    file.addImport((config.systemPackage ++ Seq("models", "database")).mkString("."), "DatabaseField")
-    file.addImport((config.systemPackage ++ Seq("models", "database", "DatabaseFieldType")).mkString("."), "_")
+    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(config.systemPackage ++ Seq("models", "database"), "Row")
+    file.addImport(config.systemPackage ++ Seq("models", "database"), "DatabaseField")
+    file.addImport(config.systemPackage ++ Seq("models", "database", "DatabaseFieldType"), "_")
 
     if (model.pkg.nonEmpty) {
-      file.addImport((config.systemPackage ++ Seq("models", "queries")).mkString("."), "BaseQueries")
+      file.addImport(config.systemPackage ++ Seq("models", "queries"), "BaseQueries")
     }
 
-    file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.name}") {""", 1)
+    file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.key}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
       f.addImport(config, file, Nil)
-      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.columnName}", typ = ${f.classNameForSqlType(config)})"""
+      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.key}", typ = ${f.classNameForSqlType(config)})"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
       file.add(field + comma)
     }
     file.add(")", -1)
 
     if (model.pkFields.nonEmpty) {
-      file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.columnName + "\"").mkString(", ") + ")")
-      file.add(s"override protected val searchColumns = Seq(${model.searchFields.map("\"" + _.columnName + "\"").mkString(", ")})")
+      file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.key + "\"").mkString(", ") + ")")
+      file.add(s"override protected val searchColumns = Seq(${model.searchFields.map("\"" + _.key + "\"").mkString(", ")})")
     }
     file.add()
 
-    file.addImport((config.systemPackage ++ Seq("models", "result", "filter")).mkString("."), "Filter")
+    file.addImport(config.systemPackage ++ Seq("models", "result", "filter"), "Filter")
     file.add("def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)")
 
     file.add("def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
@@ -58,7 +58,7 @@ object QueriesFile {
       file.add(s"def insert(model: ${model.className}) = new Insert(model)")
       file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
 
-      file.addImport((config.systemPackage ++ Seq("models", "result", "data")).mkString("."), "DataField")
+      file.addImport(config.systemPackage ++ Seq("models", "result", "data"), "DataField")
       file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
     }
 
@@ -84,7 +84,7 @@ object QueriesFile {
       val name = pkField.propertyName
       pkField.addImport(config, file, Nil)
       file.add(s"def getByPrimaryKey($name: ${model.pkType(config)}) = new GetByPrimaryKey(Seq($name))")
-      file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType(config)}]) = new ColSeqQuery(column = "${pkField.columnName}", values = ${name}Seq)""")
+      file.add(s"""def getByPrimaryKeySeq(${name}Seq: Seq[${model.pkType(config)}]) = new ColSeqQuery(column = "${pkField.key}", values = ${name}Seq)""")
       file.add()
     case pkFields =>
       pkFields.foreach(_.addImport(config, file, Nil))
@@ -92,7 +92,7 @@ object QueriesFile {
       val seqArgs = pkFields.map(_.propertyName).mkString(", ")
       file.add(s"def getByPrimaryKey($args) = new GetByPrimaryKey(Seq[Any]($seqArgs))")
       file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType(config)}]) = new SeqQuery(", 1)
-      val pkWhere = pkFields.map(f => "\\\"" + f.columnName + "\\\" = ?").mkString(" and ")
+      val pkWhere = pkFields.map(f => "\\\"" + f.key + "\\\" = ?").mkString(" and ")
       file.add(s"""whereClause = Some(idSeq.map(_ => "($pkWhere)").mkString(" or ")),""")
       file.add("values = idSeq.flatMap(_.productIterator.toSeq)")
       file.add(")", -1)

@@ -15,8 +15,8 @@ case class ExportResult(
   private[this] val startTime = System.currentTimeMillis
   private[this] val logs = collection.mutable.ArrayBuffer.empty[(Int, String)]
 
-  def getTable(id: String) = models.find(t => t.propertyName == id || t.name == id)
-  def getView(id: String) = views.find(t => t.propertyName == id || t.name == id)
+  def getTable(id: String) = models.find(t => t.propertyName == id || t.key == id)
+  def getView(id: String) = views.find(t => t.propertyName == id || t.key == id)
 
   def log(msg: String) = logs += ((System.currentTimeMillis - startTime).toInt -> msg)
   val getLogs: Seq[(Int, String)] = logs

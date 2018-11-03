@@ -8,8 +8,8 @@ case class ScalaFile(
 
   private[this] var imports = Set.empty[(String, String)]
 
-  def addImport(p: String, c: String) = {
-    imports += (p -> c)
+  def addImport(p: Seq[String], c: String): Unit = {
+    imports += (p.mkString(".") -> c)
   }
 
   override def prefix = {

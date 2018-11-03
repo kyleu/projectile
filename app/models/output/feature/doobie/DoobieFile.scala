@@ -10,27 +10,27 @@ object DoobieFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "Doobie")
-    val cols = model.fields.map(_.columnName)
+    val cols = model.fields.map(_.key)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 
-    file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
+    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
     if (model.pkg.nonEmpty) {
-      file.addImport((config.systemPackage ++ Seq("services", "database", "doobie")).mkString("."), "DoobieQueries")
+      file.addImport(config.systemPackage ++ Seq("services", "database", "doobie"), "DoobieQueries")
     }
-    file.addImport((config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports")).mkString("."), "_")
+    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports"), "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(s"${(config.applicationPackage ++ e.doobiePackage).mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")
+      file.addImport(config.applicationPackage ++ e.doobiePackage :+ s"${e.className}Doobie", s"${e.propertyName}Meta")
     })
 
-    file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.name}") {""", 1)
+    file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.key}") {""", 1)
 
-    file.add(s"""override val countFragment = fr${tq}select count(*) from "${model.name}"$tq""")
-    file.add(s"""override val selectFragment = fr${tq}select $quotedCols from "${model.name}"$tq""")
+    file.add(s"""override val countFragment = fr${tq}select count(*) from "${model.key}"$tq""")
+    file.add(s"""override val selectFragment = fr${tq}select $quotedCols from "${model.key}"$tq""")
     file.add()
 
     file.add(s"""override val columns = Seq(${cols.map("\"" + _ + "\"").mkString(", ")})""")
-    file.add(s"override val searchColumns = Seq(${model.searchFields.map("\"" + _.columnName + "\"").mkString(", ")})")
+    file.add(s"override val searchColumns = Seq(${model.searchFields.map("\"" + _.key + "\"").mkString(", ")})")
     file.add()
 
     file.add("override def searchFragment(q: String) = {", 1)
@@ -49,7 +49,7 @@ object DoobieFile {
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
-        file.addImport("cats.data", "NonEmptyList")
+        file.addImport(Seq("cats", "data"), "NonEmptyList")
 
         file.add()
         val colProp = field.propertyName
@@ -71,9 +71,9 @@ object DoobieFile {
     model.foreignKeys.foreach { fk =>
       fk.references match {
         case h :: Nil =>
-          file.addImport("cats.data", "NonEmptyList")
+          file.addImport(Seq("cats", "data"), "NonEmptyList")
 
-          val col = model.fields.find(_.columnName == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+          val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
           col.addImport(config = config, file = file, pkg = model.doobiePackage)
           val propId = col.propertyName
           val propCls = col.className

@@ -1,14 +1,15 @@
-@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, e: models.export.ExportEnum)(
+@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, m: models.project.member.ProjectMember, e: models.export.ExportEnum)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, e.className + " Enum") {
-  <form method="post" action="@controllers.project.routes.ProjectEnumController.save(e.name)">
+  <form method="post" action="@controllers.project.routes.ProjectEnumController.save(p.key, e.key)">
     <div class="collection with-header">
       <div class="collection-header">
         <div class="right">
-          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.name}.json")">Edit Json</a>
+          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.key}.json")">Edit Json</a>
           <input class="theme btn" type="submit" value="Save" />
         </div>
         <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
+        <em><a class="theme-text" href="@controllers.project.routes.ProjectController.detail(p.key)">@p.title</a> Enum</em>
       </div>
       <div class="collection-item">
         <label for="package">Package</label>
@@ -48,7 +49,7 @@
               <td>@v</td>
               <td>
                 <label>
-                  <input id="value-@v-ignored" name="value-@v-ignored" type="checkbox" />
+                  <input name="ignored" value="@v" type="checkbox" @if(m.ignored(v)) { checked="checked" } />
                   <span></span>
                 </label>
               </td>

@@ -22,13 +22,13 @@ object ProjectAuditService {
     c.models.flatMap { m =>
       val missingEnums = m.fields.filter(_.t == ColumnType.EnumType).flatMap(f => f.enumOpt(c) match {
         case None => Some(AuditResult(
-          srcModel = m.name, src = f.columnName, t = "enum", tgt = f.sqlTypeName, message = "Missing enum definition"
+          srcModel = m.key, src = f.key, t = "enum", tgt = f.sqlTypeName, message = "Missing enum definition"
         ))
         case _ => None
       })
       val missingModels = m.references.flatMap {
         case r if c.getModelOpt(r.srcTable).isEmpty => Some(AuditResult(
-          srcModel = m.name, src = r.name, t = "model", tgt = r.srcTable, message = "Missing model definition"
+          srcModel = m.key, src = r.name, t = "model", tgt = r.srcTable, message = "Missing model definition"
         ))
         case _ => None
       }

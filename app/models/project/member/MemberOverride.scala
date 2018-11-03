@@ -8,6 +8,6 @@ object MemberOverride {
 }
 
 case class MemberOverride(
-    prop: String,
+    k: String,
     v: String
 )

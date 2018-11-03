@@ -22,7 +22,7 @@ object ExportModel {
 
 case class ExportModel(
     inputType: InputType,
-    name: String,
+    key: String,
     pkg: List[String] = Nil,
     propertyName: String,
     className: String,
@@ -41,16 +41,24 @@ case class ExportModel(
     readOnly: Boolean = false
 ) {
   def apply(m: ProjectMember) = copy(
-    pkg = m.outputPackage.toList,
-    propertyName = m.outputKey,
-    className = m.getOverride("className", ExportHelper.toClassName(m.outputKey)),
-    features = m.features
+    pkg = m.pkg.toList,
+    propertyName = m.getOverride("propertyName", propertyName),
+    className = m.getOverride("className", className),
+    title = m.getOverride("title", title),
+    plural = m.getOverride("plural", plural),
+    features = m.features,
+    fields = fields.filterNot(f => m.ignored.contains(f.key)).map { f =>
+      f.copy(
+        propertyName = m.getOverride(s"${f.key}.propertyName", f.propertyName),
+        title = m.getOverride(s"${f.key}.title", f.title)
+      )
+    }
   )
 
   val fullClassName = (pkg :+ className).mkString(".")
   val propertyPlural = ExportHelper.toIdentifier(plural)
 
-  val pkFields = pkColumns.map(c => getField(c.name))
+  val pkFields = pkColumns.flatMap(c => getFieldOpt(c.name))
   def pkType(config: ExportConfiguration) = pkFields match {
     case Nil => "???"
     case h :: Nil => h.scalaType(config)
@@ -60,8 +68,7 @@ case class ExportModel(
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
-  val pkgString = pkg.mkString(".")
-  val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.columnName == x.columnName))
+  val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
   val modelPackage = List("models") ++ pkg
   val queriesPackage = List("models", "queries") ++ pkg
@@ -69,11 +76,9 @@ case class ExportModel(
   val doobiePackage = List("models", "doobie") ++ pkg
 
   val servicePackage = List("services") ++ pkg
-  val serviceClass = (servicePackage :+ (className + "Service")).mkString(".")
-  val serviceReference = pkg match {
-    case Nil => "services." + propertyName + "Service"
-    case _ => "services." + pkg.head + "Services." + propertyName + "Service"
-  }
+
+  val viewPackage = Seq("views", "admin") ++ pkg
+  val viewHtmlPackage = Seq("views", "html", "admin") ++ pkg
 
   def validReferences(config: ExportConfiguration) = {
     references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
@@ -90,5 +95,5 @@ case class ExportModel(
   def getField(k: String) = getFieldOpt(k).getOrElse {
     throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}].")
   }
-  def getFieldOpt(k: String) = fields.find(f => f.columnName == k || f.propertyName == k)
+  def getFieldOpt(k: String) = fields.find(f => f.key == k || f.propertyName == k)
 }

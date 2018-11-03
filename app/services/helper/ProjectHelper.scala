@@ -43,8 +43,8 @@ trait ProjectHelper { this: ProjectileService =>
     val p = getProject(key)
     val inputs = p.allMembers.map(_.input).distinct.map(getInput).map(i => i.key -> i).toMap
 
-    val exportEnums = p.enums.map(e => inputs(e.input).exportEnum(e.inputKey).apply(e))
-    val exportModels = p.models.map(e => inputs(e.input).exportModel(e.inputKey).apply(e))
+    val exportEnums = p.enums.map(e => inputs(e.input).exportEnum(e.key).apply(e))
+    val exportModels = p.models.map(e => inputs(e.input).exportModel(e.key).apply(e))
 
     ExportConfiguration(project = p, enums = exportEnums, models = exportModels)
   }

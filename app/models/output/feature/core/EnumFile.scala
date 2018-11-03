@@ -10,9 +10,9 @@ object EnumFile {
     val path = OutputPath.ServerSource
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.modelPackage, key = enum.className)
 
-    file.addImport("enumeratum.values", "StringEnumEntry")
-    file.addImport("enumeratum.values", "StringEnum")
-    file.addImport("enumeratum.values", "StringCirceEnum")
+    file.addImport(Seq("enumeratum", "values"), "StringEnumEntry")
+    file.addImport(Seq("enumeratum", "values"), "StringEnum")
+    file.addImport(Seq("enumeratum", "values"), "StringCirceEnum")
 
     file.add(s"sealed abstract class ${enum.className}(override val value: String) extends StringEnumEntry {", 1)
     file.add("override def toString = value")

@@ -21,13 +21,14 @@ class ProjectMemberService(val svc: ProjectileService) {
 
   private[this] def saveMember(p: String, i: Input, member: ProjectMember) = {
     val m = member.inputType.out match {
-      case ProjectMember.OutputType.Model => i.exportModel(member.inputKey).apply(member)
-      case ProjectMember.OutputType.Enum => i.exportEnum(member.inputKey).apply(member)
+      case ProjectMember.OutputType.Model => i.exportModel(member.key).apply(member)
+      case ProjectMember.OutputType.Enum => i.exportEnum(member.key).apply(member)
     }
 
-    val f = fileFor(p, member.outputType, member.outputKey)
+    val f = fileFor(p, member.outputType, member.key)
     f.createFileIfNotExists(createParents = true)
     f.overwrite(member.asJson.spaces2)
+    println(member)
     member
   }
 }

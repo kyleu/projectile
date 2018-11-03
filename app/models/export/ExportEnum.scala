@@ -14,15 +14,15 @@ object ExportEnum {
 case class ExportEnum(
     inputType: InputType,
     pkg: List[String] = Nil,
-    name: String,
+    key: String,
     className: String,
     values: Seq[String],
     features: Set[Feature] = Set.empty
 ) {
 
   def apply(m: ProjectMember) = copy(
-    pkg = m.outputPackage.toList,
-    className = ExportHelper.toClassName(m.outputKey),
+    pkg = m.pkg.toList,
+    className = m.getOverride("className", ExportHelper.toClassName(ExportHelper.toIdentifier(m.key))),
     values = values.filterNot(m.ignored.contains),
     features = m.features
   )

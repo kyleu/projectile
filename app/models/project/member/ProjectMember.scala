@@ -31,16 +31,15 @@ object ProjectMember {
 case class ProjectMember(
     input: String,
     inputType: ProjectMember.InputType,
-    inputKey: String,
 
-    outputKey: String,
-    outputPackage: Seq[String] = Nil,
+    key: String,
+    pkg: Seq[String] = Nil,
 
     features: Set[Feature] = Set.empty,
-    ignored: Seq[String] = Nil,
+    ignored: Set[String] = Set.empty,
     overrides: Seq[MemberOverride] = Nil
 ) {
-  def getOverride(key: String, default: String) = overrides.find(_.prop == key).map(_.v).getOrElse(default)
+  def getOverride(key: String, default: => String) = overrides.find(_.k == key).map(_.v).getOrElse(default)
 
   lazy val outputType = inputType.out
 }

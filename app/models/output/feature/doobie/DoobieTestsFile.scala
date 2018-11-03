@@ -9,16 +9,16 @@ object DoobieTestsFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerTest, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "DoobieTests")
 
-    file.addImport("org.scalatest", "_")
-    file.addImport((config.applicationPackage ++ model.modelPackage).mkString("."), model.className)
-    file.addImport((config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports")).mkString("."), "_")
+    file.addImport(Seq("org", "scalatest"), "_")
+    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports"), "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(s"${(config.applicationPackage ++ e.doobiePackage).mkString(".")}.${e.className}Doobie", s"${e.propertyName}Meta")
+      file.addImport(config.applicationPackage ++ e.doobiePackage :+ s"${e.className}Doobie", s"${e.propertyName}Meta")
     })
 
     file.add(s"class ${model.className}DoobieTests extends FlatSpec with Matchers {", 1)
-    file.addImport((config.systemPackage ++ Seq("models", "doobie", "DoobieTestHelper", "yolo")).mkString("."), "_")
+    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieTestHelper", "yolo"), "_")
 
     file.add()
     file.add(s""""Doobie queries for [${model.className}]" should "typecheck" in {""", 1)

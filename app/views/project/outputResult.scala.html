@@ -7,8 +7,8 @@
         <a class="theme-text" href="@controllers.project.routes.ProjectController.export(output.project.key)">Run Again</a>
         (<a class="theme-text" href="@controllers.project.routes.ProjectController.export(output.project.key, verbose = true)">verbose</a>)
       </div>
-      <h5><i class="@output.project.template.icon"></i> @output.project.title Export Result</h5>
-      <em>@output.fileCount files generated in @{output.duration}ms</em>
+      <h5><i class="@output.project.template.icon"></i> Export Result</h5>
+      <em>@output.fileCount files generated for <a class="theme-text" href="@controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.title</a> in @{output.duration}ms</em>
     </div>
 
     <div class="collection-item">

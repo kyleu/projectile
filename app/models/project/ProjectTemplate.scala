@@ -20,6 +20,7 @@ sealed abstract class ProjectTemplate(
     case OutputPath.ServerTest => "src/test/scala"
     case OutputPath.SharedSource => "src/main/scala"
     case OutputPath.SharedTest => "src/test/scala"
+    case OutputPath.OpenAPIJson => "src/main/resources/openapi"
     case OutputPath.WikiMarkdown => "wiki"
   }
 }
@@ -31,7 +32,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "A simple Scala library, built with sbt, that depends on Circe and Enumeratum",
     repo = "https://github.com/KyleU/projectile-template-scala-library.git",
     icon = Icons.library,
-    features = Set(Core, DataModel, Wiki)
+    features = Set(Core, DataModel, OpenAPI, Wiki)
   )
 
   case object Play extends ProjectTemplate(
@@ -40,13 +41,14 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "A simple Scala Play Framework application with some useful defaults and helper classes",
     repo = "https://github.com/KyleU/projectile-template-play.git",
     icon = Icons.library,
-    features = Set(Core, DataModel, Wiki)
+    features = Set(Core, DataModel, OpenAPI, Wiki)
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.ServerSource => "app"
       case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "app"
       case OutputPath.SharedTest => "test"
+      case OutputPath.OpenAPIJson => "conf/openapi"
       case _ => super.path(p)
     }
   }
@@ -57,13 +59,14 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "Constantly updated, Boilerplay is a starter web application with loads of features",
     repo = "https://github.com/KyleU/boilerplay.git",
     icon = Icons.web,
-    features = Set(Core, DataModel, ScalaJS, Audit, Wiki)
+    features = Feature.values.toSet
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.ServerSource => "app"
       case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "shared/src/main/scala"
       case OutputPath.SharedTest => "shared/src/test/scala"
+      case OutputPath.OpenAPIJson => "conf/openapi"
       case OutputPath.WikiMarkdown => "doc/src/main/paradox"
       case _ => super.path(p)
     }

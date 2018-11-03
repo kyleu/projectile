@@ -45,7 +45,7 @@ case class PostgresInput(
 
   override def exportEnum(key: String) = {
     val e = getEnum(key)
-    ExportEnum(inputType = InputType.PostgresEnum, name = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
+    ExportEnum(inputType = InputType.PostgresEnum, key = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
   }
 
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))

@@ -42,7 +42,7 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     val newMembers = memberKeys.map { k =>
       val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
       val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(Feature.withValue).toSet
-      p.getMember(k).copy(outputPackage = pkg, features = features)
+      p.getMember(k).copy(pkg = pkg, features = features)
     }
     val updated = projectile.saveProjectMembers(key, newMembers)
     val msg = s"Saved [${memberKeys.size}] project members"

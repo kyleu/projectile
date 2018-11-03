@@ -11,7 +11,7 @@ object ExportConfigurationDefault {
   }
 
   def loadField(col: Column, idx: Int, indexed: Boolean, unique: Boolean, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
-    columnName = col.name,
+    key = col.name,
     propertyName = clean(toIdentifier(col.name)),
     title = toDefaultTitle(col.name),
     description = col.description,

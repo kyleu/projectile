@@ -8,63 +8,22 @@ import models.project.member.ProjectMember.InputType
 
 object TableExportModel {
   def loadTableModel(t: Table, tables: Seq[Table], enums: Seq[ExportEnum]) = {
-    val audited = t.name match {
-      case "system_users" => true
-      case _ => false
-    }
-
-    val cn = t.name match {
-      case "system_users" => "SystemUser"
-      case "oauth2_info" => "OAuth2Info"
-      case x => toClassName(x)
-    }
-
-    val provided = cn match {
-      case "Ddl" | "LoginInfo" | "OAuth2Info" | "PasswordInfo" | "SettingValues" => true
-      case _ => false
-    }
-
-    val pkg = cn match {
-      case "Ddl" => List("ddl")
-      case "FlywaySchemaHistory" => List("ddl")
-      case "Audit" => List("audit")
-      case "AuditRecord" => List("audit")
-      case "OAuth2Info" => List("auth")
-      case "PasswordInfo" => List("auth")
-      case "ScheduledTaskRun" => List("task")
-      case "SettingValues" => List("settings")
-      case "SyncProgress" => List("sync")
-      case "SystemUser" => List("user")
-      case "Note" => List("note")
-      case "LoginInfo" | "PasswordInfo" => List("auth")
-      case _ => Nil
-    }
-
-    val title = toDefaultTitle(cn) match {
-      case "O Auth2 Info" => "OAuth2 Info"
-      case x => x
-    }
-
-    val plural = title match {
-      case "Sync Progress" => "Sync Progresses"
-      case "Flyway Schema History" => "Flyway Schema Histories"
-      case x => x + "s"
-    }
+    val cn = toClassName(t.name)
+    val title = toDefaultTitle(cn)
 
     ExportModel(
       inputType = InputType.PostgresTable,
-      name = t.name,
-      pkg = pkg,
+      key = t.name,
+      pkg = Nil,
       propertyName = toIdentifier(cn),
       className = cn,
       title = title,
       description = t.description,
-      plural = plural,
+      plural = title + "s",
       fields = loadTableFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(t),
       foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
-      references = ExportConfigurationHelper.references(tables, t, Map.empty),
-      provided = provided
+      references = ExportConfigurationHelper.references(tables, t, Map.empty)
     )
   }
 

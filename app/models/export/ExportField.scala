@@ -34,7 +34,7 @@ object ExportField {
     case EnumType => enumOpt match {
       case Some(enum) =>
         val (_, cn) = defaultValue.flatMap(d => enum.valuesWithClassNames.find(_._1 == d)).getOrElse {
-          enum.valuesWithClassNames.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.name}]."))
+          enum.valuesWithClassNames.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.key}]."))
         }
         s"${enum.className}.$cn"
       case None => "\"" + defaultValue.getOrElse("") + "\""
@@ -44,7 +44,7 @@ object ExportField {
 }
 
 case class ExportField(
-    columnName: String,
+    key: String,
     propertyName: String,
     title: String,
     fkNameOverride: String = "",
@@ -83,8 +83,8 @@ case class ExportField(
   def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String]) = {
     enumOpt(config) match {
       case Some(enum) if enum.modelPackage == pkg => // Noop
-      case Some(enum) => file.addImport((config.applicationPackage ++ enum.modelPackage).mkString("."), enum.className)
-      case None => t.requiredImport.foreach(pkg => file.addImport(pkg, t.asScala))
+      case Some(enum) => file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
+      case None => t.requiredImport.foreach(pkg => file.addImport(pkg.split('.'), t.asScala))
     }
   }
 
