@@ -34,7 +34,7 @@
       @input.enums.map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/enum/${e.key}.json")" class="theme-text">@e.key</a>
+          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/enum/${e.key}.json")" class="theme-text">@e.key</a>
         </div>
       }
     </div>
@@ -48,7 +48,7 @@
       @input.tables.map { t =>
         <div class="collection-item">
           <div class="right">@t.columns.size columns</div>
-          <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/table/${t.name}.json")" class="theme-text">@t.name</a>
+          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/table/${t.name}.json")" class="theme-text">@t.name</a>
         </div>
       }
     </div>
@@ -63,7 +63,7 @@
         @input.views.map { v =>
           <div class="collection-item">
             <div class="right">@v.columns.size columns</div>
-            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/view/${v.name}.json")" class="theme-text">@v.name</a>
+            <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/view/${v.name}.json")" class="theme-text">@v.name</a>
           </div>
         }
       </div>

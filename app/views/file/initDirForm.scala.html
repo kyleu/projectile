@@ -1,0 +1,16 @@
+@(projectile: services.ProjectileService, dir: String)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile, "Init Projectile Directory") {
+    <div class="collection with-header">
+      <div class="collection-header">
+        <h5><i class="@models.template.Icons.projectile"></i> Init Projectile Directory</h5>
+      </div>
+      <div class="collection-item">
+        The directory <code>@dir</code> isn't configured for projectile.
+      </div>
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.routes.HomeController.initialize(dir)">Initialize</a>
+        <a class="btn-flat theme-text" href="@controllers.routes.HomeController.index()">Cancel</a>
+      </div>
+    </div>
+}

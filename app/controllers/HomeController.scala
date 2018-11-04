@@ -1,5 +1,7 @@
 package controllers
 
+import util.web.{ControllerUtils, PlayServerHelper}
+
 import scala.concurrent.Future
 
 @javax.inject.Singleton
@@ -8,42 +10,32 @@ class HomeController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.index(projectile, projectile.listInputs(), projectile.listProjects())))
   }
 
-  def viewFile(path: String) = Action.async { implicit request =>
-    val f = projectile.rootDir / ".projectile" / path
-    if (f.isReadable && f.isRegularFile) {
-      Future.successful(Ok(views.html.file.fileEditForm(projectile, path, f.contentAsString)))
+  def changeDirForm() = Action.async { implicit request =>
+    Future.successful(Ok(views.html.file.newDirForm(projectile)))
+  }
+
+  def changeDir() = Action.async { implicit request =>
+    import better.files._
+
+    val dir = ControllerUtils.getForm(request.body)("dir")
+    val f = dir.toFile
+    if (f.isDirectory && f.isReadable) {
+      val projectileDir = f / ".projectile"
+      if (projectileDir.isDirectory && projectileDir.isReadable) {
+        PlayServerHelper.setNewDirectory(dir)
+        Future.successful(Redirect(controllers.routes.HomeController.index()))
+      } else {
+        Future.successful(Ok(views.html.file.initDirForm(projectile, dir)))
+      }
     } else {
-      throw new IllegalStateException(s"Cannot load file [${f.pathAsString}]")
+      Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("error" -> s"Directory [${f.pathAsString}] does not exist."))
     }
   }
 
-  def editFile(path: String) = Action.async { implicit request =>
-    val f = projectile.rootDir / ".projectile" / path
-    val originalContent = if (f.exists && f.isReadable) {
-      Some(f.contentAsString)
-    } else {
-      None
-    }
-    val newContent = request.body.asFormUrlEncoded.get("content").head
-
-    val msg = if (originalContent.contains(newContent)) {
-      "No change needed"
-    } else {
-      f.overwrite(newContent)
-      "Saved"
-    }
-
-    Future.successful(Redirect(controllers.routes.HomeController.viewFile(path)).flashing("success" -> msg))
-  }
-
-  def deleteFile(path: String) = Action.async { implicit request =>
-    val f = projectile.rootDir / ".projectile" / path
-    if (f.isReadable && f.isRegularFile) {
-      f.delete()
-      Future.successful(Ok(s"Deleted [$path]"))
-    } else {
-      throw new IllegalStateException(s"Cannot find file [${f.pathAsString}]")
-    }
+  def initialize(d: String) = Action.async { implicit request =>
+    PlayServerHelper.setNewDirectory(d)
+    projectile.init()
+    Future.successful(Redirect(controllers.routes.HomeController.index()))
   }
 
   def testbed = Action.async { implicit request =>

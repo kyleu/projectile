@@ -30,7 +30,7 @@
       @if(input.isInstanceOf[models.database.input.PostgresInput]) {
         <div class="collection-item">
           <div class="input-field">
-            <a href="@controllers.routes.HomeController.viewFile(s"input/${input.key}/dbconn.json")" class="theme-text">Connection Settings</a>
+            <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")" class="theme-text">Connection Settings</a>
           </div>
         </div>
       }

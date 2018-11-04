@@ -4,12 +4,12 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a href="@controllers.routes.HomeController.deleteFile(path)" class="theme-text" onclick="return confirm('Are you sure you want to delete this file?');">Delete File</a>
+        <a href="@controllers.routes.FileController.deleteFile(path)" class="theme-text" onclick="return confirm('Are you sure you want to delete this file?');">Delete File</a>
       </div>
       <h5><i class="@models.template.Icons.file"></i> @path</h5>
     </div>
     <div class="collection-item">
-      <form method="post" action="@controllers.routes.HomeController.editFile(path)">
+      <form method="post" action="@controllers.routes.FileController.editFile(path)">
         <textarea name="content" class="materialize-textarea">@content</textarea>
         <input type="submit" class="btn theme" value="Save Changes" />
       </form>

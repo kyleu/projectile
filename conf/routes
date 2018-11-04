@@ -1,9 +1,13 @@
 GET         /                                        controllers.HomeController.index
-GET         /file/view/*path                         controllers.HomeController.viewFile(path)
-POST        /file/edit/*path                         controllers.HomeController.editFile(path)
-GET         /file/delete/*path                       controllers.HomeController.deleteFile(path)
 GET         /testbed                                 controllers.HomeController.testbed
+GET         /dir                                     controllers.HomeController.changeDirForm()
+POST        /dir                                     controllers.HomeController.changeDir()
+GET         /dir/init                                controllers.HomeController.initialize(d)
 
+# Files
+GET         /file/view/*path                         controllers.FileController.viewFile(path)
+POST        /file/edit/*path                         controllers.FileController.editFile(path)
+GET         /file/delete/*path                       controllers.FileController.deleteFile(path)
 
 # Inputs
 GET         /input                                   controllers.input.InputController.formNew()

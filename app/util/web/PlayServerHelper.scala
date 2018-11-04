@@ -4,14 +4,19 @@ import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
 import services.ProjectileService
 import services.config.ConfigService
+import util.Logging
 
-object PlayServerHelper {
+object PlayServerHelper extends Logging {
   private[this] var activeService: Option[ProjectileService] = None
 
-  def setSvc(svc: ProjectileService) = activeService = Some(svc)
+  def setSvc(svc: ProjectileService) = {
+    activeService = Some(svc)
+    log.info(s"Set active service to $svc")
+  }
+  def setNewDirectory(path: String) = setSvc(new ProjectileService(new ConfigService(path)))
 
   def svc = activeService.getOrElse {
-    activeService = Some(new ProjectileService(new ConfigService(".")))
+    setSvc(new ProjectileService(new ConfigService(".")))
     activeService.getOrElse(throw new IllegalStateException("Cannot initialize service"))
   }
 

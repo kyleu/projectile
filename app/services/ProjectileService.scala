@@ -26,4 +26,6 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
   def init() = process(Init)
   def doctor() = process(Doctor)
   def testbed() = process(Testbed).asInstanceOf[JsonResponse]
+
+  override val toString = s"Projectile Service @ ${cfg.workingDirectory}"
 }

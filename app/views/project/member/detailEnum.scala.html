@@ -5,7 +5,7 @@
     <div class="collection with-header">
       <div class="collection-header">
         <div class="right">
-          <a class="btn-flat theme-text" href="@controllers.routes.HomeController.viewFile(s"project/$key/enum/${e.key}.json")">Edit Json</a>
+          <a class="btn-flat theme-text" href="@controllers.routes.FileController.viewFile(s"project/$key/enum/${e.key}.json")">Edit Json</a>
           <input class="theme btn" type="submit" value="Save" />
         </div>
         <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
