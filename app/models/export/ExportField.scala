@@ -47,7 +47,6 @@ case class ExportField(
     key: String,
     propertyName: String,
     title: String,
-    fkNameOverride: String = "",
     description: Option[String],
     idx: Int = 0,
     t: ColumnType,

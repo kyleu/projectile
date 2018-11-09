@@ -4,7 +4,7 @@ import models.database.schema.Table
 import models.export.config.{ExportConfigurationDefault, ExportConfigurationHelper}
 import models.export.{ExportEnum, ExportModel}
 import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
-import models.project.member.ProjectMember.InputType
+import models.project.member.ModelMember.InputType
 
 object TableExportModel {
   def loadTableModel(t: Table, tables: Seq[Table], enums: Seq[ExportEnum]) = {

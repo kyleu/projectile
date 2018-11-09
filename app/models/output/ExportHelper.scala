@@ -23,4 +23,17 @@ object ExportHelper {
 
   val getAllArgs = "orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
+
+  def replaceBetween(original: String, start: String, end: String, newContent: String) = {
+    val startIndex = original.indexOf(start)
+    if (startIndex == -1) {
+      throw new IllegalStateException(s"Cannot inject. No start key matching [$start].")
+    }
+    val endIndex = original.indexOf(end)
+    if (endIndex == -1) {
+      throw new IllegalStateException(s"Cannot inject. No end key matching [$end].")
+    }
+
+    original.substring(0, startIndex + start.length) + "\n" + newContent + "\n" + original.substring(endIndex)
+  }
 }

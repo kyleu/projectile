@@ -4,7 +4,7 @@ import enumeratum.{Enum, EnumEntry}
 import models.database.input.PostgresConnection
 import models.input.InputSummary
 import models.project._
-import models.project.member.ProjectMember
+import models.project.member.{EnumMember, ModelMember}
 
 sealed trait ProjectileCommand extends EnumEntry
 
@@ -21,8 +21,13 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class AddProject(project: ProjectSummary) extends ProjectileCommand
   case class SaveProject(project: Project) extends ProjectileCommand
   case class RemoveProject(key: String) extends ProjectileCommand
-  case class SaveProjectMembers(project: String, members: Seq[ProjectMember]) extends ProjectileCommand
-  case class RemoveProjectMember(key: String, t: ProjectMember.OutputType, member: String) extends ProjectileCommand
+
+  case class SaveModelMembers(project: String, members: Seq[ModelMember]) extends ProjectileCommand
+  case class RemoveModelMember(key: String, member: String) extends ProjectileCommand
+
+  case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
+  case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand
+
   case class ExportProject(key: String) extends ProjectileCommand
   case class AuditProject(key: String) extends ProjectileCommand
 

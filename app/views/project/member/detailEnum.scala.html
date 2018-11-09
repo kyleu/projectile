@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, m: models.project.member.ProjectMember, e: models.export.ExportEnum)(
+@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, m: models.project.member.EnumMember, e: models.export.ExportEnum)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, e.className + " Enum") {
   <form method="post" action="@controllers.project.routes.ProjectEnumController.save(p.key, e.key)">
@@ -10,6 +10,7 @@
         </div>
         <h5><i class="@models.template.Icons.enum"></i> @e.className</h5>
         <em><a class="theme-text" href="@controllers.project.routes.ProjectController.detail(p.key)">@p.title</a> Enum</em>
+        (<a class="theme-text" href="@controllers.project.routes.ProjectEnumController.remove(p.key, m.key)">Remove</a>)
       </div>
       <div class="collection-item">
         <label for="package">Package</label>
@@ -25,7 +26,7 @@
       </div>
       <div class="collection-item">
         <h6>Features</h6>
-        @models.output.feature.Feature.values.filter(p.features.apply).filter(_.appliesToEnum).map { feat =>
+        @p.enumFeatures.map { feat =>
           <div>
             <label>
               <input name="features" type="checkbox" value="@feat.value" @if(e.features(feat)) { checked="checked" } />

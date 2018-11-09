@@ -1,7 +1,5 @@
 package models.database.schema
 
-import java.util.UUID
-
 import util.JsonSerializers._
 
 object View {
@@ -16,7 +14,5 @@ case class View(
     description: Option[String],
     definition: Option[String],
 
-    columns: Seq[Column] = Nil,
-
-    loadedAt: Long = System.currentTimeMillis
+    columns: Seq[Column] = Nil
 )

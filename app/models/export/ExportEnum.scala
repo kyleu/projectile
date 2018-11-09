@@ -1,9 +1,9 @@
 package models.export
 
 import models.output.ExportHelper
-import models.output.feature.Feature
-import models.project.member.ProjectMember
-import models.project.member.ProjectMember.InputType
+import models.output.feature.EnumFeature
+import models.project.member.EnumMember
+import models.project.member.EnumMember.InputType
 import util.JsonSerializers._
 
 object ExportEnum {
@@ -17,10 +17,10 @@ case class ExportEnum(
     key: String,
     className: String,
     values: Seq[String],
-    features: Set[Feature] = Set.empty
+    features: Set[EnumFeature] = Set.empty
 ) {
 
-  def apply(m: ProjectMember) = copy(
+  def apply(m: EnumMember) = copy(
     pkg = m.pkg.toList,
     className = m.getOverride("className", ExportHelper.toClassName(ExportHelper.toIdentifier(m.key))),
     values = values.filterNot(m.ignored.contains),
@@ -35,5 +35,5 @@ case class ExportEnum(
   val slickPackage = List("models", "table") ++ pkg
   val doobiePackage = List("models", "doobie") ++ pkg
 
-  val fullClassName = (modelPackage :+ className).mkString(".")
+  val controllerPackage = List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
 }

@@ -1,12 +1,8 @@
 package models.database.schema
 
-import java.util.UUID
-
 import util.JsonSerializers._
 
 object Table {
-  PrimaryKey("p", Nil).asJson
-  ForeignKey("f", "k", Nil).asJson
   implicit val jsonEncoder: Encoder[Table] = deriveEncoder
   implicit val jsonDecoder: Decoder[Table] = deriveDecoder
 }
@@ -28,8 +24,5 @@ case class Table(
     rowIdentifier: Seq[String] = Nil,
     primaryKey: Option[PrimaryKey] = None,
     foreignKeys: Seq[ForeignKey] = Nil,
-    indexes: Seq[Index] = Nil,
-
-    createTime: Option[Long] = None,
-    loadedAt: Long = System.currentTimeMillis
+    indexes: Seq[Index] = Nil
 )

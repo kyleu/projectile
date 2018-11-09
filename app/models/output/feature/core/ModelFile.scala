@@ -3,25 +3,25 @@ package models.output.feature.core
 import models.database.schema.ColumnType
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
-import models.output.{OutputPackage, OutputPath}
-import models.output.feature.Feature
+import models.output.OutputPath
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object ModelFile {
   val includeDefaults = false
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val path = OutputPath.ServerSource
+    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className)
 
-    if (model.features(Feature.DataModel)) {
+    if (model.features(ModelFeature.DataModel)) {
       val pkg = config.resultsPackage :+ "data"
       file.addImport(pkg, "DataField")
       file.addImport(pkg, "DataSummary")
       file.addImport(pkg, "DataFieldModel")
     }
     file.addImport(config.utilitiesPackage :+ "JsonSerializers", "_")
-    if (model.features(Feature.ScalaJS)) {
+    if (model.features(ModelFeature.ScalaJS)) {
       file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExport")
       file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExportTopLevel")
     }
@@ -36,13 +36,13 @@ object ModelFile {
 
     model.description.foreach(d => file.add(s"/** $d */"))
 
-    if (model.features(Feature.ScalaJS)) {
+    if (model.features(ModelFeature.ScalaJS)) {
       file.add(s"""@JSExportTopLevel(util.Config.projectId + ".${model.className}")""")
     }
     file.add(s"final case class ${model.className}(", 2)
     ModelHelper.addFields(config, model, file)
 
-    if (model.features(Feature.DataModel)) {
+    if (model.features(ModelFeature.DataModel)) {
       model.extendsClass match {
         case Some(x) => file.add(") extends " + x + " {", -2)
         case None => file.add(") extends DataFieldModel {", -2)

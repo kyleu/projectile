@@ -2,9 +2,9 @@ package services
 
 import models.database.input.{PostgresConnection, PostgresInput}
 import models.input.{InputSummary, InputTemplate}
-import models.output.feature.Feature
-import models.project.member.ProjectMember
-import models.project.{ProjectSummary, ProjectTemplate}
+import models.output.feature.ProjectFeature
+import models.project.member.{EnumMember, ModelMember}
+import models.project.{ProjectSummary, ProjectTemplate, member}
 import org.scalatest._
 import services.config.ConfigService
 
@@ -57,47 +57,51 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
 
   // Project
   it should "create a project" in {
-    svc.saveProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, title = "Test Project", features = Feature.set))
+    svc.saveProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, title = "Test Project", features = ProjectFeature.set))
     val p = svc.getProject(projectKey)
     p.key should be(projectKey)
-    p.features should be(Feature.set)
+    p.features should be(ProjectFeature.set)
   }
 
+  // Members
   it should "add members correctly" in {
-    val e = svc.saveProjectMember(projectKey, ProjectMember(inputKey, ProjectMember.InputType.PostgresEnum, "setting_key", "settingKey"))
+    val e = svc.saveEnumMember(projectKey, EnumMember(inputKey, EnumMember.InputType.PostgresEnum, "setting_key", "settingKey"))
     e.input should be(inputKey)
     e.inputKey should be("setting_key")
 
-    val t = svc.saveProjectMember(projectKey, ProjectMember(inputKey, ProjectMember.InputType.PostgresTable, "audit", "audit"))
+    val t = svc.saveModelMember(projectKey, ModelMember(inputKey, ModelMember.InputType.PostgresTable, "audit", "audit"))
     t.input should be(inputKey)
     t.inputKey should be("audit")
 
     val p = svc.getProject(projectKey)
-    p.allMembers.size should be(2)
+    p.enums.size should be(1)
+    p.models.size should be(1)
   }
 
   it should "fail to add invalid members" in {
     a[IllegalStateException] should be thrownBy {
-      svc.saveProjectMember("Bad project", ProjectMember(inputKey, ProjectMember.InputType.PostgresTable, "audit", "audit"))
+      svc.saveModelMember("Bad project", ModelMember(inputKey, ModelMember.InputType.PostgresTable, "audit", "audit"))
     }
     a[IllegalStateException] should be thrownBy {
-      svc.saveProjectMember(projectKey, ProjectMember("Bad input", ProjectMember.InputType.PostgresTable, "audit", "audit"))
+      svc.saveModelMember(projectKey, ModelMember("Bad input", ModelMember.InputType.PostgresTable, "audit", "audit"))
     }
     a[IllegalStateException] should be thrownBy {
-      svc.saveProjectMember(projectKey, ProjectMember(inputKey, ProjectMember.InputType.PostgresTable, "invalid", "audit"))
+      svc.saveModelMember(projectKey, ModelMember(inputKey, ModelMember.InputType.PostgresTable, "invalid", "audit"))
     }
   }
 
+
+  // Audit
   it should "audit projects correctly" in {
     val result = svc.auditProject(key = projectKey, verbose = true)
-    result.project.key should be(projectKey)
-    result.fileCount should be(2)
+    result._1.project.key should be(projectKey)
   }
 
+  // Export
   it should "export projects correctly" in {
     val result = svc.exportProject(key = projectKey, verbose = true)
-    result.project.key should be(projectKey)
-    result.fileCount should be(2)
+    result._1.project.key should be(projectKey)
+    result._1.fileCount should be(2)
   }
 
   // Cleanup

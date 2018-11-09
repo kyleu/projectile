@@ -1,16 +1,17 @@
 package services.project
 
+import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.OutputLog
-import models.output.feature.{Feature, FeatureOutput}
+import models.output.{OutputLog, OutputPath}
+import models.output.feature.{FeatureOutput, ProjectFeature}
 import models.project.ProjectOutput
 import services.ProjectileService
 
 class ProjectExportService(val projectile: ProjectileService) {
-  def getOutput(key: String, verbose: Boolean) = out(projectile.loadConfig(key), verbose)
+  def getOutput(projectRoot: File, key: String, verbose: Boolean) = out(projectRoot, projectile.loadConfig(key), verbose)
 
-  def exportProject(key: String, verbose: Boolean) = {
-    val o = getOutput(key, verbose)
+  def exportProject(projectRoot: File, key: String, verbose: Boolean) = {
+    val o = getOutput(projectRoot, key, verbose)
 
     /*
     val dir = "./tmp/boilerplay".toFile
@@ -25,7 +26,7 @@ class ProjectExportService(val projectile: ProjectileService) {
     o
   }
 
-  private[this] def out(config: ExportConfiguration, verbose: Boolean) = {
+  private[this] def out(projectRoot: File, config: ExportConfiguration, verbose: Boolean) = {
     val startMs = System.currentTimeMillis
 
     val rootLogs = if (verbose) {
@@ -34,9 +35,9 @@ class ProjectExportService(val projectile: ProjectileService) {
       Nil
     }
 
-    val featureOutputs = Feature.values.flatMap {
-      case feature if config.project.features(feature) => Seq(feature.export(config, verbose))
-      case feature if verbose => Seq(FeatureOutput(feature, Nil, Seq(OutputLog(s"Skipping disabled feature [${feature.value}]", 0L)), 0L))
+    val featureOutputs = ProjectFeature.values.flatMap {
+      case feature if config.project.features(feature) => Seq(feature.export(projectRoot, config, verbose))
+      case feature if verbose => Seq(FeatureOutput(feature, Nil, Nil, Seq(OutputLog(s"Skipping disabled feature [${feature.value}]", 0L)), 0L))
       case _ => Nil
     }
 

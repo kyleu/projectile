@@ -2,9 +2,10 @@ package controllers.project
 
 import controllers.BaseController
 import models.database.input.PostgresInput
-import models.output.feature.Feature
-import models.project.member.{MemberOverride, ProjectMember}
-import models.project.member.ProjectMember.InputType
+import models.output.feature.{EnumFeature, ProjectFeature}
+import models.project.member
+import models.project.member.{EnumMember, MemberOverride}
+import models.project.member.EnumMember.InputType
 import util.web.ControllerUtils
 
 import scala.concurrent.Future
@@ -35,23 +36,22 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
 
   def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val enumFeatures = p.features.filter(_.appliesToEnum)
     inputKey match {
       case "all" =>
         val i = projectile.getInput(input)
         val toSave = i.exportEnums.flatMap {
           case e if p.getEnumOpt(e.key).isDefined => None
-          case e => Some(ProjectMember(input = input, inputType = e.inputType, key = e.key, features = enumFeatures))
+          case e => Some(member.EnumMember(input = input, inputType = e.inputType, key = e.key, features = p.enumFeatures.toSet))
         }
-        val saved = projectile.saveProjectMembers(key, toSave)
+        val saved = projectile.saveEnumMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
-        Future.successful(redir.flashing("success" -> s"Saved ${saved.size} enums"))
+        Future.successful(redir.flashing("success" -> s"Added ${saved.size} enums"))
       case _ =>
-        val it = ProjectMember.InputType.withValue(inputType)
-        val m = ProjectMember(input = input, inputType = it, key = inputKey, features = enumFeatures)
-        projectile.saveProjectMembers(key, Seq(m))
+        val it = EnumMember.InputType.withValue(inputType)
+        val m = EnumMember(input = input, inputType = it, key = inputKey, features = p.enumFeatures.toSet)
+        projectile.saveEnumMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, m.key))
-        Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [${m.key}]"))
+        Future.successful(redir.flashing("success" -> s"Added enum [${m.key}]"))
     }
   }
 
@@ -65,7 +65,7 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
     val form = ControllerUtils.getForm(request.body)
     val newMember = m.copy(
       pkg = form("package").split('.').map(_.trim).filter(_.nonEmpty),
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(Feature.withValue).toSet,
+      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(EnumFeature.withValue).toSet,
       ignored = form.getOrElse("ignored", "").split(',').map(_.trim).filter(_.nonEmpty).toSet,
       overrides = Seq(
         form("propertyName") match {
@@ -79,13 +79,13 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
       ).flatten
     )
 
-    projectile.saveProjectMembers(key, Seq(newMember))
+    projectile.saveEnumMembers(key, Seq(newMember))
     val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, enumKey))
-    Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [$enumKey]"))
+    Future.successful(redir.flashing("success" -> s"Saved enum [$enumKey]"))
   }
 
   def remove(key: String, member: String) = Action.async { implicit request =>
-    projectile.removeProjectMember(key, ProjectMember.OutputType.Enum, member)
+    projectile.removeEnumMember(key, member)
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed enum [$member]"))
   }
 }

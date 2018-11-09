@@ -52,10 +52,6 @@
     </div>
 
     <div class="collection-item">
-      <div class="right">
-        <a class="theme-text" href="@controllers.project.routes.ProjectController.bulkEditForm(project.key)">Bulk Edit</a>
-      </div>
-
       <a class="btn theme" href="@controllers.project.routes.ProjectController.export(project.key)">Export</a>
       <a class="btn theme" href="@controllers.project.routes.ProjectController.audit(project.key)">Audit</a>
     </div>
@@ -64,7 +60,8 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a class="theme-text" href="@controllers.project.routes.ProjectEnumController.formNew(project.key)">Add Enum</a>
+        <a class="theme-text" href="@controllers.project.routes.ProjectController.enumBulkEditForm(project.key)">Bulk Edit</a> /
+        <a class="theme-text" href="@controllers.project.routes.ProjectEnumController.formNew(project.key)">Add</a>
       </div>
       <h6><i class="@models.template.Icons.enum"></i> @project.enums.size Enums</h6>
     </div>
@@ -84,7 +81,8 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a class="theme-text" href="@controllers.project.routes.ProjectModelController.formNew(project.key)">Add Model</a>
+        <a class="theme-text" href="@controllers.project.routes.ProjectController.modelBulkEditForm(project.key)">Bulk Edit</a> /
+        <a class="theme-text" href="@controllers.project.routes.ProjectModelController.formNew(project.key)">Add</a>
       </div>
       <h6><i class="@models.template.Icons.model"></i> @project.models.size Models</h6>
     </div>

@@ -4,7 +4,7 @@ import models.database.schema.View
 import models.export.config.ExportConfigurationDefault
 import models.export.{ExportEnum, ExportModel}
 import models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
-import models.project.member.ProjectMember.InputType
+import models.project.member.ModelMember.InputType
 
 object ViewExportModel {
   def loadViewModel(v: View, enums: Seq[ExportEnum]) = {

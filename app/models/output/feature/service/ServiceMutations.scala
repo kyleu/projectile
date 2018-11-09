@@ -2,7 +2,7 @@ package models.output.feature.service
 
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
-import models.output.feature.Feature
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object ServiceMutations {
@@ -19,7 +19,7 @@ object ServiceMutations {
       file.add(s"def remove(creds: Credentials, $sig)$trace = {", 1)
       file.add(s"""traceF("remove")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add(s"case Some(current) =>", 1)
-      if (model.features(Feature.Audit)) {
+      if (model.features(ModelFeature.Audit)) {
         file.addImport(config.systemPackage ++ Seq("services", "audit"), "AuditHelper")
         val audit = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
         file.add(s"""AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields, creds)""")
@@ -41,7 +41,7 @@ object ServiceMutations {
         case f if f.notNull => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
         case f => s"""DataField("${f.propertyName}", ${f.propertyName}.map(_.toString))"""
       }.mkString(", ")
-      if (model.features(Feature.Audit)) {
+      if (model.features(ModelFeature.Audit)) {
         file.add(s"""AuditHelper.onUpdate("${model.className}", Seq($ids), newModel.toDataFields, fields, creds)""")
       }
       file.add(s"""newModel -> s"Updated [$${fields.size}] fields of ${model.title} [$interp]."""")

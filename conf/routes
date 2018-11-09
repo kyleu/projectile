@@ -20,7 +20,6 @@ GET         /input/:key/remove                       controllers.input.InputCont
 GET         /input/:key/form                         controllers.input.InputController.form(key)
 GET         /input/:key/refresh                      controllers.input.InputController.refresh(key)
 
-
 # Projects
 GET         /project                                 controllers.project.ProjectFormController.formNew()
 POST        /project/summary                         controllers.project.ProjectFormController.saveSummary()
@@ -37,8 +36,11 @@ GET         /project/:key/remove                     controllers.project.Project
 GET         /project/:key/export                     controllers.project.ProjectController.export(key, verbose: Boolean ?= false)
 GET         /project/:key/audit                      controllers.project.ProjectController.audit(key, verbose: Boolean ?= false)
 
-GET         /project/:key/members                    controllers.project.ProjectController.bulkEditForm(key)
-POST        /project/:key/members                    controllers.project.ProjectController.bulkEdit(key)
+GET         /project/:key/enums                      controllers.project.ProjectController.enumBulkEditForm(key)
+POST        /project/:key/enums                      controllers.project.ProjectController.enumBulkEdit(key)
+
+GET         /project/:key/models                     controllers.project.ProjectController.modelBulkEditForm(key)
+POST        /project/:key/models                     controllers.project.ProjectController.modelBulkEdit(key)
 
 GET         /project/:key/summary                    controllers.project.ProjectFormController.formSummary(key)
 GET         /project/:key/features                   controllers.project.ProjectFormController.formFeatures(key)

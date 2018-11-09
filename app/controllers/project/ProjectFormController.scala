@@ -1,7 +1,7 @@
 package controllers.project
 
 import controllers.BaseController
-import models.output.feature.Feature
+import models.output.feature.ProjectFeature
 import models.project.{ProjectSummary, ProjectTemplate}
 import play.api.mvc.{AnyContent, Request}
 import util.web.ControllerUtils
@@ -34,7 +34,7 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   def saveFeatures() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(Feature.withValue).toSet
+      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ProjectFeature.withValue).toSet
     ))
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }

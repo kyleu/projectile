@@ -2,9 +2,9 @@ package controllers.project
 
 import controllers.BaseController
 import models.database.input.PostgresInput
-import models.output.feature.Feature
-import models.project.member.{MemberOverride, ProjectMember}
-import models.project.member.ProjectMember.InputType
+import models.output.feature.{ModelFeature, ProjectFeature}
+import models.project.member.{MemberOverride, ModelMember}
+import models.project.member.ModelMember.InputType
 import util.web.ControllerUtils
 
 import scala.concurrent.Future
@@ -39,23 +39,22 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
 
   def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val modelFeatures = p.features.filter(_.appliesToModel)
     inputKey match {
       case "all" =>
         val i = projectile.getInput(input)
         val toSave = i.exportModels.flatMap {
           case m if p.getModelOpt(m.key).isDefined => None
-          case m => Some(ProjectMember(input = input, inputType = m.inputType, key = m.key, features = modelFeatures))
+          case m => Some(ModelMember(input = input, inputType = m.inputType, key = m.key, features = p.modelFeatures.toSet))
         }
-        val saved = projectile.saveProjectMembers(key, toSave)
+        val saved = projectile.saveModelMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
-        Future.successful(redir.flashing("success" -> s"Saved ${saved.size} models"))
+        Future.successful(redir.flashing("success" -> s"Added ${saved.size} models"))
       case _ =>
-        val it = ProjectMember.InputType.withValue(inputType)
-        val m = ProjectMember(input = input, inputType = it, key = inputKey, features = modelFeatures)
-        projectile.saveProjectMembers(key, Seq(m))
+        val it = ModelMember.InputType.withValue(inputType)
+        val m = ModelMember(input = input, inputType = it, key = inputKey, features = p.modelFeatures.toSet)
+        projectile.saveModelMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.key))
-        Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [${m.key}]"))
+        Future.successful(redir.flashing("success" -> s"Added model [${m.key}]"))
     }
   }
 
@@ -96,24 +95,42 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
         form.getOrElse(s"field-${f.key}-title", "") match {
           case x if x.nonEmpty && x != f.title => Some(MemberOverride(s"${f.key}.title", x))
           case _ => None
+        },
+        form.getOrElse(s"field-${f.key}-search", "false") match {
+          case x if x.toBoolean != f.inSearch => Some(MemberOverride(s"${f.key}.search", x))
+          case _ => None
         }
       ).flatten
     }
 
+    val foreignKeyOverrides = model.foreignKeys.flatMap { fk =>
+      form.getOrElse(s"fk-${fk.name}-propertyName", "") match {
+        case x if x.nonEmpty && x != fk.name => Some(MemberOverride(s"fk.${fk.name}.propertyName", x))
+        case _ => None
+      }
+    }
+
+    val referenceOverrides = model.references.flatMap { r =>
+      form.getOrElse(s"reference-${r.name}-propertyName", "") match {
+        case x if x.nonEmpty && x != r.name => Some(MemberOverride(s"reference.${r.name}.propertyName", x))
+        case _ => None
+      }
+    }
+
     val newMember = m.copy(
       pkg = form("package").split('.').map(_.trim).filter(_.nonEmpty),
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(Feature.withValue).toSet,
+      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ModelFeature.withValue).toSet,
       ignored = form.getOrElse("ignored", "").split(',').map(_.trim).filter(_.nonEmpty).toSet,
-      overrides = nameOverrides ++ fieldOverrides
+      overrides = nameOverrides ++ fieldOverrides ++ foreignKeyOverrides ++ referenceOverrides
     )
 
-    projectile.saveProjectMembers(key, Seq(newMember))
+    projectile.saveModelMembers(key, Seq(newMember))
     val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, modelKey))
-    Future.successful(redir.flashing("success" -> s"Saved ${m.outputType} [$modelKey]"))
+    Future.successful(redir.flashing("success" -> s"Saved model [$modelKey]"))
   }
 
   def remove(key: String, member: String) = Action.async { implicit request =>
-    projectile.removeProjectMember(key, ProjectMember.OutputType.Model, member)
+    projectile.removeModelMember(key, member)
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed model [$member]"))
   }
 }

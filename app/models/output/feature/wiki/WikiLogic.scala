@@ -1,17 +1,17 @@
 package models.output.feature.wiki
 
 import models.export.config.ExportConfiguration
-import models.output.feature.Feature
+import models.output.feature.ProjectFeature
 
-object WikiLogic extends Feature.Logic {
+object WikiLogic extends ProjectFeature.Logic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val listPages = WikiListFiles.export(config).map(_.rendered)
 
-    val models = config.models.filter(_.features(Feature.Wiki)).flatMap { model =>
+    val models = config.models.flatMap { model =>
       Seq(WikiModelFile.export(config, model).rendered)
     }
 
-    val enums = config.enums.filter(_.features(Feature.Wiki)).flatMap { e =>
+    val enums = config.enums.flatMap { e =>
       Seq(WikiEnumFile.export(config, e).rendered)
     }
 

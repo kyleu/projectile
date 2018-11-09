@@ -3,6 +3,7 @@ package models.output.feature.service
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
 import models.output.OutputPath
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object ServiceFile {
@@ -10,7 +11,8 @@ object ServiceFile {
   private[this] val searchArgs = "filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.servicePackage, key = model.className + "Service")
+    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.servicePackage, key = model.className + "Service")
     val queriesFilename = model.className + "Queries"
 
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
@@ -19,7 +21,7 @@ object ServiceFile {
     file.addImport(config.systemPackage ++ Seq("services", "database"), "ApplicationDatabase")
     file.addImport(config.utilitiesPackage :+ "FutureUtils", "serviceContext")
     file.addImport(config.resultsPackage :+ "data", "DataField")
-    file.addImport(config.systemPackage ++ Seq("models", "auth"), "Credentials")
+    file.addImport(config.applicationPackage ++ Seq("models", "auth"), "Credentials")
     file.addImport(config.resultsPackage :+ "filter", "Filter")
     file.addImport(config.resultsPackage :+ "orderBy", "OrderBy")
 

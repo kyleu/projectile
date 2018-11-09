@@ -1,7 +1,7 @@
 package controllers.project
 
 import controllers.BaseController
-import models.output.feature.Feature
+import models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
 import models.project.{ProjectSummary, ProjectTemplate}
 import util.web.ControllerUtils
 import util.JsonSerializers._
@@ -30,22 +30,41 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.project.outputResult(projectile, result._1, result._2, verbose)))
   }
 
-  def bulkEditForm(key: String) = Action.async { implicit request =>
+  def enumBulkEditForm(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    Future.successful(Ok(views.html.project.form.formMembers(projectile, p)))
+    Future.successful(Ok(views.html.project.form.formEnumMembers(projectile, p)))
   }
 
-  def bulkEdit(key: String) = Action.async { implicit request =>
+  def enumBulkEdit(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val form = ControllerUtils.getForm(request.body)
     val memberKeys = form.keys.filter(_.endsWith("-package")).map(_.stripSuffix("-package")).toSeq.sorted
     val newMembers = memberKeys.map { k =>
       val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
-      val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(Feature.withValue).toSet
-      p.getMember(k).copy(pkg = pkg, features = features)
+      val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(EnumFeature.withValue).toSet
+      p.getEnum(k).copy(pkg = pkg, features = features)
     }
-    val updated = projectile.saveProjectMembers(key, newMembers)
-    val msg = s"Saved [${memberKeys.size}] project members"
+    val updated = projectile.saveEnumMembers(key, newMembers)
+    val msg = s"Saved [${memberKeys.size}] project enum members"
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
+  }
+
+  def modelBulkEditForm(key: String) = Action.async { implicit request =>
+    val p = projectile.getProject(key)
+    Future.successful(Ok(views.html.project.form.formModelMembers(projectile, p)))
+  }
+
+  def modelBulkEdit(key: String) = Action.async { implicit request =>
+    val p = projectile.getProject(key)
+    val form = ControllerUtils.getForm(request.body)
+    val memberKeys = form.keys.filter(_.endsWith("-package")).map(_.stripSuffix("-package")).toSeq.sorted
+    val newMembers = memberKeys.map { k =>
+      val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
+      val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(ModelFeature.withValue).toSet
+      p.getModel(k).copy(pkg = pkg, features = features)
+    }
+    val updated = projectile.saveModelMembers(key, newMembers)
+    val msg = s"Saved [${memberKeys.size}] project model members"
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
   }
 }

@@ -4,11 +4,13 @@ import models.database.schema.ColumnType
 import models.export.{ExportEnum, ExportModel}
 import models.export.config.ExportConfiguration
 import models.output.OutputPath
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ model.slickPackage, key = model.className + "Table")
+    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.slickPackage, key = model.className + "Table")
 
     file.addImport(config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports"), "_")
 

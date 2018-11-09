@@ -3,11 +3,13 @@ package models.output.feature.slick
 import models.export.ExportEnum
 import models.export.config.ExportConfiguration
 import models.output.OutputPath
+import models.output.feature.EnumFeature
 import models.output.file.ScalaFile
 
 object ColumnTypeFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ enum.slickPackage, key = enum.className + "ColumnType")
+    val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.slickPackage, key = enum.className + "ColumnType")
 
     file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
     file.addImport(config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports"), "_")

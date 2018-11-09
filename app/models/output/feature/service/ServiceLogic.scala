@@ -1,19 +1,24 @@
 package models.output.feature.service
 
+import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.feature.Feature
+import models.output.feature.{ModelFeature, ProjectFeature}
 
-object ServiceLogic extends Feature.Logic {
+object ServiceLogic extends ProjectFeature.Logic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
-    val models = config.models.filter(_.features(Feature.Service)).flatMap { model =>
-      Seq(QueriesFile.export(config, model).rendered)
+    val svcModels = config.models.filter(_.features(ModelFeature.Service))
+
+    val models = svcModels.flatMap { model =>
+      Seq(QueriesFile.export(config, model).rendered, ServiceFile.export(config, model).rendered)
     }
 
-    val enums = config.enums.filter(_.features(Feature.Service)).flatMap { enum =>
-      Nil
-    }
+    val registries = ServiceRegistryFiles.files(config, svcModels).map(_.rendered)
 
-    debug(s"Exported [${models.size}] models and [${enums.size}] enums")
-    models ++ enums
+    debug(s"Exported [${models.size}] models and [${registries.size}] registries")
+    models ++ registries
+  }
+
+  override def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
+    InjectServiceRegistry.inject(config, projectRoot, info, debug)
   }
 }

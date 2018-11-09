@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 import io.scalaland.chimney.dsl._
 import models.output.{OutputPackage, OutputPath}
-import models.output.feature.Feature
-import models.project.member.ProjectMember
+import models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import models.project.member.{EnumMember, ModelMember}
 import util.DateUtils
 import util.JsonSerializers._
 
@@ -19,11 +19,11 @@ case class Project(
     key: String,
     title: String,
     description: String = "...",
-    features: Set[Feature] = Set.empty,
+    features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
     packages: Map[OutputPackage, Seq[String]] = Map.empty,
-    enums: Seq[ProjectMember] = Nil,
-    models: Seq[ProjectMember] = Nil,
+    enums: Seq[EnumMember] = Nil,
+    models: Seq[ModelMember] = Nil,
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,
     updated: LocalDateTime = DateUtils.now
@@ -39,9 +39,8 @@ case class Project(
   def getModelOpt(model: String) = models.find(_.key == model)
   def getModel(model: String) = getModelOpt(model).getOrElse(notFound("model", model))
 
-  def getMember(member: String) = getModelOpt(member).orElse(getEnumOpt(member)).getOrElse(notFound("member", member))
-
-  val allMembers = enums ++ models
+  def enumFeatures = EnumFeature.values.filter(e => e.dependsOn.forall(features.apply))
+  def modelFeatures = ModelFeature.values.filter(e => e.dependsOn.forall(features.apply))
 
   override def compare(p: Project) = title.compare(p.title)
 

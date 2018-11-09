@@ -3,13 +3,14 @@ package models.output.feature.datamodel
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
 import models.output.OutputPath
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object ResultFile {
   private[this] val resultArgs = "paging = paging, filters = filters, orderBys = orderBys, totalCount = totalCount, results = results, durationMs = durationMs"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val path = OutputPath.ServerSource
+    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className + "Result")
 
     file.addImport(Seq("java", "time"), "LocalDateTime")

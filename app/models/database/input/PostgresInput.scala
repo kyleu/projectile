@@ -7,7 +7,7 @@ import models.database.schema.{EnumType, Table, View}
 import models.export.ExportEnum
 import models.input.{Input, InputTemplate}
 import models.output.ExportHelper
-import models.project.member.ProjectMember.InputType
+import models.project.member.EnumMember.InputType
 import util.JsonSerializers._
 
 object PostgresInput {

@@ -1,0 +1,58 @@
+@(projectile: services.ProjectileService, project: models.project.Project)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile = projectile, title = project.title + " Model Members") {
+  <form action="" method="post">
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <input type="submit" class="btn theme" value="Save" />
+      </div>
+      <h5><i class="@project.template.icon"></i> [@project.key] Model Members</h5>
+      <div>@util.NumberUtils.withCommas(project.models.size) Available</div>
+    </div>
+    <div class="collection-item">
+      <table>
+        <thead>
+          <tr>
+            <th>Package</th>
+            <th>Name</th>
+            @project.modelFeatures.map { f =>
+              <th style="width: 120px;">
+                @f.title
+                <div>
+                  <a href="" onclick="checkAll('@f.value'); return false;" class="theme-text">All</a> /
+                  <a href="" onclick="uncheckAll('@f.value'); return false;" class="theme-text">@util.NullUtils.str</a>
+                </div>
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @project.models.sortBy(_.key).map { m =>
+            <tr>
+              <td><input id="@m.key-package" name="@m.key-package" type="text" value="@m.pkg.mkString(".")" /></td>
+              <td>@m.key</td>
+              @project.modelFeatures.map { f =>
+                <td>
+                  <label for="@m.key-feature-@f.value">
+                    <input id="@m.key-feature-@f.value" name="@m.key-feature-@f.value" class="input-@f.value" value="true" type="checkbox" @if(m.features(f)) { checked="checked" } />
+                    <span></span>
+                  </label>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </form>
+  <script>
+    function checkAll(k) {
+      $(".input-" + k).attr("checked", "checked");
+    }
+    function uncheckAll(k) {
+      $(".input-" + k).removeAttr("checked");
+    }
+  </script>
+}

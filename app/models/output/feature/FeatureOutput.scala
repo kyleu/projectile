@@ -1,7 +1,7 @@
 package models.output.feature
 
 import models.output.OutputLog
-import models.output.file.OutputFile
+import models.output.file.{InjectResult, OutputFile}
 import util.JsonSerializers._
 
 object FeatureOutput {
@@ -10,8 +10,9 @@ object FeatureOutput {
 }
 
 case class FeatureOutput(
-    feature: Feature,
+    feature: ProjectFeature,
     files: Seq[OutputFile.Rendered],
+    injections: Seq[InjectResult],
     logs: Seq[OutputLog],
     duration: Long
 )

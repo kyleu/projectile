@@ -3,11 +3,13 @@ package models.output.feature.service
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
 import models.output.OutputPath
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object QueriesFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.queriesPackage, key = model.className + "Queries")
+    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.queriesPackage, key = model.className + "Queries")
 
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
     file.addImport(config.systemPackage ++ Seq("models", "database"), "Row")

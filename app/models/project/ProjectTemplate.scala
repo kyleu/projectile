@@ -2,8 +2,8 @@ package models.project
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import models.output.OutputPath
-import models.output.feature.Feature
-import models.output.feature.Feature._
+import models.output.feature.ProjectFeature
+import models.output.feature.ProjectFeature._
 import models.template.Icons
 
 sealed abstract class ProjectTemplate(
@@ -12,11 +12,12 @@ sealed abstract class ProjectTemplate(
     val description: String,
     val repo: String,
     val icon: String,
-    val features: Set[Feature]
+    val features: Set[ProjectFeature]
 ) extends StringEnumEntry {
   def path(p: OutputPath) = p match {
     case OutputPath.Root => "."
     case OutputPath.ServerSource => "src/main/scala"
+    case OutputPath.ServerResource => "src/main/resources"
     case OutputPath.ServerTest => "src/test/scala"
     case OutputPath.SharedSource => "src/main/scala"
     case OutputPath.SharedTest => "src/test/scala"
@@ -45,6 +46,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.ServerSource => "app"
+      case OutputPath.ServerResource => "conf"
       case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "app"
       case OutputPath.SharedTest => "test"
@@ -59,10 +61,11 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "Constantly updated, Boilerplay is a starter web application with loads of features",
     repo = "https://github.com/KyleU/boilerplay.git",
     icon = Icons.web,
-    features = Feature.values.toSet
+    features = ProjectFeature.values.toSet
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.ServerSource => "app"
+      case OutputPath.ServerResource => "conf"
       case OutputPath.ServerTest => "test"
       case OutputPath.SharedSource => "shared/src/main/scala"
       case OutputPath.SharedTest => "shared/src/test/scala"
@@ -78,7 +81,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "A custom template allows you to specify default options manually",
     repo = "",
     icon = Icons.project,
-    features = Feature.values.toSet
+    features = ProjectFeature.values.toSet
   )
 
   override val values = findValues

@@ -32,12 +32,12 @@ object Dependencies {
 
   object GraphQL {
     val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
-    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.4"
+    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.5"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
 
   object Serialization {
-    private[this] val version = "0.10.0"
+    private[this] val version = "0.10.1"
     private[this] val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
     val all = projects.map(c => "io.circe" %% c % version)
   }
@@ -58,8 +58,8 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
     val schwatcher = "com.beachape.filemanagement" %% "schwatcher" % "0.3.5"
-    val clist = "org.backuity.clist" %% "clist-core"   % "3.4.0"
-    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.4.0" % "provided"
+    val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
+    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
   }
 
   object Testing {

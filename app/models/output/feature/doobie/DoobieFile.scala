@@ -3,13 +3,15 @@ package models.output.feature.doobie
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
 import models.output.OutputPath
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object DoobieFile {
   private[this] val tq = "\"\"\""
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "Doobie")
+    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
+    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "Doobie")
     val cols = model.fields.map(_.key)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 

@@ -50,8 +50,7 @@ object MetadataTables extends Logging {
       rowIdentifier = MetadataIdentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),
       foreignKeys = MetadataKeys.getForeignKeys(metadata, table),
-      indexes = MetadataIndexes.getIndexes(metadata, table),
-      createTime = rowStats.flatMap(_._6)
+      indexes = MetadataIndexes.getIndexes(metadata, table)
     )
   } catch {
     case NonFatal(x) =>

@@ -7,6 +7,7 @@ sealed abstract class OutputPath(override val value: String, val description: St
 object OutputPath extends StringEnum[OutputPath] with StringCirceEnum[OutputPath] {
   case object Root extends OutputPath("root", "The main directory where all files are generated")
   case object ServerSource extends OutputPath("server", "Scala source root for server-only classes")
+  case object ServerResource extends OutputPath("serverResources", "Scala resource root for server-only files")
   case object ServerTest extends OutputPath("serverTest", "Scala source root for server-only test classes")
   case object SharedSource extends OutputPath("shared", "Scala source root for shared classes")
   case object SharedTest extends OutputPath("sharedTest", "Scala source root for shared test classes")

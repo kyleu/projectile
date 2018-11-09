@@ -1,11 +1,12 @@
 package models.output.feature.openapi
 
 import models.export.ExportEnum
+import models.export.config.ExportConfiguration
 import models.output.OutputPath
 import models.output.file.JsonFile
 
 object EnumOpenApiPathsFile {
-  def export(enum: ExportEnum) = {
+  def export(config: ExportConfiguration, enum: ExportEnum) = {
     val file = JsonFile(path = OutputPath.OpenAPIJson, dir = "paths" +: enum.pkg, key = enum.propertyName)
     file.add("{", 1)
 
@@ -13,7 +14,7 @@ object EnumOpenApiPathsFile {
     file.add(s""""$route": {""", 1)
     file.add("\"get\": {", 1)
     file.add("\"summary\": \"Lists the possible " + enum.className + " values.\",")
-    file.add("\"operationId\": \"" + enum.fullClassName + ".list\",")
+    file.add("\"operationId\": \"" + (config.applicationPackage ++ enum.modelPackage :+ enum.className).mkString(".") + ".list\",")
     file.add("\"tags\": [\"" + enum.pkg.mkString(".") + "\"],")
     file.add("\"responses\": {", 1)
     file.add("\"200\": {", 1)

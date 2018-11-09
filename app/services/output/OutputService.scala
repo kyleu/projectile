@@ -1,6 +1,8 @@
 package services.output
 
 import better.files.File
+import models.export.config.ExportConfiguration
+import models.output.OutputPath
 import models.output.file.OutputFile
 import models.project.ProjectOutput
 import util.JsonSerializers._
@@ -20,7 +22,25 @@ class OutputService(projectRoot: File) {
       fo.files.map { f =>
         val result = write(o.project.key, f, o.getDirectory(projectRoot, f.path), verbose)
         OutputService.WriteResult(f.toString, result._1, result._2)
+      } ++ fo.injections.map { i =>
+        val f = o.getDirectory(projectRoot, i.path) / i.dir.mkString("/") / i.filename
+        if (f.exists && f.isReadable) {
+          if (f.contentAsString != i.content) {
+            f.overwrite(i.content)
+            OutputService.WriteResult(f.toString, i.dir.mkString("/"), Seq(s"Overwrote [${util.NumberUtils.withCommas(i.content.length)}] bytes"))
+          } else {
+            OutputService.WriteResult(f.toString, i.dir.mkString("/"), Nil)
+          }
+        } else {
+          throw new IllegalStateException(s"Cannot read file [${f.pathAsString}]")
+        }
       }
+    }
+  }
+
+  def inject(config: ExportConfiguration, o: ProjectOutput, verbose: Boolean, info: String => Unit, debug: String => Unit) = {
+    o.featureOutput.flatMap { fo =>
+      fo.feature.logic.toSeq.flatMap(_.inject(config, projectRoot, info, debug))
     }
   }
 

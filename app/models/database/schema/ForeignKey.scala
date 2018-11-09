@@ -9,6 +9,7 @@ object ForeignKey {
 
 case class ForeignKey(
     name: String,
+    propertyName: String,
     targetTable: String,
     references: List[Reference]
 )

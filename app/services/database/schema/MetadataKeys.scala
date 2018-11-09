@@ -3,6 +3,7 @@ package services.database.schema
 import java.sql.DatabaseMetaData
 
 import models.database.schema.{ForeignKey, PrimaryKey, Reference, Table}
+import models.output.ExportHelper
 import services.database.query.{JdbcHelper, JdbcRow}
 
 object MetadataKeys {
@@ -34,6 +35,7 @@ object MetadataKeys {
       val first = row._2.headOption.getOrElse(throw new IllegalStateException("Missing column info."))
       ForeignKey(
         name = first._1,
+        propertyName = ExportHelper.toIdentifier(ExportHelper.toClassName(first._1)) + "Rel",
         targetTable = first._3,
         references = row._2.map { col =>
           Reference(col._2, col._4)

@@ -3,9 +3,9 @@ package models.export
 import models.database.schema.{Column, ColumnType, ForeignKey}
 import models.export.config.ExportConfiguration
 import models.output.ExportHelper
-import models.output.feature.Feature
-import models.project.member.ProjectMember
-import models.project.member.ProjectMember.InputType
+import models.output.feature.ModelFeature
+import models.project.member.ModelMember
+import models.project.member.ModelMember.InputType
 import util.JsonSerializers._
 
 object ExportModel {
@@ -33,14 +33,13 @@ case class ExportModel(
     pkColumns: List[Column],
     foreignKeys: List[ForeignKey],
     references: List[ExportModel.Reference],
-    features: Set[Feature] = Set.empty,
+    features: Set[ModelFeature] = Set.empty,
     extendsClass: Option[String] = None,
     icon: Option[String] = None,
     ignored: Boolean = false,
-    provided: Boolean = false,
     readOnly: Boolean = false
 ) {
-  def apply(m: ProjectMember) = copy(
+  def apply(m: ModelMember) = copy(
     pkg = m.pkg.toList,
     propertyName = m.getOverride("propertyName", propertyName),
     className = m.getOverride("className", className),
@@ -50,8 +49,15 @@ case class ExportModel(
     fields = fields.filterNot(f => m.ignored.contains(f.key)).map { f =>
       f.copy(
         propertyName = m.getOverride(s"${f.key}.propertyName", f.propertyName),
-        title = m.getOverride(s"${f.key}.title", f.title)
+        title = m.getOverride(s"${f.key}.title", f.title),
+        inSearch = m.getOverride(s"${f.key}.search", f.inSearch.toString).toBoolean
       )
+    },
+    foreignKeys = foreignKeys.filterNot(fk => m.ignored.contains("fk." + fk.name)).map { fk =>
+      fk.copy(propertyName = m.getOverride(s"fk.${fk.name}.propertyName", fk.propertyName))
+    },
+    references = references.filterNot(r => m.ignored.contains("reference." + r.name)).map { r =>
+      r.copy(propertyName = m.getOverride(s"reference.${r.name}.propertyName", r.propertyName))
     }
   )
 
@@ -71,14 +77,23 @@ case class ExportModel(
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
   val modelPackage = List("models") ++ pkg
+
   val queriesPackage = List("models", "queries") ++ pkg
   val slickPackage = List("models", "table") ++ pkg
   val doobiePackage = List("models", "doobie") ++ pkg
 
   val servicePackage = List("services") ++ pkg
 
+  val controllerPackage = List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
+  val routesPackage = controllerPackage :+ "routes"
+
   val viewPackage = Seq("views", "admin") ++ pkg
   val viewHtmlPackage = Seq("views", "html", "admin") ++ pkg
+
+  val serviceReference = pkg match {
+    case Nil => "services." + propertyName + "Service"
+    case _ => "services." + pkg.head + "Services." + propertyName + "Service"
+  }
 
   def validReferences(config: ExportConfiguration) = {
     references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)

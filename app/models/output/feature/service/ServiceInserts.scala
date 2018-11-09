@@ -2,7 +2,7 @@ package models.output.feature.service
 
 import models.export.ExportModel
 import models.export.config.ExportConfiguration
-import models.output.feature.Feature
+import models.output.feature.ModelFeature
 import models.output.file.ScalaFile
 
 object ServiceInserts {
@@ -13,7 +13,7 @@ object ServiceInserts {
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
-      if (model.features(Feature.Audit)) {
+      if (model.features(ModelFeature.Audit)) {
         file.addImport(config.systemPackage ++ Seq("services", "audit"), "AuditHelper")
         file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map {", 1)
         val audit = model.pkFields.map(f => "n." + f.propertyName + ".toString").mkString(", ")
@@ -40,7 +40,7 @@ object ServiceInserts {
       case Nil => file.add(s"Future.successful(None: Option[${model.className}])")
       case pk =>
         val lookup = pk.map(k => k.fromString(config, s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
-        if (model.features(Feature.Audit)) {
+        if (model.features(ModelFeature.Audit)) {
           val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
           file.add(s"""AuditHelper.onInsert("${model.className}", Seq($audit), fields, creds)""")
         }
