@@ -1,5 +1,6 @@
 package models.export
 
+import models.export.config.ExportConfiguration
 import models.output.ExportHelper
 import models.output.feature.EnumFeature
 import models.project.member.EnumMember
@@ -36,4 +37,6 @@ case class ExportEnum(
   val doobiePackage = List("models", "doobie") ++ pkg
 
   val controllerPackage = List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
+
+  def fullClassPath(config: ExportConfiguration) = (config.applicationPackage ++ modelPackage :+ className).mkString(".")
 }

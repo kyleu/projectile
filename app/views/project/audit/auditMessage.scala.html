@@ -1,0 +1,4 @@
+@(log: models.project.audit.AuditMessage)<div class="collection-item">
+  <div class="right">@log.srcModel -&gt; @log.tgt</div>
+  @log.message
+</div>

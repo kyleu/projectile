@@ -78,6 +78,7 @@ case class ExportField(
   }
 
   def scalaType(config: ExportConfiguration) = enumOpt(config).map(_.className).getOrElse(t.asScala)
+  def scalaTypeFull(config: ExportConfiguration) = enumOpt(config).map(e => (e.pkg :+ e.className).mkString(".")).getOrElse(t.asScalaFull)
 
   def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String]) = {
     enumOpt(config) match {

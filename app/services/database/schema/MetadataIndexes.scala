@@ -10,15 +10,14 @@ object MetadataIndexes {
     val rs = metadata.getIndexInfo(t.catalog.orNull, t.schema.orNull, t.name, false, false)
     val indexColumns = new JdbcRow.Iter(rs).map(fromRow).toList
     val indexes = indexColumns.groupBy(_._1).map { cols =>
-      val idxCols = cols._2.sortBy(_._5).map { col =>
-        IndexColumn(name = col._6, ascending = col._7)
+      val idxCols = cols._2.sortBy(_._4).map { col =>
+        IndexColumn(name = col._5, ascending = col._6)
       }
       val idxInfo = cols._2.headOption.getOrElse(throw new IllegalStateException("Missing index info."))
       Index(
         name = idxInfo._1,
         unique = idxInfo._2,
         indexType = idxInfo._3,
-        cardinality = idxInfo._4,
         columns = idxCols
       )
     }.toSeq
@@ -41,7 +40,6 @@ object MetadataIndexes {
       case DatabaseMetaData.tableIndexOther => "other"
       case x => throw new IllegalArgumentException(x.toString)
     }
-    val cardinality = row.asOpt[Any]("cardinality").fold(0L)(JdbcHelper.longVal)
-    (name, !nonUnique, typ, cardinality, position, columnName, ascending)
+    (name, !nonUnique, typ, position, columnName, ascending)
   }
 }

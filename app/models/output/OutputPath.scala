@@ -12,6 +12,7 @@ object OutputPath extends StringEnum[OutputPath] with StringCirceEnum[OutputPath
   case object SharedSource extends OutputPath("shared", "Scala source root for shared classes")
   case object SharedTest extends OutputPath("sharedTest", "Scala source root for shared test classes")
   case object OpenAPIJson extends OutputPath("openApi", "Directory that will contain OpenAPI/Swagger definitions")
+  case object ThriftOutput extends OutputPath("thrift", "Location to store generated thrift models and services")
   case object WikiMarkdown extends OutputPath("wiki", "Location to store generated wiki documentation")
 
   override val values = findValues

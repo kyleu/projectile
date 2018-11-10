@@ -1,10 +1,9 @@
 package models.output.feature.openapi
 
-import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.feature.ProjectFeature
+import models.output.feature.FeatureLogic
 
-object OpenApiLogic extends ProjectFeature.Logic {
+object OpenApiLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val models = config.models.flatMap { model =>
       config.packages.find(_._2.contains(model)).map(_._4) match {
@@ -21,7 +20,5 @@ object OpenApiLogic extends ProjectFeature.Logic {
     models ++ enums
   }
 
-  override def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
-    InjectOpenApiPaths.inject(config, projectRoot, info, debug) ++ InjectOpenApiSchema.inject(config, projectRoot, info, debug)
-  }
+  override val injections = Seq(InjectOpenApiPaths, InjectOpenApiSchema)
 }

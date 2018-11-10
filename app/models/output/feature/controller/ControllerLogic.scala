@@ -1,13 +1,20 @@
 package models.output.feature.controller
 
-import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import models.output.feature.controller.twirl._
+import models.output.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
-object ControllerLogic extends ProjectFeature.Logic {
+object ControllerLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val models = config.models.filter(_.features(ModelFeature.Controller)).flatMap { model =>
-      Seq(ControllerFile.export(config, model).rendered)
+      Seq(
+        ControllerFile.export(config, model).rendered,
+        TwirlDataRowFile.export(config, model).rendered,
+        TwirlListFile.export(config, model).rendered,
+        TwirlViewFile.export(config, model).rendered,
+        TwirlFormFile.export(config, model).rendered,
+        TwirlSearchResultFile.export(config, model).rendered
+      ) ++ TwirlRelationFiles.export(config, model).map(_.rendered)
     }
 
     val enums = config.enums.filter(_.features(EnumFeature.Controller)).flatMap { enum =>
@@ -18,7 +25,5 @@ object ControllerLogic extends ProjectFeature.Logic {
     models ++ enums
   }
 
-  override def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
-    InjectRoutes.inject(config, projectRoot, info, debug)
-  }
+  override val injections = Seq(InjectBindables, InjectRoutes, InjectSystemRoutes, InjectExploreHtml, InjectExploreMenu, InjectSearch)
 }

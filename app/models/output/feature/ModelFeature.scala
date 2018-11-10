@@ -32,10 +32,6 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
     value = "scalajs", title = "Scala.js", description = "Adds Scala.js annotations to export the model to JavaScript", dependsOn = Set(ProjectFeature.ScalaJS)
   )
 
-  case object Audit extends ModelFeature(
-    value = "audit", title = "Audit", description = "Adds audit logic to service methods", dependsOn = Set(ProjectFeature.Audit)
-  )
-
   case object Slick extends ModelFeature(
     value = "slick", title = "Slick", description = "Slick JDBC models and bindings", dependsOn = Set(ProjectFeature.Slick)
   )
@@ -54,6 +50,14 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
 
   case object GraphQL extends ModelFeature(
     value = "graphql", title = "GraphQL", description = "Creates a Sangria GraphQL schema that includes this model", dependsOn = Set(ProjectFeature.GraphQL)
+  )
+
+  case object Thrift extends ModelFeature(
+    value = "thrift", title = "Thrift", description = "Generates Thrift definitions for models and services", dependsOn = Set(ProjectFeature.Thrift)
+  )
+
+  case object Audit extends ModelFeature(
+    value = "audit", title = "Audit", description = "Adds audit logic to service methods", dependsOn = Set(ProjectFeature.Audit)
   )
 
   override val values = findValues

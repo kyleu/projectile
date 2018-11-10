@@ -21,5 +21,6 @@ case class ProjectOutput(
     case _ => getDirectory(projectRoot, OutputPath.Root) / project.paths.getOrElse(path, project.template.path(path))
   }
 
+  lazy val files = featureOutput.flatMap(_.files)
   lazy val fileCount = featureOutput.map(_.files.size).sum
 }

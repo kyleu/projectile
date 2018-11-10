@@ -1,11 +1,25 @@
 package models.output.feature.core
 
-import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.file.InjectResult
+import models.output.feature.FeatureLogic
 import models.output.{ExportHelper, OutputPath}
 
-object InjectIcons {
+object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "Icons.scala") {
+  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
+
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
+    val startString = "  // Start model icons"
+    val endString = "  // End model icons"
+    val startIndex = original.indexOf(startString)
+    val newContent = config.models.flatMap { m =>
+      original.indexOf("val " + m.propertyName + " = ") match {
+        case x if x > -1 && x < startIndex => None
+        case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
+      }
+    }.sorted.mkString("\n")
+    ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
+  }
+
   private[this] val icons = IndexedSeq(
     "address-book-o", "anchor", "asterisk", "bar-chart-o", "beer", "bell-o", "bicycle", "birthday-cake", "bookmark-o",
     "bullhorn", "bus", "car", "code", "cog", "cube", "diamond", "envelope-o", "exchange", "eye", "eyedropper",
@@ -19,30 +33,4 @@ object InjectIcons {
   )
 
   private[this] def randomIcon(s: String) = icons(Math.abs(s.hashCode) % icons.size)
-
-  def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
-    val dir = projectRoot / config.project.getPath(OutputPath.ServerSource)
-    val f = dir / (config.applicationPackage :+ "models" :+ "template").mkString("/") / "Icons.scala"
-
-    if (f.exists) {
-      val c = {
-        val s = f.contentAsString
-        val startString = "  // Start model icons"
-        val endString = "  // End model icons"
-        val startIndex = s.indexOf(startString)
-        val newContent = config.models.flatMap { m =>
-          s.indexOf("val " + m.propertyName + " = ") match {
-            case x if x > -1 && x < startIndex => None
-            case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
-          }
-        }.sorted.mkString("\n")
-        ExportHelper.replaceBetween(original = s, start = startString, end = endString, newContent = newContent)
-      }
-      debug("Injected Icons.scala")
-      Seq(InjectResult(path = OutputPath.ServerSource, dir = config.applicationPackage ++ Seq("models", "template"), filename = "Icons.scala", content = c))
-    } else {
-      info(s"Cannot load file [${f.pathAsString}] for injection.")
-      Nil
-    }
-  }
 }

@@ -22,7 +22,7 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def audit(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.auditProject(key, verbose)
-    Future.successful(Ok(views.html.project.auditResult(projectile, result._1, result._2)))
+    Future.successful(Ok(views.html.project.audit.auditResult(projectile, result)))
   }
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>

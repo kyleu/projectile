@@ -1,9 +1,9 @@
 package models.output.feature.graphql
 
 import models.export.config.ExportConfiguration
-import models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import models.output.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
-object GraphQLLogic extends ProjectFeature.Logic {
+object GraphQLLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val models = config.models.filter(_.features(ModelFeature.GraphQL)).flatMap { model =>
       Seq(SchemaFile.export(config, model).rendered)
@@ -16,4 +16,6 @@ object GraphQLLogic extends ProjectFeature.Logic {
     debug(s"Exported [${models.size}] models and [${enums.size}] enums")
     models ++ enums
   }
+
+  override val injections = Seq(InjectSchema)
 }

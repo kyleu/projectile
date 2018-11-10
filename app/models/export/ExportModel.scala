@@ -62,6 +62,7 @@ case class ExportModel(
   )
 
   val fullClassName = (pkg :+ className).mkString(".")
+  def fullClassPath(config: ExportConfiguration) = (config.applicationPackage ++ modelPackage :+ className).mkString(".")
   val propertyPlural = ExportHelper.toIdentifier(plural)
 
   val pkFields = pkColumns.flatMap(c => getFieldOpt(c.name))

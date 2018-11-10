@@ -13,7 +13,7 @@ object SchemaHelper {
   }
 
   def addPrimaryKey(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    model.pkFields.foreach(_.addImport(config, file, Nil))
+    model.pkFields.foreach(_.addImport(config, file, model.pkg))
     file.addImport(Seq("sangria", "execution", "deferred"), "HasId")
     val method = if (model.pkFields.lengthCompare(1) == 0) {
       model.pkFields.headOption.map(f => "_." + f.propertyName).getOrElse(throw new IllegalStateException())
@@ -27,7 +27,7 @@ object SchemaHelper {
     file.add("}", -1)
     file.addImport(Seq("sangria", "execution", "deferred"), "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
-    file.addMarker("fetcher", (file.dir :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
+    file.addMarker("fetcher", (config.applicationPackage ++ model.modelPackage :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
     file.add(s"val $fetcherName = Fetcher(getByPrimaryKeySeq)")
     file.add()
   }

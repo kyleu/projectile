@@ -22,6 +22,7 @@ sealed abstract class ProjectTemplate(
     case OutputPath.SharedSource => "src/main/scala"
     case OutputPath.SharedTest => "src/test/scala"
     case OutputPath.OpenAPIJson => "src/main/resources/openapi"
+    case OutputPath.ThriftOutput => "src/main/thrift"
     case OutputPath.WikiMarkdown => "wiki"
   }
 }
@@ -71,6 +72,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
       case OutputPath.SharedTest => "shared/src/test/scala"
       case OutputPath.OpenAPIJson => "conf/openapi"
       case OutputPath.WikiMarkdown => "doc/src/main/paradox"
+      case OutputPath.ThriftOutput => "doc/src/main/thrift"
       case _ => super.path(p)
     }
   }

@@ -1,9 +1,9 @@
 package models.output.feature.slick
 
 import models.export.config.ExportConfiguration
-import models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import models.output.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
-object SlickLogic extends ProjectFeature.Logic {
+object SlickLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val models = config.models.filter(_.features(ModelFeature.Slick)).flatMap { model =>
       Seq(TableFile.export(config, model).rendered)

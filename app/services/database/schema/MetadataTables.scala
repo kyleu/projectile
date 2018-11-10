@@ -29,23 +29,8 @@ object MetadataTables extends Logging {
   }
 
   private[this] def getTableDetails(conn: Connection, metadata: DatabaseMetaData, table: Table, enums: Seq[EnumType]) = try {
-    val rowStats = new QueryExecutor(conn)(new Query[Option[(String, Option[String], Long, Option[Int], Option[Long], Option[Long])]] {
-      val t = s"""${table.schema.fold("")(_ + ".")}"${table.name}""""
-      override val sql = s"select relname as name, reltuples as rows from pg_class where oid = '$t'::regclass"
-      override def reduce(rows: Iterator[JdbcRow]) = rows.map { row =>
-        val tableName = row.as[String]("name")
-        val rowEstimate = JdbcHelper.longVal(row.as[Any]("rows"))
-
-        (tableName, None, rowEstimate, None, None, None)
-      }.toList.headOption
-    })
-
     table.copy(
       definition = None,
-      storageEngine = rowStats.flatMap(_._2),
-      rowCountEstimate = rowStats.map(_._3),
-      averageRowLength = rowStats.flatMap(_._4),
-      dataLength = rowStats.flatMap(_._5),
       columns = MetadataColumns.getColumns(metadata, table.catalog, table.schema, table.name, enums),
       rowIdentifier = MetadataIdentifiers.getRowIdentifier(metadata, table.catalog, table.schema, table.name),
       primaryKey = MetadataKeys.getPrimaryKey(metadata, table),

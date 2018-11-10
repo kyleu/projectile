@@ -10,6 +10,7 @@ import models.project.{Project, ProjectSummary}
 import services.ProjectileService
 import services.output.OutputService
 import services.project._
+import services.project.audit.ProjectAuditService
 import util.JsonSerializers._
 
 trait ProjectHelper { this: ProjectileService =>
@@ -42,7 +43,8 @@ trait ProjectHelper { this: ProjectileService =>
   }
   def auditProject(key: String, verbose: Boolean) = {
     val c = loadConfig(key)
-    c -> ProjectAuditService.audit(c)
+    val o = exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
+    ProjectAuditService.audit(c, o)
   }
 
   def loadConfig(key: String) = {

@@ -4,6 +4,7 @@ import better.files.File
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import models.export.config.ExportConfiguration
 import models.output.OutputPath._
+import models.output.feature.audit.AuditLogic
 import models.output.feature.controller.ControllerLogic
 import models.output.feature.core.CoreLogic
 import models.output.feature.datamodel.DataModelLogic
@@ -12,6 +13,7 @@ import models.output.feature.graphql.GraphQLLogic
 import models.output.feature.openapi.OpenApiLogic
 import models.output.feature.service.ServiceLogic
 import models.output.feature.slick.SlickLogic
+import models.output.feature.thrift.ThriftLogic
 import models.output.feature.wiki.WikiLogic
 import models.output.file.{InjectResult, OutputFile}
 import models.output.{OutputLog, OutputPath}
@@ -20,7 +22,7 @@ sealed abstract class ProjectFeature(
     override val value: String,
     val title: String,
     val tech: String,
-    val logic: Option[ProjectFeature.Logic],
+    val logic: Option[FeatureLogic],
     val paths: Set[OutputPath],
     val description: String
 ) extends StringEnumEntry {
@@ -36,7 +38,10 @@ sealed abstract class ProjectFeature(
     def debug(s: String) = if (verbose) { info(s) }
 
     val files = logic.map(_.export(config = config, info = info, debug = debug)).getOrElse(Nil)
-    val injections = logic.map(_.inject(config = config, projectRoot = projectRoot, info = info, debug = debug)).getOrElse(Nil)
+    val markers = files.map(_.markers).foldLeft(Map.empty[String, Seq[String]]) { (l, r) =>
+      (l.keys.toSeq ++ r.keys.toSeq).distinct.map(k => k -> (l.getOrElse(k, Nil) ++ r.getOrElse(k, Nil))).toMap
+    }
+    val injections = logic.map(_.inject(config = config, projectRoot = projectRoot, markers = markers, info = info, debug = debug)).getOrElse(Nil)
     val duration = System.currentTimeMillis - startMs
     info(s"Feature [$title] produced [${files.length}] files in [${duration}ms]")
     FeatureOutput(feature = this, files = files, injections = injections, logs = logs, duration = duration)
@@ -44,11 +49,6 @@ sealed abstract class ProjectFeature(
 }
 
 object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[ProjectFeature] {
-  trait Logic {
-    def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit): Seq[OutputFile.Rendered] = Nil
-    def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit): Seq[InjectResult] = Nil
-  }
-
   case object Core extends ProjectFeature(
     value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic), paths = Set(Root),
     description = "Scala case classes and Circe Json serializers"
@@ -65,7 +65,7 @@ object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[Pr
   )
 
   case object Audit extends ProjectFeature(
-    value = "audit", title = "Audit", tech = "Scala", logic = None, paths = Set(ServerSource),
+    value = "audit", title = "Audit", tech = "Scala", logic = Some(AuditLogic), paths = Set(ServerSource),
     description = "Logs audits of changed properties for models"
   )
 
@@ -82,6 +82,11 @@ object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[Pr
   case object Controller extends ProjectFeature(
     value = "controller", title = "Controller", tech = "Scala", logic = Some(ControllerLogic), paths = Set(ServerSource, ServerResource),
     description = "Play Framework controller for common operations"
+  )
+
+  case object Thrift extends ProjectFeature(
+    value = "thrift", title = "Thrift", tech = "Thrift", logic = Some(ThriftLogic), paths = Set(ThriftOutput),
+    description = "Thrift definitions for exported models and services"
   )
 
   case object OpenAPI extends ProjectFeature(

@@ -1,10 +1,9 @@
 package models.output.feature.core
 
-import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import models.output.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
-object CoreLogic extends ProjectFeature.Logic {
+object CoreLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val enums = config.enums.filter(_.features(EnumFeature.Core)).flatMap { enum =>
       Seq(EnumFile.export(config, enum).rendered)
@@ -16,7 +15,5 @@ object CoreLogic extends ProjectFeature.Logic {
     enums ++ models
   }
 
-  override def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
-    InjectIcons.inject(config, projectRoot, info, debug)
-  }
+  override val injections = Seq(InjectIcons)
 }

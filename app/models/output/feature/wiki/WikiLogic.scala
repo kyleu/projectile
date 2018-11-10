@@ -1,9 +1,9 @@
 package models.output.feature.wiki
 
 import models.export.config.ExportConfiguration
-import models.output.feature.ProjectFeature
+import models.output.feature.FeatureLogic
 
-object WikiLogic extends ProjectFeature.Logic {
+object WikiLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val listPages = WikiListFiles.export(config).map(_.rendered)
 

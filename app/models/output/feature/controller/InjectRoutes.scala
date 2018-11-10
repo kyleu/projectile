@@ -1,15 +1,16 @@
 package models.output.feature.controller
 
-import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.file.InjectResult
+import models.output.feature.FeatureLogic
 import models.output.{ExportHelper, OutputPath}
 
-object InjectRoutes {
+object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource, filename = "routes") {
   val startString = "# Start model route files"
   val endString = "# End model route files"
 
-  def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
+  override def dir(config: ExportConfiguration) = Nil
+
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
     val packages = config.packages.map(_._1)
 
     def routeFor(pkg: String) = {
@@ -18,26 +19,7 @@ object InjectRoutes {
       s"->          $detailUrl $detailWs $pkg.Routes"
     }
 
-    def routesFor(s: String) = {
-      val newContent = packages.map(routeFor).mkString("\n")
-      ExportHelper.replaceBetween(
-        original = s,
-        start = startString,
-        end = endString,
-        newContent = newContent
-      )
-    }
-
-    val dir = projectRoot / config.project.getPath(OutputPath.ServerResource)
-    val f = dir / "routes"
-
-    if (f.exists) {
-      val c = routesFor(f.contentAsString)
-      debug("Injected routes")
-      Seq(InjectResult(path = OutputPath.ServerResource, dir = Nil, filename = "routes", content = c))
-    } else {
-      info(s"Cannot load file [${f.pathAsString}] for injection.")
-      Nil
-    }
+    val newContent = packages.map(routeFor).mkString("\n")
+    ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
   }
 }

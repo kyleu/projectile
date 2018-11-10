@@ -1,10 +1,9 @@
 package models.output.feature.service
 
-import better.files.File
 import models.export.config.ExportConfiguration
-import models.output.feature.{ModelFeature, ProjectFeature}
+import models.output.feature.{FeatureLogic, ModelFeature}
 
-object ServiceLogic extends ProjectFeature.Logic {
+object ServiceLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val svcModels = config.models.filter(_.features(ModelFeature.Service))
 
@@ -18,7 +17,5 @@ object ServiceLogic extends ProjectFeature.Logic {
     models ++ registries
   }
 
-  override def inject(config: ExportConfiguration, projectRoot: File, info: String => Unit, debug: String => Unit) = {
-    InjectServiceRegistry.inject(config, projectRoot, info, debug)
-  }
+  override val injections = Seq(InjectServiceRegistry)
 }

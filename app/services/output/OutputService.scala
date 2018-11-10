@@ -1,8 +1,6 @@
 package services.output
 
 import better.files.File
-import models.export.config.ExportConfiguration
-import models.output.OutputPath
 import models.output.file.OutputFile
 import models.project.ProjectOutput
 import util.JsonSerializers._
@@ -20,7 +18,7 @@ class OutputService(projectRoot: File) {
   def persist(o: ProjectOutput, verbose: Boolean) = {
     o.featureOutput.flatMap { fo =>
       fo.files.map { f =>
-        val result = write(o.project.key, f, o.getDirectory(projectRoot, f.path), verbose)
+        val result = write(f, o.getDirectory(projectRoot, f.path), verbose)
         OutputService.WriteResult(f.toString, result._1, result._2)
       } ++ fo.injections.map { i =>
         val f = o.getDirectory(projectRoot, i.path) / i.dir.mkString("/") / i.filename
@@ -38,13 +36,7 @@ class OutputService(projectRoot: File) {
     }
   }
 
-  def inject(config: ExportConfiguration, o: ProjectOutput, verbose: Boolean, info: String => Unit, debug: String => Unit) = {
-    o.featureOutput.flatMap { fo =>
-      fo.feature.logic.toSeq.flatMap(_.inject(config, projectRoot, info, debug))
-    }
-  }
-
-  private[this] def write(key: String, file: OutputFile.Rendered, dir: File, verbose: Boolean) = {
+  private[this] def write(file: OutputFile.Rendered, dir: File, verbose: Boolean) = {
     val f = dir / (file.dir :+ file.filename).mkString("/")
     val existed = f.exists
     f.createFileIfNotExists(createParents = true)

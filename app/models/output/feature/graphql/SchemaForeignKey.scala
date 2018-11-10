@@ -15,10 +15,10 @@ object SchemaForeignKey {
           val srcCol = src.getField(h.source)
           if (src.pkColumns.isEmpty) {
             val idType = if (srcCol.notNull) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
-            srcCol.addImport(config, file, Nil)
+            srcCol.addImport(config, file, src.pkg)
             file.addImport(Seq("sangria", "execution", "deferred"), "HasId")
             val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
-            file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
+            file.addMarker("fetcher", (config.applicationPackage ++ src.modelPackage :+ s"${src.className}Schema" :+ fn).mkString("."))
             file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
             file.add(s"c.${src.serviceReference}.getBy${srcCol.className}Seq(c.creds, values)(c.trace)")
             file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
@@ -27,9 +27,9 @@ object SchemaForeignKey {
             val relName = s"${src.propertyName}By${srcCol.className}"
             val idType = if (srcCol.notNull) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
 
-            file.addMarker("fetcher", (src.modelPackage :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
+            file.addMarker("fetcher", (config.applicationPackage ++ src.modelPackage :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
             file.addImport(Seq("sangria", "execution", "deferred"), "Relation")
-            srcCol.addImport(config, file, Nil)
+            srcCol.addImport(config, file, src.pkg)
             file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
             file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType(config)}](", 1)
             val rels = if (srcCol.notNull) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
@@ -55,7 +55,7 @@ object SchemaForeignKey {
         val targets = fkCols.map(h => targetTable.fields.find(_.key == h.target).getOrElse {
           throw new IllegalStateException(s"Missing target column [${h.target}].")
         })
-        fields.foreach(f => f.addImport(config, file, Nil))
+        fields.foreach(f => f.addImport(config, file, model.pkg))
         if (targetTable.pkg != model.pkg) { file.addImport(config.applicationPackage ++ targetTable.modelPackage, targetTable.className + "Schema") }
 
         file.add("Field(", 1)
