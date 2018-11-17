@@ -12,4 +12,6 @@ object ThriftLogic extends FeatureLogic {
     debug(s"Exported [${models.size}] models")
     models
   }
+
+  override def injections = Seq(InjectThriftModel, InjectThriftService)
 }
