@@ -30,7 +30,11 @@ case class Project(
 ) extends Ordered[Project] {
   private[this] def notFound(t: String, k: String) = throw new IllegalStateException(s"No $t in project [$key] with key [$k]")
 
-  def getPath(p: OutputPath) = paths.getOrElse(p, template.path(p))
+  def getPath(p: OutputPath): String = p match {
+    case OutputPath.Root => paths.getOrElse(p, template.path(p))
+    case _ => getPath(OutputPath.Root) + paths.getOrElse(p, template.path(p))
+  }
+
   def getPackage(p: OutputPackage) = packages.getOrElse(p, p.defaultVal)
 
   def getEnumOpt(enum: String) = enums.find(_.key == enum)

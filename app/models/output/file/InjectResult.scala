@@ -9,4 +9,4 @@ object InjectResult {
   implicit val jsonDecoder: Decoder[InjectResult] = deriveDecoder
 }
 
-case class InjectResult(path: OutputPath, dir: Seq[String], filename: String, content: String)
+case class InjectResult(path: OutputPath, dir: Seq[String], filename: String, status: String, content: String)

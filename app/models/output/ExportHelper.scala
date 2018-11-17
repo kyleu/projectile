@@ -1,6 +1,7 @@
 package models.output
 
 import com.google.common.base.{CaseFormat, Converter}
+import util.NumberUtils
 
 object ExportHelper {
   private[this] val converters = collection.mutable.HashMap.empty[(CaseFormat, CaseFormat), Converter[String, String]]
@@ -25,13 +26,14 @@ object ExportHelper {
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
 
   def replaceBetween(filename: String, original: String, start: String, end: String, newContent: String) = {
+    val oSize = NumberUtils.withCommas(original.length)
     val startIndex = original.indexOf(start)
     if (startIndex == -1) {
-      throw new IllegalStateException(s"Cannot inject [$filename]. No start key matching [$start].")
+      throw new IllegalStateException(s"Cannot inject [$filename]. No start key matching [$start] in [$oSize] bytes.")
     }
     val endIndex = original.indexOf(end)
     if (endIndex == -1) {
-      throw new IllegalStateException(s"Cannot inject [$filename]. No end key matching [$end].")
+      throw new IllegalStateException(s"Cannot inject [$filename]. No end key matching [$end] in [$oSize] bytes.")
     }
 
     original.substring(0, startIndex + start.length) + "\n" + newContent + "\n" + original.substring(endIndex)

@@ -5,6 +5,8 @@ import models.export.config.ExportConfiguration
 import models.output.OutputPath
 import models.output.file.{InjectResult, OutputFile}
 
+import scala.util.control.NonFatal
+
 object FeatureLogic {
   abstract class Inject(val path: OutputPath, val filename: String) {
     def dir(config: ExportConfiguration): Seq[String]
@@ -14,13 +16,20 @@ object FeatureLogic {
       val projectPath = projectRoot / config.project.getPath(path)
       val f = projectPath / dir(config).mkString("/") / filename
 
-      if (f.exists) {
+      if (f.isRegularFile && f.isReadable) {
+        val (status, newContent) = try {
+          "OK" -> logic(config, markers, f.contentAsString)
+        } catch {
+          case NonFatal(x) => "Error" -> x.toString
+        }
+
         debug(s"Injected $filename")
         Seq(InjectResult(
           path = path,
           dir = dir(config),
           filename = filename,
-          content = logic(config, markers, f.contentAsString)
+          status = status,
+          content = newContent
         ))
       } else {
         info(s"Cannot load file [${f.pathAsString}] for injection.")

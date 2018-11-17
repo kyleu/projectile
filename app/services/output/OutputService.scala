@@ -22,15 +22,19 @@ class OutputService(projectRoot: File) {
         OutputService.WriteResult(f.toString, result._1, result._2)
       } ++ fo.injections.map { i =>
         val f = o.getDirectory(projectRoot, i.path) / i.dir.mkString("/") / i.filename
-        if (f.exists && f.isReadable) {
-          if (f.contentAsString != i.content) {
-            f.overwrite(i.content)
-            OutputService.WriteResult(f.toString, i.dir.mkString("/"), Seq(s"Overwrote [${util.NumberUtils.withCommas(i.content.length)}] bytes"))
+        if (i.status == "OK") {
+          if (f.exists && f.isReadable) {
+            if (f.contentAsString != i.content) {
+              f.overwrite(i.content)
+              OutputService.WriteResult(f.toString, i.dir.mkString("/"), Seq(s"Overwrote [${util.NumberUtils.withCommas(i.content.length)}] bytes"))
+            } else {
+              OutputService.WriteResult(f.toString, i.dir.mkString("/"), Nil)
+            }
           } else {
-            OutputService.WriteResult(f.toString, i.dir.mkString("/"), Nil)
+            throw new IllegalStateException(s"Cannot read file [${f.pathAsString}]")
           }
         } else {
-          throw new IllegalStateException(s"Cannot read file [${f.pathAsString}]")
+          throw new IllegalStateException(s"Error encountered processing [${f.pathAsString}]: " + i.content)
         }
       }
     }
