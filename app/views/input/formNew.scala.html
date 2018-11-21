@@ -1,10 +1,10 @@
-@(projectile: services.ProjectileService)(
+@(projectile:  com.projectile.services.ProjectileService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, s"New Input") {
   <form method="post" action="@controllers.input.routes.InputController.save()">
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="@models.template.Icons.input"></i> New Input</h5>
+      <h5><i class=" @com.projectile.models.template.Icons.input"></i> New Input</h5>
     </div>
     <div class="collection-item">
       <div class="input-field">
@@ -27,7 +27,7 @@
     <div class="collection-item">
       <div class="input-field">
         <select id="template" name="template">
-        @models.input.InputTemplate.values.map { t =>
+         @com.projectile.models.input.InputTemplate.values.map { t =>
           <option value="@t.value">@t.title</option>
         }
         </select>

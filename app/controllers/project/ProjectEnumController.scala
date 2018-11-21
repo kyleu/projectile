@@ -1,11 +1,11 @@
 package controllers.project
 
 import controllers.BaseController
-import models.database.input.PostgresInput
-import models.output.feature.{EnumFeature, ProjectFeature}
-import models.project.member
-import models.project.member.{EnumMember, MemberOverride}
-import models.project.member.EnumMember.InputType
+import com.projectile.models.database.input.PostgresInput
+import com.projectile.models.output.feature.{EnumFeature, ProjectFeature}
+import com.projectile.models.project.member
+import com.projectile.models.project.member.{EnumMember, MemberOverride}
+import com.projectile.models.project.member.EnumMember.InputType
 import util.web.ControllerUtils
 
 import scala.concurrent.Future

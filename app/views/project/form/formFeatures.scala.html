@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, project: models.project.Project)(
+@(projectile:  com.projectile.services.ProjectileService, project:  com.projectile.models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, project.title + " Feature Edit") {
   <form method="post" action="@controllers.project.routes.ProjectFormController.saveFeatures()">
@@ -10,7 +10,7 @@
         <h5><i class="@project.template.icon"></i> Edit [@project.key] Features</h5>
         <div>@project.template.title Project</div>
       </div>
-      @models.output.feature.ProjectFeature.values.filter(project.template.features.apply).map { feat =>
+       @com.projectile.models.output.feature.ProjectFeature.values.filter(project.template.features.apply).map { feat =>
         <div class="collection-item">
           <p>
             <label>

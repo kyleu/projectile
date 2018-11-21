@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, input: models.database.input.PostgresInput)(
+@(projectile:  com.projectile.services.ProjectileService, input:  com.projectile.models.database.input.PostgresInput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 ) @layout.simple(projectile, input.title + " Input Detail") {
   <div class="collection with-header">
@@ -10,10 +10,10 @@
   </div>
 
   <ul class="tabs">
-    <li class="tab"><a href="#input-detail"><i class="@models.template.Icons.database"></i> Summary</a></li>
-    <li class="tab"><a href="#input-enums"><i class="@models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
-    <li class="tab"><a href="#input-tables"><i class="@models.template.Icons.enum"></i> @input.tables.size Tables</a></li>
-    <li class="tab"><a href="#input-views"><i class="@models.template.Icons.enum"></i> @input.views.size Views</a></li>
+    <li class="tab"><a href="#input-detail"><i class=" @com.projectile.models.template.Icons.database"></i> Summary</a></li>
+    <li class="tab"><a href="#input-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
+    <li class="tab"><a href="#input-tables"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.tables.size Tables</a></li>
+    <li class="tab"><a href="#input-views"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.views.size Views</a></li>
   </ul>
 
   <div id="input-detail">

@@ -1,4 +1,10 @@
-@(log: models.project.audit.AuditMessage)<div class="collection-item">
-  <div class="right">@log.srcModel -&gt; @log.tgt</div>
+@(log:  com.projectile.models.project.audit.AuditMessage)<div class="collection-item">
+  <div class="right">
+    @if(log.srcModel == log.tgt) {
+      @log.srcModel
+    } else {
+      @log.srcModel -&gt; @log.tgt
+    }
+  </div>
   @log.message
 </div>

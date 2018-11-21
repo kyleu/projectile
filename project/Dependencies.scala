@@ -53,13 +53,14 @@ object Dependencies {
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
     val chimney = "io.scalaland" %% "chimney" % "0.2.1"
+    val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
+    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
+    val guava = "com.google.guava" % "guava" % "27.0-jre"
+    val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
-    val schwatcher = "com.beachape.filemanagement" %% "schwatcher" % "0.3.5"
-    val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
-    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
   }
 
   object Testing {

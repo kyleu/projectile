@@ -1,10 +1,10 @@
-@(projectile: services.ProjectileService, inputs: Seq[models.input.InputSummary], projects: Seq[models.project.ProjectSummary])(
+@(projectile:  com.projectile.services.ProjectileService, inputs: Seq[ com.projectile.models.input.InputSummary], projects: Seq[ com.projectile.models.project.ProjectSummary])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, util.Version.projectName) {
+)@layout.simple(projectile, com.projectile.util.Version.projectName) {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.input.routes.InputController.formNew()">Add Input</a></div>
-      <h5><i class="@models.template.Icons.input"></i> Inputs</h5>
+      <h5><i class=" @com.projectile.models.template.Icons.input"></i> Inputs</h5>
       @if(inputs.size == 1) {
         @inputs.size available input
       } else {
@@ -27,7 +27,7 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formNew()">Add Project</a></div>
-      <h5><i class="@models.template.Icons.project"></i> Projects</h5>
+      <h5><i class=" @com.projectile.models.template.Icons.project"></i> Projects</h5>
       @if(projects.size == 1) {
         @projects.size available project
       } else {

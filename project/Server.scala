@@ -16,14 +16,12 @@ import sbtassembly.AssemblyPlugin.autoImport._
 object Server {
   private[this] val dependencies = {
     import Dependencies._
-    Dependencies.Serialization.all ++ Seq(
+    Serialization.all ++ Seq(
       Akka.actor, Akka.logging, Akka.protobuf, Akka.stream, Akka.visualMailbox,
       Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
-      Database.postgres, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
+      GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       WebJars.jquery, WebJars.fontAwesome, WebJars.materialize,
-      Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang,
-      Utils.enumeratum, Utils.scalaGuice, Utils.schwatcher, Utils.clist, Utils.clistMacros,
-      Akka.testkit, Play.test, Testing.scalaTest
+      Utils.scalaGuice, Utils.clistMacros, Akka.testkit, Play.test
     )
   }
 
@@ -61,14 +59,15 @@ object Server {
     fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
     mainClass in assembly := Some("ProjectileCLI"),
 
-    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Shared.projectId, Shared.projectName, Shared.projectPort).taskValue,
-
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/RoutesPrefix.scala", ".*/*ReverseRoutes.scala", ".*/*.template.scala"),
     scapegoatDisabledInspections := Seq("UnusedMethodParameter")
   )
 
-  lazy val server = Project(id = Shared.projectId, base = file(".")).enablePlugins(
+
+  private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
+
+  lazy val server = withProjects(Project(id = Shared.projectId, base = file(".")).enablePlugins(
     SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin,
-  ).settings(serverSettings: _*)
+  ).settings(serverSettings: _*), SbtExportPlugin.`sbt-plugin`, ProjectExport.`project-export`)
 }

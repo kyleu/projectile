@@ -1,8 +1,9 @@
 package util.web
 
+import com.projectile.util.NullUtils
 import play.api.data.FormError
 import play.api.mvc.AnyContent
-import util.JsonSerializers.Json
+import com.projectile.util.JsonSerializers.{Json, parseJson}
 
 object ControllerUtils {
   def getForm(body: AnyContent, prefix: Option[String] = None) = body.asFormUrlEncoded match {
@@ -23,7 +24,7 @@ object ControllerUtils {
 
   def jsonFormOrBody(body: AnyContent, key: String) = {
     val content = body.asFormUrlEncoded.map(_(key).headOption.getOrElse(throw new IllegalStateException(s"Missing form field [$key].")))
-    content.map(util.JsonSerializers.parseJson).map(_.right.get).getOrElse(jsonBody(body))
+    content.map(parseJson).map(_.right.get).getOrElse(jsonBody(body))
   }
 
   def jsonObject(json: Json) = json.asObject.getOrElse(throw new IllegalStateException("Json is not an object."))
@@ -40,7 +41,7 @@ object ControllerUtils {
     val form = rawForm.mapValues(_.headOption.getOrElse(throw new IllegalStateException("Empty form field.")))
     val fields = form.toSeq.filter(x => x._1.endsWith(".include") && x._2 == "true").map(_._1.stripSuffix(".include"))
     def valFor(f: String) = form.get(f) match {
-      case Some(x) if x == util.NullUtils.str => None
+      case Some(x) if x == NullUtils.str => None
       case Some(x) => Some(x)
       case None => form.get(f + "-date") match {
         case Some(d) => form.get(f + "-time") match {

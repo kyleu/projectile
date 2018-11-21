@@ -1,9 +1,9 @@
-@(projectile: services.ProjectileService, key: String, inputEnums: Seq[(String, Seq[(String, String, Boolean)])])(
+@(projectile:  com.projectile.services.ProjectileService, key: String, inputEnums: Seq[(String, Seq[(String, String, Boolean)])])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "New Enum") {
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="@models.template.Icons.enum"></i> New [@key] Enum</h5>
+      <h5><i class=" @com.projectile.models.template.Icons.enum"></i> New [@key] Enum</h5>
     </div>
     @inputEnums.map { e =>
       <div class="collection-item">

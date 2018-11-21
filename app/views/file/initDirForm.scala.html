@@ -1,9 +1,9 @@
-@(projectile: services.ProjectileService, dir: String)(
+@(projectile:  com.projectile.services.ProjectileService, dir: String)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "Init Projectile Directory") {
     <div class="collection with-header">
       <div class="collection-header">
-        <h5><i class="@models.template.Icons.projectile"></i> Init Projectile Directory</h5>
+        <h5><i class=" @com.projectile.models.template.Icons.projectile"></i> Init Projectile Directory</h5>
       </div>
       <div class="collection-item">
         The directory <code>@dir</code> isn't configured for projectile.

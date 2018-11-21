@@ -1,8 +1,8 @@
 package controllers.input
 
 import controllers.BaseController
-import models.database.input.PostgresInput
-import models.input.{InputSummary, InputTemplate}
+import com.projectile.models.database.input.PostgresInput
+import com.projectile.models.input.{InputSummary, InputTemplate}
 import util.web.ControllerUtils
 
 import scala.concurrent.Future

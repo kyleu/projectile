@@ -1,10 +1,10 @@
-@(projectile: services.ProjectileService)(
+@(projectile:  com.projectile.services.ProjectileService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "New Directory") {
   <form method="post" action="@controllers.routes.HomeController.changeDir()">
     <div class="collection with-header">
       <div class="collection-header">
-        <h5><i class="@models.template.Icons.projectile"></i> New Directory</h5>
+        <h5><i class=" @com.projectile.models.template.Icons.projectile"></i> New Directory</h5>
       </div>
       <div class="collection-item">
         <input name="dir" type="text" value="@projectile.cfg.path" />

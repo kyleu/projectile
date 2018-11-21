@@ -1,10 +1,10 @@
-@(projectile: services.ProjectileService, summary: models.project.ProjectSummary)(
+@(projectile:  com.projectile.services.ProjectileService, summary:  com.projectile.models.project.ProjectSummary)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, summary.title) {
   <form method="post" action="@controllers.project.routes.ProjectFormController.saveSummary()">
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class="@models.template.Icons.project"></i> @summary.title</h5>
+      <h5><i class=" @com.projectile.models.template.Icons.project"></i> @summary.title</h5>
     </div>
     @if(summary.key == "new") {
       <div class="collection-item">
@@ -31,7 +31,7 @@
     <div class="collection-item">
       <div class="input-field">
         <select id="template" name="template">
-          @models.project.ProjectTemplate.values.map { t =>
+           @com.projectile.models.project.ProjectTemplate.values.map { t =>
             @if(summary.template == t) {
               <option value="@t.value" selected="selected">@t.title</option>
             } else {

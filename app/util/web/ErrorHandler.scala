@@ -6,7 +6,7 @@ import play.api.http.{DefaultHttpErrorHandler, MimeTypes}
 import play.api._
 import play.api.mvc._
 import play.api.routing.Router
-import util.Logging
+import com.projectile.util.Logging
 
 import scala.concurrent._
 

@@ -1,4 +1,4 @@
-@(projectile: services.ProjectileService, key: String, p: models.project.ProjectSummary, member: models.project.member.ModelMember, m: models.export.ExportModel)(
+@(projectile:  com.projectile.services.ProjectileService, key: String, p:  com.projectile.models.project.ProjectSummary, member:  com.projectile.models.project.member.ModelMember, m:  com.projectile.models.export.ExportModel)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, m.title + " Model") {
   <form method="post" action="@controllers.project.routes.ProjectModelController.save(p.key, m.key)">
@@ -8,7 +8,7 @@
           <a class="btn-flat theme-text" href="@controllers.routes.FileController.viewFile(s"project/$key/model/${m.key}.json")">Edit Json</a>
           <input class="theme btn" type="submit" value="Save" />
         </div>
-        <h5><i class="@models.template.Icons.model"></i> @m.title</h5>
+        <h5><i class=" @com.projectile.models.template.Icons.model"></i> @m.title</h5>
         <em><a class="theme-text" href="@controllers.project.routes.ProjectController.detail(p.key)">@p.title</a> Model</em>
         (<a class="theme-text" href="@controllers.project.routes.ProjectModelController.remove(p.key, member.key)">Remove</a>)
       </div>

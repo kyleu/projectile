@@ -2,9 +2,9 @@ package util.web
 
 import play.api._
 import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
-import services.ProjectileService
-import services.config.ConfigService
-import util.Logging
+import com.projectile.services.ProjectileService
+import com.projectile.services.config.ConfigService
+import com.projectile.util.Logging
 
 object PlayServerHelper extends Logging {
   private[this] var activeService: Option[ProjectileService] = None

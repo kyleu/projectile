@@ -1,10 +1,10 @@
 package controllers.project
 
 import controllers.BaseController
-import models.database.input.PostgresInput
-import models.output.feature.{ModelFeature, ProjectFeature}
-import models.project.member.{MemberOverride, ModelMember}
-import models.project.member.ModelMember.InputType
+import com.projectile.models.database.input.PostgresInput
+import com.projectile.models.output.feature.{ModelFeature, ProjectFeature}
+import com.projectile.models.project.member.{MemberOverride, ModelMember}
+import com.projectile.models.project.member.ModelMember.InputType
 import util.web.ControllerUtils
 
 import scala.concurrent.Future
