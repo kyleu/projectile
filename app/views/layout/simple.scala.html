@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+@(projectile: com.projectile.services.ProjectileService, title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.materialize(title, scripts = scripts, stylesheets = controllers.routes.Assets.versioned(s"stylesheets/${com.projectile.util.Version.projectId}.min.css").url +: stylesheets) {
   <header>

@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, key: String, inputModels: Seq[(String, Seq[(String, String, Boolean)])])(
+@(projectile: com.projectile.services.ProjectileService, key: String, inputModels: Seq[(String, Seq[(String, String, Boolean)])])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "New Model") {
   <div class="collection with-header">

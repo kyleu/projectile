@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, input:  com.projectile.models.database.input.PostgresInput)(
+@(projectile: com.projectile.services.ProjectileService, input: com.projectile.models.database.input.PostgresInput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 ) @layout.simple(projectile, input.title + " Input Detail") {
   <div class="collection with-header">

@@ -20,6 +20,7 @@ case class ProjectSummary(
     features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
     packages: Map[OutputPackage, Seq[String]] = Map.empty,
+    classOverrides: Map[String, String] = Map.empty,
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,
     updated: LocalDateTime = DateUtils.now

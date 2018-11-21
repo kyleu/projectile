@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, key: String, p:  com.projectile.models.project.ProjectSummary, member:  com.projectile.models.project.member.ModelMember, m:  com.projectile.models.export.ExportModel)(
+@(projectile: com.projectile.services.ProjectileService, key: String, p: com.projectile.models.project.ProjectSummary, member: com.projectile.models.project.member.ModelMember, m: com.projectile.models.export.ExportModel)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, m.title + " Model") {
   <form method="post" action="@controllers.project.routes.ProjectModelController.save(p.key, m.key)">

@@ -39,6 +39,23 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
 
+  def formPaths(key: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.project.form.formPaths(projectile, projectile.getProject(key))))
+  }
+
+  def savePaths() = Action.async { implicit request =>
+    val (summary, form) = getSummary(request)
+    val project = projectile.saveProject(summary.copy(
+      paths = com.projectile.models.output.OutputPath.values.flatMap { p =>
+        form.get(s"path.${p.value}").flatMap {
+          case x if x == summary.template.path(p) => None
+          case x => Some(p -> x)
+        }
+      }.toMap
+    ))
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
+  }
+
   def formPackages(key: String) = Action.async { implicit request =>
     Future.successful(Ok(views.html.project.form.formPackages(projectile, projectile.getProject(key))))
   }
@@ -60,18 +77,15 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
 
-  def formPaths(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.form.formPaths(projectile, projectile.getProject(key))))
+  def formClassOverrides(key: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.project.form.formClassOverrides(projectile, projectile.getProject(key))))
   }
 
-  def savePaths() = Action.async { implicit request =>
+  def saveClassOverrides() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      paths = com.projectile.models.output.OutputPath.values.flatMap { p =>
-        form.get(s"path.${p.value}").flatMap {
-          case x if x == summary.template.path(p) => None
-          case x => Some(p -> x)
-        }
+      classOverrides = form(s"overrides").split('\n').map(_.trim).filter(_.nonEmpty).map { o =>
+        o.substring(0, o.indexOf("=")).trim -> o.substring(o.indexOf("=") + 1).trim
       }.toMap
     ))
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))

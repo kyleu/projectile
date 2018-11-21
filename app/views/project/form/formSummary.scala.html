@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, summary:  com.projectile.models.project.ProjectSummary)(
+@(projectile: com.projectile.services.ProjectileService, summary: com.projectile.models.project.ProjectSummary)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, summary.title) {
   <form method="post" action="@controllers.project.routes.ProjectFormController.saveSummary()">

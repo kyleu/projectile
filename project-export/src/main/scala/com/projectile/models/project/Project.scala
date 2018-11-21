@@ -22,6 +22,7 @@ case class Project(
     features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
     packages: Map[OutputPackage, Seq[String]] = Map.empty,
+    classOverrides: Map[String, String] = Map.empty,
     enums: Seq[EnumMember] = Nil,
     models: Seq[ModelMember] = Nil,
     status: Option[String] = None,
@@ -51,4 +52,5 @@ case class Project(
   lazy val toSummary = this.into[ProjectSummary].transform
 
   val pathset = features.flatMap(_.paths)
+  val classOverrideStrings = classOverrides.toSeq.sortBy(_._1).map(x => s"${x._1} = ${x._2}")
 }

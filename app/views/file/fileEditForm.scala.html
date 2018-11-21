@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, path: String, content: String)(
+@(projectile: com.projectile.services.ProjectileService, path: String, content: String)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, path) {
   <div class="collection with-header">

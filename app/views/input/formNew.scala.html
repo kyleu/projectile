@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService)(
+@(projectile: com.projectile.services.ProjectileService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, s"New Input") {
   <form method="post" action="@controllers.input.routes.InputController.save()">

@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, inputs: Seq[ com.projectile.models.input.InputSummary], projects: Seq[ com.projectile.models.project.ProjectSummary])(
+@(projectile: com.projectile.services.ProjectileService, inputs: Seq[com.projectile.models.input.InputSummary], projects: Seq[com.projectile.models.project.ProjectSummary])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, com.projectile.util.Version.projectName) {
   <div class="collection with-header">

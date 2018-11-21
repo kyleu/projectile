@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, project:  com.projectile.models.project.Project)(
+@(projectile: com.projectile.services.ProjectileService, project: com.projectile.models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, project.title + " Project Detail") {
   <div class="collection with-header">
@@ -43,11 +43,24 @@
         @if(project.packages.isEmpty) {
           <div>No package overrides</div>
         }
-         @com.projectile.models.output.OutputPackage.values.map { p =>
-        @project.packages.get(p).map { pkg =>
-          <div>@p.value: @pkg.mkString(".")</div>
+        @com.projectile.models.output.OutputPackage.values.map { p =>
+          @project.packages.get(p).map { pkg =>
+            <div>@p.value: @pkg.mkString(".")</div>
+          }
         }
-      }
+      </div>
+    </div>
+
+    <div class="collection-item">
+      <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formClassOverrides(project.key)">Edit Class Overrides</a></div>
+      <h6>Class Overrides</h6>
+      <div>
+        @if(project.classOverrides.isEmpty) {
+          <div>No class overrides</div>
+        }
+        @project.classOverrideStrings.map { o =>
+          <div>@o</div>
+        }
       </div>
     </div>
 
@@ -87,7 +100,7 @@
       <h6><i class=" @com.projectile.models.template.Icons.model"></i> @project.models.size Models</h6>
     </div>
     @if(project.models.isEmpty) {
-      <div class="collection-item">No project  com.projectile.models.</div>
+      <div class="collection-item">No project models.</div>
     }
     @project.models.sortBy(_.key).map { m =>
       <div class="collection-item">

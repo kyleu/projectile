@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, output:  com.projectile.models.project.ProjectOutput, files: Seq[ com.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
+@(projectile: com.projectile.services.ProjectileService, output: com.projectile.models.project.ProjectOutput, files: Seq[com.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, output.project.title + " Export Result") {
   <div class="collection with-header">

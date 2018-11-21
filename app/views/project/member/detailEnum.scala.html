@@ -1,4 +1,4 @@
-@(projectile:  com.projectile.services.ProjectileService, key: String, p:  com.projectile.models.project.ProjectSummary, m:  com.projectile.models.project.member.EnumMember, e:  com.projectile.models.export.ExportEnum)(
+@(projectile: com.projectile.services.ProjectileService, key: String, p: com.projectile.models.project.ProjectSummary, m: com.projectile.models.project.member.EnumMember, e: com.projectile.models.export.ExportEnum)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, e.className + " Enum") {
   <form method="post" action="@controllers.project.routes.ProjectEnumController.save(p.key, e.key)">

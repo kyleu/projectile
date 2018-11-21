@@ -26,6 +26,7 @@ POST        /project/summary                         controllers.project.Project
 POST        /project/features                        controllers.project.ProjectFormController.saveFeatures()
 POST        /project/packages                        controllers.project.ProjectFormController.savePackages()
 POST        /project/paths                           controllers.project.ProjectFormController.savePaths()
+POST        /project/overrides                       controllers.project.ProjectFormController.saveClassOverrides()
 
 GET         /project/all/audit                       controllers.project.BulkProjectController.auditAll
 GET         /project/all/export                      controllers.project.BulkProjectController.exportAll
@@ -46,6 +47,7 @@ GET         /project/:key/summary                    controllers.project.Project
 GET         /project/:key/features                   controllers.project.ProjectFormController.formFeatures(key)
 GET         /project/:key/packages                   controllers.project.ProjectFormController.formPackages(key)
 GET         /project/:key/paths                      controllers.project.ProjectFormController.formPaths(key)
+GET         /project/:key/overrides                  controllers.project.ProjectFormController.formClassOverrides(key)
 
 GET         /project/:key/enum                       controllers.project.ProjectEnumController.formNew(key)
 GET         /project/:key/enum/add                   controllers.project.ProjectEnumController.add(key, input, inputType, inputKey)
