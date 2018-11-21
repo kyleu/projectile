@@ -10,10 +10,11 @@ object EnumControllerFile {
     val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ enum.controllerPackage, enum.className + "Controller")
     file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
 
-    file.addImport(config.applicationPackage :+ "controllers", "BaseController")
+    config.addCommonImport(file, "BaseController")
+    config.addCommonImportWildcard(file, "JsonSerializers")
+    config.addCommonImport(file, "ServiceController")
+
     file.addImport(Seq("scala", "concurrent"), "Future")
-    file.addImport(config.utilitiesPackage :+ "JsonSerializers", "_")
-    file.addImport(config.applicationPackage :+ "controllers" :+ "admin", "ServiceController")
     file.addImport(Seq("play", "twirl", "api"), "Html")
 
     val prefix = config.applicationPackage.map(_ + ".").mkString

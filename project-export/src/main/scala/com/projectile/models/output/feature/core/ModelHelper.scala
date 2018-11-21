@@ -15,7 +15,7 @@ object ModelHelper {
     val colScala = field.t match {
       case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.sqlTypeName)
       case ColumnType.TagsType =>
-        file.addImport(config.tagsPackage, "Tag")
+        config.addCommonImport(file, "Tag")
         field.scalaType(config)
       case _ => field.scalaType(config)
     }
@@ -29,7 +29,7 @@ object ModelHelper {
   def addEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val fieldStrings = model.fields.map { field =>
       field.t match {
-        case x if x.requiredImport.contains("java.time") => file.addImport(config.utilitiesPackage, "DateUtils")
+        case x if x.requiredImport.contains("java.time") => config.addCommonImport(file, "DateUtils")
         case _ => // noop
       }
 

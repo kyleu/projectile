@@ -17,7 +17,7 @@ object DoobieFile {
 
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
     if (model.pkg.nonEmpty) {
-      file.addImport(config.systemPackage ++ Seq("services", "database", "doobie"), "DoobieQueries")
+      config.addCommonImport(file, "DoobieQueries")
     }
     file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports"), "_")
 

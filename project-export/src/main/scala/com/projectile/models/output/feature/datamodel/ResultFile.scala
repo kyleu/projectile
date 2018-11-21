@@ -14,13 +14,13 @@ object ResultFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className + "Result")
 
     file.addImport(Seq("java", "time"), "LocalDateTime")
-    file.addImport(config.resultsPackage, "BaseResult")
-    file.addImport(config.resultsPackage :+ "filter", "Filter")
-    file.addImport(config.resultsPackage :+ "orderBy", "OrderBy")
-    file.addImport(config.resultsPackage :+ "paging", "PagingOptions")
+    config.addCommonImport(file, "BaseResult")
+    config.addCommonImport(file, "Filter")
+    config.addCommonImport(file, "OrderBy")
+    config.addCommonImport(file, "PagingOptions")
 
-    file.addImport(config.utilitiesPackage, "DateUtils")
-    file.addImport(config.utilitiesPackage :+ "JsonSerializers", "_")
+    config.addCommonImport(file, "DateUtils")
+    config.addCommonImportWildcard(file, "JsonSerializers")
 
     file.add(s"final case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")

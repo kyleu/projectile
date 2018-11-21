@@ -1,7 +1,8 @@
 package com.projectile.models.export.config
 
 import com.projectile.models.export.{ExportEnum, ExportModel}
-import com.projectile.models.output.OutputPackage
+import com.projectile.models.output.{CommonImportHelper, OutputPackage}
+import com.projectile.models.output.file.{OutputFile, ScalaFile}
 import com.projectile.models.project.Project
 import com.projectile.util.JsonSerializers._
 
@@ -28,6 +29,13 @@ case class ExportConfiguration(
 
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with name [$k]."))
   def getModelOpt(k: String) = models.find(m => m.key == k || m.propertyName == k || m.className == k)
+
+  def addCommonImport(f: ScalaFile, s: String) = CommonImportHelper.get(this, f, s) match {
+    case (p, c) => f.addImport(p, c)
+  }
+  def addCommonImportWildcard(f: ScalaFile, s: String) = CommonImportHelper.get(this, f, s) match {
+    case (p, c) => f.addImport(p :+ c, "_")
+  }
 
   lazy val packages = {
     val (rootEnums, packageEnums) = enums.partition(_.pkg.isEmpty)

@@ -12,15 +12,15 @@ object ControllerFile {
     val routesClass = (config.applicationPackage ++ model.routesPackage :+ (model.className + "Controller")).mkString(".")
 
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
-    file.addImport(config.applicationPackage :+ "models", "Application")
-    file.addImport(config.applicationPackage ++ Seq("controllers", "admin"), "ServiceController")
-    file.addImport(config.applicationPackage ++ Seq("services", "audit"), "AuditRecordService")
+    config.addCommonImport(file, "Application")
+    config.addCommonImport(file, "ServiceController")
+    config.addCommonImport(file, "AuditRecordService")
 
-    file.addImport(config.resultsPackage :+ "orderBy", "OrderBy")
+    config.addCommonImport(file, "OrderBy")
 
-    file.addImport(config.utilitiesPackage :+ "JsonSerializers", "_")
-    file.addImport(config.utilitiesPackage, "DateUtils")
-    file.addImport(config.utilitiesPackage :+ "ReftreeUtils", "_")
+    config.addCommonImportWildcard(file, "JsonSerializers")
+    config.addCommonImport(file, "DateUtils")
+    config.addCommonImportWildcard(file, "ReftreeUtils")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "api", "http"), "MimeTypes")

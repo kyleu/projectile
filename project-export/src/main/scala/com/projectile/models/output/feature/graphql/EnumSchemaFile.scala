@@ -3,15 +3,15 @@ package com.projectile.models.output.feature.graphql
 import com.projectile.models.export.ExportEnum
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.OutputPath
-import com.projectile.models.output.feature.EnumFeature
 import com.projectile.models.output.file.ScalaFile
 
 object EnumSchemaFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
     val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ enum.modelPackage, enum.className + "Schema")
-    file.addImport(config.systemPackage :+ "graphql", "CommonSchema")
-    file.addImport(config.applicationPackage :+ "graphql", "GraphQLContext")
-    file.addImport(config.applicationPackage :+ "graphql", "GraphQLSchemaHelper")
+    config.addCommonImport(file, "CommonSchema")
+    config.addCommonImport(file, "GraphQLContext")
+    config.addCommonImport(file, "GraphQLSchemaHelper")
+
     file.addImport(Seq("sangria", "schema"), "EnumType")
     file.addImport(Seq("sangria", "schema"), "ListType")
     file.addImport(Seq("sangria", "schema"), "fields")

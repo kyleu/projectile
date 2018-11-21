@@ -20,7 +20,7 @@ object ModelFile {
       file.addImport(pkg, "DataSummary")
       file.addImport(pkg, "DataFieldModel")
     }
-    file.addImport(config.utilitiesPackage :+ "JsonSerializers", "_")
+    config.addCommonImportWildcard(file, "JsonSerializers")
     if (model.features(ModelFeature.ScalaJS)) {
       file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExport")
       file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExportTopLevel")

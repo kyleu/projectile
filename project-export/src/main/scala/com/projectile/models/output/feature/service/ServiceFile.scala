@@ -21,12 +21,13 @@ object ServiceFile {
     file.addImport(config.systemPackage ++ Seq("services", "database"), "ApplicationDatabase")
     file.addImport(config.utilitiesPackage :+ "FutureUtils", "serviceContext")
     file.addImport(config.resultsPackage :+ "data", "DataField")
-    file.addImport(config.applicationPackage ++ Seq("models", "auth"), "Credentials")
-    file.addImport(config.resultsPackage :+ "filter", "Filter")
-    file.addImport(config.resultsPackage :+ "orderBy", "OrderBy")
 
-    file.addImport(config.utilitiesPackage :+ "tracing", "TraceData")
-    file.addImport(config.utilitiesPackage :+ "tracing", "TracingService")
+    config.addCommonImport(file, "Credentials")
+    config.addCommonImport(file, "Filter")
+    config.addCommonImport(file, "OrderBy")
+
+    config.addCommonImport(file, "TraceData")
+    config.addCommonImport(file, "TracingService")
 
     if (model.pkg.nonEmpty) {
       file.addImport(config.systemPackage :+ "services", "ModelServiceHelper")

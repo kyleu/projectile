@@ -6,9 +6,9 @@ import com.projectile.models.output.file.ScalaFile
 
 object SchemaHelper {
   def addImports(config: ExportConfiguration, file: ScalaFile) = {
-    file.addImport(config.systemPackage :+ "graphql" :+ "GraphQLUtils", "_")
-    file.addImport(config.applicationPackage :+ "graphql", "GraphQLContext")
-    file.addImport(config.applicationPackage :+ "graphql", "GraphQLSchemaHelper")
+    config.addCommonImportWildcard(file, "GraphQLUtils")
+    config.addCommonImport(file, "GraphQLContext")
+    config.addCommonImport(file, "GraphQLSchemaHelper")
     file.addImport(Seq("sangria", "schema"), "_")
   }
 

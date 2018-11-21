@@ -35,15 +35,15 @@ object QueriesHelper {
   }
 
   private[this] def addColQueriesToFile(config: ExportConfiguration, model: ExportModel, file: ScalaFile, col: String) = {
-    file.addImport(config.systemPackage ++ Seq("models", "queries"), "ResultFieldHelper")
-    file.addImport(config.systemPackage ++ Seq("models", "result", "orderBy"), "OrderBy")
+    config.addCommonImport(file, "ResultFieldHelper")
+    config.addCommonImport(file, "OrderBy")
 
     val field = model.fields.find(_.key == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]."))
     field.addImport(config, file, Nil)
     val propId = columnPropertyIds.getOrElse(field.propertyName, field.propertyName)
     val propCls = field.className
     field.t match {
-      case ColumnType.TagsType => file.addImport(config.tagsPackage, "Tag")
+      case ColumnType.TagsType => config.addCommonImport(file, "Tag")
       case _ => // noop
     }
     val ft = field.scalaType(config)

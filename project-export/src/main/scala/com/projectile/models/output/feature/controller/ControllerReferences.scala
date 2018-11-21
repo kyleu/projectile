@@ -8,8 +8,9 @@ object ControllerReferences {
   def write(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val references = model.transformedReferencesDistinct(config)
     if (references.nonEmpty) {
-      file.addImport(config.applicationPackage ++ Seq("models", "auth"), "Credentials")
-      file.addImport(config.systemPackage ++ Seq("models", "result"), "RelationCount")
+      config.addCommonImport(file, "Credentials")
+      config.addCommonImport(file, "RelationCount")
+
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
       val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaType(config)}").mkString(", ")
       val refServices = references.map(ref => (ref._2, ref._3, ref._4))
