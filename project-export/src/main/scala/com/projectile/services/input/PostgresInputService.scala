@@ -1,7 +1,7 @@
 package com.projectile.services.input
 
+import better.files.File
 import io.scalaland.chimney.dsl._
-
 import com.projectile.models.database.input.{PostgresConnection, PostgresInput}
 import com.projectile.models.database.schema.{EnumType, Table, View}
 import com.projectile.models.input.{InputSummary, InputTemplate}
@@ -9,17 +9,18 @@ import com.projectile.services.config.ConfigService
 import com.projectile.util.JsonSerializers._
 
 object PostgresInputService {
-  private[this] val fn = "input.json"
+  private[this] val fn = "dbconn.json"
+
+  def savePostgresDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
+    (dir / fn).overwrite(PostgresConnection().asJson.spaces2)
+  }
 
   def savePostgres(cfg: ConfigService, pgi: PostgresInput) = {
-    val dir = cfg.inputDirectory / pgi.key
-    dir.createDirectories()
-
-    val summ = pgi.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Postgres).transform.asJson.spaces2
-    (dir / fn).overwrite(summ)
+    val summ = pgi.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Postgres).transform
+    val dir = SummaryInputService.saveSummary(cfg, summ)
 
     val dbconn = pgi.into[PostgresConnection].transform.asJson.spaces2
-    (dir / "dbconn.json").overwrite(dbconn)
+    (dir / fn).overwrite(dbconn)
 
     if (pgi.enums.nonEmpty) {
       val enumDir = dir / "enum"
@@ -53,7 +54,7 @@ object PostgresInputService {
   def loadPostgres(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
 
-    val pc = loadFile[PostgresConnection](dir / "dbconn.json", "Postgres connection")
+    val pc = loadFile[PostgresConnection](dir / fn, "Postgres connection")
 
     def loadDir[A: Decoder](k: String) = {
       val d = dir / k

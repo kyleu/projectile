@@ -1,0 +1,95 @@
+@(projectile: com.projectile.services.ProjectileService, input: com.projectile.models.thrift.input.ThriftInput)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+) @layout.simple(projectile, input.title + " Input Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <h5><i class="@input.template.icon"></i> @input.title</h5>
+      @input.description
+    </div>
+  </div>
+
+  <ul class="tabs">
+    <li class="tab"><a href="#input-detail"><i class=" @com.projectile.models.template.Icons.database"></i> Summary</a></li>
+    <li class="tab"><a href="#input-int-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.intEnums.size Int Enums</a></li>
+    <li class="tab"><a href="#input-string-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.structs.size String Enums</a></li>
+    <li class="tab"><a href="#input-structs"><i class=" @com.projectile.models.template.Icons.table"></i> @input.structs.size Structs</a></li>
+    <li class="tab"><a href="#input-services"><i class=" @com.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
+  </ul>
+
+  <div id="input-detail">
+    <div class="collection">
+      @if(input.files.isEmpty) {
+        <div class="collection-item">No Thrift IDL files</div>
+      }
+      @input.files.map { f =>
+        <div class="collection-item">@f</div>
+      }
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="input-int-enums">
+    <div class="collection">
+      @if(input.intEnums.isEmpty) {
+        <div class="collection-item">No integer enumerations</div>
+      }
+      @input.intEnums.map { e =>
+        <div class="collection-item">
+          <div class="right">@e.values.size values</div>
+          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/int-enum/${e.key}.json")" class="theme-text">@e.key</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div id="input-string-enums">
+    <div class="collection">
+      @if(input.stringEnums.isEmpty) {
+        <div class="collection-item">No string enumerations</div>
+      }
+      @input.stringEnums.map { e =>
+        <div class="collection-item">
+          <div class="right">@e.values.size values</div>
+          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/string-enum/${e.key}.json")" class="theme-text">@e.key</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div id="input-structs">
+    <div class="collection">
+      @if(input.structs.isEmpty) {
+        <div class="collection-item">No structs</div>
+      }
+      @input.structs.map { s =>
+        <div class="collection-item">
+          <div class="right">@s.fields.size fields</div>
+          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/struct/${s.key}.json")" class="theme-text">@s.key</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div id="input-services">
+    <div class="collection">
+      @if(input.services.isEmpty) {
+        <div class="collection-item">No services.</div>
+      }
+      @input.services.map { s =>
+        <div class="collection-item">
+          <div class="right">@s.methods.size methods</div>
+          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/service/${s.key}.json")" class="theme-text">@s.key</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('.tabs').tabs();
+    });
+  </script>
+}

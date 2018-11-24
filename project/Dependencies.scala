@@ -61,6 +61,7 @@ object Dependencies {
     val guava = "com.google.guava" % "guava" % "27.0-jre"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
+    val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
   }
 
   object Testing {

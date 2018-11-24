@@ -10,6 +10,7 @@ object ModelMember {
   object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
     case object PostgresTable extends InputType(value = "postgres-table")
     case object PostgresView extends InputType(value = "postgres-view")
+    case object ThriftStruct extends InputType(value = "thrift-struct")
 
     override val values = findValues
   }

@@ -5,6 +5,7 @@ import com.projectile.models.database.input.PostgresConnection
 import com.projectile.models.input.InputSummary
 import com.projectile.models.project._
 import com.projectile.models.project.member.{EnumMember, ModelMember}
+import com.projectile.models.thrift.input.ThriftOptions
 import com.projectile.util.Version
 
 sealed trait ProjectileCommand extends EnumEntry
@@ -35,7 +36,10 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case object ListInputs extends ProjectileCommand
   case class GetInput(key: String) extends ProjectileCommand
   case class AddInput(input: InputSummary) extends ProjectileCommand
+
   case class SetPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
+  case class SetThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
+
   case class RemoveInput(key: String) extends ProjectileCommand
   case class RefreshInput(key: String) extends ProjectileCommand
 

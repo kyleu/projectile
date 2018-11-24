@@ -3,8 +3,10 @@ package com.projectile.services.input
 import com.projectile.models.command.ProjectileResponse
 import com.projectile.models.database.input.{PostgresConnection, PostgresInput}
 import com.projectile.models.input.{Input, InputSummary, InputTemplate}
+import com.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.projectile.services.config.ConfigService
 import com.projectile.services.database.schema.SchemaHelper
+import com.projectile.services.thrift.ThriftParseService
 import com.projectile.util.JsonSerializers._
 
 class InputService(val cfg: ConfigService) {
@@ -25,25 +27,29 @@ class InputService(val cfg: ConfigService) {
     val summ = getSummary(key)
     summ.template match {
       case InputTemplate.Postgres => PostgresInputService.loadPostgres(cfg, summ)
-      case t => throw new IllegalStateException(s"Unhandled template [$t]")
+      case InputTemplate.Thrift => ThriftInputService.loadThrift(cfg, summ)
+      case InputTemplate.Filesystem => throw new IllegalStateException("Unable to load filesystem inputs (coming soon)")
     }
   }
 
   def add(is: InputSummary) = {
-    // TODO save summary
-    val input = is.template match {
-      case InputTemplate.Postgres =>
-        PostgresInputService.toPostgresInput(summ = is, pc = PostgresConnection())
-      case InputTemplate.Filesystem =>
-        throw new IllegalStateException("Unable to save filesystem inputs (coming soon)")
+    val dir = SummaryInputService.saveSummary(cfg, is)
+    is.template match {
+      case InputTemplate.Postgres => PostgresInputService.savePostgresDefault(cfg, dir)
+      case InputTemplate.Thrift => ThriftInputService.saveThriftDefault(cfg, dir)
+      case InputTemplate.Filesystem => throw new IllegalStateException("Unable to add filesystem inputs (coming soon)")
     }
-    PostgresInputService.savePostgres(cfg, input)
-    input.asInstanceOf[Input]
+    load(is.key)
   }
 
   def setPostgresOptions(key: String, conn: PostgresConnection) = {
     val input = PostgresInputService.toPostgresInput(summ = getSummary(key), pc = conn)
     PostgresInputService.savePostgres(cfg, input)
+  }
+
+  def setThriftOptions(key: String, to: ThriftOptions) = {
+    val input = ThriftInputService.toThriftInput(summ = getSummary(key), to = to)
+    ThriftInputService.saveThrift(cfg, input)
   }
 
   def remove(key: String) = {
@@ -59,7 +65,19 @@ class InputService(val cfg: ConfigService) {
       val pgi = pg.copy(enums = s.enums, tables = s.tables, views = s.views)
       PostgresInputService.savePostgres(cfg, pgi)
       pgi
-
+    case t: ThriftInput =>
+      val files = t.files.map { o =>
+        val f = cfg.workingDirectory / o
+        if (f.exists && f.isRegularFile && f.isReadable) {
+          f
+        } else {
+          throw new IllegalStateException(s"Unable to load thrift definition at [${f.pathAsString}]")
+        }
+      }
+      val (intEnums, stringEnums, structs, services) = ThriftParseService.loadFiles(files)
+      val ti = t.copy(intEnums = intEnums, stringEnums = stringEnums, structs = structs, services = services)
+      ThriftInputService.saveThrift(cfg, ti)
+      ti
     case x => throw new IllegalStateException(s"Unable to process [$x]")
   }
 }

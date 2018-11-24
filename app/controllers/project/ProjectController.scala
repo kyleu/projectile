@@ -1,10 +1,8 @@
 package controllers.project
 
 import controllers.BaseController
-import com.projectile.models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
-import com.projectile.models.project.{ProjectSummary, ProjectTemplate}
+import com.projectile.models.output.feature.{EnumFeature, ModelFeature}
 import util.web.ControllerUtils
-import com.projectile.util.JsonSerializers._
 
 import scala.concurrent.Future
 

@@ -3,6 +3,7 @@ package controllers.input
 import controllers.BaseController
 import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.input.{InputSummary, InputTemplate}
+import com.projectile.models.thrift.input.ThriftInput
 import util.web.ControllerUtils
 
 import scala.concurrent.Future
@@ -12,6 +13,7 @@ class InputController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
     val view = projectile.getInput(key) match {
       case i: PostgresInput => views.html.input.postgresInput(projectile, i)
+      case i: ThriftInput => views.html.input.thriftInput(projectile, i)
       case x => throw new IllegalStateException(s"Cannot render view for [$x]")
     }
     Future.successful(Ok(view))

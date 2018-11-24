@@ -19,11 +19,18 @@ object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[Inpu
     icon = Icons.database
   )
 
+  case object Thrift extends InputTemplate(
+    value = "thrift",
+    title = "Thrift Definitions",
+    description = "Enums, structs, and services from a collection of Thrift IDL files",
+    icon = Icons.thrift
+  )
+
   case object Filesystem extends InputTemplate(
     value = "filesystem",
     title = "Filesystem",
     description = "Loads csv and json files from the filesystem",
-    icon = Icons.database
+    icon = Icons.file
   )
 
   override val values = findValues

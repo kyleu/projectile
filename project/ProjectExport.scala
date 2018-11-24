@@ -6,7 +6,7 @@ object ProjectExport {
     import Dependencies._
     Serialization.all ++ Seq(
       Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang, Utils.enumeratum,
-      Utils.guava, Utils.clist, Utils.clistMacros, Utils.logging,
+      Utils.guava, Utils.clist, Utils.clistMacros, Utils.logging, Utils.thriftParser,
       Database.postgres, Testing.scalaTest
     )
   }
