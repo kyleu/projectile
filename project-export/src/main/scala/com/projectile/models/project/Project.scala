@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 import io.scalaland.chimney.dsl._
 import com.projectile.models.output.{OutputPackage, OutputPath}
-import com.projectile.models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import com.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature}
 import com.projectile.models.project.member.{EnumMember, ModelMember}
 import com.projectile.util.DateUtils
 import com.projectile.util.JsonSerializers._

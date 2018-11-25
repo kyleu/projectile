@@ -2,8 +2,8 @@ package com.projectile.models.project
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import com.projectile.models.output.OutputPath
-import com.projectile.models.output.feature.ProjectFeature
-import com.projectile.models.output.feature.ProjectFeature._
+import com.projectile.models.feature.ProjectFeature
+import com.projectile.models.feature.ProjectFeature._
 import com.projectile.models.template.Icons
 
 sealed abstract class ProjectTemplate(

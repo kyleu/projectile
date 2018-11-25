@@ -10,7 +10,7 @@
         <h5><i class="@project.template.icon"></i> Edit [@project.key] Features</h5>
         <div>@project.template.title Project</div>
       </div>
-       @com.projectile.models.output.feature.ProjectFeature.values.filter(project.template.features.apply).map { feat =>
+       @com.projectile.models.feature.ProjectFeature.values.filter(project.template.features.apply).map { feat =>
         <div class="collection-item">
           <p>
             <label>

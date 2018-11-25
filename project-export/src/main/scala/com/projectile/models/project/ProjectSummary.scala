@@ -3,7 +3,7 @@ package com.projectile.models.project
 import java.time.LocalDateTime
 
 import com.projectile.models.output.{OutputPackage, OutputPath}
-import com.projectile.models.output.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import com.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature}
 import com.projectile.util.DateUtils
 import com.projectile.util.JsonSerializers._
 

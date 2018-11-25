@@ -3,7 +3,7 @@ package com.projectile.services.project
 import better.files.File
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.{OutputLog, OutputPath}
-import com.projectile.models.output.feature.{FeatureOutput, ProjectFeature}
+import com.projectile.models.feature.{FeatureOutput, ProjectFeature}
 import com.projectile.models.project.ProjectOutput
 import com.projectile.services.ProjectileService
 

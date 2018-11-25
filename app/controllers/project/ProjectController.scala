@@ -1,7 +1,7 @@
 package controllers.project
 
 import controllers.BaseController
-import com.projectile.models.output.feature.{EnumFeature, ModelFeature}
+import com.projectile.models.feature.{EnumFeature, ModelFeature}
 import util.web.ControllerUtils
 
 import scala.concurrent.Future

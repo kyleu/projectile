@@ -1,7 +1,7 @@
 package controllers.project
 
 import controllers.BaseController
-import com.projectile.models.output.feature.ProjectFeature
+import com.projectile.models.feature.ProjectFeature
 import com.projectile.models.project.{ProjectSummary, ProjectTemplate}
 import play.api.mvc.{AnyContent, Request}
 import util.web.ControllerUtils

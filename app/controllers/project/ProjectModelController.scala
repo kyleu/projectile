@@ -1,7 +1,7 @@
 package controllers.project
 
 import com.projectile.models.database.input.PostgresInput
-import com.projectile.models.output.feature.ModelFeature
+import com.projectile.models.feature.ModelFeature
 import com.projectile.models.project.member.ModelMember.InputType
 import com.projectile.models.project.member.{MemberOverride, ModelMember}
 import com.projectile.models.thrift.input.ThriftInput

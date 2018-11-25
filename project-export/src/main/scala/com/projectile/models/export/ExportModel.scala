@@ -3,7 +3,7 @@ package com.projectile.models.export
 import com.projectile.models.database.schema.{Column, ColumnType, ForeignKey}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.ExportHelper
-import com.projectile.models.output.feature.ModelFeature
+import com.projectile.models.feature.ModelFeature
 import com.projectile.models.project.member.ModelMember
 import com.projectile.models.project.member.ModelMember.InputType
 import com.projectile.util.JsonSerializers._

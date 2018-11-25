@@ -1,7 +1,7 @@
 package com.projectile.models.project.member
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
-import com.projectile.models.output.feature.EnumFeature
+import com.projectile.models.feature.EnumFeature
 import com.projectile.util.JsonSerializers._
 
 object EnumMember {

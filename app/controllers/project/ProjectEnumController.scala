@@ -1,7 +1,7 @@
 package controllers.project
 
 import com.projectile.models.database.input.PostgresInput
-import com.projectile.models.output.feature.EnumFeature
+import com.projectile.models.feature.EnumFeature
 import com.projectile.models.project.member
 import com.projectile.models.project.member.EnumMember.InputType
 import com.projectile.models.project.member.{EnumMember, MemberOverride}

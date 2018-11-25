@@ -2,7 +2,7 @@ package com.projectile.models.project
 
 import better.files._
 import com.projectile.models.output.{OutputLog, OutputPath}
-import com.projectile.models.output.feature.FeatureOutput
+import com.projectile.models.feature.FeatureOutput
 import com.projectile.util.JsonSerializers._
 
 object ProjectOutput {
