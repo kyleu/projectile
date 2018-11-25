@@ -1,13 +1,9 @@
 package com.projectile.models.thrift.schema
 
-import com.facebook.swift.parser.model.ThriftField
+import com.facebook.swift.parser.model.{ConstValue, ThriftField, ThriftType}
 import com.facebook.swift.parser.model.ThriftField.Requiredness
-import com.projectile.util.JsonSerializers._
 
 object ThriftStructField {
-  implicit val jsonEncoder: Encoder[ThriftStructField] = deriveEncoder
-  implicit val jsonDecoder: Decoder[ThriftStructField] = deriveDecoder
-
   protected val renames = Map("type" -> "`type`")
 
   def fromThrift(f: ThriftField) = {
@@ -16,8 +12,8 @@ object ThriftStructField {
     val required = f.getRequiredness != Requiredness.OPTIONAL
     val t = f.getType
     val value = Option(f.getValue.orNull)
-    ThriftStructField(key, name, required, t.toString, value.map(_.toString))
+    ThriftStructField(key, name, required, t, value)
   }
 }
 
-case class ThriftStructField(key: String, name: String, required: Boolean, t: String, value: Option[String])
+case class ThriftStructField(key: String, name: String, required: Boolean, t: ThriftType, value: Option[ConstValue])

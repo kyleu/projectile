@@ -4,28 +4,26 @@ import com.projectile.models.export.ExportEnum
 import com.projectile.models.input.{Input, InputTemplate}
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.project.member.EnumMember.InputType
-import com.projectile.models.thrift.schema.{ThriftEnum, ThriftService, ThriftStruct}
-import com.projectile.util.JsonSerializers._
-
-object ThriftInput {
-  implicit val jsonEncoder: Encoder[ThriftInput] = deriveEncoder
-  implicit val jsonDecoder: Decoder[ThriftInput] = deriveDecoder
-}
+import com.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
 
 case class ThriftInput(
     override val key: String = "new",
     override val title: String = "New Thrift Imput",
     override val description: String = "...",
     files: Seq[String] = Nil,
-    intEnums: Seq[ThriftEnum] = Nil,
-    stringEnums: Seq[ThriftEnum] = Nil,
+    typedefs: Map[String, String],
+    intEnums: Seq[ThriftIntEnum] = Nil,
+    stringEnums: Seq[ThriftStringEnum] = Nil,
     structs: Seq[ThriftStruct] = Nil,
     services: Seq[ThriftService] = Nil
 ) extends Input {
   override def template = InputTemplate.Thrift
 
-  def getEnum(k: String) = intEnums.find(_.key == k).orElse(stringEnums.find(_.key == k)).getOrElse {
-    throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${(intEnums ++ stringEnums).map(_.key).mkString(", ")}]")
+  def getEnum(k: String) = {
+    intEnums.find(_.key == k).map(Left.apply).orElse(stringEnums.find(_.key == k).map(Right.apply)).getOrElse {
+      val keys = (intEnums.map(_.key) ++ stringEnums.map(_.key)).sorted
+      throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${keys.mkString(", ")}]")
+    }
   }
 
   def getIntEnum(k: String) = intEnums.find(_.key == k).getOrElse {
@@ -45,11 +43,17 @@ case class ThriftInput(
   }
 
   override def exportEnum(key: String) = {
-    val e = getEnum(key)
-    ExportEnum(inputType = InputType.ThriftEnum, key = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
+    getEnum(key) match {
+      case Left(ie) => ExportEnum(
+        inputType = InputType.ThriftIntEnum, key = ie.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(ie.key)), values = ie.values.map(_._1)
+      )
+      case Right(se) => ExportEnum(
+        inputType = InputType.ThriftStringEnum, key = se.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(se.key)), values = se.values
+      )
+    }
   }
 
-  override lazy val exportEnums = (stringEnums ++ intEnums).map(e => exportEnum(e.key))
+  override lazy val exportEnums = stringEnums.map(e => exportEnum(e.key)) ++ intEnums.map(e => exportEnum(e.key))
 
   override def exportModel(key: String) = {
     structs.find(_.key == key) match {

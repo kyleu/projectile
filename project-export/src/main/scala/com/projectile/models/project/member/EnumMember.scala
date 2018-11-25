@@ -9,7 +9,8 @@ object EnumMember {
 
   object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
     case object PostgresEnum extends InputType(value = "postgres-enum")
-    case object ThriftEnum extends InputType(value = "thrift-enum")
+    case object ThriftIntEnum extends InputType(value = "thrift-int-enum")
+    case object ThriftStringEnum extends InputType(value = "thrift-string-enum")
 
     override val values = findValues
   }

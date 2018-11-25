@@ -1,10 +1,11 @@
 package controllers.project
 
-import controllers.BaseController
 import com.projectile.models.database.input.PostgresInput
-import com.projectile.models.output.feature.{ModelFeature, ProjectFeature}
-import com.projectile.models.project.member.{MemberOverride, ModelMember}
+import com.projectile.models.output.feature.ModelFeature
 import com.projectile.models.project.member.ModelMember.InputType
+import com.projectile.models.project.member.{MemberOverride, ModelMember}
+import com.projectile.models.thrift.input.ThriftInput
+import controllers.BaseController
 import util.web.ControllerUtils
 
 import scala.concurrent.Future
@@ -31,6 +32,7 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
           val ts = pi.tables.map(m => (m.name, InputType.PostgresTable.value, p.models.exists(x => x.input == pi.key && x.key == m.name)))
           val vs = pi.views.map(v => (v.name, InputType.PostgresView.value, p.models.exists(x => x.input == pi.key && x.key == v.name)))
           ts ++ vs
+        case ti: ThriftInput => ti.structs.map(s => (s.key, InputType.ThriftStruct.value, p.models.exists(x => x.input == ti.key && x.key == s.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
     }

@@ -1,11 +1,12 @@
 package controllers.project
 
-import controllers.BaseController
 import com.projectile.models.database.input.PostgresInput
-import com.projectile.models.output.feature.{EnumFeature, ProjectFeature}
+import com.projectile.models.output.feature.EnumFeature
 import com.projectile.models.project.member
-import com.projectile.models.project.member.{EnumMember, MemberOverride}
 import com.projectile.models.project.member.EnumMember.InputType
+import com.projectile.models.project.member.{EnumMember, MemberOverride}
+import com.projectile.models.thrift.input.ThriftInput
+import controllers.BaseController
 import util.web.ControllerUtils
 
 import scala.concurrent.Future
@@ -28,6 +29,10 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
     val inputEnums = projectile.listInputs().map { input =>
       input.key -> (projectile.getInput(input.key) match {
         case pi: PostgresInput => pi.enums.map(e => (e.key, InputType.PostgresEnum.value, p.enums.exists(x => x.input == pi.key && x.key == e.key)))
+        case ti: ThriftInput =>
+          val i = ti.intEnums.map(e => (e.key, InputType.ThriftIntEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
+          val s = ti.stringEnums.map(e => (e.key, InputType.ThriftStringEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
+          i ++ s
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
     }

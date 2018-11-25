@@ -37,7 +37,7 @@ object EnumFeature extends StringEnum[EnumFeature] with StringCirceEnum[EnumFeat
   )
 
   case object Controller extends EnumFeature(
-    value = "controller", title = "Controller", description = "Play Framework Controller for this enum, why not"
+    value = "controller", title = "Controller", description = "Play Framework Controller for this enum, why not", dependsOn = Set(ProjectFeature.Controller)
   )
 
   override val values = findValues

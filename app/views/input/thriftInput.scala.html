@@ -11,8 +11,9 @@
 
   <ul class="tabs">
     <li class="tab"><a href="#input-detail"><i class=" @com.projectile.models.template.Icons.database"></i> Summary</a></li>
+    <li class="tab"><a href="#input-typedefs"><i class=" @com.projectile.models.template.Icons.file"></i> @input.typedefs.size Typedefs</a></li>
     <li class="tab"><a href="#input-int-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.intEnums.size Int Enums</a></li>
-    <li class="tab"><a href="#input-string-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.structs.size String Enums</a></li>
+    <li class="tab"><a href="#input-string-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.stringEnums.size String Enums</a></li>
     <li class="tab"><a href="#input-structs"><i class=" @com.projectile.models.template.Icons.table"></i> @input.structs.size Structs</a></li>
     <li class="tab"><a href="#input-services"><i class=" @com.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
   </ul>
@@ -28,6 +29,17 @@
       <div class="collection-item">
         <a class="btn theme" href="@controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
       </div>
+    </div>
+  </div>
+
+  <div id="input-typedefs">
+    <div class="collection">
+      @if(input.typedefs.isEmpty) {
+        <div class="collection-item">No typedefs</div>
+      }
+      @input.typedefs.toSeq.sortBy(_._1).map { e =>
+        <div class="collection-item">@e._1 = @e._2</div>
+      }
     </div>
   </div>
 
