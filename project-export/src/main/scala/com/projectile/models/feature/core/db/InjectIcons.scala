@@ -1,4 +1,4 @@
-package com.projectile.models.feature.core
+package com.projectile.models.feature.core.db
 
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.FeatureLogic

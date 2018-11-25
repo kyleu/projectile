@@ -28,7 +28,13 @@ case class ExportEnum(
     features = m.features
   )
 
-  val valuesWithClassNames = values.map(v => v -> ExportHelper.toClassName(ExportHelper.toIdentifier(v.replaceAllLiterally(".", "_"))))
+  val valuesWithClassNames = values.map { v =>
+    val newVal = v.indexOf(':') match {
+      case -1 => v
+      case x => v.substring(x + 1)
+    }
+    v -> ExportHelper.toClassName(ExportHelper.toIdentifier(newVal))
+  }
 
   val propertyName = ExportHelper.toIdentifier(className)
 

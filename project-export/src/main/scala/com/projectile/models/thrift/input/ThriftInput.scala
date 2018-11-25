@@ -45,10 +45,16 @@ case class ThriftInput(
   override def exportEnum(key: String) = {
     getEnum(key) match {
       case Left(ie) => ExportEnum(
-        inputType = InputType.ThriftIntEnum, key = ie.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(ie.key)), values = ie.values.map(_._1)
+        inputType = InputType.ThriftIntEnum,
+        key = ie.key,
+        className = ExportHelper.toClassName(ExportHelper.toIdentifier(ie.key)),
+        values = ie.values.map(v => v._2 + ":" + v._1)
       )
       case Right(se) => ExportEnum(
-        inputType = InputType.ThriftStringEnum, key = se.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(se.key)), values = se.values
+        inputType = InputType.ThriftStringEnum,
+        key = se.key,
+        className = ExportHelper.toClassName(ExportHelper.toIdentifier(se.key)),
+        values = se.values
       )
     }
   }

@@ -1,21 +1,22 @@
-package com.projectile.models.feature.core
+package com.projectile.models.feature.core.thrift
 
 import com.projectile.models.export.ExportEnum
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.output.OutputPath
 import com.projectile.models.feature.EnumFeature
+import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 
 object StringEnumFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.modelPackage, key = enum.className)
+    val file = ScalaFile(path = path, dir = enum.modelPackage, key = enum.className)
 
-    file.addImport(Seq("enumeratum", "values"), "StringEnumEntry")
-    file.addImport(Seq("enumeratum", "values"), "StringEnum")
     file.addImport(Seq("enumeratum", "values"), "StringCirceEnum")
+    file.addImport(Seq("enumeratum", "values"), "StringEnum")
+    file.addImport(Seq("enumeratum", "values"), "StringEnumEntry")
 
     file.add(s"sealed abstract class ${enum.className}(override val value: String) extends StringEnumEntry {", 1)
+    file.add(s"lazy val asThrift = ${(enum.modelPackage :+ "thrift").mkString(".")}.${enum.key}.apply(toString)")
     file.add("override def toString = value")
     file.add("}", -1)
     file.add()
