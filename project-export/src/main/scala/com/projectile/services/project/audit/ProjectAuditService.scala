@@ -23,7 +23,7 @@ object ProjectAuditService {
   private[this] def checkMissing(c: ExportConfiguration, m: ExportModel) = {
     val missingEnums = m.fields.filter(_.t == ColumnType.EnumType).flatMap(f => f.enumOpt(c) match {
       case None => Some(AuditMessage(
-        srcModel = m.key, src = f.key, t = "enum", tgt = f.sqlTypeName, message = "Missing enum definition"
+        srcModel = m.key, src = f.key, t = "enum", tgt = f.nativeType, message = "Missing enum definition"
       ))
       case _ => None
     })

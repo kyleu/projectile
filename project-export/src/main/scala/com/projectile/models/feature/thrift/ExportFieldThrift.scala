@@ -5,7 +5,7 @@ import com.projectile.models.database.schema.ColumnType._
 import com.projectile.models.export.ExportEnum
 
 object ExportFieldThrift {
-  def thriftType(t: ColumnType, sqlTypeName: String, enumOpt: Option[ExportEnum]) = t match {
+  def thriftType(t: ColumnType, nativeType: String, enumOpt: Option[ExportEnum]) = t match {
     case StringType => "string"
     case EncryptedStringType => "string"
 
@@ -39,12 +39,13 @@ object ExportFieldThrift {
     case TagsType => "list<common.Tag>"
 
     case ByteArrayType => "binary"
-    case ArrayType => sqlTypeName match {
+    case ArrayType => nativeType match {
       case x if x.startsWith("_int") => "list<common.int>"
       case x if x.startsWith("_uuid") => "list<common.UUID>"
       case _ => "list<string>"
     }
 
+    case ComplexType => throw new IllegalStateException("TODO")
     case UnknownType => "string"
   }
 }

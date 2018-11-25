@@ -36,7 +36,7 @@ object TwirlFormFields {
   }
 
   private[this] def enumArgsFor(config: ExportConfiguration, field: ExportField) = {
-    val enum = field.enumOpt(config).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.sqlTypeName}]."))
+    val enum = field.enumOpt(config).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.nativeType}]."))
     val prop = field.propertyName
     val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
     val opts = "Seq(" + enum.values.map(v => s""""$v" -> "$v"""").mkString(", ") + ")"

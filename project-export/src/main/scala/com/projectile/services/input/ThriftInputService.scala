@@ -26,34 +26,11 @@ object ThriftInputService {
     ti
   }
 
-  def toThriftInput(
-    summ: InputSummary, to: ThriftOptions, typedefs: Map[String, String] = Map.empty[String, String],
-    intEnums: Seq[ThriftIntEnum] = Nil, stringEnums: Seq[ThriftStringEnum] = Nil,
-    structs: Seq[ThriftStruct] = Nil, services: Seq[ThriftService] = Nil
-  ) = {
-    summ.into[ThriftInput]
-      .withFieldComputed(_.files, _ => to.files)
-      .withFieldComputed(_.typedefs, _ => typedefs)
-      .withFieldComputed(_.intEnums, _ => intEnums).withFieldComputed(_.stringEnums, _ => stringEnums)
-      .withFieldComputed(_.structs, _ => structs).withFieldComputed(_.services, _ => services)
-      .transform
-  }
-
   def loadThrift(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
 
     val pc = loadFile[ThriftOptions](dir / fn, "Thrift connection")
-
-    val results = ThriftParseService.loadFiles(pc.files.map(cfg.workingDirectory / _))
-
-    toThriftInput(
-      summ = summ,
-      to = pc,
-      typedefs = results.flatMap(_.typedefs).toMap,
-      intEnums = results.flatMap(_.intEnums),
-      stringEnums = results.flatMap(_.stringEnums),
-      structs = results.flatMap(_.structs),
-      services = results.flatMap(_.services)
-    )
+    val files = pc.files.map(cfg.workingDirectory / _)
+    ThriftParseService.loadThriftInput(files, ThriftInput.fromSummary(summ, pc.files))
   }
 }

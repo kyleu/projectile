@@ -1,6 +1,8 @@
 package com.projectile.models.thrift.input
 
-import com.projectile.models.export.{ExportEnum, ExportModel}
+import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.{ExportEnum, ExportField, ExportModel}
+import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import com.projectile.models.project.member.ModelMember.InputType
 import com.projectile.models.thrift.schema.ThriftStruct
@@ -23,5 +25,17 @@ object ThriftExportModel {
     )
   }
 
-  private[this] def loadStructFields(s: ThriftStruct, enums: Seq[ExportEnum]) = Nil
+  private[this] def loadStructFields(s: ThriftStruct, enums: Seq[ExportEnum]) = s.fields.zipWithIndex.map {
+    case (f, idx) => ExportField(
+      key = f.key,
+      propertyName = ExportHelper.toIdentifier(f.key),
+      title = ExportHelper.toDefaultTitle(f.key),
+      description = None,
+      idx = idx,
+      t = ColumnType.ComplexType,
+      nativeType = f.t.toString,
+      defaultValue = f.value.map(_.toString),
+      notNull = f.required
+    )
+  }.toList
 }

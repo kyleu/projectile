@@ -40,20 +40,21 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
   }
 
   def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
+    val i = projectile.getInput(input)
     val p = projectile.getProject(key)
     inputKey match {
       case "all" =>
-        val i = projectile.getInput(input)
         val toSave = i.exportEnums.flatMap {
           case e if p.getEnumOpt(e.key).isDefined => None
-          case e => Some(member.EnumMember(input = input, inputType = e.inputType, key = e.key, features = p.enumFeatures.toSet))
+          case e => Some(member.EnumMember(input = input, pkg = e.pkg, inputType = e.inputType, key = e.key, features = p.enumFeatures.toSet))
         }
         val saved = projectile.saveEnumMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} enums"))
       case _ =>
+        val orig = i.exportModels.find(_.key == key).getOrElse(throw new IllegalStateException(s"Cannot find model [$key] in input [$input]"))
         val it = EnumMember.InputType.withValue(inputType)
-        val m = EnumMember(input = input, inputType = it, key = inputKey, features = p.enumFeatures.toSet)
+        val m = EnumMember(input = input, pkg = orig.pkg, inputType = it, key = inputKey, features = p.enumFeatures.toSet)
         projectile.saveEnumMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added enum [${m.key}]"))

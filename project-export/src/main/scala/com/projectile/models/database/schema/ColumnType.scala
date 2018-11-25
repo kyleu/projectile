@@ -65,6 +65,8 @@ object ColumnType extends StringEnum[ColumnType] with StringCirceEnum[ColumnType
     }
   }
 
+  case object ComplexType extends ColumnType("complex", "COMPLEX", "COMPLEX(xxx)")
+
   case object UnknownType extends ColumnType("unknown", "Any", "xxx")
 
   override def values = findValues

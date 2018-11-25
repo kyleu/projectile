@@ -5,7 +5,7 @@ import com.projectile.models.export.{ExportEnum, ExportField}
 import com.projectile.models.output.file.JsonFile
 
 object OpenApiPropertyHelper {
-  def contentFor(t: ColumnType, sqlTypeName: String, file: JsonFile, enums: Seq[ExportEnum]) = t match {
+  def contentFor(t: ColumnType, nativeType: String, file: JsonFile, enums: Seq[ExportEnum]) = t match {
     case ColumnType.IntegerType | ColumnType.LongType => file.add("\"type\": \"integer\"")
     case ColumnType.BigDecimalType | ColumnType.DoubleType | ColumnType.FloatType => file.add("\"type\": \"number\"")
     case ColumnType.UuidType =>
@@ -26,11 +26,11 @@ object OpenApiPropertyHelper {
       file.add("\"example\": \"2018-01-01\"")
     case ColumnType.TagsType | ColumnType.JsonType => file.add("\"type\": \"object\"")
     case ColumnType.EnumType =>
-      // val e = enums.find(_.name == sqlTypeName).getOrElse(throw new IllegalStateException(s"Cannot file enum [$sqlTypeName]."))
+      // val e = enums.find(_.name == nativeType).getOrElse(throw new IllegalStateException(s"Cannot file enum [$nativeType]."))
       file.add("\"type\": \"string\"")
     case ColumnType.ArrayType =>
       file.add("\"type\": \"array\",")
-      sqlTypeName match {
+      nativeType match {
         case x =>
           file.add("\"items\": {", 1)
           file.add("\"type\": \"" + x + "\"")
@@ -44,7 +44,7 @@ object OpenApiPropertyHelper {
   def propertyFor(f: ExportField, file: JsonFile, last: Boolean, enums: Seq[ExportEnum]) = {
     val comma = if (last) { "" } else { "," }
     file.add("\"" + f.propertyName + "\": {", 1)
-    contentFor(f.t, f.sqlTypeName, file, enums)
+    contentFor(f.t, f.nativeType, file, enums)
     file.add("}" + comma, -1)
   }
 }

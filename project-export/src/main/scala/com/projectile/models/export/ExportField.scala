@@ -50,7 +50,7 @@ case class ExportField(
     description: Option[String],
     idx: Int = 0,
     t: ColumnType,
-    sqlTypeName: String,
+    nativeType: String,
     defaultValue: Option[String] = None,
     notNull: Boolean = false,
     indexed: Boolean = false,
@@ -67,13 +67,13 @@ case class ExportField(
   def classNameForSqlType(config: ExportConfiguration) = t match {
     case EnumType => enumOpt(config).map { e =>
       s"EnumType(${e.className})"
-    }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$sqlTypeName]."))
-    case ArrayType => ArrayType.typForSqlType(sqlTypeName)
+    }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$nativeType]."))
+    case ArrayType => ArrayType.typForSqlType(nativeType)
     case _ => t.className
   }
 
   def enumOpt(config: ExportConfiguration) = t match {
-    case ColumnType.EnumType => config.getEnumOpt(sqlTypeName)
+    case ColumnType.EnumType => config.getEnumOpt(nativeType)
     case _ => None
   }
 

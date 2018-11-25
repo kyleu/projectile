@@ -40,20 +40,21 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
   }
 
   def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
+    val i = projectile.getInput(input)
     val p = projectile.getProject(key)
     inputKey match {
       case "all" =>
-        val i = projectile.getInput(input)
         val toSave = i.exportModels.flatMap {
           case m if p.getModelOpt(m.key).isDefined => None
-          case m => Some(ModelMember(input = input, inputType = m.inputType, key = m.key, features = p.modelFeatures.toSet))
+          case m => Some(ModelMember(input = input, pkg = m.pkg, inputType = m.inputType, key = m.key, features = p.modelFeatures.toSet))
         }
         val saved = projectile.saveModelMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} models"))
       case _ =>
+        val orig = i.exportModels.find(_.key == key).getOrElse(throw new IllegalStateException(s"Cannot find model [$key] in input [$input]"))
         val it = ModelMember.InputType.withValue(inputType)
-        val m = ModelMember(input = input, inputType = it, key = inputKey, features = p.modelFeatures.toSet)
+        val m = ModelMember(input = input, pkg = orig.pkg, inputType = it, key = inputKey, features = p.modelFeatures.toSet)
         projectile.saveModelMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added model [${m.key}]"))

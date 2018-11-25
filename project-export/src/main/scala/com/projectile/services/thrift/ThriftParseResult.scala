@@ -32,24 +32,25 @@ case class ThriftParseResult(
       case _ => throw new IllegalStateException("Cannot handle complex typedefs: " + t)
     })
   }.toMap
+  lazy val allTypedefs = typedefs ++ includes.flatMap(_.typedefs)
 
-  lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.fromStringEnum)
+  lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.fromStringEnum(_, srcPkg))
   lazy val allStringEnums = stringEnums ++ includes.flatMap(_.stringEnums)
   lazy val stringEnumNames = stringEnums.map(_.key)
   lazy val stringEnumString = stringEnums.map(e => s"  ${e.key} (${e.values.size} values)").mkString("\n")
 
-  lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntEnum.fromIntEnum)
+  lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntEnum.fromIntEnum(_, srcPkg))
   lazy val allIntEnums = intEnums ++ includes.flatMap(_.intEnums)
   lazy val intEnumNames = intEnums.map(_.key)
   lazy val intEnumString = intEnums.map(e => s"  ${e.key} (${e.values.size} values)").mkString("\n")
 
   lazy val enumDefaults = {
-    val s = stringEnums.map(e => e.key -> ExportHelper.toClassName(e.values.head))
-    val i = intEnums.map(e => e.key -> ExportHelper.toClassName(e.values.head._1))
+    val s = allStringEnums.map(e => e.key -> ExportHelper.toClassName(e.values.head))
+    val i = allIntEnums.map(e => e.key -> ExportHelper.toClassName(e.values.head._1))
     (s ++ i).toMap
   }
 
-  lazy val metadata = ThriftParseResult.Metadata(typedefs, enumDefaults, pkgMap)
+  lazy val metadata = ThriftParseResult.Metadata(allTypedefs, enumDefaults, pkgMap)
 
   lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.fromThrift)
   lazy val allStructs = structs ++ includes.flatMap(_.structs)

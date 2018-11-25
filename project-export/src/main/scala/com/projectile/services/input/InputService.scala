@@ -48,7 +48,7 @@ class InputService(val cfg: ConfigService) {
   }
 
   def setThriftOptions(key: String, to: ThriftOptions) = {
-    val input = ThriftInputService.toThriftInput(summ = getSummary(key), to = to)
+    val input = ThriftInput.fromSummary(is = getSummary(key), files = to.files)
     ThriftInputService.saveThrift(cfg, input)
   }
 
@@ -74,16 +74,8 @@ class InputService(val cfg: ConfigService) {
           throw new IllegalStateException(s"Unable to load thrift definition at [${f.pathAsString}]")
         }
       }
-      val results = ThriftParseService.loadFiles(files)
-      val ti = t.copy(
-        typedefs = results.flatMap(_.typedefs).toMap,
-        intEnums = results.flatMap(_.allIntEnums),
-        stringEnums = results.flatMap(_.allStringEnums),
-        structs = results.flatMap(_.allStructs),
-        services = results.flatMap(_.allServices)
-      )
+      val ti = ThriftParseService.loadThriftInput(files, t)
       ThriftInputService.saveThrift(cfg, ti)
-      ti
     case x => throw new IllegalStateException(s"Unable to process [$x]")
   }
 }

@@ -18,7 +18,7 @@ object ThriftModelFile {
 
     file.add(s"struct ${model.className} {", 1)
     model.fields.foreach { field =>
-      val thriftType = ExportFieldThrift.thriftType(field.t, field.sqlTypeName, field.enumOpt(config))
+      val thriftType = ExportFieldThrift.thriftType(field.t, field.nativeType, field.enumOpt(config))
       val thriftVisibility = if (field.notNull) { "required" } else { "optional" }
       file.add(s"${field.idx + 1}: $thriftVisibility $thriftType ${field.propertyName};")
     }

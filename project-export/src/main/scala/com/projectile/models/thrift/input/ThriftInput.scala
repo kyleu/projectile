@@ -1,17 +1,21 @@
 package com.projectile.models.thrift.input
 
 import com.projectile.models.export.ExportEnum
-import com.projectile.models.input.{Input, InputTemplate}
+import com.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.project.member.EnumMember.InputType
 import com.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
+
+object ThriftInput {
+  def fromSummary(is: InputSummary, files: Seq[String]) = ThriftInput(key = is.key, title = is.title, description = is.description, files = files)
+}
 
 case class ThriftInput(
     override val key: String = "new",
     override val title: String = "New Thrift Imput",
     override val description: String = "...",
     files: Seq[String] = Nil,
-    typedefs: Map[String, String],
+    typedefs: Map[String, String] = Map.empty,
     intEnums: Seq[ThriftIntEnum] = Nil,
     stringEnums: Seq[ThriftStringEnum] = Nil,
     structs: Seq[ThriftStruct] = Nil,
@@ -46,12 +50,14 @@ case class ThriftInput(
     getEnum(key) match {
       case Left(ie) => ExportEnum(
         inputType = InputType.ThriftIntEnum,
+        pkg = ie.pkg.toList,
         key = ie.key,
         className = ExportHelper.toClassName(ExportHelper.toIdentifier(ie.key)),
         values = ie.values.map(v => v._2 + ":" + v._1)
       )
       case Right(se) => ExportEnum(
         inputType = InputType.ThriftStringEnum,
+        pkg = se.pkg.toList,
         key = se.key,
         className = ExportHelper.toClassName(ExportHelper.toIdentifier(se.key)),
         values = se.values

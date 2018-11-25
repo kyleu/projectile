@@ -17,7 +17,7 @@ object ExportConfigurationDefault {
     description = col.description,
     idx = idx,
     t = col.columnType,
-    sqlTypeName = col.sqlTypeName,
+    nativeType = col.sqlTypeName,
     defaultValue = col.defaultValue,
     notNull = col.notNull,
     indexed = indexed,

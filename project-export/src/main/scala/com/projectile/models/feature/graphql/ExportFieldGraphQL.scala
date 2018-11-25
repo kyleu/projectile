@@ -39,12 +39,13 @@ object ExportFieldGraphQL {
     case TagsType => "TagsType"
 
     case ByteArrayType => "ArrayType(StringType)"
-    case ArrayType => field.sqlTypeName match {
+    case ArrayType => field.nativeType match {
       case x if x.startsWith("_int") => "ArrayType(IntType)"
       case x if x.startsWith("_uuid") => "ArrayType(uuidType)"
       case _ => "ArrayType(StringType)"
     }
 
+    case ComplexType => throw new IllegalStateException(s"Cannot create GraphQL for complex field [${field.nativeType}]")
     case UnknownType => "UnknownType"
   }
 
