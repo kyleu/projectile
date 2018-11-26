@@ -1,5 +1,6 @@
 package com.projectile.services
 
+import com.projectile.models.cli.ServerHelper
 import io.circe.Json
 import com.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.projectile.models.command.ProjectileCommand._
@@ -19,6 +20,14 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
       case Init => cfg.init()
       case Doctor => ConfigValidator.validate(cfg, verbose)
       case Testbed => JsonResponse(Json.True)
+      case s: StartServer => ServerHelper.inst match {
+        case Some(srv) => srv.startServer(s.port)
+        case None => throw new IllegalStateException("No server available")
+      }
+      case StopServer => ServerHelper.inst match {
+        case Some(srv) => srv.stopServer()
+        case None => throw new IllegalStateException("No server available")
+      }
     }
 
     processCore.orElse(processInput).orElse(processProject).apply(cmd)

@@ -1,12 +1,15 @@
 package util.web
 
-import play.api._
-import play.core.server.{ProdServerStart, RealServerProcess, ServerConfig, ServerProvider}
+import com.projectile.models.cli.ServerHelper
+import com.projectile.models.command.ProjectileResponse.OK
 import com.projectile.services.ProjectileService
 import com.projectile.services.config.ConfigService
 import com.projectile.util.Logging
+import play.api._
+import play.core.server._
 
-object PlayServerHelper extends Logging {
+object PlayServerHelper extends Logging with ServerHelper {
+  private[this] var serverOpt: Option[(RealServerProcess, Server)] = None
   private[this] var activeService: Option[ProjectileService] = None
 
   def setSvc(svc: ProjectileService) = {
@@ -20,7 +23,7 @@ object PlayServerHelper extends Logging {
     activeService.getOrElse(throw new IllegalStateException("Cannot initialize service"))
   }
 
-  def startServer(port: Option[Int]) = {
+  def start(port: Option[Int]) = {
     val process = new RealServerProcess(Nil)
     val baseConfig: ServerConfig = ProdServerStart.readServerConfigSettings(process)
     val config = baseConfig.copy(port = port.orElse(baseConfig.port))
@@ -36,5 +39,16 @@ object PlayServerHelper extends Logging {
     val server = serverProvider.createServer(config, application)
     process.addShutdownHook(server.stop())
     process -> server
+  }
+
+  override def startServer(port: Int) = {
+    serverOpt = Some(start(Some(port)))
+    OK
+  }
+
+  override def stopServer() = {
+    serverOpt.getOrElse(throw new IllegalStateException("No server has been started"))._2.stop()
+    serverOpt = None
+    OK
   }
 }
