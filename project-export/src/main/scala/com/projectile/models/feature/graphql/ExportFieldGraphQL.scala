@@ -1,6 +1,6 @@
 package com.projectile.models.feature.graphql
 
-import com.projectile.models.database.schema.ColumnType._
+import com.projectile.models.export.FieldType._
 import com.projectile.models.export.ExportField
 import com.projectile.models.export.config.ExportConfiguration
 

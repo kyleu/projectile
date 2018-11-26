@@ -2,7 +2,7 @@ package com.projectile.services.database.query
 
 import java.sql.Types._
 
-import com.projectile.models.database.schema.ColumnType._
+import com.projectile.models.export.FieldType._
 import com.projectile.util.Logging
 
 object QueryTranslations extends Logging {

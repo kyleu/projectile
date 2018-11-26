@@ -1,7 +1,6 @@
 package com.projectile.models.feature.controller.twirl
 
-import com.projectile.models.database.schema.ColumnType
-import com.projectile.models.export.ExportModel
+import com.projectile.models.export.{ExportModel, FieldType}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.TwirlFile
@@ -58,7 +57,7 @@ object TwirlViewFile {
             file.add("}", -1)
           }
           file.add("</td>", -1)
-        case _ if field.t == ColumnType.CodeType || field.t == ColumnType.JsonType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
+        case _ if field.t == FieldType.CodeType || field.t == FieldType.JsonType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
         case _ => file.add(s"<td>@model.${field.propertyName}</td>")
       }
       file.add("</tr>", -1)

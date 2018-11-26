@@ -1,6 +1,6 @@
 package com.projectile.models.feature.graphql
 
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.file.GraphQLFile
@@ -14,7 +14,7 @@ object GraphQLQueryFiles {
   }
 
   private[this] def addField(f: ExportField, file: GraphQLFile) = f.t match {
-    case ColumnType.TagsType =>
+    case FieldType.TagsType =>
       file.add(f.propertyName + " {", 1)
       file.add("k")
       file.add("v")
@@ -22,10 +22,10 @@ object GraphQLQueryFiles {
     case _ => file.add(f.propertyName)
   }
 
-  private[this] def argValFor(t: ColumnType) = t match {
-    case ColumnType.UuidType => "\"00000000-0000-0000-0000-000000000000\""
-    case ColumnType.IntegerType | ColumnType.LongType => "0"
-    case ColumnType.FloatType | ColumnType.DoubleType => "0.0"
+  private[this] def argValFor(t: FieldType) = t match {
+    case FieldType.UuidType => "\"00000000-0000-0000-0000-000000000000\""
+    case FieldType.IntegerType | FieldType.LongType => "0"
+    case FieldType.FloatType | FieldType.DoubleType => "0.0"
     case _ => "\"\""
   }
 

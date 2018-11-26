@@ -1,7 +1,7 @@
 package com.projectile.models.thrift.input
 
 import com.facebook.swift.parser.model._
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftFileHelper {
@@ -57,8 +57,8 @@ object ThriftFileHelper {
   }
 
   private[this] def colTypeForIdentifier(name: String, metadata: ThriftParseResult.Metadata): (String, Seq[String]) = name match {
-    case "I64" => ColumnType.LongType.asScala -> Nil
-    case "I32" => ColumnType.IntegerType.asScala -> Nil
+    case "I64" => FieldType.LongType.asScala -> Nil
+    case "I32" => FieldType.IntegerType.asScala -> Nil
     case x if x.contains('.') => x.split('.').toList match {
       case pkg :: cls :: Nil => cls -> metadata.pkgMap.getOrElse(pkg, Nil)
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
@@ -67,13 +67,13 @@ object ThriftFileHelper {
   }
 
   private[this] def colTypeForBase(t: BaseType.Type) = t match {
-    case BaseType.Type.BINARY => ColumnType.ByteArrayType.asScala
-    case BaseType.Type.BOOL => ColumnType.BooleanType.asScala
-    case BaseType.Type.BYTE => ColumnType.ByteType.asScala
-    case BaseType.Type.DOUBLE => ColumnType.DoubleType.asScala
-    case BaseType.Type.I16 | BaseType.Type.I32 => ColumnType.IntegerType.asScala
-    case BaseType.Type.I64 => ColumnType.LongType.asScala
-    case BaseType.Type.STRING => ColumnType.StringType.asScala
+    case BaseType.Type.BINARY => FieldType.ByteArrayType.asScala
+    case BaseType.Type.BOOL => FieldType.BooleanType.asScala
+    case BaseType.Type.BYTE => FieldType.ByteType.asScala
+    case BaseType.Type.DOUBLE => FieldType.DoubleType.asScala
+    case BaseType.Type.I16 | BaseType.Type.I32 => FieldType.IntegerType.asScala
+    case BaseType.Type.I64 => FieldType.LongType.asScala
+    case BaseType.Type.STRING => FieldType.StringType.asScala
     case x => throw new IllegalStateException(s"Unhandled base type [$x]")
   }
 }

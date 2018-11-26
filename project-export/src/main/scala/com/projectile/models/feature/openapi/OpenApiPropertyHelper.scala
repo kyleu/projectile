@@ -1,34 +1,34 @@
 package com.projectile.models.feature.openapi
 
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.models.export.{ExportEnum, ExportField}
 import com.projectile.models.output.file.JsonFile
 
 object OpenApiPropertyHelper {
-  def contentFor(t: ColumnType, nativeType: String, file: JsonFile, enums: Seq[ExportEnum]) = t match {
-    case ColumnType.IntegerType | ColumnType.LongType => file.add("\"type\": \"integer\"")
-    case ColumnType.BigDecimalType | ColumnType.DoubleType | ColumnType.FloatType => file.add("\"type\": \"number\"")
-    case ColumnType.UuidType =>
+  def contentFor(t: FieldType, nativeType: String, file: JsonFile, enums: Seq[ExportEnum]) = t match {
+    case FieldType.IntegerType | FieldType.LongType => file.add("\"type\": \"integer\"")
+    case FieldType.BigDecimalType | FieldType.DoubleType | FieldType.FloatType => file.add("\"type\": \"number\"")
+    case FieldType.UuidType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"00000000-0000-0000-0000-000000000000\"")
-    case ColumnType.BooleanType => file.add("\"type\": \"boolean\"")
-    case ColumnType.TimestampType =>
+    case FieldType.BooleanType => file.add("\"type\": \"boolean\"")
+    case FieldType.TimestampType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"2018-01-01 00:00:00\"")
-    case ColumnType.TimestampZonedType =>
+    case FieldType.TimestampZonedType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"2018-01-01 00:00:00+0\"")
-    case ColumnType.TimeType =>
+    case FieldType.TimeType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"00:00:00\"")
-    case ColumnType.DateType =>
+    case FieldType.DateType =>
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"2018-01-01\"")
-    case ColumnType.TagsType | ColumnType.JsonType => file.add("\"type\": \"object\"")
-    case ColumnType.EnumType =>
+    case FieldType.TagsType | FieldType.JsonType => file.add("\"type\": \"object\"")
+    case FieldType.EnumType =>
       // val e = enums.find(_.name == nativeType).getOrElse(throw new IllegalStateException(s"Cannot file enum [$nativeType]."))
       file.add("\"type\": \"string\"")
-    case ColumnType.ArrayType =>
+    case FieldType.ArrayType =>
       file.add("\"type\": \"array\",")
       nativeType match {
         case x =>
@@ -36,8 +36,8 @@ object OpenApiPropertyHelper {
           file.add("\"type\": \"" + x + "\"")
           file.add("}", -1)
       }
-    case ColumnType.StringType | ColumnType.EncryptedStringType | ColumnType.UnknownType => file.add("\"type\": \"string\"")
-    case ColumnType.ByteArrayType => file.add("\"type\": \"string\"")
+    case FieldType.StringType | FieldType.EncryptedStringType | FieldType.UnknownType => file.add("\"type\": \"string\"")
+    case FieldType.ByteArrayType => file.add("\"type\": \"string\"")
     case x => throw new IllegalStateException(s"Unhandled openapi property for type [$x].")
   }
 

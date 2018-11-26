@@ -1,6 +1,6 @@
 package com.projectile.models.export
 
-import com.projectile.models.database.schema.{Column, ColumnType, ForeignKey}
+import com.projectile.models.database.schema.{Column, ForeignKey}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.feature.ModelFeature
@@ -71,7 +71,7 @@ case class ExportModel(
     case cols => "(" + cols.map(_.scalaType(config)).mkString(", ") + ")"
   }
 
-  val indexedFields = fields.filter(_.indexed).filterNot(_.t == ColumnType.TagsType)
+  val indexedFields = fields.filter(_.indexed).filterNot(_.t == FieldType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))

@@ -1,6 +1,6 @@
 package com.projectile.models.feature.service
 
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.file.ScalaFile
@@ -43,7 +43,7 @@ object QueriesHelper {
     val propId = columnPropertyIds.getOrElse(field.propertyName, field.propertyName)
     val propCls = field.className
     field.t match {
-      case ColumnType.TagsType => config.addCommonImport(file, "Tag")
+      case FieldType.TagsType => config.addCommonImport(file, "Tag")
       case _ => // noop
     }
     val ft = field.scalaType(config)

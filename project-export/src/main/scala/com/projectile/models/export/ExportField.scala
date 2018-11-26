@@ -1,7 +1,6 @@
 package com.projectile.models.export
 
-import com.projectile.models.database.schema.ColumnType
-import com.projectile.models.database.schema.ColumnType._
+import com.projectile.models.export.FieldType._
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.file.ScalaFile
@@ -11,7 +10,7 @@ object ExportField {
   implicit val jsonEncoder: Encoder[ExportField] = deriveEncoder
   implicit val jsonDecoder: Decoder[ExportField] = deriveDecoder
 
-  def getDefaultString(t: ColumnType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
+  def getDefaultString(t: FieldType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
     case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
     case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
@@ -49,7 +48,7 @@ case class ExportField(
     title: String,
     description: Option[String],
     idx: Int = 0,
-    t: ColumnType,
+    t: FieldType,
     nativeType: String,
     defaultValue: Option[String] = None,
     notNull: Boolean = false,
@@ -73,7 +72,7 @@ case class ExportField(
   }
 
   def enumOpt(config: ExportConfiguration) = t match {
-    case ColumnType.EnumType => config.getEnumOpt(nativeType)
+    case FieldType.EnumType => config.getEnumOpt(nativeType)
     case _ => None
   }
 

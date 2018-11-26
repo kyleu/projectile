@@ -34,12 +34,14 @@ case class ThriftParseResult(
   }.toMap
   lazy val allTypedefs = typedefs ++ includes.flatMap(_.typedefs)
 
-  lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.fromStringEnum(_, srcPkg))
+  private[this] val pkg = srcPkg.dropRight(1)
+
+  lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.fromStringEnum(_, pkg))
   lazy val allStringEnums = stringEnums ++ includes.flatMap(_.stringEnums)
   lazy val stringEnumNames = stringEnums.map(_.key)
   lazy val stringEnumString = stringEnums.map(e => s"  ${e.key} (${e.values.size} values)").mkString("\n")
 
-  lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntEnum.fromIntEnum(_, srcPkg))
+  lazy val intEnums = decls.filter(_.isInstanceOf[IntegerEnum]).map(_.asInstanceOf[IntegerEnum]).map(ThriftIntEnum.fromIntEnum(_, pkg))
   lazy val allIntEnums = intEnums ++ includes.flatMap(_.intEnums)
   lazy val intEnumNames = intEnums.map(_.key)
   lazy val intEnumString = intEnums.map(e => s"  ${e.key} (${e.values.size} values)").mkString("\n")
@@ -52,7 +54,7 @@ case class ThriftParseResult(
 
   lazy val metadata = ThriftParseResult.Metadata(allTypedefs, enumDefaults, pkgMap)
 
-  lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.fromThrift)
+  lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.fromStruct(_, pkg))
   lazy val allStructs = structs ++ includes.flatMap(_.structs)
   lazy val structNames = structs.map(_.key)
   lazy val structString = structs.map(struct => s"  ${struct.key} (${struct.fields.size} fields)").mkString("\n")

@@ -1,6 +1,6 @@
 package com.projectile.models.thrift.input
 
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.models.export.{ExportEnum, ExportField, ExportModel}
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
@@ -32,8 +32,8 @@ object ThriftExportModel {
       title = ExportHelper.toDefaultTitle(f.key),
       description = None,
       idx = idx,
-      t = ColumnType.ComplexType,
-      nativeType = f.t.toString,
+      t = FieldType.ComplexType,
+      nativeType = f.t.toString, // TODO!!!
       defaultValue = f.value.map(_.toString),
       notNull = f.required
     )

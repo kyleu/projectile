@@ -9,7 +9,7 @@ import com.projectile.models.thrift.input.ThriftInput
 object ThriftParseService {
   def loadThriftInput(files: Seq[File], t: ThriftInput) = {
     val results = files.map(loadFile)
-    val metadata = results.map(_.metadata)
+    // val metadata = results.map(_.metadata)
     t.copy(
       // metadata = Metadata(typedefs = metadata.flatMap(_.typedefs).toMap, enums = metadata.flatMap(_.enums).toMap, pkgMap = metadata.flatMap(_.pkgMap).toMap),
       typedefs = results.flatMap(_.allTypedefs).toMap,

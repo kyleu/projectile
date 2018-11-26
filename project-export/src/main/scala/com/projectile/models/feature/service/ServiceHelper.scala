@@ -1,6 +1,6 @@
 package com.projectile.models.feature.service
 
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.file.ScalaFile
@@ -54,8 +54,8 @@ object ServiceHelper {
         file.add("}", -1)
         if (model.propertyName != "audit") {
           field.t match {
-            case ColumnType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
-            case ColumnType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)
+            case FieldType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
+            case FieldType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)
             case _ => // noop
           }
         }

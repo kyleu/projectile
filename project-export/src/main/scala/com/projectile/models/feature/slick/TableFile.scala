@@ -1,6 +1,6 @@
 package com.projectile.models.feature.slick
 
-import com.projectile.models.database.schema.ColumnType
+import com.projectile.models.export.FieldType
 import com.projectile.models.export.{ExportEnum, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.OutputPath
@@ -65,8 +65,8 @@ object TableFile {
   private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
     field.addImport(config = config, file = file, pkg = model.slickPackage)
     val colScala = field.t match {
-      case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.nativeType)
-      case ColumnType.TagsType =>
+      case FieldType.ArrayType => FieldType.ArrayType.valForSqlType(field.nativeType)
+      case FieldType.TagsType =>
         file.addImport(config.tagsPackage, "Tag")
         s"List[Tag]"
       case _ => field.scalaType(config)

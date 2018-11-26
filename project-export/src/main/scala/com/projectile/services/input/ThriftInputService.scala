@@ -1,7 +1,6 @@
 package com.projectile.services.input
 
 import better.files.File
-import com.projectile.models.thrift.schema._
 import com.projectile.models.input.{InputSummary, InputTemplate}
 import com.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.projectile.services.config.ConfigService

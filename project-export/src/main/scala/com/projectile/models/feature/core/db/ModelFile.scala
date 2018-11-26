@@ -1,7 +1,6 @@
 package com.projectile.models.feature.core.db
 
-import com.projectile.models.database.schema.ColumnType
-import com.projectile.models.export.ExportModel
+import com.projectile.models.export.{ExportModel, FieldType}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
@@ -52,17 +51,17 @@ object ModelFile {
       model.fields.foreach { field =>
         val x = if (field.notNull) {
           val method = field.t match {
-            case ColumnType.StringType | ColumnType.EncryptedStringType => field.propertyName
-            case ColumnType.EnumType => s"${field.propertyName}.value"
-            case ColumnType.ArrayType => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
+            case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
+            case FieldType.EnumType => s"${field.propertyName}.value"
+            case FieldType.ArrayType => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
             case _ => s"${field.propertyName}.toString"
           }
           s"""DataField("${field.propertyName}", Some($method))"""
         } else {
           val method = field.t match {
-            case ColumnType.StringType | ColumnType.EncryptedStringType => field.propertyName
-            case ColumnType.EnumType => s"${field.propertyName}.map(_.value)"
-            case ColumnType.ArrayType => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
+            case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
+            case FieldType.EnumType => s"${field.propertyName}.map(_.value)"
+            case FieldType.ArrayType => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
             case _ => s"${field.propertyName}.map(_.toString)"
           }
           s"""DataField("${field.propertyName}", $method)"""

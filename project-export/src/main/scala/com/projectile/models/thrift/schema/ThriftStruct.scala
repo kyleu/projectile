@@ -5,12 +5,14 @@ import com.facebook.swift.parser.model.Struct
 import scala.collection.JavaConverters._
 
 object ThriftStruct {
-  def fromThrift(s: Struct) = {
-    val key = s.getName
-    val fields = s.getFields.asScala.map(ThriftStructField.fromThrift)
-    ThriftStruct(key, fields)
+  def fromStruct(s: Struct, pkg: Seq[String]) = {
+    ThriftStruct(s.getName, pkg, s.getFields.asScala.map(ThriftStructField.fromThrift))
   }
 }
 
-case class ThriftStruct(key: String, fields: Seq[ThriftStructField])
+case class ThriftStruct(
+    key: String,
+    pkg: Seq[String],
+    fields: Seq[ThriftStructField]
+)
 

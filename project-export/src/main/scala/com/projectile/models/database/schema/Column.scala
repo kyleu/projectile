@@ -1,5 +1,6 @@
 package com.projectile.models.database.schema
 
+import com.projectile.models.export.FieldType
 import com.projectile.util.JsonSerializers._
 
 object Column {
@@ -14,7 +15,7 @@ case class Column(
     primaryKey: Boolean = false,
     notNull: Boolean = false,
     autoIncrement: Boolean = false,
-    columnType: ColumnType = ColumnType.StringType,
+    columnType: FieldType = FieldType.StringType,
     sqlTypeCode: Int = 12,
     sqlTypeName: String = "varchar",
     size: String = Int.MaxValue.toString,

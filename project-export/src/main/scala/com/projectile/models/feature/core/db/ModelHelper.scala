@@ -1,7 +1,6 @@
 package com.projectile.models.feature.core.db
 
-import com.projectile.models.database.schema.ColumnType
-import com.projectile.models.export.ExportModel
+import com.projectile.models.export.{ExportModel, FieldType}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.ScalaFile
@@ -13,8 +12,8 @@ object ModelHelper {
     val scalaJsPrefix = if (model.features(ModelFeature.ScalaJS)) { "@JSExport " } else { "" }
 
     val colScala = field.t match {
-      case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.nativeType)
-      case ColumnType.TagsType =>
+      case FieldType.ArrayType => FieldType.ArrayType.valForSqlType(field.nativeType)
+      case FieldType.TagsType =>
         config.addCommonImport(file, "Tag")
         field.scalaType(config)
       case _ => field.scalaType(config)
@@ -34,7 +33,7 @@ object ModelHelper {
       }
 
       val colScala = field.t match {
-        case ColumnType.ArrayType => ColumnType.ArrayType.valForSqlType(field.nativeType)
+        case FieldType.ArrayType => FieldType.ArrayType.valForSqlType(field.nativeType)
         case _ => field.scalaType(config)
       }
       val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
