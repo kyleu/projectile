@@ -12,7 +12,7 @@ object EnumDoobieFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.doobiePackage, key = enum.className + "Doobie")
 
     file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
-    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports"), "_")
+    config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     file.add(s"object ${enum.className}Doobie {", 1)
     val cn = enum.className

@@ -12,7 +12,7 @@ object ColumnTypeFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.slickPackage, key = enum.className + "ColumnType")
 
     file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
-    file.addImport(config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports"), "_")
+    config.addCommonImport(file, "SlickQueryService", "imports", "_")
     file.addImport(Seq("slick", "jdbc"), "JdbcType")
 
     file.add(s"object ${enum.className}ColumnType {", 1)

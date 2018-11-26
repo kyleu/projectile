@@ -19,7 +19,7 @@ object DoobieFile {
     if (model.pkg.nonEmpty) {
       config.addCommonImport(file, "DoobieQueries")
     }
-    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports"), "_")
+    config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
       file.addImport(config.applicationPackage ++ e.doobiePackage :+ s"${e.className}Doobie", s"${e.propertyName}Meta")

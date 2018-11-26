@@ -14,7 +14,7 @@ object ServiceInserts {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
       if (model.features(ModelFeature.Audit)) {
-        file.addImport(config.systemPackage ++ Seq("services", "audit"), "AuditHelper")
+        config.addCommonImport(file, "AuditHelper")
         file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map {", 1)
         val audit = model.pkFields.map(f => "n." + f.propertyName + ".toString").mkString(", ")
         file.add("case Some(n) =>")

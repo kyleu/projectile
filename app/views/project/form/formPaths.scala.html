@@ -10,17 +10,20 @@
         <h5><i class="@project.template.icon"></i> Edit [@project.key] Paths</h5>
         <div>@project.template.title Project</div>
       </div>
-       @com.projectile.models.output.OutputPath.values.map { p =>
-        @if(project.pathset.apply(p)) {
-          <div class="collection-item">
-            <div>
-              <label for="path.@p.value">@p.value</label>
-              <input name="path.@p.value" id="path.@p.value" value="@project.paths.getOrElse(p, project.template.path(p))" />
-            </div>
-            <div class="right">default: "@project.template.path(p)"</div>
-            <em>@p.description</em>
+      @if(!com.projectile.models.output.OutputPath.values.exists(project.pathset.apply)) {
+        <div class="collection-item">
+          No paths available - add more features!
+        </div>
+      }
+      @com.projectile.models.output.OutputPath.values.filter(project.pathset.apply).map { p =>
+        <div class="collection-item">
+          <div>
+            <label for="path.@p.value">@p.value</label>
+            <input name="path.@p.value" id="path.@p.value" value="@project.paths.getOrElse(p, project.template.path(p))" />
           </div>
-        }
+          <div class="right">default: "@project.template.path(p)"</div>
+          <em>@p.description</em>
+        </div>
       }
       <div class="collection-item">
         <input class="btn theme" type="submit" value="Save" />

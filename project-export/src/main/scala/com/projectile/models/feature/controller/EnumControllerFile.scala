@@ -11,7 +11,7 @@ object EnumControllerFile {
     file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
 
     config.addCommonImport(file, "BaseController")
-    config.addCommonImportWildcard(file, "JsonSerializers")
+    config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ServiceController")
 
     file.addImport(Seq("scala", "concurrent"), "Future")

@@ -15,20 +15,24 @@ object ModelFile {
 
     if (model.features(ModelFeature.DataModel)) {
       val pkg = config.resultsPackage :+ "data"
-      file.addImport(pkg, "DataField")
-      file.addImport(pkg, "DataSummary")
-      file.addImport(pkg, "DataFieldModel")
+      config.addCommonImport(file, "DataField")
+      config.addCommonImport(file, "DataSummary")
+      config.addCommonImport(file, "DataFieldModel")
     }
-    config.addCommonImportWildcard(file, "JsonSerializers")
+    if (model.features(ModelFeature.Json)) {
+      config.addCommonImport(file, "JsonSerializers", "_")
+    }
     if (model.features(ModelFeature.ScalaJS)) {
       file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExport")
       file.addImport(Seq("scala", "scalajs", "js", "annotation"), "JSExportTopLevel")
     }
 
     file.add(s"object ${model.className} {", 1)
-    file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
-    file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-    file.add()
+    if (model.features(ModelFeature.Json)) {
+      file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+      file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
+      file.add()
+    }
     ModelHelper.addEmpty(config, model, file)
     file.add("}", -1)
     file.add()

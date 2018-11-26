@@ -11,14 +11,14 @@ object DoobieTestsFile {
 
     file.addImport(Seq("org", "scalatest"), "_")
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
-    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieQueryService", "Imports"), "_")
+    config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
       file.addImport(config.applicationPackage ++ e.doobiePackage :+ s"${e.className}Doobie", s"${e.propertyName}Meta")
     })
 
     file.add(s"class ${model.className}DoobieTests extends FlatSpec with Matchers {", 1)
-    file.addImport(config.systemPackage ++ Seq("services", "database", "doobie", "DoobieTestHelper", "yolo"), "_")
+    config.addCommonImport(file, "DoobieTestHelper", "yolo", "_")
 
     file.add()
     file.add(s""""Doobie queries for [${model.className}]" should "typecheck" in {""", 1)

@@ -20,7 +20,7 @@ object ServiceMutations {
       file.add(s"""traceF("remove")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add(s"case Some(current) =>", 1)
       if (model.features(ModelFeature.Audit)) {
-        file.addImport(config.systemPackage ++ Seq("services", "audit"), "AuditHelper")
+        config.addCommonImport(file, "AuditHelper")
         val audit = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
         file.add(s"""AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields, creds)""")
       }

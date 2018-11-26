@@ -18,9 +18,9 @@ object ControllerFile {
 
     config.addCommonImport(file, "OrderBy")
 
-    config.addCommonImportWildcard(file, "JsonSerializers")
+    config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImportWildcard(file, "ReftreeUtils")
+    config.addCommonImport(file, "ReftreeUtils", "_")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "api", "http"), "MimeTypes")

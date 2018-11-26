@@ -17,7 +17,11 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
   }
 
   case object Core extends ModelFeature(
-    value = "core", title = "Core", description = "Scala case class and Circe Json serializer"
+    value = "core", title = "Core", description = "Scala case class representing this model"
+  )
+
+  case object Json extends ModelFeature(
+    value = "json", title = "JSON", description = "Circe Json serializer and deserializer"
   )
 
   case object Shared extends ModelFeature(

@@ -30,11 +30,9 @@ case class ExportConfiguration(
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with name [$k]."))
   def getModelOpt(k: String) = models.find(m => m.key == k || m.propertyName == k || m.className == k)
 
-  def addCommonImport(f: ScalaFile, s: String) = CommonImportHelper.get(this, f, s) match {
-    case (p, c) => f.addImport(p, c)
-  }
-  def addCommonImportWildcard(f: ScalaFile, s: String) = CommonImportHelper.get(this, f, s) match {
-    case (p, c) => f.addImport(p :+ c, "_")
+  def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, f, s) match {
+    case (p, c) if additional.isEmpty => f.addImport(p, c)
+    case (p, c) => f.addImport((p :+ c) ++ additional.init, additional.last)
   }
 
   lazy val packages = {

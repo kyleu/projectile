@@ -35,7 +35,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "A simple Scala library, built with sbt, that depends on Circe and Enumeratum",
     repo = "https://github.com/KyleU/projectile-template-scala-library.git",
     icon = Icons.library,
-    features = Set(Core, DataModel, OpenAPI, Wiki)
+    features = Set(Core, DataModel, Service, Slick, Doobie, OpenAPI, Wiki)
   )
 
   case object Play extends ProjectTemplate(
@@ -44,7 +44,7 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     description = "A simple Scala Play Framework application with some useful defaults and helper classes",
     repo = "https://github.com/KyleU/projectile-template-play.git",
     icon = Icons.library,
-    features = Set(Core, DataModel, OpenAPI, Wiki)
+    features = Set(Core, DataModel, Service, Slick, Doobie, OpenAPI, Wiki)
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.GraphQLOutput => "conf/graphql"

@@ -16,7 +16,7 @@ object SchemaFile {
     })
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) {
-      file.addImport(config.applicationPackage ++ Seq("models", "note"), "NoteSchema")
+      config.addCommonImport(file, "NoteSchema")
     }
     SchemaHelper.addImports(config, file)
 

@@ -18,9 +18,10 @@ object ServiceFile {
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
     file.addImport(config.applicationPackage ++ model.queriesPackage, model.className + "Queries")
     file.addImport(Seq("scala", "concurrent"), "Future")
-    file.addImport(config.systemPackage ++ Seq("services", "database"), "ApplicationDatabase")
-    file.addImport(config.utilitiesPackage :+ "FutureUtils", "serviceContext")
-    file.addImport(config.resultsPackage :+ "data", "DataField")
+
+    config.addCommonImport(file, "ApplicationDatabase")
+    config.addCommonImport(file, "FutureUtils", "serviceContext")
+    config.addCommonImport(file, "DataField")
 
     config.addCommonImport(file, "Credentials")
     config.addCommonImport(file, "Filter")
@@ -30,7 +31,7 @@ object ServiceFile {
     config.addCommonImport(file, "TracingService")
 
     if (model.pkg.nonEmpty) {
-      file.addImport(config.systemPackage :+ "services", "ModelServiceHelper")
+      config.addCommonImport(file, "ModelServiceHelper")
     }
 
     file.add("@javax.inject.Singleton")
@@ -49,7 +50,7 @@ object ServiceFile {
     }
 
     file.add()
-    file.addImport(config.utilitiesPackage, "CsvUtils")
+    config.addCommonImport(file, "CsvUtils")
     file.add(s"def csvFor(totalCount: Int, rows: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
     file.add(s"""traceB("export.csv")(td => CsvUtils.csvFor(Some(key), totalCount, rows, $queriesFilename.fields)(td))""")
     file.add("}", -1)

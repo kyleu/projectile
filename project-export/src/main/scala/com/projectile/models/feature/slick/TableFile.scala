@@ -12,7 +12,7 @@ object TableFile {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.slickPackage, key = model.className + "Table")
 
-    file.addImport(config.systemPackage ++ Seq("services", "database", "slick", "SlickQueryService", "imports"), "_")
+    config.addCommonImport(file, "SlickQueryService", "imports", "_")
 
     model.fields.foreach(_.enumOpt(config).foreach { e =>
       file.addImport(config.applicationPackage ++ e.slickPackage :+ s"${e.className}ColumnType", s"${e.propertyName}ColumnType")
@@ -67,7 +67,7 @@ object TableFile {
     val colScala = field.t match {
       case FieldType.ArrayType => FieldType.ArrayType.valForSqlType(field.nativeType)
       case FieldType.TagsType =>
-        file.addImport(config.tagsPackage, "Tag")
+        config.addCommonImport(file, "Tag")
         s"List[Tag]"
       case _ => field.scalaType(config)
     }

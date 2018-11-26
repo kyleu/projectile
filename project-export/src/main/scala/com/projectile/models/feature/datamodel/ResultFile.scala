@@ -20,7 +20,7 @@ object ResultFile {
     config.addCommonImport(file, "PagingOptions")
 
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImportWildcard(file, "JsonSerializers")
+    config.addCommonImport(file, "JsonSerializers", "_")
 
     file.add(s"final case class ${model.className}Result(", 2)
     file.add("override val filters: Seq[Filter] = Nil,")

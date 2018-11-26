@@ -12,12 +12,12 @@ object QueriesFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.queriesPackage, key = model.className + "Queries")
 
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
-    file.addImport(config.systemPackage ++ Seq("models", "database"), "Row")
-    file.addImport(config.systemPackage ++ Seq("models", "database"), "DatabaseField")
-    file.addImport(config.systemPackage ++ Seq("models", "database", "DatabaseFieldType"), "_")
+    config.addCommonImport(file, "Row")
+    config.addCommonImport(file, "DatabaseField")
+    config.addCommonImport(file, "DatabaseFieldType", "_")
 
     if (model.pkg.nonEmpty) {
-      file.addImport(config.systemPackage ++ Seq("models", "queries"), "BaseQueries")
+      config.addCommonImport(file, "BaseQueries")
     }
 
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.key}") {""", 1)
@@ -36,7 +36,7 @@ object QueriesFile {
     }
     file.add()
 
-    file.addImport(config.systemPackage ++ Seq("models", "result", "filter"), "Filter")
+    config.addCommonImport(file, "Filter")
     file.add("def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)")
 
     file.add("def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
@@ -60,7 +60,7 @@ object QueriesFile {
       file.add(s"def insert(model: ${model.className}) = new Insert(model)")
       file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
 
-      file.addImport(config.systemPackage ++ Seq("models", "result", "data"), "DataField")
+      config.addCommonImport(file, "DataField")
       file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
     }
 
