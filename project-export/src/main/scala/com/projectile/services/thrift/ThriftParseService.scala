@@ -44,12 +44,6 @@ object ThriftParseService {
         parse(other)
       }
     }
-    ThriftParseResult(
-      filename = file.name,
-      srcPkg = pkg.split('.'),
-      decls = d,
-      includes = included,
-      lines = file.lines.toSeq
-    )
+    ThriftParseResult(filename = file.name, srcPkg = pkg.split('.'), decls = d, includes = included, lines = file.lines.toSeq)
   }
 }

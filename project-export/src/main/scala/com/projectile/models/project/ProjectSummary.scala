@@ -3,7 +3,7 @@ package com.projectile.models.project
 import java.time.LocalDateTime
 
 import com.projectile.models.output.{OutputPackage, OutputPath}
-import com.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature}
+import com.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature, ServiceFeature}
 import com.projectile.util.DateUtils
 import com.projectile.util.JsonSerializers._
 
@@ -29,4 +29,5 @@ case class ProjectSummary(
 
   def enumFeatures = EnumFeature.values.filter(e => e.dependsOn.forall(features.apply))
   def modelFeatures = ModelFeature.values.filter(e => e.dependsOn.forall(features.apply))
+  def serviceFeatures = ServiceFeature.values.filter(e => e.dependsOn.forall(features.apply))
 }

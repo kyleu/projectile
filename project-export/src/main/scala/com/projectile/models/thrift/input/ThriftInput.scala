@@ -67,12 +67,17 @@ case class ThriftInput(
 
   override lazy val exportEnums = stringEnums.map(e => exportEnum(e.key)) ++ intEnums.map(e => exportEnum(e.key))
 
-  override def exportModel(key: String) = {
-    structs.find(_.key == key) match {
-      case Some(struct) => ThriftExportModel.loadStructModel(struct, structs, exportEnums)
-      case None => throw new IllegalStateException(s"Cannot find struct [$key] in input [$key]")
-    }
+  override def exportModel(key: String) = structs.find(_.key == key) match {
+    case Some(struct) => ThriftExportModel.loadStructModel(struct, structs, exportEnums)
+    case None => throw new IllegalStateException(s"Cannot find struct [$key] in input [$key]")
   }
 
   override lazy val exportModels = structs.map(e => exportModel(e.key))
+
+  override def exportService(key: String) = services.find(_.key == key) match {
+    case Some(svc) => ThriftExportService.loadService(svc, exportEnums)
+    case None => throw new IllegalStateException(s"Cannot find struct [$key] in input [$key]")
+  }
+
+  override def exportServices = services.map(s => exportService(s.key))
 }

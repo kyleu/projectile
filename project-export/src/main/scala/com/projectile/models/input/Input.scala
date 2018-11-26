@@ -1,6 +1,6 @@
 package com.projectile.models.input
 
-import com.projectile.models.export.{ExportEnum, ExportModel}
+import com.projectile.models.export.{ExportEnum, ExportModel, ExportService}
 
 abstract class Input() extends Ordered[Input] {
   def template: InputTemplate
@@ -13,6 +13,9 @@ abstract class Input() extends Ordered[Input] {
 
   def exportModel(key: String): ExportModel
   def exportModels: Seq[ExportModel]
+
+  def exportService(key: String): ExportService
+  def exportServices: Seq[ExportService]
 
   override def compare(that: Input) = title.compare(that.title)
 }

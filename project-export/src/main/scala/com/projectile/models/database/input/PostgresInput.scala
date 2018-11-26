@@ -62,6 +62,10 @@ case class PostgresInput(
 
   override lazy val exportModels = tables.map(e => exportModel(e.name))
 
+  override def exportService(key: String) = throw new IllegalStateException("Services not supported for Postgres inputs")
+
+  override def exportServices = Nil
+
   def newConnection() = {
     val props = new Properties()
     props.setProperty("user", username)

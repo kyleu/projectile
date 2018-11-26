@@ -4,7 +4,7 @@ import enumeratum.{Enum, EnumEntry}
 import com.projectile.models.database.input.PostgresConnection
 import com.projectile.models.input.InputSummary
 import com.projectile.models.project._
-import com.projectile.models.project.member.{EnumMember, ModelMember}
+import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 import com.projectile.models.thrift.input.ThriftOptions
 import com.projectile.util.Version
 
@@ -24,11 +24,14 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class SaveProject(project: Project) extends ProjectileCommand
   case class RemoveProject(key: String) extends ProjectileCommand
 
+  case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
+  case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand
+
   case class SaveModelMembers(project: String, members: Seq[ModelMember]) extends ProjectileCommand
   case class RemoveModelMember(key: String, member: String) extends ProjectileCommand
 
-  case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
-  case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand
+  case class SaveServiceMembers(project: String, members: Seq[ServiceMember]) extends ProjectileCommand
+  case class RemoveServiceMember(key: String, member: String) extends ProjectileCommand
 
   case class ExportProject(key: String) extends ProjectileCommand
   case class AuditProject(key: String) extends ProjectileCommand

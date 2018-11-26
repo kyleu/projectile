@@ -111,4 +111,25 @@
       </div>
     }
   </div>
+
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <a class="theme-text" href="@controllers.project.routes.ProjectController.serviceBulkEditForm(project.key)">Bulk Edit</a> /
+        <a class="theme-text" href="@controllers.project.routes.ProjectServiceController.formNew(project.key)">Add</a>
+      </div>
+      <h6><i class=" @com.projectile.models.template.Icons.model"></i> @project.services.size Services</h6>
+    </div>
+    @if(project.services.isEmpty) {
+      <div class="collection-item">No project services.</div>
+    }
+    @project.services.sortBy(_.key).map { svc =>
+      <div class="collection-item">
+        <div class="right">@svc.input</div>
+        <a class="theme-text" href="@controllers.project.routes.ProjectServiceController.detail(project.key, svc.key)">
+          <i class=" @com.projectile.models.template.Icons.service"></i> @svc.key
+        </a>
+      </div>
+    }
+  </div>
 }

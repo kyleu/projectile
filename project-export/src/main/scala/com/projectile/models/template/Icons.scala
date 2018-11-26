@@ -13,7 +13,7 @@ object Icons {
   val input = fa("star-o")
 
   val file = fa("file-o")
-  val thrift = fa("file-o")
+  val thrift = fa("tumblr")
   val database = fa("database")
 
   val enum = fa("tag")
