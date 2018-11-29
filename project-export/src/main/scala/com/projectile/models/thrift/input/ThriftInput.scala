@@ -5,6 +5,7 @@ import com.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.project.member.EnumMember.InputType
 import com.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
+import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftInput {
   def fromSummary(is: InputSummary, files: Seq[String]) = ThriftInput(key = is.key, title = is.title, description = is.description, files = files)
@@ -15,6 +16,7 @@ case class ThriftInput(
     override val title: String = "New Thrift Imput",
     override val description: String = "...",
     files: Seq[String] = Nil,
+    metadata: ThriftParseResult.Metadata = ThriftParseResult.Metadata(Map.empty, Map.empty, Map.empty),
     typedefs: Map[String, String] = Map.empty,
     intEnums: Seq[ThriftIntEnum] = Nil,
     stringEnums: Seq[ThriftStringEnum] = Nil,
@@ -68,14 +70,14 @@ case class ThriftInput(
   override lazy val exportEnums = stringEnums.map(e => exportEnum(e.key)) ++ intEnums.map(e => exportEnum(e.key))
 
   override def exportModel(key: String) = structs.find(_.key == key) match {
-    case Some(struct) => ThriftExportModel.loadStructModel(struct, structs, exportEnums)
+    case Some(struct) => ThriftExportModel.loadStructModel(struct, metadata)
     case None => throw new IllegalStateException(s"Cannot find struct [$key] in input [$key]")
   }
 
   override lazy val exportModels = structs.map(e => exportModel(e.key))
 
   override def exportService(key: String) = services.find(_.key == key) match {
-    case Some(svc) => ThriftExportService.loadService(svc, exportEnums)
+    case Some(svc) => ThriftExportService.loadService(svc, metadata)
     case None => throw new IllegalStateException(s"Cannot find struct [$key] in input [$key]")
   }
 

@@ -1,6 +1,6 @@
 package com.projectile.models.feature.core.db
 
-import com.projectile.models.export.{ExportModel, FieldType}
+import com.projectile.models.export.{ExportField, ExportModel, FieldType}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
@@ -53,25 +53,7 @@ object ModelFile {
       file.indent()
       file.add("override def toDataFields = Seq(", 1)
       model.fields.foreach { field =>
-        val x = if (field.notNull) {
-          val method = field.t match {
-            case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
-            case FieldType.EnumType => s"${field.propertyName}.value"
-            case FieldType.ArrayType => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
-            case _ => s"${field.propertyName}.toString"
-          }
-          s"""DataField("${field.propertyName}", Some($method))"""
-        } else {
-          val method = field.t match {
-            case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
-            case FieldType.EnumType => s"${field.propertyName}.map(_.value)"
-            case FieldType.ArrayType => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
-            case _ => s"${field.propertyName}.map(_.toString)"
-          }
-          s"""DataField("${field.propertyName}", $method)"""
-        }
-        val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-        file.add(x + comma)
+        process(file, field, model.fields.lastOption.contains(field))
       }
       file.add(")", -1)
       file.add()
@@ -90,7 +72,28 @@ object ModelFile {
         case None => file.add(")", -2)
       }
     }
-
     file
+  }
+
+  private[this] def process(file: ScalaFile, field: ExportField, last: Boolean) = {
+    val x = if (field.notNull) {
+      val method = field.t match {
+        case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
+        case FieldType.EnumType => s"${field.propertyName}.value"
+        case FieldType.ArrayType => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
+        case _ => s"${field.propertyName}.toString"
+      }
+      s"""DataField("${field.propertyName}", Some($method))"""
+    } else {
+      val method = field.t match {
+        case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
+        case FieldType.EnumType => s"${field.propertyName}.map(_.value)"
+        case FieldType.ArrayType => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
+        case _ => s"${field.propertyName}.map(_.toString)"
+      }
+      s"""DataField("${field.propertyName}", $method)"""
+    }
+    val comma = if (last) { "" } else { "," }
+    file.add(x + comma)
   }
 }

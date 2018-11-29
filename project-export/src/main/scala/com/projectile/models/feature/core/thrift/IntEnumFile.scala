@@ -9,14 +9,14 @@ import com.projectile.models.output.file.ScalaFile
 object IntEnumFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = enum.pkg, key = enum.className)
+    val file = ScalaFile(path = path, dir = enum.pkg :+ "models", key = enum.className)
 
     file.addImport(Seq("enumeratum", "values"), "IntCirceEnum")
     file.addImport(Seq("enumeratum", "values"), "IntEnum")
     file.addImport(Seq("enumeratum", "values"), "IntEnumEntry")
 
     file.add(s"sealed abstract class ${enum.className}(override val value: Int, val name: String) extends IntEnumEntry {", 1)
-    file.add(s"lazy val asThrift = ${(enum.pkg :+ "thrift").mkString(".")}.${enum.key}.apply(value)")
+    file.add(s"lazy val asThrift = ${(enum.pkg :+ enum.key).mkString(".")}.apply(value)")
     file.add("override def toString = name")
     file.add("}", -1)
     file.add()
@@ -25,6 +25,7 @@ object IntEnumFile {
     addFields(enum, file)
     file.add()
     file.add("override val values = findValues")
+    file.add(s"def fromThrift(t: ${(enum.pkg :+ enum.key).mkString(".")}) = ${enum.key}.withValue(t.getValue)")
     file.add("}", -1)
 
     file

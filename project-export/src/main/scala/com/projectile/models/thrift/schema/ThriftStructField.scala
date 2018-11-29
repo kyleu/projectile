@@ -4,15 +4,15 @@ import com.facebook.swift.parser.model.{ConstValue, ThriftField, ThriftType}
 import com.facebook.swift.parser.model.ThriftField.Requiredness
 
 object ThriftStructField {
-  protected val renames = Map("type" -> "`type`")
+  private[this] val renames = Map("type" -> "`type`")
+
+  private[this] def fromKeyTypeVal(key: String, required: Boolean, t: ThriftType, v: Option[ConstValue]) = {
+    val name = renames.getOrElse(key, key)
+    ThriftStructField(key, name, required, t, v)
+  }
 
   def fromThrift(f: ThriftField) = {
-    val key = f.getName
-    val name = ThriftStructField.renames.getOrElse(key, key)
-    val required = f.getRequiredness != Requiredness.OPTIONAL
-    val t = f.getType
-    val value = Option(f.getValue.orNull)
-    ThriftStructField(key, name, required, t, value)
+    fromKeyTypeVal(key = f.getName, required = f.getRequiredness != Requiredness.OPTIONAL, t = f.getType, v = Option(f.getValue.orNull))
   }
 }
 

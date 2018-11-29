@@ -6,6 +6,30 @@ import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 
 object ControllerFile {
+
+  private[this] def addMutations(file: ScalaFile, model: ExportModel, routesClass: String, viewHtmlPackage: String) = if (!model.readOnly) {
+    file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"val cancel = $routesClass.list()")
+    file.add(s"val call = $routesClass.create()")
+    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
+    file.add(s"""request.identity, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
+    file.add(")))", -1)
+    file.add("}", -1)
+    file.add()
+    file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
+    file.add("svc.create(request, modelForm(request.body)).map {", 1)
+    if (model.pkFields.isEmpty) {
+      file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
+    } else {
+      val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
+      file.add(s"case Some(model) => Redirect($routesClass.view($viewArgs))")
+    }
+    file.add(s"case None => Redirect($routesClass.list())")
+    file.add("}", -1)
+    file.add("}", -1)
+    file.add()
+  }
+
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ model.controllerPackage, model.className + "Controller")
     val viewHtmlPackage = (config.applicationPackage ++ model.viewHtmlPackage).mkString(".")
@@ -40,29 +64,7 @@ object ControllerFile {
     file.indent()
     file.add("import app.contexts.webContext")
     file.add()
-    if (!model.readOnly) {
-      file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
-      file.add(s"val cancel = $routesClass.list()")
-      file.add(s"val call = $routesClass.create()")
-      file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-      file.add(s"""request.identity, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
-      file.add(")))", -1)
-      file.add("}", -1)
-      file.add()
-      file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
-      file.add("svc.create(request, modelForm(request.body)).map {", 1)
-      if (model.pkFields.isEmpty) {
-        file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
-      } else {
-        val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
-        file.add(s"case Some(model) => Redirect($routesClass.view($viewArgs))")
-      }
-      file.add(s"case None => Redirect($routesClass.list())")
-
-      file.add("}", -1)
-      file.add("}", -1)
-    }
-    file.add()
+    addMutations(file, model, routesClass, viewHtmlPackage)
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
     file.add("""withSession("list", admin = true) { implicit request => implicit td =>""", 1)
@@ -77,7 +79,6 @@ object ControllerFile {
     file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
     file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)")
     file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)")
-
     file.add("})", -1)
     file.add("}", -1)
     file.add("}", -1)

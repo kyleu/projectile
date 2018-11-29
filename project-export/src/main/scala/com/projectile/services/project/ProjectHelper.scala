@@ -59,8 +59,9 @@ trait ProjectHelper { this: ProjectileService =>
 
     val exportEnums = p.enums.map(e => inputs(e.input).exportEnum(e.key).apply(e))
     val exportModels = p.models.map(e => inputs(e.input).exportModel(e.key).apply(e))
+    val exportServices = p.services.map(e => inputs(e.input).exportService(e.key).apply(e))
 
-    ExportConfiguration(project = p, enums = exportEnums, models = exportModels)
+    ExportConfiguration(project = p, enums = exportEnums, models = exportModels, services = exportServices)
   }
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {

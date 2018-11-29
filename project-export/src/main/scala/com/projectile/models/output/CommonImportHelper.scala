@@ -43,6 +43,9 @@ object CommonImportHelper {
       case "ResultFieldHelper" => c.systemPackage ++ Seq("models", "queries")
       case "Row" => c.systemPackage ++ Seq("models", "database")
       case "Tag" => c.tagsPackage
+      case "ThriftFutureUtils" => c.utilitiesPackage :+ "thrift"
+      case "ThriftService" => c.utilitiesPackage :+ "thrift"
+      case "ThriftServiceHelper" => c.utilitiesPackage :+ "thrift"
       case "TraceData" => c.utilitiesPackage :+ "tracing"
       case "TracingService" => c.utilitiesPackage :+ "tracing"
       case _ => throw new IllegalStateException(s"No common import available with key [$s]")

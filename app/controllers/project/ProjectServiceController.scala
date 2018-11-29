@@ -19,7 +19,7 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
     val i = projectile.getInput(m.input)
     val em = i.exportService(model)
     val updated = em.apply(m)
-    val fin = updated.copy(methods = em.methods.map(m => updated.getMethodOpt(m).getOrElse(m)))
+    val fin = updated.copy(methods = em.methods.map(m => updated.getMethodOpt(m.key).getOrElse(m)))
 
     Future.successful(Ok(views.html.project.member.detailService(projectile, key, p.toSummary, m, fin)))
   }

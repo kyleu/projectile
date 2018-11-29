@@ -1,8 +1,8 @@
 package com.projectile.models.export.config
 
-import com.projectile.models.export.{ExportEnum, ExportModel}
+import com.projectile.models.export.{ExportEnum, ExportModel, ExportService}
+import com.projectile.models.output.file.ScalaFile
 import com.projectile.models.output.{CommonImportHelper, OutputPackage}
-import com.projectile.models.output.file.{OutputFile, ScalaFile}
 import com.projectile.models.project.Project
 import com.projectile.util.JsonSerializers._
 
@@ -14,7 +14,8 @@ object ExportConfiguration {
 case class ExportConfiguration(
     project: Project,
     enums: Seq[ExportEnum],
-    models: Seq[ExportModel]
+    models: Seq[ExportModel],
+    services: Seq[ExportService]
 ) {
   val applicationPackage = project.getPackage(OutputPackage.Application)
 
@@ -36,10 +37,10 @@ case class ExportConfiguration(
   }
 
   lazy val packages = {
-    val (rootEnums, packageEnums) = enums.partition(_.pkg.isEmpty)
+    val (_, packageEnums) = enums.partition(_.pkg.isEmpty)
     val enumPackages = packageEnums.groupBy(_.pkg.head).toSeq.sortBy(_._1)
 
-    val (rootModels, packageModels) = models.partition(_.pkg.isEmpty)
+    val (_, packageModels) = models.partition(_.pkg.isEmpty)
     val modelPackages = packageModels.groupBy(_.pkg.head).toSeq.sortBy(_._1)
 
     val packages = (enumPackages.map(_._1) ++ modelPackages.map(_._1)).distinct

@@ -73,7 +73,13 @@ object TableFile {
     }
     val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
-    file.add(s"""val ${field.propertyName} = column[$propType]("${field.key}")""")
+    val pkKeys = model.pkFields.map(_.key)
+    val aiKeys = model.pkColumns.filter(_.autoIncrement).map(_.name).flatMap(k => model.fields.find(_.key == k)).map(_.key)
+    val extra = Seq(
+      if(pkKeys.contains(field.key)) { Some(", O.PrimaryKey") } else { None },
+      if(aiKeys.contains(field.key)) { Some(", O.AutoInc") } else { None },
+    ).flatten.mkString
+    file.add(s"""val ${field.propertyName} = column[$propType]("${field.key}"$extra)""")
   }
 
   private[this] def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {

@@ -13,7 +13,13 @@ object SlickLogic extends FeatureLogic {
       Seq(ColumnTypeFile.export(config, enum).rendered)
     }
 
+    val allTables = if (!config.models.exists(_.features(ModelFeature.Slick))) {
+      Nil
+    } else {
+      Seq(AllTablesFile.export(config).rendered)
+    }
+
     debug(s"Exported [${models.size}] models and [${enums.size}] enums")
-    models ++ enums
+    models ++ enums ++ allTables
   }
 }

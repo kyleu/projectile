@@ -14,13 +14,12 @@ object ThriftParseResult {
 
 case class ThriftParseResult(
     filename: String,
-    srcPkg: Seq[String],
+    pkg: Seq[String],
     decls: Seq[Definition],
     includes: Seq[ThriftParseResult],
     lines: Seq[String]
 ) {
-  lazy val tgtPkg = srcPkg.dropRight(1)
-  lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> tgtPkg) +: includes.flatMap(r => r.pkgMap.toSeq)).toMap
+  lazy val pkgMap: Map[String, Seq[String]] = ((filename.stripSuffix(".thrift") -> pkg) +: includes.flatMap(_.pkgMap)).toMap
 
   lazy val comments = lines.filter(_.trim.startsWith("#")).map(_.trim.stripPrefix("#").trim)
   lazy val exportModelRoot = comments.find(_.startsWith("exportModelRoot")).map(_.stripPrefix("exportModelRoot").trim.stripPrefix("=").trim)
@@ -33,8 +32,6 @@ case class ThriftParseResult(
     })
   }.toMap
   lazy val allTypedefs = typedefs ++ includes.flatMap(_.typedefs)
-
-  private[this] val pkg = srcPkg.dropRight(1)
 
   lazy val stringEnums = decls.filter(_.isInstanceOf[StringEnum]).map(_.asInstanceOf[StringEnum]).map(ThriftStringEnum.fromStringEnum(_, pkg))
   lazy val allStringEnums = stringEnums ++ includes.flatMap(_.stringEnums)
@@ -59,13 +56,13 @@ case class ThriftParseResult(
   lazy val structNames = structs.map(_.key)
   lazy val structString = structs.map(struct => s"  ${struct.key} (${struct.fields.size} fields)").mkString("\n")
 
-  lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.fromThrift)
+  lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.fromThrift(_, pkg))
   lazy val allServices = services ++ includes.flatMap(_.services)
   lazy val serviceNames = services.map(_.key)
   lazy val serviceString = services.map(struct => s"  ${struct.key} (${struct.methods.size} methods)").mkString("\n")
 
   lazy val summaryString = s"""[[[$filename]]]
-    |Package: [${srcPkg.mkString(".")}]
+    |Package: [${pkg.mkString(".")}]
     |Models:
     |$structString
     |Services:

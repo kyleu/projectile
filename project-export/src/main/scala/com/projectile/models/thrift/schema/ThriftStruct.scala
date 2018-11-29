@@ -6,7 +6,7 @@ import scala.collection.JavaConverters._
 
 object ThriftStruct {
   def fromStruct(s: Struct, pkg: Seq[String]) = {
-    ThriftStruct(s.getName, pkg, s.getFields.asScala.map(ThriftStructField.fromThrift))
+    ThriftStruct(key = s.getName, pkg = pkg, fields = s.getFields.asScala.map(ThriftStructField.fromThrift))
   }
 }
 
