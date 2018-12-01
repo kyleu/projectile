@@ -1,8 +1,7 @@
-package com.projectile.models.feature.graphql
+package com.projectile.models.feature.graphql.db
 
-import com.projectile.models.export.FieldType
-import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.{ExportField, ExportModel, FieldType}
 import com.projectile.models.output.file.GraphQLFile
 
 object GraphQLQueryFiles {

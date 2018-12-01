@@ -1,7 +1,7 @@
-package com.projectile.models.feature.graphql
+package com.projectile.models.feature.graphql.db
 
-import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.output.file.ScalaFile
 
 object SchemaHelper {
@@ -55,7 +55,6 @@ object SchemaHelper {
   }
 
   def addSeqArgument(config: ExportConfiguration, model: ExportModel, field: ExportField, file: ScalaFile) = {
-    val desc = s"Returns the ${model.plural} matching the provided primary keys."
     val graphQlSeqArgType = ExportFieldGraphQL.listArgType(config, field)
     val arg = s"""Argument("${field.propertyName}s", $graphQlSeqArgType)"""
     file.add(s"""val ${model.propertyName}${field.className}SeqArg = $arg""")

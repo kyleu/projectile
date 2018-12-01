@@ -11,10 +11,10 @@ abstract class Input() extends Ordered[Input] {
   def exportEnum(key: String): ExportEnum
   def exportEnums: Seq[ExportEnum]
 
-  def exportModel(key: String): ExportModel
+  def exportModel(k: String): ExportModel
   def exportModels: Seq[ExportModel]
 
-  def exportService(key: String): ExportService
+  def exportService(k: String): ExportService
   def exportServices: Seq[ExportService]
 
   override def compare(that: Input) = title.compare(that.title)

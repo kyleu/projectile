@@ -1,4 +1,4 @@
-package com.projectile.models.feature.graphql
+package com.projectile.models.feature.graphql.db
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration

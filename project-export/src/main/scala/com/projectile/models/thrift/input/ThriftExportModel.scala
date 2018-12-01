@@ -11,6 +11,7 @@ object ThriftExportModel {
   def loadStructModel(s: ThriftStruct, metadata: ThriftParseResult.Metadata) = {
     val cn = toClassName(s.key)
     val title = toDefaultTitle(cn)
+    val fields = loadStructFields(s, metadata)
 
     ExportModel(
       inputType = InputType.ThriftStruct,
@@ -21,7 +22,7 @@ object ThriftExportModel {
       title = title,
       description = None,
       plural = title + "s",
-      fields = loadStructFields(s, metadata)
+      fields = fields
     )
   }
 

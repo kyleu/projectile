@@ -80,7 +80,7 @@ object ModelFile {
       val method = field.t match {
         case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
         case FieldType.EnumType => s"${field.propertyName}.value"
-        case FieldType.ArrayType => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
+        case FieldType.ListType(_) => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
         case _ => s"${field.propertyName}.toString"
       }
       s"""DataField("${field.propertyName}", Some($method))"""
@@ -88,7 +88,7 @@ object ModelFile {
       val method = field.t match {
         case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
         case FieldType.EnumType => s"${field.propertyName}.map(_.value)"
-        case FieldType.ArrayType => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
+        case FieldType.ListType(_) => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
         case _ => s"${field.propertyName}.map(_.toString)"
       }
       s"""DataField("${field.propertyName}", $method)"""

@@ -1,6 +1,8 @@
 package com.projectile.models.export
 
-import enumeratum.values._
+import enumeratum.values.{StringEnum, StringEnumEntry}
+import com.projectile.util.JsonSerializers._
+import io.circe.{HCursor, JsonObject}
 
 sealed abstract class FieldType(
     override val value: String,
@@ -20,7 +22,10 @@ sealed abstract class FieldType(
   override def toString = value
 }
 
-object FieldType extends StringEnum[FieldType] with StringCirceEnum[FieldType] {
+object FieldType extends StringEnum[FieldType] {
+  implicit val encodeFieldType: Encoder[FieldType] = FieldTypeEncoder.encodeFieldType
+  implicit val decodeFieldType: Decoder[FieldType] = FieldTypeDecoder.decodeFieldType
+
   case object StringType extends FieldType("string", "String", "xxx")
   case object EncryptedStringType extends FieldType("encrypted", "String", "xxx")
 
@@ -44,26 +49,15 @@ object FieldType extends StringEnum[FieldType] with StringCirceEnum[FieldType] {
 
   case object ObjectType extends FieldType("object", "String", "xxx")
   case object StructType extends FieldType("struct", "String", "xxx")
-  case object JsonType extends FieldType("json", "Json", "util.JsonSerializers.toJson(xxx)", requiredImport = Some("io.circe"))
 
+  case class ListType(typ: FieldType) extends FieldType("list", s"List[${typ.asScala}]", "xxx.TODO")
   case object EnumType extends FieldType("enum", "String", "xxx")
+
+  case object JsonType extends FieldType("json", "Json", "util.JsonSerializers.toJson(xxx)", requiredImport = Some("io.circe"))
   case object CodeType extends FieldType("code", "String", "xxx")
   case object TagsType extends FieldType("hstore", "List[Tag]", "Tag.seqFromString(xxx)")
 
   case object ByteArrayType extends FieldType("byteArray", "Array[Byte]", "xxx.split(\",\").map(_.toInt.toByte)")
-  case object ArrayType extends FieldType("array", "Array[Any]", "xxx.split(\",\")") {
-    def valForSqlType(s: String) = s match {
-      case _ if s.startsWith("_int") => "List[Long]"
-      case _ if s.startsWith("_uuid") => "List[UUID]"
-      case _ => "List[String]"
-    }
-    def typForSqlType(s: String) = s match {
-      case _ if s.startsWith("_int4") => "IntArrayType"
-      case _ if s.startsWith("_int") => "LongArrayType"
-      case _ if s.startsWith("_uuid") => "UuidArrayType"
-      case _ => "StringArrayType"
-    }
-  }
 
   case object ComplexType extends FieldType("complex", "COMPLEX", "COMPLEX(xxx)")
 

@@ -5,7 +5,7 @@ import com.projectile.models.export.FieldType._
 import com.projectile.models.export.ExportEnum
 
 object ExportFieldThrift {
-  def thriftType(t: FieldType, nativeType: String, enumOpt: Option[ExportEnum]) = t match {
+  def thriftType(t: FieldType, nativeType: String, enumOpt: Option[ExportEnum]): String = t match {
     case StringType => "string"
     case EncryptedStringType => "string"
 
@@ -29,21 +29,18 @@ object ExportFieldThrift {
 
     case ObjectType => "string"
     case StructType => "string"
-    case JsonType => "string"
 
+    case ListType(typ) => s"list<${thriftType(typ, "", enumOpt)}>"
     case EnumType => enumOpt match {
       case Some(_) => "string"
       case None => throw new IllegalStateException(s"Cannot load enum.")
     }
+
+    case JsonType => "string"
     case CodeType => "string"
     case TagsType => "list<common.Tag>"
 
     case ByteArrayType => "binary"
-    case ArrayType => nativeType match {
-      case x if x.startsWith("_int") => "list<common.int>"
-      case x if x.startsWith("_uuid") => "list<common.UUID>"
-      case _ => "list<string>"
-    }
 
     case ComplexType => throw new IllegalStateException("TODO")
     case UnknownType => "string"

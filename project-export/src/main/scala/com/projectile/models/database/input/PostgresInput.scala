@@ -50,19 +50,19 @@ case class PostgresInput(
 
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))
 
-  override def exportModel(key: String) = {
-    tables.find(_.name == key) match {
+  override def exportModel(k: String) = {
+    tables.find(_.name == k) match {
       case Some(table) => TableExportModel.loadTableModel(table, tables, exportEnums)
-      case None => views.find(_.name == key) match {
+      case None => views.find(_.name == k) match {
         case Some(view) => ViewExportModel.loadViewModel(view, exportEnums)
-        case None => throw new IllegalStateException(s"Cannot find view or table [$key] in input [$key]")
+        case None => throw new IllegalStateException(s"Cannot find view or table [$k] in input [$key]")
       }
     }
   }
 
   override lazy val exportModels = tables.map(e => exportModel(e.name))
 
-  override def exportService(key: String) = throw new IllegalStateException("Services not supported for Postgres inputs")
+  override def exportService(k: String) = throw new IllegalStateException("Services not supported for Postgres inputs")
 
   override def exportServices = Nil
 

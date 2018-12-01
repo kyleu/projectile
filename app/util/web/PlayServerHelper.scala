@@ -12,10 +12,6 @@ object PlayServerHelper extends Logging with ServerHelper {
   private[this] var serverOpt: Option[(RealServerProcess, Server)] = None
   private[this] var activeService: Option[ProjectileService] = None
 
-  def setSvc(svc: ProjectileService) = {
-    activeService = Some(svc)
-    log.info(s"Set active service to $svc")
-  }
   def setNewDirectory(path: String) = setSvc(new ProjectileService(new ConfigService(path)))
 
   def svc = activeService.getOrElse {
@@ -23,7 +19,27 @@ object PlayServerHelper extends Logging with ServerHelper {
     activeService.getOrElse(throw new IllegalStateException("Cannot initialize service"))
   }
 
-  def start(port: Option[Int]) = {
+  override def startServer(port: Int) = {
+    serverOpt = Some(start(Some(port)))
+    OK
+  }
+
+  override def stopServer() = {
+    serverOpt.getOrElse(throw new IllegalStateException("No server has been started"))._2.stop()
+    serverOpt = None
+    OK
+  }
+
+  private[this] def setSvc(svc: ProjectileService) = {
+    if (!svc.cfg.available) {
+      log.info(s"Initializing [.projectile] config directory for [${svc.cfg.path}]")
+      svc.cfg.init()
+    }
+    activeService = Some(svc)
+    log.info(s"Set active service to $svc")
+  }
+
+  private[this] def start(port: Option[Int]) = {
     val process = new RealServerProcess(Nil)
     val baseConfig: ServerConfig = ProdServerStart.readServerConfigSettings(process)
     val config = baseConfig.copy(port = port.orElse(baseConfig.port))
@@ -39,16 +55,5 @@ object PlayServerHelper extends Logging with ServerHelper {
     val server = serverProvider.createServer(config, application)
     process.addShutdownHook(server.stop())
     process -> server
-  }
-
-  override def startServer(port: Int) = {
-    serverOpt = Some(start(Some(port)))
-    OK
-  }
-
-  override def stopServer() = {
-    serverOpt.getOrElse(throw new IllegalStateException("No server has been started"))._2.stop()
-    serverOpt = None
-    OK
   }
 }

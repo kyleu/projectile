@@ -1,4 +1,4 @@
-package com.projectile.models.feature.graphql
+package com.projectile.models.feature.graphql.db
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
@@ -6,7 +6,6 @@ import com.projectile.models.output.file.ScalaFile
 
 object SchemaMutationHelper {
   def addMutationFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    val pkNames = model.pkFields.map(_.propertyName).mkString(", ")
     val pkArgs = model.pkFields.map(pk => model.propertyName + pk.className + "Arg")
     val argProps = pkArgs.map(arg => s"c.arg($arg)").mkString(", ")
 

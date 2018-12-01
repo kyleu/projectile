@@ -65,7 +65,7 @@ object TableFile {
   private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
     field.addImport(config = config, file = file, pkg = model.slickPackage)
     val colScala = field.t match {
-      case FieldType.ArrayType => FieldType.ArrayType.valForSqlType(field.nativeType)
+      case FieldType.ListType(typ) => s"List[${typ.asScala}]"
       case FieldType.TagsType =>
         config.addCommonImport(file, "Tag")
         s"List[Tag]"

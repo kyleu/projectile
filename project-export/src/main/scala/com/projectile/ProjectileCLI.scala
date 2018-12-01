@@ -1,3 +1,5 @@
+package com.projectile
+
 import com.projectile.models.cli.{CommandLineAction, CommandLineOutput}
 import com.projectile.services.ProjectileService
 import com.projectile.services.config.ConfigService
@@ -17,7 +19,7 @@ object ProjectileCLI extends Logging {
     result.foreach(CommandLineOutput.logResponse)
   }
 
-  private[this] def runArgs(args: Array[String]) = parse(args).map { c =>
+  def runArgs(args: Seq[String]) = parse(args).map { c =>
     new ProjectileService(new ConfigService(c.dir)).process(c.toCommand, c.verbose)
   }
 
@@ -34,6 +36,6 @@ object ProjectileCLI extends Logging {
   }
 
   def parse(args: Seq[String]) = {
-    Cli.parse(args.toArray).withProgramName(projectId).version(version, projectName).exitCode(0).withCommands(CommandLineAction.actions: _*)
+    Cli.parse(args.toArray).withProgramName(projectId).version(version, projectName).throwExceptionOnError().withCommands(CommandLineAction.actions: _*)
   }
 }

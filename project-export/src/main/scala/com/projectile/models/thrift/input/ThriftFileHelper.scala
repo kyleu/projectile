@@ -1,13 +1,13 @@
 package com.projectile.models.thrift.input
 
 import com.facebook.swift.parser.model._
-import com.projectile.models.export.{ExportEnum, FieldType}
+import com.projectile.models.export.{ExportEnum, ExportField, FieldType}
 import com.projectile.models.output.ExportHelper
 import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftFileHelper {
   def columnTypeFor(t: ThriftType, metadata: ThriftParseResult.Metadata): (FieldType, String) = t match {
-    case _: VoidType => FieldType.ComplexType -> "Unit"
+    case _: VoidType => (FieldType.ComplexType, "Unit")
     case i: IdentifierType => colTypeForIdentifier(metadata.typedefs.getOrElse(i.getName, i.getName), metadata)
     case b: BaseType => colTypeForBase(b.getType)
     case l: ListType => FieldType.ComplexType -> s"Seq[${columnTypeFor(l.getElementType, metadata)._2}]"
@@ -17,6 +17,10 @@ object ThriftFileHelper {
       val v = columnTypeFor(m.getValueType, metadata)._2
       FieldType.ComplexType -> s"Map[$k, $v]"
     case x => throw new IllegalStateException(s"Unhandled field type [$x]")
+  }
+
+  def declarationForField(field: ExportField, enums: Seq[ExportEnum]) = {
+    declarationFor(field.notNull, field.propertyName, field.defaultValue, field.nativeType, enums)
   }
 
   def declarationFor(
@@ -64,7 +68,8 @@ object ThriftFileHelper {
     case "I64" => ft(FieldType.LongType)
     case "I32" => ft(FieldType.IntegerType)
     case x if x.contains('.') => x.split('.').toList match {
-      case pkg :: cls :: Nil => FieldType.ComplexType -> (metadata.pkgMap.getOrElse(pkg, Nil) :+ cls).mkString(".")
+      case pkg :: cls :: Nil => FieldType.ComplexType -> (metadata.pkgMap.getOrElse(pkg, Nil) :+ "models" :+ cls).mkString(".")
+      case cls :: Nil => FieldType.ComplexType -> Seq("models" :+ cls).mkString(".")
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
     }
     case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)).getOrElse(FieldType.ComplexType -> x)

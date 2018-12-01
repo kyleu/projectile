@@ -4,6 +4,7 @@ import com.projectile.models.export.ExportService
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
+import com.projectile.models.thrift.input.{ThriftFileHelper, ThriftMethodHelper}
 
 object ThriftServiceFile {
   def export(config: ExportConfiguration, svc: ExportService) = {
@@ -33,19 +34,12 @@ object ThriftServiceFile {
 
   private[this] def addMethods(config: ExportConfiguration, file: ScalaFile, svc: ExportService) = {
     svc.methods.foreach { method =>
-      file.add(s"// $method")
-      /*
-      val args = method.arguments.map { a =>
-        val colType = ThriftFileHelper.columnTypeFor(a.t, metadata)._1
-        ThriftFileHelper.declarationFor(required = a.required || a.value.isDefined, name = a.name, value = a.value, metadata = metadata, colType = colType)
-      }.mkString(", ")
-      val retType = ThriftFileHelper.columnTypeFor(method.returnValue, metadata)._1
+      val args = method.args.map(a => ThriftFileHelper.declarationForField(a, config.enums)).mkString(", ")
       file.add()
-      file.add(s"""def ${method.name}($args)(implicit td: TraceData): Future[$retType] = trace("${method.name}") { _ =>""", 1)
-      val argsMapped = method.arguments.map(arg => ThriftMethodHelper.getArgCall(arg, metadata)).mkString(", ")
-      file.add(s"svc.${method.name}($argsMapped)${ThriftMethodHelper.getReturnMapping(retType)}")
+      file.add(s"""def ${method.key}($args)(implicit td: TraceData): Future[${method.returnNativeType}] = trace("${method.key}") { _ =>""", 1)
+      val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg, file)).mkString(", ")
+      file.add(s"svc.${method.key}($argsMapped)${ThriftMethodHelper.getReturnMapping(method.returnNativeType)}")
       file.add("}", -1)
-      */
     }
   }
 }

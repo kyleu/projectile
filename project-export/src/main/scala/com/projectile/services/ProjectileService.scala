@@ -3,7 +3,6 @@ package com.projectile.services
 import com.projectile.models.cli.ServerHelper
 import io.circe.Json
 import com.projectile.models.command.{ProjectileCommand, ProjectileResponse}
-import com.projectile.models.command.ProjectileCommand._
 import com.projectile.models.command.ProjectileResponse._
 import com.projectile.services.config.{ConfigService, ConfigValidator}
 import com.projectile.services.input.InputHelper
@@ -17,9 +16,9 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     import com.projectile.models.command.ProjectileCommand._
 
     val processCore: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-      case Init => cfg.init()
-      case Doctor => ConfigValidator.validate(cfg, verbose)
-      case Testbed => JsonResponse(Json.True)
+      case Init => init()
+      case Doctor => doctor(verbose)
+      case Testbed => testbed()
       case s: StartServer => ServerHelper.inst match {
         case Some(srv) => srv.startServer(s.port)
         case None => throw new IllegalStateException("No server available")
@@ -33,9 +32,9 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     processCore.orElse(processInput).orElse(processProject).apply(cmd)
   }
 
-  def init() = process(Init)
-  def doctor() = process(Doctor)
-  def testbed() = process(Testbed).asInstanceOf[JsonResponse]
+  def init() = cfg.init()
+  def doctor(verbose: Boolean) = ConfigValidator.validate(cfg, verbose)
+  def testbed() = JsonResponse(Json.True)
 
   override val toString = s"Projectile Service @ ${cfg.workingDirectory}"
 }

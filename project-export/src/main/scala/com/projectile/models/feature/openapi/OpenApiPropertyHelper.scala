@@ -28,7 +28,7 @@ object OpenApiPropertyHelper {
     case FieldType.EnumType =>
       // val e = enums.find(_.name == nativeType).getOrElse(throw new IllegalStateException(s"Cannot file enum [$nativeType]."))
       file.add("\"type\": \"string\"")
-    case FieldType.ArrayType =>
+    case FieldType.ListType(_) =>
       file.add("\"type\": \"array\",")
       nativeType match {
         case x =>
@@ -37,8 +37,7 @@ object OpenApiPropertyHelper {
           file.add("}", -1)
       }
     case FieldType.StringType | FieldType.EncryptedStringType | FieldType.UnknownType => file.add("\"type\": \"string\"")
-    case FieldType.ByteArrayType => file.add("\"type\": \"string\"")
-    case x => throw new IllegalStateException(s"Unhandled openapi property for type [$x].")
+    case _ => file.add("\"type\": \"string\"")
   }
 
   def propertyFor(f: ExportField, file: JsonFile, last: Boolean, enums: Seq[ExportEnum]) = {

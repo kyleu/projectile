@@ -30,36 +30,43 @@ object QueryTranslations extends Logging {
     case TIMESTAMP_WITH_TIMEZONE => TimestampZonedType
     case REF | REF_CURSOR => RefType
     case SQLXML => XmlType
-    case OTHER => n match {
-      case "uuid" => UuidType
-      case "json" => JsonType
-      case "jsonb" => JsonType
-      case "hstore" => TagsType
-      case "ghstore" => TagsType
-      case "internal" => StringType
-      case "cstring" => StringType
-      case "anyelement" => StringType
-      case "record" => StringType
-      case "citext" => StringType
-      case "inet" => StringType
-      case "macaddr" => StringType
-      case "trigger" => StringType
-      case "interval" => StringType
-      case "cidr" => StringType
-      case "varbit" => StringType
-      case x if x.startsWith("gbtreekey") => StringType
-      case x =>
-        log.warn(s"Encountered unknown field type [$x]. ")
-        UnknownType
-    }
+    case OTHER => matchOther(n)
 
     case NULL => UnknownType
     case JAVA_OBJECT => ObjectType
     case STRUCT => StructType
-    case ARRAY => ArrayType
+    case ARRAY => n match {
+      case _ if n.startsWith("_int4") => ListType(IntegerType)
+      case _ if n.startsWith("_int") => ListType(LongType)
+      case _ if n.startsWith("_uuid") => ListType(UuidType)
+      case _ => ListType(StringType)
+    }
 
     case _ =>
       log.warn(s"Encountered unknown column type [$i].")
+      UnknownType
+  }
+
+  private[this] def matchOther(n: String) = n match {
+    case "uuid" => UuidType
+    case "json" => JsonType
+    case "jsonb" => JsonType
+    case "hstore" => TagsType
+    case "ghstore" => TagsType
+    case "internal" => StringType
+    case "cstring" => StringType
+    case "anyelement" => StringType
+    case "record" => StringType
+    case "citext" => StringType
+    case "inet" => StringType
+    case "macaddr" => StringType
+    case "trigger" => StringType
+    case "interval" => StringType
+    case "cidr" => StringType
+    case "varbit" => StringType
+    case x if x.startsWith("gbtreekey") => StringType
+    case x =>
+      log.warn(s"Encountered unknown field type [$x]. ")
       UnknownType
   }
 }

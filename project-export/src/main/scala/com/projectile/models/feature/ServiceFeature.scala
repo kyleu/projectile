@@ -20,6 +20,10 @@ object ServiceFeature extends StringEnum[ServiceFeature] with StringCirceEnum[Se
     value = "core", title = "Core", description = "Scala service class wrapping Thrift's MessagePerEndpoint"
   )
 
+  case object GraphQL extends ServiceFeature(
+    value = "graphql", title = "GraphQL", description = "Creates a Sangria GraphQL schema that exposes this service", dependsOn = Set(ProjectFeature.GraphQL)
+  )
+
   override val values = findValues
   val set = values.toSet
 }

@@ -27,9 +27,7 @@ object ExportField {
 
     case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
 
-    case JsonType => "Json.obj()"
-    case ArrayType => "List.empty"
-    case TagsType => s"List.empty[Tag]"
+    case l: ListType => "List.empty"
     case EnumType => enumOpt match {
       case Some(enum) =>
         val (_, cn) = defaultValue.flatMap(d => enum.valuesWithClassNames.find(_._1 == d)).getOrElse {
@@ -38,6 +36,10 @@ object ExportField {
         s"${enum.className}.$cn"
       case None => "\"" + defaultValue.getOrElse("") + "\""
     }
+
+    case JsonType => "Json.obj()"
+    case TagsType => s"List.empty[Tag]"
+
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
 }
@@ -63,11 +65,16 @@ case class ExportField(
 
   val className = ExportHelper.toClassName(propertyName)
 
-  def classNameForSqlType(config: ExportConfiguration) = t match {
+  def classNameForSqlType(config: ExportConfiguration): String = t match {
     case EnumType => enumOpt(config).map { e =>
       s"EnumType(${e.className})"
     }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$nativeType]."))
-    case ArrayType => ArrayType.typForSqlType(nativeType)
+    case ListType(typ) => typ match {
+      case IntegerType => "IntArrayType"
+      case LongType => "LongArrayType"
+      case UuidType => "UuidArrayType"
+      case _ => "StringArrayType"
+    }
     case _ => t.className
   }
 

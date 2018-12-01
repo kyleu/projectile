@@ -38,7 +38,7 @@ object Dependencies {
 
   object Serialization {
     private[this] val version = "0.10.1"
-    private[this] val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
+    private[this] val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-jawn", "circe-parser", "circe-java8")
     val all = projects.map(c => "io.circe" %% c % version)
   }
 

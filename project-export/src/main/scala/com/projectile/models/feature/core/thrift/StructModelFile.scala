@@ -23,8 +23,6 @@ object StructModelFile {
       config.addCommonImport(file, "DataFieldModel")
     }
 
-    // overrides.imports.get(model.name).foreach(_.foreach(i => file.addImport(i._1, i._2)))
-
     file.add(s"object ${model.className} {", 1)
     if (model.features(ModelFeature.Json)) {
       file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
