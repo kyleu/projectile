@@ -9,7 +9,7 @@ case class ScalaFile(
 
   private[this] var imports = Set.empty[(String, String)]
 
-  def addImport(p: Seq[String], c: String): Unit = {
+  def addImport(p: Seq[String], c: String): Unit = if (p != dir) {
     imports += (p.mkString(".") -> c)
   }
 

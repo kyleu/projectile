@@ -2,6 +2,7 @@ package com.projectile.models.feature.graphql.db
 
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.{ExportField, ExportModel}
+import com.projectile.models.feature.graphql.ExportFieldGraphQL
 import com.projectile.models.output.file.ScalaFile
 
 object SchemaHelper {

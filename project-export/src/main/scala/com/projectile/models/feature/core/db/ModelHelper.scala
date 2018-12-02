@@ -1,13 +1,18 @@
 package com.projectile.models.feature.core.db
 
-import com.projectile.models.export.{ExportModel, FieldType}
+import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.{FieldType, FieldTypeImports, FieldTypeRestrictions}
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.ScalaFile
 
 object ModelHelper {
   def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.addImport(config, file, model.modelPackage)
+
+    if (FieldTypeRestrictions.isDate(field.t)) {
+      config.addCommonImport(file, "DateUtils")
+    }
 
     val scalaJsPrefix = if (model.features(ModelFeature.ScalaJS)) { "@JSExport " } else { "" }
 
@@ -26,9 +31,10 @@ object ModelHelper {
 
   def addEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val fieldStrings = model.fields.map { field =>
-      field.t match {
-        case x if x.requiredImport.contains("java.time") => config.addCommonImport(file, "DateUtils")
-        case _ => // noop
+      val imports = FieldTypeImports.imports(config, field.t)
+      imports.foreach {
+        case x if x == Seq("java", "time") => config.addCommonImport(file, "DateUtils")
+        case _ => //noop
       }
 
       val colScala = field.t match {

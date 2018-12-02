@@ -2,6 +2,7 @@ package com.projectile.models.feature.graphql.db
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType.EnumType
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 
@@ -11,8 +12,11 @@ object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ model.modelPackage, model.className + "Schema")
 
-    model.fields.foreach(_.enumOpt(config).foreach { enum =>
-      file.addImport(config.applicationPackage ++ enum.modelPackage :+ enum.className + "Schema", s"${enum.propertyName}EnumType")
+    model.fields.foreach(_.t match {
+      case EnumType(key) =>
+        val e = config.getEnum(key)
+        file.addImport(config.applicationPackage ++ e.modelPackage :+ e.className + "Schema", s"${e.propertyName}EnumType")
+      case _ => // noop
     })
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) {

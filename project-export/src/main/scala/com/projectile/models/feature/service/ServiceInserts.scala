@@ -2,6 +2,7 @@ package com.projectile.models.feature.service
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldTypeFromString
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.ScalaFile
 
@@ -39,7 +40,7 @@ object ServiceInserts {
     model.pkFields match {
       case Nil => file.add(s"Future.successful(None: Option[${model.className}])")
       case pk =>
-        val lookup = pk.map(k => k.fromString(config, s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
+        val lookup = pk.map(k => FieldTypeFromString.fromString(config, k.t, s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
         if (model.features(ModelFeature.Audit)) {
           val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
           file.add(s"""AuditHelper.onInsert("${model.className}", Seq($audit), fields, creds)""")

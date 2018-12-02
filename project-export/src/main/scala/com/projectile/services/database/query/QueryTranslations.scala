@@ -2,13 +2,13 @@ package com.projectile.services.database.query
 
 import java.sql.Types._
 
-import com.projectile.models.export.FieldType._
+import com.projectile.models.export.typ.FieldType._
 import com.projectile.util.Logging
 
 object QueryTranslations extends Logging {
   def forType(i: Int, n: String, colSize: Option[Int] = None, enums: Seq[com.projectile.models.database.schema.EnumType]) = i match {
     case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => enums.find(_.key == n) match {
-      case Some(_) => EnumType
+      case Some(_) => EnumType(n)
       case _ => StringType
     }
     case NUMERIC | DECIMAL => BigDecimalType

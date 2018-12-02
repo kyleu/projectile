@@ -1,7 +1,8 @@
 package com.projectile.models.feature.core.thrift
 
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.export.{ExportEnum, ExportField, ExportModel, FieldType}
+import com.projectile.models.export.typ.FieldType
+import com.projectile.models.export.{ExportEnum, ExportField, ExportModel}
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
@@ -64,7 +65,7 @@ object StructModelFile {
         } else {
           val method = field.t match {
             case FieldType.StringType => ""
-            case FieldType.EnumType => ".map(_.value)"
+            case FieldType.EnumType(_) => ".map(_.value)"
             case _ => ".map(_.toString)"
           }
           s"""DataField("${field.propertyName}", ${field.propertyName}$method)"""

@@ -1,7 +1,8 @@
 package com.projectile.models.feature.controller.twirl
 
-import com.projectile.models.export.{ExportModel, FieldType}
+import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.TwirlFile
 

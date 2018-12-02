@@ -21,7 +21,7 @@ object ThriftModelSchemaFile {
     file.addImport(Seq("sangria", "schema"), "_")
     file.addImport(Seq("sangria", "marshalling", "circe"), "_")
 
-    ThriftSchemaInputHelper.addInputImports(pkg = model.pkg, types = model.fields.map(_.nativeType), config = config, file = file)
+    ThriftSchemaInputHelper.addInputImports(pkg = model.pkg, types = model.fields.map(_.t), config = config, file = file)
 
     file.add(s"""object ${model.className}Schema {""", 1)
 

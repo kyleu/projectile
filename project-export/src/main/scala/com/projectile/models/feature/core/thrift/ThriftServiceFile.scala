@@ -2,6 +2,7 @@ package com.projectile.models.feature.core.thrift
 
 import com.projectile.models.export.ExportService
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldTypeAsScala
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 import com.projectile.models.thrift.input.{ThriftFileHelper, ThriftMethodHelper}
@@ -36,9 +37,10 @@ object ThriftServiceFile {
     svc.methods.foreach { method =>
       val args = method.args.map(a => ThriftFileHelper.declarationForField(a, config.enums)).mkString(", ")
       file.add()
-      file.add(s"""def ${method.key}($args)(implicit td: TraceData): Future[${method.returnNativeType}] = trace("${method.key}") { _ =>""", 1)
+      val s = FieldTypeAsScala.asScala(config, method.returnType)
+      file.add(s"""def ${method.key}($args)(implicit td: TraceData): Future[$s] = trace("${method.key}") { _ =>""", 1)
       val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg, file)).mkString(", ")
-      file.add(s"svc.${method.key}($argsMapped)${ThriftMethodHelper.getReturnMapping(method.returnNativeType)}")
+      file.add(s"svc.${method.key}($argsMapped)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
       file.add("}", -1)
     }
   }

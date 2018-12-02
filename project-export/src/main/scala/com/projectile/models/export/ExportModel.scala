@@ -2,6 +2,7 @@ package com.projectile.models.export
 
 import com.projectile.models.database.schema.{Column, ForeignKey}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.project.member.ModelMember

@@ -1,54 +1,53 @@
 package com.projectile.models.thrift.parse
 
 import com.projectile.models.export.ExportField
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.thrift.input.ThriftFileHelper
 import com.projectile.models.thrift.schema.ThriftStructField
 import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftFieldThriftHelper {
   def getAsThrift(field: ThriftStructField, metadata: ThriftParseResult.Metadata) = {
-    val (_, nativeType) = ThriftFileHelper.columnTypeFor(field.t, metadata)
-    parse(field.name, nativeType, field.required || field.value.isDefined)
+    val t = ThriftFileHelper.columnTypeFor(field.t, metadata)
+    parse(field.name, t, field.required || field.value.isDefined)
   }
 
   def getFromField(field: ExportField) = {
-    parse(field.propertyName, field.nativeType, field.notNull)
+    parse(field.propertyName, field.t, field.notNull)
   }
 
-  private[this] def parse(name: String, nativeType: String, required: Boolean): String = nativeType match {
-    case x if x.startsWith("Map[") =>
-      val valuesMapped = parseMapped(ThriftFieldHelper.mapKeyValFor(x)._2, "map").replaceAllLiterally(".map", ".mapValues(")
+  private[this] def parse(name: String, t: FieldType, required: Boolean): String = t match {
+    case FieldType.MapType(_, v) =>
+      val valuesMapped = parseMapped(v, "map").replaceAllLiterally(".map", ".mapValues(")
       if (required) {
         s"$name$valuesMapped.toMap"
       } else {
         s"$name.map(x => x$valuesMapped).toMap"
       }
-    case x if x.startsWith("Seq[") =>
-      val remainder = nativeType.drop(4).dropRight(1)
-      val mapped = parseMapped(remainder, "seq")
+    case FieldType.ListType(typ) =>
+      val mapped = parseMapped(typ, "seq")
       if (required) {
         s"$name$mapped"
       } else {
         s"$name.map(x => x$mapped)"
       }
-    case x if x.startsWith("Set[") =>
-      val remainder = nativeType.drop(4).dropRight(1)
-      val mapped = parseMapped(remainder, "set")
+    case FieldType.SetType(typ) =>
+      val mapped = parseMapped(typ, "set")
       if (required) {
         s"$name$mapped.toSet"
       } else {
         s"$name.map(x => x$mapped.toSet)"
       }
-    case "Boolean" | "String" | "Int" | "Long" | "Double" => s"$name"
+    case _ if FieldType.scalars.apply(t) => name
     case _ if required => s"$name.asThrift"
     case _ => s"$name.map(_.asThrift)"
   }
 
-  private[this] def parseMapped(t: String, ctx: String): String = t match {
-    case x if x.startsWith("Map[") => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
-    case x if x.startsWith("Seq[") => "" // throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
-    case x if x.startsWith("Set[") => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
-    case "Boolean" | "String" | "Int" | "Long" | "Double" => ""
-    case _ => s".map(_.asThrift)"
+  private[this] def parseMapped(t: FieldType, ctx: String): String = t match {
+    case FieldType.MapType(_, _) => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
+    case FieldType.ListType(_) => "" // throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
+    case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
+    case _ if FieldType.scalars.apply(t) => ""
+    case x => s".map($x.asThrift)"
   }
 }

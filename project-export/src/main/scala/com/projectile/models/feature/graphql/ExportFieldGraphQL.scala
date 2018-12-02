@@ -1,11 +1,13 @@
-package com.projectile.models.feature.graphql.db
+package com.projectile.models.feature.graphql
 
 import com.projectile.models.export.ExportField
-import com.projectile.models.export.FieldType._
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType._
 
 object ExportFieldGraphQL {
   private[this] def graphQLType(config: ExportConfiguration, field: ExportField): String = field.t match {
+    case UnitType => "UnitType"
+
     case StringType => "StringType"
     case EncryptedStringType => "StringType"
 
@@ -30,18 +32,19 @@ object ExportFieldGraphQL {
     case ObjectType => "StringType"
     case StructType => "StringType"
 
-    case ListType(typ) => s"ListType(${graphQLType(config, field.copy(t = typ))})"
-    case EnumType => field.enumOpt(config) match {
+    case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"
       case None => throw new IllegalStateException(s"Cannot load enum for field [${field.propertyName}].")
     }
+    case ListType(typ) => s"ListType(${graphQLType(config, field.copy(t = typ))})"
+    case SetType(typ) => s"ListType(${graphQLType(config, field.copy(t = typ))})"
+    case MapType(_, _) => throw new IllegalStateException("Maps are not supported in GraphQL")
 
     case JsonType => "JsonType"
     case CodeType => "StringType"
     case TagsType => "TagsType"
     case ByteArrayType => "ArrayType(StringType)"
 
-    case ComplexType => throw new IllegalStateException(s"Cannot create GraphQL for complex field [${field.nativeType}]")
     case UnknownType => "UnknownType"
   }
 

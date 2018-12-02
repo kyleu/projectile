@@ -19,7 +19,7 @@ object ThriftExportService {
 
   private[this] def loadArguments(args: Seq[ThriftStructField], metadata: ThriftParseResult.Metadata) = args.zipWithIndex.map {
     case (f, idx) =>
-      val (t, nativeType) = ThriftFileHelper.columnTypeFor(f.t, metadata)
+      val t = ThriftFileHelper.columnTypeFor(f.t, metadata)
       ExportField(
         key = f.key,
         propertyName = ExportHelper.toIdentifier(f.name),
@@ -27,7 +27,7 @@ object ThriftExportService {
         description = None,
         idx = idx,
         t = t,
-        nativeType = nativeType,
+        nativeType = "TODO",
         defaultValue = f.value.map(_.toString),
         notNull = f.required
       )
@@ -35,7 +35,7 @@ object ThriftExportService {
 
   private[this] def loadServiceMethods(s: ThriftService, metadata: ThriftParseResult.Metadata) = s.methods.map { m =>
     val args = loadArguments(m.arguments, metadata)
-    val (returnType, returnNativeType) = ThriftFileHelper.columnTypeFor(m.returnType, metadata)
-    ExportMethod(key = m.key, args = args, returnType = returnType, returnNativeType = returnNativeType)
+    val returnType = ThriftFileHelper.columnTypeFor(m.returnType, metadata)
+    ExportMethod(key = m.key, args = args, returnType = returnType)
   }.toList
 }

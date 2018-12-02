@@ -29,14 +29,17 @@ object RoutesFiles {
           val urlArgs = s"by${col.className}/:${col.propertyName}"
           val detailUrl = prefix + "/" + urlArgs
           val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
-          Some(s"GET         $detailUrl $detailWs $controllerClass.by${col.className}(${col.propertyName}: ${col.scalaTypeFull(config)}, $relationArgs)")
+          val t = col.scalaTypeFull(config).mkString(".")
+          Some(s"GET         $detailUrl $detailWs $controllerClass.by${col.className}(${col.propertyName}: $t, $relationArgs)")
         case _ => None
       }
     }
     val detail = model.pkFields match {
       case Nil => Nil
       case pkFields =>
-        val args = pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull(config)}").mkString(", ")
+        val args = pkFields.map { x =>
+          s"${x.propertyName}: ${x.scalaTypeFull(config).mkString(".")}"
+        }.mkString(", ")
         val urlArgs = pkFields.map(x => ":" + x.propertyName).mkString("/")
 
         val detailUrl = prefix + "/" + urlArgs

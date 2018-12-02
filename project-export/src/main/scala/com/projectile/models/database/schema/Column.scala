@@ -1,6 +1,6 @@
 package com.projectile.models.database.schema
 
-import com.projectile.models.export.FieldType
+import com.projectile.models.export.typ.FieldType
 import com.projectile.util.JsonSerializers._
 
 object Column {

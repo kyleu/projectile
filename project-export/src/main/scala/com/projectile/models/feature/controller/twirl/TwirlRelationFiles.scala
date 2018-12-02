@@ -10,7 +10,7 @@ object TwirlRelationFiles {
   private[this] def writeTable(config: ExportConfiguration, model: ExportModel, refFields: Seq[ExportField], listFile: TwirlFile) = {
     val viewCall = TwirlHelper.routesClass(config, model) + ".by" + refFields.map(_.className).mkString
     val refProps = refFields.map(_.propertyName).mkString(", ")
-    val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull(config)).mkString(", ")
+    val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull(config).mkString(".")).mkString(", ")
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.applicationPackage :+ "views" :+ "html").mkString(".")

@@ -13,10 +13,6 @@ object DoobieTestsFile {
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
-    model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(config.applicationPackage ++ e.doobiePackage :+ s"${e.className}Doobie", s"${e.propertyName}Meta")
-    })
-
     file.add(s"class ${model.className}DoobieTests extends FlatSpec with Matchers {", 1)
     config.addCommonImport(file, "DoobieTestHelper", "yolo", "_")
 

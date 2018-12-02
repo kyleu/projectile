@@ -21,10 +21,6 @@ object DoobieFile {
     }
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
-    model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(config.applicationPackage ++ e.doobiePackage :+ s"${e.className}Doobie", s"${e.propertyName}Meta")
-    })
-
     file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.key}") {""", 1)
 
     file.add(s"""override val countFragment = fr${tq}select count(*) from "${model.key}"$tq""")

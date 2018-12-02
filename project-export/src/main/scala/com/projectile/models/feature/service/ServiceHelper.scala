@@ -1,8 +1,8 @@
 package com.projectile.models.feature.service
 
-import com.projectile.models.export.FieldType
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.output.file.ScalaFile
 
 object ServiceHelper {

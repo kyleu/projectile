@@ -1,9 +1,9 @@
 package com.projectile.services.project.audit
 
 import better.files.File
-import com.projectile.models.export.FieldType
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType.EnumType
 import com.projectile.models.project.ProjectOutput
 import com.projectile.models.project.audit.{AuditMessage, AuditResult}
 
@@ -21,12 +21,16 @@ object ProjectAuditService {
   }
 
   private[this] def checkMissing(c: ExportConfiguration, m: ExportModel) = {
-    val missingEnums = m.fields.filter(_.t == FieldType.EnumType).flatMap(f => f.enumOpt(c) match {
-      case None => Some(AuditMessage(
-        srcModel = m.key, src = f.key, t = "enum", tgt = f.nativeType, message = "Missing enum definition"
-      ))
+    val missingEnums = m.fields.flatMap(_.t match {
+      case EnumType(key) => c.getEnumOpt(key) match {
+        case None => Some(AuditMessage(
+          srcModel = m.key, src = key, t = "enum", tgt = key, message = "Missing enum definition"
+        ))
+        case _ => None
+      }
       case _ => None
     })
+
     val missingModels = m.references.flatMap {
       case r if c.getModelOpt(r.srcTable).isEmpty => Some(AuditMessage(
         srcModel = m.key, src = r.name, t = "model", tgt = r.srcTable, message = "Missing model definition"

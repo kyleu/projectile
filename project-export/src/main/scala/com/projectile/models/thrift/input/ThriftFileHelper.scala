@@ -1,21 +1,23 @@
 package com.projectile.models.thrift.input
 
 import com.facebook.swift.parser.model._
-import com.projectile.models.export.{ExportEnum, ExportField, FieldType}
+import com.projectile.models.export.typ.FieldType
+import com.projectile.models.export.{ExportEnum, ExportField}
 import com.projectile.models.output.ExportHelper
 import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftFileHelper {
-  def columnTypeFor(t: ThriftType, metadata: ThriftParseResult.Metadata): (FieldType, String) = t match {
-    case _: VoidType => (FieldType.ComplexType, "Unit")
+  def columnTypeFor(t: ThriftType, metadata: ThriftParseResult.Metadata): FieldType = t match {
+    case _: VoidType => FieldType.UnitType
     case i: IdentifierType => colTypeForIdentifier(metadata.typedefs.getOrElse(i.getName, i.getName), metadata)
     case b: BaseType => colTypeForBase(b.getType)
-    case l: ListType => FieldType.ComplexType -> s"Seq[${columnTypeFor(l.getElementType, metadata)._2}]"
-    case s: SetType => FieldType.ComplexType -> s"Set[${columnTypeFor(s.getElementType, metadata)._2}]"
+    case l: ListType => FieldType.ListType(columnTypeFor(l.getElementType, metadata))
+    case s: SetType =>
+      FieldType.SetType(columnTypeFor(s.getElementType, metadata))
     case m: MapType =>
-      val k = columnTypeFor(m.getKeyType, metadata)._2
-      val v = columnTypeFor(m.getValueType, metadata)._2
-      FieldType.ComplexType -> s"Map[$k, $v]"
+      val k = columnTypeFor(m.getKeyType, metadata)
+      val v = columnTypeFor(m.getValueType, metadata)
+      FieldType.MapType(k, v)
     case x => throw new IllegalStateException(s"Unhandled field type [$x]")
   }
 
@@ -62,27 +64,25 @@ object ThriftFileHelper {
     case None => " = None"
   }
 
-  private[this] def ft(x: FieldType) = x -> x.asScala
-
-  private[this] def colTypeForIdentifier(name: String, metadata: ThriftParseResult.Metadata): (FieldType, String) = name match {
-    case "I64" => ft(FieldType.LongType)
-    case "I32" => ft(FieldType.IntegerType)
+  private[this] def colTypeForIdentifier(name: String, metadata: ThriftParseResult.Metadata): FieldType = name match {
+    case "I64" => FieldType.LongType
+    case "I32" => FieldType.IntegerType
     case x if x.contains('.') => x.split('.').toList match {
-      case pkg :: cls :: Nil => FieldType.ComplexType -> (metadata.pkgMap.getOrElse(pkg, Nil) :+ "models" :+ cls).mkString(".")
-      case cls :: Nil => FieldType.ComplexType -> Seq("models" :+ cls).mkString(".")
+      case pkg :: cls :: Nil => FieldType.UnknownType // TODO -> (metadata.pkgMap.getOrElse(pkg, Nil) :+ "models" :+ cls).mkString(".")
+      case cls :: Nil => FieldType.UnknownType // -> TODO Seq("models" :+ cls).mkString(".")
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
     }
-    case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)).getOrElse(FieldType.ComplexType -> x)
+    case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)).getOrElse(FieldType.UnknownType)
   }
 
   private[this] def colTypeForBase(t: BaseType.Type) = t match {
-    case BaseType.Type.BINARY => ft(FieldType.ByteArrayType)
-    case BaseType.Type.BOOL => ft(FieldType.BooleanType)
-    case BaseType.Type.BYTE => ft(FieldType.ByteType)
-    case BaseType.Type.DOUBLE => ft(FieldType.DoubleType)
-    case BaseType.Type.I16 | BaseType.Type.I32 => ft(FieldType.IntegerType)
-    case BaseType.Type.I64 => ft(FieldType.LongType)
-    case BaseType.Type.STRING => ft(FieldType.StringType)
+    case BaseType.Type.BINARY => FieldType.ByteArrayType
+    case BaseType.Type.BOOL => FieldType.BooleanType
+    case BaseType.Type.BYTE => FieldType.ByteType
+    case BaseType.Type.DOUBLE => FieldType.DoubleType
+    case BaseType.Type.I16 | BaseType.Type.I32 => FieldType.IntegerType
+    case BaseType.Type.I64 => FieldType.LongType
+    case BaseType.Type.STRING => FieldType.StringType
     case x => throw new IllegalStateException(s"Unhandled base type [$x]")
   }
 }

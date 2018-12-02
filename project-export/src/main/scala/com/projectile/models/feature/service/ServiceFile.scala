@@ -2,6 +2,7 @@ package com.projectile.models.feature.service
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldTypeRestrictions
 import com.projectile.models.output.OutputPath
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.ScalaFile
@@ -33,6 +34,8 @@ object ServiceFile {
     if (model.pkg.nonEmpty) {
       config.addCommonImport(file, "ModelServiceHelper")
     }
+
+    model.pkFields.foreach(_.addImport(config, file, Nil))
 
     file.add("@javax.inject.Singleton")
     file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}") {""", 1)

@@ -1,7 +1,8 @@
 package com.projectile.models.export
 
-import com.projectile.models.export.FieldType._
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.{FieldType, FieldTypeAsScala, FieldTypeImports}
+import com.projectile.models.export.typ.FieldType._
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.file.ScalaFile
 import com.projectile.util.JsonSerializers._
@@ -10,7 +11,7 @@ object ExportField {
   implicit val jsonEncoder: Encoder[ExportField] = deriveEncoder
   implicit val jsonDecoder: Decoder[ExportField] = deriveDecoder
 
-  def getDefaultString(t: FieldType, enumOpt: Option[ExportEnum], defaultValue: Option[String]) = t match {
+  def getDefaultString(config: ExportConfiguration, t: FieldType, defaultValue: Option[String]) = t match {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
     case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
     case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
@@ -27,15 +28,13 @@ object ExportField {
 
     case UuidType => defaultValue.filter(_.length == 36).map(d => s"""UUID.fromString("$d")""").getOrElse("UUID.randomUUID")
 
-    case l: ListType => "List.empty"
-    case EnumType => enumOpt match {
-      case Some(enum) =>
-        val (_, cn) = defaultValue.flatMap(d => enum.valuesWithClassNames.find(_._1 == d)).getOrElse {
-          enum.valuesWithClassNames.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.key}]."))
-        }
-        s"${enum.className}.$cn"
-      case None => "\"" + defaultValue.getOrElse("") + "\""
-    }
+    case _: ListType => "List.empty"
+    case EnumType(key) =>
+      val enum = config.getEnum(key)
+      val (_, cn) = defaultValue.flatMap(d => enum.valuesWithClassNames.find(_._1 == d)).getOrElse {
+        enum.valuesWithClassNames.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.key}]."))
+      }
+      s"${enum.className}.$cn"
 
     case JsonType => "Json.obj()"
     case TagsType => s"List.empty[Tag]"
@@ -66,37 +65,22 @@ case class ExportField(
   val className = ExportHelper.toClassName(propertyName)
 
   def classNameForSqlType(config: ExportConfiguration): String = t match {
-    case EnumType => enumOpt(config).map { e =>
-      s"EnumType(${e.className})"
-    }.getOrElse(throw new IllegalStateException(s"Cannot find enum matching [$nativeType]."))
     case ListType(typ) => typ match {
       case IntegerType => "IntArrayType"
       case LongType => "LongArrayType"
       case UuidType => "UuidArrayType"
       case _ => "StringArrayType"
     }
+    case EnumType(k) => s"EnumType(${config.getEnum(k).className})"
     case _ => t.className
   }
 
-  def enumOpt(config: ExportConfiguration) = t match {
-    case FieldType.EnumType => config.getEnumOpt(nativeType)
-    case _ => None
-  }
-
-  def scalaType(config: ExportConfiguration) = enumOpt(config).map(_.className).getOrElse(t.asScala)
-  def scalaTypeFull(config: ExportConfiguration) = enumOpt(config).map(e => (e.pkg :+ e.className).mkString(".")).getOrElse(t.asScalaFull)
+  def scalaType(config: ExportConfiguration) = FieldTypeAsScala.asScala(config, t)
+  def scalaTypeFull(config: ExportConfiguration) = FieldTypeImports.imports(config, t).headOption.getOrElse(Seq(scalaType(config)))
 
   def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String]) = {
-    enumOpt(config) match {
-      case Some(enum) if enum.modelPackage == pkg => // Noop
-      case Some(enum) => file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
-      case None => t.requiredImport.foreach(pkg => file.addImport(pkg.split('.'), t.asScala))
-    }
+    FieldTypeImports.imports(config, t).foreach(pkg => file.addImport(pkg.init, pkg.last))
   }
 
-  def defaultString(config: ExportConfiguration) = ExportField.getDefaultString(t, enumOpt(config), defaultValue)
-
-  def fromString(config: ExportConfiguration, s: String) = enumOpt(config).map { enum =>
-    s"${enum.className}.withValue($s)"
-  }.getOrElse(t.fromString.replaceAllLiterally("xxx", s))
+  def defaultString(config: ExportConfiguration) = ExportField.getDefaultString(config, t, defaultValue)
 }

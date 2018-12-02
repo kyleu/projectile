@@ -28,7 +28,7 @@ object ThriftExportModel {
 
   private[this] def loadStructFields(s: ThriftStruct, metadata: ThriftParseResult.Metadata) = s.fields.zipWithIndex.map {
     case (f, idx) =>
-      val (t, nativeType) = ThriftFileHelper.columnTypeFor(f.t, metadata)
+      val t = ThriftFileHelper.columnTypeFor(f.t, metadata)
       ExportField(
         key = f.key,
         propertyName = ExportHelper.toIdentifier(f.name),
@@ -36,7 +36,7 @@ object ThriftExportModel {
         description = None,
         idx = idx,
         t = t,
-        nativeType = nativeType,
+        nativeType = "TODO",
         defaultValue = f.value.map(_.toString),
         notNull = f.required
       )

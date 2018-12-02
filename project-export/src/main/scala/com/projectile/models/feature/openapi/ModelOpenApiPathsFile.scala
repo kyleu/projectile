@@ -104,7 +104,7 @@ object ModelOpenApiPathsFile {
       file.add("\"name\": \"" + field.propertyName + "\",")
       file.add("\"in\": \"path\",")
       file.add("\"schema\": {", 1)
-      OpenApiPropertyHelper.contentFor(field.t, field.nativeType, file, enums)
+      OpenApiPropertyHelper.contentFor(field.t, file, enums)
       file.add("}", -1)
       file.add(if (fields.lastOption.contains(field)) { "}" } else { "}," }, -1)
     }

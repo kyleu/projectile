@@ -1,7 +1,8 @@
 package com.projectile.models.feature.core.db
 
-import com.projectile.models.export.{ExportField, ExportModel, FieldType}
+import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.{FieldType, FieldTypeRestrictions}
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
@@ -14,7 +15,6 @@ object ModelFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className)
 
     if (model.features(ModelFeature.DataModel)) {
-      val pkg = config.resultsPackage :+ "data"
       config.addCommonImport(file, "DataField")
       config.addCommonImport(file, "DataSummary")
       config.addCommonImport(file, "DataFieldModel")
@@ -79,7 +79,7 @@ object ModelFile {
     val x = if (field.notNull) {
       val method = field.t match {
         case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
-        case FieldType.EnumType => s"${field.propertyName}.value"
+        case FieldType.EnumType(_) => s"${field.propertyName}.value"
         case FieldType.ListType(_) => s""""{ " + ${field.propertyName}.mkString(", ") + " }""""
         case _ => s"${field.propertyName}.toString"
       }
@@ -87,7 +87,7 @@ object ModelFile {
     } else {
       val method = field.t match {
         case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
-        case FieldType.EnumType => s"${field.propertyName}.map(_.value)"
+        case FieldType.EnumType(_) => s"${field.propertyName}.map(_.value)"
         case FieldType.ListType(_) => s"""${field.propertyName}.map(v => "{ " + v.mkString(", ") + " }")"""
         case _ => s"${field.propertyName}.map(_.toString)"
       }

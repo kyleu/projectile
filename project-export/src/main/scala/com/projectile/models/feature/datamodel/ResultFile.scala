@@ -20,6 +20,7 @@ object ResultFile {
     config.addCommonImport(file, "PagingOptions")
 
     config.addCommonImport(file, "DateUtils")
+
     config.addCommonImport(file, "JsonSerializers", "_")
 
     file.add(s"final case class ${model.className}Result(", 2)

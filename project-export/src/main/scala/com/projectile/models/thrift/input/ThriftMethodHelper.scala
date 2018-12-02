@@ -1,80 +1,78 @@
 package com.projectile.models.thrift.input
 
 import com.projectile.models.export.ExportField
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.output.file.ScalaFile
-import com.projectile.models.thrift.parse.ThriftFieldHelper
 
 object ThriftMethodHelper {
-  def getReturnMapping(t: String): String = t match {
-    case "Unit" | "Boolean" | "String" | "Int" | "Long" | "Double" => ""
-    case x if x.startsWith("Map[") => getReturnSubMapping(ThriftFieldHelper.mapKeyValFor(x)._2) match {
+  def getReturnMapping(t: FieldType): String = t match {
+    case _ if FieldType.scalars(t) => ""
+    case FieldType.MapType(_, v) => getReturnSubMapping(v) match {
       case r if r.isEmpty => ".map(_.toMap)"
       case r => s".map(_.mapValues($r).toMap)"
     }
-    case x if x.startsWith("Seq[") => getReturnSubMapping(t.drop(4).dropRight(1)) match {
+    case FieldType.ListType(typ) => getReturnSubMapping(typ) match {
       case r if r.isEmpty => ""
       case r => s".map(_.map($r))"
     }
-    case x if x.startsWith("Set[") => getReturnSubMapping(t.drop(4).dropRight(1)) match {
+    case FieldType.SetType(typ) => getReturnSubMapping(typ) match {
       case r if r.isEmpty => ".map(_.toSet)"
       case r => s".map(_.map($r).toSet)"
     }
-    case x => s".map($x.fromThrift)"
+    case _ => s".map($t.fromThrift)"
   }
 
-  def getArgCall(field: ExportField, file: ScalaFile) = parse(field.propertyName, field.nativeType, field.notNull)
+  def getArgCall(field: ExportField, file: ScalaFile) = parse(field.propertyName, field.t, field.notNull)
 
-  private[this] def getReturnSubMapping(t: String): String = t match {
-    case "Unit" | "Boolean" | "String" | "Int" | "Long" | "Double" => ""
-    case x if x.startsWith("Map[") => getReturnSubMapping(ThriftFieldHelper.mapKeyValFor(x)._2) match {
+  private[this] def getReturnSubMapping(t: FieldType): String = t match {
+    case _ if FieldType.scalars(t) => ""
+    case FieldType.MapType(_, v) => getReturnSubMapping(v) match {
       case r if r.isEmpty => "_.toMap"
       case r => s"_.mapValues($r).toMap"
     }
-    case x if x.startsWith("Seq[") => getReturnSubMapping(t.drop(4).dropRight(1)) match {
+    case FieldType.ListType(typ) => getReturnSubMapping(typ) match {
       case r if r.isEmpty => ""
       case r => s"_.map($r)"
     }
-    case x if x.startsWith("Set[") => getReturnSubMapping(t.drop(4).dropRight(1)) match {
+    case FieldType.SetType(typ) => getReturnSubMapping(typ) match {
       case r if r.isEmpty => "_.toSet"
       case r => s"_.map($r).toSet"
     }
-    case x => s"$x.fromThrift"
+    case _ => s"$t.fromThrift"
   }
 
-  private[this] def parse(name: String, t: String, required: Boolean): String = t match {
-    case x if x.startsWith("Map[") =>
-      val valuesMapped = parseMapped(ThriftFieldHelper.mapKeyValFor(x)._2, "map").replaceAllLiterally(".map", ".mapValues(")
+  private[this] def parse(name: String, t: FieldType, required: Boolean): String = t match {
+    case FieldType.MapType(_, v) =>
+      val valuesMapped = parseMapped(v, "map").replaceAllLiterally(".map", ".mapValues(")
       if (required) {
         s"$name$valuesMapped.toMap"
       } else {
         s"$name.map(_$valuesMapped).toMap"
       }
-    case x if x.startsWith("Seq[") =>
-      val remainder = t.drop(4).dropRight(1)
-      val mapped = parseMapped(remainder, "seq")
+    case FieldType.ListType(typ) =>
+      val mapped = parseMapped(typ, "seq")
       if (mapped.isEmpty) {
         s"$name"
       } else {
         s"$name.map(_$mapped)"
       }
-    case x if x.startsWith("Set[") =>
-      val remainder = t.drop(4).dropRight(1)
-      val mapped = parseMapped(remainder, "set")
+    case FieldType.SetType(typ) =>
+      val mapped = parseMapped(typ, "set")
       if (mapped.isEmpty) {
         s"$name"
       } else {
         s"$name.map(_$mapped)"
       }
-    case "Boolean" | "String" | "Int" | "Long" | "Double" => s"$name"
+    case _ if FieldType.scalars(t) => s"$name"
     case _ if required => s"$name.asThrift"
     case _ => s"$name.map(_.asThrift)"
   }
 
-  private[this] def parseMapped(t: String, ctx: String): String = t match {
-    case x if x.startsWith("Map[") => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
-    case x if x.startsWith("Seq[") => throw new IllegalStateException(s"Unhandled [$ctx] child Seq") // ""?
-    case x if x.startsWith("Set[") => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
-    case "Boolean" | "String" | "Int" | "Long" | "Double" => ""
+  private[this] def parseMapped(t: FieldType, ctx: String): String = t match {
+    case FieldType.MapType(_, _) => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
+    case FieldType.ListType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
+    case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
+    case _ if FieldType.scalars(t) => ""
     case _ => s".asThrift"
   }
 }

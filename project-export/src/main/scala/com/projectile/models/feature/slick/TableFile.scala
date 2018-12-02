@@ -1,8 +1,9 @@
 package com.projectile.models.feature.slick
 
-import com.projectile.models.export.FieldType
 import com.projectile.models.export.{ExportEnum, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType
+import com.projectile.models.export.typ.FieldType.EnumType
 import com.projectile.models.output.OutputPath
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.ScalaFile
@@ -14,8 +15,11 @@ object TableFile {
 
     config.addCommonImport(file, "SlickQueryService", "imports", "_")
 
-    model.fields.foreach(_.enumOpt(config).foreach { e =>
-      file.addImport(config.applicationPackage ++ e.slickPackage :+ s"${e.className}ColumnType", s"${e.propertyName}ColumnType")
+    model.fields.foreach(_.t match {
+      case EnumType(key) =>
+        val e = config.getEnum(key)
+        file.addImport(config.applicationPackage ++ e.slickPackage :+ s"${e.className}ColumnType", s"${e.propertyName}ColumnType")
+      case _ => // noop
     })
 
     file.add(s"object ${model.className}Table {", 1)
@@ -64,20 +68,19 @@ object TableFile {
 
   private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
     field.addImport(config = config, file = file, pkg = model.slickPackage)
-    val colScala = field.t match {
-      case FieldType.ListType(typ) => s"List[${typ.asScala}]"
-      case FieldType.TagsType =>
-        config.addCommonImport(file, "Tag")
-        s"List[Tag]"
-      case _ => field.scalaType(config)
+    field.t match {
+      case FieldType.TagsType => config.addCommonImport(file, "Tag")
+      case FieldType.EnumType(key) => file.addImport(config.applicationPackage ++ Seq("models") ++ config.getEnum(key).pkg, config.getEnum(key).className)
+      case _ => // noop
     }
-    val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
+    field.addImport(config, file, Nil)
+    val propType = if (field.notNull) { field.scalaType(config) } else { "Option[" + field.scalaType(config) + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
     val pkKeys = model.pkFields.map(_.key)
     val aiKeys = model.pkColumns.filter(_.autoIncrement).map(_.name).flatMap(k => model.fields.find(_.key == k)).map(_.key)
     val extra = Seq(
-      if(pkKeys.contains(field.key)) { Some(", O.PrimaryKey") } else { None },
-      if(aiKeys.contains(field.key)) { Some(", O.AutoInc") } else { None },
+      if (pkKeys.contains(field.key)) { Some(", O.PrimaryKey") } else { None },
+      if (aiKeys.contains(field.key)) { Some(", O.AutoInc") } else { None }
     ).flatten.mkString
     file.add(s"""val ${field.propertyName} = column[$propType]("${field.key}"$extra)""")
   }
@@ -92,7 +95,7 @@ object TableFile {
         file.add(s"def getByPrimaryKey($colProp: ${field.scalaType(config)}) = query.filter(_.$colProp === $colProp).result.headOption")
         val seqArgs = s"${colProp}Seq: Seq[${field.scalaType(config)}]"
         file.add(s"def getByPrimaryKeySeq($seqArgs) = query.filter(_.$colProp.inSet(${colProp}Seq)).result")
-      case fields => // multiple columns
+      case fields =>
         file.add()
         val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType(config)).mkString(", ")
         val queryArgs = fields.map(f => "o." + f.propertyName + " === " + f.propertyName).mkString(" && ")

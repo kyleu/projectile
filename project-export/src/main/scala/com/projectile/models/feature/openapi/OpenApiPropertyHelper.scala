@@ -1,11 +1,11 @@
 package com.projectile.models.feature.openapi
 
-import com.projectile.models.export.FieldType
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.export.{ExportEnum, ExportField}
 import com.projectile.models.output.file.JsonFile
 
 object OpenApiPropertyHelper {
-  def contentFor(t: FieldType, nativeType: String, file: JsonFile, enums: Seq[ExportEnum]) = t match {
+  def contentFor(t: FieldType, file: JsonFile, enums: Seq[ExportEnum]): Unit = t match {
     case FieldType.IntegerType | FieldType.LongType => file.add("\"type\": \"integer\"")
     case FieldType.BigDecimalType | FieldType.DoubleType | FieldType.FloatType => file.add("\"type\": \"number\"")
     case FieldType.UuidType =>
@@ -25,17 +25,19 @@ object OpenApiPropertyHelper {
       file.add("\"type\": \"string\",")
       file.add("\"example\": \"2018-01-01\"")
     case FieldType.TagsType | FieldType.JsonType => file.add("\"type\": \"object\"")
-    case FieldType.EnumType =>
-      // val e = enums.find(_.name == nativeType).getOrElse(throw new IllegalStateException(s"Cannot file enum [$nativeType]."))
-      file.add("\"type\": \"string\"")
-    case FieldType.ListType(_) =>
+    case FieldType.EnumType(key) =>
+      val e = enums.find(_.key == key).getOrElse(throw new IllegalStateException(s"Cannot file enum [$key]."))
+      file.add("\"type\": \"" + e.className + "\"")
+    case FieldType.ListType(typ) =>
       file.add("\"type\": \"array\",")
-      nativeType match {
-        case x =>
-          file.add("\"items\": {", 1)
-          file.add("\"type\": \"" + x + "\"")
-          file.add("}", -1)
-      }
+      file.add("\"items\": {", 1)
+      contentFor(typ, file, enums)
+      file.add("}", -1)
+    case FieldType.SetType(typ) =>
+      file.add("\"type\": \"array\",")
+      file.add("\"items\": {", 1)
+      contentFor(typ, file, enums)
+      file.add("}", -1)
     case FieldType.StringType | FieldType.EncryptedStringType | FieldType.UnknownType => file.add("\"type\": \"string\"")
     case _ => file.add("\"type\": \"string\"")
   }
@@ -43,7 +45,7 @@ object OpenApiPropertyHelper {
   def propertyFor(f: ExportField, file: JsonFile, last: Boolean, enums: Seq[ExportEnum]) = {
     val comma = if (last) { "" } else { "," }
     file.add("\"" + f.propertyName + "\": {", 1)
-    contentFor(f.t, f.nativeType, file, enums)
+    contentFor(f.t, file, enums)
     file.add("}" + comma, -1)
   }
 }

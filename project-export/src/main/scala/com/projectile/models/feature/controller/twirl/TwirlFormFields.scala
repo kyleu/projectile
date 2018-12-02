@@ -1,15 +1,16 @@
 package com.projectile.models.feature.controller.twirl
 
 import com.projectile.models.database.schema.ForeignKey
-import com.projectile.models.export.{ExportField, ExportModel, FieldType}
+import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.typ.FieldType
 import com.projectile.models.output.file.OutputFile
 
 object TwirlFormFields {
   def fieldFor(config: ExportConfiguration, model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
     val formPkg = (config.applicationPackage ++ Seq("views", "html", "components", "form")).mkString(".")
     field.t match {
-      case FieldType.EnumType => file.add(s"@$formPkg.selectField(${enumArgsFor(config, field)})")
+      case FieldType.EnumType(key) => file.add(s"@$formPkg.selectField(${enumArgsFor(config, field, key)})")
       case FieldType.CodeType => file.add(s"@$formPkg.codeField(${argsFor(field)})")
       case FieldType.BooleanType => file.add(s"@$formPkg.booleanField(${boolArgsFor(field)})")
       case FieldType.DateType => timeField(config, field, file, "Date")
@@ -35,12 +36,13 @@ object TwirlFormFields {
     s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}$dataTypeString"""
   }
 
-  private[this] def enumArgsFor(config: ExportConfiguration, field: ExportField) = {
-    val enum = field.enumOpt(config).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.nativeType}]."))
+  private[this] def enumArgsFor(config: ExportConfiguration, field: ExportField, key: String) = {
+    val enum = config.getEnumOpt(key).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [${field.nativeType}]."))
     val prop = field.propertyName
     val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
     val opts = "Seq(" + enum.values.map(v => s""""$v" -> "$v"""").mkString(", ") + ")"
-    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, options = $opts, nullable = ${field.nullable}, dataType = "${enum.key}""""
+    val extra = s"""options = $opts, nullable = ${field.nullable}, dataType = "${enum.key}""""
+    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, $extra"""
   }
 
   private[this] def zonedDateTimeField(config: ExportConfiguration, field: ExportField, file: OutputFile) = {
