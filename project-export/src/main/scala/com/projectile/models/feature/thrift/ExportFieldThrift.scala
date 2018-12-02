@@ -41,7 +41,5 @@ object ExportFieldThrift {
     case TagsType => "list<common.Tag>"
 
     case ByteArrayType => "binary"
-
-    case UnknownType => "string"
   }
 }

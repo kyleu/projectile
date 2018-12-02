@@ -83,7 +83,7 @@ object StructModelFile {
     fields.foreach { field =>
       //field.addImport(file, model.modelPackage)
       val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
-      val decl = ThriftFileHelper.declarationFor(field.notNull, field.propertyName, field.defaultValue, field.nativeType, enums)
+      val decl = ThriftFileHelper.declarationFor(field.notNull, field.propertyName, field.defaultValue, field.t, enums)
       file.add(decl + comma)
     }
   }

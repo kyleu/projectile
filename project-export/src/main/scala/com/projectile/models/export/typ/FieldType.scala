@@ -49,8 +49,6 @@ object FieldType extends StringEnum[FieldType] {
 
   case object ByteArrayType extends FieldType("byteArray")
 
-  case object UnknownType extends FieldType("unknown")
-
   override def values = findValues
   val scalars: Set[FieldType] = Set(BooleanType, StringType, IntegerType, LongType, DoubleType)
 }

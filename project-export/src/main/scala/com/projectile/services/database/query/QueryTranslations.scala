@@ -32,7 +32,7 @@ object QueryTranslations extends Logging {
     case SQLXML => XmlType
     case OTHER => matchOther(n)
 
-    case NULL => UnknownType
+    case NULL => UnitType
     case JAVA_OBJECT => ObjectType
     case STRUCT => StructType
     case ARRAY => n match {
@@ -44,7 +44,7 @@ object QueryTranslations extends Logging {
 
     case _ =>
       log.warn(s"Encountered unknown column type [$i].")
-      UnknownType
+      StringType
   }
 
   private[this] def matchOther(n: String) = n match {
@@ -67,6 +67,6 @@ object QueryTranslations extends Logging {
     case x if x.startsWith("gbtreekey") => StringType
     case x =>
       log.warn(s"Encountered unknown field type [$x]. ")
-      UnknownType
+      StringType
   }
 }

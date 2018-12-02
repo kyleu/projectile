@@ -41,7 +41,6 @@ object FieldTypeAsScala {
     case TagsType => "List[Tag]"
 
     case ByteArrayType => "Array[Byte]"
-    case UnknownType => "Any"
 
     case _ => throw new IllegalStateException(s"Unhandled type [$t]")
 

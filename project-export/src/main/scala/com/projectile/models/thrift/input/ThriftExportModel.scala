@@ -36,7 +36,6 @@ object ThriftExportModel {
         description = None,
         idx = idx,
         t = t,
-        nativeType = "TODO",
         defaultValue = f.value.map(_.toString),
         notNull = f.required
       )

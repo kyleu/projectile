@@ -22,57 +22,61 @@ object ThriftFileHelper {
   }
 
   def declarationForField(field: ExportField, enums: Seq[ExportEnum]) = {
-    declarationFor(field.notNull, field.propertyName, field.defaultValue, field.nativeType, enums)
+    declarationFor(field.notNull, field.propertyName, field.defaultValue, field.t, enums)
   }
 
   def declarationFor(
     required: Boolean,
     name: String,
     value: Option[String],
-    colType: String,
+    colType: FieldType,
     enums: Seq[ExportEnum]
   ) = {
     val propType = if (required) { colType } else { "Option[" + colType + "]" }
     s"$name: $propType${propDefault(colType, required, value, enums)}"
   }
 
-  private[this] def defaultForType(colType: String, enums: Seq[ExportEnum]) = colType match {
-    case x if x.startsWith("Seq[") => "Nil"
-    case x if x.startsWith("Set[") => "Set.empty"
-    case x if x.startsWith("Map[") => "Map.empty"
-    case x if x.startsWith("Option[") => "None"
-    case "Boolean" => "false"
-    case "String" => "\"\""
-    case "Int" => "0"
-    case "Long" => "0L"
-    case "Double" => "0.0"
-    case x => enums.find(_.key == x) match {
+  private[this] def defaultForType(colType: FieldType, required: Boolean, enums: Seq[ExportEnum]) = colType match {
+    case _ if !required => "None"
+    case FieldType.ListType(_) => "Nil"
+    case FieldType.SetType(_) => "Set.empty"
+    case FieldType.MapType(_, _) => "Map.empty"
+    case FieldType.BooleanType => "false"
+    case FieldType.StringType => "\"\""
+    case FieldType.IntegerType => "0"
+    case FieldType.LongType => "0L"
+    case FieldType.DoubleType => "0.0"
+    case FieldType.EnumType(k) => enums.find(_.key == k) match {
       case Some(e) => e.className + "." + ExportHelper.toClassName(e.values.head.indexOf(':') match {
         case -1 => e.values.head
         case v => e.values.head.substring(v + 1)
       })
-      case None => x + "()"
+      case None => throw new IllegalStateException(s"No enum with key [$k]")
     }
+    case x => x + "()"
   }
 
-  private[this] def propDefault(colType: String, required: Boolean, value: Option[Any], enums: Seq[ExportEnum]) = value match {
-    case Some(_) if required && enums.exists(_.key == colType) => " = " + defaultForType(colType, enums)
-    case Some(v) if required => " = " + v
-    case Some(_) if enums.exists(_.key == colType) => " = Some(" + defaultForType(colType, enums) + ")"
-    case Some(v) => " = Some(" + v + ")"
-    case None if required => " = " + defaultForType(colType, enums)
-    case None => " = None"
+  private[this] def propDefault(colType: FieldType, required: Boolean, value: Option[Any], enums: Seq[ExportEnum]) = value match {
+    case Some(v) if required => colType match {
+      case FieldType.EnumType(_) => " = " + defaultForType(colType, required, enums)
+      case _ => " = " + v
+    }
+    case Some(v) => colType match {
+      case FieldType.EnumType(_) => " = Some(" + defaultForType(colType, required, enums) + ")"
+      case _ => " = Some(" + v + ")"
+    }
+    case None => " = " + defaultForType(colType, required, enums)
   }
 
   private[this] def colTypeForIdentifier(name: String, metadata: ThriftParseResult.Metadata): FieldType = name match {
     case "I64" => FieldType.LongType
     case "I32" => FieldType.IntegerType
     case x if x.contains('.') => x.split('.').toList match {
-      case pkg :: cls :: Nil => FieldType.UnknownType // TODO -> (metadata.pkgMap.getOrElse(pkg, Nil) :+ "models" :+ cls).mkString(".")
-      case cls :: Nil => FieldType.UnknownType // -> TODO Seq("models" :+ cls).mkString(".")
+      case pkg :: cls :: Nil => throw new IllegalStateException(s"Col type error: [$pkg], [$cls]")
+      case cls :: Nil => throw new IllegalStateException(s"Col type error: [$cls]")
       case _ => throw new IllegalStateException(s"Cannot match [$x].")
     }
-    case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)).getOrElse(FieldType.UnknownType)
+    case x => metadata.typedefs.get(x).map(td => colTypeForIdentifier(td, metadata)).getOrElse(FieldType.StringType)
   }
 
   private[this] def colTypeForBase(t: BaseType.Type) = t match {

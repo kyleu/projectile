@@ -18,34 +18,4 @@ object ThriftSchemaHelper {
     case FieldType.MapType(_, _) => s"StringType"
     case x => ExportHelper.toIdentifier(x.value) + "Type"
   }
-
-  def mapsFor(t: String, req: Boolean = true): String = {
-    t match {
-      case _ if !req => if (mapsFor(t).nonEmpty) {
-        s".map(some => some${mapsFor(t)})"
-      } else {
-        ""
-      }
-      case _ if t.startsWith("Seq[") => if (mapsFor(t.drop(4).dropRight(1)).nonEmpty) {
-        s".map(el => el${mapsFor(t.drop(4).dropRight(1))})"
-      } else {
-        ""
-      }
-      case _ if t.startsWith("Set[") => if (mapsFor(t.drop(4).dropRight(1)).nonEmpty) {
-        s".map(el => el${mapsFor(t.drop(4).dropRight(1))}).toSeq"
-      } else {
-        ".toSeq"
-      }
-      case x if x.startsWith("Map[") => s".toString"
-      case _ => ""
-    }
-  }
-
-  def getImportType(t: FieldType): Option[String] = t match {
-    case _ if FieldType.scalars(t) => None
-    case FieldType.MapType(_, v) => getImportType(v)
-    case FieldType.ListType(typ) => getImportType(typ)
-    case FieldType.SetType(typ) => getImportType(typ)
-    case _ => Some(t.value)
-  }
 }

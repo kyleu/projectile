@@ -44,8 +44,6 @@ object ExportFieldGraphQL {
     case CodeType => "StringType"
     case TagsType => "TagsType"
     case ByteArrayType => "ArrayType(StringType)"
-
-    case UnknownType => "UnknownType"
   }
 
   def argType(config: ExportConfiguration, field: ExportField) = if (field.notNull) {

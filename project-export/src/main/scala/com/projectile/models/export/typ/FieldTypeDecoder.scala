@@ -59,7 +59,6 @@ object FieldTypeDecoder {
       case TagsType.value => Right(TagsType)
 
       case ByteArrayType.value => Right(ByteArrayType)
-      case UnknownType.value => Right(UnknownType)
     }
   }
 }

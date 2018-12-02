@@ -50,7 +50,6 @@ case class ExportField(
     description: Option[String],
     idx: Int = 0,
     t: FieldType,
-    nativeType: String,
     defaultValue: Option[String] = None,
     notNull: Boolean = false,
     indexed: Boolean = false,

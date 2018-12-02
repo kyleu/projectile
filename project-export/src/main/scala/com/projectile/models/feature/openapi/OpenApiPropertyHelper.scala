@@ -38,7 +38,7 @@ object OpenApiPropertyHelper {
       file.add("\"items\": {", 1)
       contentFor(typ, file, enums)
       file.add("}", -1)
-    case FieldType.StringType | FieldType.EncryptedStringType | FieldType.UnknownType => file.add("\"type\": \"string\"")
+    case FieldType.StringType | FieldType.EncryptedStringType => file.add("\"type\": \"string\"")
     case _ => file.add("\"type\": \"string\"")
   }
 
