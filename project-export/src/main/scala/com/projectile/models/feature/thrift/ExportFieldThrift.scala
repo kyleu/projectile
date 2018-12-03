@@ -31,12 +31,12 @@ object ExportFieldThrift {
 
     case ObjectType => "string"
     case StructType(key) => config.getModelOpt(key) match {
-      case Some(_) => throw new IllegalStateException("TODO: Struct types")
+      case Some(m) => m.className
       case None => "string"
     }
 
     case EnumType(key) => config.getEnumOpt(key) match {
-      case Some(_) => throw new IllegalStateException("TODO: Enum types")
+      case Some(e) => e.className
       case None => "string"
     }
     case ListType(typ) => s"list<${thriftType(typ, config)}>"
