@@ -26,7 +26,9 @@ object Icons {
 
   val logs = fa("reorder")
 
+  val graphql = fa("bolt")
   val json = fa("wrench")
   val scala = fa("sitemap")
   val markdown = fa("bookmark-o")
+
 }

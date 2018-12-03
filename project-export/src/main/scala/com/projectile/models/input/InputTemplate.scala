@@ -11,7 +11,6 @@ sealed abstract class InputTemplate(
 ) extends StringEnumEntry
 
 object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[InputTemplate] {
-
   case object Postgres extends InputTemplate(
     value = "postgres",
     title = "PostgreSQL Database",
@@ -24,6 +23,13 @@ object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[Inpu
     title = "Thrift Definitions",
     description = "Enums, structs, and services from a collection of Thrift IDL files",
     icon = Icons.thrift
+  )
+
+  case object GraphQL extends InputTemplate(
+    value = "graphql",
+    title = "GraphQL Queries",
+    description = "GraphQL query models from a file containing GraphQL queries",
+    icon = Icons.graphql
   )
 
   case object Filesystem extends InputTemplate(

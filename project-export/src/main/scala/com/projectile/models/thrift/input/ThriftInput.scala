@@ -12,7 +12,7 @@ object ThriftInput {
 
 case class ThriftInput(
     override val key: String = "new",
-    override val title: String = "New Thrift Imput",
+    override val title: String = "New Thrift Input",
     override val description: String = "...",
     files: Seq[String] = Nil,
     typedefs: Map[String, String] = Map.empty,
@@ -22,13 +22,6 @@ case class ThriftInput(
     services: Seq[ThriftService] = Nil
 ) extends Input {
   override def template = InputTemplate.Thrift
-
-  private[this] def getThriftEnum(k: String) = {
-    intEnums.find(_.key == k).map(Left.apply).orElse(stringEnums.find(_.key == k).map(Right.apply)).getOrElse {
-      val keys = (intEnums.map(_.key) ++ stringEnums.map(_.key)).sorted
-      throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${keys.mkString(", ")}]")
-    }
-  }
 
   override def exportEnum(key: String) = {
     getThriftEnum(key) match {
@@ -66,4 +59,11 @@ case class ThriftInput(
   }
 
   override def exportServices = services.map(s => exportService(s.key))
+
+  private[this] def getThriftEnum(k: String) = {
+    intEnums.find(_.key == k).map(Left.apply).orElse(stringEnums.find(_.key == k).map(Right.apply)).getOrElse {
+      val keys = (intEnums.map(_.key) ++ stringEnums.map(_.key)).sorted
+      throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${keys.mkString(", ")}]")
+    }
+  }
 }

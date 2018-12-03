@@ -1,0 +1,42 @@
+@(projectile: com.projectile.services.ProjectileService, input: com.projectile.models.graphql.input.GraphQLInput)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+) @layout.simple(projectile, input.title + " Input Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <h5><i class="@input.template.icon"></i> @input.title</h5>
+      @input.description
+    </div>
+  </div>
+
+  <ul class="tabs">
+    <li class="tab"><a href="#input-detail"><i class=" @com.projectile.models.template.Icons.graphql"></i> Summary</a></li>
+    <li class="tab"><a href="#input-document"><i class=" @com.projectile.models.template.Icons.file"></i> Document</a></li>
+  </ul>
+
+  <div id="input-detail">
+    <div class="collection">
+      @if(input.files.isEmpty) {
+        <div class="collection-item">No GraphQL query files</div>
+      }
+      @input.files.map { f =>
+        <div class="collection-item">@f</div>
+      }
+      <div class="collection-item">
+        <a class="btn theme" href="@controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="input-document">
+    <div class="collection">
+      <pre>@input.document.renderPretty</pre>
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('.tabs').tabs();
+    });
+  </script>
+}

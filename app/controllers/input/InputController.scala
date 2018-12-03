@@ -2,6 +2,7 @@ package controllers.input
 
 import controllers.BaseController
 import com.projectile.models.database.input.PostgresInput
+import com.projectile.models.graphql.input.GraphQLInput
 import com.projectile.models.input.{InputSummary, InputTemplate}
 import com.projectile.models.thrift.input.ThriftInput
 import util.web.ControllerUtils
@@ -14,6 +15,7 @@ class InputController @javax.inject.Inject() () extends BaseController {
     val view = projectile.getInput(key) match {
       case i: PostgresInput => views.html.input.postgresInput(projectile, i)
       case i: ThriftInput => views.html.input.thriftInput(projectile, i)
+      case g: GraphQLInput => views.html.input.graphQLInput(projectile, g)
       case x => throw new IllegalStateException(s"Cannot render view for [$x]")
     }
     Future.successful(Ok(view))

@@ -28,7 +28,7 @@ object ThriftInputService {
   def loadThrift(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
 
-    val pc = loadFile[ThriftOptions](dir / fn, "Thrift connection")
+    val pc = loadFile[ThriftOptions](dir / fn, "Thrift files")
     val files = pc.files.map(cfg.workingDirectory / _)
     ThriftParseService.loadThriftInput(files, ThriftInput.fromSummary(summ, pc.files))
   }
