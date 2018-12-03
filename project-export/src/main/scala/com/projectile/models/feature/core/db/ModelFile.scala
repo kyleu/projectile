@@ -1,8 +1,8 @@
 package com.projectile.models.feature.core.db
 
-import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.export.typ.{FieldType, FieldTypeRestrictions}
+import com.projectile.models.export.typ.FieldType
+import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile

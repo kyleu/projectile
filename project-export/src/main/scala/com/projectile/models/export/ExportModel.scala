@@ -77,7 +77,10 @@ case class ExportModel(
 
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
-  val modelPackage = List("models") ++ pkg
+  val modelPackage = pkg.lastOption match {
+    case Some("models") => pkg
+    case _ => "models" +: pkg
+  }
 
   val queriesPackage = List("models", "queries") ++ pkg
   val slickPackage = List("models", "table") ++ pkg

@@ -36,7 +36,7 @@ object FieldType extends StringEnum[FieldType] {
   case object UuidType extends FieldType("uuid")
 
   case object ObjectType extends FieldType("object")
-  case object StructType extends FieldType("struct")
+  case class StructType(key: String) extends FieldType("struct")
 
   case class EnumType(key: String) extends FieldType("enum")
   case class ListType(typ: FieldType) extends FieldType("list")

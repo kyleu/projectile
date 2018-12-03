@@ -1,11 +1,11 @@
 package com.projectile.models.feature.slick
 
-import com.projectile.models.export.{ExportEnum, ExportModel}
+import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.typ.FieldType
 import com.projectile.models.export.typ.FieldType.EnumType
-import com.projectile.models.output.OutputPath
 import com.projectile.models.feature.ModelFeature
+import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 
 object TableFile {
@@ -33,7 +33,7 @@ object TableFile {
 
     file.add(s"""class ${model.className}Table(tag: slick.lifted.Tag) extends Table[${model.className}](tag, "${model.key}") {""", 1)
 
-    addFields(config, model, file, config.enums)
+    addFields(config, model, file)
     file.add()
 
     if (model.pkFields.nonEmpty) {
@@ -66,7 +66,7 @@ object TableFile {
 
   }
 
-  private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, enums: Seq[ExportEnum]) = model.fields.foreach { field =>
+  private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.addImport(config = config, file = file, pkg = model.slickPackage)
     field.t match {
       case FieldType.TagsType => config.addCommonImport(file, "Tag")

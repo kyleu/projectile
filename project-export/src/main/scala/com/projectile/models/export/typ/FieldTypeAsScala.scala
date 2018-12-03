@@ -5,7 +5,7 @@ import com.projectile.models.export.typ.FieldType._
 
 object FieldTypeAsScala {
   def asScala(config: ExportConfiguration, t: FieldType): String = t match {
-    case UnitType => "()"
+    case UnitType => "Unit"
 
     case StringType => "String"
     case EncryptedStringType => "String"
@@ -29,10 +29,10 @@ object FieldTypeAsScala {
     case UuidType => "UUID"
 
     case ObjectType => "String"
-    case StructType => "String"
+    case StructType(key) => config.getModel(key).className
 
     case EnumType(key) => config.getEnum(key).className
-    case ListType(typ) => s"List[${asScala(config, typ)}]"
+    case ListType(typ) => s"Seq[${asScala(config, typ)}]"
     case SetType(typ) => s"Set[${asScala(config, typ)}]"
     case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"
 

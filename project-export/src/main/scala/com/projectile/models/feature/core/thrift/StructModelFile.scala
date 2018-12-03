@@ -2,7 +2,7 @@ package com.projectile.models.feature.core.thrift
 
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.typ.FieldType
-import com.projectile.models.export.{ExportEnum, ExportField, ExportModel}
+import com.projectile.models.export.{ExportField, ExportModel}
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
@@ -11,9 +11,8 @@ import com.projectile.models.thrift.parse.{ThriftFieldScalaHelper, ThriftFieldTh
 
 object StructModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    // TODO TODO
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = model.pkg :+ "models", key = model.className)
+    val file = ScalaFile(path = path, dir = model.pkg, key = model.className)
 
     if (model.features(ModelFeature.Json)) {
       config.addCommonImport(file, "JsonSerializers", "_")
@@ -30,7 +29,8 @@ object StructModelFile {
       file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
       file.add()
     }
-    file.add(s"def fromThrift(t: ${(model.pkg :+ model.key).mkString(".")}) = ${model.className}(", 1)
+    val thriftModel = model.pkg.dropRight(1) :+ model.key
+    file.add(s"def fromThrift(t: ${thriftModel.mkString(".")}) = ${model.className}(", 1)
     model.fields.foreach { field =>
       val out = ThriftFieldScalaHelper.getFromField(field)
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
@@ -41,14 +41,14 @@ object StructModelFile {
     file.add()
 
     file.add(s"final case class ${model.className}(", 2)
-    addFields(model.pkg, model.fields, file, config.enums)
+    addFields(config, model.pkg, model.fields, file)
     if (model.features(ModelFeature.DataModel)) {
       file.add(") extends DataFieldModel {", -2)
     } else {
       file.add(") {", -2)
     }
     file.indent()
-    file.add(s"lazy val asThrift = ${(model.pkg :+ model.key).mkString(".")}(", 1)
+    file.add(s"lazy val asThrift = ${thriftModel.mkString(".")}(", 1)
     model.fields.foreach { field =>
       val out = ThriftFieldThriftHelper.getFromField(field).stripSuffix(".toMap")
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
@@ -79,11 +79,11 @@ object StructModelFile {
     file
   }
 
-  private[this] def addFields(pkg: Seq[String], fields: Seq[ExportField], file: ScalaFile, enums: Seq[ExportEnum]) = {
+  private[this] def addFields(config: ExportConfiguration, pkg: Seq[String], fields: Seq[ExportField], file: ScalaFile) = {
     fields.foreach { field =>
       //field.addImport(file, model.modelPackage)
       val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
-      val decl = ThriftFileHelper.declarationFor(field.notNull, field.propertyName, field.defaultValue, field.t, enums)
+      val decl = ThriftFileHelper.declarationFor(config, field.notNull, field.propertyName, field.defaultValue, field.t)
       file.add(decl + comma)
     }
   }

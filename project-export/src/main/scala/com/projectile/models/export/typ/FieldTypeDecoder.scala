@@ -22,6 +22,10 @@ object FieldTypeDecoder {
     decodeFieldType.apply(c.downField("v").asInstanceOf[HCursor]).right.get
   ))
 
+  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(
+    c.downField("key").as[String].right.get
+  ))
+
   implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => {
     val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute.")))
     t match {
@@ -47,7 +51,7 @@ object FieldTypeDecoder {
       case UuidType.value => Right(UuidType)
 
       case ObjectType.value => Right(ObjectType)
-      case StructType.value => Right(StructType)
+      case "struct" => structTypeDecoder.apply(c)
 
       case "enum" => enumTypeDecoder.apply(c)
       case "list" => listTypeDecoder.apply(c)

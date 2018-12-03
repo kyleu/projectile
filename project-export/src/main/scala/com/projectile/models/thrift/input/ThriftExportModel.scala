@@ -5,18 +5,17 @@ import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import com.projectile.models.project.member.ModelMember.InputType
 import com.projectile.models.thrift.schema.ThriftStruct
-import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftExportModel {
-  def loadStructModel(s: ThriftStruct, metadata: ThriftParseResult.Metadata) = {
+  def loadStructModel(s: ThriftStruct, input: ThriftInput) = {
     val cn = toClassName(s.key)
     val title = toDefaultTitle(cn)
-    val fields = loadStructFields(s, metadata)
+    val fields = loadStructFields(s, input)
 
     ExportModel(
       inputType = InputType.ThriftStruct,
       key = s.key,
-      pkg = s.pkg.toList,
+      pkg = s.pkg.toList :+ "models",
       propertyName = toIdentifier(cn),
       className = cn,
       title = title,
@@ -26,9 +25,9 @@ object ThriftExportModel {
     )
   }
 
-  private[this] def loadStructFields(s: ThriftStruct, metadata: ThriftParseResult.Metadata) = s.fields.zipWithIndex.map {
+  private[this] def loadStructFields(s: ThriftStruct, input: ThriftInput) = s.fields.zipWithIndex.map {
     case (f, idx) =>
-      val t = ThriftFileHelper.columnTypeFor(f.t, metadata)
+      val t = ThriftFileHelper.columnTypeFor(f.t, input)
       ExportField(
         key = f.key,
         propertyName = ExportHelper.toIdentifier(f.name),

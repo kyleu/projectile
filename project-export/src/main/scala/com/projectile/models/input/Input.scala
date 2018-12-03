@@ -18,4 +18,10 @@ abstract class Input() extends Ordered[Input] {
   def exportServices: Seq[ExportService]
 
   override def compare(that: Input) = title.compare(that.title)
+
+  def getEnumOpt(k: String) = exportEnums.find(_.key == k)
+  def getEnum(k: String) = getEnumOpt(k).getOrElse(throw new IllegalStateException(s"No enum available with key [$k]"))
+
+  def getModelOpt(k: String) = exportModels.find(_.key == k)
+  def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
 }

@@ -20,7 +20,7 @@ object ThriftServiceMutations {
     pkFields match {
       case Nil => // noop
       case pkf :: Nil =>
-        val thriftType = ExportFieldThrift.thriftType(pkf.t)
+        val thriftType = ExportFieldThrift.thriftType(pkf.t, config)
         val thriftVisibility = if (pkf.notNull) { "required" } else { "optional" }
 
         file.add(s"$retType create(", 1)

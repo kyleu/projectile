@@ -19,7 +19,10 @@ object ThriftMethodHelper {
       case r if r.isEmpty => ".map(_.toSet)"
       case r => s".map(_.map($r).toSet)"
     }
-    case _ => s".map($t.fromThrift)"
+    case FieldType.EnumType(key) => s".map($key.fromThrift)"
+    case FieldType.StructType(key) => s".map($key.fromThrift)"
+    case FieldType.UnitType => ""
+    case _ => throw new IllegalStateException(s"Unhandled return type [${t.toString}")
   }
 
   def getArgCall(field: ExportField, file: ScalaFile) = parse(field.propertyName, field.t, field.notNull)
@@ -38,7 +41,9 @@ object ThriftMethodHelper {
       case r if r.isEmpty => "_.toSet"
       case r => s"_.map($r).toSet"
     }
-    case _ => s"$t.fromThrift"
+    case FieldType.EnumType(key) => s"$key.fromThrift"
+    case FieldType.StructType(key) => s"$key.fromThrift"
+    case _ => throw new IllegalStateException(s"Unhandled nested type [${t.toString}")
   }
 
   private[this] def parse(name: String, t: FieldType, required: Boolean): String = t match {

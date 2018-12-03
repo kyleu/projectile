@@ -5,21 +5,20 @@ import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.ExportHelper.toClassName
 import com.projectile.models.project.member.ServiceMember.InputType
 import com.projectile.models.thrift.schema.{ThriftService, ThriftStructField}
-import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftExportService {
-  def loadService(s: ThriftService, metadata: ThriftParseResult.Metadata) = ExportService(
+  def loadService(s: ThriftService, input: ThriftInput) = ExportService(
     inputType = InputType.ThriftService,
-    pkg = s.pkg.toList,
+    pkg = s.pkg.toList :+ "services",
     key = s.key,
     className = toClassName(s.key),
-    methods = loadServiceMethods(s, metadata),
+    methods = loadServiceMethods(s, input),
     features = Set.empty
   )
 
-  private[this] def loadArguments(args: Seq[ThriftStructField], metadata: ThriftParseResult.Metadata) = args.zipWithIndex.map {
+  private[this] def loadArguments(args: Seq[ThriftStructField], input: ThriftInput) = args.zipWithIndex.map {
     case (f, idx) =>
-      val t = ThriftFileHelper.columnTypeFor(f.t, metadata)
+      val t = ThriftFileHelper.columnTypeFor(f.t, input)
       ExportField(
         key = f.key,
         propertyName = ExportHelper.toIdentifier(f.name),
@@ -32,9 +31,9 @@ object ThriftExportService {
       )
   }.toList
 
-  private[this] def loadServiceMethods(s: ThriftService, metadata: ThriftParseResult.Metadata) = s.methods.map { m =>
-    val args = loadArguments(m.arguments, metadata)
-    val returnType = ThriftFileHelper.columnTypeFor(m.returnType, metadata)
+  private[this] def loadServiceMethods(s: ThriftService, input: ThriftInput) = s.methods.map { m =>
+    val args = loadArguments(m.arguments, input)
+    val returnType = ThriftFileHelper.columnTypeFor(m.returnType, input)
     ExportMethod(key = m.key, args = args, returnType = returnType)
   }.toList
 }

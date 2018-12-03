@@ -2,13 +2,12 @@ package com.projectile.models.thrift.parse
 
 import com.projectile.models.export.ExportField
 import com.projectile.models.export.typ.FieldType
-import com.projectile.models.thrift.input.ThriftFileHelper
+import com.projectile.models.thrift.input.{ThriftFileHelper, ThriftInput}
 import com.projectile.models.thrift.schema.ThriftStructField
-import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftFieldThriftHelper {
-  def getAsThrift(field: ThriftStructField, metadata: ThriftParseResult.Metadata) = {
-    val t = ThriftFileHelper.columnTypeFor(field.t, metadata)
+  def getAsThrift(field: ThriftStructField, input: ThriftInput) = {
+    val t = ThriftFileHelper.columnTypeFor(field.t, input)
     parse(field.name, t, field.required || field.value.isDefined)
   }
 
@@ -48,6 +47,6 @@ object ThriftFieldThriftHelper {
     case FieldType.ListType(_) => "" // throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
     case _ if FieldType.scalars.apply(t) => ""
-    case x => s".map($x.asThrift)"
+    case _ => s".map(_.asThrift)"
   }
 }

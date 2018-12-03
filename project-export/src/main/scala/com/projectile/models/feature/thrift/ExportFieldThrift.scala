@@ -1,10 +1,11 @@
 package com.projectile.models.feature.thrift
 
+import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.typ.FieldType
 import com.projectile.models.export.typ.FieldType._
 
 object ExportFieldThrift {
-  def thriftType(t: FieldType): String = t match {
+  def thriftType(t: FieldType, config: ExportConfiguration): String = t match {
     case UnitType => "void"
 
     case StringType => "string"
@@ -29,12 +30,18 @@ object ExportFieldThrift {
     case UuidType => "common.UUID"
 
     case ObjectType => "string"
-    case StructType => "string"
+    case StructType(key) => config.getModelOpt(key) match {
+      case Some(_) => throw new IllegalStateException("TODO: Struct types")
+      case None => "string"
+    }
 
-    case EnumType(key) => "string"
-    case ListType(typ) => s"list<${thriftType(typ)}>"
-    case SetType(typ) => s"set<${thriftType(typ)}>"
-    case MapType(k, v) => s"map<${thriftType(k)}, ${thriftType(v)}>"
+    case EnumType(key) => config.getEnumOpt(key) match {
+      case Some(_) => throw new IllegalStateException("TODO: Enum types")
+      case None => "string"
+    }
+    case ListType(typ) => s"list<${thriftType(typ, config)}>"
+    case SetType(typ) => s"set<${thriftType(typ, config)}>"
+    case MapType(k, v) => s"map<${thriftType(k, config)}, ${thriftType(v, config)}>"
 
     case JsonType => "string"
     case CodeType => "string"

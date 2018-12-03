@@ -7,11 +7,11 @@ import com.projectile.models.output.file.ScalaFile
 
 object ThriftModelSchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, model.pkg :+ "models" :+ "graphql", model.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, model.pkg :+ "graphql", model.className + "Schema")
 
     config.addCommonImport(file, "GraphQLContext")
 
-    file.addImport(model.pkg :+ "models", model.className)
+    file.addImport(model.pkg, model.className)
 
     file.addImport(Seq("sangria", "macros", "derive"), "AddFields")
     file.addImport(Seq("sangria", "macros", "derive"), "ObjectTypeName")

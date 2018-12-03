@@ -34,7 +34,7 @@ object QueryTranslations extends Logging {
 
     case NULL => UnitType
     case JAVA_OBJECT => ObjectType
-    case STRUCT => StructType
+    case STRUCT => StructType(n)
     case ARRAY => n match {
       case _ if n.startsWith("_int4") => ListType(IntegerType)
       case _ if n.startsWith("_int") => ListType(LongType)

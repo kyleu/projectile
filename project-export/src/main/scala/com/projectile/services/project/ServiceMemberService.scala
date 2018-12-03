@@ -1,7 +1,7 @@
 package com.projectile.services.project
 
 import com.projectile.models.input.Input
-import com.projectile.models.project.member.{ModelMember, ServiceMember}
+import com.projectile.models.project.member.ServiceMember
 import com.projectile.services.ProjectileService
 import com.projectile.util.JsonSerializers._
 

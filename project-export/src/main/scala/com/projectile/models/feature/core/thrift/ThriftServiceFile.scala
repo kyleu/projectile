@@ -2,17 +2,19 @@ package com.projectile.models.feature.core.thrift
 
 import com.projectile.models.export.ExportService
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.export.typ.FieldTypeAsScala
+import com.projectile.models.export.typ.{FieldTypeAsScala, FieldTypeImports}
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 import com.projectile.models.thrift.input.{ThriftFileHelper, ThriftMethodHelper}
 
 object ThriftServiceFile {
   def export(config: ExportConfiguration, svc: ExportService) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, dir = svc.pkg :+ "services", key = svc.className)
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = svc.pkg, key = svc.className)
 
     file.addImport(Seq("scala", "concurrent"), "Future")
-    file.addImport(svc.pkg :+ svc.key, "MethodPerEndpoint")
+    val thriftService = svc.pkg.dropRight(1) :+ svc.key
+
+    file.addImport(thriftService, "MethodPerEndpoint")
 
     config.addCommonImport(file, "TraceData")
     config.addCommonImport(file, "ThriftFutureUtils", "toScalaFuture")
@@ -35,11 +37,15 @@ object ThriftServiceFile {
 
   private[this] def addMethods(config: ExportConfiguration, file: ScalaFile, svc: ExportService) = {
     svc.methods.foreach { method =>
-      val args = method.args.map(a => ThriftFileHelper.declarationForField(a, config.enums)).mkString(", ")
+      val args = method.args.map(a => ThriftFileHelper.declarationForField(config, a)).mkString(", ")
+      method.args.foreach(_.addImport(config, file, svc.pkg))
       file.add()
       val s = FieldTypeAsScala.asScala(config, method.returnType)
       file.add(s"""def ${method.key}($args)(implicit td: TraceData): Future[$s] = trace("${method.key}") { _ =>""", 1)
       val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg, file)).mkString(", ")
+
+      FieldTypeImports.imports(config, method.returnType).foreach(pkg => file.addImport(pkg.init, pkg.last))
+
       file.add(s"svc.${method.key}($argsMapped)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
       file.add("}", -1)
     }

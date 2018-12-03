@@ -8,7 +8,7 @@ import com.projectile.models.project.member.EnumMember
 
 object ThriftEnumSchemaFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, enum.pkg :+ "models" :+ "graphql", enum.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, enum.pkg :+ "graphql", enum.className + "Schema")
 
     val t = enum.inputType match {
       case EnumMember.InputType.ThriftIntEnum => "Int"
@@ -18,7 +18,7 @@ object ThriftEnumSchemaFile {
 
     config.addCommonImport(file, "CommonSchema", s"derive${t}EnumeratumType")
 
-    file.addImport(enum.pkg :+ "models", enum.className)
+    file.addImport(enum.pkg, enum.className)
     file.addImport(Seq("sangria", "schema"), "EnumType")
 
     file.add(s"""object ${enum.className}Schema {""", 1)

@@ -2,13 +2,12 @@ package com.projectile.models.thrift.parse
 
 import com.projectile.models.export.ExportField
 import com.projectile.models.export.typ.FieldType
-import com.projectile.models.thrift.input.ThriftFileHelper
+import com.projectile.models.thrift.input.{ThriftFileHelper, ThriftInput}
 import com.projectile.models.thrift.schema.ThriftStructField
-import com.projectile.services.thrift.ThriftParseResult
 
 object ThriftFieldScalaHelper {
-  def getFromThrift(field: ThriftStructField, metadata: ThriftParseResult.Metadata) = {
-    val t = ThriftFileHelper.columnTypeFor(field.t, metadata)
+  def getFromThrift(field: ThriftStructField, input: ThriftInput) = {
+    val t = ThriftFileHelper.columnTypeFor(field.t, input)
     parse("t", field.name, t, field.required || field.value.isDefined)
   }
 
@@ -39,8 +38,14 @@ object ThriftFieldScalaHelper {
         s"$root.$name.map(x => x$mapped.toSet)"
       }
     case _ if FieldType.scalars.apply(t) => s"$root.$name"
-    case _ if required => s"$t.fromThrift($root.$name)"
-    case _ => s"$root.$name.map($t.fromThrift)"
+
+    case FieldType.EnumType(key) if required => s"$key.fromThrift($root.$name)"
+    case FieldType.EnumType(key) => s"$root.$name.map($key.fromThrift)"
+
+    case FieldType.StructType(key) if required => s"$key.fromThrift($root.$name)"
+    case FieldType.StructType(key) => s"$root.$name.map($key.fromThrift)"
+
+    case _ => throw new IllegalStateException(s"Unhandled type [${t.toString}")
   }
 
   private[this] def parseMapped(t: FieldType, ctx: String): String = t match {
@@ -48,6 +53,8 @@ object ThriftFieldScalaHelper {
     case FieldType.ListType(_) => "" // throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
     case _ if FieldType.scalars.apply(t) => ""
-    case x => s".map($x.fromThrift)"
+    case FieldType.EnumType(key) => s".map($key.fromThrift)"
+    case FieldType.StructType(key) => s".map($key.fromThrift)"
+    case _ => throw new IllegalStateException(s"Unhandled nested type [${t.toString}")
   }
 }

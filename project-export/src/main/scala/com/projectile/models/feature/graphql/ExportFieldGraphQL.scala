@@ -30,7 +30,10 @@ object ExportFieldGraphQL {
     case UuidType => "uuidType"
 
     case ObjectType => "StringType"
-    case StructType => "StringType"
+    case StructType(key) => config.getModelOpt(key) match {
+      case Some(_) => throw new IllegalStateException("TODO: Struct types")
+      case None => "StringType"
+    }
 
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"

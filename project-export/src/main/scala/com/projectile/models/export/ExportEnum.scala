@@ -20,7 +20,6 @@ case class ExportEnum(
     values: Seq[String],
     features: Set[EnumFeature] = Set.empty
 ) {
-
   def apply(m: EnumMember) = copy(
     pkg = m.pkg.toList,
     className = m.getOverride("className", ExportHelper.toClassName(ExportHelper.toIdentifier(m.key))),
@@ -34,6 +33,11 @@ case class ExportEnum(
       case x => v.substring(x + 1)
     }
     v -> ExportHelper.toClassName(ExportHelper.toIdentifier(newVal))
+  }
+
+  val modelPkg = pkg.lastOption match {
+    case Some("models") => pkg
+    case _ => "models" +: pkg
   }
 
   val propertyName = ExportHelper.toIdentifier(className)

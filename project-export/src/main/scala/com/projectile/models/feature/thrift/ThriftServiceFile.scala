@@ -41,7 +41,7 @@ object ThriftServiceFile {
   private[this] def writePk(config: ExportConfiguration, file: ThriftFile, pkFields: List[ExportField], retType: String) = pkFields match {
     case Nil => // noop
     case pkf :: Nil =>
-      val thriftType = ExportFieldThrift.thriftType(pkf.t)
+      val thriftType = ExportFieldThrift.thriftType(pkf.t, config)
       val thriftVisibility = if (pkf.notNull) { "required" } else { "optional" }
 
       file.add(s"$retType getByPrimaryKey(", 1)
