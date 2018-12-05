@@ -4,7 +4,6 @@ import better.files.File
 import com.projectile.models.graphql.input.{GraphQLInput, GraphQLOptions}
 import com.projectile.models.input.{InputSummary, InputTemplate}
 import com.projectile.services.config.ConfigService
-import com.projectile.services.graphql.GraphQLParseService
 import com.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._
 
@@ -29,7 +28,6 @@ object GraphQLInputService {
     val dir = cfg.inputDirectory / summ.key
 
     val pc = loadFile[GraphQLOptions](dir / fn, "GraphQL query files")
-    val files = pc.schema.map(cfg.workingDirectory / _.schema)
-    GraphQLParseService.loadGraphQLInput(files, GraphQLInput.fromSummary(summ, pc.schema.flatMap(_.queryFiles)))
+    GraphQLInput.fromSummary(summ, pc.schema)
   }
 }

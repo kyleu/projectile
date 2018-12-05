@@ -16,11 +16,18 @@
 
   <div id="input-detail">
     <div class="collection">
-      @if(input.files.isEmpty) {
-        <div class="collection-item">No GraphQL query files</div>
+      @if(input.schema.isEmpty) {
+        <div class="collection-item">No GraphQL schemas</div>
       }
-      @input.files.map { f =>
-        <div class="collection-item">@f</div>
+      @input.schema.map { f =>
+        <div class="collection-item">
+          <h6 title="@f.schema">@f.schemaClass</h6>
+          <ul>
+            @f.fileClasses.map { f =>
+              <li title="@f._2"><i class="fa @com.projectile.models.template.Icons.file"></i> @f._1</li>
+            }
+          </ul>
+        </div>
       }
       <div class="collection-item">
         <a class="btn theme" href="@controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
@@ -30,7 +37,7 @@
 
   <div id="input-document">
     <div class="collection">
-      <pre>@input.document.renderPretty</pre>
+      <pre>@input</pre>
     </div>
   </div>
 

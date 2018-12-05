@@ -10,12 +10,17 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
     val models = config.models.filter(_.features(ModelFeature.GraphQL))
     val services = config.services.filter(_.features(ServiceFeature.GraphQL))
+    val emptyString = "    Nil"
 
     val (sStart, sEnd) = "    // Start service methods" -> "    // End service methods"
     def serviceFieldsFor(s: String) = {
-      val newContent = services.map { s =>
-        s"    ${(s.pkg :+ "services" :+ s"${s.className}Schema").mkString(".")}.serviceFields"
-      }.sorted.mkString(" ++\n  ")
+      val newContent = if (services.isEmpty) {
+        emptyString
+      } else {
+        services.map { s =>
+          s"    ${(s.pkg :+ "services" :+ s"${s.className}Schema").mkString(".")}.serviceFields"
+        }.sorted.mkString(" ++\n  ")
+      }
       ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
     }
 
@@ -30,7 +35,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
     val (eStart, eEnd) = "    // Start enum query fields" -> "    // End enum query fields"
     def enumQueryFieldsFor(s: String) = {
       val newContent = if (!config.enums.exists(_.features(EnumFeature.GraphQL))) {
-        "    Seq.empty[Field[GraphQLContext, Unit]]"
+        emptyString
       } else {
         config.enums.filter(_.features(EnumFeature.GraphQL)).map { e =>
           s"    ${(config.applicationPackage ++ e.modelPackage).map(_ + ".").mkString}${e.className}Schema.queryFields"
@@ -41,17 +46,25 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
 
     val (qStart, qEnd) = "    // Start model query fields" -> "    // End model query fields"
     def modelQueryFieldsFor(s: String) = {
-      val newContent = models.map { m =>
-        s"    ${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.queryFields"
-      }.sorted.mkString(" ++\n  ")
+      val newContent = if (models.isEmpty) {
+        emptyString
+      } else {
+        models.map { m =>
+          s"    ${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.queryFields"
+        }.sorted.mkString(" ++\n  ")
+      }
       ExportHelper.replaceBetween(filename = filename, original = s, start = qStart, end = qEnd, newContent = newContent)
     }
 
     val (mStart, mEnd) = "    // Start model mutation fields" -> "    // End model mutation fields"
     def mutationFieldsFor(s: String) = {
-      val newContent = models.filter(_.pkFields.nonEmpty).map { m =>
-        s"    ${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.mutationFields"
-      }.sorted.mkString(" ++\n  ")
+      val newContent = if (models.isEmpty) {
+        emptyString
+      } else {
+        models.filter(_.pkFields.nonEmpty).map { m =>
+          s"    ${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.mutationFields"
+        }.sorted.mkString(" ++\n  ")
+      }
       ExportHelper.replaceBetween(filename = filename, original = s, start = mStart, end = mEnd, newContent = newContent)
     }
 

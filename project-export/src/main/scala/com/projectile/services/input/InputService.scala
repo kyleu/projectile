@@ -12,7 +12,7 @@ import com.projectile.util.JsonSerializers._
 class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory
 
-  def list() = dir.children.toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
+  def list() = dir.children.filter(_.isDirectory).toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
 
   def getSummary(key: String) = {
     val f = dir / key / s"input.json"

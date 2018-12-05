@@ -36,7 +36,7 @@ object TableFile {
     addFields(config, model, file)
     file.add()
 
-    if (model.pkFields.nonEmpty) {
+    if (model.pkFields.size > 1) {
       val pkProps = model.pkFields match {
         case h :: Nil => h.propertyName
         case x => "(" + x.map(_.propertyName).mkString(", ") + ")"
@@ -79,7 +79,7 @@ object TableFile {
     val pkKeys = model.pkFields.map(_.key)
     val aiKeys = model.pkColumns.filter(_.autoIncrement).map(_.name).flatMap(k => model.fields.find(_.key == k)).map(_.key)
     val extra = Seq(
-      if (pkKeys.contains(field.key)) { Some(", O.PrimaryKey") } else { None },
+      if (pkKeys.size == 1 && pkKeys.contains(field.key)) { Some(", O.PrimaryKey") } else { None },
       if (aiKeys.contains(field.key)) { Some(", O.AutoInc") } else { None }
     ).flatten.mkString
     file.add(s"""val ${field.propertyName} = column[$propType]("${field.key}"$extra)""")
