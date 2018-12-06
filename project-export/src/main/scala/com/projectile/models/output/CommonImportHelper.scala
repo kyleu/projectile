@@ -46,6 +46,7 @@ object CommonImportHelper {
       case "ThriftFutureUtils" => c.utilitiesPackage :+ "thrift"
       case "ThriftService" => c.utilitiesPackage :+ "thrift"
       case "ThriftServiceHelper" => c.utilitiesPackage :+ "thrift"
+      case "ThriftServiceRegistry" => c.utilitiesPackage :+ "thrift"
       case "TraceData" => c.utilitiesPackage :+ "tracing"
       case "TracingService" => c.utilitiesPackage :+ "tracing"
       case _ => throw new IllegalStateException(s"No common import available with key [$s]")

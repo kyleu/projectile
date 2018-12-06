@@ -15,6 +15,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       if (stringModels.isEmpty) {
         s
       } else {
+        val (sStart, sEnd) = "    // Start string searches" -> "    // End string searches"
         val stringFields = stringModels.map { m =>
           s"    val ${m.model.propertyName} = ${m.model.serviceReference}.searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>\n" ++
             s"      ${m.viewClass}(model, ${m.message})\n" +
@@ -22,7 +23,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
         }
         val stringFutures = stringModels.map(_.model.propertyName).mkString(", ")
         val newContent = stringFields.sorted.mkString("\n") + s"\n\n    val stringSearches = Seq[Future[Seq[Html]]]($stringFutures)"
-        ExportHelper.replaceBetween(filename = filename, original = s, start = "    // Start string searches", end = "    // End string searches", newContent = newContent)
+        ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
       }
     }
 
@@ -32,6 +33,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       if (intModels.isEmpty) {
         s
       } else {
+        val (sStart, sEnd) = "    // Start int searches" -> "    // End int searches"
         val intFields = intModels.map { m =>
           s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map { model =>\n" ++
             s"      ${m.viewClass}(model, ${m.message})\n" +
@@ -39,7 +41,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
         }
         val intFutures = intModels.map(_.model.propertyName).mkString(", ")
         val newContent = intFields.sorted.mkString("\n") + s"\n\n    val intSearches = Seq[Future[Seq[Html]]]($intFutures)"
-        ExportHelper.replaceBetween(filename = filename, original = s, start = "    // Start int searches", end = "    // End int searches", newContent = newContent)
+        ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
       }
     }
 
@@ -49,6 +51,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       if (uuidModels.isEmpty) {
         s
       } else {
+        val (sStart, sEnd) = "    // Start uuid searches" -> "    // End uuid searches"
         val uuidFields = uuidModels.map { m =>
           s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map { model =>\n" +
             s"      ${m.viewClass}(model, ${m.message})\n" +
@@ -56,7 +59,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
         }
         val uuidFutures = uuidModels.map(_.model.propertyName).mkString(", ")
         val newContent = uuidFields.sorted.mkString("\n") + s"\n\n    val uuidSearches = Seq[Future[Seq[Html]]]($uuidFutures)"
-        ExportHelper.replaceBetween(filename = filename, original = s, start = "    // Start uuid searches", end = "    // End uuid searches", newContent = newContent)
+        ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
       }
     }
 

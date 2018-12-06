@@ -2,7 +2,7 @@ package com.projectile.models.feature.audit
 
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.typ.FieldType
-import com.projectile.models.feature.controller.twirl.TwirlHelper
+import com.projectile.models.feature.controller.db.twirl.TwirlHelper
 import com.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.projectile.models.output.{ExportHelper, OutputPath}
 

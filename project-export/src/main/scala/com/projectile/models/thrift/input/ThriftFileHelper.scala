@@ -46,7 +46,7 @@ object ThriftFileHelper {
     case FieldType.StringType => "\"\""
     case FieldType.IntegerType => "0"
     case FieldType.LongType => "0L"
-    case FieldType.DoubleType => "0.0"
+    case FieldType.FloatType | FieldType.DoubleType => "0.0"
     case FieldType.EnumType(k) => config.getEnumOpt(k) match {
       case Some(e) => e.className + "." + ExportHelper.toClassName(e.values.head.indexOf(':') match {
         case -1 => e.values.head

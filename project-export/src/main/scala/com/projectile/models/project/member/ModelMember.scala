@@ -5,12 +5,12 @@ import com.projectile.models.feature.ModelFeature
 import com.projectile.util.JsonSerializers._
 
 object ModelMember {
-  sealed abstract class InputType(override val value: String) extends StringEnumEntry
+  sealed abstract class InputType(override val value: String, val isDatabase: Boolean) extends StringEnumEntry
 
   object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
-    case object PostgresTable extends InputType(value = "postgres-table")
-    case object PostgresView extends InputType(value = "postgres-view")
-    case object ThriftStruct extends InputType(value = "thrift-struct")
+    case object PostgresTable extends InputType(value = "postgres-table", isDatabase = true)
+    case object PostgresView extends InputType(value = "postgres-view", isDatabase = true)
+    case object ThriftStruct extends InputType(value = "thrift-struct", isDatabase = false)
 
     override val values = findValues
   }

@@ -36,9 +36,9 @@
             </tr>
           </thead>
           <tbody>
-            @svc.methods.map { f =>
+            @svc.methods.map { m =>
               <tr>
-                <td>@f</td>
+                <td>@m.signature</td>
               </tr>
             }
           </tbody>

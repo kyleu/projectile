@@ -1,7 +1,8 @@
-package com.projectile.models.feature.controller
+package com.projectile.models.feature.controller.db
 
-import com.projectile.models.export.{ExportEnum, ExportModel}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.export.{ExportEnum, ExportModel}
+import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.file.RoutesFile
 
 object RoutesFiles {
@@ -68,8 +69,15 @@ object RoutesFiles {
   }
 
   def export(config: ExportConfiguration) = {
-    val routesContent = config.packages.map {
-      case (p, ms, es, solo) => if (solo) {
+    val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
+    val packages = filtered.flatMap(_.pkg.headOption).distinct
+
+    val routesContent = packages.map { p =>
+      val ms = config.models.filter(_.pkg.headOption.contains(p))
+      val es = config.enums.filter(_.pkg.headOption.contains(p))
+      val solo = es.isEmpty && ms.size == 1
+
+      if (solo) {
         p -> routesContentFor(config, ms.head, solo = true)
       } else {
         p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(config, e)))

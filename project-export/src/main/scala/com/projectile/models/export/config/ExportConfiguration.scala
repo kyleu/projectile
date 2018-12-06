@@ -35,23 +35,4 @@ case class ExportConfiguration(
     case (p, c) if additional.isEmpty => f.addImport(p, c)
     case (p, c) => f.addImport((p :+ c) ++ additional.init, additional.last)
   }
-
-  lazy val packages = {
-    val (_, packageEnums) = enums.partition(_.pkg.isEmpty)
-    val enumPackages = packageEnums.groupBy(_.pkg.head).toSeq.sortBy(_._1)
-
-    val (_, packageModels) = models.partition(_.pkg.isEmpty)
-    val modelPackages = packageModels.groupBy(_.pkg.head).toSeq.sortBy(_._1)
-
-    val packages = (enumPackages.map(_._1) ++ modelPackages.map(_._1)).distinct
-
-    packages.map { p =>
-      val ms = modelPackages.filter(_._1 == p).flatMap(_._2)
-      val es = enumPackages.filter(_._1 == p).flatMap(_._2)
-
-      val solo = ms.size == 1 && es.isEmpty
-      (p, ms, es, solo)
-    }
-  }
-
 }

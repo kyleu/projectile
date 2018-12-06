@@ -26,9 +26,9 @@ object ThriftFieldScalaHelper {
     case FieldType.ListType(typ) =>
       val mapped = parseMapped(typ, "seq")
       if (required) {
-        s"$root.$name$mapped"
+        s"$root.$name$mapped.toList"
       } else {
-        s"$root.$name.map(x => x$mapped)"
+        s"$root.$name.map(x => x$mapped.toList)"
       }
     case FieldType.SetType(typ) =>
       val mapped = parseMapped(typ, "set")

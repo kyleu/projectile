@@ -1,4 +1,4 @@
-package com.projectile.models.feature.controller
+package com.projectile.models.feature.controller.db
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration

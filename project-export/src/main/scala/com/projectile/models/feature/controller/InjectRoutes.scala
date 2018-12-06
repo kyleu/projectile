@@ -1,7 +1,7 @@
 package com.projectile.models.feature.controller
 
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.feature.FeatureLogic
+import com.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.projectile.models.output.{ExportHelper, OutputPath}
 
 object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource, filename = "routes") {
@@ -11,7 +11,8 @@ object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource
   override def dir(config: ExportConfiguration) = Nil
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
-    val packages = config.packages.map(_._1)
+    val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
+    val packages = filtered.flatMap(_.pkg.headOption).distinct
 
     def routeFor(pkg: String) = {
       val detailUrl = s"/admin/$pkg"

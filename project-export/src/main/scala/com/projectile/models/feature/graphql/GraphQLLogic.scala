@@ -2,7 +2,7 @@ package com.projectile.models.feature.graphql
 
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.graphql.db.{EnumSchemaFile, GraphQLQueryFiles, SchemaFile}
-import com.projectile.models.feature.graphql.thrift.{ThriftEnumSchemaFile, ThriftModelSchemaFile}
+import com.projectile.models.feature.graphql.thrift.{ThriftEnumSchemaFile, ThriftModelSchemaFile, ThriftServiceSchemaFile}
 import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
 import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 
@@ -24,9 +24,9 @@ object GraphQLLogic extends FeatureLogic {
       }
     }
 
-    val services = config.services.filter(_.features(ServiceFeature.GraphQL)).flatMap { model =>
-      model.inputType match {
-        case ServiceMember.InputType.ThriftService => Nil
+    val services = config.services.filter(_.features(ServiceFeature.GraphQL)).flatMap { service =>
+      service.inputType match {
+        case ServiceMember.InputType.ThriftService => Seq(ThriftServiceSchemaFile.export(config, service).rendered)
       }
     }
 

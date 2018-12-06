@@ -2,7 +2,6 @@ package com.projectile.models.thrift.input
 
 import com.projectile.models.export.ExportField
 import com.projectile.models.export.typ.FieldType
-import com.projectile.models.output.file.ScalaFile
 
 object ThriftMethodHelper {
   def getReturnMapping(t: FieldType): String = t match {
@@ -13,7 +12,7 @@ object ThriftMethodHelper {
     }
     case FieldType.ListType(typ) => getReturnSubMapping(typ) match {
       case r if r.isEmpty => ""
-      case r => s".map(_.map($r))"
+      case r => s".map(_.map($r).toList)"
     }
     case FieldType.SetType(typ) => getReturnSubMapping(typ) match {
       case r if r.isEmpty => ".map(_.toSet)"
@@ -25,7 +24,7 @@ object ThriftMethodHelper {
     case _ => throw new IllegalStateException(s"Unhandled return type [${t.toString}")
   }
 
-  def getArgCall(field: ExportField, file: ScalaFile) = parse(field.propertyName, field.t, field.notNull)
+  def getArgCall(field: ExportField) = parse(field.propertyName, field.t, field.notNull)
 
   private[this] def getReturnSubMapping(t: FieldType): String = t match {
     case _ if FieldType.scalars(t) => ""

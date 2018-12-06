@@ -1,4 +1,4 @@
-package com.projectile.models.feature.controller.twirl
+package com.projectile.models.feature.controller.db.twirl
 
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration

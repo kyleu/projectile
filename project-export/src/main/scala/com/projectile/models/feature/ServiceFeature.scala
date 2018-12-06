@@ -24,6 +24,10 @@ object ServiceFeature extends StringEnum[ServiceFeature] with StringCirceEnum[Se
     value = "graphql", title = "GraphQL", description = "Creates a Sangria GraphQL schema that exposes this service", dependsOn = Set(ProjectFeature.GraphQL)
   )
 
+  case object Controller extends ServiceFeature(
+    value = "controller", title = "Controller", description = "Creates a Play Framework controller for this service", dependsOn = Set(ProjectFeature.Controller)
+  )
+
   override val values = findValues
   val set = values.toSet
 }

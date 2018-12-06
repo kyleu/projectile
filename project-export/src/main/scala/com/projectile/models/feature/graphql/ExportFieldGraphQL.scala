@@ -6,7 +6,7 @@ import com.projectile.models.export.typ.FieldType._
 
 object ExportFieldGraphQL {
   private[this] def graphQLType(config: ExportConfiguration, field: ExportField): String = field.t match {
-    case UnitType => "UnitType"
+    case UnitType => "StringType"
 
     case StringType => "StringType"
     case EncryptedStringType => "StringType"

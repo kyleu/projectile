@@ -21,11 +21,10 @@ object ThriftModelSchemaFile {
     file.addImport(Seq("sangria", "schema"), "_")
     file.addImport(Seq("sangria", "marshalling", "circe"), "_")
 
+    ThriftSchemaInputHelper.addImports(pkg = model.pkg, types = model.fields.map(_.t), config = config, file = file)
     ThriftSchemaInputHelper.addInputImports(pkg = model.pkg, types = model.fields.map(_.t), config = config, file = file)
 
     file.add(s"""object ${model.className}Schema {""", 1)
-
-    file.add("/*")
 
     val deriveInput = s"deriveInputObjectType[${model.className}]"
     file.add(s"implicit lazy val ${model.propertyName}InputType: InputType[${model.className}] = $deriveInput(", 1)
@@ -33,7 +32,7 @@ object ThriftModelSchemaFile {
     file.add(")", -1)
     file.add()
 
-    file.add(s"implicit lazy val ${model.className}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
+    file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
     file.add(s"""ObjectTypeName("Thrift${model.className}"),""")
     file.add(s"AddFields(Field(", 1)
     file.add("""name = "toString",""")
@@ -41,8 +40,6 @@ object ThriftModelSchemaFile {
     file.add("resolve = c => c.value.toString")
     file.add("))", -1)
     file.add(")", -1)
-
-    file.add("*/")
 
     file.add("}", -1)
 
