@@ -8,6 +8,8 @@ import com.projectile.models.input.{InputSummary, InputTemplate}
 import com.projectile.services.config.ConfigService
 import com.projectile.util.JsonSerializers._
 
+import scala.util.control.NonFatal
+
 object PostgresInputService {
   private[this] val fn = "dbconn.json"
 
@@ -59,7 +61,11 @@ object PostgresInputService {
     def loadDir[A: Decoder](k: String) = {
       val d = dir / k
       if (d.exists && d.isDirectory && d.isReadable) {
-        d.children.map(f => loadFile[A](f, k)).toList
+        d.children.map(f => try {
+          loadFile[A](f, k)
+        } catch {
+          case NonFatal(x) => throw new IllegalStateException(s"Error loading postgres file [${f.pathAsString}]", x)
+        }).toList
       } else {
         Nil
       }

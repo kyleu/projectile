@@ -52,7 +52,7 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} models"))
       case _ =>
-        val orig = i.exportModel(key)
+        val orig = i.exportModel(inputKey)
         val it = ModelMember.InputType.withValue(inputType)
         val m = ModelMember(input = input, pkg = orig.pkg, inputType = it, key = inputKey, features = p.modelFeatures.toSet)
         projectile.saveModelMembers(key, Seq(m))

@@ -20,7 +20,7 @@ object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource
       s"->          $detailUrl $detailWs $pkg.Routes"
     }
 
-    val newContent = packages.map(routeFor).mkString("\n")
+    val newContent = packages.sorted.map(routeFor).mkString("\n")
     ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
   }
 }

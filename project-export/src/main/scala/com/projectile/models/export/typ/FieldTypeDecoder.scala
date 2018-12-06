@@ -4,11 +4,9 @@ import com.projectile.models.export.typ.FieldType._
 import com.projectile.util.JsonSerializers._
 import io.circe.HCursor
 
-object FieldTypeDecoder {
-  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(
-    c.downField("key").as[String].right.get
-  ))
+import scala.util.control.NonFatal
 
+object FieldTypeDecoder {
   private[this] val listTypeDecoder: Decoder[ListType] = (c: HCursor) => Right(ListType(
     decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]).right.get
   ))
@@ -22,11 +20,15 @@ object FieldTypeDecoder {
     decodeFieldType.apply(c.downField("v").asInstanceOf[HCursor]).right.get
   ))
 
+  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(
+    c.downField("key").as[String].right.get
+  ))
+
   private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(
     c.downField("key").as[String].right.get
   ))
 
-  implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => {
+  implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => try {
     val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute.")))
     t match {
       case StringType.value => Right(StringType)
@@ -64,5 +66,7 @@ object FieldTypeDecoder {
 
       case ByteArrayType.value => Right(ByteArrayType)
     }
+  } catch {
+    case NonFatal(x) => throw new IllegalStateException("Error parsing: " + c.value.spaces2, x)
   }
 }

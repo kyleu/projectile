@@ -14,7 +14,8 @@ object FeatureLogic {
 
     def inject(config: ExportConfiguration, markers: Map[String, Seq[String]], projectRoot: File, info: String => Unit, debug: String => Unit) = {
       val projectPath = projectRoot / config.project.getPath(path)
-      val f = projectPath / dir(config).mkString("/") / filename
+      val d = dir(config).mkString("/")
+      val f = projectPath / d / filename
 
       if (f.isRegularFile && f.isReadable) {
         val (status, newContent) = try {

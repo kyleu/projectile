@@ -36,7 +36,12 @@ case class Project(
 
   def getPath(p: OutputPath): String = p match {
     case OutputPath.Root => paths.getOrElse(p, template.path(p))
-    case _ => getPath(OutputPath.Root) + paths.getOrElse(p, template.path(p))
+    case _ =>
+      val r = getPath(OutputPath.Root) match {
+        case x if x.endsWith("/") => x
+        case x => x + "/"
+      }
+      r + paths.getOrElse(p, template.path(p))
   }
 
   def getPackage(p: OutputPackage) = packages.getOrElse(p, p.defaultVal)
