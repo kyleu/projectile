@@ -27,11 +27,15 @@ case class ExportConfiguration(
   val tagsPackage = systemPackage ++ project.getPackage(OutputPackage.Tags)
   val utilitiesPackage = systemPackage ++ project.getPackage(OutputPackage.Utils)
 
-  def getEnum(k: String) = getEnumOpt(k).getOrElse(throw new IllegalStateException(s"No enum available with name [$k]."))
   def getEnumOpt(k: String) = enums.find(e => e.key == k || e.propertyName == k || e.className == k)
+  def getEnum(k: String) = getEnumOpt(k).getOrElse {
+    throw new IllegalStateException(s"No enum available with name [$k] among candidates [${enums.map(_.key).mkString(", ")}]")
+  }
 
-  def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with name [$k]."))
   def getModelOpt(k: String) = models.find(m => m.key == k || m.propertyName == k || m.className == k)
+  def getModel(k: String) = getModelOpt(k).getOrElse {
+    throw new IllegalStateException(s"No model available with name [$k] among candidates [${models.map(_.key).mkString(", ")}]")
+  }
 
   def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, f, s) match {
     case (p, c) if additional.isEmpty => f.addImport(p, c)

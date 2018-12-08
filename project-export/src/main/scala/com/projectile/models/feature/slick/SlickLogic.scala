@@ -9,7 +9,7 @@ object SlickLogic extends FeatureLogic {
       Seq(TableFile.export(config, model).rendered)
     }
 
-    val enums = config.enums.filter(_.features(EnumFeature.Slick)).flatMap { enum =>
+    val enums = config.enums.filter(_.inputType.isDatabase).filter(_.features(EnumFeature.Slick)).flatMap { enum =>
       Seq(ColumnTypeFile.export(config, enum).rendered)
     }
 

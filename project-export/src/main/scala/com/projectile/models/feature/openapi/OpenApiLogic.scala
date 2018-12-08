@@ -11,7 +11,7 @@ object OpenApiLogic extends FeatureLogic {
       Seq(ModelOpenApiSchemaFile.export(config, model).rendered, ModelOpenApiPathsFile.export(model, config.enums, solo = solo).rendered)
     }
 
-    val enums = config.enums.filter(_.features(EnumFeature.Controller)).flatMap { enum =>
+    val enums = config.enums.filter(_.inputType.isDatabase).filter(_.features(EnumFeature.Controller)).flatMap { enum =>
       Seq(EnumOpenApiSchemaFile.export(config, enum).rendered, EnumOpenApiPathsFile.export(config, enum).rendered)
     }
 

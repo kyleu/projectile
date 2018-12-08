@@ -57,7 +57,7 @@ object Server {
       case x => (assemblyMergeStrategy in assembly).value(x)
     },
     fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
-    mainClass in assembly := Some("com.projectile.ProjectileCLI"),
+    mainClass in assembly := Some("CLI"),
 
     // Code Quality
     scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/RoutesPrefix.scala", ".*/*ReverseRoutes.scala", ".*/*.template.scala"),

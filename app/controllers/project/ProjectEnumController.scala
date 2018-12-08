@@ -2,6 +2,7 @@ package controllers.project
 
 import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.EnumFeature
+import com.projectile.models.graphql.input.GraphQLInput
 import com.projectile.models.project.member
 import com.projectile.models.project.member.EnumMember.InputType
 import com.projectile.models.project.member.{EnumMember, MemberOverride}
@@ -33,6 +34,7 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
           val i = ti.intEnums.map(e => (e.key, InputType.ThriftIntEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
           val s = ti.stringEnums.map(e => (e.key, InputType.ThriftStringEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
           i ++ s
+        case gi: GraphQLInput => gi.exportEnums.map(e => (e.key, e.inputType.value, p.enums.exists(x => x.input == gi.key && x.key == e.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
     }
@@ -52,9 +54,8 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} enums"))
       case _ =>
-        val orig = i.exportModels.find(_.key == key).getOrElse(throw new IllegalStateException(s"Cannot find model [$key] in input [$input]"))
-        val it = EnumMember.InputType.withValue(inputType)
-        val m = EnumMember(input = input, pkg = orig.pkg, inputType = it, key = inputKey, features = p.enumFeatures.toSet)
+        val orig = i.exportEnum(inputKey)
+        val m = EnumMember(input = input, pkg = orig.pkg, inputType = orig.inputType, key = inputKey, features = p.enumFeatures.toSet)
         projectile.saveEnumMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added enum [${m.key}]"))

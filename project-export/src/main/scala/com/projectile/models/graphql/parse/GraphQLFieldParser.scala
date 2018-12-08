@@ -6,8 +6,8 @@ import sangria.ast._
 import sangria.schema.Schema
 
 object GraphQLFieldParser {
-  def getField(schema: Schema[_, _], name: String, t: Type, idx: Int, defaultValue: Option[Value]) = {
-    val (required, newT) = GraphQLTypeParser.getType(schema, t)
+  def getField(ctx: String, schema: Schema[_, _], doc: Document, name: String, t: Type, idx: Int, defaultValue: Option[Value]) = {
+    val (required, newT) = GraphQLTypeParser.getType(s"$ctx($name: ${t.renderCompact})", schema, doc, t)
     ExportField(
       key = name,
       propertyName = ExportHelper.toIdentifier(name),

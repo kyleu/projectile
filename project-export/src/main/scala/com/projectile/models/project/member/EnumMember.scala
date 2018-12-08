@@ -5,7 +5,9 @@ import com.projectile.models.feature.EnumFeature
 import com.projectile.util.JsonSerializers._
 
 object EnumMember {
-  sealed abstract class InputType(override val value: String, val isDatabase: Boolean = false, val isGraphQL: Boolean = false) extends StringEnumEntry
+  sealed abstract class InputType(override val value: String, val isDatabase: Boolean = false, val isGraphQL: Boolean = false) extends StringEnumEntry {
+    override val toString = value
+  }
 
   object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
     case object PostgresEnum extends InputType(value = "postgres-enum", isDatabase = true)

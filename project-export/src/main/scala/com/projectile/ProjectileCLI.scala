@@ -1,29 +1,18 @@
 package com.projectile
 
-import com.projectile.models.cli.{CommandLineAction, CommandLineOutput}
+import com.projectile.models.cli.CommandLineAction
 import com.projectile.services.ProjectileService
 import com.projectile.services.config.ConfigService
+import com.projectile.util.Logging
 import com.projectile.util.Version.{projectId, projectName, version}
-import com.projectile.util.{Logging, Version}
 import org.backuity.clist.Cli
 
 object ProjectileCLI extends Logging {
-  def main(args: Array[String]): Unit = {
-    val startMs = System.currentTimeMillis
-    val result = if (args.headOption.contains("batch")) {
-      runBatch(args).flatMap(_._2)
-    } else {
-      runArgs(args).toSeq
-    }
-    log.info(s"${Version.projectName} completed successfully in [${System.currentTimeMillis - startMs}ms]")
-    result.foreach(CommandLineOutput.logResponse)
-  }
-
   def runArgs(args: Seq[String]) = parse(args).map { c =>
     new ProjectileService(new ConfigService(c.dir)).process(c.toCommand, c.verbose)
   }
 
-  private[this] def runBatch(args: Array[String]) = {
+  def runBatch(args: Array[String]) = {
     if (args.length != 2) {
       throw new IllegalStateException("When calling batch, please pass only a single path as the argument.")
     }

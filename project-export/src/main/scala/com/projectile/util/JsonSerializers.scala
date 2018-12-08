@@ -41,7 +41,7 @@ object JsonSerializers {
   def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = try {
     io.circe.jackson.decode[A](s)
   } catch {
-    case NonFatal(x) => throw new IllegalStateException(s"Error parsing json (${x.getMessage}): $s", x)
+    case NonFatal(x) => throw new IllegalStateException(s"Error [${x.getMessage}] parsing json: $s", x)
   }
   def printJson(j: Json) = io.circe.jackson.jacksonPrint(j)
 

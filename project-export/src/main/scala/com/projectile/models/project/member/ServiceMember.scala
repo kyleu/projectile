@@ -5,7 +5,9 @@ import com.projectile.util.JsonSerializers._
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 
 object ServiceMember {
-  sealed abstract class InputType(override val value: String) extends StringEnumEntry
+  sealed abstract class InputType(override val value: String) extends StringEnumEntry {
+    override val toString = value
+  }
 
   object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
     case object ThriftService extends InputType(value = "thrift-service")

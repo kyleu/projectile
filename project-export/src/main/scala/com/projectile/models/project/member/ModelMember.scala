@@ -5,7 +5,9 @@ import com.projectile.models.feature.ModelFeature
 import com.projectile.util.JsonSerializers._
 
 object ModelMember {
-  sealed abstract class InputType(override val value: String, val isDatabase: Boolean = false, val isGraphQL: Boolean = false) extends StringEnumEntry
+  sealed abstract class InputType(override val value: String, val isDatabase: Boolean = false, val isGraphQL: Boolean = false) extends StringEnumEntry {
+    override val toString = value
+  }
 
   object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
     case object PostgresTable extends InputType(value = "postgres-table", isDatabase = true)

@@ -1,6 +1,6 @@
 package com.projectile.models.graphql.input
 
-import com.projectile.models.export.{ExportEnum, ExportService}
+import com.projectile.models.export.ExportService
 import com.projectile.models.graphql.input.GraphQLOptions.SchemaQueries
 import com.projectile.models.graphql.parse.GraphQLDocumentParser
 import com.projectile.models.input.{Input, InputSummary, InputTemplate}
@@ -26,17 +26,21 @@ case class GraphQLInput(
     throw new IllegalStateException("Cannot load query document []")
   })).toMap
 
-  lazy val parsedModels = parsedDocuments.map {
-    case (k, doc) => k -> GraphQLDocumentParser.parse(parsedSchema(k), doc)
+  lazy val parsedObjects = parsedDocuments.flatMap {
+    case (k, doc) => GraphQLDocumentParser.parse(parsedSchema(k), doc)
+  }.toSeq.distinct
+
+  override lazy val exportEnums = parsedObjects.collect { case Left(x) => x }
+  override def exportEnum(k: String) = exportEnums.find(_.key == k).getOrElse {
+    throw new IllegalStateException(s"No enum defined with key [$k] among candidates [${exportEnums.map(_.key).mkString(", ")}]")
+  }
+
+  override lazy val exportModels = parsedObjects.collect { case Right(x) => x }
+  override def exportModel(k: String) = exportModels.find(_.key == k).getOrElse {
+    throw new IllegalStateException(s"No model defined with key [$k] among candidates [${exportModels.map(_.key).mkString(", ")}]")
   }
 
   override def template = InputTemplate.GraphQL
-
-  override lazy val exportEnums = Seq.empty[ExportEnum]
-  override def exportEnum(k: String) = exportEnums.find(_.key == k).getOrElse(throw new IllegalStateException(s"No enum defined with key [$k]"))
-
-  override lazy val exportModels = parsedModels.flatMap(_._2).toSeq
-  override def exportModel(k: String) = exportModels.find(_.key == k).getOrElse(throw new IllegalStateException(s"No model defined with key [$k]"))
 
   override def exportServices = Seq.empty[ExportService]
   override def exportService(k: String) = exportServices.find(_.key == k).getOrElse(throw new IllegalStateException(s"No service defined with key [$k]"))

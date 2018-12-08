@@ -9,7 +9,7 @@ object DoobieLogic extends FeatureLogic {
       Seq(DoobieFile.export(config, model).rendered, DoobieTestsFile.export(config, model).rendered)
     }
 
-    val enums = config.enums.filter(_.features(EnumFeature.Doobie)).flatMap { enum =>
+    val enums = config.enums.filter(_.inputType.isDatabase).filter(_.features(EnumFeature.Doobie)).flatMap { enum =>
       Seq(EnumDoobieFile.export(config, enum).rendered)
     }
 
