@@ -1,5 +1,6 @@
 package controllers
 
+import com.projectile.util.JsonSerializers.printJson
 import util.web.{ControllerUtils, PlayServerHelper}
 
 import scala.concurrent.Future
@@ -40,7 +41,7 @@ class HomeController @javax.inject.Inject() () extends BaseController {
 
   def testbed = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    Future.successful(Ok(views.html.file.result(projectile, "Testbed", projectile.testbed().json.spaces2, System.currentTimeMillis - startMs)))
+    Future.successful(Ok(views.html.file.result(projectile, "Testbed", printJson(projectile.testbed().json), System.currentTimeMillis - startMs)))
   }
 
   def refreshAll = Action.async { implicit request =>

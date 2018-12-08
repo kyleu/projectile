@@ -10,6 +10,7 @@ import io.circe.java8.time._
 import shapeless.Lazy
 
 import scala.language.implicitConversions
+import scala.util.control.NonFatal
 
 object JsonSerializers {
   type Decoder[A] = io.circe.Decoder[A]
@@ -34,8 +35,20 @@ object JsonSerializers {
   def deriveFor[A](implicit decode: Lazy[ConfiguredDecoder[A]]) = io.circe.generic.extras.semiauto.deriveFor[A]
 
   implicit def encoderOps[A](a: A): io.circe.syntax.EncoderOps[A] = io.circe.syntax.EncoderOps[A](a)
-  def parseJson(s: String) = io.circe.parser.parse(s)
-  def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
+
+  // Jackson
+  def parseJson(s: String) = io.circe.jackson.parse(s)
+  def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = try {
+    io.circe.jackson.decode[A](s)
+  } catch {
+    case NonFatal(x) => throw new IllegalStateException(s"Error parsing json (${x.getMessage}): $s", x)
+  }
+  def printJson(j: Json) = io.circe.jackson.jacksonPrint(j)
+
+  // Jawn
+  // def parseJson(s: String) = io.circe.parser.parse(s)
+  // def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
+  // def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
 
   def extract[T: Decoder](json: Json) = json.as[T] match {
     case Right(u) => u

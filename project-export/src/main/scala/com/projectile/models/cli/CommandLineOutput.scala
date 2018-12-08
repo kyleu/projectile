@@ -5,6 +5,7 @@ import com.projectile.models.command.ProjectileResponse._
 import com.projectile.models.input.{Input, InputSummary}
 import com.projectile.models.project.{Project, ProjectSummary}
 import com.projectile.util.Logging
+import com.projectile.util.JsonSerializers.printJson
 
 object CommandLineOutput extends Logging {
   def logResponse(r: ProjectileResponse) = logFor(r).foreach(s => log.info(s))
@@ -12,7 +13,7 @@ object CommandLineOutput extends Logging {
   def logFor(r: ProjectileResponse): Seq[String] = r match {
     case OK => Seq("Success: OK")
     case Error(msg) => Seq(s"Error: $msg")
-    case JsonResponse(json) => Seq(json.spaces2)
+    case JsonResponse(json) => Seq(printJson(json))
 
     case InputDetail(input) => Seq(logForInput(input))
     case InputList(inputs) => inputs.map(logForInputSummary)

@@ -25,7 +25,7 @@ class EnumMemberService(val svc: ProjectileService) {
 
     val f = fileFor(p, member.key)
     f.createFileIfNotExists(createParents = true)
-    val content = member.asJson.spaces2
+    val content = printJson(member.asJson)
     f.overwrite(content)
     m
   }

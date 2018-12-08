@@ -24,7 +24,7 @@ class ModelMemberService(val svc: ProjectileService) {
 
     val f = fileFor(p, member.key)
     f.createFileIfNotExists(createParents = true)
-    f.overwrite(member.asJson.spaces2)
+    f.overwrite(printJson(member.asJson))
     m
   }
 }

@@ -1,5 +1,6 @@
 package com.projectile.util
 
+import com.projectile.util.JsonSerializers.printJson
 import io.circe.Json
 
 import scala.util.control.NonFatal
@@ -24,7 +25,7 @@ class JsonIncludeParser(loadJson: String => Json) {
           val incKey = path + k.drop(includeKey.length)
           v.asString match {
             case Some("*") => parseWithIncludes(incKey).asObject.getOrElse(throw new IllegalStateException(s"File [$incKey] must be a json object.")).toList
-            case _ => throw new IllegalStateException("Invalid IncKey value: " + v.spaces2)
+            case _ => throw new IllegalStateException("Invalid IncKey value: " + printJson(v))
           }
         case (k, v) => v.asString match {
           case Some(s) if s.startsWith(includeKey) =>

@@ -11,7 +11,7 @@ object SummaryInputService {
     val dir = cfg.inputDirectory / summary.key
     dir.createDirectories()
 
-    val summ = summary.asJson.spaces2
+    val summ = printJson(summary.asJson)
     (dir / fn).overwrite(summ)
 
     dir

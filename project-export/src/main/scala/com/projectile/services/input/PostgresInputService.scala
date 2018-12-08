@@ -14,32 +14,32 @@ object PostgresInputService {
   private[this] val fn = "dbconn.json"
 
   def savePostgresDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
-    (dir / fn).overwrite(PostgresConnection().asJson.spaces2)
+    (dir / fn).overwrite(printJson(PostgresConnection().asJson))
   }
 
   def savePostgres(cfg: ConfigService, pgi: PostgresInput) = {
     val summ = pgi.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Postgres).transform
     val dir = SummaryInputService.saveSummary(cfg, summ)
 
-    val dbconn = pgi.into[PostgresConnection].transform.asJson.spaces2
+    val dbconn = printJson(pgi.into[PostgresConnection].transform.asJson)
     (dir / fn).overwrite(dbconn)
 
     if (pgi.enums.nonEmpty) {
       val enumDir = dir / "enum"
       enumDir.createDirectories()
-      pgi.enums.foreach(e => (enumDir / s"${e.key}.json").overwrite(e.asJson.spaces2))
+      pgi.enums.foreach(e => (enumDir / s"${e.key}.json").overwrite(printJson(e.asJson)))
     }
 
     if (pgi.tables.nonEmpty) {
       val tableDir = dir / "table"
       tableDir.createDirectories()
-      pgi.tables.foreach(t => (tableDir / s"${t.name}.json").overwrite(t.asJson.spaces2))
+      pgi.tables.foreach(t => (tableDir / s"${t.name}.json").overwrite(printJson(t.asJson)))
     }
 
     if (pgi.views.nonEmpty) {
       val viewDir = dir / "view"
       viewDir.createDirectories()
-      pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(v.asJson.spaces2))
+      pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(printJson(v.asJson)))
     }
 
     pgi

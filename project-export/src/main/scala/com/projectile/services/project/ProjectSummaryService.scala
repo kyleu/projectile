@@ -29,7 +29,7 @@ class ProjectSummaryService(val cfg: ConfigService) {
   def add(p: ProjectSummary) = {
     val f = dir / p.key / fn
     f.createFileIfNotExists(createParents = true)
-    f.overwrite(p.asJson.spaces2)
+    f.overwrite(printJson(p.asJson))
     p.into[Project].transform
   }
 }

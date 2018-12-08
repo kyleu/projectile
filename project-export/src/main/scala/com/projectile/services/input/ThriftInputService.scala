@@ -12,14 +12,14 @@ object ThriftInputService {
   private[this] val fn = "thrift-files.json"
 
   def saveThriftDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
-    (dir / fn).overwrite(ThriftOptions().asJson.spaces2)
+    (dir / fn).overwrite(printJson(ThriftOptions().asJson))
   }
 
   def saveThrift(cfg: ConfigService, ti: ThriftInput) = {
     val summ = ti.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Thrift).transform
     val dir = SummaryInputService.saveSummary(cfg, summ)
 
-    val options = ti.into[ThriftOptions].transform.asJson.spaces2
+    val options = printJson(ti.into[ThriftOptions].transform.asJson)
     (dir / fn).overwrite(options)
 
     ti
