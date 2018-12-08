@@ -66,7 +66,7 @@ object SchemaHelper {
       val comma = if (model.indexedFields.lastOption.contains(field)) { "" } else { "," }
       val listType = s"ListType(${model.propertyName}Type)"
       val arg = s"${model.propertyName}${field.className}Arg"
-      val argPull = if (field.notNull) {
+      val argPull = if (field.required) {
         s"c.arg($arg)"
       } else {
         s"""c.arg($arg).getOrElse(throw new IllegalStateException("No [${field.propertyName}] provided"))"""

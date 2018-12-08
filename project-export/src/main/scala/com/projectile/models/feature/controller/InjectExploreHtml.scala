@@ -6,7 +6,7 @@ import com.projectile.models.output.{ExportHelper, OutputPath}
 import com.projectile.models.feature.{FeatureLogic, ModelFeature}
 
 object InjectExploreHtml extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "explore.scala.html") {
-  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "views" :+ "admin" :+ "explore"
+  override def dir(config: ExportConfiguration) = config.viewPackage :+ "admin" :+ "explore"
 
   private[this] val (sStart, sEnd) = "    <!-- Start model list routes -->" -> "    <!-- End model list routes -->"
 

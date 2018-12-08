@@ -21,6 +21,10 @@ object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource
     }
 
     val newContent = packages.sorted.map(routeFor).mkString("\n")
-    ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
+    if (newContent.trim.isEmpty) {
+      original
+    } else {
+      ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
+    }
   }
 }

@@ -24,7 +24,7 @@ object ThriftMethodHelper {
     case _ => throw new IllegalStateException(s"Unhandled return type [${t.toString}")
   }
 
-  def getArgCall(field: ExportField) = parse(field.propertyName, field.t, field.notNull)
+  def getArgCall(field: ExportField) = parse(field.propertyName, field.t, field.required)
 
   private[this] def getReturnSubMapping(t: FieldType): String = t match {
     case _ if FieldType.scalars(t) => ""

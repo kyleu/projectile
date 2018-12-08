@@ -28,7 +28,7 @@ object TwirlDataRowFile {
             }
 
             file.add(s"@model.${c.propertyName}")
-            if (c.notNull) {
+            if (c.required) {
               file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${c.propertyName})">""", 1)
               file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
               file.add("</a>", -1)

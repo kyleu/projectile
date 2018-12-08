@@ -10,14 +10,25 @@ object QueriesHelper {
     "name" -> "nameArg"
   )
 
+  def classNameForSqlType(t: FieldType, config: ExportConfiguration): String = t match {
+    case FieldType.ListType(typ) => typ match {
+      case FieldType.IntegerType => "IntArrayType"
+      case FieldType.LongType => "LongArrayType"
+      case FieldType.UuidType => "UuidArrayType"
+      case _ => "StringArrayType"
+    }
+    case FieldType.EnumType(k) => s"EnumType(${config.getEnum(k).className})"
+    case _ => t.className
+  }
+
   def fromRow(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     file.add(s"override def fromRow(row: Row) = ${model.className}(", 1)
     model.fields.foreach { field =>
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
-      if (field.notNull) {
-        file.add(s"""${field.propertyName} = ${field.classNameForSqlType(config)}(row, "${field.key}")$comma""")
+      if (field.required) {
+        file.add(s"""${field.propertyName} = ${classNameForSqlType(field.t, config)}(row, "${field.key}")$comma""")
       } else {
-        file.add(s"""${field.propertyName} = ${field.classNameForSqlType(config)}.opt(row, "${field.key}")$comma""")
+        file.add(s"""${field.propertyName} = ${classNameForSqlType(field.t, config)}.opt(row, "${field.key}")$comma""")
       }
     }
     file.add(")", -1)

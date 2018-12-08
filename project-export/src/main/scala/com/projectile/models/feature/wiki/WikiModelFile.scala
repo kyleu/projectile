@@ -14,7 +14,7 @@ object WikiModelFile {
     MarkdownFile.table(file, Seq(
       ('l', 30, "Name"), ('l', 20, "Type"), ('l', 8, "NotNull"), ('l', 8, "Unique"), ('l', 10, "Indexed"), ('l', 20, "Default")
     ), model.fields.map { f =>
-      Seq(f.key, f.t.toString, f.notNull.toString, f.unique.toString, f.indexed.toString, f.defaultValue.getOrElse(""))
+      Seq(f.key, f.t.toString, f.required.toString, f.unique.toString, f.indexed.toString, f.defaultValue.getOrElse(""))
     })
     file.add()
 

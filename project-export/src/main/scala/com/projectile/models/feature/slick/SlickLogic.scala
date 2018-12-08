@@ -5,7 +5,7 @@ import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
 object SlickLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
-    val models = config.models.filter(_.features(ModelFeature.Slick)).flatMap { model =>
+    val models = config.models.filter(_.inputType.isDatabase).filter(_.features(ModelFeature.Slick)).flatMap { model =>
       Seq(TableFile.export(config, model).rendered)
     }
 

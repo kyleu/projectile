@@ -18,7 +18,7 @@ object ExportConfigurationDefault {
     idx = idx,
     t = col.columnType,
     defaultValue = col.defaultValue,
-    notNull = col.notNull,
+    required = col.notNull,
     indexed = indexed,
     unique = unique,
     inSearch = inSearch,

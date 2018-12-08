@@ -5,7 +5,7 @@ import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
 object DoobieLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
-    val models = config.models.filter(_.features(ModelFeature.Doobie)).flatMap { model =>
+    val models = config.models.filter(_.inputType.isDatabase).filter(_.features(ModelFeature.Doobie)).flatMap { model =>
       Seq(DoobieFile.export(config, model).rendered, DoobieTestsFile.export(config, model).rendered)
     }
 

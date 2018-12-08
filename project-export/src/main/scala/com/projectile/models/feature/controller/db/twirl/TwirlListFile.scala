@@ -15,7 +15,7 @@ object TwirlListFile {
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     listFile.add(s")@traceData.logClass(getClass)", -2)
-    listFile.add(s"@${(config.applicationPackage :+ "views" :+ "html").mkString(".")}.admin.explore.list(", 1)
+    listFile.add(s"@${(config.viewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
     listFile.add("user = user,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")

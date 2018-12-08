@@ -5,7 +5,7 @@ import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature}
 
 object OpenApiLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
-    val models = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase).flatMap { model =>
+    val models = config.models.filter(_.inputType.isDatabase).filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase).flatMap { model =>
       val p = model.pkg.headOption
       val solo = (config.models.count(_.pkg.headOption == p) + config.enums.count(_.pkg.headOption == p)) == 1
       Seq(ModelOpenApiSchemaFile.export(config, model).rendered, ModelOpenApiPathsFile.export(model, config.enums, solo = solo).rendered)

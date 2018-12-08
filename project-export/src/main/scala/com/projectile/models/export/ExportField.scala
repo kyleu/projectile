@@ -51,7 +51,7 @@ case class ExportField(
     idx: Int = 0,
     t: FieldType,
     defaultValue: Option[String] = None,
-    notNull: Boolean = false,
+    required: Boolean = false,
     indexed: Boolean = false,
     unique: Boolean = false,
     inSearch: Boolean = false,
@@ -59,20 +59,9 @@ case class ExportField(
     inSummary: Boolean = false,
     ignored: Boolean = false
 ) {
-  val nullable = !notNull
+  val optional = !required
 
   val className = ExportHelper.toClassName(propertyName)
-
-  def classNameForSqlType(config: ExportConfiguration): String = t match {
-    case ListType(typ) => typ match {
-      case IntegerType => "IntArrayType"
-      case LongType => "LongArrayType"
-      case UuidType => "UuidArrayType"
-      case _ => "StringArrayType"
-    }
-    case EnumType(k) => s"EnumType(${config.getEnum(k).className})"
-    case _ => t.className
-  }
 
   def scalaType(config: ExportConfiguration) = FieldTypeAsScala.asScala(config, t)
   def scalaTypeFull(config: ExportConfiguration) = FieldTypeImports.imports(config, t).headOption.getOrElse(Seq(scalaType(config)))

@@ -1,6 +1,6 @@
 package com.projectile.models.export.typ
 
-import com.projectile.models.export.typ.FieldType.{EnumType, ListType, MapType, SetType, StructType}
+import com.projectile.models.export.typ.FieldType.{EnumType, ListType, MapType, ObjectType, SetType, StructType}
 import com.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
@@ -10,6 +10,7 @@ object FieldTypeEncoder {
   private[this] implicit val setTypeEncoder: Encoder[SetType] = deriveEncoder
   private[this] implicit val mapTypeEncoder: Encoder[MapType] = deriveEncoder
   private[this] implicit val structTypeEncoder: Encoder[StructType] = deriveEncoder
+  private[this] implicit val objectTypeEncoder: Encoder[ObjectType] = deriveEncoder
 
   implicit val encodeFieldType: Encoder[FieldType] = (x: FieldType) => {
     val o = x match {
@@ -18,6 +19,7 @@ object FieldTypeEncoder {
       case s: SetType => s.asJson.asObject.get
       case m: MapType => m.asJson.asObject.get
       case s: StructType => s.asJson.asObject.get
+      case o: ObjectType => o.asJson.asObject.get
       case _ => JsonObject.empty
     }
     o.add("t", x.value.asJson).asJson

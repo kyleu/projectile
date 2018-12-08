@@ -29,7 +29,7 @@ object ExportFieldThrift {
     case XmlType => "string"
     case UuidType => "common.UUID"
 
-    case ObjectType => "string"
+    case ObjectType(_) => throw new IllegalStateException("Object types are not supported in Thrift")
     case StructType(key) => config.getModelOpt(key) match {
       case Some(m) => m.className
       case None => "string"

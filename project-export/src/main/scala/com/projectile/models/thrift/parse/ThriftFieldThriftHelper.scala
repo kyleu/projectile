@@ -12,7 +12,7 @@ object ThriftFieldThriftHelper {
   }
 
   def getFromField(field: ExportField) = {
-    parse(field.propertyName, field.t, field.notNull)
+    parse(field.propertyName, field.t, field.required)
   }
 
   private[this] def parse(name: String, t: FieldType, required: Boolean): String = t match {

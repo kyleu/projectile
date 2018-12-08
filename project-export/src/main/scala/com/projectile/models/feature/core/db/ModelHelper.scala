@@ -22,7 +22,7 @@ object ModelHelper {
         field.scalaType(config)
       case _ => field.scalaType(config)
     }
-    val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
+    val propType = if (field.required) { colScala } else { "Option[" + colScala + "]" }
     val propDecl = s"$scalaJsPrefix${field.propertyName}: $propType"
     val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
     field.description.foreach(d => file.add("/** " + d + " */"))
@@ -40,8 +40,8 @@ object ModelHelper {
       val colScala = field.t match {
         case _ => field.scalaType(config)
       }
-      val propType = if (field.notNull) { colScala } else { "Option[" + colScala + "]" }
-      val propDefault = if (field.notNull) {
+      val propType = if (field.required) { colScala } else { "Option[" + colScala + "]" }
+      val propDefault = if (field.required) {
         " = " + field.defaultString(config)
       } else {
         " = None"

@@ -21,7 +21,7 @@ object SchemaReferencesHelper {
 
       val relationRef = s"${srcModel.className}Schema.${srcModel.propertyName}By${srcField.className}"
       val fetcherRef = relationRef + "Fetcher"
-      val v = if (srcField.notNull) { s"c.value.${tgtField.propertyName}" } else { s"Some(c.value.${tgtField.propertyName})" }
+      val v = if (srcField.required) { s"c.value.${tgtField.propertyName}" } else { s"Some(c.value.${tgtField.propertyName})" }
 
       val call = if (ref._1.notNull) { "deferRelSeq" } else { "deferRelSeqOpt" }
       file.add(s"resolve = c => $fetcherRef.$call(", 1)

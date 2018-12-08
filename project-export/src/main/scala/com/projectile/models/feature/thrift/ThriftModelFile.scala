@@ -6,7 +6,7 @@ import com.projectile.models.output.file.ThriftFile
 
 object ThriftModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ThriftFile(model.pkg, model.className)
+    val file = ThriftFile("models" +: model.pkg, model.className)
 
     file.add("namespace java " + (config.applicationPackage ++ model.modelPackage).mkString("."))
     file.add()
@@ -19,7 +19,7 @@ object ThriftModelFile {
     file.add(s"struct ${model.className} {", 1)
     model.fields.foreach { field =>
       val thriftType = ExportFieldThrift.thriftType(field.t, config)
-      val thriftVisibility = if (field.notNull) { "required" } else { "optional" }
+      val thriftVisibility = if (field.required) { "required" } else { "optional" }
       file.add(s"${field.idx + 1}: $thriftVisibility $thriftType ${field.propertyName};")
     }
     file.add("}", -1)

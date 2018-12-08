@@ -6,7 +6,7 @@ import com.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.projectile.models.output.{ExportHelper, OutputPath}
 
 object InjectExploreMenu extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "menu.scala.html") {
-  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "views" :+ "admin" :+ "layout"
+  override def dir(config: ExportConfiguration) = config.viewPackage :+ "admin" :+ "layout"
 
   private[this] val (sStart, sEnd) = "  <!-- Start model list routes -->" -> "  <!-- End model list routes -->"
 

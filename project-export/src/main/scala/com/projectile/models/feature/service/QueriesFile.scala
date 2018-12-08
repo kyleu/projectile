@@ -24,7 +24,8 @@ object QueriesFile {
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
       f.addImport(config, file, Nil)
-      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.key}", typ = ${f.classNameForSqlType(config)})"""
+      val ftyp = QueriesHelper.classNameForSqlType(f.t, config)
+      val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.key}", typ = $ftyp)"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
       file.add(field + comma)
     }

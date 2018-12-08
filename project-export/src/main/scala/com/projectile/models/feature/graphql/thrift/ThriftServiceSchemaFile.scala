@@ -52,7 +52,7 @@ object ThriftServiceSchemaFile {
       ThriftSchemaInputHelper.addInputImports(pkg = pkg, types = m.args.map(_.t), config = config, file = file)
       m.args.foreach { arg =>
         val argInputType = ThriftSchemaInputHelper.graphQlInputTypeFor(arg.t, config)
-        val optionInputType = if (arg.notNull) {
+        val optionInputType = if (arg.required) {
           argInputType
         } else {
           s"OptionInputType($argInputType)"

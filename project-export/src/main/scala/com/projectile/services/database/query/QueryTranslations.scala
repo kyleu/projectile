@@ -33,7 +33,6 @@ object QueryTranslations extends Logging {
     case OTHER => matchOther(n)
 
     case NULL => UnitType
-    case JAVA_OBJECT => ObjectType
     case STRUCT => StructType(n)
     case ARRAY => n match {
       case _ if n.startsWith("_int4") => ListType(IntegerType)
@@ -41,6 +40,10 @@ object QueryTranslations extends Logging {
       case _ if n.startsWith("_uuid") => ListType(UuidType)
       case _ => ListType(StringType)
     }
+
+    case JAVA_OBJECT =>
+      log.warn(s"Encountered object type [$i:$n].")
+      StringType
 
     case _ =>
       log.warn(s"Encountered unknown column type [$i].")

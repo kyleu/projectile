@@ -76,7 +76,7 @@ object ModelFile {
   }
 
   private[this] def process(file: ScalaFile, field: ExportField, last: Boolean) = {
-    val x = if (field.notNull) {
+    val x = if (field.required) {
       val method = field.t match {
         case FieldType.StringType | FieldType.EncryptedStringType => field.propertyName
         case FieldType.EnumType(_) => s"${field.propertyName}.value"

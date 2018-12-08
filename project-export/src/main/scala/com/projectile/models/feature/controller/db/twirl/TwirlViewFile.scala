@@ -15,7 +15,7 @@ object TwirlViewFile {
     file.add(s"@(user: $modelPath.user.SystemUser, model: ${model.fullClassPath(config)}, notes: Seq[$modelPath.note.Note]$audits, debug: Boolean)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.utilitiesPackage.mkString(".")}.tracing.TraceData")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
-    val viewPkg = (config.applicationPackage ++ Seq("views", "html", "admin")).mkString(".")
+    val viewPkg = (config.viewPackage ++ Seq("html", "admin")).mkString(".")
     file.add(s""")@traceData.logClass(getClass)@$viewPkg.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
 
     file.add("""<div class="collection with-header">""", 1)
@@ -45,12 +45,12 @@ object TwirlViewFile {
           if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
           }
-          if (field.notNull) {
+          if (field.required) {
             file.add(s"@model.${field.propertyName}")
           } else {
             file.add(s"@model.${field.propertyName}.getOrElse(${config.utilitiesPackage.mkString(".")}.NullUtils.str)")
           }
-          if (field.notNull) {
+          if (field.required) {
             file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
           } else {
             file.add(s"@model.${field.propertyName}.map { v =>", 1)
@@ -101,7 +101,7 @@ object TwirlViewFile {
       file.add("</li>", -1)
     }
     file.add("</ul>", -1)
-    file.add(s"@${(config.applicationPackage ++ Seq("views", "html", "components")).mkString(".")}.includeScalaJs(debug)")
+    file.add(s"@${(config.viewPackage ++ Seq("html", "components")).mkString(".")}.includeScalaJs(debug)")
     file.add(s"""<script>$$(function() { new RelationService('@${TwirlHelper.routesClass(config, model)}.relationCounts($args)') });</script>""")
   }
 }

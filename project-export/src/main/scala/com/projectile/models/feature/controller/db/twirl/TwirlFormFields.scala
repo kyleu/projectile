@@ -8,7 +8,7 @@ import com.projectile.models.output.file.OutputFile
 
 object TwirlFormFields {
   def fieldFor(config: ExportConfiguration, model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
-    val formPkg = (config.applicationPackage ++ Seq("views", "html", "components", "form")).mkString(".")
+    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
     field.t match {
       case FieldType.EnumType(key) => file.add(s"@$formPkg.selectField(${enumArgsFor(config, field, key)})")
       case FieldType.CodeType => file.add(s"@$formPkg.codeField(${argsFor(field)})")
@@ -24,45 +24,45 @@ object TwirlFormFields {
 
   private[this] def argsFor(field: ExportField) = {
     val prop = field.propertyName
-    val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
+    val valString = if (field.required) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
     val dataTypeString = if (field.t == FieldType.StringType) { "" } else { s""", dataType = "${field.t}"""" }
-    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}$dataTypeString"""
+    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.optional}$dataTypeString"""
   }
 
   private[this] def boolArgsFor(field: ExportField) = {
     val prop = field.propertyName
-    val valString = if (field.notNull) { s"Some(model.$prop)" } else { s"""model.$prop""" }
+    val valString = if (field.required) { s"Some(model.$prop)" } else { s"""model.$prop""" }
     val dataTypeString = if (field.t == FieldType.StringType) { "" } else { s""", dataType = "${field.t}"""" }
-    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}$dataTypeString"""
+    s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.optional}$dataTypeString"""
   }
 
   private[this] def enumArgsFor(config: ExportConfiguration, field: ExportField, key: String) = {
     val enum = config.getEnumOpt(key).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [$key]."))
     val prop = field.propertyName
-    val valString = if (field.notNull) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
+    val valString = if (field.required) { s"Some(model.$prop.toString)" } else { s"""model.$prop.map(_.toString)""" }
     val opts = "Seq(" + enum.values.map(v => s""""$v" -> "$v"""").mkString(", ") + ")"
-    val extra = s"""options = $opts, nullable = ${field.nullable}, dataType = "${enum.key}""""
+    val extra = s"""options = $opts, nullable = ${field.optional}, dataType = "${enum.key}""""
     s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, $extra"""
   }
 
   private[this] def zonedDateTimeField(config: ExportConfiguration, field: ExportField, file: OutputFile) = {
-    val formPkg = (config.applicationPackage ++ Seq("views", "html", "components", "form")).mkString(".")
+    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
     val prop = field.propertyName
-    val valString = if (field.notNull) { s"Some(model.$prop)" } else { s"""model.$prop""" }
-    val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}"""
+    val valString = if (field.required) { s"Some(model.$prop)" } else { s"""model.$prop""" }
+    val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.optional}"""
     file.add(s"@$formPkg.zonedDateTimeField($args)")
   }
 
   private[this] def timeField(config: ExportConfiguration, field: ExportField, file: OutputFile, t: String) = {
-    val formPkg = (config.applicationPackage ++ Seq("views", "html", "components", "form")).mkString(".")
+    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
     val prop = field.propertyName
-    val valString = if (field.notNull) { s"Some(model.$prop)" } else { s"""model.$prop""" }
-    val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.nullable}"""
+    val valString = if (field.required) { s"Some(model.$prop)" } else { s"""model.$prop""" }
+    val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.optional}"""
     file.add(s"@$formPkg.local${t}Field($args)")
   }
 
   private[this] def autocompleteField(config: ExportConfiguration, field: ExportField, autocomplete: (ForeignKey, ExportModel), file: OutputFile) = {
-    val formPkg = (config.applicationPackage ++ Seq("views", "html", "components", "form")).mkString(".")
+    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
     file.add(s"@$formPkg.autocompleteField(", 1)
     file.add(argsFor(field) + ",")
     val url = s"${TwirlHelper.routesClass(config, autocomplete._2)}.autocomplete()"

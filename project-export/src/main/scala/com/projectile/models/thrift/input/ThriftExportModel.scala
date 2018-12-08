@@ -36,7 +36,7 @@ object ThriftExportModel {
         idx = idx,
         t = t,
         defaultValue = f.value.map(_.toString),
-        notNull = f.required
+        required = f.required
       )
   }.toList
 }

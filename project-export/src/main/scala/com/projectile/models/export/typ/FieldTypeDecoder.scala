@@ -20,13 +20,11 @@ object FieldTypeDecoder {
     decodeFieldType.apply(c.downField("v").asInstanceOf[HCursor]).right.get
   ))
 
-  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(
-    c.downField("key").as[String].right.get
-  ))
+  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(c.downField("key").as[String].right.get))
 
-  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(
-    c.downField("key").as[String].right.get
-  ))
+  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(c.downField("key").as[String].right.get))
+
+  private[this] val objectTypeDecoder: Decoder[ObjectType] = (c: HCursor) => Right(ObjectType(c.downField("fields").as[Seq[ObjectField]].right.get))
 
   implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => try {
     val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute.")))
@@ -52,7 +50,7 @@ object FieldTypeDecoder {
       case XmlType.value => Right(XmlType)
       case UuidType.value => Right(UuidType)
 
-      case ObjectType.value => Right(ObjectType)
+      case "object" => objectTypeDecoder.apply(c)
       case "struct" => structTypeDecoder.apply(c)
 
       case "enum" => enumTypeDecoder.apply(c)
@@ -67,6 +65,6 @@ object FieldTypeDecoder {
       case ByteArrayType.value => Right(ByteArrayType)
     }
   } catch {
-    case NonFatal(x) => throw new IllegalStateException("Error parsing: " + c.value.spaces2, x)
+    case NonFatal(x) => throw new IllegalStateException("Error parsing: " + printJson(c.value), x)
   }
 }

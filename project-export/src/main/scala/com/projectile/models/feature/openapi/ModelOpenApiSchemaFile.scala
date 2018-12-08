@@ -12,7 +12,7 @@ object ModelOpenApiSchemaFile {
 
     file.add(s""""${model.fullClassName}": {""", 1)
 
-    val required = model.fields.filter(_.notNull).map(_.propertyName)
+    val required = model.fields.filter(_.required).map(_.propertyName)
 
     if (required.nonEmpty) {
       file.add("\"required\": [", 1)

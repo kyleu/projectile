@@ -23,7 +23,7 @@ object ThriftFileHelper {
   }
 
   def declarationForField(config: ExportConfiguration, field: ExportField) = {
-    declarationFor(config, field.notNull, field.propertyName, field.defaultValue, field.t)
+    declarationFor(config, field.required, field.propertyName, field.defaultValue, field.t)
   }
 
   def declarationFor(

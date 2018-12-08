@@ -5,9 +5,13 @@ import com.projectile.models.feature.FeatureLogic
 
 object WikiLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
-    val listPages = WikiListFiles.export(config).map(_.rendered)
+    val listPages = if (config.models.exists(_.inputType.isDatabase)) {
+      WikiListFiles.export(config).map(_.rendered)
+    } else {
+      Nil
+    }
 
-    val models = config.models.flatMap { model =>
+    val models = config.models.filter(_.inputType.isDatabase).flatMap { model =>
       Seq(WikiModelFile.export(config, model).rendered)
     }
 

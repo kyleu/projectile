@@ -14,7 +14,7 @@ object SchemaForeignKey {
         case h :: Nil => config.getModelOpt(fk.targetTable).foreach(_ => {
           val srcCol = src.getField(h.source)
           if (src.pkColumns.isEmpty) {
-            val idType = if (srcCol.notNull) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
+            val idType = if (srcCol.required) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
             srcCol.addImport(config, file, src.pkg)
             file.addImport(Seq("sangria", "execution", "deferred"), "HasId")
             val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
@@ -25,14 +25,14 @@ object SchemaForeignKey {
             file.add()
           } else {
             val relName = s"${src.propertyName}By${srcCol.className}"
-            val idType = if (srcCol.notNull) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
+            val idType = if (srcCol.required) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
 
             file.addMarker("fetcher", (config.applicationPackage ++ src.modelPackage :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
             file.addImport(Seq("sangria", "execution", "deferred"), "Relation")
             srcCol.addImport(config, file, src.pkg)
             file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
             file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType(config)}](", 1)
-            val rels = if (srcCol.notNull) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
+            val rels = if (srcCol.required) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
             file.add(s"getByPrimaryKeySeq, (c, rels) => c.${src.serviceReference}.getBy${srcCol.className}Seq(c.creds, $rels)(c.trace)")
             file.add(")", -1)
 
@@ -63,7 +63,7 @@ object SchemaForeignKey {
         fields match {
           case field :: Nil =>
             file.add(s"""name = "${fk.propertyName}",""")
-            if (field.notNull) {
+            if (field.required) {
               file.add(s"""fieldType = ${targetTable.className}Schema.${targetTable.propertyName}Type,""")
             } else {
               file.add(s"""fieldType = OptionType(${targetTable.className}Schema.${targetTable.propertyName}Type),""")
@@ -74,7 +74,7 @@ object SchemaForeignKey {
             } else {
               s"${targetTable.className}Schema.${targetTable.propertyName}By${targets.map(_.className).mkString}Fetcher"
             }
-            if (field.notNull) {
+            if (field.required) {
               file.add(s"resolve = ctx => $fetcherRef.defer(ctx.value.${field.propertyName})")
             } else {
               file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.${field.propertyName})")

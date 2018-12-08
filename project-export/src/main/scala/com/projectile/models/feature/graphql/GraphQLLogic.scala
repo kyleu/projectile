@@ -13,6 +13,7 @@ object GraphQLLogic extends FeatureLogic {
         case EnumMember.InputType.PostgresEnum => Seq(EnumSchemaFile.export(config, enum).rendered)
         case EnumMember.InputType.ThriftIntEnum => Seq(ThriftEnumSchemaFile.export(config, enum).rendered)
         case EnumMember.InputType.ThriftStringEnum => Seq(ThriftEnumSchemaFile.export(config, enum).rendered)
+        case EnumMember.InputType.GraphQLEnum => Nil
       }
     }
 
@@ -21,6 +22,7 @@ object GraphQLLogic extends FeatureLogic {
         case ModelMember.InputType.PostgresTable => Seq(SchemaFile.export(config, model).rendered) ++ GraphQLQueryFiles.export(config, model).map(_.rendered)
         case ModelMember.InputType.PostgresView => Seq(SchemaFile.export(config, model).rendered) ++ GraphQLQueryFiles.export(config, model).map(_.rendered)
         case ModelMember.InputType.ThriftStruct => Seq(ThriftModelSchemaFile.export(config, model).rendered)
+        case m if m.isGraphQL => Nil
       }
     }
 

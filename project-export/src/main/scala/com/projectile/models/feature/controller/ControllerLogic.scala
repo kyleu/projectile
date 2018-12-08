@@ -1,9 +1,10 @@
 package com.projectile.models.feature.controller
 
-import com.projectile.models.export.ExportModel
+import com.projectile.models.export.{ExportModel, ExportService}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.controller.db.{ControllerFile, RoutesFiles}
 import com.projectile.models.feature.controller.db.twirl._
+import com.projectile.models.feature.controller.thrift.{ThriftControllerFile, ThriftRoutesFile, ThriftTwirlServiceFile}
 import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
 import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 
@@ -18,12 +19,13 @@ object ControllerLogic extends FeatureLogic {
         case ModelMember.InputType.PostgresTable => dbModelFiles(config, model)
         case ModelMember.InputType.PostgresView => dbModelFiles(config, model)
         case ModelMember.InputType.ThriftStruct => Nil
+        case m if m.isGraphQL => Nil
       }
     }
 
     val services = config.services.filter(_.features(ServiceFeature.Controller)).flatMap { service =>
       service.inputType match {
-        case ServiceMember.InputType.ThriftService => Nil
+        case ServiceMember.InputType.ThriftService => thriftServiceFiles(config, service)
       }
     }
 
@@ -43,4 +45,10 @@ object ControllerLogic extends FeatureLogic {
     TwirlFormFile.export(config, model).rendered,
     TwirlSearchResultFile.export(config, model).rendered
   ) ++ TwirlRelationFiles.export(config, model).map(_.rendered)
+
+  private[this] def thriftServiceFiles(config: ExportConfiguration, service: ExportService) = Seq(
+    ThriftControllerFile.export(config, service).rendered,
+    ThriftRoutesFile.export(service).rendered,
+    ThriftTwirlServiceFile.export(config, service).rendered
+  )
 }

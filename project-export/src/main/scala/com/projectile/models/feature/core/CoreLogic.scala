@@ -13,6 +13,7 @@ object CoreLogic extends FeatureLogic {
         case EnumMember.InputType.PostgresEnum => Seq(EnumFile.export(config, enum).rendered)
         case EnumMember.InputType.ThriftIntEnum => Seq(IntEnumFile.export(config, enum).rendered)
         case EnumMember.InputType.ThriftStringEnum => Seq(StringEnumFile.export(config, enum).rendered)
+        case EnumMember.InputType.GraphQLEnum => Nil
       }
     }
     val models = config.models.filter(_.features(ModelFeature.Core)).flatMap { model =>
@@ -20,6 +21,7 @@ object CoreLogic extends FeatureLogic {
         case ModelMember.InputType.PostgresTable => Seq(ModelFile.export(config, model).rendered)
         case ModelMember.InputType.PostgresView => Seq(ModelFile.export(config, model).rendered)
         case ModelMember.InputType.ThriftStruct => Seq(StructModelFile.export(config, model).rendered)
+        case m if m.isGraphQL => Nil
       }
     }
     val services = config.services.filter(_.features(ServiceFeature.Core)).flatMap { svc =>

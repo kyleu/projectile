@@ -38,7 +38,7 @@ object ServiceMutations {
       file.add(s"getByPrimaryKey(creds, $call)(td).map {", 1)
       file.add("case Some(newModel) =>", 1)
       val ids = model.pkFields.map {
-        case f if f.notNull => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
+        case f if f.required => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
         case f => s"""DataField("${f.propertyName}", ${f.propertyName}.map(_.toString))"""
       }.mkString(", ")
       if (model.features(ModelFeature.Audit)) {

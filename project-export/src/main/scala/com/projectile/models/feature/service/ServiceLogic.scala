@@ -7,7 +7,7 @@ object ServiceLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val svcModels = config.models.filter(_.features(ModelFeature.Service))
 
-    val models = svcModels.flatMap { model =>
+    val models = svcModels.filter(_.inputType.isDatabase).flatMap { model =>
       Seq(QueriesFile.export(config, model).rendered, ServiceFile.export(config, model).rendered)
     }
 

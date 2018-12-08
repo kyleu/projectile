@@ -13,7 +13,7 @@ object TwirlRelationFiles {
     val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull(config).mkString(".")).mkString(", ")
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
-    val viewPkg = (config.applicationPackage :+ "views" :+ "html").mkString(".")
+    val viewPkg = (config.viewPackage :+ "html").mkString(".")
 
     val su = s"$modelPkg.user.SystemUser"
     listFile.add(s"@(user: $su, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)

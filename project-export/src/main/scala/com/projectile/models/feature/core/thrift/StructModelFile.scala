@@ -59,7 +59,7 @@ object StructModelFile {
       file.add()
       file.add("override def toDataFields = Seq(", 1)
       model.fields.foreach { field =>
-        val x = if (field.notNull || field.defaultValue.isDefined) {
+        val x = if (field.required || field.defaultValue.isDefined) {
           val method = if (field.t == FieldType.StringType) { "" } else { ".toString" }
           s"""DataField("${field.propertyName.replaceAllLiterally("`", "")}", Some(${field.propertyName}$method))"""
         } else {
@@ -83,7 +83,7 @@ object StructModelFile {
     fields.foreach { field =>
       //field.addImport(file, model.modelPackage)
       val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
-      val decl = ThriftFileHelper.declarationFor(config, field.notNull, field.propertyName, field.defaultValue, field.t)
+      val decl = ThriftFileHelper.declarationFor(config, field.required, field.propertyName, field.defaultValue, field.t)
       file.add(decl + comma)
     }
   }

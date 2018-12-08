@@ -9,7 +9,7 @@ object TwirlFormFile {
     val file = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "Form")
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
-    val viewPkg = (config.applicationPackage :+ "views" :+ "html").mkString(".")
+    val viewPkg = (config.viewPackage :+ "html").mkString(".")
 
     val su = s"$modelPkg.user.SystemUser"
     file.add(s"@(user: $su, model: ${model.fullClassPath(config)}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")

@@ -30,7 +30,7 @@ object ThriftSchemaInputHelper {
     case XmlType => "StringType"
     case UuidType => "uuidType"
 
-    case ObjectType => "StringType"
+    case ObjectType(_) => throw new IllegalStateException("Object types are not supported in Thrift")
     case StructType(key) => config.getModel(key).propertyName + "InputType"
     case EnumType(key) => config.getEnum(key).propertyName + "InputType"
 

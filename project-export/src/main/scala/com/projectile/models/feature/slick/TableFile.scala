@@ -74,7 +74,7 @@ object TableFile {
       case _ => // noop
     }
     field.addImport(config, file, Nil)
-    val propType = if (field.notNull) { field.scalaType(config) } else { "Option[" + field.scalaType(config) + "]" }
+    val propType = if (field.required) { field.scalaType(config) } else { "Option[" + field.scalaType(config) + "]" }
     field.description.foreach(d => file.add("/** " + d + " */"))
     val pkKeys = model.pkFields.map(_.key)
     val aiKeys = model.pkColumns.filter(_.autoIncrement).map(_.name).flatMap(k => model.fields.find(_.key == k)).map(_.key)

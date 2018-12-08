@@ -5,7 +5,7 @@ import com.projectile.models.feature.{FeatureLogic, ModelFeature}
 
 object ThriftLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
-    val models = config.models.filter(_.features(ModelFeature.Thrift)).flatMap { model =>
+    val models = config.models.filter(_.inputType.isDatabase).filter(_.features(ModelFeature.Thrift)).flatMap { model =>
       Seq(ThriftModelFile.export(config, model).rendered, ThriftServiceFile.export(config, model).rendered)
     }
 
