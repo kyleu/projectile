@@ -1,6 +1,5 @@
 package com.projectile.services.graphql.original
 
-import com.projectile.models.graphql.GraphQLExportConfig
 import com.projectile.services.graphql.original.GraphQLQueryParseService.ClassName
 import sangria.schema.{EnumType, ListType, OptionType, Type}
 

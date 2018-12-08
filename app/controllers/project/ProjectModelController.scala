@@ -2,6 +2,7 @@ package controllers.project
 
 import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.ModelFeature
+import com.projectile.models.graphql.input.GraphQLInput
 import com.projectile.models.project.member.ModelMember.InputType
 import com.projectile.models.project.member.{MemberOverride, ModelMember}
 import com.projectile.models.thrift.input.ThriftInput
@@ -33,6 +34,7 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
           val vs = pi.views.map(v => (v.name, InputType.PostgresView.value, p.models.exists(x => x.input == pi.key && x.key == v.name)))
           ts ++ vs
         case ti: ThriftInput => ti.structs.map(s => (s.key, InputType.ThriftStruct.value, p.models.exists(x => x.input == ti.key && x.key == s.key)))
+        case gi: GraphQLInput => gi.exportModels.map(m => (m.key, m.inputType.value, p.models.exists(x => x.input == gi.key && x.key == m.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
     }

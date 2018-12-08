@@ -29,7 +29,7 @@ object ExportFieldGraphQL {
     case XmlType => "StringType"
     case UuidType => "uuidType"
 
-    case ObjectType => "StringType"
+    case ObjectType(_) => throw new IllegalStateException("TODO: Objects")
     case StructType(key) => config.getModelOpt(key) match {
       case Some(_) => throw new IllegalStateException("TODO: Struct types")
       case None => "StringType"
@@ -49,7 +49,7 @@ object ExportFieldGraphQL {
     case ByteArrayType => "ArrayType(StringType)"
   }
 
-  def argType(config: ExportConfiguration, field: ExportField) = if (field.notNull) {
+  def argType(config: ExportConfiguration, field: ExportField) = if (field.required) {
     graphQLType(config, field)
   } else {
     "OptionInputType(" + graphQLType(config, field) + ")"

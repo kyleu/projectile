@@ -2,6 +2,7 @@ package com.projectile.services.input
 
 import com.projectile.models.command.ProjectileResponse
 import com.projectile.models.database.input.{PostgresConnection, PostgresInput}
+import com.projectile.models.graphql.input.GraphQLInput
 import com.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.projectile.services.config.ConfigService
@@ -78,6 +79,7 @@ class InputService(val cfg: ConfigService) {
       }
       val ti = ThriftParseService.loadThriftInput(files, t)
       ThriftInputService.saveThrift(cfg, ti)
+    case g: GraphQLInput => GraphQLInputService.saveGraphQL(cfg, g)
     case x => throw new IllegalStateException(s"Unable to process [$x]")
   }
 }

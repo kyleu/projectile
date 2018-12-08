@@ -1,6 +1,5 @@
 package com.projectile.services.graphql.original
 
-import com.projectile.models.graphql.GraphQLExportConfig
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 import sangria.ast._
@@ -40,8 +39,8 @@ object GraphQLInputServiceOriginal {
         case x => x
       }
       case NamedType(n, _) => s"Option[" + (n match {
-        case x if enums.contains(x) =>
-          val ecn = nameMap(x)
+        case _ if enums.contains(n) =>
+          val ecn = nameMap(n)
           file.addImport(ecn.pkg, ecn.cn)
           ecn.cn
         case "UUID" =>

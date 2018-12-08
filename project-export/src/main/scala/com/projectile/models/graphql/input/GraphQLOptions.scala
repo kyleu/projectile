@@ -9,17 +9,12 @@ object GraphQLOptions {
   }
 
   case class SchemaQueries(schema: String, queryFiles: Seq[String] = Nil) {
-    val schemaClass = schema.lastIndexOf('/') match {
-      case -1 => schema
-      case x => schema.substring(x + 1)
+    private[this] def fix(s: String) = s.lastIndexOf('/') match {
+      case -1 => s.stripSuffix(".graphql")
+      case x => s.substring(x + 1).stripSuffix(".graphql")
     }
-    val fileClasses = queryFiles.map { f =>
-      val c = f.lastIndexOf('/') match {
-        case -1 => f
-        case x => f.substring(x + 1)
-      }
-      c -> f
-    }
+    val schemaClass = fix(schema)
+    val fileClasses = queryFiles.map(f => fix(f) -> f)
   }
 
   implicit val jsonEncoder: Encoder[GraphQLOptions] = deriveEncoder

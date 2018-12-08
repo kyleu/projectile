@@ -1,7 +1,6 @@
 package com.projectile.services.graphql.original
 
 import better.files._
-import com.projectile.models.graphql.GraphQLExportConfig
 import com.projectile.models.output.ExportHelper
 import sangria.ast._
 import sangria.parser.QueryParser

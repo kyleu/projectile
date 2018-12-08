@@ -19,6 +19,8 @@ case class ExportConfiguration(
 ) {
   val applicationPackage = project.getPackage(OutputPackage.Application)
 
+  val viewPackage = applicationPackage ++ project.getPackage(OutputPackage.TwirlViews)
+
   val systemPackage = project.getPackage(OutputPackage.System)
 
   val resultsPackage = systemPackage ++ project.getPackage(OutputPackage.Results)

@@ -1,11 +1,9 @@
 package com.projectile.services.graphql.original
 
-import com.projectile.models.graphql.GraphQLExportConfig
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.file.ScalaFile
 import com.projectile.services.graphql.original.GraphQLQueryParseService.ClassName
 import com.projectile.services.graphql.original.GraphQLOutputTranslations.{scalaImport, scalaType}
-
 import sangria.ast.{Field, FragmentSpread, InlineFragment, Selection}
 import sangria.schema.{ObjectType, Type => Typ}
 

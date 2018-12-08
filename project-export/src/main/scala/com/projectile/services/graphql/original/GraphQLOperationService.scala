@@ -1,6 +1,5 @@
 package com.projectile.services.graphql.original
 
-import com.projectile.models.graphql.GraphQLExportConfig
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 import sangria.ast.{OperationDefinition, OperationType, VariableDefinition}

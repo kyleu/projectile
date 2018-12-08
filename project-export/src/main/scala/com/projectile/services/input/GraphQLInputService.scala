@@ -11,14 +11,14 @@ object GraphQLInputService {
   private[this] val fn = "graphql-files.json"
 
   def saveGraphQLDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
-    (dir / fn).overwrite(GraphQLOptions().asJson.spaces2)
+    (dir / fn).overwrite(printJson(GraphQLOptions().asJson))
   }
 
   def saveGraphQL(cfg: ConfigService, gi: GraphQLInput) = {
-    val summ = gi.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Thrift).transform
+    val summ = gi.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.GraphQL).transform
     val dir = SummaryInputService.saveSummary(cfg, summ)
 
-    val options = gi.into[GraphQLOptions].transform.asJson.spaces2
+    val options = printJson(gi.into[GraphQLOptions].transform.asJson)
     (dir / fn).overwrite(options)
 
     gi

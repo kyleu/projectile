@@ -9,6 +9,7 @@ object OutputPackage extends StringEnum[OutputPackage] with StringCirceEnum[Outp
   case object Application extends OutputPackage("application", Nil)
 
   case object Utils extends OutputPackage("utilities", Seq("util"))
+  case object TwirlViews extends OutputPackage("twirl", Seq("views"))
   case object Results extends OutputPackage("results", Seq("models", "result"))
   case object Tags extends OutputPackage("tags", Seq("models", "tag"))
 
