@@ -1,9 +1,9 @@
 package com.projectile.models.export
 
 import com.projectile.models.feature.ServiceFeature
+import com.projectile.models.input.ServiceInputType
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.project.member.ServiceMember
-import com.projectile.models.project.member.ServiceMember.InputType
 import com.projectile.util.JsonSerializers._
 
 object ExportService {
@@ -12,7 +12,7 @@ object ExportService {
 }
 
 case class ExportService(
-    inputType: InputType,
+    inputType: ServiceInputType,
     pkg: List[String] = Nil,
     key: String,
     className: String,

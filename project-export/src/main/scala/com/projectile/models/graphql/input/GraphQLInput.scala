@@ -32,12 +32,12 @@ case class GraphQLInput(
 
   override lazy val exportEnums = parsedObjects.collect { case Left(x) => x }
   override def exportEnum(k: String) = exportEnums.find(_.key == k).getOrElse {
-    throw new IllegalStateException(s"No enum defined with key [$k] among candidates [${exportEnums.map(_.key).mkString(", ")}]")
+    throw new IllegalStateException(s"No input enum defined with key [$k] among candidates [${exportEnums.map(_.key).sorted.mkString(", ")}]")
   }
 
   override lazy val exportModels = parsedObjects.collect { case Right(x) => x }
   override def exportModel(k: String) = exportModels.find(_.key == k).getOrElse {
-    throw new IllegalStateException(s"No model defined with key [$k] among candidates [${exportModels.map(_.key).mkString(", ")}]")
+    throw new IllegalStateException(s"No input model defined with key [$k] among candidates [${exportModels.map(_.key).sorted.mkString(", ")}]")
   }
 
   override def template = InputTemplate.GraphQL

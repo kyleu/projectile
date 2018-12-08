@@ -1,27 +1,17 @@
 package com.projectile.models.project.member
 
 import com.projectile.models.feature.ServiceFeature
+import com.projectile.models.input.ServiceInputType
 import com.projectile.util.JsonSerializers._
-import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 
 object ServiceMember {
-  sealed abstract class InputType(override val value: String) extends StringEnumEntry {
-    override val toString = value
-  }
-
-  object InputType extends StringEnum[InputType] with StringCirceEnum[InputType] {
-    case object ThriftService extends InputType(value = "thrift-service")
-
-    override val values = findValues
-  }
-
   implicit val jsonEncoder: Encoder[ServiceMember] = deriveEncoder
   implicit val jsonDecoder: Decoder[ServiceMember] = deriveDecoder
 }
 
 case class ServiceMember(
     input: String,
-    inputType: ServiceMember.InputType,
+    inputType: ServiceInputType,
 
     key: String,
     pkg: Seq[String] = Nil,

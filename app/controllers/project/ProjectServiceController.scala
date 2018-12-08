@@ -2,7 +2,7 @@ package controllers.project
 
 import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.ServiceFeature
-import com.projectile.models.project.member.ServiceMember.InputType
+import com.projectile.models.input.ServiceInputType
 import com.projectile.models.project.member.{MemberOverride, ServiceMember}
 import com.projectile.models.thrift.input.ThriftInput
 import controllers.BaseController
@@ -28,8 +28,8 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
     val p = projectile.getProject(key)
     val inputServices = projectile.listInputs().map { input =>
       input.key -> (projectile.getInput(input.key) match {
-        case pi: PostgresInput => Nil
-        case ti: ThriftInput => ti.services.map(s => (s.key, InputType.ThriftService.value, p.services.exists(x => x.input == ti.key && x.key == s.key)))
+        case _: PostgresInput => Nil
+        case ti: ThriftInput => ti.services.map(s => (s.key, ServiceInputType.ThriftService.value, p.services.exists(x => x.input == ti.key && x.key == s.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
     }
@@ -50,7 +50,7 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} services"))
       case _ =>
         val orig = i.exportServices.find(_.key == inputKey).getOrElse(throw new IllegalStateException(s"Cannot find service [$inputKey] in input [$input]"))
-        val it = ServiceMember.InputType.withValue(inputType)
+        val it = ServiceInputType.withValue(inputType)
         val m = ServiceMember(input = input, pkg = orig.pkg, inputType = it, key = inputKey, features = p.serviceFeatures.toSet)
         projectile.saveServiceMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectServiceController.detail(key, m.key))

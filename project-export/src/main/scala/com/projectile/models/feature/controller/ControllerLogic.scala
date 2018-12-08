@@ -6,7 +6,7 @@ import com.projectile.models.feature.controller.db.{ControllerFile, RoutesFiles}
 import com.projectile.models.feature.controller.db.twirl._
 import com.projectile.models.feature.controller.thrift.{ThriftControllerFile, ThriftRoutesFile, ThriftTwirlServiceFile}
 import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
-import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
+import com.projectile.models.input.{ModelInputType, ServiceInputType}
 
 object ControllerLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
@@ -16,16 +16,16 @@ object ControllerLogic extends FeatureLogic {
 
     val models = config.models.filter(_.features(ModelFeature.Controller)).flatMap { model =>
       model.inputType match {
-        case ModelMember.InputType.PostgresTable => dbModelFiles(config, model)
-        case ModelMember.InputType.PostgresView => dbModelFiles(config, model)
-        case ModelMember.InputType.ThriftStruct => Nil
+        case ModelInputType.PostgresTable => dbModelFiles(config, model)
+        case ModelInputType.PostgresView => dbModelFiles(config, model)
+        case ModelInputType.ThriftStruct => Nil
         case m if m.isGraphQL => Nil
       }
     }
 
     val services = config.services.filter(_.features(ServiceFeature.Controller)).flatMap { service =>
       service.inputType match {
-        case ServiceMember.InputType.ThriftService => thriftServiceFiles(config, service)
+        case ServiceInputType.ThriftService => thriftServiceFiles(config, service)
       }
     }
 

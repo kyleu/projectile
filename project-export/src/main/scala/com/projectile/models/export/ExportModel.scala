@@ -6,7 +6,7 @@ import com.projectile.models.export.typ.FieldType
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.project.member.ModelMember
-import com.projectile.models.project.member.ModelMember.InputType
+import com.projectile.models.input.ModelInputType
 import com.projectile.util.JsonSerializers._
 
 object ExportModel {
@@ -22,7 +22,7 @@ object ExportModel {
 }
 
 case class ExportModel(
-    inputType: InputType,
+    inputType: ModelInputType,
     key: String,
     pkg: List[String] = Nil,
     propertyName: String,
@@ -79,6 +79,10 @@ case class ExportModel(
 
   val modelPackage = pkg.lastOption match {
     case Some("models") => pkg
+    case Some("fragment") => pkg
+    case Some("input") => pkg
+    case Some("mutation") => pkg
+    case Some("query") => pkg
     case _ => "models" +: pkg
   }
 

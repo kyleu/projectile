@@ -3,7 +3,7 @@ package controllers.project
 import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.graphql.input.GraphQLInput
-import com.projectile.models.project.member.ModelMember.InputType
+import com.projectile.models.input.ModelInputType
 import com.projectile.models.project.member.{MemberOverride, ModelMember}
 import com.projectile.models.thrift.input.ThriftInput
 import controllers.BaseController
@@ -30,10 +30,10 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
     val inputModels = projectile.listInputs().map { input =>
       input.key -> (projectile.getInput(input.key) match {
         case pi: PostgresInput =>
-          val ts = pi.tables.map(m => (m.name, InputType.PostgresTable.value, p.models.exists(x => x.input == pi.key && x.key == m.name)))
-          val vs = pi.views.map(v => (v.name, InputType.PostgresView.value, p.models.exists(x => x.input == pi.key && x.key == v.name)))
+          val ts = pi.tables.map(m => (m.name, ModelInputType.PostgresTable.value, p.models.exists(x => x.input == pi.key && x.key == m.name)))
+          val vs = pi.views.map(v => (v.name, ModelInputType.PostgresView.value, p.models.exists(x => x.input == pi.key && x.key == v.name)))
           ts ++ vs
-        case ti: ThriftInput => ti.structs.map(s => (s.key, InputType.ThriftStruct.value, p.models.exists(x => x.input == ti.key && x.key == s.key)))
+        case ti: ThriftInput => ti.structs.map(s => (s.key, ModelInputType.ThriftStruct.value, p.models.exists(x => x.input == ti.key && x.key == s.key)))
         case gi: GraphQLInput => gi.exportModels.map(m => (m.key, m.inputType.value, p.models.exists(x => x.input == gi.key && x.key == m.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
@@ -48,14 +48,14 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
       case "all" =>
         val toSave = i.exportModels.flatMap {
           case m if p.getModelOpt(m.key).isDefined => None
-          case m => Some(ModelMember(input = input, pkg = m.pkg, inputType = m.inputType, key = m.key, features = p.modelFeatures.toSet))
+          case m => Some(ModelMember(input = input, pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet))
         }
         val saved = projectile.saveModelMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} models"))
       case _ =>
         val orig = i.exportModel(inputKey)
-        val m = ModelMember(input = input, pkg = orig.pkg, inputType = orig.inputType, key = inputKey, features = p.modelFeatures.toSet)
+        val m = ModelMember(input = input, pkg = orig.pkg, key = inputKey, features = p.modelFeatures.toSet)
         projectile.saveModelMembers(key, Seq(m))
         val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added model [${m.key}]"))

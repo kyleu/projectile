@@ -4,7 +4,7 @@ import com.projectile.models.database.schema.Table
 import com.projectile.models.export.config.{ExportConfigurationDefault, ExportConfigurationHelper}
 import com.projectile.models.export.{ExportEnum, ExportModel}
 import com.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
-import com.projectile.models.project.member.ModelMember.InputType
+import com.projectile.models.input.ModelInputType
 
 object TableExportModel {
   def loadTableModel(t: Table, tables: Seq[Table], enums: Seq[ExportEnum]) = {
@@ -12,7 +12,7 @@ object TableExportModel {
     val title = toDefaultTitle(cn)
 
     ExportModel(
-      inputType = InputType.PostgresTable,
+      inputType = ModelInputType.PostgresTable,
       key = t.name,
       pkg = Nil,
       propertyName = toIdentifier(cn),

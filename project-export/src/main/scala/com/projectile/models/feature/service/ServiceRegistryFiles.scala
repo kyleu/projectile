@@ -7,7 +7,7 @@ import com.projectile.models.output.file.ScalaFile
 
 object ServiceRegistryFiles {
   def files(config: ExportConfiguration, models: Seq[ExportModel]) = {
-    val packageModels = models.filter(_.pkg.nonEmpty)
+    val packageModels = models.filter(_.inputType.isDatabase).filter(_.pkg.nonEmpty)
     val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
     val svcContent = packages.map(m => m._1 -> m._2.map { m =>

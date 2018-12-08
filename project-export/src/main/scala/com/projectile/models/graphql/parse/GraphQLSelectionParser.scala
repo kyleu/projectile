@@ -5,7 +5,7 @@ import sangria.ast._
 import sangria.schema.Schema
 
 object GraphQLSelectionParser {
-  def fieldsForSelections(schema: Schema[_, _], selections: Seq[Selection]) = {
+  def fieldsForSelections(schema: Schema[_, _], doc: Document, selections: Seq[Selection]) = {
     val (spreads, fields) = distribute(selections)
 
     Seq.empty[ExportField]

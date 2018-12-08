@@ -1,14 +1,14 @@
 package com.projectile.models.thrift.input
 
 import com.projectile.models.export._
+import com.projectile.models.input.ServiceInputType
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.ExportHelper.toClassName
-import com.projectile.models.project.member.ServiceMember.InputType
 import com.projectile.models.thrift.schema.{ThriftService, ThriftStructField}
 
 object ThriftExportService {
   def loadService(s: ThriftService, input: ThriftInput) = ExportService(
-    inputType = InputType.ThriftService,
+    inputType = ServiceInputType.ThriftService,
     pkg = s.pkg.toList :+ "services",
     key = s.key,
     className = toClassName(s.key),

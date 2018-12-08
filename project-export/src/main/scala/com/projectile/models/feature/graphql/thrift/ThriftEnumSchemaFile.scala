@@ -2,17 +2,17 @@ package com.projectile.models.feature.graphql.thrift
 
 import com.projectile.models.export.ExportEnum
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.input.EnumInputType
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
-import com.projectile.models.project.member.EnumMember
 
 object ThriftEnumSchemaFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
     val file = ScalaFile(path = OutputPath.ServerSource, enum.pkg :+ "graphql", enum.className + "Schema")
 
     val t = enum.inputType match {
-      case EnumMember.InputType.ThriftIntEnum => "Int"
-      case EnumMember.InputType.ThriftStringEnum => "String"
+      case EnumInputType.ThriftIntEnum => "Int"
+      case EnumInputType.ThriftStringEnum => "String"
       case _ => throw new IllegalStateException(s"Cannot process [${enum.inputType}]")
     }
 

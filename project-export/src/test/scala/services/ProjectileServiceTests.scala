@@ -68,7 +68,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
   /*
   // Members
   it should "add members correctly" in {
-    val e = svc.saveEnumMember(projectKey, EnumMember(inputKey, EnumMember.InputType.PostgresEnum, "setting_key", Seq("settingKey")))
+    val e = svc.saveEnumMember(projectKey, EnumMember(inputKey, EnumInputType.PostgresEnum, "setting_key", Seq("settingKey")))
 
     val t = svc.saveModelMember(projectKey, ModelMember(inputKey, ModelMember.InputType.PostgresTable, "audit", Seq("audit")))
     val t2 = svc.saveModelMember(projectKey, ModelMember(inputKey, ModelMember.InputType.PostgresTable, "audit_record", Seq("audit")))

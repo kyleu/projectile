@@ -11,7 +11,9 @@ object GraphQLEnumFile {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.pkg, key = enum.className)
 
-    config.addCommonImport(file, "JsonSerializers", "_")
+    file.addImport(Seq("enumeratum", "values"), "StringCirceEnum")
+    file.addImport(Seq("enumeratum", "values"), "StringEnum")
+    file.addImport(Seq("enumeratum", "values"), "StringEnumEntry")
 
     file.add(s"sealed abstract class ${enum.className}(override val value: String) extends StringEnumEntry")
     file.add()
