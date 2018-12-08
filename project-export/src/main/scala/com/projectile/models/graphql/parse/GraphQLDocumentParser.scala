@@ -1,7 +1,6 @@
 package com.projectile.models.graphql.parse
 
 import com.projectile.models.export.{ExportField, ExportModel}
-import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.project.member.ModelMember.InputType
 import sangria.ast._
@@ -18,22 +17,22 @@ object GraphQLDocumentParser {
   }
 
   private[this] def parseFragment(schema: Schema[_, _], key: String, f: FragmentDefinition) = {
-    val fields = GraphQLTypeParser.fieldsForSelections(schema, f.selections)
+    val fields = GraphQLSelectionParser.fieldsForSelections(schema, f.selections)
     modelFor(key, InputType.GraphQLFragment, fields)
   }
 
   private[this] def parseInput(schema: Schema[_, _], i: InputObjectTypeDefinition) = {
-    val fields = i.fields.zipWithIndex.map(f => GraphQLTypeParser.getField(schema, f._1.name, f._1.valueType, f._2, f._1.defaultValue))
+    val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getField(schema, f._1.name, f._1.valueType, f._2, f._1.defaultValue))
     modelFor(i.name, InputType.GraphQLInput, fields)
   }
 
   private[this] def parseMutation(schema: Schema[_, _], key: Option[String], o: OperationDefinition) = {
-    val fields = GraphQLTypeParser.fieldsForSelections(schema, o.selections)
+    val fields = GraphQLSelectionParser.fieldsForSelections(schema, o.selections)
     modelFor(o.name.getOrElse("DefaultMutation"), InputType.GraphQLMutation, fields)
   }
 
   private[this] def parseQuery(schema: Schema[_, _], key: Option[String], o: OperationDefinition) = {
-    val fields = GraphQLTypeParser.fieldsForSelections(schema, o.selections)
+    val fields = GraphQLSelectionParser.fieldsForSelections(schema, o.selections)
     modelFor(o.name.getOrElse("DefaultQuery"), InputType.GraphQLQuery, fields)
   }
 

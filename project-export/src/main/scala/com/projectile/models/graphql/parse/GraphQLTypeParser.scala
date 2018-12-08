@@ -1,27 +1,17 @@
 package com.projectile.models.graphql.parse
 
-import com.projectile.models.export.ExportField
 import com.projectile.models.export.typ.FieldType
-import com.projectile.models.output.ExportHelper
-import sangria.ast.{Selection, Type, Value}
+import sangria.ast.{ListType, NamedType, NotNullType, Type}
 import sangria.schema.Schema
 
 object GraphQLTypeParser {
-  def getField(schema: Schema[_, _], name: String, t: Type, idx: Int, defaultValue: Option[Value]) = {
-    val (required, newT) = true -> FieldType.StringType
-    ExportField(
-      key = name,
-      propertyName = ExportHelper.toIdentifier(name),
-      title = ExportHelper.toDefaultTitle(name),
-      description = None,
-      idx = idx,
-      t = newT,
-      defaultValue = defaultValue.map(_.toString),
-      required = required
-    )
+  def getType(schema: Schema[_, _], t: Type): (Boolean, FieldType) = t match {
+    case NotNullType(ofType, _) => true -> getType(schema, ofType)._2
+    case ListType(ofType, _) => true -> FieldType.ListType(getType(schema, ofType)._2)
+    case named: NamedType => false -> getNamedType(schema, named)
   }
 
-  def fieldsForSelections(schema: Schema[_, _], selections: Seq[Selection]) = {
-    Seq.empty[ExportField]
+  private[this] def getNamedType(schema: Schema[_, _], named: NamedType) = {
+    FieldType.StringType
   }
 }

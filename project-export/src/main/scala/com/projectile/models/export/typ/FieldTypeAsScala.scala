@@ -28,7 +28,7 @@ object FieldTypeAsScala {
     case XmlType => "String"
     case UuidType => "UUID"
 
-    case ObjectType(_) => throw new IllegalStateException("Do not call asScala for ObjectType fields")
+    case ObjectType(_, _) => throw new IllegalStateException("Do not call asScala for ObjectType fields")
     case StructType(key) => config.getModel(key).className
 
     case EnumType(key) => config.getEnum(key).className

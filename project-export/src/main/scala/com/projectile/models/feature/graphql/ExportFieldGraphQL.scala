@@ -29,7 +29,7 @@ object ExportFieldGraphQL {
     case XmlType => "StringType"
     case UuidType => "uuidType"
 
-    case ObjectType(_) => throw new IllegalStateException("TODO: Objects")
+    case ObjectType(_, _) => throw new IllegalStateException("TODO: Objects")
     case StructType(key) => config.getModelOpt(key) match {
       case Some(_) => throw new IllegalStateException("TODO: Struct types")
       case None => "StringType"

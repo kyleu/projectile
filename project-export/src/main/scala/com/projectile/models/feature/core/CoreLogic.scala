@@ -2,7 +2,8 @@ package com.projectile.models.feature.core
 
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.core.db.{EnumFile, InjectIcons, ModelFile}
-import com.projectile.models.feature.core.thrift.{IntEnumFile, ThriftServiceFile, StringEnumFile, StructModelFile}
+import com.projectile.models.feature.core.graphql.{GraphQLFragmentFile, GraphQLInputFile, GraphQLOperationFile}
+import com.projectile.models.feature.core.thrift.{IntEnumFile, StringEnumFile, StructModelFile, ThriftServiceFile}
 import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
 import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 
@@ -21,7 +22,10 @@ object CoreLogic extends FeatureLogic {
         case ModelMember.InputType.PostgresTable => Seq(ModelFile.export(config, model).rendered)
         case ModelMember.InputType.PostgresView => Seq(ModelFile.export(config, model).rendered)
         case ModelMember.InputType.ThriftStruct => Seq(StructModelFile.export(config, model).rendered)
-        case m if m.isGraphQL => Nil
+        case ModelMember.InputType.GraphQLFragment => Seq(GraphQLFragmentFile.export(config, model).rendered)
+        case ModelMember.InputType.GraphQLInput => Seq(GraphQLInputFile.export(config, model).rendered)
+        case ModelMember.InputType.GraphQLMutation => Seq(GraphQLOperationFile.export(config, model).rendered)
+        case ModelMember.InputType.GraphQLQuery => Seq(GraphQLOperationFile.export(config, model).rendered)
       }
     }
     val services = config.services.filter(_.features(ServiceFeature.Core)).flatMap { svc =>

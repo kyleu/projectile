@@ -1,6 +1,6 @@
 package com.projectile.models.graphql.input
 
-import com.projectile.models.export.{ExportEnum, ExportModel, ExportService}
+import com.projectile.models.export.{ExportEnum, ExportService}
 import com.projectile.models.graphql.input.GraphQLOptions.SchemaQueries
 import com.projectile.models.graphql.parse.GraphQLDocumentParser
 import com.projectile.models.input.{Input, InputSummary, InputTemplate}
