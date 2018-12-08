@@ -5,7 +5,7 @@ import java.util.Properties
 
 import com.projectile.models.database.schema.{EnumType, Table, View}
 import com.projectile.models.export.ExportEnum
-import com.projectile.models.input.{EnumInputType, Input, InputTemplate}
+import com.projectile.models.input.{InputType, Input, InputTemplate}
 import com.projectile.models.output.ExportHelper
 import com.projectile.util.JsonSerializers._
 
@@ -36,7 +36,7 @@ case class PostgresInput(
 
   override def exportEnum(key: String) = {
     val e = getPostgresEnum(key)
-    ExportEnum(inputType = EnumInputType.PostgresEnum, key = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
+    ExportEnum(inputType = InputType.Enum.PostgresEnum, key = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
   }
 
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))

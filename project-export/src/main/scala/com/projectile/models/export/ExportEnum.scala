@@ -3,7 +3,7 @@ package com.projectile.models.export
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.feature.EnumFeature
-import com.projectile.models.input.EnumInputType
+import com.projectile.models.input.InputType
 import com.projectile.models.project.member.EnumMember
 import com.projectile.util.JsonSerializers._
 
@@ -13,7 +13,7 @@ object ExportEnum {
 }
 
 case class ExportEnum(
-    inputType: EnumInputType,
+    inputType: InputType.Enum,
     pkg: List[String] = Nil,
     key: String,
     className: String,

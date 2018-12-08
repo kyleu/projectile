@@ -6,7 +6,7 @@ import com.projectile.models.export.typ.FieldType
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.feature.ModelFeature
 import com.projectile.models.project.member.ModelMember
-import com.projectile.models.input.ModelInputType
+import com.projectile.models.input.InputType
 import com.projectile.util.JsonSerializers._
 
 object ExportModel {
@@ -22,7 +22,7 @@ object ExportModel {
 }
 
 case class ExportModel(
-    inputType: ModelInputType,
+    inputType: InputType.Model,
     key: String,
     pkg: List[String] = Nil,
     propertyName: String,

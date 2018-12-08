@@ -4,7 +4,7 @@ import com.projectile.models.database.schema.View
 import com.projectile.models.export.config.ExportConfigurationDefault
 import com.projectile.models.export.{ExportEnum, ExportModel}
 import com.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
-import com.projectile.models.input.ModelInputType
+import com.projectile.models.input.InputType
 
 object ViewExportModel {
   def loadViewModel(v: View, enums: Seq[ExportEnum]) = {
@@ -12,7 +12,7 @@ object ViewExportModel {
     val title = toDefaultTitle(cn)
 
     ExportModel(
-      inputType = ModelInputType.PostgresView,
+      inputType = InputType.Model.PostgresView,
       key = v.name,
       pkg = Nil,
       propertyName = toIdentifier(cn),

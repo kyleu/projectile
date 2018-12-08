@@ -1,7 +1,7 @@
 package com.projectile.models.thrift.input
 
 import com.projectile.models.export.{ExportField, ExportModel}
-import com.projectile.models.input.ModelInputType
+import com.projectile.models.input.InputType
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import com.projectile.models.thrift.schema.ThriftStruct
@@ -13,7 +13,7 @@ object ThriftExportModel {
     val fields = loadStructFields(s, input)
 
     ExportModel(
-      inputType = ModelInputType.ThriftStruct,
+      inputType = InputType.Model.ThriftStruct,
       key = s.key,
       pkg = s.pkg.toList :+ "models",
       propertyName = toIdentifier(cn),

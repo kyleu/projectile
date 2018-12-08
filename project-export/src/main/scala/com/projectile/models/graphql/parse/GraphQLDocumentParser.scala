@@ -2,7 +2,7 @@ package com.projectile.models.graphql.parse
 
 import com.projectile.models.export.typ.FieldType
 import com.projectile.models.export.{ExportEnum, ExportField, ExportModel}
-import com.projectile.models.input.{EnumInputType, ModelInputType}
+import com.projectile.models.input.InputType
 import com.projectile.models.output.ExportHelper
 import com.projectile.util.Logging
 import sangria.ast._
@@ -65,25 +65,25 @@ object GraphQLDocumentParser extends Logging {
 
   private[this] def parseFragment(schema: Schema[_, _], doc: Document, key: String, f: FragmentDefinition) = {
     val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, f.selections)
-    modelFor(key, ModelInputType.GraphQLFragment, fields)
+    modelFor(key, InputType.Model.GraphQLFragment, fields)
   }
 
   private[this] def parseInput(schema: Schema[_, _], doc: Document, i: InputObjectTypeDefinition) = {
     val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getField(i.name, schema, doc, f._1.name, f._1.valueType, f._2, f._1.defaultValue))
-    modelFor(i.name, ModelInputType.GraphQLInput, fields)
+    modelFor(i.name, InputType.Model.GraphQLInput, fields)
   }
 
   private[this] def parseMutation(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
     val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, o.selections)
-    modelFor(o.name.getOrElse("DefaultMutation"), ModelInputType.GraphQLMutation, fields)
+    modelFor(o.name.getOrElse("DefaultMutation"), InputType.Model.GraphQLMutation, fields)
   }
 
   private[this] def parseQuery(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
     val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, o.selections)
-    modelFor(o.name.getOrElse("DefaultQuery"), ModelInputType.GraphQLQuery, fields)
+    modelFor(o.name.getOrElse("DefaultQuery"), InputType.Model.GraphQLQuery, fields)
   }
 
-  private[this] def modelFor(name: String, it: ModelInputType, fields: Seq[ExportField]) = {
+  private[this] def modelFor(name: String, it: InputType.Model, fields: Seq[ExportField]) = {
     val cn = ExportHelper.toClassName(name)
     val title = ExportHelper.toDefaultTitle(cn)
 
@@ -91,10 +91,10 @@ object GraphQLDocumentParser extends Logging {
       inputType = it,
       key = name,
       pkg = it match {
-        case ModelInputType.GraphQLFragment => List("graphql", "fragment")
-        case ModelInputType.GraphQLInput => List("graphql", "input")
-        case ModelInputType.GraphQLMutation => List("graphql", "mutation")
-        case ModelInputType.GraphQLQuery => List("graphql", "query")
+        case InputType.Model.GraphQLFragment => List("graphql", "fragment")
+        case InputType.Model.GraphQLInput => List("graphql", "input")
+        case InputType.Model.GraphQLMutation => List("graphql", "mutation")
+        case InputType.Model.GraphQLQuery => List("graphql", "query")
         case _ => throw new IllegalStateException()
       },
       propertyName = ExportHelper.toIdentifier(cn),
@@ -113,7 +113,7 @@ object GraphQLDocumentParser extends Logging {
         case i: InputObjectType[_] =>
           val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getInputField(i.name, schema, f._1.name, f._1.fieldType, f._2))
           log.info(s" ::: Loading model [$key]")
-          Seq(Right(modelFor(i.name, ModelInputType.GraphQLInput, fields)))
+          Seq(Right(modelFor(i.name, InputType.Model.GraphQLInput, fields)))
         case _ => throw new IllegalStateException(s"Invalid model type [$t]")
       }
       case _ =>
@@ -127,7 +127,7 @@ object GraphQLDocumentParser extends Logging {
     schema.allTypes.get(key) match {
       case Some(t) => t match {
         case EnumType(name, _, values, _, _) => Seq(Left(ExportEnum(
-          inputType = EnumInputType.GraphQLEnum,
+          inputType = InputType.Enum.GraphQLEnum,
           pkg = List("graphql", "enums"),
           key = name,
           className = ExportHelper.toClassName(name),

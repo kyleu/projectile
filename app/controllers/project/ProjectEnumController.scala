@@ -3,7 +3,7 @@ package controllers.project
 import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.EnumFeature
 import com.projectile.models.graphql.input.GraphQLInput
-import com.projectile.models.input.EnumInputType
+import com.projectile.models.input.InputType
 import com.projectile.models.project.member
 import com.projectile.models.project.member.{EnumMember, MemberOverride}
 import com.projectile.models.thrift.input.ThriftInput
@@ -29,10 +29,10 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
     val p = projectile.getProject(key)
     val inputEnums = projectile.listInputs().map { input =>
       input.key -> (projectile.getInput(input.key) match {
-        case pi: PostgresInput => pi.enums.map(e => (e.key, EnumInputType.PostgresEnum.value, p.enums.exists(x => x.input == pi.key && x.key == e.key)))
+        case pi: PostgresInput => pi.enums.map(e => (e.key, InputType.Enum.PostgresEnum.value, p.enums.exists(x => x.input == pi.key && x.key == e.key)))
         case ti: ThriftInput =>
-          val i = ti.intEnums.map(e => (e.key, EnumInputType.ThriftIntEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
-          val s = ti.stringEnums.map(e => (e.key, EnumInputType.ThriftStringEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
+          val i = ti.intEnums.map(e => (e.key, InputType.Enum.ThriftIntEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
+          val s = ti.stringEnums.map(e => (e.key, InputType.Enum.ThriftStringEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
           i ++ s
         case gi: GraphQLInput => gi.exportEnums.map(e => (e.key, e.inputType.value, p.enums.exists(x => x.input == gi.key && x.key == e.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")

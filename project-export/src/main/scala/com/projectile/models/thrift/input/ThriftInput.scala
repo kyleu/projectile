@@ -1,7 +1,7 @@
 package com.projectile.models.thrift.input
 
 import com.projectile.models.export.ExportEnum
-import com.projectile.models.input.{EnumInputType, Input, InputSummary, InputTemplate}
+import com.projectile.models.input.{InputType, Input, InputSummary, InputTemplate}
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
 
@@ -25,14 +25,14 @@ case class ThriftInput(
   override def exportEnum(key: String) = {
     getThriftEnum(key) match {
       case Left(ie) => ExportEnum(
-        inputType = EnumInputType.ThriftIntEnum,
+        inputType = InputType.Enum.ThriftIntEnum,
         pkg = ie.pkg.toList :+ "models",
         key = ie.key,
         className = ExportHelper.toClassName(ExportHelper.toIdentifier(ie.key)),
         values = ie.values.map(v => v._2 + ":" + v._1)
       )
       case Right(se) => ExportEnum(
-        inputType = EnumInputType.ThriftStringEnum,
+        inputType = InputType.Enum.ThriftStringEnum,
         pkg = se.pkg.toList :+ "models",
         key = se.key,
         className = ExportHelper.toClassName(ExportHelper.toIdentifier(se.key)),

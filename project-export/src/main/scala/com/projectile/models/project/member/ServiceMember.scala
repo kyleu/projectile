@@ -1,7 +1,7 @@
 package com.projectile.models.project.member
 
 import com.projectile.models.feature.ServiceFeature
-import com.projectile.models.input.ServiceInputType
+import com.projectile.models.input.InputType
 import com.projectile.util.JsonSerializers._
 
 object ServiceMember {
@@ -11,7 +11,7 @@ object ServiceMember {
 
 case class ServiceMember(
     input: String,
-    inputType: ServiceInputType,
+    inputType: InputType.Service,
 
     key: String,
     pkg: Seq[String] = Nil,
