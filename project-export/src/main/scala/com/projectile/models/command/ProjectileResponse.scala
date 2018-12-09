@@ -20,6 +20,7 @@ object ProjectileResponse extends Enum[ProjectileResponse] {
   case class ProjectDetail(project: Project) extends ProjectileResponse
 
   case class ProjectAuditResult(logs: Seq[String]) extends ProjectileResponse
+  case class ProjectUpdateResult(logs: Seq[String]) extends ProjectileResponse
   case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputService.WriteResult]) extends ProjectileResponse
 
   override val values = findValues

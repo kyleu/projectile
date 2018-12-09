@@ -2,7 +2,7 @@ package com.projectile.services.project
 
 import io.scalaland.chimney.dsl._
 import com.projectile.models.command.ProjectileCommand._
-import com.projectile.models.command.ProjectileResponse.{JsonResponse, ProjectDetail, ProjectExportResult, ProjectList}
+import com.projectile.models.command.ProjectileResponse._
 import com.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
@@ -10,6 +10,7 @@ import com.projectile.models.project.{Project, ProjectSummary}
 import com.projectile.services.ProjectileService
 import com.projectile.services.output.OutputService
 import com.projectile.services.project.audit.ProjectAuditService
+import com.projectile.services.project.update.ProjectUpdateService
 import com.projectile.util.JsonSerializers._
 
 trait ProjectHelper { this: ProjectileService =>
@@ -28,6 +29,7 @@ trait ProjectHelper { this: ProjectileService =>
 
   def getProject(key: String) = load(key)
   def getProjectSummary(key: String) = summarySvc.getSummary(key)
+  def updateProject(key: String) = ProjectUpdateService.update(this, load(key))
   def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
   def removeProject(key: String) = removeProjectFiles(key)
 
@@ -67,6 +69,7 @@ trait ProjectHelper { this: ProjectileService =>
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
     case ListProjects => ProjectList(listProjects())
     case GetProject(key) => ProjectDetail(getProject(key))
+    case UpdateProject(key) => ProjectUpdateResult(updateProject(key))
     case AddProject(p) => ProjectDetail(saveProject(p))
     case RemoveProject(key) => removeProject(key)
 

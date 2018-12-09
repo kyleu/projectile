@@ -56,7 +56,7 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
       case _ =>
         val orig = i.exportEnum(inputKey)
         val m = EnumMember(input = input, pkg = orig.pkg, key = inputKey, features = p.enumFeatures.toSet)
-        projectile.saveEnumMembers(key, Seq(m))
+        projectile.saveEnumMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added enum [${m.key}]"))
     }

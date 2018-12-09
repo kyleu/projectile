@@ -11,7 +11,6 @@ object ServiceMember {
 
 case class ServiceMember(
     input: String,
-    inputType: InputType.Service,
 
     key: String,
     pkg: Seq[String] = Nil,

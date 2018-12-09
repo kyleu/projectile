@@ -20,6 +20,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
 
   case object ListProjects extends ProjectileCommand
   case class GetProject(key: String) extends ProjectileCommand
+  case class UpdateProject(key: String) extends ProjectileCommand
   case class AddProject(project: ProjectSummary) extends ProjectileCommand
   case class SaveProject(project: Project) extends ProjectileCommand
   case class RemoveProject(key: String) extends ProjectileCommand

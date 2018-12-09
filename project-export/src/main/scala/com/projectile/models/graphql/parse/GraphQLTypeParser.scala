@@ -52,7 +52,11 @@ object GraphQLTypeParser {
 
     case o: ObjectType[_, _] =>
       val fields = GraphQLSelectionParser.fieldsForSelections(ctx, schema, Document.emptyStub, o, selections)
-      true -> FieldType.ObjectType(key = o.name + "Wrapper", fields = fields.map(f => com.projectile.models.export.typ.ObjectField(k = f.key, v = f.t)))
+      if (fields.isEmpty) {
+        true -> FieldType.StructType(key = o.name)
+      } else {
+        true -> FieldType.ObjectType(key = o.name + "Wrapper", fields = fields.map(f => com.projectile.models.export.typ.ObjectField(k = f.key, v = f.t)))
+      }
 
     case _: InterfaceType[_, _] => throw new IllegalStateException("TODO: Interfaces")
     case _: UnionType[_] => throw new IllegalStateException("TODO: Unions")

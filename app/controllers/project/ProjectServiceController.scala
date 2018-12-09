@@ -44,16 +44,15 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
       case "all" =>
         val toSave = i.exportServices.flatMap {
           case m if p.getServiceOpt(m.key).isDefined => None
-          case m => Some(ServiceMember(input = input, pkg = m.pkg, inputType = m.inputType, key = m.key, features = p.serviceFeatures.toSet))
+          case m => Some(ServiceMember(input = input, pkg = m.pkg, key = m.key, features = p.serviceFeatures.toSet))
         }
         val saved = projectile.saveServiceMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} services"))
       case _ =>
         val orig = i.exportServices.find(_.key == inputKey).getOrElse(throw new IllegalStateException(s"Cannot find service [$inputKey] in input [$input]"))
-        val it = InputType.Service.withValue(inputType)
-        val m = ServiceMember(input = input, pkg = orig.pkg, inputType = it, key = inputKey, features = p.serviceFeatures.toSet)
-        projectile.saveServiceMembers(key, Seq(m))
+        val m = ServiceMember(input = input, pkg = orig.pkg, key = inputKey, features = p.serviceFeatures.toSet)
+        projectile.saveServiceMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectServiceController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added service [${m.key}]"))
     }

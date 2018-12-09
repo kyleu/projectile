@@ -23,7 +23,7 @@ object GraphQLSelectionParser {
   }
 
   private[this] def parseSpread(spread: FragmentSpread): Seq[ExportField] = spread match {
-    case _ => throw new IllegalStateException(spread.toString)
+    case _ => Nil
   }
 
   private[this] def parseInline(frag: InlineFragment): Seq[ExportField] = frag match {

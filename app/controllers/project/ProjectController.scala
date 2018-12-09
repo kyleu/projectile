@@ -18,6 +18,11 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
     Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]"))
   }
 
+  def update(key: String) = Action.async { implicit request =>
+    val result = projectile.updateProject(key)
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Updated project [$key]: ${result.mkString("\n")}"))
+  }
+
   def audit(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.auditProject(key, verbose)
     Future.successful(Ok(views.html.project.audit.auditResult(projectile, result)))
