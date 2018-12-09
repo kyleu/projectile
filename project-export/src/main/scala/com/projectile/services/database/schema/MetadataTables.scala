@@ -2,9 +2,8 @@ package com.projectile.services.database.schema
 
 import java.sql.{Connection, DatabaseMetaData}
 
-import com.projectile.models.database.query.Query
 import com.projectile.models.database.schema.{EnumType, Table}
-import com.projectile.services.database.query.{JdbcHelper, JdbcRow, QueryExecutor}
+import com.projectile.services.database.query.JdbcRow
 import com.projectile.util.{Logging, NullUtils}
 
 import scala.util.control.NonFatal

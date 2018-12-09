@@ -11,14 +11,17 @@ import scala.annotation.tailrec
 
 object GraphQLDocumentParser extends Logging {
   def parse(schema: Schema[_, _], doc: Document) = {
-    val fragments = doc.fragments.map(f => parseFragment(schema, doc, f._1, f._2))
-    val inputs = doc.definitions.collect {
-      case x: InputObjectTypeDefinition => parseInput(schema, doc, x)
-    }
-    val mutations = doc.operations.filter(_._2.operationType == OperationType.Mutation).map(q => parseMutation(schema, doc, q._1, q._2))
-    val queries = doc.operations.filter(_._2.operationType == OperationType.Query).map(q => parseQuery(schema, doc, q._1, q._2))
+    val fragments = doc.fragments.values
+    val inputs = doc.definitions.collect { case x: InputObjectTypeDefinition => x }
+    val mutations = doc.operations.filter(_._2.operationType == OperationType.Mutation).values
+    val queries = doc.operations.filter(_._2.operationType == OperationType.Query).values
 
-    val total = fragments ++ inputs ++ mutations ++ queries
+    val total = Seq(
+      fragments.map(f => parseFragment(schema, doc, f)),
+      inputs.map(i => parseInput(schema, doc, i)),
+      mutations.map(m => parseMutation(schema, doc, m)),
+      queries.map(q => parseQuery(schema, doc, q))
+    ).flatten
 
     val ret = total.map(Right.apply).toSeq
 
@@ -57,9 +60,9 @@ object GraphQLDocumentParser extends Logging {
     addReferences(ret)
   }
 
-  private[this] def parseFragment(schema: Schema[_, _], doc: Document, key: String, f: FragmentDefinition) = {
-    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, s"fragment:$key", f.typeCondition, f.selections)
-    GraphQLDocumentHelper.modelFor(key, InputType.Model.GraphQLFragment, Nil, fields)
+  private[this] def parseFragment(schema: Schema[_, _], doc: Document, f: FragmentDefinition) = {
+    val fields = GraphQLSelectionParser.fieldsForSelections(s"fragment:${f.name}", schema, doc, schema.allTypes(f.typeCondition.name), f.selections)
+    GraphQLDocumentHelper.modelFor(f.name, InputType.Model.GraphQLFragment, Nil, fields)
   }
 
   private[this] def parseInput(schema: Schema[_, _], doc: Document, i: InputObjectTypeDefinition) = {
@@ -67,17 +70,23 @@ object GraphQLDocumentParser extends Logging {
     GraphQLDocumentHelper.modelFor(i.name, InputType.Model.GraphQLInput, Nil, fields)
   }
 
-  private[this] def parseMutation(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
-    parseOperation(schema, doc, InputType.Model.GraphQLMutation, key.getOrElse("DefaultMutation"), o)
+  private[this] def parseMutation(schema: Schema[_, _], doc: Document, o: OperationDefinition) = {
+    parseOperation(schema, doc, InputType.Model.GraphQLMutation, o)
   }
 
-  private[this] def parseQuery(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
-    parseOperation(schema, doc, InputType.Model.GraphQLQuery, key.getOrElse("DefaultQuery"), o)
+  private[this] def parseQuery(schema: Schema[_, _], doc: Document, o: OperationDefinition) = {
+    parseOperation(schema, doc, InputType.Model.GraphQLQuery, o)
   }
 
-  private[this] def parseOperation(schema: Schema[_, _], doc: Document, it: InputType.Model, key: String, o: OperationDefinition) = {
-    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, s"$it:$key", NamedType(key), o.selections)
+  private[this] def parseOperation(schema: Schema[_, _], doc: Document, it: InputType.Model, o: OperationDefinition) = {
+    val key = o.name.getOrElse(throw new IllegalStateException("All operations must be named"))
+    val typ = o.operationType match {
+      case OperationType.Query => schema.query
+      case OperationType.Mutation => schema.mutation.get
+      case _ => throw new IllegalStateException(s"Unsupported operation [${o.operationType}]")
+    }
+    val fields = GraphQLSelectionParser.fieldsForSelections(s"$it:$key", schema, doc, typ, o.selections)
     val vars = GraphQLDocumentHelper.parseVariables(schema, doc, o.variables)
-    GraphQLDocumentHelper.modelFor(o.name.getOrElse("DefaultOperation"), it, vars, fields)
+    GraphQLDocumentHelper.modelFor(key, it, vars, fields)
   }
 }

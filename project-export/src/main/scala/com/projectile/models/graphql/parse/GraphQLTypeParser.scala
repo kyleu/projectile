@@ -2,7 +2,7 @@ package com.projectile.models.graphql.parse
 
 import com.projectile.models.export.typ.FieldType
 import sangria.ast._
-import sangria.schema.{EnumType, InputObjectType, InputType, ListInputType, OptionInputType, ScalarAlias, ScalarType, Schema}
+import sangria.schema.{EnumType, InputObjectType, InputType, InterfaceType, ListInputType, ObjectType, OptionInputType, OptionType, OutputType, ScalarAlias, ScalarType, Schema, UnionType}
 
 object GraphQLTypeParser {
   def getType(ctx: String, schema: Schema[_, _], doc: Document, t: Type): (Boolean, FieldType) = t match {
@@ -28,6 +28,17 @@ object GraphQLTypeParser {
     case i: InputObjectType[_] => true -> FieldType.StructType(i.name)
     case l: ListInputType[_] => true -> FieldType.ListType(getInputType(ctx, schema, l.ofType)._2)
     case o: OptionInputType[_] => false -> getInputType(ctx, schema, o.ofType)._2
+    case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)
+    case s: ScalarType[_] => true -> getScalarType(s.name)
+  }
+
+  def getOutputType(ctx: String, schema: Schema[_, _], t: OutputType[_]): (Boolean, FieldType) = t match {
+    case o: OptionType[_] => false -> getOutputType(ctx + "." + o.ofType, schema, o.ofType)._2
+    case l: sangria.schema.ListType[_] => true -> FieldType.ListType(getOutputType(ctx + "." + l.ofType, schema, l.ofType)._2)
+    case o: ObjectType[_, _] => true -> FieldType.StructType(o.name)
+    case i: InterfaceType[_, _] => true -> FieldType.StructType(i.name)
+    case u: UnionType[_] => throw new IllegalStateException("TODO: Unions")
+    case e: EnumType[_] => true -> FieldType.EnumType(e.name)
     case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)
     case s: ScalarType[_] => true -> getScalarType(s.name)
   }
