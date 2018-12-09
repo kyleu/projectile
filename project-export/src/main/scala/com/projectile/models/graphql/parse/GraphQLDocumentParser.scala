@@ -33,7 +33,7 @@ object GraphQLDocumentParser extends Logging {
       }.toSet
 
       val extras = s.flatMap {
-        case Left(_) => Nil
+        case Left(e) => Nil
         case Right(m) => (m.arguments ++ m.fields).map(_.t)
       }.distinct.collect {
         case FieldType.EnumType(key) if !current.apply(key) => GraphQLDocumentHelper.enumFromSchema(schema, key)
@@ -41,11 +41,7 @@ object GraphQLDocumentParser extends Logging {
       }.flatten
 
       if (extras.isEmpty) {
-        val keys = s.map {
-          case Left(x) => x.key
-          case Right(x) => x.key
-        }
-        log.info(s" ::: Completed with keys [${keys.mkString(", ")}]")
+        log.info(s" ::: Completed with keys [${current.toSeq.sorted.mkString(", ")}]")
         s
       } else {
         val keys = extras.map {

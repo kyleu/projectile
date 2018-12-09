@@ -2,7 +2,7 @@ package com.projectile.models.feature.core.graphql
 
 import com.projectile.models.export.ExportField
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.export.typ.{FieldTypeAsScala, ObjectField}
+import com.projectile.models.export.typ.{FieldTypeAsScala, FieldTypeImports, ObjectField}
 import com.projectile.models.output.file.ScalaFile
 import sangria.ast.OperationDefinition
 
@@ -20,7 +20,7 @@ object GraphQLObjectHelper {
 
   def addObjectFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ObjectField]) = {
     fields.foreach { f =>
-      // f.addImport(config, file, Nil)
+      FieldTypeImports.imports(config, f.v).foreach(pkg => file.addImport(pkg.init, pkg.last))
       val param = s"${f.k}: ${FieldTypeAsScala.asScala(config, f.v)}"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
       file.add(param + comma)

@@ -22,10 +22,9 @@ object GraphQLOperationFile {
     GraphQLObjectHelper.addArguments(config, file, model.arguments)
 
     def getObjects(o: FieldType.ObjectType): Seq[(String, FieldType.ObjectType)] = {
-      Seq(o.key -> o)
-      // (o.key -> o) +: o.fields.map(_.v).collect {
-      //   case o: FieldType.ObjectType => getObjects(o)
-      // }.flatten
+      (o.key -> o) +: o.fields.map(_.v).collect {
+        case o: FieldType.ObjectType => getObjects(o)
+      }.flatten
     }
 
     val objs = model.fields.map(_.t).collect {
