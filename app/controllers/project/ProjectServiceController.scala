@@ -29,7 +29,8 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
     val inputServices = projectile.listInputs().map { input =>
       input.key -> (projectile.getInput(input.key) match {
         case _: PostgresInput => Nil
-        case ti: ThriftInput => ti.services.map(s => (s.key, InputType.Service.ThriftService.value, p.services.exists(x => x.input == ti.key && x.key == s.key)))
+        case ti: ThriftInput =>
+          ti.services.map(s => (s.key, InputType.Service.ThriftService.value, p.services.exists(x => x.input == ti.key && x.key == s.key)))
         case x => throw new IllegalStateException(s"Unhandled input [$x]")
       })
     }
@@ -78,7 +79,7 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
       }
     ).flatten
 
-    val methodOverrides = svc.methods.flatMap { m =>
+    val methodOverrides = svc.methods.flatMap { _ =>
       Nil // TODO
     }
 

@@ -20,6 +20,7 @@ object TableExportModel {
       title = title,
       description = t.description,
       plural = title + "s",
+      arguments = Nil,
       fields = loadTableFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(t),
       foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,

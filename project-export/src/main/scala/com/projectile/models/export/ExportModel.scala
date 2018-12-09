@@ -30,6 +30,7 @@ case class ExportModel(
     title: String,
     description: Option[String],
     plural: String,
+    arguments: List[ExportField],
     fields: List[ExportField],
     pkColumns: List[Column] = Nil,
     foreignKeys: List[ForeignKey] = Nil,

@@ -20,6 +20,7 @@ object ViewExportModel {
       title = title,
       description = v.description,
       plural = title + "s",
+      arguments = Nil,
       fields = loadViewFields(v, enums),
       pkColumns = Nil,
       foreignKeys = Nil,

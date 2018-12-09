@@ -8,6 +8,8 @@ object GraphQLSelectionParser {
   def fieldsForSelections(schema: Schema[_, _], doc: Document, selections: Seq[Selection]) = {
     val (spreads, fields) = distribute(selections)
 
+    // TODO
+
     Seq.empty[ExportField]
   }
 

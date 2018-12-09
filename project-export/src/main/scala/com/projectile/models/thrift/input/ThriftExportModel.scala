@@ -21,6 +21,7 @@ object ThriftExportModel {
       title = title,
       description = None,
       plural = title + "s",
+      arguments = Nil,
       fields = fields
     )
   }

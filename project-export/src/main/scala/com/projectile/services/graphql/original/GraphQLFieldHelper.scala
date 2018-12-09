@@ -36,7 +36,7 @@ object GraphQLFieldHelper {
         s"Cannot find field [$typName] on type [${typ.namedType.name}] from [${o.fields.map(_.name).mkString(", ")}]."
       )
     }
-    case x => throw new IllegalStateException(" ::: " + x)
+    case _ => throw new IllegalStateException(s"Cannot extract field type from [$typ]")
   }
 
   def typeForSelections(

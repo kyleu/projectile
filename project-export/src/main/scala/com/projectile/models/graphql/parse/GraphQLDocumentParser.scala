@@ -23,11 +23,13 @@ object GraphQLDocumentParser extends Logging {
 
     val argTypes = {
       val current = total.map(_.key).toSet
-      total.flatMap(_.fields.map(_.t)).toSeq.distinct.collect {
+      total.flatMap(m => (m.arguments ++ m.fields).map(_.t)).toSeq.distinct.collect {
         case FieldType.EnumType(key) if !current.apply(key) => enumFromSchema(schema, key)
         case FieldType.StructType(key) if !current.apply(key) => modelFromSchema(schema, key)
       }.flatten
     }
+
+    log.info(s" ::: $argTypes")
 
     val ret = total.map(Right.apply).toSeq ++ argTypes
 
@@ -65,25 +67,25 @@ object GraphQLDocumentParser extends Logging {
 
   private[this] def parseFragment(schema: Schema[_, _], doc: Document, key: String, f: FragmentDefinition) = {
     val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, f.selections)
-    modelFor(key, InputType.Model.GraphQLFragment, fields)
+    modelFor(key, InputType.Model.GraphQLFragment, Nil, fields)
   }
 
   private[this] def parseInput(schema: Schema[_, _], doc: Document, i: InputObjectTypeDefinition) = {
     val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getField(i.name, schema, doc, f._1.name, f._1.valueType, f._2, f._1.defaultValue))
-    modelFor(i.name, InputType.Model.GraphQLInput, fields)
+    modelFor(i.name, InputType.Model.GraphQLInput, Nil, fields)
   }
 
   private[this] def parseMutation(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
     val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, o.selections)
-    modelFor(o.name.getOrElse("DefaultMutation"), InputType.Model.GraphQLMutation, fields)
+    modelFor(o.name.getOrElse("DefaultMutation"), InputType.Model.GraphQLMutation, parseVariables(schema, doc, o.variables), fields)
   }
 
   private[this] def parseQuery(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
     val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, o.selections)
-    modelFor(o.name.getOrElse("DefaultQuery"), InputType.Model.GraphQLQuery, fields)
+    modelFor(o.name.getOrElse("DefaultQuery"), InputType.Model.GraphQLQuery, parseVariables(schema, doc, o.variables), fields)
   }
 
-  private[this] def modelFor(name: String, it: InputType.Model, fields: Seq[ExportField]) = {
+  private[this] def modelFor(name: String, it: InputType.Model, arguments: Seq[ExportField], fields: Seq[ExportField]) = {
     val cn = ExportHelper.toClassName(name)
     val title = ExportHelper.toDefaultTitle(cn)
 
@@ -102,6 +104,7 @@ object GraphQLDocumentParser extends Logging {
       title = title,
       description = None,
       plural = title + "s",
+      arguments = arguments.toList,
       fields = fields.toList
     )
   }
@@ -113,7 +116,7 @@ object GraphQLDocumentParser extends Logging {
         case i: InputObjectType[_] =>
           val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getInputField(i.name, schema, f._1.name, f._1.fieldType, f._2))
           log.info(s" ::: Loading model [$key]")
-          Seq(Right(modelFor(i.name, InputType.Model.GraphQLInput, fields)))
+          Seq(Right(modelFor(i.name, InputType.Model.GraphQLInput, Nil, fields)))
         case _ => throw new IllegalStateException(s"Invalid model type [$t]")
       }
       case _ =>
@@ -139,5 +142,17 @@ object GraphQLDocumentParser extends Logging {
         val candidates = schema.allTypes.toSeq.filter(_._2.isInstanceOf[EnumType[_]]).map(_._1).sorted.mkString(", ")
         throw new IllegalStateException(s"Cannot find type [$key] in schema from candidates [$candidates]")
     }
+  }
+
+  private[this] def parseVariables(schema: Schema[_, _], doc: Document, variables: Seq[VariableDefinition]) = variables.zipWithIndex.map { v =>
+    GraphQLFieldParser.getField(
+      ctx = "",
+      schema = schema,
+      doc = doc,
+      name = v._1.name,
+      t = v._1.tpe,
+      idx = v._2,
+      defaultValue = v._1.defaultValue
+    )
   }
 }
