@@ -30,9 +30,9 @@ object ThriftSchemaInputHelper {
     case XmlType => "StringType"
     case UuidType => "uuidType"
 
+    case EnumType(key) => config.getEnum(key, "graphql thrift").propertyName + "InputType"
+    case StructType(key) => config.getModel(key, "graphql thrift").propertyName + "InputType"
     case ObjectType(_, _) => throw new IllegalStateException("Object types are not supported in Thrift")
-    case StructType(key) => config.getModel(key).propertyName + "InputType"
-    case EnumType(key) => config.getEnum(key).propertyName + "InputType"
 
     case ListType(typ) => s"ListInputType(${graphQlInputTypeFor(typ, config)})"
     case SetType(typ) => s"ListInputType(${graphQlInputTypeFor(typ, config)})"

@@ -108,7 +108,7 @@ case class ExportModel(
     references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)
   }
   def transformedReferences(config: ExportConfiguration) = validReferences(config).flatMap { r =>
-    val src = config.getModel(r.srcTable)
+    val src = config.getModel(r.srcTable, s"$className reference ${r.name}")
     getFieldOpt(r.tgt).flatMap(f => src.getFieldOpt(r.srcCol).map(tf => (r, f, src, tf)))
   }.groupBy(_._1.name).values.map(_.head).toSeq.sortBy(_._1.name)
 

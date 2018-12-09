@@ -37,7 +37,7 @@ object ControllerReferences {
   }
 
   def refServiceArgs(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
-    val refServices = model.validReferences(config).map(_.srcTable).distinct.map(config.getModel)
+    val refServices = model.validReferences(config).map(_.srcTable).distinct.map(m => config.getModel(m, "reference args"))
     refServices.foreach(s => file.addImport(config.applicationPackage ++ s.servicePackage, s.className + "Service"))
     refServices.map(s => s.propertyName + "S: " + s.className + "Service").mkString(", ")
   }

@@ -22,7 +22,7 @@ object TwirlDataRowFile {
         model.foreignKeys.find(_.references.forall(_.source == c.key)) match {
           case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
             file.add("<td>", 1)
-            val tgt = config.getModel(fk.targetTable)
+            val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
             if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
               throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
             }

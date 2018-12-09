@@ -29,9 +29,9 @@ object FieldTypeAsScala {
     case UuidType => "UUID"
 
     case ObjectType(k, _) => k
-    case StructType(key) => config.getModel(key).className
+    case StructType(key) => config.getModel(key, "asScala").className
 
-    case EnumType(key) => config.getEnum(key).className
+    case EnumType(key) => config.getEnum(key, "asScala").className
     case ListType(typ) => s"List[${asScala(config, typ)}]"
     case SetType(typ) => s"Set[${asScala(config, typ)}]"
     case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"

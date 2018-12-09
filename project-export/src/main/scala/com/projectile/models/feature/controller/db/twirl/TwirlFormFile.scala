@@ -31,7 +31,9 @@ object TwirlFormFile {
     file.add("<tbody>", 1)
 
     model.fields.foreach { field =>
-      val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.key)).map(x => x -> config.getModel(x.targetTable))
+      val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.key)).map { fk =>
+        fk -> config.getModel(fk.targetTable, s"foreign key ${fk.name}")
+      }
       TwirlFormFields.fieldFor(config, model, field, file, autocomplete)
     }
 

@@ -27,8 +27,8 @@ object ThriftControllerArgumentHelper {
       val vd = getDefault(v, config)
       s"Map($kd -> $vd)"
 
-    case FieldType.EnumType(key) => config.getEnum(key).className + "TODO"
-    case FieldType.StructType(key) => config.getModel(key).className + "()"
+    case FieldType.EnumType(key) => config.getEnum(key, "field default").className + "TODO"
+    case FieldType.StructType(key) => config.getModel(key, "field default").className + "()"
 
     case x => throw new IllegalStateException(s"Unhandled field type [$x]")
   }

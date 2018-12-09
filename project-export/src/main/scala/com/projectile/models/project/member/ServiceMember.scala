@@ -1,7 +1,6 @@
 package com.projectile.models.project.member
 
 import com.projectile.models.feature.ServiceFeature
-import com.projectile.models.input.InputType
 import com.projectile.util.JsonSerializers._
 
 object ServiceMember {

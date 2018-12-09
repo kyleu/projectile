@@ -20,7 +20,8 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def update(key: String) = Action.async { implicit request =>
     val result = projectile.updateProject(key)
-    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Updated project [$key]: ${result.mkString("\n")}"))
+    val msg = s"Updated project [$key]: ${result.mkString("\n")}"
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
   }
 
   def audit(key: String, verbose: Boolean) = Action.async { implicit request =>

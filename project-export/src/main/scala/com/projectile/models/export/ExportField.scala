@@ -30,7 +30,7 @@ object ExportField {
 
     case _: ListType => "List.empty"
     case EnumType(key) =>
-      val enum = config.getEnum(key)
+      val enum = config.getEnum(key, "field default")
       val (_, cn) = defaultValue.flatMap(d => enum.valuesWithClassNames.find(_._1 == d)).getOrElse {
         enum.valuesWithClassNames.headOption.getOrElse(throw new IllegalStateException(s"No enum values for [${enum.key}]."))
       }

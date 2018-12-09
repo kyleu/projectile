@@ -13,7 +13,8 @@ object TwirlViewFile {
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
     file.add(s"@(user: $modelPath.user.SystemUser, model: ${model.fullClassPath(config)}, notes: Seq[$modelPath.note.Note]$audits, debug: Boolean)(")
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${config.utilitiesPackage.mkString(".")}.tracing.TraceData")
+    val td = s"${(config.utilitiesPackage :+ "tracing").mkString(".")}.TraceData"
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
     val viewPkg = (config.viewPackage ++ Seq("html", "admin")).mkString(".")
     file.add(s""")@traceData.logClass(getClass)@$viewPkg.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
@@ -23,10 +24,12 @@ object TwirlViewFile {
     if (model.pkFields.nonEmpty) {
       val onClick = s"""onclick="return confirm('Are you sure you want to remove this ${model.title}?')""""
       file.add(s"""<div class="right"><a class="theme-text" href="@${TwirlHelper.routesClass(config, model)}.editForm($args)">Edit</a></div>""")
-      file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@${TwirlHelper.routesClass(config, model)}.remove($args)">Remove</a></div>""")
+      val rc = TwirlHelper.routesClass(config, model)
+      file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@$rc.remove($args)">Remove</a></div>""")
     }
     file.add("<h5>", 1)
-    file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, model)}.list()">""" + TwirlHelper.iconHtml(config, model.propertyName) + "</a>")
+    val modelIcon = TwirlHelper.iconHtml(config, model.propertyName)
+    file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, model)}.list()">""" + modelIcon + "</a>")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
     file.add(s"""${model.title} [$toTwirl]""")
     file.add("</h5>", -1)
@@ -41,7 +44,7 @@ object TwirlViewFile {
       model.foreignKeys.find(_.references.forall(_.source == field.key)) match {
         case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
           file.add("<td>", 1)
-          val tgt = config.getModel(fk.targetTable)
+          val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
           if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
           }
@@ -51,10 +54,12 @@ object TwirlViewFile {
             file.add(s"@model.${field.propertyName}.getOrElse(${config.utilitiesPackage.mkString(".")}.NullUtils.str)")
           }
           if (field.required) {
-            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
+            val icon = TwirlHelper.iconHtml(config, tgt.propertyName)
+            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
           } else {
             file.add(s"@model.${field.propertyName}.map { v =>", 1)
-            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
+            val rc = TwirlHelper.routesClass(config, tgt)
+            file.add(s"""<a class="theme-text" href="@$rc.view(v)">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
             file.add("}", -1)
           }
           file.add("</td>", -1)

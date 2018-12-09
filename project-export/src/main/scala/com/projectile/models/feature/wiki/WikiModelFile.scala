@@ -3,7 +3,7 @@ package com.projectile.models.feature.wiki
 import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.output.OutputPath
-import com.projectile.models.output.file.{MarkdownFile}
+import com.projectile.models.output.file.MarkdownFile
 
 object WikiModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
@@ -21,7 +21,7 @@ object WikiModelFile {
     if (model.references.nonEmpty) {
       file.addHeader("References", 2)
       MarkdownFile.table(file, Seq(('l', 30, "Name"), ('l', 20, "Target"), ('l', 40, "Table"), ('l', 20, "Column")), model.references.sortBy(_.name).map { r =>
-        val src = config.getModel(r.srcTable)
+        val src = config.getModel(r.srcTable, "wiki")
         Seq(r.name, r.tgt, MarkdownFile.link(r.srcTable, s"DatabaseTable${src.className}"), r.srcCol)
       })
     }

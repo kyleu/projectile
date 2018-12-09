@@ -10,7 +10,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
     def searchStringFieldsFor(s: String) = {
-      val stringModels = markers.getOrElse("string-search", Nil).map(s => InjectSearchParams(config.getModel(s)))
+      val stringModels = markers.getOrElse("string-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search strings")))
 
       if (stringModels.isEmpty) {
         s
@@ -28,7 +28,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
     }
 
     def searchIntFieldsFor(s: String) = {
-      val intModels = markers.getOrElse("int-search", Nil).map(s => InjectSearchParams(config.getModel(s)))
+      val intModels = markers.getOrElse("int-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search ints")))
 
       if (intModels.isEmpty) {
         s
@@ -46,7 +46,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
     }
 
     def searchUuidFieldsFor(s: String) = {
-      val uuidModels = markers.getOrElse("uuid-search", Nil).map(s => InjectSearchParams(config.getModel(s)))
+      val uuidModels = markers.getOrElse("uuid-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search uuids")))
 
       if (uuidModels.isEmpty) {
         s

@@ -33,7 +33,7 @@ object GraphQLDocumentParser extends Logging {
       }.toSet
 
       val extras = s.flatMap {
-        case Left(e) => Nil
+        case Left(_) => Nil
         case Right(m) => (m.arguments ++ m.fields).map(_.t)
       }.distinct.collect {
         case FieldType.EnumType(key) if !current.apply(key) => GraphQLDocumentHelper.enumFromSchema(schema, key)

@@ -13,16 +13,48 @@ object ProjectUpdateService {
       case InputTemplate.GraphQL => true
       case InputTemplate.Filesystem => true
     })
-    inputs.flatMap { i =>
+    inputs.map { i =>
       val enums = i.exportEnums.filterNot(ek => p.enums.exists(_.key == ek.key))
       val models = i.exportModels.filterNot(mk => p.models.exists(_.key == mk.key))
       val services = i.exportServices.filterNot(sk => p.services.exists(_.key == sk.key))
 
-      enums.foreach(e => svc.saveEnumMember(p.key, EnumMember(input = i.key, pkg = e.pkg, key = e.key, features = p.enumFeatures.toSet)))
-      models.foreach(m => svc.saveModelMember(p.key, ModelMember(input = i.key, pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet)))
-      services.foreach(s => svc.saveServiceMember(p.key, ServiceMember(input = i.key, pkg = s.pkg, key = s.key, features = p.serviceFeatures.toSet)))
+      val enumsToRemove = p.enums.filterNot(ek => i.exportEnums.exists(_.key == ek.key))
+      val modelsToRemove = p.models.filterNot(mk => i.exportModels.exists(_.key == mk.key))
+      val servicesToRemove = p.services.filterNot(sk => i.exportServices.exists(_.key == sk.key))
 
-      Some(s"Updated input [${i.key}], adding [${enums.size}] enums, [${models.size}] models, and [${services.size}] services.")
+      val ea = enums.map { e =>
+        svc.saveEnumMember(p.key, EnumMember(input = i.key, pkg = e.pkg, key = e.key, features = p.enumFeatures.toSet))
+        s"Added enum [${e.key}]"
+      }
+      val ma = models.map { m =>
+        svc.saveModelMember(p.key, ModelMember(input = i.key, pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet))
+        s"Added model [${m.key}]"
+      }
+      val sa = services.map { s =>
+        svc.saveServiceMember(p.key, ServiceMember(input = i.key, pkg = s.pkg, key = s.key, features = p.serviceFeatures.toSet))
+        s"Added service [${s.key}]"
+      }
+
+      val er = enumsToRemove.map { e =>
+        svc.removeEnumMember(p.key, e.key)
+        s"Removed enum [${e.key}]"
+      }
+      val mr = modelsToRemove.map { m =>
+        svc.removeModelMember(p.key, m.key)
+        s"Removed model [${m.key}]"
+      }
+      val sr = servicesToRemove.map { s =>
+        svc.removeServiceMember(p.key, s.key)
+        s"Removed service [${s.key}]"
+      }
+
+      val results = ea ++ ma ++ sa ++ er ++ mr ++ sr
+      val msg = if (results.isEmpty) {
+        "No changes required"
+      } else {
+        results.mkString(", ")
+      }
+      s"Updated input [${i.key}]: $msg"
     }
   }
 }

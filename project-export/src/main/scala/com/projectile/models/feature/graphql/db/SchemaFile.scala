@@ -14,7 +14,7 @@ object SchemaFile {
 
     model.fields.foreach(_.t match {
       case EnumType(key) =>
-        val e = config.getEnum(key)
+        val e = config.getEnum(key, "schema file")
         file.addImport(config.applicationPackage ++ e.modelPackage :+ e.className + "Schema", s"${e.propertyName}EnumType")
       case _ => // noop
     })

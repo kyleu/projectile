@@ -17,7 +17,7 @@ object QueriesHelper {
       case FieldType.UuidType => "UuidArrayType"
       case _ => "StringArrayType"
     }
-    case FieldType.EnumType(k) => s"EnumType(${config.getEnum(k).className})"
+    case FieldType.EnumType(k) => s"EnumType(${config.getEnum(k, "sql class name").className})"
     case _ => t.className
   }
 
