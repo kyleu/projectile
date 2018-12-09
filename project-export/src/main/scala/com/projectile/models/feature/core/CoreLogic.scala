@@ -26,6 +26,7 @@ object CoreLogic extends FeatureLogic {
         case InputType.Model.GraphQLInput => Seq(GraphQLInputFile.export(config, model).rendered)
         case InputType.Model.GraphQLMutation => Seq(GraphQLOperationFile.export(config, model).rendered)
         case InputType.Model.GraphQLQuery => Seq(GraphQLOperationFile.export(config, model).rendered)
+        case InputType.Model.GraphQLReference => Nil
       }
     }
     val services = config.services.filter(_.features(ServiceFeature.Core)).flatMap { svc =>

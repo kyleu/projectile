@@ -23,7 +23,7 @@ object GraphQLDocumentParser extends Logging {
       queries.map(q => parseQuery(schema, doc, q))
     ).flatten
 
-    val ret = total.map(Right.apply).toSeq
+    val ret = total.map(Right.apply)
 
     @tailrec
     def addReferences(s: Seq[Either[ExportEnum, ExportModel]]): Seq[Either[ExportEnum, ExportModel]] = {

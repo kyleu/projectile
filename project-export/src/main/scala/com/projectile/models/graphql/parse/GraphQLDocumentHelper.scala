@@ -19,6 +19,7 @@ object GraphQLDocumentHelper {
         case InputType.Model.GraphQLInput => List("graphql", "input")
         case InputType.Model.GraphQLMutation => List("graphql", "mutation")
         case InputType.Model.GraphQLQuery => List("graphql", "query")
+        case InputType.Model.GraphQLReference => List("graphql", "reference")
         case _ => throw new IllegalStateException()
       },
       propertyName = ExportHelper.toIdentifier(cn),

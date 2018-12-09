@@ -2,7 +2,7 @@ package com.projectile.models.feature.core.graphql
 
 import com.projectile.models.export.ExportField
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.export.typ.FieldTypeAsScala
+import com.projectile.models.export.typ.{FieldTypeAsScala, ObjectField}
 import com.projectile.models.output.file.ScalaFile
 import sangria.ast.OperationDefinition
 
@@ -18,10 +18,20 @@ object GraphQLObjectHelper {
     }
   }
 
+  def addObjectFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ObjectField]) = {
+    fields.foreach { f =>
+      // f.addImport(config, file, Nil)
+      val param = s"${f.k}: ${FieldTypeAsScala.asScala(config, f.v)}"
+      val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
+      file.add(param + comma)
+    }
+  }
+
   def addArguments(config: ExportConfiguration, file: ScalaFile, arguments: Seq[ExportField]) = if (arguments.nonEmpty) {
+    file.addImport(Seq("io", "circe"), "Json")
     val args = arguments.map { f =>
       f.addImport(config, file, Nil)
-      val typ = f.t.toString
+      val typ = FieldTypeAsScala.asScala(config, f.t)
       val dv = f.defaultValue.map(" = " + _).getOrElse("")
       s"${f.propertyName}: $typ$dv"
     }.mkString(", ")
@@ -29,6 +39,7 @@ object GraphQLObjectHelper {
     file.add(s"def variables($args) = {", 1)
     file.add(s"Json.obj($varsDecl)")
     file.add("}", -1)
+    file.add()
   }
 
   def addContent(file: ScalaFile, op: OperationDefinition) = {

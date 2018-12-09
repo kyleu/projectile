@@ -31,7 +31,7 @@ object GraphQLSelectionParser {
   }
 
   private[this] def parseField(ctx: String, schema: Schema[_, _], doc: Document, typ: Typ, field: Field): Option[ExportField] = {
-    val x = typ match {
+    val fieldType = typ match {
       case o: ObjectType[_, _] => o.fields.find(_.name == field.name) match {
         case Some(f) => f.fieldType
         case None =>
@@ -40,6 +40,6 @@ object GraphQLSelectionParser {
       }
       case _ => throw new IllegalStateException(s"Cannot extract field type from [$typ]")
     }
-    Some(GraphQLFieldParser.getOutputField(ctx, schema, doc, field.name, x, None))
+    Some(GraphQLFieldParser.getOutputField(ctx, schema, field.name, fieldType, field.selections))
   }
 }

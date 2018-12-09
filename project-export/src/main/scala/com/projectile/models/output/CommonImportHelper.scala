@@ -30,6 +30,7 @@ object CommonImportHelper {
       case "Filter" => c.resultsPackage :+ "filter"
       case "FutureUtils" => c.utilitiesPackage
       case "GraphQLContext" => c.applicationPackage :+ "graphql"
+      case "GraphQLQuery" => c.applicationPackage :+ "graphql"
       case "GraphQLSchemaHelper" => c.applicationPackage :+ "graphql"
       case "GraphQLUtils" => c.systemPackage :+ "graphql"
       case "JsonSerializers" => c.utilitiesPackage

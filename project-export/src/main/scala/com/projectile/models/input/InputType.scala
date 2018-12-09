@@ -29,6 +29,7 @@ object InputType {
     case object GraphQLInput extends Model(value = "graphql-input", isGraphQL = true)
     case object GraphQLMutation extends Model(value = "graphql-mutation", isGraphQL = true)
     case object GraphQLQuery extends Model(value = "graphql-query", isGraphQL = true)
+    case object GraphQLReference extends Model(value = "graphql-reference", isGraphQL = true)
 
     override val values = findValues
   }
