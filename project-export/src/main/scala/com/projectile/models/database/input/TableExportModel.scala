@@ -28,13 +28,13 @@ object TableExportModel {
     )
   }
 
-  private[this] def loadTableFields(t: Table, enums: Seq[ExportEnum]) = t.columns.zipWithIndex.toList.map { col =>
+  private[this] def loadTableFields(t: Table, enums: Seq[ExportEnum]) = t.columns.toList.map { col =>
     val banned = t.name match {
-      case "audit_record" if col._1.name == "changes" => true
+      case "audit_record" if col.name == "changes" => true
       case _ => false
     }
-    val inPk = t.primaryKey.exists(_.columns.contains(col._1.name))
-    val idxs = t.indexes.filter(i => i.columns.exists(_.name == col._1.name)).map(i => i.name -> i.unique)
+    val inPk = t.primaryKey.exists(_.columns.contains(col.name))
+    val idxs = t.indexes.filter(i => i.columns.exists(_.name == col.name)).map(i => i.name -> i.unique)
     val inIndex = idxs.nonEmpty
     val unique = idxs.exists(_._2)
     def extras = t.name match {
@@ -45,7 +45,7 @@ object TableExportModel {
       case "scheduled_task_run" => Set("arguments")
       case _ => Set.empty[String]
     }
-    val inSearch = (!banned) && (inPk || inIndex || extras(col._1.name))
-    ExportConfigurationDefault.loadField(col._1, col._2, inIndex, unique, inSearch, enums)
+    val inSearch = (!banned) && (inPk || inIndex || extras(col.name))
+    ExportConfigurationDefault.loadField(col, inIndex, unique, inSearch, enums)
   }
 }

@@ -17,10 +17,11 @@ object ThriftModelFile {
     file.add()
 
     file.add(s"struct ${model.className} {", 1)
-    model.fields.foreach { field =>
-      val thriftType = ExportFieldThrift.thriftType(field.t, config)
-      val thriftVisibility = if (field.required) { "required" } else { "optional" }
-      file.add(s"${field.idx + 1}: $thriftVisibility $thriftType ${field.propertyName};")
+    model.fields.zipWithIndex.foreach {
+      case (field, idx) =>
+        val thriftType = ExportFieldThrift.thriftType(field.t, config)
+        val thriftVisibility = if (field.required) { "required" } else { "optional" }
+        file.add(s"${idx + 1}: $thriftVisibility $thriftType ${field.propertyName};")
     }
     file.add("}", -1)
     file.add()

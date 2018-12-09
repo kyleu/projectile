@@ -28,7 +28,7 @@ object ViewExportModel {
     )
   }
 
-  private[this] def loadViewFields(v: View, enums: Seq[ExportEnum]) = v.columns.zipWithIndex.toList.map { col =>
-    ExportConfigurationDefault.loadField(col = col._1, idx = col._2, indexed = false, unique = false, enums = enums)
+  private[this] def loadViewFields(v: View, enums: Seq[ExportEnum]) = v.columns.toList.map { col =>
+    ExportConfigurationDefault.loadField(col = col, indexed = false, unique = false, enums = enums)
   }
 }

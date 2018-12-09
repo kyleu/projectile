@@ -35,7 +35,7 @@ object GraphQLDocumentHelper {
     schema.allTypes.get(key) match {
       case Some(t) => t match {
         case i: InputObjectType[_] =>
-          val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getInputField(i.name, schema, f._1.name, f._1.fieldType, f._2))
+          val fields = i.fields.map(f => GraphQLFieldParser.getInputField(i.name, schema, f.name, f.fieldType))
           Seq(Right(modelFor(i.name, InputType.Model.GraphQLInput, Nil, fields)))
         case _ => throw new IllegalStateException(s"Invalid model type [$t]")
       }
@@ -63,15 +63,14 @@ object GraphQLDocumentHelper {
     }
   }
 
-  def parseVariables(schema: Schema[_, _], doc: Document, variables: Seq[VariableDefinition]) = variables.zipWithIndex.map { v =>
+  def parseVariables(schema: Schema[_, _], doc: Document, variables: Seq[VariableDefinition]) = variables.map { v =>
     GraphQLFieldParser.getField(
       ctx = "",
       schema = schema,
       doc = doc,
-      name = v._1.name,
-      t = v._1.tpe,
-      idx = v._2,
-      defaultValue = v._1.defaultValue
+      name = v.name,
+      t = v.tpe,
+      defaultValue = v.defaultValue
     )
   }
 }

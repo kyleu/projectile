@@ -59,4 +59,16 @@ class InputController @javax.inject.Inject() () extends BaseController {
     val removed = projectile.removeInput(key)
     Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("success" -> s"Removed input [$key]: $removed"))
   }
+
+  def enumDetail(key: String, enum: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.input.detailEnum(projectile, projectile.getInput(key).getEnum(enum))))
+  }
+
+  def modelDetail(key: String, model: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.input.detailModel(projectile, projectile.getInput(key).getModel(model))))
+  }
+
+  def serviceDetail(key: String, service: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.input.detailService(projectile, projectile.getInput(key).getService(service))))
+  }
 }

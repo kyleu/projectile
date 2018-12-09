@@ -1,31 +1,39 @@
 package com.projectile.models.feature.core.graphql
 
-import com.projectile.models.export.{ExportField, ExportModel}
+import com.projectile.models.export.ExportField
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.typ.FieldTypeAsScala
 import com.projectile.models.output.file.ScalaFile
+import sangria.ast.OperationDefinition
+
+import scala.io.Source
 
 object GraphQLObjectHelper {
-  def objectFor(config: ExportConfiguration, file: ScalaFile, m: ExportModel, incEncoder: Boolean = false): Unit = {
-    file.add(s"object ${m.className} {", 1)
-
-    file.add(s"implicit val jsonDecoder: Decoder[${m.className}] = deriveDecoder")
-    if (incEncoder) {
-      file.add(s"implicit val jsonEncoder: Encoder[${m.className}] = deriveEncoder")
-    }
-    file.add("}", -1)
-    file.add()
-    file.add(s"case class ${m.className}(", 2)
-    addFields(config, file, m.fields)
-    file.add(")", -2)
-  }
-
-  private[this] def addFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ExportField]) = {
+  def addFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ExportField]) = {
     fields.foreach { f =>
       f.addImport(config, file, Nil)
       val param = s"${f.propertyName}: ${FieldTypeAsScala.asScala(config, f.t)}"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
       file.add(param + comma)
     }
+  }
+
+  def addArguments(config: ExportConfiguration, file: ScalaFile, arguments: Seq[ExportField]) = if (arguments.nonEmpty) {
+    val args = arguments.map { f =>
+      f.addImport(config, file, Nil)
+      val typ = f.t.toString
+      val dv = f.defaultValue.map(" = " + _).getOrElse("")
+      s"${f.propertyName}: $typ$dv"
+    }.mkString(", ")
+    val varsDecl = arguments.map(v => s""""${v.propertyName}" -> ${v.propertyName}.asJson""").mkString(", ")
+    file.add(s"def variables($args) = {", 1)
+    file.add(s"Json.obj($varsDecl)")
+    file.add("}", -1)
+  }
+
+  def addContent(file: ScalaFile, op: OperationDefinition) = {
+    file.add("override val content = \"\"\"", 1)
+    Source.fromString(op.renderPretty).getLines.foreach(l => file.add("|" + l))
+    file.add("\"\"\".stripMargin.trim", -1)
   }
 }

@@ -51,7 +51,7 @@
       @input.intEnums.map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/int-enum/${e.key}.json")" class="theme-text">@e.key</a>
+          <a href="@controllers.input.routes.InputController.enumDetail(input.key, e.key)" class="theme-text">@e.key</a>
         </div>
       }
     </div>
@@ -65,7 +65,7 @@
       @input.stringEnums.map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/string-enum/${e.key}.json")" class="theme-text">@e.key</a>
+          <a href="@controllers.input.routes.InputController.enumDetail(input.key, e.key)" class="theme-text">@e.key</a>
         </div>
       }
     </div>
@@ -79,7 +79,7 @@
       @input.structs.map { s =>
         <div class="collection-item">
           <div class="right">@s.fields.size fields</div>
-          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/struct/${s.key}.json")" class="theme-text">@s.key</a>
+          <a href="@controllers.input.routes.InputController.modelDetail(input.key, s.key)" class="theme-text">@s.key</a>
         </div>
       }
     </div>
@@ -93,7 +93,7 @@
       @input.services.map { s =>
         <div class="collection-item">
           <div class="right">@s.methods.size methods</div>
-          <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/service/${s.key}.json")" class="theme-text">@s.key</a>
+          <a href="@controllers.input.routes.InputController.serviceDetail(input.key, s.key)" class="theme-text">@s.key</a>
         </div>
       }
     </div>

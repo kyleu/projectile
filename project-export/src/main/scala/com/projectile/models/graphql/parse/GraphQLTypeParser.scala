@@ -32,7 +32,7 @@ object GraphQLTypeParser {
     case s: ScalarType[_] => true -> getScalarType(s.name)
   }
 
-  private[this] def getScalarType(name: String) = name match {
+  def getScalarType(name: String) = name match {
     case "Boolean" => FieldType.BooleanType
     case "BigDecimal" => FieldType.BigDecimalType
     case "Date" => FieldType.DateType

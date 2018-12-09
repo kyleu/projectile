@@ -24,4 +24,7 @@ abstract class Input() extends Ordered[Input] {
 
   def getModelOpt(k: String) = exportModels.find(_.key == k)
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
+
+  def getServiceOpt(k: String) = exportServices.find(_.key == k)
+  def getService(k: String) = getServiceOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
 }

@@ -1,0 +1,12 @@
+@(projectile: com.projectile.services.ProjectileService, service: com.projectile.models.export.ExportService)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile, s"[${service.key}] Service Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class=" @com.projectile.models.template.Icons.service"></i> @service.key</h5>
+    </div>
+    <div class="collection-item">
+      <pre>@com.projectile.util.JsonSerializers.printJson(com.projectile.util.JsonSerializers.encoderOps(service).asJson)</pre>
+    </div>
+  </div>
+}

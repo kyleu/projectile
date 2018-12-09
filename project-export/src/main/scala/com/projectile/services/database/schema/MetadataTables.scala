@@ -21,7 +21,7 @@ object MetadataTables extends Logging {
     val startMs = System.currentTimeMillis
     log.info(s"Loading [${tables.size}] tables...")
     val ret = tables.zipWithIndex.map { table =>
-      if (table._2 > 0 && table._2 % 25 == 0) { log.info(s"Processed [${table._2}/${tables.size}] tables...") }
+      if (table._2 > 0 && table._2 % 10 == 0) { log.info(s"Processed [${table._2}/${tables.size}] tables...") }
       getTableDetails(conn, metadata, table._1, enums)
     }
     log.info(s"[${tables.size}] tables loaded in [${System.currentTimeMillis - startMs}ms]")

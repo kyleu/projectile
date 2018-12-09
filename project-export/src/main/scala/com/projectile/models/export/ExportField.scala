@@ -48,7 +48,6 @@ case class ExportField(
     propertyName: String,
     title: String,
     description: Option[String],
-    idx: Int = 0,
     t: FieldType,
     defaultValue: Option[String] = None,
     required: Boolean = false,

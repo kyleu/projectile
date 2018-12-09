@@ -16,19 +16,17 @@ object ThriftExportService {
     features = Set.empty
   )
 
-  private[this] def loadArguments(args: Seq[ThriftStructField], input: ThriftInput) = args.zipWithIndex.map {
-    case (f, idx) =>
-      val t = ThriftFileHelper.columnTypeFor(f.t, input)
-      ExportField(
-        key = f.key,
-        propertyName = ExportHelper.toIdentifier(f.name),
-        title = ExportHelper.toDefaultTitle(f.key),
-        description = None,
-        idx = idx,
-        t = t,
-        defaultValue = f.value.map(_.toString),
-        required = f.required
-      )
+  private[this] def loadArguments(args: Seq[ThriftStructField], input: ThriftInput) = args.map { arg =>
+    val t = ThriftFileHelper.columnTypeFor(arg.t, input)
+    ExportField(
+      key = arg.key,
+      propertyName = ExportHelper.toIdentifier(arg.name),
+      title = ExportHelper.toDefaultTitle(arg.key),
+      description = None,
+      t = t,
+      defaultValue = arg.value.map(_.toString),
+      required = arg.required
+    )
   }.toList
 
   private[this] def loadServiceMethods(s: ThriftService, input: ThriftInput) = s.methods.map { m =>

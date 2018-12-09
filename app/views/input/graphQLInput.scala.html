@@ -48,7 +48,7 @@
       @input.exportEnums.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.inputType</div>
-          @e.className
+          <a href="@controllers.input.routes.InputController.enumDetail(input.key, e.key)" class="theme-text">@e.key</a>
         </div>
       }
     </div>
@@ -62,7 +62,7 @@
       @input.exportModels.sortBy(_.key).map { m =>
         <div class="collection-item">
           <div class="right">@m.inputType</div>
-          @m.className
+          <a href="@controllers.input.routes.InputController.modelDetail(input.key, m.key)" class="theme-text">@m.key</a>
         </div>
       }
     </div>
@@ -76,7 +76,7 @@
       @input.exportServices.sortBy(_.key).map { s =>
         <div class="collection-item">
           <div class="right">@s.inputType</div>
-          @s.className
+          <a href="@controllers.input.routes.InputController.serviceDetail(input.key, s.key)" class="theme-text">@s.key</a>
         </div>
       }
     </div>

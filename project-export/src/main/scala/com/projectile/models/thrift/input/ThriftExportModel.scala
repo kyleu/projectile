@@ -26,18 +26,16 @@ object ThriftExportModel {
     )
   }
 
-  private[this] def loadStructFields(s: ThriftStruct, input: ThriftInput) = s.fields.zipWithIndex.map {
-    case (f, idx) =>
-      val t = ThriftFileHelper.columnTypeFor(f.t, input)
-      ExportField(
-        key = f.key,
-        propertyName = ExportHelper.toIdentifier(f.name),
-        title = ExportHelper.toDefaultTitle(f.key),
-        description = None,
-        idx = idx,
-        t = t,
-        defaultValue = f.value.map(_.toString),
-        required = f.required
-      )
+  private[this] def loadStructFields(s: ThriftStruct, input: ThriftInput) = s.fields.map { f =>
+    val t = ThriftFileHelper.columnTypeFor(f.t, input)
+    ExportField(
+      key = f.key,
+      propertyName = ExportHelper.toIdentifier(f.name),
+      title = ExportHelper.toDefaultTitle(f.key),
+      description = None,
+      t = t,
+      defaultValue = f.value.map(_.toString),
+      required = f.required
+    )
   }.toList
 }

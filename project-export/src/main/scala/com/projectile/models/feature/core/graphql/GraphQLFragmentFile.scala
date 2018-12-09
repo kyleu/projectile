@@ -15,7 +15,16 @@ object GraphQLFragmentFile {
 
     config.addCommonImport(file, "JsonSerializers", "_")
 
-    GraphQLObjectHelper.objectFor(config, file, model, incEncoder = true)
+    file.add(s"object ${model.className} {", 1)
+
+    file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
+    file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+    file.add("}", -1)
+    file.add()
+
+    file.add(s"case class ${model.className}(", 2)
+    GraphQLObjectHelper.addFields(config, file, model.fields)
+    file.add(")", -2)
 
     file
   }

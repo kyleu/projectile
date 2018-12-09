@@ -37,15 +37,18 @@ object GraphQLDocumentParser extends Logging {
         case FieldType.StructType(key) if !current.apply(key) => GraphQLDocumentHelper.modelFromSchema(schema, key)
       }.flatten
 
-      val keys = (s ++ extras).map {
-        case Left(x) => x.key
-        case Right(x) => x.key
-      }
-
       if (extras.isEmpty) {
+        val keys = s.map {
+          case Left(x) => x.key
+          case Right(x) => x.key
+        }
         log.info(s" ::: Completed with keys [${keys.mkString(", ")}]")
         s
       } else {
+        val keys = extras.map {
+          case Left(x) => x.key
+          case Right(x) => x.key
+        }
         log.info(s" ::: Loading extras [${keys.mkString(", ")}]")
         addReferences(s ++ extras)
       }
@@ -55,24 +58,26 @@ object GraphQLDocumentParser extends Logging {
   }
 
   private[this] def parseFragment(schema: Schema[_, _], doc: Document, key: String, f: FragmentDefinition) = {
-    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, f.selections)
+    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, s"fragment:$key", f.typeCondition, f.selections)
     GraphQLDocumentHelper.modelFor(key, InputType.Model.GraphQLFragment, Nil, fields)
   }
 
   private[this] def parseInput(schema: Schema[_, _], doc: Document, i: InputObjectTypeDefinition) = {
-    val fields = i.fields.zipWithIndex.map(f => GraphQLFieldParser.getField(i.name, schema, doc, f._1.name, f._1.valueType, f._2, f._1.defaultValue))
+    val fields = i.fields.map(f => GraphQLFieldParser.getField(i.name, schema, doc, f.name, f.valueType, f.defaultValue))
     GraphQLDocumentHelper.modelFor(i.name, InputType.Model.GraphQLInput, Nil, fields)
   }
 
   private[this] def parseMutation(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
-    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, o.selections)
-    val vars = GraphQLDocumentHelper.parseVariables(schema, doc, o.variables)
-    GraphQLDocumentHelper.modelFor(o.name.getOrElse("DefaultMutation"), InputType.Model.GraphQLMutation, vars, fields)
+    parseOperation(schema, doc, InputType.Model.GraphQLMutation, key.getOrElse("DefaultMutation"), o)
   }
 
   private[this] def parseQuery(schema: Schema[_, _], doc: Document, key: Option[String], o: OperationDefinition) = {
-    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, o.selections)
+    parseOperation(schema, doc, InputType.Model.GraphQLQuery, key.getOrElse("DefaultQuery"), o)
+  }
+
+  private[this] def parseOperation(schema: Schema[_, _], doc: Document, it: InputType.Model, key: String, o: OperationDefinition) = {
+    val fields = GraphQLSelectionParser.fieldsForSelections(schema, doc, s"$it:$key", NamedType(key), o.selections)
     val vars = GraphQLDocumentHelper.parseVariables(schema, doc, o.variables)
-    GraphQLDocumentHelper.modelFor(o.name.getOrElse("DefaultQuery"), InputType.Model.GraphQLQuery, vars, fields)
+    GraphQLDocumentHelper.modelFor(o.name.getOrElse("DefaultOperation"), it, vars, fields)
   }
 }

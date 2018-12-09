@@ -20,6 +20,10 @@ GET         /input/:key/remove                       controllers.input.InputCont
 GET         /input/:key/form                         controllers.input.InputController.form(key)
 GET         /input/:key/refresh                      controllers.input.InputController.refresh(key)
 
+GET         /input/:key/enum/:e                      controllers.input.InputController.enumDetail(key, e)
+GET         /input/:key/model/:m                     controllers.input.InputController.modelDetail(key, m)
+GET         /input/:key/service/:s                   controllers.input.InputController.serviceDetail(key, s)
+
 # Projects
 GET         /project                                 controllers.project.ProjectFormController.formNew()
 POST        /project/summary                         controllers.project.ProjectFormController.saveSummary()

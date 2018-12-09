@@ -10,12 +10,11 @@ object ExportConfigurationDefault {
     case _ => str
   }
 
-  def loadField(col: Column, idx: Int, indexed: Boolean, unique: Boolean, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
+  def loadField(col: Column, indexed: Boolean, unique: Boolean, inSearch: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
     key = col.name,
     propertyName = clean(toIdentifier(col.name)),
     title = toDefaultTitle(col.name),
     description = col.description,
-    idx = idx,
     t = col.columnType,
     defaultValue = col.defaultValue,
     required = col.notNull,
