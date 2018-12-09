@@ -32,12 +32,13 @@ object GraphQLDocumentHelper {
     )
   }
 
-  def modelFromSchema(schema: Schema[_, _], key: String) = {
+  def modelFromSchema(schema: Schema[_, _], key: String, isInput: Boolean) = {
     schema.allTypes.get(key) match {
       case Some(t) => t match {
         case i: InputObjectType[_] =>
           val fields = i.fields.map(f => GraphQLFieldParser.getInputField(i.name, schema, f.name, f.fieldType))
-          Seq(Right(modelFor(i.name, InputType.Model.GraphQLInput, Nil, fields)))
+          val it = if (isInput) { InputType.Model.GraphQLInput } else { InputType.Model.GraphQLReference }
+          Seq(Right(modelFor(i.name, it, Nil, fields)))
         case _ => throw new IllegalStateException(s"Invalid model type [$t]")
       }
       case _ =>

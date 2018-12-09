@@ -32,13 +32,7 @@ object GraphQLDocumentParser extends Logging {
         case Right(model) => model.key
       }.toSet
 
-      val extras = s.flatMap {
-        case Left(_) => Nil
-        case Right(m) => (m.arguments ++ m.fields).map(_.t)
-      }.distinct.collect {
-        case FieldType.EnumType(key) if !current.apply(key) => GraphQLDocumentHelper.enumFromSchema(schema, key)
-        case FieldType.StructType(key) if !current.apply(key) => GraphQLDocumentHelper.modelFromSchema(schema, key)
-      }.flatten
+      val extras = getExtras(schema, current, s)
 
       if (extras.isEmpty) {
         log.info(s" ::: Completed with keys [${current.toSeq.sorted.mkString(", ")}]")
@@ -84,5 +78,22 @@ object GraphQLDocumentParser extends Logging {
     val fields = GraphQLSelectionParser.fieldsForSelections(s"$it:$key", schema, doc, typ, o.selections)
     val vars = GraphQLDocumentHelper.parseVariables(schema, doc, o.variables)
     GraphQLDocumentHelper.modelFor(key, it, vars, fields)
+  }
+
+  private[this] def getExtras(schema: Schema[_, _], current: Set[String], s: Seq[Either[ExportEnum, ExportModel]]) = {
+    def forType(t: FieldType, isInput: Boolean): Seq[Either[ExportEnum, ExportModel]] = t match {
+      case FieldType.EnumType(key) if !current.apply(key) => GraphQLDocumentHelper.enumFromSchema(schema, key)
+      case FieldType.StructType(key) if !current.apply(key) => GraphQLDocumentHelper.modelFromSchema(schema, key, isInput)
+      case FieldType.ListType(typ) => forType(typ, isInput)
+      case FieldType.SetType(typ) => forType(typ, isInput)
+      case FieldType.MapType(k, v) => forType(k, isInput) ++ forType(v, isInput)
+      case FieldType.ObjectType(_, fields) => fields.flatMap(f => forType(f.v, isInput))
+      case _ => Nil
+    }
+
+    s.collect {
+      case Right(m) if m.inputType == InputType.Model.GraphQLInput => (m.arguments ++ m.fields).map(f => f.t -> true)
+      case Right(m) => (m.arguments.map(f => f.t -> true) ++ m.fields.map(f => f.t -> false))
+    }.flatten.distinct.flatMap(x => forType(x._1, x._2))
   }
 }

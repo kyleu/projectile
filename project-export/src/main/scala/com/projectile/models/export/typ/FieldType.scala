@@ -35,10 +35,10 @@ object FieldType extends StringEnum[FieldType] {
   case object XmlType extends FieldType("xml")
   case object UuidType extends FieldType("uuid")
 
-  case class ObjectType(key: String, fields: Seq[ObjectField]) extends FieldType("object")
-  case class StructType(key: String) extends FieldType("struct")
-
   case class EnumType(key: String) extends FieldType("enum")
+  case class StructType(key: String) extends FieldType("struct")
+  case class ObjectType(key: String, fields: Seq[ObjectField]) extends FieldType("object")
+
   case class ListType(typ: FieldType) extends FieldType("list")
   case class SetType(typ: FieldType) extends FieldType("set")
   case class MapType(k: FieldType, v: FieldType) extends FieldType("set")
