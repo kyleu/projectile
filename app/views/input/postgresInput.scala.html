@@ -31,7 +31,7 @@
       @if(input.enums.isEmpty) {
         <div class="collection-item">No database enumerations.</div>
       }
-      @input.enums.map { e =>
+      @input.enums.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
           <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/enum/${e.key}.json")" class="theme-text">@e.key</a>
@@ -45,7 +45,7 @@
       @if(input.tables.isEmpty) {
         <div class="collection-item">No database tables.</div>
       }
-      @input.tables.map { t =>
+      @input.tables.sortBy(_.name).map { t =>
         <div class="collection-item">
           <div class="right">@t.columns.size columns</div>
           <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/table/${t.name}.json")" class="theme-text">@t.name</a>
@@ -59,7 +59,7 @@
       @if(input.views.isEmpty) {
         <div class="collection-item">No database views.</div>
       }
-      @input.views.map { v =>
+      @input.views.sortBy(_.name).map { v =>
         <div class="collection-item">
           <div class="right">@v.columns.size columns</div>
           <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/view/${v.name}.json")" class="theme-text">@v.name</a>

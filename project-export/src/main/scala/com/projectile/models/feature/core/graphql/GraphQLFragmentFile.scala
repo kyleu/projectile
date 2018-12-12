@@ -17,10 +17,17 @@ object GraphQLFragmentFile {
 
     file.add(s"object ${model.className} {", 1)
 
+    val objCount = GraphQLObjectHelper.writeObjects(s"fragment:${model.className}", config, file, model.fields)
+
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
     file.add("}", -1)
     file.add()
+
+    if (objCount > 0) {
+      file.add(s"import ${model.className}._")
+      file.add()
+    }
 
     file.add(s"case class ${model.className}(", 2)
     GraphQLObjectHelper.addFields(config, file, model.fields)

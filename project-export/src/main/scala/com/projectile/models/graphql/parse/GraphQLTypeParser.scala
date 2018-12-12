@@ -46,20 +46,19 @@ object GraphQLTypeParser {
     case s: ScalarType[_] => true -> getScalarType(s.name)
   }
 
-  def getOutputType(ctx: String, schema: Schema[_, _], t: OutputType[_], selections: Seq[Selection]): (Boolean, FieldType) = t match {
-    case o: OptionType[_] => false -> getOutputType(ctx + "." + o.ofType, schema, o.ofType, selections)._2
-    case l: sangria.schema.ListType[_] => true -> FieldType.ListType(getOutputType(ctx + "." + l.ofType, schema, l.ofType, selections)._2)
+  def getOutputType(ctx: String, schema: Schema[_, _], doc: Document, t: OutputType[_], selections: Seq[Selection]): (Boolean, FieldType) = t match {
+    case o: OptionType[_] => false -> getOutputType(ctx + "." + o.ofType, schema, doc, o.ofType, selections)._2
+    case l: sangria.schema.ListType[_] => true -> FieldType.ListType(getOutputType(ctx + "." + l.ofType, schema, doc, l.ofType, selections)._2)
 
-    case o: ObjectType[_, _] =>
-      val fields = GraphQLSelectionParser.fieldsForSelections(ctx, schema, Document.emptyStub, o, selections)
-      if (fields.isEmpty) {
-        true -> FieldType.StructType(key = o.name)
-      } else {
-        true -> FieldType.ObjectType(key = o.name + "Wrapper", fields = fields.map(f => com.projectile.models.export.typ.ObjectField(k = f.key, v = f.t)))
-      }
+    case o: ObjectType[_, _] => GraphQLSelectionParser.fieldsForSelections(ctx, schema, doc, o, selections) match {
+      case Left(name) => true -> FieldType.StructType(key = name)
+      case Right(fields) => true -> FieldType.ObjectType(
+        key = o.name + "Wrapper", fields = fields.map(f => com.projectile.models.export.typ.ObjectField(k = f.key, v = f.t))
+      )
+    }
 
-    case _: InterfaceType[_, _] => throw new IllegalStateException("TODO: Interfaces")
-    case _: UnionType[_] => throw new IllegalStateException("TODO: Unions")
+    case _: InterfaceType[_, _] => true -> FieldType.JsonType
+    case _: UnionType[_] => true -> FieldType.JsonType
 
     case e: EnumType[_] => true -> FieldType.EnumType(e.name)
     case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)

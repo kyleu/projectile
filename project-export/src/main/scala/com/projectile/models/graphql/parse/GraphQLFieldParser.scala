@@ -32,8 +32,8 @@ object GraphQLFieldParser {
     )
   }
 
-  def getOutputField(ctx: String, schema: Schema[_, _], name: String, t: OutputType[_], selections: Seq[Selection]) = {
-    val (required, newT) = GraphQLTypeParser.getOutputType(s"$ctx($name: $t)", schema, t, selections)
+  def getOutputField(ctx: String, schema: Schema[_, _], doc: Document, name: String, t: OutputType[_], selections: Seq[Selection]) = {
+    val (required, newT) = GraphQLTypeParser.getOutputType(s"$ctx($name: $t)", schema, doc, t, selections)
     ExportField(
       key = name,
       propertyName = ExportHelper.toIdentifier(name),

@@ -4,24 +4,24 @@ import com.projectile.models.export.{ExportEnum, ExportField, ExportModel}
 import com.projectile.models.input.InputType
 import com.projectile.models.output.ExportHelper
 import sangria.ast.{Document, VariableDefinition}
-import sangria.schema.{EnumType, InputObjectType, Schema}
+import sangria.schema.{EnumType, InputObjectType, ObjectType, Schema}
 
 object GraphQLDocumentHelper {
-  def modelFor(name: String, it: InputType.Model, arguments: Seq[ExportField], fields: Seq[ExportField]) = {
+  def modelFor(pkg: Seq[String], name: String, it: InputType.Model, arguments: Seq[ExportField], fields: Seq[ExportField]) = {
     val cn = ExportHelper.toClassName(name)
     val title = ExportHelper.toDefaultTitle(cn)
 
     ExportModel(
       inputType = it,
       key = name,
-      pkg = it match {
+      pkg = pkg.toList ++ (it match {
         case InputType.Model.GraphQLFragment => List("graphql", "fragment")
         case InputType.Model.GraphQLInput => List("graphql", "input")
         case InputType.Model.GraphQLMutation => List("graphql", "mutation")
         case InputType.Model.GraphQLQuery => List("graphql", "query")
         case InputType.Model.GraphQLReference => List("graphql", "reference")
         case _ => throw new IllegalStateException()
-      },
+      }),
       propertyName = ExportHelper.toIdentifier(cn),
       className = cn,
       title = title,
@@ -32,13 +32,16 @@ object GraphQLDocumentHelper {
     )
   }
 
-  def modelFromSchema(schema: Schema[_, _], key: String, isInput: Boolean) = {
+  def modelFromSchema(pkg: Seq[String], schema: Schema[_, _], key: String, isInput: Boolean) = {
     schema.allTypes.get(key) match {
       case Some(t) => t match {
         case i: InputObjectType[_] =>
           val fields = i.fields.map(f => GraphQLFieldParser.getInputField(i.name, schema, f.name, f.fieldType))
           val it = if (isInput) { InputType.Model.GraphQLInput } else { InputType.Model.GraphQLReference }
-          Seq(Right(modelFor(i.name, it, Nil, fields)))
+          Seq(Right(modelFor(pkg, i.name, it, Nil, fields)))
+        case o: ObjectType[_, _] =>
+          val fields = o.fields.map(f => GraphQLFieldParser.getOutputField(o.name, schema, Document.emptyStub, f.name, f.fieldType, Nil))
+          Seq(Right(modelFor(pkg, o.name, InputType.Model.GraphQLReference, Nil, fields)))
         case _ => throw new IllegalStateException(s"Invalid model type [$t]")
       }
       case _ =>
@@ -47,12 +50,12 @@ object GraphQLDocumentHelper {
     }
   }
 
-  def enumFromSchema(schema: Schema[_, _], key: String) = {
+  def enumFromSchema(pkg: Seq[String], schema: Schema[_, _], key: String) = {
     schema.allTypes.get(key) match {
       case Some(t) => t match {
         case EnumType(name, _, values, _, _) => Seq(Left(ExportEnum(
           inputType = InputType.Enum.GraphQLEnum,
-          pkg = List("graphql", "enums"),
+          pkg = pkg.toList ++ List("graphql", "enums"),
           key = name,
           className = ExportHelper.toClassName(name),
           values = values.map(_.name)

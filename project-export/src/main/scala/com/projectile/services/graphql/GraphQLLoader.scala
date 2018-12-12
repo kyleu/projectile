@@ -1,6 +1,6 @@
 package com.projectile.services.graphql
 
-import better.files._
+import better.files.File
 import com.projectile.models.graphql.input.GraphQLOptions
 import sangria.ast.Document
 import sangria.parser.QueryParser
@@ -10,11 +10,11 @@ object GraphQLLoader {
     throw new IllegalStateException(s"Cannot read [$t] from [${f.pathAsString}]")
   }
 
-  def load(options: GraphQLOptions.SchemaQueries) = {
-    val schemaFile = options.schema.toFile
+  def load(workingDir: File, options: GraphQLOptions.SchemaQueries) = {
+    val schemaFile = workingDir / options.schema
     check("schema", schemaFile)
     schemaFile.contentAsString -> options.fileClasses.map { q =>
-      val qf = q._2.toFile
+      val qf = workingDir / q._2
       check("queries", qf)
       q._1 -> qf.contentAsString
     }

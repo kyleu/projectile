@@ -28,6 +28,6 @@ object GraphQLInputService {
     val dir = cfg.inputDirectory / summ.key
 
     val pc = loadFile[GraphQLOptions](dir / fn, "GraphQL query files")
-    GraphQLInput.fromSummary(summ, pc.schema)
+    GraphQLInput.fromSummary(summ, pc.schema, cfg.workingDirectory)
   }
 }
