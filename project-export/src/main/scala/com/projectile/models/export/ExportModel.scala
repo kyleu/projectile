@@ -38,7 +38,8 @@ case class ExportModel(
     features: Set[ModelFeature] = Set.empty,
     extendsClass: Option[String] = None,
     icon: Option[String] = None,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    source: Option[String] = None
 ) {
   def apply(m: ModelMember) = copy(
     pkg = m.pkg.toList,

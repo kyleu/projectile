@@ -23,6 +23,11 @@ object InjectExploreMenu extends FeatureLogic.Inject(path = OutputPath.ServerSou
     val newContent = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
       s"""  <li><a href="@${TwirlHelper.routesClass(config, model)}.list()">${TwirlHelper.iconHtml(config, model.propertyName)} ${model.title}</a></li>"""
     }.mkString("\n")
-    ExportHelper.replaceBetween(filename = filename, original = original, start = sStart, end = sEnd, newContent = newContent)
+
+    if (newContent.trim.isEmpty) {
+      original
+    } else {
+      ExportHelper.replaceBetween(filename = filename, original = original, start = sStart, end = sEnd, newContent = newContent)
+    }
   }
 }

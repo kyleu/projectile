@@ -27,4 +27,6 @@ abstract class Input() extends Ordered[Input] {
 
   def getServiceOpt(k: String) = exportServices.find(_.key == k)
   def getService(k: String) = getServiceOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
+
+  override def toString = s"$title - [${exportEnums.size}] enums, [${exportModels.size}] models, and [${exportServices.size}] services"
 }

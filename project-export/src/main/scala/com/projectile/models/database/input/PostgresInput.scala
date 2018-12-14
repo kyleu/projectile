@@ -58,6 +58,7 @@ case class PostgresInput(
   override def exportServices = Nil
 
   def newConnection() = {
+    Class.forName("org.postgresql.Driver")
     val props = new Properties()
     props.setProperty("user", username)
     props.setProperty("password", password)

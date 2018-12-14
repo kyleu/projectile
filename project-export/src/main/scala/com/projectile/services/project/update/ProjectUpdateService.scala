@@ -22,16 +22,20 @@ object ProjectUpdateService {
       val modelsToRemove = p.models.filterNot(mk => i.exportModels.exists(_.key == mk.key))
       val servicesToRemove = p.services.filterNot(sk => i.exportServices.exists(_.key == sk.key))
 
+      val ef = i.exportEnums.headOption.map(_.features).getOrElse(p.enumFeatures.toSet)
+      val mf = i.exportModels.headOption.map(_.features).getOrElse(p.modelFeatures.toSet)
+      val sf = i.exportServices.headOption.map(_.features).getOrElse(p.serviceFeatures.toSet)
+
       val ea = enums.map { e =>
-        svc.saveEnumMember(p.key, EnumMember(input = i.key, pkg = e.pkg, key = e.key, features = p.enumFeatures.toSet))
+        svc.saveEnumMember(p.key, EnumMember(input = i.key, pkg = e.pkg, key = e.key, features = ef))
         s"Added enum [${e.key}]"
       }
       val ma = models.map { m =>
-        svc.saveModelMember(p.key, ModelMember(input = i.key, pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet))
+        svc.saveModelMember(p.key, ModelMember(input = i.key, pkg = m.pkg, key = m.key, features = mf))
         s"Added model [${m.key}]"
       }
       val sa = services.map { s =>
-        svc.saveServiceMember(p.key, ServiceMember(input = i.key, pkg = s.pkg, key = s.key, features = p.serviceFeatures.toSet))
+        svc.saveServiceMember(p.key, ServiceMember(input = i.key, pkg = s.pkg, key = s.key, features = sf))
         s"Added service [${s.key}]"
       }
 

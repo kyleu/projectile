@@ -28,6 +28,10 @@ object InjectExploreHtml extends FeatureLogic.Inject(path = OutputPath.ServerSou
         |    </li>""".stripMargin
     }.mkString("\n")
 
-    ExportHelper.replaceBetween(filename = filename, original = original, start = sStart, end = sEnd, newContent = newContent)
+    if (newContent.trim.isEmpty) {
+      original
+    } else {
+      ExportHelper.replaceBetween(filename = filename, original = original, start = sStart, end = sEnd, newContent = newContent)
+    }
   }
 }

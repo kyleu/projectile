@@ -6,6 +6,8 @@ import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 
+import scala.io.Source
+
 object GraphQLFragmentFile {
   val includeDefaults = false
 
@@ -21,6 +23,11 @@ object GraphQLFragmentFile {
 
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+
+    model.source.foreach { src =>
+      addContent(file, src)
+    }
+
     file.add("}", -1)
     file.add()
 
@@ -34,5 +41,12 @@ object GraphQLFragmentFile {
     file.add(")", -2)
 
     file
+  }
+
+  private[this] def addContent(file: ScalaFile, src: String) = {
+    file.add()
+    file.add("val content = \"\"\"", 1)
+    Source.fromString(src).getLines.foreach(l => file.add("|" + l))
+    file.add("\"\"\".stripMargin.trim", -1)
   }
 }

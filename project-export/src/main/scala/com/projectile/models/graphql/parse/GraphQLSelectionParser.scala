@@ -7,7 +7,7 @@ import sangria.schema.{ObjectType, Schema, Type => Typ}
 object GraphQLSelectionParser {
   def fieldsForSelections(ctx: String, schema: Schema[_, _], doc: Document, typ: Typ, selections: Seq[Selection]) = {
     def parseSpread(spread: FragmentSpread): String = {
-      doc.fragments.get(spread.name).map(_.typeCondition.name).orElse {
+      doc.fragments.get(spread.name).map(_.name).orElse {
         doc.definitions.collectFirst {
           case f: FragmentDefinition if f.name == spread.name => f.name
           case o: ObjectTypeDefinition if o.name == spread.name => o.name

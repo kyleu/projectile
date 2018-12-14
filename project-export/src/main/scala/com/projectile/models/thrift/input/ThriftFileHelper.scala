@@ -76,6 +76,8 @@ object ThriftFileHelper {
 
   private[this] def typeForClass(cls: String, input: ThriftInput): FieldType = input.getEnumOpt(cls).map(e => FieldType.EnumType(e.key)).orElse {
     if (input.exportModelNames.contains(cls)) { Some(StructType(cls)) } else { None }
+  }.orElse {
+    input.typedefs.get(cls).map(colTypeForIdentifier(_, input))
   }.getOrElse {
     throw new IllegalStateException(s"Col type error: no enum or model found with key [$cls]")
   }

@@ -1,6 +1,6 @@
 package com.projectile.models.cli
 
-import com.projectile.models.command.ProjectileCommand.{StartServer, StopServer}
+import com.projectile.models.command.ProjectileCommand.{ServerStart, ServerStop}
 import com.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.projectile.util.NullUtils
 
@@ -14,8 +14,8 @@ object ServerHelper {
 
 trait ServerHelper {
   protected val processServer: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-    case StartServer(port) => startServer(port)
-    case StopServer => stopServer()
+    case ServerStart(port) => startServer(port)
+    case ServerStop => stopServer()
   }
 
   def startServer(port: Int): ProjectileResponse

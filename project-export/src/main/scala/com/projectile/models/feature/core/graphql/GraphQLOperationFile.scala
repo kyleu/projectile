@@ -6,6 +6,8 @@ import com.projectile.models.feature.ModelFeature
 import com.projectile.models.output.OutputPath
 import com.projectile.models.output.file.ScalaFile
 
+import scala.io.Source
+
 object GraphQLOperationFile {
   val includeDefaults = false
 
@@ -30,11 +32,23 @@ object GraphQLOperationFile {
     file.add(")", -2)
 
     file.add()
-    file.add(s"""val query = new GraphQLQuery[Data]("${model.className}")""")
+    model.source match {
+      case None => file.add(s"""val query: GraphQLQuery[Data] = new GraphQLQuery[Data]("${model.className}")""")
+      case Some(src) =>
+        file.add(s"""val query: GraphQLQuery[Data] = new GraphQLQuery[Data]("${model.className}") {""", 1)
+        addContent(file, src)
+        file.add("}", -1)
+    }
 
     file.add("}", -1)
     file.add()
 
     file
+  }
+
+  private[this] def addContent(file: ScalaFile, src: String) = {
+    file.add("override val content = \"\"\"", 1)
+    Source.fromString(src).getLines.foreach(l => file.add("|" + l))
+    file.add("\"\"\".stripMargin.trim", -1)
   }
 }

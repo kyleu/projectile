@@ -5,6 +5,7 @@ import com.projectile.models.command.ProjectileCommand._
 import com.projectile.models.command.ProjectileResponse._
 import com.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.projectile.models.export.config.ExportConfiguration
+import com.projectile.models.output.OutputLog
 import com.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 import com.projectile.models.project.{Project, ProjectSummary}
 import com.projectile.services.ProjectileService
@@ -67,11 +68,13 @@ trait ProjectHelper { this: ProjectileService =>
   }
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-    case ListProjects => ProjectList(listProjects())
-    case GetProject(key) => ProjectDetail(getProject(key))
-    case UpdateProject(key) => ProjectUpdateResult(updateProject(key))
-    case AddProject(p) => ProjectDetail(saveProject(p))
-    case RemoveProject(key) => removeProject(key)
+    case Projects(key) => key match {
+      case Some(k) => ProjectDetail(getProject(k))
+      case None => ProjectList(listProjects())
+    }
+
+    case ProjectAdd(p) => ProjectDetail(saveProject(p))
+    case ProjectRemove(key) => removeProject(key)
 
     case SaveEnumMembers(p, members) => JsonResponse(saveEnumMembers(p, members).asJson)
     case RemoveEnumMember(p, member) => JsonResponse(removeEnumMember(p, member).asJson)
@@ -82,10 +85,22 @@ trait ProjectHelper { this: ProjectileService =>
     case SaveServiceMembers(p, members) => JsonResponse(saveServiceMembers(p, members).asJson)
     case RemoveServiceMember(p, member) => JsonResponse(removeServiceMember(p, member).asJson)
 
-    case ExportProject(key) =>
-      val r = exportProject(key, verbose = false)
-      ProjectExportResult(r._1, r._2)
-    case AuditProject(key) => JsonResponse(auditProject(key, verbose = false).asJson)
+    case ProjectUpdate(key) => key match {
+      case Some(k) => ProjectUpdateResult(k, updateProject(k))
+      case None => CompositeResult(listProjects().map(p => ProjectUpdateResult(p.key, updateProject(p.key))))
+    }
+    case ProjectExport(key) => key match {
+      case Some(k) => projectResults(k)
+      case None => CompositeResult(listProjects().map(p => projectResults(p.key)))
+    }
+    case ProjectAudit(key) => key match {
+      case Some(k) => JsonResponse(auditProject(k, verbose = false).asJson)
+      case None => CompositeResult(listProjects().map(p => ProjectAuditResult(auditProject(p.key, verbose = false))))
+    }
+    case ProjectCodegen(key) => key match {
+      case Some(k) => codegenProject(k, verbose = false)
+      case None => CompositeResult(listProjects().map(p => codegenProject(p.key, verbose = false)))
+    }
   }
 
   private[this] def removeProjectFiles(key: String) = {
@@ -108,5 +123,16 @@ trait ProjectHelper { this: ProjectileService =>
     } else {
       Nil
     }
+  }
+
+  private[this] def projectResults(k: String) = {
+    val r = exportProject(k, verbose = false)
+    ProjectExportResult(r._1, r._2)
+  }
+
+  private[this] def codegenProject(key: String, verbose: Boolean) = {
+    val updateResult = updateProject(key).map(r => OutputLog(r, 0))
+    val exportResult = projectResults(key)
+    exportResult.copy(output = exportResult.output.copy(rootLogs = updateResult ++ exportResult.output.rootLogs))
   }
 }

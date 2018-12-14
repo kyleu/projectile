@@ -5,9 +5,6 @@ import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.export.typ.{FieldType, FieldTypeAsScala, FieldTypeImports, ObjectField}
 import com.projectile.models.output.ExportHelper
 import com.projectile.models.output.file.ScalaFile
-import sangria.ast.OperationDefinition
-
-import scala.io.Source
 
 object GraphQLObjectHelper {
   def addFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ExportField]) = {
@@ -41,12 +38,6 @@ object GraphQLObjectHelper {
     file.add(s"Json.obj($varsDecl)")
     file.add("}", -1)
     file.add()
-  }
-
-  def addContent(file: ScalaFile, op: OperationDefinition) = {
-    file.add("override val content = \"\"\"", 1)
-    Source.fromString(op.renderPretty).getLines.foreach(l => file.add("|" + l))
-    file.add("\"\"\".stripMargin.trim", -1)
   }
 
   def writeObjects(ctx: String, config: ExportConfiguration, file: ScalaFile, fields: List[ExportField]) = {

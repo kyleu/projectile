@@ -23,49 +23,55 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     override def toCommand = ProjectileCommand.Init
   }
 
-  object InputList extends Command(name = "input-list", description = "Lists summaries of Projectile inputs") with CommandLineAction {
-    override def toCommand = ProjectileCommand.ListInputs
+  // Common tasks
+  object InputRefresh extends Command(name = "refresh", description = "Refreshes the provided input (or all)") with CommandLineAction {
+    var key = arg[Option[String]](required = false)
+    override def toCommand = ProjectileCommand.InputRefresh(key)
+  }
+  object ProjectUpdate extends Command(name = "update", description = "Updates the provided project (or all)") with CommandLineAction {
+    var key = arg[Option[String]](required = false)
+    override def toCommand = ProjectileCommand.ProjectUpdate(key)
+  }
+  object ProjectExport extends Command(name = "export", description = "Exports the provided project (or all)") with CommandLineAction {
+    var key = arg[Option[String]](required = false)
+    override def toCommand = ProjectileCommand.ProjectExport(key)
+  }
+  object ProjectAudit extends Command(name = "audit", description = "Audits the provided project (or all)") with CommandLineAction {
+    var key = arg[Option[String]](required = false)
+    override def toCommand = ProjectileCommand.ProjectAudit(key)
+  }
+  object ProjectCodegen extends Command(name = "codegen", description = "Generates code for the provided project (or all)") with CommandLineAction {
+    var key = arg[Option[String]](required = false)
+    override def toCommand = ProjectileCommand.ProjectCodegen(key)
+  }
+
+  // Inputs
+  object InputList extends Command(name = "input", description = "Lists summaries of inputs, or details if key provided") with CommandLineAction {
+    var key = arg[Option[String]]()
+    override def toCommand = ProjectileCommand.Inputs(key)
   }
   object InputAdd extends Command(name = "input-add", description = "Add an input to the system") with CommandLineAction {
     var key = arg[String]()
     var title = opt[Option[String]](description = "Optional title for this input")
     var desc = opt[Option[String]](description = "Optional description for this input")
-    override def toCommand = ProjectileCommand.AddInput(InputSummary(key = key, title = title.getOrElse(key), description = desc.getOrElse("")))
-  }
-  object InputGet extends Command(name = "input-get", description = "Prints details of the input with the provided key") with CommandLineAction {
-    var key = arg[String]()
-    override def toCommand = ProjectileCommand.GetInput(key)
-  }
-  object InputRefresh extends Command(name = "input-refresh", description = "Refreshes the input with the provided key") with CommandLineAction {
-    var key = arg[String]()
-    override def toCommand = ProjectileCommand.RefreshInput(key)
+    override def toCommand = ProjectileCommand.InputAdd(InputSummary(key = key, title = title.getOrElse(key), description = desc.getOrElse("")))
   }
 
-  object ProjectList extends Command(name = "project-list", description = "Lists summaries of Projectile projects") with CommandLineAction {
-    override def toCommand = ProjectileCommand.ListProjects
+  // Projects
+  object ProjectList extends Command(name = "project", description = "Lists summaries of Projectile projects, or details of key") with CommandLineAction {
+    var key = arg[Option[String]]()
+    override def toCommand = ProjectileCommand.Projects(key)
   }
   object ProjectAdd extends Command(name = "project-add", description = "Adds a project to the system") with CommandLineAction {
     var key = arg[String]()
     var title = opt[Option[String]](description = "Optional title for this project")
     var desc = opt[Option[String]](description = "Optional description for this project")
-    override def toCommand = ProjectileCommand.AddProject(ProjectSummary(key = key, title = title.getOrElse(key), description = desc.getOrElse("")))
-  }
-  object ProjectGet extends Command(name = "project-get", description = "Prints details of the project with the provided key") with CommandLineAction {
-    var key = arg[String]()
-    override def toCommand = ProjectileCommand.GetProject(key)
-  }
-  object ProjectExport extends Command(name = "project-export", description = "Exports the Projectile project with the provided key") with CommandLineAction {
-    var key = arg[String]()
-    override def toCommand = ProjectileCommand.ExportProject(key)
-  }
-  object ProjectAudit extends Command(name = "project-audit", description = "Audits the Projectile project with the provided key") with CommandLineAction {
-    var key = arg[String]()
-    override def toCommand = ProjectileCommand.AuditProject(key)
+    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(key = key, title = title.getOrElse(key), description = desc.getOrElse("")))
   }
 
   object Server extends Command(name = "server", description = s"Starts the web application") with CommandLineAction {
     var port = opt[Int](description = s"Http port for the server", default = Version.projectPort)
-    override def toCommand = ProjectileCommand.StartServer(port)
+    override def toCommand = ProjectileCommand.ServerStart(port)
   }
 
   override val values = findValues

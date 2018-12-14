@@ -15,15 +15,33 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case object Init extends ProjectileCommand
   case object Testbed extends ProjectileCommand
 
-  case class StartServer(port: Int = Version.projectPort) extends ProjectileCommand
-  case object StopServer extends ProjectileCommand
+  // Server
+  case class ServerStart(port: Int = Version.projectPort) extends ProjectileCommand
+  case object ServerStop extends ProjectileCommand
 
-  case object ListProjects extends ProjectileCommand
-  case class GetProject(key: String) extends ProjectileCommand
-  case class UpdateProject(key: String) extends ProjectileCommand
-  case class AddProject(project: ProjectSummary) extends ProjectileCommand
-  case class SaveProject(project: Project) extends ProjectileCommand
-  case class RemoveProject(key: String) extends ProjectileCommand
+  // Inputs
+  case class Inputs(key: Option[String]) extends ProjectileCommand
+
+  case class InputRefresh(key: Option[String]) extends ProjectileCommand
+
+  case class InputAdd(input: InputSummary) extends ProjectileCommand
+  case class InputRemove(key: String) extends ProjectileCommand
+
+  case class InputPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
+  case class InputThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
+
+  // Projects
+  case class Projects(key: Option[String]) extends ProjectileCommand
+
+  case class ProjectUpdate(key: Option[String]) extends ProjectileCommand
+  case class ProjectExport(key: Option[String]) extends ProjectileCommand
+  case class ProjectAudit(key: Option[String]) extends ProjectileCommand
+
+  case class ProjectCodegen(key: Option[String]) extends ProjectileCommand
+
+  case class ProjectAdd(project: ProjectSummary) extends ProjectileCommand
+  case class ProjectSave(project: Project) extends ProjectileCommand
+  case class ProjectRemove(key: String) extends ProjectileCommand
 
   case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
   case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand
@@ -33,19 +51,6 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
 
   case class SaveServiceMembers(project: String, members: Seq[ServiceMember]) extends ProjectileCommand
   case class RemoveServiceMember(key: String, member: String) extends ProjectileCommand
-
-  case class ExportProject(key: String) extends ProjectileCommand
-  case class AuditProject(key: String) extends ProjectileCommand
-
-  case object ListInputs extends ProjectileCommand
-  case class GetInput(key: String) extends ProjectileCommand
-  case class AddInput(input: InputSummary) extends ProjectileCommand
-
-  case class SetPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
-  case class SetThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
-
-  case class RemoveInput(key: String) extends ProjectileCommand
-  case class RefreshInput(key: String) extends ProjectileCommand
 
   override val values = findValues
 }

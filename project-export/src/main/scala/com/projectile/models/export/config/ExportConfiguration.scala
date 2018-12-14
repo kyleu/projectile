@@ -29,17 +29,17 @@ case class ExportConfiguration(
 
   def getEnumOpt(k: String) = enums.find(_.key == k)
   def getEnum(k: String, ctx: String) = getEnumOpt(k).getOrElse {
-    throw new IllegalStateException(s"No enum available with name [$k] among candidates [${enums.map(_.key).mkString(", ")}]")
+    throw new IllegalStateException(s"No enum for [$ctx] available with name [$k] among candidates [${enums.map(_.key).sorted.mkString(", ")}]")
   }
 
   def getModelOpt(k: String) = models.find(_.key == k)
   def getModel(k: String, ctx: String) = getModelOpt(k).getOrElse {
-    throw new IllegalStateException(s"No model available for [$ctx] with name [$k] among candidates [${models.map(_.key).mkString(", ")}]")
+    throw new IllegalStateException(s"No model for [$ctx] available with name [$k] among candidates [${models.map(_.key).sorted.mkString(", ")}]")
   }
 
   def getServiceOpt(k: String) = services.find(_.key == k)
   def getService(k: String, ctx: String) = getServiceOpt(k).getOrElse {
-    throw new IllegalStateException(s"No service available for [$ctx] with name [$k] among candidates [${services.map(_.key).mkString(", ")}]")
+    throw new IllegalStateException(s"No service for [$ctx] available with name [$k] among candidates [${services.map(_.key).sorted.mkString(", ")}]")
   }
 
   def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, f, s) match {

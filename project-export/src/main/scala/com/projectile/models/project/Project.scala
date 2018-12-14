@@ -64,4 +64,6 @@ case class Project(
 
   val pathset = features.flatMap(_.paths)
   val classOverrideStrings = classOverrides.toSeq.sortBy(_._1).map(x => s"${x._1} = ${x._2}")
+
+  override def toString = s"$title - [${enums.size}] enums, [${models.size}] models, and [${services.size}] services"
 }

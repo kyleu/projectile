@@ -19,11 +19,11 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
       case Init => init()
       case Doctor => doctor(verbose)
       case Testbed => testbed()
-      case s: StartServer => ServerHelper.inst match {
+      case s: ServerStart => ServerHelper.inst match {
         case Some(srv) => srv.startServer(s.port)
         case None => throw new IllegalStateException("No server available")
       }
-      case StopServer => ServerHelper.inst match {
+      case ServerStop => ServerHelper.inst match {
         case Some(srv) => srv.stopServer()
         case None => throw new IllegalStateException("No server available")
       }

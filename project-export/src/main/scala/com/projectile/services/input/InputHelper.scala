@@ -1,7 +1,7 @@
 package com.projectile.services.input
 
 import com.projectile.models.command.ProjectileCommand._
-import com.projectile.models.command.ProjectileResponse.{InputDetail, InputList}
+import com.projectile.models.command.ProjectileResponse.{CompositeResult, InputDetail, InputList}
 import com.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.projectile.models.database.input.PostgresConnection
 import com.projectile.models.input.InputSummary
@@ -20,12 +20,17 @@ trait InputHelper { this: ProjectileService =>
   def refreshInput(key: String) = inputSvc.refresh(key)
 
   protected val processInput: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-    case ListInputs => InputList(listInputs())
-    case GetInput(key) => InputDetail(getInput(key))
-    case AddInput(i) => InputDetail(addInput(i))
-    case SetPostgresOptions(key, conn) => InputDetail(setPostgresOptions(key, conn))
-    case SetThriftOptions(key, opts) => InputDetail(setThriftOptions(key, opts))
-    case RemoveInput(key) => removeInput(key)
-    case RefreshInput(key) => InputDetail(refreshInput(key))
+    case Inputs(key) => key match {
+      case Some(k) => InputDetail(getInput(k))
+      case None => InputList(listInputs())
+    }
+    case InputAdd(i) => InputDetail(addInput(i))
+    case InputPostgresOptions(key, conn) => InputDetail(setPostgresOptions(key, conn))
+    case InputThriftOptions(key, opts) => InputDetail(setThriftOptions(key, opts))
+    case InputRemove(key) => removeInput(key)
+    case InputRefresh(key) => key match {
+      case Some(k) => InputDetail(refreshInput(k))
+      case None => CompositeResult(listInputs().map(i => InputDetail(refreshInput(i.key))))
+    }
   }
 }

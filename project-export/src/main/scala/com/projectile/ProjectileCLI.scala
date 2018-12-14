@@ -5,7 +5,7 @@ import com.projectile.services.ProjectileService
 import com.projectile.services.config.ConfigService
 import com.projectile.util.Logging
 import com.projectile.util.Version.{projectId, projectName, version}
-import org.backuity.clist.Cli
+import org.backuity.clist.{Cli, ParsingException}
 
 object ProjectileCLI extends Logging {
   def runArgs(args: Seq[String]) = parse(args).map { c =>
@@ -24,7 +24,9 @@ object ProjectileCLI extends Logging {
     }
   }
 
-  def parse(args: Seq[String]) = {
+  def parse(args: Seq[String]): Option[CommandLineAction] = try {
     Cli.parse(args.toArray).withProgramName(projectId).version(version, projectName).throwExceptionOnError().withCommands(CommandLineAction.actions: _*)
+  } catch {
+    case _: ParsingException => None
   }
 }

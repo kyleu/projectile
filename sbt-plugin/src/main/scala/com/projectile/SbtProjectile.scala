@@ -1,7 +1,9 @@
 package com.projectile
 
-import sbt._
+import com.projectile.services.ProjectileService
+import com.projectile.services.config.ConfigService
 import sbt.Keys._
+import sbt._
 import complete.DefaultParsers.spaceDelimited
 
 object SbtProjectile extends AutoPlugin {
@@ -17,12 +19,16 @@ object SbtProjectile extends AutoPlugin {
       def log(s: String) = streamValue.log.info(s)
       val args: Seq[String] = spaceDelimited("<args>").parsed
 
+      val svc = new ProjectileService(new ConfigService(baseDirectory.value.getPath))
+
       try {
         val startMs = System.currentTimeMillis
-        ProjectileCLI.runArgs(args) match {
-          case Some(result) =>
+        val action = ProjectileCLI.parse(args)
+        val result = action.map(act => svc.process(act.toCommand, act.verbose))
+        result match {
+          case Some(r) =>
             log(s"Code generation completed in [${System.currentTimeMillis - startMs}ms]")
-            log(result.toString)
+            log(r.toString)
           case None =>
             log("No arguments")
         }

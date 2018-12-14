@@ -25,7 +25,7 @@ object ExportHelper {
   val getAllArgs = "orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
 
-  def replaceBetween(filename: String, original: String, start: String, end: String, newContent: String) = {
+  def splitBetween(filename: String, original: String, start: String, end: String) = {
     val oSize = NumberUtils.withCommas(original.length)
     val startIndex = original.indexOf(start)
     if (startIndex == -1) {
@@ -36,6 +36,11 @@ object ExportHelper {
       throw new IllegalStateException(s"Cannot inject [$filename]. No end key matching [$end] in [$oSize] bytes.")
     }
 
-    original.substring(0, startIndex + start.length) + "\n" + newContent + "\n" + original.substring(endIndex)
+    (original.substring(0, startIndex + start.length), original.substring(startIndex, endIndex), original.substring(endIndex))
+  }
+
+  def replaceBetween(filename: String, original: String, start: String, end: String, newContent: String) = {
+    val (l, _, r) = splitBetween(filename = filename, original = original, start = start, end = end)
+    l + "\n" + newContent + "\n" + r
   }
 }

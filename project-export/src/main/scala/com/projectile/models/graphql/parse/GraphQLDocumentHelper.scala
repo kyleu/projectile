@@ -7,7 +7,7 @@ import sangria.ast.{Document, VariableDefinition}
 import sangria.schema.{EnumType, InputObjectType, ObjectType, Schema}
 
 object GraphQLDocumentHelper {
-  def modelFor(pkg: Seq[String], name: String, it: InputType.Model, arguments: Seq[ExportField], fields: Seq[ExportField]) = {
+  def modelFor(pkg: Seq[String], name: String, it: InputType.Model, arguments: Seq[ExportField], fields: Seq[ExportField], source: Option[String]) = {
     val cn = ExportHelper.toClassName(name)
     val title = ExportHelper.toDefaultTitle(cn)
 
@@ -28,7 +28,8 @@ object GraphQLDocumentHelper {
       description = None,
       plural = title + "s",
       arguments = arguments.toList,
-      fields = fields.toList
+      fields = fields.toList,
+      source = source
     )
   }
 
@@ -38,10 +39,10 @@ object GraphQLDocumentHelper {
         case i: InputObjectType[_] =>
           val fields = i.fields.map(f => GraphQLFieldParser.getInputField(i.name, schema, f.name, f.fieldType))
           val it = if (isInput) { InputType.Model.GraphQLInput } else { InputType.Model.GraphQLReference }
-          Seq(Right(modelFor(pkg, i.name, it, Nil, fields)))
+          Seq(Right(modelFor(pkg, i.name, it, Nil, fields, None)))
         case o: ObjectType[_, _] =>
           val fields = o.fields.map(f => GraphQLFieldParser.getOutputField(o.name, schema, Document.emptyStub, f.name, f.fieldType, Nil))
-          Seq(Right(modelFor(pkg, o.name, InputType.Model.GraphQLReference, Nil, fields)))
+          Seq(Right(modelFor(pkg, o.name, InputType.Model.GraphQLReference, Nil, fields, None)))
         case _ => throw new IllegalStateException(s"Invalid model type [$t]")
       }
       case _ =>

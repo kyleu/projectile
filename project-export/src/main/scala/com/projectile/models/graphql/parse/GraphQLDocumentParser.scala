@@ -33,18 +33,7 @@ object GraphQLDocumentParser extends Logging {
       }.toSet
 
       val extras = getExtras(pkg, schema, current, s)
-
-      if (extras.isEmpty) {
-        log.info(s" ::: Completed with keys [${current.toSeq.sorted.mkString(", ")}]")
-        s
-      } else {
-        val keys = extras.map {
-          case Left(x) => x.key
-          case Right(x) => x.key
-        }
-        log.info(s" ::: Loading extras [${keys.mkString(", ")}]")
-        addReferences(s ++ extras)
-      }
+      if (extras.isEmpty) { s } else { addReferences(s ++ extras) }
     }
 
     addReferences(ret)
@@ -53,12 +42,12 @@ object GraphQLDocumentParser extends Logging {
   private[this] def parseFragment(pkg: Seq[String], schema: Schema[_, _], doc: Document, f: FragmentDefinition) = {
     val result = GraphQLSelectionParser.fieldsForSelections(s"fragment:${f.name}", schema, doc, schema.allTypes(f.typeCondition.name), f.selections)
     val fields = result.right.getOrElse(throw new IllegalStateException("Cannot currently support fragments with a single spread"))
-    GraphQLDocumentHelper.modelFor(pkg, f.name, InputType.Model.GraphQLFragment, Nil, fields)
+    GraphQLDocumentHelper.modelFor(pkg, f.name, InputType.Model.GraphQLFragment, Nil, fields, Some(f.renderPretty))
   }
 
   private[this] def parseInput(pkg: Seq[String], schema: Schema[_, _], doc: Document, i: InputObjectTypeDefinition) = {
     val fields = i.fields.map(f => GraphQLFieldParser.getField(i.name, schema, doc, f.name, f.valueType, f.defaultValue))
-    GraphQLDocumentHelper.modelFor(pkg, i.name, InputType.Model.GraphQLInput, Nil, fields)
+    GraphQLDocumentHelper.modelFor(pkg, i.name, InputType.Model.GraphQLInput, Nil, fields, Some(i.renderPretty))
   }
 
   private[this] def parseMutation(pkg: Seq[String], schema: Schema[_, _], doc: Document, o: OperationDefinition) = {
@@ -79,7 +68,7 @@ object GraphQLDocumentParser extends Logging {
     val result = GraphQLSelectionParser.fieldsForSelections(s"$it:$key", schema, doc, typ, o.selections)
     val fields = result.right.getOrElse(throw new IllegalStateException("Cannot currently support fragments with a single spread"))
     val vars = GraphQLDocumentHelper.parseVariables(schema, doc, o.variables)
-    GraphQLDocumentHelper.modelFor(pkg, key, it, vars, fields)
+    GraphQLDocumentHelper.modelFor(pkg, key, it, vars, fields, Some(o.renderPretty))
   }
 
   private[this] def getExtras(pkg: Seq[String], schema: Schema[_, _], current: Set[String], s: Seq[Either[ExportEnum, ExportModel]]) = {
