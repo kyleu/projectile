@@ -67,7 +67,7 @@ object Server {
 
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
-  lazy val server = withProjects(Project(id = Shared.projectId, base = file(".")).enablePlugins(
+  lazy val `projectile-server` = withProjects(Project(id = Shared.projectId, base = file(".")).enablePlugins(
     SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin,
-  ).settings(serverSettings: _*), SbtExportPlugin.`sbt-plugin`, ProjectExport.`project-export`)
+  ).settings(serverSettings: _*), SbtExportPlugin.`projectile-sbt`, ProjectExport.`projectile-export`)
 }

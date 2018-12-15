@@ -1,7 +1,7 @@
 package controllers.project
 
-import com.projectile.models.feature.ModelFeature
-import com.projectile.models.project.member.{MemberOverride, ModelMember}
+import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.project.member.{MemberOverride, ModelMember}
 import controllers.BaseController
 import util.web.ControllerUtils
 

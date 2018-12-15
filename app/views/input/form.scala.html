@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, input: com.projectile.models.input.Input)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.input.Input)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, input.title + " Input Edit") {
   <form method="post" action="@controllers.input.routes.InputController.save()">
@@ -27,7 +27,7 @@
           <label for="description">Description</label>
         </div>
       </div>
-      @if(input.isInstanceOf[com.projectile.models.database.input.PostgresInput]) {
+      @if(input.isInstanceOf[com.kyleu.projectile.models.database.input.PostgresInput]) {
         <div class="collection-item">
           <div class="input-field">
             <a href="@controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")" class="theme-text">Connection Settings</a>

@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, project: com.projectile.models.project.Project)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, project.title + " Package Edit") {
   <form method="post" action="@controllers.project.routes.ProjectFormController.savePackages()">
@@ -10,7 +10,7 @@
         <h5><i class="@project.template.icon"></i> Edit [@project.key] Packages</h5>
         <div>@project.template.title Project</div>
       </div>
-       @com.projectile.models.output.OutputPackage.values.map { p =>
+       @com.kyleu.projectile.models.output.OutputPackage.values.map { p =>
         <div class="collection-item">
           <div>
             <label for="package.@p.value">@p.value</label>

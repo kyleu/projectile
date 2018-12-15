@@ -1,11 +1,11 @@
 package services
 
-import com.projectile.models.database.input.{PostgresConnection, PostgresInput}
-import com.projectile.models.feature.ProjectFeature
-import com.projectile.models.input.{InputSummary, InputTemplate}
-import com.projectile.models.project.{ProjectSummary, ProjectTemplate}
-import com.projectile.services.ProjectileService
-import com.projectile.services.config.ConfigService
+import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresInput}
+import com.kyleu.projectile.models.feature.ProjectFeature
+import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
+import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
+import com.kyleu.projectile.services.ProjectileService
+import com.kyleu.projectile.services.config.ConfigService
 import org.scalatest._
 
 class ProjectileServiceTests extends FlatSpec with Matchers {

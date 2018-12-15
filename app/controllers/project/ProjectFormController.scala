@@ -1,8 +1,8 @@
 package controllers.project
 
 import controllers.BaseController
-import com.projectile.models.feature.ProjectFeature
-import com.projectile.models.project.{ProjectSummary, ProjectTemplate}
+import com.kyleu.projectile.models.feature.ProjectFeature
+import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
 import play.api.mvc.{AnyContent, Request}
 import util.web.ControllerUtils
 
@@ -46,7 +46,7 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   def savePaths() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      paths = com.projectile.models.output.OutputPath.values.flatMap { p =>
+      paths = com.kyleu.projectile.models.output.OutputPath.values.flatMap { p =>
         form.get(s"path.${p.value}").flatMap {
           case x if x == summary.template.path(p) => None
           case x => Some(p -> x)
@@ -63,7 +63,7 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   def savePackages() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      packages = com.projectile.models.output.OutputPackage.values.flatMap { p =>
+      packages = com.kyleu.projectile.models.output.OutputPackage.values.flatMap { p =>
         form.get(s"package.${p.value}").flatMap { pkg =>
           val x = pkg.split('.').map(_.trim).filter(_.nonEmpty).toSeq
           if (x == p.defaultVal) {

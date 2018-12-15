@@ -4,7 +4,7 @@ import javax.inject.Inject
 import play.api.http._
 import play.api.mvc.RequestHeader
 import play.api.routing.Router
-import com.projectile.util.Logging
+import com.kyleu.projectile.util.Logging
 
 class RequestHandler @Inject() (
     errorHandler: HttpErrorHandler,

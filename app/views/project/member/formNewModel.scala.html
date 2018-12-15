@@ -1,9 +1,9 @@
-@(projectile: com.projectile.services.ProjectileService, key: String, inputModels: Seq[(String, Boolean)])(
+@(projectile: com.kyleu.projectile.services.ProjectileService, key: String, inputModels: Seq[(String, Boolean)])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "New Model") {
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class=" @com.projectile.models.template.Icons.model"></i> New [@key] Model</h5>
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> New [@key] Model</h5>
     </div>
     <div class="collection-item">
       <div class="right">

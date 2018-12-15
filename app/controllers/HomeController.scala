@@ -1,6 +1,6 @@
 package controllers
 
-import com.projectile.util.JsonSerializers.printJson
+import com.kyleu.projectile.util.JsonSerializers.printJson
 import util.web.{ControllerUtils, PlayServerHelper}
 
 import scala.concurrent.Future

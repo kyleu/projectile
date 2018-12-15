@@ -1,7 +1,7 @@
 package controllers.project
 
-import com.projectile.models.feature.ServiceFeature
-import com.projectile.models.project.member.{MemberOverride, ServiceMember}
+import com.kyleu.projectile.models.feature.ServiceFeature
+import com.kyleu.projectile.models.project.member.{MemberOverride, ServiceMember}
 import controllers.BaseController
 import util.web.ControllerUtils
 

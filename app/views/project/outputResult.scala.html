@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, output: com.projectile.models.project.ProjectOutput, files: Seq[com.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, output: com.kyleu.projectile.models.project.ProjectOutput, files: Seq[com.kyleu.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, output.project.title + " Export Result") {
   <div class="collection with-header">
@@ -9,9 +9,9 @@
       </div>
       <h5><i class="@output.project.template.icon"></i> Export Result</h5>
       <em>
-        @com.projectile.util.NumberUtils.withCommas(output.fileCount) files generated for
+        @com.kyleu.projectile.util.NumberUtils.withCommas(output.fileCount) files generated for
         <a class="theme-text" href="@controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.title</a>
-        in @{com.projectile.util.NumberUtils.withCommas(output.duration)}ms
+        in @{com.kyleu.projectile.util.NumberUtils.withCommas(output.duration)}ms
       </em>
     </div>
 
@@ -20,7 +20,7 @@
       <ul class="collapsible expandable">
         <li>
           <div class="collapsible-header">
-            <i class=" @com.projectile.models.template.Icons.logs"></i> Logs
+            <i class=" @com.kyleu.projectile.models.template.Icons.logs"></i> Logs
             <span class="badge">@output.rootLogs.size</span>
           </div>
           <div class="collapsible-body">
@@ -38,7 +38,7 @@
         @if(files.nonEmpty) {
           <li>
             <div class="collapsible-header">
-              <i class=" @com.projectile.models.template.Icons.file"></i> Files
+              <i class=" @com.kyleu.projectile.models.template.Icons.file"></i> Files
               <span class="badge">@files.size</span>
             </div>
             <div class="collapsible-body">
@@ -62,7 +62,7 @@
         <ul class="collapsible expandable">
           <li>
             <div class="collapsible-header">
-              <i class=" @com.projectile.models.template.Icons.logs"></i> Logs
+              <i class=" @com.kyleu.projectile.models.template.Icons.logs"></i> Logs
               <span class="badge">@fo.logs.size</span>
             </div>
             <div class="collapsible-body">

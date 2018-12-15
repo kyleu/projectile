@@ -1,10 +1,10 @@
 package util.web
 
-import com.projectile.models.cli.ServerHelper
-import com.projectile.models.command.ProjectileResponse.OK
-import com.projectile.services.ProjectileService
-import com.projectile.services.config.ConfigService
-import com.projectile.util.Logging
+import com.kyleu.projectile.models.cli.ServerHelper
+import com.kyleu.projectile.models.command.ProjectileResponse.OK
+import com.kyleu.projectile.services.ProjectileService
+import com.kyleu.projectile.services.config.ConfigService
+import com.kyleu.projectile.util.Logging
 import play.api._
 import play.core.server._
 

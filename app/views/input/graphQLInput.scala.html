@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, input: com.projectile.models.graphql.input.GraphQLInput)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.graphql.input.GraphQLInput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 ) @layout.simple(projectile, input.title + " Input Detail") {
   <div class="collection with-header">
@@ -10,12 +10,12 @@
   </div>
 
   <ul class="tabs">
-    <li class="tab"><a href="#input-detail"><i class=" @com.projectile.models.template.Icons.graphql"></i> Summary</a></li>
-    <li class="tab"><a href="#input-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.exportEnums.size Enums</a></li>
-    <li class="tab"><a href="#input-models"><i class=" @com.projectile.models.template.Icons.model"></i> @input.exportModels.size Models</a></li>
-    <li class="tab"><a href="#input-services"><i class=" @com.projectile.models.template.Icons.service"></i> @input.exportServices.size Services</a></li>
+    <li class="tab"><a href="#input-detail"><i class=" @com.kyleu.projectile.models.template.Icons.graphql"></i> Summary</a></li>
+    <li class="tab"><a href="#input-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.exportEnums.size Enums</a></li>
+    <li class="tab"><a href="#input-models"><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @input.exportModels.size Models</a></li>
+    <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.exportServices.size Services</a></li>
     @input.schema.map { q =>
-      <li class="tab"><a href="#input-@q.schemaClass"><i class=" @com.projectile.models.template.Icons.logs"></i> @q.schemaClass</a></li>
+      <li class="tab"><a href="#input-@q.schemaClass"><i class=" @com.kyleu.projectile.models.template.Icons.logs"></i> @q.schemaClass</a></li>
     }
   </ul>
 
@@ -29,7 +29,7 @@
           <h6 title="@q.schema">@q.schemaClass</h6>
           <ul>
           @q.fileClasses.map { f =>
-            <li title="@f._2"><i class="fa @com.projectile.models.template.Icons.file"></i> @f._1</li>
+            <li title="@f._2"><i class="fa @com.kyleu.projectile.models.template.Icons.file"></i> @f._1</li>
           }
           </ul>
         </div>

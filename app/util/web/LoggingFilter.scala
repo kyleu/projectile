@@ -2,9 +2,9 @@ package util.web
 
 import javax.inject.Inject
 import akka.stream.Materializer
-import com.projectile.util.FutureUtils.defaultContext
+import com.kyleu.projectile.util.FutureUtils.defaultContext
 import play.api.mvc._
-import com.projectile.util.{Config, Logging}
+import com.kyleu.projectile.util.{Config, Logging}
 
 import scala.concurrent.Future
 

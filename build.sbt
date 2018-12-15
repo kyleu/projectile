@@ -2,8 +2,8 @@ scapegoatVersion in ThisBuild := Dependencies.Utils.scapegoatVersion
 
 lazy val doc = Documentation.doc
 
-lazy val `project-export` = ProjectExport.`project-export`
+lazy val `projectile-export` = ProjectExport.`projectile-export`
 
-lazy val `sbt-plugin` = SbtExportPlugin.`sbt-plugin`
+lazy val `projectile-sbt` = SbtExportPlugin.`projectile-sbt`
 
-lazy val server = Server.server
+lazy val `projectile-server` = Server.`projectile-server`

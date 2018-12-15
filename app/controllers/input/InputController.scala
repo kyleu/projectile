@@ -1,10 +1,10 @@
 package controllers.input
 
 import controllers.BaseController
-import com.projectile.models.database.input.PostgresInput
-import com.projectile.models.graphql.input.GraphQLInput
-import com.projectile.models.input.{InputSummary, InputTemplate}
-import com.projectile.models.thrift.input.ThriftInput
+import com.kyleu.projectile.models.database.input.PostgresInput
+import com.kyleu.projectile.models.graphql.input.GraphQLInput
+import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
+import com.kyleu.projectile.models.thrift.input.ThriftInput
 import util.web.ControllerUtils
 
 import scala.concurrent.Future

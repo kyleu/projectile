@@ -1,7 +1,7 @@
 package controllers.project
 
 import controllers.BaseController
-import com.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
+import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
 import util.web.ControllerUtils
 
 import scala.concurrent.Future

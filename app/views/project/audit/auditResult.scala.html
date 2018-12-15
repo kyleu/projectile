@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, result: com.projectile.models.project.audit.AuditResult)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, result: com.kyleu.projectile.models.project.audit.AuditResult)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, result.config.project.title + " Audit Result") {
   <div class="collection with-header">

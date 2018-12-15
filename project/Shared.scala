@@ -9,7 +9,7 @@ object Shared {
   val projectPort = 20000
 
   object Versions {
-    val app = "0.3.2"
+    val app = "0.3.3"
     val scala = "2.12.7"
   }
 
@@ -26,7 +26,7 @@ object Shared {
   lazy val commonSettings = Seq(
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
-    organization := "com.projectile",
+    organization := "com.kyleu",
 
     scalacOptions ++= compileOptions,
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),

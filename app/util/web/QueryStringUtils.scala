@@ -3,7 +3,7 @@ package util.web
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 import play.api.mvc.{PathBindable, QueryStringBindable}
-import com.projectile.util.DateUtils
+import com.kyleu.projectile.util.DateUtils
 
 object QueryStringUtils {
   implicit def localDateTimePathBindable(implicit stringBinder: PathBindable[String]): PathBindable[LocalDateTime] = new PathBindable[LocalDateTime] {

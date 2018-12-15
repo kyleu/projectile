@@ -1,13 +1,13 @@
 package util.web
 
-import com.projectile.util.JsonSerializers.printJson
+import com.kyleu.projectile.util.JsonSerializers.printJson
 import io.circe.Json
 import javax.inject._
 import play.api.http.{DefaultHttpErrorHandler, MimeTypes}
 import play.api._
 import play.api.mvc._
 import play.api.routing.Router
-import com.projectile.util.Logging
+import com.kyleu.projectile.util.Logging
 
 import scala.concurrent._
 

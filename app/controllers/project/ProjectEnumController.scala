@@ -1,8 +1,8 @@
 package controllers.project
 
-import com.projectile.models.feature.EnumFeature
-import com.projectile.models.project.member
-import com.projectile.models.project.member.{EnumMember, MemberOverride}
+import com.kyleu.projectile.models.feature.EnumFeature
+import com.kyleu.projectile.models.project.member
+import com.kyleu.projectile.models.project.member.{EnumMember, MemberOverride}
 import controllers.BaseController
 import util.web.ControllerUtils
 

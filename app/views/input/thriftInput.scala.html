@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, input: com.projectile.models.thrift.input.ThriftInput)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.thrift.input.ThriftInput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 ) @layout.simple(projectile, input.title + " Input Detail") {
   <div class="collection with-header">
@@ -10,12 +10,12 @@
   </div>
 
   <ul class="tabs">
-    <li class="tab"><a href="#input-detail"><i class=" @com.projectile.models.template.Icons.database"></i> Summary</a></li>
-    <li class="tab"><a href="#input-typedefs"><i class=" @com.projectile.models.template.Icons.thrift"></i> @input.typedefs.size Typedefs</a></li>
-    <li class="tab"><a href="#input-int-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.intEnums.size Int Enums</a></li>
-    <li class="tab"><a href="#input-string-enums"><i class=" @com.projectile.models.template.Icons.enum"></i> @input.stringEnums.size String Enums</a></li>
-    <li class="tab"><a href="#input-structs"><i class=" @com.projectile.models.template.Icons.model"></i> @input.structs.size Structs</a></li>
-    <li class="tab"><a href="#input-services"><i class=" @com.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
+    <li class="tab"><a href="#input-detail"><i class=" @com.kyleu.projectile.models.template.Icons.database"></i> Summary</a></li>
+    <li class="tab"><a href="#input-typedefs"><i class=" @com.kyleu.projectile.models.template.Icons.thrift"></i> @input.typedefs.size Typedefs</a></li>
+    <li class="tab"><a href="#input-int-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.intEnums.size Int Enums</a></li>
+    <li class="tab"><a href="#input-string-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.stringEnums.size String Enums</a></li>
+    <li class="tab"><a href="#input-structs"><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @input.structs.size Structs</a></li>
+    <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
   </ul>
 
   <div id="input-detail">

@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, key: String, p: com.projectile.models.project.ProjectSummary, member: com.projectile.models.project.member.ServiceMember, svc: com.projectile.models.export.ExportService)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, key: String, p: com.kyleu.projectile.models.project.ProjectSummary, member: com.kyleu.projectile.models.project.member.ServiceMember, svc: com.kyleu.projectile.models.export.ExportService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, svc.key + " Service") {
   <form method="post" action="@controllers.project.routes.ProjectServiceController.save(p.key, svc.key)">
@@ -8,7 +8,7 @@
           <a class="btn-flat theme-text" href="@controllers.routes.FileController.viewFile(s"project/$key/service/${svc.key}.json")">Edit Json</a>
           <input class="theme btn" type="submit" value="Save" />
         </div>
-        <h5><i class=" @com.projectile.models.template.Icons.service"></i> @svc.key</h5>
+        <h5><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @svc.key</h5>
         <em><a class="theme-text" href="@controllers.project.routes.ProjectController.detail(p.key)">@p.title</a> Service</em>
         (<a class="theme-text" href="@controllers.project.routes.ProjectServiceController.remove(p.key, member.key)">Remove</a>)
       </div>

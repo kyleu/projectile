@@ -1,4 +1,4 @@
-@(projectile: com.projectile.services.ProjectileService, path: String, content: String)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, path: String, content: String)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, path) {
   <div class="collection with-header">
@@ -6,7 +6,7 @@
       <div class="right">
         <a href="@controllers.routes.FileController.deleteFile(path)" class="theme-text" onclick="return confirm('Are you sure you want to delete this file?');">Delete File</a>
       </div>
-      <h5><i class=" @com.projectile.models.template.Icons.file"></i> @path</h5>
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.file"></i> @path</h5>
     </div>
     <div class="collection-item">
       <form method="post" action="@controllers.routes.FileController.editFile(path)">

@@ -1,6 +1,6 @@
-import com.projectile.ProjectileCLI
-import com.projectile.models.cli.CommandLineOutput
-import com.projectile.util.{Logging, Version}
+import com.kyleu.projectile.ProjectileCLI
+import com.kyleu.projectile.models.cli.CommandLineOutput
+import com.kyleu.projectile.util.{Logging, Version}
 
 object CLI extends Logging {
   def main(args: Array[String]): Unit = {
