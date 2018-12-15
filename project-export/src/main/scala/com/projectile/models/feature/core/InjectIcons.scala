@@ -1,5 +1,6 @@
-package com.projectile.models.feature.core.db
+package com.projectile.models.feature.core
 
+import com.projectile.models.export.ExportModel
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.FeatureLogic
 import com.projectile.models.output.{ExportHelper, OutputPath}
@@ -8,16 +9,47 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
+    val dbModels = config.models.filter(_.inputType.isDatabase)
+    val postDb = if (dbModels.isEmpty) { original } else { dbLogic(dbModels, original) }
+
+    val thriftModels = config.models.filter(_.inputType.isThrift)
+    if (thriftModels.isEmpty) { postDb } else { thriftLogic(thriftModels, postDb) }
+  }
+
+  private[this] def dbLogic(models: Seq[ExportModel], original: String) = {
     val startString = "  // Start model icons"
     val endString = "  // End model icons"
     val startIndex = original.indexOf(startString)
-    val newContent = config.models.flatMap { m =>
+    val newContent = models.flatMap { m =>
       original.indexOf("val " + m.propertyName + " = ") match {
         case x if x > -1 && x < startIndex => None
         case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
       }
     }.sorted.mkString("\n")
-    ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
+
+    if (newContent.trim.isEmpty) {
+      original
+    } else {
+      ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
+    }
+  }
+
+  private[this] def thriftLogic(models: Seq[ExportModel], original: String) = {
+    val startString = "  // Start thrift icons"
+    val endString = "  // End thrift icons"
+    val startIndex = original.indexOf(startString)
+    val newContent = models.flatMap { m =>
+      original.indexOf("val " + m.propertyName + " = ") match {
+        case x if x > -1 && x < startIndex => None
+        case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
+      }
+    }.sorted.mkString("\n")
+
+    if (newContent.trim.isEmpty) {
+      original
+    } else {
+      ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
+    }
   }
 
   private[this] val icons = IndexedSeq(

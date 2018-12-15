@@ -15,6 +15,7 @@ object ProjectSummary {
 case class ProjectSummary(
     template: ProjectTemplate = ProjectTemplate.Custom,
     key: String = "new",
+    input: String = "FIX_SOURCE_INPUT",
     title: String = "New Project",
     description: String = "...",
     features: Set[ProjectFeature] = Set.empty,

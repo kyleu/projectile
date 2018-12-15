@@ -9,8 +9,6 @@ object ServiceMember {
 }
 
 case class ServiceMember(
-    input: String,
-
     key: String,
     pkg: Seq[String] = Nil,
 

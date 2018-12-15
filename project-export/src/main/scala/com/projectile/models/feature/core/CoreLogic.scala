@@ -1,7 +1,7 @@
 package com.projectile.models.feature.core
 
 import com.projectile.models.export.config.ExportConfiguration
-import com.projectile.models.feature.core.db.{EnumFile, InjectIcons, ModelFile}
+import com.projectile.models.feature.core.db.{EnumFile, ModelFile}
 import com.projectile.models.feature.core.graphql.{GraphQLEnumFile, GraphQLFragmentFile, GraphQLInputFile, GraphQLOperationFile}
 import com.projectile.models.feature.core.thrift.{IntEnumFile, StringEnumFile, StructModelFile, ThriftServiceFile}
 import com.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}

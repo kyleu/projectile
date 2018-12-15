@@ -21,7 +21,7 @@ object ProjectileResponse extends Enum[ProjectileResponse] {
   case class ProjectList(projects: Seq[ProjectSummary]) extends ProjectileResponse
   case class ProjectDetail(project: Project) extends ProjectileResponse
 
-  case class ProjectUpdateResult(key: String, logs: Seq[String]) extends ProjectileResponse
+  case class ProjectUpdateResult(key: String, log: Seq[String]) extends ProjectileResponse
   case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputService.WriteResult]) extends ProjectileResponse
   case class ProjectAuditResult(result: AuditResult) extends ProjectileResponse
 

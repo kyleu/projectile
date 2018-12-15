@@ -49,9 +49,18 @@ object ThriftFieldScalaHelper {
   }
 
   private[this] def parseMapped(t: FieldType, ctx: String): String = t match {
-    case FieldType.MapType(_, _) => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
-    case FieldType.ListType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
-    case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
+    case FieldType.MapType(_, v) => parseMapped(v, ctx + ".map") match {
+      case x if x.isEmpty => x
+      case x => s".mapValues(x => x$x)"
+    }
+    case FieldType.ListType(typ) => parseMapped(typ, ctx + ".list") match {
+      case x if x.isEmpty => x
+      case x => s".map(x => x$x)"
+    }
+    case FieldType.SetType(typ) => parseMapped(typ, ctx + ".set") match {
+      case x if x.isEmpty => x
+      case x => s".map(x => x$x)"
+    }
     case _ if FieldType.scalars.apply(t) => ""
     case FieldType.EnumType(key) => s".map($key.fromThrift)"
     case FieldType.StructType(key) => s".map($key.fromThrift)"

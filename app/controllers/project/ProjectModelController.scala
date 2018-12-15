@@ -1,11 +1,7 @@
 package controllers.project
 
-import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.ModelFeature
-import com.projectile.models.graphql.input.GraphQLInput
-import com.projectile.models.input.InputType
 import com.projectile.models.project.member.{MemberOverride, ModelMember}
-import com.projectile.models.thrift.input.ThriftInput
 import controllers.BaseController
 import util.web.ControllerUtils
 
@@ -15,9 +11,9 @@ import scala.concurrent.Future
 class ProjectModelController @javax.inject.Inject() () extends BaseController {
   def detail(key: String, model: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val m = p.getModel(model)
+    val i = projectile.getInput(p.input)
 
-    val i = projectile.getInput(m.input)
+    val m = p.getModel(model)
     val em = i.exportModel(model)
     val updated = em.apply(m)
     val fin = updated.copy(fields = em.fields.map(f => updated.getFieldOpt(f.key).getOrElse(f)))
@@ -27,35 +23,27 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val inputModels = projectile.listInputs().map { input =>
-      input.key -> (projectile.getInput(input.key) match {
-        case pi: PostgresInput =>
-          val ts = pi.tables.map(m => (m.name, InputType.Model.PostgresTable.value, p.models.exists(x => x.input == pi.key && x.key == m.name)))
-          val vs = pi.views.map(v => (v.name, InputType.Model.PostgresView.value, p.models.exists(x => x.input == pi.key && x.key == v.name)))
-          ts ++ vs
-        case ti: ThriftInput => ti.structs.map(s => (s.key, InputType.Model.ThriftStruct.value, p.models.exists(x => x.input == ti.key && x.key == s.key)))
-        case gi: GraphQLInput => gi.exportModels.map(m => (m.key, m.inputType.value, p.models.exists(x => x.input == gi.key && x.key == m.key)))
-        case x => throw new IllegalStateException(s"Unhandled input [$x]")
-      })
-    }
+    val i = projectile.getInput(p.input)
+
+    val inputModels = i.exportModels.map(m => (m.key, p.models.exists(x => x.key == m.key)))
     Future.successful(Ok(views.html.project.member.formNewModel(projectile, key, inputModels)))
   }
 
-  def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
-    val i = projectile.getInput(input)
+  def add(key: String, modelKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    inputKey match {
+    val i = projectile.getInput(p.input)
+    modelKey match {
       case "all" =>
         val toSave = i.exportModels.flatMap {
           case m if p.getModelOpt(m.key).isDefined => None
-          case m => Some(ModelMember(input = input, pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet))
+          case m => Some(ModelMember(pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet))
         }
         val saved = projectile.saveModelMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} models"))
       case _ =>
-        val orig = i.exportModel(inputKey)
-        val m = ModelMember(input = input, pkg = orig.pkg, key = inputKey, features = p.modelFeatures.toSet)
+        val orig = i.exportModel(modelKey)
+        val m = ModelMember(pkg = orig.pkg, key = modelKey, features = p.modelFeatures.toSet)
         projectile.saveModelMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added model [${m.key}]"))
@@ -66,7 +54,7 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
     val p = projectile.getProject(key)
     val m = p.getModel(modelKey)
 
-    val i = projectile.getInput(m.input)
+    val i = projectile.getInput(p.input)
     val model = i.exportModel(m.key)
 
     val form = ControllerUtils.getForm(request.body)

@@ -1,12 +1,8 @@
 package controllers.project
 
-import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.EnumFeature
-import com.projectile.models.graphql.input.GraphQLInput
-import com.projectile.models.input.InputType
 import com.projectile.models.project.member
 import com.projectile.models.project.member.{EnumMember, MemberOverride}
-import com.projectile.models.thrift.input.ThriftInput
 import controllers.BaseController
 import util.web.ControllerUtils
 
@@ -18,7 +14,7 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
     val p = projectile.getProject(key)
     val m = p.getEnum(enum)
 
-    val i = projectile.getInput(m.input)
+    val i = projectile.getInput(p.input)
     val ee = i.exportEnum(enum)
     val fin = ee.apply(m).copy(values = ee.values)
 
@@ -27,35 +23,27 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val inputEnums = projectile.listInputs().map { input =>
-      input.key -> (projectile.getInput(input.key) match {
-        case pi: PostgresInput => pi.enums.map(e => (e.key, InputType.Enum.PostgresEnum.value, p.enums.exists(x => x.input == pi.key && x.key == e.key)))
-        case ti: ThriftInput =>
-          val i = ti.intEnums.map(e => (e.key, InputType.Enum.ThriftIntEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
-          val s = ti.stringEnums.map(e => (e.key, InputType.Enum.ThriftStringEnum.value, p.enums.exists(x => x.input == ti.key && x.key == e.key)))
-          i ++ s
-        case gi: GraphQLInput => gi.exportEnums.map(e => (e.key, e.inputType.value, p.enums.exists(x => x.input == gi.key && x.key == e.key)))
-        case x => throw new IllegalStateException(s"Unhandled input [$x]")
-      })
-    }
+    val i = projectile.getInput(p.input)
+
+    val inputEnums = i.exportEnums.map(e => (e.key, p.enums.exists(x => x.key == e.key)))
     Future.successful(Ok(views.html.project.member.formNewEnum(projectile, key, inputEnums)))
   }
 
-  def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
-    val i = projectile.getInput(input)
+  def add(key: String, enumKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    inputKey match {
+    val i = projectile.getInput(p.input)
+    enumKey match {
       case "all" =>
         val toSave = i.exportEnums.flatMap {
           case e if p.getEnumOpt(e.key).isDefined => None
-          case e => Some(member.EnumMember(input = input, pkg = e.pkg, key = e.key, features = p.enumFeatures.toSet))
+          case e => Some(member.EnumMember(pkg = e.pkg, key = e.key, features = p.enumFeatures.toSet))
         }
         val saved = projectile.saveEnumMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} enums"))
       case _ =>
-        val orig = i.exportEnum(inputKey)
-        val m = EnumMember(input = input, pkg = orig.pkg, key = inputKey, features = p.enumFeatures.toSet)
+        val orig = i.exportEnum(enumKey)
+        val m = EnumMember(pkg = orig.pkg, key = enumKey, features = p.enumFeatures.toSet)
         projectile.saveEnumMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added enum [${m.key}]"))
@@ -64,9 +52,9 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
 
   def save(key: String, enumKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val m = p.getEnum(enumKey)
+    val i = projectile.getInput(p.input)
 
-    val i = projectile.getInput(m.input)
+    val m = p.getEnum(enumKey)
     val e = i.exportEnum(m.key)
 
     val form = ControllerUtils.getForm(request.body)

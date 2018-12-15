@@ -9,9 +9,9 @@ import play.api._
 import play.core.server._
 
 object PlayServerHelper extends Logging with ServerHelper {
-  // private[this] val defaultPath = "."
+  private[this] val defaultPath = "."
   // private[this] val defaultPath = "/Users/kyle/Projects/Fevo/coco"
-  private[this] val defaultPath = "/Users/kyle/Projects/Fevo/fevomatic"
+  // private[this] val defaultPath = "/Users/kyle/Projects/Fevo/fevomatic"
 
   private[this] var serverOpt: Option[(RealServerProcess, Server)] = None
   private[this] var activeService: Option[ProjectileService] = None

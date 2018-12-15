@@ -7,8 +7,9 @@ import com.projectile.util.JsonSerializers._
 
 class ServiceMemberService(val svc: ProjectileService) {
   def saveServices(p: String, members: Seq[ServiceMember]) = {
-    val inputs = members.map(_.input).distinct.map(i => i -> svc.getInput(i)).toMap
-    members.map(m => saveMember(p, inputs(m.input), m))
+    val proj = svc.getProjectSummary(p)
+    val input = svc.getInput(proj.input)
+    members.map(m => saveMember(p, input, m))
   }
 
   def removeService(p: String, member: String) = {

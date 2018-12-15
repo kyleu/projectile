@@ -9,7 +9,6 @@ object EnumMember {
 }
 
 case class EnumMember(
-    input: String,
     key: String,
     pkg: Seq[String] = Nil,
     features: Set[EnumFeature] = Set.empty,

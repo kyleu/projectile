@@ -7,8 +7,8 @@ import com.projectile.util.JsonSerializers._
 
 class ModelMemberService(val svc: ProjectileService) {
   def saveModels(p: String, members: Seq[ModelMember]) = {
-    val inputs = members.map(_.input).distinct.map(i => i -> svc.getInput(i)).toMap
-    members.map(m => saveMember(p, inputs(m.input), m))
+    val input = svc.getInput(svc.getProjectSummary(p).input)
+    members.map(m => saveMember(p, input, m))
   }
 
   def removeModel(p: String, member: String) = {

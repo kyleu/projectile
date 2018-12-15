@@ -29,7 +29,8 @@ trait ProjectHelper { this: ProjectileService =>
   def listProjects() = summarySvc.list()
 
   def getProject(key: String) = load(key)
-  def getProjectSummary(key: String) = summarySvc.getSummary(key)
+  def getProjectSummaryOpt(key: String) = summarySvc.getSummary(key)
+  def getProjectSummary(key: String) = getProjectSummaryOpt(key).getOrElse(throw new IllegalStateException(s"No project with key [$key]"))
   def updateProject(key: String) = ProjectUpdateService.update(this, load(key))
   def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
   def removeProject(key: String) = removeProjectFiles(key)
@@ -58,11 +59,11 @@ trait ProjectHelper { this: ProjectileService =>
 
   def loadConfig(key: String) = {
     val p = getProject(key)
-    val inputs = (p.enums.map(_.input) ++ p.models.map(_.input)).distinct.map(getInput).map(i => i.key -> i).toMap
+    val input = getInput(p.input)
 
-    val exportEnums = p.enums.map(e => inputs(e.input).exportEnum(e.key).apply(e))
-    val exportModels = p.models.map(e => inputs(e.input).exportModel(e.key).apply(e))
-    val exportServices = p.services.map(e => inputs(e.input).exportService(e.key).apply(e))
+    val exportEnums = p.enums.map(e => input.exportEnum(e.key).apply(e))
+    val exportModels = p.models.map(e => input.exportModel(e.key).apply(e))
+    val exportServices = p.services.map(e => input.exportService(e.key).apply(e))
 
     ExportConfiguration(project = p, enums = exportEnums, models = exportModels, services = exportServices)
   }

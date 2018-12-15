@@ -3,7 +3,7 @@ package com.projectile.models.feature.core.thrift
 import com.projectile.models.export.ExportEnum
 import com.projectile.models.export.config.ExportConfiguration
 import com.projectile.models.feature.EnumFeature
-import com.projectile.models.output.OutputPath
+import com.projectile.models.output.{ExportHelper, OutputPath}
 import com.projectile.models.output.file.ScalaFile
 
 object IntEnumFile {
@@ -37,6 +37,6 @@ object IntEnumFile {
       case -1 => 0 -> v._1
       case x => v._1.substring(0, x).toInt -> v._1.substring(x + 1)
     }
-    file.add(s"""case object ${v._2} extends ${model.className}($i, "$s")""")
+    file.add(s"""case object ${ExportHelper.toClassName(v._2)} extends ${model.className}($i, "$s")""")
   }
 }

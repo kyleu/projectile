@@ -1,31 +1,29 @@
-@(projectile: com.projectile.services.ProjectileService, key: String, inputModels: Seq[(String, Seq[(String, String, Boolean)])])(
+@(projectile: com.projectile.services.ProjectileService, key: String, inputModels: Seq[(String, Boolean)])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "New Model") {
   <div class="collection with-header">
     <div class="collection-header">
       <h5><i class=" @com.projectile.models.template.Icons.model"></i> New [@key] Model</h5>
     </div>
-    @inputModels.map { m =>
-      <div class="collection-item">
-        <div class="right">
-          <a href="@controllers.project.routes.ProjectModelController.add(key, m._1, "model", "all")" class="theme-text">Add All</a>
-        </div>
-        <h6>@m._1</h6>
-        @if(m._2.isEmpty) {
-          <em>No available models</em>
-        }
-        <ul>
-        @m._2.sortBy(_._1).map { model =>
-          <li>
-            @if(model._3) {
-              @model._1 <em>(already added)</em>
-            } else {
-              <a href="@controllers.project.routes.ProjectModelController.add(key, m._1, model._2, model._1)" class="theme-text">@model._1</a>
-            }
-          </li>
-        }
-        </ul>
+    <div class="collection-item">
+      <div class="right">
+        <a href="@controllers.project.routes.ProjectModelController.add(key, "all")" class="theme-text">Add All</a>
       </div>
-    }
+      <h6>Models</h6>
+      @if(inputModels.isEmpty) {
+        <em>No available models</em>
+      }
+      <ul>
+      @inputModels.map { model =>
+        <li>
+          @if(model._2) {
+            @model._1 <em>(already added)</em>
+          } else {
+            <a href="@controllers.project.routes.ProjectModelController.add(key, model._1)" class="theme-text">@model._1</a>
+          }
+        </li>
+      }
+      </ul>
+    </div>
   </div>
 }

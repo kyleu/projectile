@@ -9,8 +9,6 @@ object ModelMember {
 }
 
 case class ModelMember(
-    input: String,
-
     key: String,
     pkg: Seq[String] = Nil,
 

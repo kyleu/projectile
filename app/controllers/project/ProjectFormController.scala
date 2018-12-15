@@ -94,7 +94,7 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   private[this] def getSummary(request: Request[AnyContent]) = {
     val form = ControllerUtils.getForm(request.body)
     val template = ProjectTemplate.withValue(form("template"))
-    val summary = projectile.getProjectSummary(form("key")).getOrElse(ProjectSummary(
+    val summary = projectile.getProjectSummaryOpt(form("key")).getOrElse(ProjectSummary(
       template = template,
       key = form("key")
     ))

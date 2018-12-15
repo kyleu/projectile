@@ -17,6 +17,14 @@
         <input id="package" name="package" value="@svc.pkg.mkString(".")" />
       </div>
       <div class="collection-item">
+        <label for="propertyName">Property Name</label>
+        <input id="propertyName" name="propertyName" value="@svc.propertyName" />
+      </div>
+      <div class="collection-item">
+        <label for="className">Class Name</label>
+        <input id="className" name="className" value="@svc.className" />
+      </div>
+      <div class="collection-item">
         <h6>Features</h6>
         @p.serviceFeatures.map { feat =>
           <div>

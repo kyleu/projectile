@@ -17,6 +17,7 @@ object Project {
 case class Project(
     template: ProjectTemplate = ProjectTemplate.Custom,
     key: String,
+    input: String,
     title: String,
     description: String = "...",
     features: Set[ProjectFeature] = Set.empty,

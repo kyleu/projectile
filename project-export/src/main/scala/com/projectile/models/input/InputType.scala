@@ -17,14 +17,19 @@ object InputType {
     override val values = findValues
   }
 
-  sealed abstract class Model(override val value: String, val isDatabase: Boolean = false, val isGraphQL: Boolean = false) extends StringEnumEntry {
+  sealed abstract class Model(
+      override val value: String,
+      val isDatabase: Boolean = false,
+      val isThrift: Boolean = false,
+      val isGraphQL: Boolean = false
+  ) extends StringEnumEntry {
     override val toString = value
   }
 
   object Model extends StringEnum[Model] with StringCirceEnum[Model] {
     case object PostgresTable extends Model(value = "postgres-table", isDatabase = true)
     case object PostgresView extends Model(value = "postgres-view", isDatabase = true)
-    case object ThriftStruct extends Model(value = "thrift-struct")
+    case object ThriftStruct extends Model(value = "thrift-struct", isThrift = true)
     case object GraphQLFragment extends Model(value = "graphql-fragment", isGraphQL = true)
     case object GraphQLInput extends Model(value = "graphql-input", isGraphQL = true)
     case object GraphQLMutation extends Model(value = "graphql-mutation", isGraphQL = true)

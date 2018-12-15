@@ -1,10 +1,7 @@
 package controllers.project
 
-import com.projectile.models.database.input.PostgresInput
 import com.projectile.models.feature.ServiceFeature
-import com.projectile.models.input.InputType
 import com.projectile.models.project.member.{MemberOverride, ServiceMember}
-import com.projectile.models.thrift.input.ThriftInput
 import controllers.BaseController
 import util.web.ControllerUtils
 
@@ -12,46 +9,41 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class ProjectServiceController @javax.inject.Inject() () extends BaseController {
-  def detail(key: String, model: String) = Action.async { implicit request =>
+  def detail(key: String, service: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val m = p.getService(model)
+    val i = projectile.getInput(p.input)
 
-    val i = projectile.getInput(m.input)
-    val em = i.exportService(model)
-    val updated = em.apply(m)
+    val s = p.getService(service)
+    val em = i.exportService(service)
+    val updated = em.apply(s)
     val fin = updated.copy(methods = em.methods.map(m => updated.getMethodOpt(m.key).getOrElse(m)))
 
-    Future.successful(Ok(views.html.project.member.detailService(projectile, key, p.toSummary, m, fin)))
+    Future.successful(Ok(views.html.project.member.detailService(projectile, key, p.toSummary, s, fin)))
   }
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val inputServices = projectile.listInputs().map { input =>
-      input.key -> (projectile.getInput(input.key) match {
-        case _: PostgresInput => Nil
-        case ti: ThriftInput =>
-          ti.services.map(s => (s.key, InputType.Service.ThriftService.value, p.services.exists(x => x.input == ti.key && x.key == s.key)))
-        case x => throw new IllegalStateException(s"Unhandled input [$x]")
-      })
-    }
+    val i = projectile.getInput(p.input)
+
+    val inputServices = i.exportServices.map(s => (s.key, p.services.exists(x => x.key == s.key)))
     Future.successful(Ok(views.html.project.member.formNewService(projectile, key, inputServices)))
   }
 
-  def add(key: String, input: String, inputType: String, inputKey: String) = Action.async { implicit request =>
-    val i = projectile.getInput(input)
+  def add(key: String, serviceKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    inputKey match {
+    val i = projectile.getInput(p.input)
+    serviceKey match {
       case "all" =>
         val toSave = i.exportServices.flatMap {
           case m if p.getServiceOpt(m.key).isDefined => None
-          case m => Some(ServiceMember(input = input, pkg = m.pkg, key = m.key, features = p.serviceFeatures.toSet))
+          case m => Some(ServiceMember(pkg = m.pkg, key = m.key, features = p.serviceFeatures.toSet))
         }
         val saved = projectile.saveServiceMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} services"))
       case _ =>
-        val orig = i.exportServices.find(_.key == inputKey).getOrElse(throw new IllegalStateException(s"Cannot find service [$inputKey] in input [$input]"))
-        val m = ServiceMember(input = input, pkg = orig.pkg, key = inputKey, features = p.serviceFeatures.toSet)
+        val orig = i.exportServices.find(_.key == serviceKey).getOrElse(throw new IllegalStateException(s"Cannot find service [$serviceKey]"))
+        val m = ServiceMember(pkg = orig.pkg, key = serviceKey, features = p.serviceFeatures.toSet)
         projectile.saveServiceMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectServiceController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added service [${m.key}]"))
@@ -60,9 +52,9 @@ class ProjectServiceController @javax.inject.Inject() () extends BaseController 
 
   def save(key: String, serviceKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val m = p.getService(serviceKey)
+    val i = projectile.getInput(p.input)
 
-    val i = projectile.getInput(m.input)
+    val m = p.getService(serviceKey)
     val svc = i.exportService(m.key)
 
     val form = ControllerUtils.getForm(request.body)

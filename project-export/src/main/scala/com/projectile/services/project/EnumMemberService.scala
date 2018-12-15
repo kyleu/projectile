@@ -7,8 +7,8 @@ import com.projectile.util.JsonSerializers._
 
 class EnumMemberService(val svc: ProjectileService) {
   def saveEnums(p: String, members: Seq[EnumMember]) = {
-    val inputs = members.map(_.input).distinct.map(i => i -> svc.getInput(i)).toMap
-    members.map(m => saveMember(p, inputs(m.input), m))
+    val input = svc.getInput(svc.getProjectSummary(p).input)
+    members.map(m => saveMember(p, input, m))
   }
 
   def removeEnum(p: String, member: String) = {
