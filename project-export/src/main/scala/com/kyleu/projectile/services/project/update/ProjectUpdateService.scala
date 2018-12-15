@@ -7,7 +7,7 @@ import com.kyleu.projectile.services.ProjectileService
 
 object ProjectUpdateService {
   private[this] val updateDatabase = true
-  private[this] val saveUnchanged = true
+  private[this] val saveUnchanged = false
 
   def update(svc: ProjectileService, p: Project) = {
     val i = svc.getInput(p.input)

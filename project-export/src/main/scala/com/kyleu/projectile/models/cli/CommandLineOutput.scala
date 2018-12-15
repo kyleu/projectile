@@ -8,9 +8,9 @@ import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.JsonSerializers.printJson
 
 object CommandLineOutput extends Logging {
-  def logResponse(r: ProjectileResponse) = logFor(r).foreach(s => log.info(s))
+  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => log.info(s))
 
-  def logFor(r: ProjectileResponse): Seq[String] = r match {
+  def logsFor(r: ProjectileResponse): Seq[String] = r match {
     case OK => Seq("Success: OK")
     case Error(msg) => Seq(s"Error: $msg")
     case JsonResponse(json) => Seq(printJson(json))
@@ -37,7 +37,11 @@ object CommandLineOutput extends Logging {
       }
       s"[${result.config.project.key}] Audited:" +: (cfgMsgs ++ outputMsgs)
 
-    case CompositeResult(results) => results.flatMap(logFor)
+    case CompositeResult(results) => results.size match {
+      case 0 => Seq("No results")
+      case 1 => logsFor(results.head)
+      case _ => results.zipWithIndex.flatMap(r => s"Result [${r._2}]:" +: logsFor(r._1).map("  " + _))
+    }
   }
 
   private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.title} (${is.template.title})"

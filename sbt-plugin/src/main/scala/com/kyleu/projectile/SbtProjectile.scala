@@ -1,5 +1,6 @@
 package com.kyleu.projectile
 
+import com.kyleu.projectile.models.cli.CommandLineOutput
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 import sbt.Keys._
@@ -26,16 +27,11 @@ object SbtProjectile extends AutoPlugin {
         val action = ProjectileCLI.parse(args)
         val result = action.map(act => svc.process(act.toCommand, act.verbose))
         result match {
-          case Some(r) =>
-            log(s"Code generation completed in [${System.currentTimeMillis - startMs}ms]")
-            log(r.toString)
-          case None =>
-            log("No arguments")
+          case Some(r) => (s"Code generation completed in [${System.currentTimeMillis - startMs}ms]" +: CommandLineOutput.logsFor(r)).foreach(log)
+          case None => log("No arguments")
         }
       } catch {
-        case x: Throwable =>
-          // x.printStackTrace()
-          log(s"Error running [${args.mkString(" ")}]: $x")
+        case x: Throwable => log(s"Error running [${args.mkString(" ")}]: $x")
       }
     }
   )
