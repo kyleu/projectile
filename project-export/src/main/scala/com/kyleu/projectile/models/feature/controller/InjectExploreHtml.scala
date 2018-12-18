@@ -2,13 +2,12 @@ package com.kyleu.projectile.models.feature.controller
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.controller.db.twirl.TwirlHelper
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
+import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectExploreHtml extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "explore.scala.html") {
   override def dir(config: ExportConfiguration) = config.viewPackage :+ "admin" :+ "explore"
-
-  private[this] val (sStart, sEnd) = "    <!-- Start model list routes -->" -> "    <!-- End model list routes -->"
 
   private[this] def modelsFor(config: ExportConfiguration) = {
     val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
@@ -17,21 +16,20 @@ object InjectExploreHtml extends FeatureLogic.Inject(path = OutputPath.ServerSou
     roots -> pkgGroups
   }
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val (roots, pkgGroups) = modelsFor(config)
 
-    val newContent = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
+    val newLines = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).flatMap { model =>
       val routesClass = TwirlHelper.routesClass(config, model)
-      s"""    <li class="collection-item">
-        |      <a class="theme-text" href="@$routesClass.list()">${TwirlHelper.iconHtml(config, model.propertyName)} ${model.plural}</a>
-        |      <div><em>Manage the ${model.plural} of the system.</em></div>
-        |    </li>""".stripMargin
-    }.mkString("\n")
-
-    if (newContent.trim.isEmpty) {
-      original
-    } else {
-      ExportHelper.replaceBetween(filename = filename, original = original, start = sStart, end = sEnd, newContent = newContent)
+      Seq(
+        """<li class="collection-item">""",
+        s"""  <a class="theme-text" href="@$routesClass.list()">${TwirlHelper.iconHtml(config, model.propertyName)} ${model.plural}</a>""",
+        s"""  <div><em>Manage the ${model.plural} of the system.</em></div>""",
+        """</li>"""
+      )
     }
+
+    val params = TextSectionHelper.Params(commentProvider = CommentProvider.Twirl, key = "model list routes")
+    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)
   }
 }

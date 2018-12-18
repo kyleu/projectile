@@ -5,8 +5,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
-
-import scala.io.Source
+import com.kyleu.projectile.util.StringUtils
 
 object GraphQLFragmentFile {
   val includeDefaults = false
@@ -46,7 +45,7 @@ object GraphQLFragmentFile {
   private[this] def addContent(file: ScalaFile, src: String) = {
     file.add()
     file.add("val content = \"\"\"", 1)
-    Source.fromString(src).getLines.foreach(l => file.add("|" + l))
+    StringUtils.lines(src).foreach(l => file.add("|" + l))
     file.add("\"\"\".stripMargin.trim", -1)
   }
 }

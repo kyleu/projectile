@@ -2,72 +2,78 @@ package com.kyleu.projectile.models.feature.graphql
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.OutputPath
+import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "Schema.scala") {
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "graphql"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
-    val models = config.models.filter(_.features(ModelFeature.GraphQL))
-    val services = config.services.filter(_.features(ServiceFeature.GraphQL))
-    val emptyString = "    Nil"
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+    val enums = config.enums.filter(_.features(EnumFeature.GraphQL)).sortBy(e => e.modelPackage.mkString + e.className)
+    val models = config.models.filter(_.features(ModelFeature.GraphQL)).sortBy(m => m.modelPackage.mkString + m.className)
+    val services = config.services.filter(_.features(ServiceFeature.GraphQL)).sortBy(s => s.pkg.mkString + s.className)
 
-    val (sStart, sEnd) = "    // Start service methods" -> "    // End service methods"
-    def serviceFieldsFor(s: String) = {
-      val newContent = if (services.isEmpty) {
-        emptyString
-      } else {
+    def serviceFieldsFor(s: Seq[String]) = {
+      val newLines = if (services.isEmpty) { Seq("Nil") } else {
         services.map { s =>
-          s"    ${(s.pkg :+ "services" :+ s"${s.className}Schema").mkString(".")}.serviceFields"
-        }.sorted.mkString(" ++\n  ")
+          val prelude = if (services.headOption.contains(s)) { "" } else "  "
+          val concat = if (services.lastOption.contains(s)) { "" } else " ++"
+          s"$prelude${(s.pkg :+ "services" :+ s"${s.className}Schema").mkString(".")}.serviceFields$concat"
+        }.sorted
       }
-      ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
+
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "service methods")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    val (fStart, fEnd) = "    // Start model fetchers" -> "    // End model fetchers"
-    def fetcherFieldsFor(s: String) = if (markers.getOrElse("fetcher", Nil).isEmpty) {
-      s
-    } else {
-      val newContent = "    Seq(\n" + markers.getOrElse("fetcher", Nil).sorted.map("      " + _.trim()).mkString(",\n") + "\n    )"
-      ExportHelper.replaceBetween(filename = filename, original = s, start = fStart, end = fEnd, newContent = newContent)
+    def fetcherFieldsFor(s: Seq[String]) = {
+      val fetchers = markers.getOrElse("fetcher", Nil).sorted
+      val newLines = "Seq(" +: fetchers.map { f =>
+        val concat = if (fetchers.lastOption.contains(f)) { "" } else ","
+        "  " + f.trim() + concat
+      } :+ ")"
+
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model fetchers")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    val (eStart, eEnd) = "    // Start enum query fields" -> "    // End enum query fields"
-    def enumQueryFieldsFor(s: String) = {
-      val newContent = if (!config.enums.exists(_.features(EnumFeature.GraphQL))) {
-        emptyString
-      } else {
-        config.enums.filter(_.features(EnumFeature.GraphQL)).map { e =>
-          s"    ${(config.applicationPackage ++ e.modelPackage).map(_ + ".").mkString}${e.className}Schema.queryFields"
-        }.sorted.mkString(" ++\n  ")
+    def enumQueryFieldsFor(s: Seq[String]) = {
+      val newLines = enums.map { e =>
+        val prelude = if (enums.headOption.contains(e)) { "" } else "  "
+        val concat = if (enums.lastOption.contains(e)) { "" } else " ++"
+        s"$prelude${(config.applicationPackage ++ e.modelPackage).map(_ + ".").mkString}${e.className}Schema.queryFields$concat"
       }
-      ExportHelper.replaceBetween(filename = filename, original = s, start = eStart, end = eEnd, newContent = newContent)
+
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "enum query fields")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    val (qStart, qEnd) = "    // Start model query fields" -> "    // End model query fields"
-    def modelQueryFieldsFor(s: String) = {
-      val newContent = if (models.isEmpty) {
-        emptyString
-      } else {
-        models.map { m =>
-          s"    ${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.queryFields"
-        }.sorted.mkString(" ++\n  ")
+    def modelQueryFieldsFor(s: Seq[String]) = {
+      val newLines = models.map { m =>
+        val prelude = if (models.headOption.contains(m)) { "" } else "  "
+        val concat = if (models.lastOption.contains(m)) { "" } else " ++"
+        s"$prelude${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.queryFields$concat"
       }
-      ExportHelper.replaceBetween(filename = filename, original = s, start = qStart, end = qEnd, newContent = newContent)
+
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model query fields")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    val (mStart, mEnd) = "    // Start model mutation fields" -> "    // End model mutation fields"
-    def mutationFieldsFor(s: String) = {
-      val newContent = if (models.isEmpty) {
-        emptyString
-      } else {
-        models.filter(_.pkFields.nonEmpty).map { m =>
-          s"    ${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.mutationFields"
-        }.sorted.mkString(" ++\n  ")
+    def mutationFieldsFor(s: Seq[String]) = {
+      val newLines = models.filter(_.pkFields.nonEmpty).map { m =>
+        val prelude = if (models.headOption.contains(m)) { "" } else "  "
+        val concat = if (models.lastOption.contains(m)) { "" } else " ++"
+        s"$prelude${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.mutationFields$concat"
       }
-      ExportHelper.replaceBetween(filename = filename, original = s, start = mStart, end = mEnd, newContent = newContent)
+
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model mutation fields")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    serviceFieldsFor(fetcherFieldsFor(enumQueryFieldsFor(modelQueryFieldsFor(mutationFieldsFor(original)))))
+    val postMutation = mutationFieldsFor(original)
+    val postModel = modelQueryFieldsFor(postMutation)
+    val postEnum = enumQueryFieldsFor(postModel)
+    val postFetcher = fetcherFieldsFor(postEnum)
+    serviceFieldsFor(postFetcher)
   }
 }

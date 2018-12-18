@@ -2,29 +2,13 @@ package com.kyleu.projectile.services.project
 
 import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.output.{OutputLog, OutputPath}
 import com.kyleu.projectile.models.feature.{FeatureOutput, ProjectFeature}
+import com.kyleu.projectile.models.output.OutputLog
 import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.services.ProjectileService
 
 class ProjectExportService(val projectile: ProjectileService) {
   def getOutput(projectRoot: File, key: String, verbose: Boolean) = out(projectRoot, projectile.loadConfig(key), verbose)
-
-  def exportProject(projectRoot: File, key: String, verbose: Boolean) = {
-    val o = getOutput(projectRoot, key, verbose)
-
-    /*
-    val dir = "./tmp/boilerplay".toFile
-    if (!dir.exists) {
-      "git clone https://github.com/KyleU/boilerplay.git ./tmp/boilerplay".!!
-      (dir / ".git").delete()
-      (dir / "databaseflow.json").delete()
-    }
-    dir
-    */
-
-    o
-  }
 
   private[this] def out(projectRoot: File, config: ExportConfiguration, verbose: Boolean) = {
     val startMs = System.currentTimeMillis

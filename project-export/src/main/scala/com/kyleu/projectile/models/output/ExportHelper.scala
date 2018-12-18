@@ -1,7 +1,6 @@
 package com.kyleu.projectile.models.output
 
 import com.google.common.base.{CaseFormat, Converter}
-import com.kyleu.projectile.util.NumberUtils
 
 object ExportHelper {
   private[this] val converters = collection.mutable.HashMap.empty[(CaseFormat, CaseFormat), Converter[String, String]]
@@ -24,23 +23,4 @@ object ExportHelper {
 
   val getAllArgs = "orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
-
-  def splitBetween(filename: String, original: String, start: String, end: String) = {
-    val oSize = NumberUtils.withCommas(original.length)
-    val startIndex = original.indexOf(start)
-    if (startIndex == -1) {
-      throw new IllegalStateException(s"Cannot inject [$filename]. No start key matching [$start] in [$oSize] bytes.")
-    }
-    val endIndex = original.indexOf(end)
-    if (endIndex == -1) {
-      throw new IllegalStateException(s"Cannot inject [$filename]. No end key matching [$end] in [$oSize] bytes.")
-    }
-
-    (original.substring(0, startIndex + start.length), original.substring(startIndex, endIndex), original.substring(endIndex))
-  }
-
-  def replaceBetween(filename: String, original: String, start: String, end: String, newContent: String) = {
-    val (l, _, r) = splitBetween(filename = filename, original = original, start = start, end = end)
-    l + "\n" + newContent + "\n" + r
-  }
 }

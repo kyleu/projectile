@@ -13,6 +13,8 @@ object Icons {
   val input = fa("star-o")
 
   val file = fa("file-o")
+  val inject = fa("magnet")
+
   val thrift = fa("tumblr")
   val database = fa("database")
 

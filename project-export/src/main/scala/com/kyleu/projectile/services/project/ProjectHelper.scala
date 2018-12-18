@@ -48,7 +48,7 @@ trait ProjectHelper { this: ProjectileService =>
   def removeServiceMember(key: String, member: String) = serviceSvc.removeService(key, member)
 
   def exportProject(key: String, verbose: Boolean) = {
-    val o = exportSvc.exportProject(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
+    val o = exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
     o -> outputSvc.persist(o = o, verbose = verbose)
   }
   def auditProject(key: String, verbose: Boolean) = {
@@ -120,7 +120,7 @@ trait ProjectHelper { this: ProjectileService =>
   private[this] def loadDir[A: Decoder](k: String) = {
     val d = dir / k
     if (d.exists && d.isDirectory && d.isReadable) {
-      d.children.map(f => loadFile[A](f, k)).toList
+      d.children.filter(f => f.isRegularFile && f.name.endsWith(".json")).map(f => loadFile[A](f, k)).toList
     } else {
       Nil
     }

@@ -2,15 +2,13 @@ package com.kyleu.projectile.models.feature.controller
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.OutputPath
+import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource, filename = "routes") {
-  val startString = "# Start model route files"
-  val endString = "# End model route files"
-
   override def dir(config: ExportConfiguration) = Nil
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
     val packages = filtered.flatMap(_.pkg.headOption).distinct
 
@@ -20,11 +18,9 @@ object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource
       s"->          $detailUrl $detailWs $pkg.Routes"
     }
 
-    val newContent = packages.sorted.map(routeFor).mkString("\n")
-    if (newContent.trim.isEmpty) {
-      original
-    } else {
-      ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
-    }
+    val newLines = packages.sorted.map(routeFor)
+
+    val params = TextSectionHelper.Params(commentProvider = CommentProvider.Routes, key = "model route files")
+    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)
   }
 }

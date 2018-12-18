@@ -25,11 +25,14 @@ class OutputService(projectRoot: File) {
         val f = o.getDirectory(projectRoot, i.path) / i.dir.mkString("/") / i.filename
         if (i.status == "OK") {
           if (f.exists && f.isReadable) {
+            val p = i.toString
             if (f.contentAsString != i.content) {
               f.overwrite(i.content)
-              OutputService.WriteResult(f.toString, i.dir.mkString("/"), Seq(s"Overwrote [${NumberUtils.withCommas(i.content.length)}] bytes"))
+              OutputService.WriteResult(p, i.dir.mkString("/"), Seq(s"Overwrote [${NumberUtils.withCommas(i.content.length)}] bytes"))
+            } else if (verbose) {
+              OutputService.WriteResult(p, i.dir.mkString("/"), Seq(s"Ignoring unchanged file"))
             } else {
-              OutputService.WriteResult(f.toString, i.dir.mkString("/"), Nil)
+              OutputService.WriteResult(p, i.dir.mkString("/"), Nil)
             }
           } else {
             throw new IllegalStateException(s"Cannot read file [${f.pathAsString}]")

@@ -3,53 +3,50 @@ package com.kyleu.projectile.models.feature.core
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.FeatureLogic
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.OutputPath
+import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "Icons.scala") {
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val dbModels = config.models.filter(_.inputType.isDatabase)
-    val postDb = if (dbModels.isEmpty) { original } else { dbLogic(dbModels, original) }
+    val postDb = dbLogic(dbModels, original, config.project.key)
 
     val thriftModels = config.models.filter(_.inputType.isThrift)
-    if (thriftModels.isEmpty) { postDb } else { thriftLogic(thriftModels, postDb) }
+    if (thriftModels.isEmpty) { postDb } else { thriftLogic(thriftModels, postDb, config.project.key) }
   }
 
-  private[this] def dbLogic(models: Seq[ExportModel], original: String) = {
-    val startString = "  // Start model icons"
-    val endString = "  // End model icons"
-    val startIndex = original.indexOf(startString)
-    val newContent = models.flatMap { m =>
+  private[this] def dbLogic(models: Seq[ExportModel], original: Seq[String], projectKey: String) = {
+    val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model icons")
+    val startIndex = original.indexOf(params.start)
+    val endIndex = original.indexOf(params.end)
+
+    val newLines = models.flatMap { m =>
       original.indexOf("val " + m.propertyName + " = ") match {
         case x if x > -1 && x < startIndex => None
-        case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
+        case x if x > endIndex => None
+        case _ => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
       }
-    }.sorted.mkString("\n")
+    }.sorted
 
-    if (newContent.trim.isEmpty) {
-      original
-    } else {
-      ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
-    }
+    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = projectKey)
   }
 
-  private[this] def thriftLogic(models: Seq[ExportModel], original: String) = {
-    val startString = "  // Start thrift icons"
-    val endString = "  // End thrift icons"
-    val startIndex = original.indexOf(startString)
-    val newContent = models.flatMap { m =>
+  private[this] def thriftLogic(models: Seq[ExportModel], original: Seq[String], projectKey: String) = {
+    val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "thrift icons")
+    val startIndex = original.indexOf(params.start)
+    val endIndex = original.indexOf(params.end)
+
+    val newLines = models.flatMap { m =>
       original.indexOf("val " + m.propertyName + " = ") match {
         case x if x > -1 && x < startIndex => None
-        case _ => Some(s"""  val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
+        case x if x > endIndex => None
+        case _ => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
       }
-    }.sorted.mkString("\n")
+    }.sorted
 
-    if (newContent.trim.isEmpty) {
-      original
-    } else {
-      ExportHelper.replaceBetween(filename = filename, original = original, start = startString, end = endString, newContent = newContent)
-    }
+    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = projectKey)
   }
 
   private[this] val icons = IndexedSeq(

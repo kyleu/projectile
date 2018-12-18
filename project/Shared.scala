@@ -9,7 +9,7 @@ object Shared {
   val projectPort = 20000
 
   object Versions {
-    val app = "0.4.0"
+    val app = "0.5.1"
     val scala = "2.12.7"
   }
 
@@ -27,6 +27,11 @@ object Shared {
     version := Shared.Versions.app,
     scalaVersion := Shared.Versions.scala,
     organization := "com.kyleu",
+
+    licenses := Seq("MIT" -> url("http://www.opensource.org/licenses/mit-license.php")),
+    homepage := Some(url("https://projectile.kyleu.com")),
+    scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "scm:git@github.com:KyleU/projectile.git")),
+    developers := List(Developer(id = "kyleu", name = "Kyle Unverferth", email = "opensource@kyleu.com", url = url("http://kyleu.com"))),
 
     scalacOptions ++= compileOptions,
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
@@ -62,7 +67,9 @@ object Shared {
     },
 
     publishMavenStyle := true,
-    publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus" + "/content/repositories/releases")
+    pomIncludeRepository := { _ => false },
+
+    publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
 
   ) ++ (if(profilingEnabled) {
     Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0"))

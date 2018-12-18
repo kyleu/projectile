@@ -100,6 +100,29 @@
               </li>
             }
           }
+          @defining(fo.injections.filter(f => verbose || files.exists(x => x.file == f.toString && x.logs.nonEmpty)).sortBy(_.filename)) { injectFiles =>
+            @if(injectFiles.isEmpty) {
+              <li>
+                <div class="collapsible-header">
+                  No files injected
+                </div>
+                <div class="collapsible-body">
+                  Run in verbose mode to see all injected files
+                </div>
+              </li>
+            }
+            @injectFiles.map { f =>
+              <li>
+                <div class="collapsible-header">
+                  <i class="@com.kyleu.projectile.models.template.Icons.inject"></i> @f.filename
+                  <span class="badge">@f.path.value</span>
+                </div>
+                <div class="collapsible-body">
+                  <pre style="overflow: auto;">@f.content</pre>
+                </div>
+              </li>
+            }
+          }
         </ul>
       </div>
     }

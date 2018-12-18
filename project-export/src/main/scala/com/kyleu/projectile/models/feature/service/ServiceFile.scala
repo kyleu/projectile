@@ -2,7 +2,6 @@ package com.kyleu.projectile.models.feature.service
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.typ.FieldTypeRestrictions
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile

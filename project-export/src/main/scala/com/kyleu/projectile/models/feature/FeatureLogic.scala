@@ -4,13 +4,14 @@ import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.{InjectResult, OutputFile}
+import com.kyleu.projectile.util.StringUtils
 
 import scala.util.control.NonFatal
 
 object FeatureLogic {
   abstract class Inject(val path: OutputPath, val filename: String) {
     def dir(config: ExportConfiguration): Seq[String]
-    def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String): String
+    def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]): Seq[String]
 
     def inject(config: ExportConfiguration, markers: Map[String, Seq[String]], projectRoot: File, info: String => Unit, debug: String => Unit) = {
       val projectPath = projectRoot / config.project.getPath(path)
@@ -19,9 +20,9 @@ object FeatureLogic {
 
       if (f.isRegularFile && f.isReadable) {
         val (status, newContent) = try {
-          "OK" -> logic(config, markers, f.contentAsString)
+          "OK" -> logic(config, markers, StringUtils.lines(f.contentAsString))
         } catch {
-          case NonFatal(x) => "Error" -> x.toString
+          case NonFatal(x) => "Error" -> Seq(x.toString)
         }
 
         debug(s"Injected $filename")
@@ -30,7 +31,7 @@ object FeatureLogic {
           dir = dir(config),
           filename = filename,
           status = status,
-          content = newContent
+          content = newContent.mkString("\n")
         ))
       } else {
         info(s"Cannot load file [${f.pathAsString}] for injection.")

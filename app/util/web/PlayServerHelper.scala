@@ -9,7 +9,8 @@ import play.api._
 import play.core.server._
 
 object PlayServerHelper extends Logging with ServerHelper {
-  private[this] val defaultPath = "."
+  // private[this] val defaultPath = "."
+  private[this] val defaultPath = "/Users/kyle/Projects/Personal/boilerplay"
   // private[this] val defaultPath = "/Users/kyle/Projects/Fevo/coco"
   // private[this] val defaultPath = "/Users/kyle/Projects/Fevo/fevomatic"
 

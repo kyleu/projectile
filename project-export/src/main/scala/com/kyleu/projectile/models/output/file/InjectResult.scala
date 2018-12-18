@@ -9,4 +9,7 @@ object InjectResult {
   implicit val jsonDecoder: Decoder[InjectResult] = deriveDecoder
 }
 
-case class InjectResult(path: OutputPath, dir: Seq[String], filename: String, status: String, content: String)
+case class InjectResult(path: OutputPath, dir: Seq[String], filename: String, status: String, content: String) {
+  val filePath = s"${dir.map(_ + "/").mkString}$filename"
+  override val toString = s"$path:$filePath"
+}

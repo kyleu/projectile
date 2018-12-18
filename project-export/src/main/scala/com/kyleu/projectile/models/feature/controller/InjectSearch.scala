@@ -1,66 +1,56 @@
 package com.kyleu.projectile.models.feature.controller
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.feature.FeatureLogic
 import com.kyleu.projectile.models.feature.service.InjectSearchParams
+import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "SearchController.scala") {
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "controllers" :+ "admin" :+ "system"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: String) = {
-    def searchStringFieldsFor(s: String) = {
-      val stringModels = markers.getOrElse("string-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search strings")))
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+    val stringModels = markers.getOrElse("string-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search strings")))
+    val intModels = markers.getOrElse("int-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search ints")))
+    val uuidModels = markers.getOrElse("uuid-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search uuids")))
 
-      if (stringModels.isEmpty) {
-        s
-      } else {
-        val (sStart, sEnd) = "    // Start string searches" -> "    // End string searches"
-        val stringFields = stringModels.map { m =>
-          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>\n" ++
-            s"      ${m.viewClass}(model, ${m.message})\n" +
-            "    })"
-        }
-        val stringFutures = stringModels.map(_.model.propertyName).mkString(", ")
-        val newContent = stringFields.sorted.mkString("\n") + s"\n\n    val stringSearches = Seq[Future[Seq[Html]]]($stringFutures)"
-        ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
-      }
+    def searchStringFieldsFor(s: Seq[String]) = {
+      val stringFields = stringModels.flatMap(m => Seq(
+        s"val ${m.model.propertyName} = ${m.model.serviceReference}.searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>",
+        s"  ${m.viewClass}(model, ${m.message})",
+        "})"
+      ))
+      val stringFutures = stringModels.map(_.model.propertyName).mkString(", ")
+      val newLines = stringFields.sorted :+ "" :+ s"val stringSearches = Seq[Future[Seq[Html]]]($stringFutures)"
+
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "string searches")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    def searchIntFieldsFor(s: String) = {
-      val intModels = markers.getOrElse("int-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search ints")))
+    def searchIntFieldsFor(s: Seq[String]) = {
+      val intFields = intModels.flatMap(m => Seq(
+        s"val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map { model =>",
+        s"  ${m.viewClass}(model, ${m.message})",
+        "}.toSeq)"
+      ))
+      val intFutures = intModels.map(_.model.propertyName).mkString(", ")
+      val newLines = intFields.sorted :+ "" :+ s"val intSearches = Seq[Future[Seq[Html]]]($intFutures)"
 
-      if (intModels.isEmpty) {
-        s
-      } else {
-        val (sStart, sEnd) = "    // Start int searches" -> "    // End int searches"
-        val intFields = intModels.map { m =>
-          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map { model =>\n" ++
-            s"      ${m.viewClass}(model, ${m.message})\n" +
-            "    }.toSeq)"
-        }
-        val intFutures = intModels.map(_.model.propertyName).mkString(", ")
-        val newContent = intFields.sorted.mkString("\n") + s"\n\n    val intSearches = Seq[Future[Seq[Html]]]($intFutures)"
-        ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
-      }
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "int searches")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    def searchUuidFieldsFor(s: String) = {
-      val uuidModels = markers.getOrElse("uuid-search", Nil).map(s => InjectSearchParams(config.getModel(s, "search uuids")))
+    def searchUuidFieldsFor(s: Seq[String]) = {
+      val uuidFields = uuidModels.flatMap(m => Seq(
+        s"val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map { model =>",
+        s"  ${m.viewClass}(model, ${m.message})",
+        "}.toSeq)"
+      ))
+      val uuidFutures = uuidModels.map(_.model.propertyName).mkString(", ")
+      val newLines = uuidFields.sorted :+ "" :+ s"val uuidSearches = Seq[Future[Seq[Html]]]($uuidFutures)"
 
-      if (uuidModels.isEmpty) {
-        s
-      } else {
-        val (sStart, sEnd) = "    // Start uuid searches" -> "    // End uuid searches"
-        val uuidFields = uuidModels.map { m =>
-          s"    val ${m.model.propertyName} = ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map { model =>\n" +
-            s"      ${m.viewClass}(model, ${m.message})\n" +
-            "    }.toSeq)"
-        }
-        val uuidFutures = uuidModels.map(_.model.propertyName).mkString(", ")
-        val newContent = uuidFields.sorted.mkString("\n") + s"\n\n    val uuidSearches = Seq[Future[Seq[Html]]]($uuidFutures)"
-        ExportHelper.replaceBetween(filename = filename, original = s, start = sStart, end = sEnd, newContent = newContent)
-      }
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "uuid searches")
+      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     val withStrings = searchStringFieldsFor(original)
