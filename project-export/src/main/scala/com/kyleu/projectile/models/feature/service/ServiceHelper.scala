@@ -2,7 +2,6 @@ package com.kyleu.projectile.models.feature.service
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ServiceHelper {
@@ -52,13 +51,6 @@ object ServiceHelper {
         file.add(s"def getByPrimaryKeySeq(creds: Credentials, $seqArgs)$td = {", 1)
         file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
         file.add("}", -1)
-        if (model.propertyName != "audit") {
-          field.t match {
-            case FieldType.UuidType => file.addMarker("uuid-search", InjectSearchParams(model).toString)
-            case FieldType.IntegerType => file.addMarker("int-search", InjectSearchParams(model).toString)
-            case _ => // noop
-          }
-        }
       case fields => // multiple columns
         val tupleTyp = "(" + fields.map(_.scalaType(config)).mkString(", ") + ")"
         val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType(config)).mkString(", ")

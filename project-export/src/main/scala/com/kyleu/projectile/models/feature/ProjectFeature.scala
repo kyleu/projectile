@@ -15,7 +15,6 @@ import com.kyleu.projectile.models.feature.service.ServiceLogic
 import com.kyleu.projectile.models.feature.slick.SlickLogic
 import com.kyleu.projectile.models.feature.thrift.ThriftLogic
 import com.kyleu.projectile.models.feature.wiki.WikiLogic
-import com.kyleu.projectile.models.output.file.{InjectResult, OutputFile}
 import com.kyleu.projectile.models.output.{OutputLog, OutputPath}
 
 sealed abstract class ProjectFeature(

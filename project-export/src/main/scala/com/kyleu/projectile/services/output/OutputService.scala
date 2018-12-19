@@ -38,7 +38,7 @@ class OutputService(projectRoot: File) {
             throw new IllegalStateException(s"Cannot read file [${f.pathAsString}]")
           }
         } else {
-          throw new IllegalStateException(s"Error encountered processing [${f.pathAsString}]: " + i.content)
+          throw new IllegalStateException(s"Error [${i.status}] encountered processing [${f.pathAsString}]: " + i.content)
         }
       }
     }

@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -51,6 +52,18 @@ object ControllerFile {
 
     file.addImport(config.applicationPackage ++ model.servicePackage, model.className + "Service")
     file.addImport(config.applicationPackage ++ model.modelPackage, model.className + "Result")
+
+    if (model.propertyName != "audit") {
+      file.addMarker("string-search", model.key)
+      model.pkFields match {
+        case sole :: Nil => sole.t match {
+          case FieldType.UuidType => file.addMarker("uuid-search", model.key)
+          case FieldType.IntegerType => file.addMarker("int-search", model.key)
+          case _ => // noop
+        }
+        case _ => // noop
+      }
+    }
 
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (", 2)
