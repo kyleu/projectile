@@ -35,7 +35,7 @@ object CommandLineOutput extends Logging {
       } else {
         s" - [${result.outputMessages.size}] Output Messages:" +: result.outputMessages.map(m => s"   - ${m.tgt}: ${m.message}")
       }
-      s"[${result.config.project.key}] Audited:" +: (cfgMsgs ++ outputMsgs)
+      s"Audit Result:" +: (cfgMsgs ++ outputMsgs)
 
     case CompositeResult(results) => results.size match {
       case 0 => Seq("No results")

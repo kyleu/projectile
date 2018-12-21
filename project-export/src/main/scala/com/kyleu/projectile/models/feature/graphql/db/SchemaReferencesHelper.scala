@@ -13,7 +13,7 @@ object SchemaReferencesHelper {
       val srcField = ref._4
       val tgtField = ref._2
       if (srcModel.pkg != model.pkg) {
-        file.addImport(config.applicationPackage ++ srcModel.modelPackage, srcModel.className + "Schema")
+        file.addImport(srcModel.modelPackage(config), srcModel.className + "Schema")
       }
       file.add("Field(", 1)
       file.add(s"""name = "${ref._1.propertyName}",""")

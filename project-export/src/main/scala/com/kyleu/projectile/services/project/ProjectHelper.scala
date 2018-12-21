@@ -1,18 +1,16 @@
 package com.kyleu.projectile.services.project
 
-import io.scalaland.chimney.dsl._
-import com.kyleu.projectile.models.command.ProjectileCommand._
+import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
-import com.kyleu.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.OutputLog
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.output.OutputService
-import com.kyleu.projectile.services.project.audit.ProjectAuditService
 import com.kyleu.projectile.services.project.update.ProjectUpdateService
 import com.kyleu.projectile.util.JsonSerializers._
+import io.scalaland.chimney.dsl._
 
 trait ProjectHelper { this: ProjectileService =>
   private[this] lazy val summarySvc = new ProjectSummaryService(cfg)
@@ -51,11 +49,6 @@ trait ProjectHelper { this: ProjectileService =>
     val o = exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
     o -> outputSvc.persist(o = o, verbose = verbose)
   }
-  def auditProject(key: String, verbose: Boolean) = {
-    val c = loadConfig(key)
-    val o = exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
-    ProjectAuditService.audit(cfg.workingDirectory, c, o)
-  }
 
   def loadConfig(key: String) = {
     val p = getProject(key)
@@ -66,42 +59,6 @@ trait ProjectHelper { this: ProjectileService =>
     val exportServices = p.services.map(e => input.exportService(e.key).apply(e))
 
     ExportConfiguration(project = p, enums = exportEnums, models = exportModels, services = exportServices)
-  }
-
-  protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
-    case Projects(key) => key match {
-      case Some(k) => ProjectDetail(getProject(k))
-      case None => ProjectList(listProjects())
-    }
-
-    case ProjectAdd(p) => ProjectDetail(saveProject(p))
-    case ProjectRemove(key) => removeProject(key)
-
-    case SaveEnumMembers(p, members) => JsonResponse(saveEnumMembers(p, members).asJson)
-    case RemoveEnumMember(p, member) => JsonResponse(removeEnumMember(p, member).asJson)
-
-    case SaveModelMembers(p, members) => JsonResponse(saveModelMembers(p, members).asJson)
-    case RemoveModelMember(p, member) => JsonResponse(removeModelMember(p, member).asJson)
-
-    case SaveServiceMembers(p, members) => JsonResponse(saveServiceMembers(p, members).asJson)
-    case RemoveServiceMember(p, member) => JsonResponse(removeServiceMember(p, member).asJson)
-
-    case ProjectUpdate(key) => key match {
-      case Some(k) => ProjectUpdateResult(k, updateProject(k))
-      case None => CompositeResult(listProjects().map(p => ProjectUpdateResult(p.key, updateProject(p.key))))
-    }
-    case ProjectExport(key) => key match {
-      case Some(k) => projectResults(k)
-      case None => CompositeResult(listProjects().map(p => projectResults(p.key)))
-    }
-    case ProjectAudit(key) => key match {
-      case Some(k) => JsonResponse(auditProject(k, verbose = false).asJson)
-      case None => CompositeResult(listProjects().map(p => ProjectAuditResult(auditProject(p.key, verbose = false))))
-    }
-    case ProjectCodegen(key) => key match {
-      case Some(k) => codegenProject(k, verbose = false)
-      case None => CompositeResult(listProjects().map(p => codegenProject(p.key, verbose = false)))
-    }
   }
 
   private[this] def removeProjectFiles(key: String) = {
@@ -126,12 +83,12 @@ trait ProjectHelper { this: ProjectileService =>
     }
   }
 
-  private[this] def projectResults(k: String) = {
+  protected[this] def projectResults(k: String) = {
     val r = exportProject(k, verbose = false)
     ProjectExportResult(r._1, r._2)
   }
 
-  private[this] def codegenProject(key: String, verbose: Boolean) = {
+  protected[this] def codegenProject(key: String, verbose: Boolean) = {
     val updateResult = updateProject(key).map(r => OutputLog(r, 0))
     val exportResult = projectResults(key)
     exportResult.copy(output = exportResult.output.copy(rootLogs = updateResult ++ exportResult.output.rootLogs))

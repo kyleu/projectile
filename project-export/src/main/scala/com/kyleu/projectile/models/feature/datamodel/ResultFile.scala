@@ -11,7 +11,7 @@ object ResultFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className + "Result")
+    val file = ScalaFile(path = path, dir = model.modelPackage(config), key = model.className + "Result")
 
     file.addImport(Seq("java", "time"), "LocalDateTime")
     config.addCommonImport(file, "BaseResult")

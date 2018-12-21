@@ -7,9 +7,10 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object EnumControllerFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ enum.controllerPackage, enum.className + "Controller")
-    file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
+    val file = ScalaFile(path = OutputPath.ServerSource, enum.controllerPackage(config), enum.className + "Controller")
+    file.addImport(enum.modelPackage(config), enum.className)
 
+    config.addCommonImport(file, "Application")
     config.addCommonImport(file, "BaseController")
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ServiceController")
@@ -20,7 +21,7 @@ object EnumControllerFile {
     val prefix = config.applicationPackage.map(_ + ".").mkString
 
     file.add("@javax.inject.Singleton")
-    val constructorArgs = s"@javax.inject.Inject() (override val app: ${prefix}models.Application)"
+    val constructorArgs = s"@javax.inject.Inject() (override val app: Application)"
     file.add(s"""class ${enum.className}Controller $constructorArgs extends BaseController("${enum.propertyName}") {""", 1)
     file.add("import app.contexts.webContext")
     file.add()

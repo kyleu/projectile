@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object EnumSchemaFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ enum.modelPackage, enum.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, enum.modelPackage(config), enum.className + "Schema")
     config.addCommonImport(file, "CommonSchema")
     config.addCommonImport(file, "GraphQLContext")
     config.addCommonImport(file, "GraphQLSchemaHelper")

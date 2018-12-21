@@ -37,6 +37,4 @@ object CoreLogic extends FeatureLogic {
     debug(s"Exported [${enums.size}] enums, [${models.size}] models, and [${services.size}] services, creating [${models.size + enums.size}] files")
     enums ++ models ++ services
   }
-
-  override val injections = Seq(InjectIcons)
 }

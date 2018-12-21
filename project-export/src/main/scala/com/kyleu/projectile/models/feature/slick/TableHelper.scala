@@ -50,7 +50,7 @@ object TableHelper {
       fk.references match {
         case h :: Nil =>
           val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-          col.addImport(config = config, file = file, pkg = model.modelPackage)
+          col.addImport(config = config, file = file, pkg = model.modelPackage(config))
           val propId = col.propertyName
           val propCls = col.className
 

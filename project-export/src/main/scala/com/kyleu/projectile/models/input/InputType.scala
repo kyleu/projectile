@@ -4,14 +4,19 @@ import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 
 object InputType {
 
-  sealed abstract class Enum(override val value: String, val isDatabase: Boolean = false, val isGraphQL: Boolean = false) extends StringEnumEntry {
+  sealed abstract class Enum(
+      override val value: String,
+      val isDatabase: Boolean = false,
+      val isGraphQL: Boolean = false,
+      val isThrift: Boolean = false
+  ) extends StringEnumEntry {
     override val toString = value
   }
 
   object Enum extends StringEnum[Enum] with StringCirceEnum[Enum] {
     case object PostgresEnum extends Enum(value = "postgres-enum", isDatabase = true)
-    case object ThriftIntEnum extends Enum(value = "thrift-int-enum")
-    case object ThriftStringEnum extends Enum(value = "thrift-string-enum")
+    case object ThriftIntEnum extends Enum(value = "thrift-int-enum", isThrift = true)
+    case object ThriftStringEnum extends Enum(value = "thrift-string-enum", isThrift = true)
     case object GraphQLEnum extends Enum(value = "graphql-enum", isGraphQL = true)
 
     override val values = findValues
@@ -39,12 +44,12 @@ object InputType {
     override val values = findValues
   }
 
-  sealed abstract class Service(override val value: String) extends StringEnumEntry {
+  sealed abstract class Service(override val value: String, isThrift: Boolean = false) extends StringEnumEntry {
     override val toString = value
   }
 
   object Service extends StringEnum[Service] with StringCirceEnum[Service] {
-    case object ThriftService extends Service(value = "thrift-service")
+    case object ThriftService extends Service(value = "thrift-service", isThrift = true)
 
     override val values = findValues
   }

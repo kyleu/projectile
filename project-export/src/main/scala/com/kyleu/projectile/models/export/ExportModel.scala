@@ -64,7 +64,9 @@ case class ExportModel(
   )
 
   val fullClassName = (pkg :+ className).mkString(".")
-  def fullClassPath(config: ExportConfiguration) = (config.applicationPackage ++ modelPackage :+ className).mkString(".")
+
+  def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
+
   val propertyPlural = ExportHelper.toIdentifier(plural)
 
   val pkFields = pkColumns.flatMap(c => getFieldOpt(c.name))
@@ -79,13 +81,16 @@ case class ExportModel(
 
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
-  val modelPackage = pkg.lastOption match {
-    case Some("models") => pkg
-    case Some("fragment") => pkg
-    case Some("input") => pkg
-    case Some("mutation") => pkg
-    case Some("query") => pkg
-    case _ => "models" +: pkg
+  def modelPackage(config: ExportConfiguration) = {
+    val prelude = if (inputType.isThrift) { Nil } else { config.applicationPackage }
+    prelude ++ (pkg.lastOption match {
+      case Some("models") => pkg
+      case Some("fragment") => pkg
+      case Some("input") => pkg
+      case Some("mutation") => pkg
+      case Some("query") => pkg
+      case _ => "models" +: pkg
+    })
   }
 
   val queriesPackage = List("models", "queries") ++ pkg

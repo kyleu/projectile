@@ -22,7 +22,7 @@ case class ExportEnum(
 ) {
   def apply(m: EnumMember) = copy(
     pkg = m.pkg.toList,
-    className = m.getOverride("className", ExportHelper.toClassName(ExportHelper.toIdentifier(m.key))),
+    className = m.getOverride("className", className),
     values = values.filterNot(m.ignored.contains),
     features = m.features
   )
@@ -35,21 +35,24 @@ case class ExportEnum(
     v -> ExportHelper.toClassName(ExportHelper.toIdentifier(newVal))
   }
 
-  val modelPkg = pkg.lastOption match {
-    case Some("models") => pkg
-    case _ => "models" +: pkg
-  }
-
   val propertyName = ExportHelper.toIdentifier(className)
 
-  val modelPackage = pkg.lastOption match {
-    case Some("enums") => pkg
-    case _ => "models" +: pkg
-  }
+  def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
+
   val slickPackage = List("models", "table") ++ pkg
   val doobiePackage = List("models", "doobie") ++ pkg
 
-  val controllerPackage = List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
+  def modelPackage(config: ExportConfiguration) = {
+    val prelude = if (inputType.isThrift) { Nil } else { config.applicationPackage }
+    prelude ++ (pkg.lastOption match {
+      case Some("models") => pkg
+      case _ => "models" +: pkg
+    })
+  }
 
-  def fullClassPath(config: ExportConfiguration) = (config.applicationPackage ++ modelPackage :+ className).mkString(".")
+  def controllerPackage(config: ExportConfiguration) = if (inputType.isThrift) {
+    (if (pkg.isEmpty) { List("system") } else { pkg }) :+ "controllers"
+  } else {
+    config.applicationPackage ++ List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
+  }
 }

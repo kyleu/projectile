@@ -25,8 +25,7 @@ object InjectOpenApiPaths extends FeatureLogic.Inject(path = OutputPath.ServerRe
 
     def modelPathsFor(lines: Seq[String]) = {
       val newLines = models.map { m =>
-        val comma = if (models.lastOption.contains(m)) { "" } else { "," }
-        s""""#include:${m.pkg.mkString("/")}/${m.propertyName}.json": "*"$comma"""
+        s""""#include:${m.pkg.mkString("/")}/${m.propertyName}.json": "*","""
       }.sorted
 
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Json, key = "schema paths")

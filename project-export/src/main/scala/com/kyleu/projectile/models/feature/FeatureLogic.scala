@@ -31,7 +31,7 @@ object FeatureLogic {
           dir = dir(config),
           filename = filename,
           status = status,
-          content = newContent.mkString("\n")
+          content = newContent.map(_ + "\n").mkString
         ))
       } else {
         info(s"Cannot load file [${f.pathAsString}] for injection.")

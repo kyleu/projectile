@@ -1,48 +1,50 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, result: com.kyleu.projectile.models.project.audit.AuditResult)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, result.config.project.title + " Audit Result") {
+)@layout.simple(projectile, "Audit Result") {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a class="theme-text" href="@controllers.project.routes.ProjectController.audit(result.config.project.key)">Run Again</a>
-        (<a class="theme-text" href="@controllers.project.routes.ProjectController.audit(result.config.project.key, verbose = true)">verbose</a>)
+        <a class="theme-text" href="@controllers.project.routes.BulkProjectController.auditAll()">Run Again</a>
       </div>
-      <h5><i class="@result.config.project.template.icon"></i> @result.config.project.title Audit Result</h5>
+      <h5><i class="@com.kyleu.projectile.models.template.Icons.audit"></i> Audit Result</h5>
     </div>
   </div>
 
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right">
-        <a class="theme-text" href="TODO">Fix All</a>
-      </div>
+      @if(result.configMessages.nonEmpty) {
+        <div class="right">
+          <a class="theme-text" href="@controllers.project.routes.ProjectController.fix("all", "all", "config", "")">Fix All</a>
+        </div>
+      }
       <h6>Configuration Result</h6>
-
-      @if(result.configMessages.isEmpty) {
-        <div class="collection-item">No warnings. You're all good!</div>
-      }
-
-      @result.configMessages.sortBy(_.srcModel).map { log =>
-        @views.html.project.audit.auditMessage(log)
-      }
     </div>
+
+    @if(result.configMessages.isEmpty) {
+      <div class="collection-item">No warnings. You're all good!</div>
+    }
+
+    @result.configMessages.sortBy(_.srcModel).map { log =>
+      @views.html.project.audit.auditMessage(log)
+    }
   </div>
 
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right">
-        <a class="theme-text" href="TODO">Fix All</a>
-      </div>
+      @if(result.outputMessages.nonEmpty) {
+        <div class="right">
+          <a class="theme-text" href="@controllers.project.routes.ProjectController.fix("all", "all", "output", "")">Fix All</a>
+        </div>
+      }
       <h6>Output Result</h6>
-
-      @if(result.outputMessages.isEmpty) {
-        <div class="collection-item">No warnings. You're all good!</div>
-      }
-
-      @result.outputMessages.sortBy(_.srcModel).map { log =>
-        @views.html.project.audit.auditMessage(log)
-      }
     </div>
+    @if(result.outputMessages.isEmpty) {
+      <div class="collection-item">No warnings. You're all good!</div>
+    }
+
+    @result.outputMessages.sortBy(_.srcModel).map { log =>
+      @views.html.project.audit.auditMessage(log)
+    }
   </div>
 
 }

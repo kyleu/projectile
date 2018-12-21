@@ -11,7 +11,7 @@ object QueriesFile {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.queriesPackage, key = model.className + "Queries")
 
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Row")
     config.addCommonImport(file, "DatabaseField")
     config.addCommonImport(file, "DatabaseFieldType", "_")

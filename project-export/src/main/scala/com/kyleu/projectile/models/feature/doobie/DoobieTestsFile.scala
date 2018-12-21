@@ -10,7 +10,7 @@ object DoobieTestsFile {
     val file = ScalaFile(path = OutputPath.ServerTest, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "DoobieTests")
 
     file.addImport(Seq("org", "scalatest"), "_")
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     file.add(s"class ${model.className}DoobieTests extends FlatSpec with Matchers {", 1)

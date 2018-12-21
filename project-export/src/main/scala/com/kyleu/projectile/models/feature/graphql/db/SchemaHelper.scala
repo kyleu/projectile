@@ -28,7 +28,7 @@ object SchemaHelper {
     file.add("}", -1)
     file.addImport(Seq("sangria", "execution", "deferred"), "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
-    file.addMarker("fetcher", (config.applicationPackage ++ model.modelPackage :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
+    file.addMarker("fetcher", (model.modelPackage(config) :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
     file.add(s"val $fetcherName = Fetcher(getByPrimaryKeySeq)")
     file.add()
   }

@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ModelHelper {
   def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
-    field.addImport(config, file, model.modelPackage)
+    field.addImport(config, file, model.modelPackage(config))
 
     if (FieldTypeRestrictions.isDate(field.t)) {
       config.addCommonImport(file, "DateUtils")

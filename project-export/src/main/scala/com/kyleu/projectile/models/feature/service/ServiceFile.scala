@@ -15,7 +15,7 @@ object ServiceFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.servicePackage, key = model.className + "Service")
     val queriesFilename = model.className + "Queries"
 
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(model.modelPackage(config), model.className)
     file.addImport(config.applicationPackage ++ model.queriesPackage, model.className + "Queries")
     file.addImport(Seq("scala", "concurrent"), "Future")
 

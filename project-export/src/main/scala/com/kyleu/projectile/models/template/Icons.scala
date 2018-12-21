@@ -33,4 +33,6 @@ object Icons {
   val scala = fa("sitemap")
   val markdown = fa("bookmark-o")
 
+  val audit = fa("trophy")
+
 }

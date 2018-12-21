@@ -8,8 +8,8 @@ import com.kyleu.projectile.models.input.InputType
 
 object TableExportModel {
   def loadTableModel(t: Table, tables: Seq[Table], enums: Seq[ExportEnum]) = {
-    val cn = toClassName(t.name)
-    val title = toDefaultTitle(cn)
+    val cn = PostgresInput.rowName(toClassName(t.name))
+    val title = toDefaultTitle(toClassName(t.name))
 
     ExportModel(
       inputType = InputType.Model.PostgresTable,

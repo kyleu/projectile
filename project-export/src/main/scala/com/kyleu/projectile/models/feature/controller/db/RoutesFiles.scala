@@ -63,7 +63,7 @@ object RoutesFiles {
   }
 
   def enumRoutesContentFor(config: ExportConfiguration, e: ExportEnum) = {
-    val controllerClass = (config.applicationPackage ++ e.controllerPackage :+ (e.className + "Controller")).mkString(".")
+    val controllerClass = (e.controllerPackage(config) :+ (e.className + "Controller")).mkString(".")
     val detailWs = (0 until (55 - e.propertyName.length)).map(_ => " ").mkString
     Seq(s"GET         /${e.propertyName} $detailWs $controllerClass.list()", "")
   }

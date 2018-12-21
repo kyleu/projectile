@@ -2,14 +2,16 @@ package com.kyleu.projectile.models.graphql.parse
 
 import com.kyleu.projectile.models.export.{ExportEnum, ExportField, ExportModel}
 import com.kyleu.projectile.models.input.InputType
-import com.kyleu.projectile.models.output.ExportHelper
+import com.kyleu.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import sangria.ast.{Document, VariableDefinition}
 import sangria.schema.{EnumType, InputObjectType, ObjectType, Schema}
 
 object GraphQLDocumentHelper {
+  def forGraphQLName(s: String) = s
+
   def modelFor(pkg: Seq[String], name: String, it: InputType.Model, arguments: Seq[ExportField], fields: Seq[ExportField], source: Option[String]) = {
-    val cn = ExportHelper.toClassName(name)
-    val title = ExportHelper.toDefaultTitle(cn)
+    val cn = forGraphQLName(toClassName(name))
+    val title = toDefaultTitle(cn)
 
     ExportModel(
       inputType = it,
@@ -22,7 +24,7 @@ object GraphQLDocumentHelper {
         case InputType.Model.GraphQLReference => List("graphql", "reference")
         case _ => throw new IllegalStateException()
       }),
-      propertyName = ExportHelper.toIdentifier(cn),
+      propertyName = toIdentifier(cn),
       className = cn,
       title = title,
       description = None,
@@ -58,7 +60,7 @@ object GraphQLDocumentHelper {
           inputType = InputType.Enum.GraphQLEnum,
           pkg = pkg.toList ++ List("graphql", "enums"),
           key = name,
-          className = ExportHelper.toClassName(name),
+          className = toClassName(name),
           values = values.map(_.name)
         )))
         case _ => throw new IllegalStateException(s"Invalid enum type [$t]")

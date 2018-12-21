@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object EnumFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.modelPackage, key = enum.className)
+    val file = ScalaFile(path = path, dir = enum.modelPackage(config), key = enum.className)
 
     file.addImport(Seq("enumeratum", "values"), "StringEnumEntry")
     file.addImport(Seq("enumeratum", "values"), "StringEnum")

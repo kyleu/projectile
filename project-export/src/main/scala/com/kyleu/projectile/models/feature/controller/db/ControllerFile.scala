@@ -36,7 +36,7 @@ object ControllerFile {
     val viewHtmlPackage = (config.applicationPackage ++ model.viewHtmlPackage).mkString(".")
     val routesClass = (config.applicationPackage ++ model.routesPackage :+ (model.className + "Controller")).mkString(".")
 
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
     config.addCommonImport(file, "ServiceController")
     config.addCommonImport(file, "AuditRecordService")
@@ -51,7 +51,7 @@ object ControllerFile {
     file.addImport(Seq("play", "api", "http"), "MimeTypes")
 
     file.addImport(config.applicationPackage ++ model.servicePackage, model.className + "Service")
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className + "Result")
+    file.addImport(model.modelPackage(config), model.className + "Result")
 
     if (model.propertyName != "audit") {
       file.addMarker("string-search", model.key)

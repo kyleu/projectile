@@ -30,12 +30,14 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class InputPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
   case class InputThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
 
+  // Audit
+  case object Audit extends ProjectileCommand
+
   // Projects
   case class Projects(key: Option[String]) extends ProjectileCommand
 
   case class ProjectUpdate(key: Option[String]) extends ProjectileCommand
   case class ProjectExport(key: Option[String]) extends ProjectileCommand
-  case class ProjectAudit(key: Option[String]) extends ProjectileCommand
 
   case class ProjectCodegen(key: Option[String]) extends ProjectileCommand
 

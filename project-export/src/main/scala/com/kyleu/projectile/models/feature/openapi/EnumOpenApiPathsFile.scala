@@ -14,7 +14,7 @@ object EnumOpenApiPathsFile {
     file.add(s""""$route": {""", 1)
     file.add("\"get\": {", 1)
     file.add("\"summary\": \"Lists the possible " + enum.className + " values.\",")
-    file.add("\"operationId\": \"" + (config.applicationPackage ++ enum.modelPackage :+ enum.className).mkString(".") + ".list\",")
+    file.add("\"operationId\": \"" + (enum.modelPackage(config) :+ enum.className).mkString(".") + ".list\",")
     file.add("\"tags\": [\"" + enum.pkg.mkString(".") + "\"],")
     file.add("\"responses\": {", 1)
     file.add("\"200\": {", 1)

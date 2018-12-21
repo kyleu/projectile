@@ -11,7 +11,7 @@ object EnumDoobieFile {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.doobiePackage, key = enum.className + "Doobie")
 
-    file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
+    file.addImport(enum.modelPackage(config), enum.className)
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     file.add(s"object ${enum.className}Doobie {", 1)

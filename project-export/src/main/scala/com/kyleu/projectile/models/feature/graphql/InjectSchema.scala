@@ -9,8 +9,8 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "graphql"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
-    val enums = config.enums.filter(_.features(EnumFeature.GraphQL)).sortBy(e => e.modelPackage.mkString + e.className)
-    val models = config.models.filter(_.features(ModelFeature.GraphQL)).sortBy(m => m.modelPackage.mkString + m.className)
+    val enums = config.enums.filter(_.features(EnumFeature.GraphQL)).sortBy(e => e.modelPackage(config).mkString + e.className)
+    val models = config.models.filter(_.features(ModelFeature.GraphQL)).sortBy(m => m.modelPackage(config).mkString + m.className)
     val services = config.services.filter(_.features(ServiceFeature.GraphQL)).sortBy(s => s.pkg.mkString + s.className)
 
     def serviceFieldsFor(s: Seq[String]) = {
@@ -41,7 +41,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = enums.map { e =>
         val prelude = if (enums.headOption.contains(e)) { "" } else "  "
         val concat = if (enums.lastOption.contains(e)) { "" } else " ++"
-        s"$prelude${(config.applicationPackage ++ e.modelPackage).map(_ + ".").mkString}${e.className}Schema.queryFields$concat"
+        s"$prelude${e.modelPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields$concat"
       }
 
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "enum query fields")
@@ -52,7 +52,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = models.map { m =>
         val prelude = if (models.headOption.contains(m)) { "" } else "  "
         val concat = if (models.lastOption.contains(m)) { "" } else " ++"
-        s"$prelude${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.queryFields$concat"
+        s"$prelude${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.queryFields$concat"
       }
 
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model query fields")
@@ -63,7 +63,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = models.filter(_.pkFields.nonEmpty).map { m =>
         val prelude = if (models.headOption.contains(m)) { "" } else "  "
         val concat = if (models.lastOption.contains(m)) { "" } else " ++"
-        s"$prelude${(config.applicationPackage ++ m.modelPackage :+ m.className).mkString(".")}Schema.mutationFields$concat"
+        s"$prelude${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.mutationFields$concat"
       }
 
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model mutation fields")

@@ -28,7 +28,7 @@ object TableFile {
     file.add("}", -1)
     file.add()
 
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(model.modelPackage(config), model.className)
 
     file.add(s"""class ${model.className}Table(tag: slick.lifted.Tag) extends Table[${model.className}](tag, "${model.key}") {""", 1)
 
@@ -49,7 +49,7 @@ object TableFile {
       file.addImport(Seq("slickless"), "_")
 
       val fieldStr = model.fields.map(_.propertyName).mkString(" :: ")
-      file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+      file.addImport(model.modelPackage(config), model.className)
       file.add(s"override val * = ($fieldStr :: HNil).mappedWith(Generic[${model.className}])")
     } else {
       val propSeq = model.fields.map(_.propertyName).mkString(", ")

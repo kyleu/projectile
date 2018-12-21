@@ -15,7 +15,7 @@ object DoobieFile {
     val cols = model.fields.map(_.key)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 
-    file.addImport(config.applicationPackage ++ model.modelPackage, model.className)
+    file.addImport(model.modelPackage(config), model.className)
     if (model.pkg.nonEmpty) {
       config.addCommonImport(file, "DoobieQueries")
     }
@@ -60,7 +60,7 @@ object DoobieFile {
       case fields => // multiple columns
         file.add()
         val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType(config)).mkString(", ")
-        val queryArgs = fields.map(f => "o." + f.propertyName + " === " + f.propertyName).mkString(" && ")
+        // val queryArgs = fields.map(f => "o." + f.propertyName + " === " + f.propertyName).mkString(" && ")
         file.add(s"// def getByPrimaryKey($colArgs) = ???")
     }
   }

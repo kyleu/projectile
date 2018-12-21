@@ -12,8 +12,7 @@ object InjectOpenApiSchema extends FeatureLogic.Inject(path = OutputPath.ServerR
     val models = config.models.sortBy(x => x.pkg.mkString("/") + "/" + x.propertyName)
 
     val newLines = models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase).map { m =>
-      val comma = if (models.lastOption.contains(m)) { "" } else { "," }
-      s""""#include:${m.pkg.mkString("/")}/${m.propertyName}.json": "*"$comma"""
+      s""""#include:${m.pkg.mkString("/")}/${m.propertyName}.json": "*","""
     }.sorted
 
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Json, key = "model schemas")

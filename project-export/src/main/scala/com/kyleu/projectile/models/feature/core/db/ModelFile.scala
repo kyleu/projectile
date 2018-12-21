@@ -12,7 +12,7 @@ object ModelFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.modelPackage, key = model.className)
+    val file = ScalaFile(path = path, dir = model.modelPackage(config), key = model.className)
 
     if (model.features(ModelFeature.DataModel)) {
       config.addCommonImport(file, "DataField")

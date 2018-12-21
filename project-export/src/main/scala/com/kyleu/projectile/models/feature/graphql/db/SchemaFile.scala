@@ -10,12 +10,12 @@ object SchemaFile {
   val resultArgs = "paging = r.paging, filters = r.args.filters, orderBys = r.args.orderBys, totalCount = r.count, results = r.results, durationMs = r.dur"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ Seq("models") ++ model.pkg, model.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, model.modelPackage(config), model.className + "Schema")
 
     model.fields.foreach(_.t match {
       case EnumType(key) =>
         val e = config.getEnum(key, "schema file")
-        file.addImport(config.applicationPackage ++ e.modelPackage :+ e.className + "Schema", s"${e.propertyName}EnumType")
+        file.addImport(e.modelPackage(config) :+ e.className + "Schema", s"${e.propertyName}EnumType")
       case _ => // noop
     })
 

@@ -1,8 +1,7 @@
-package com.kyleu.projectile.models.feature.core
+package com.kyleu.projectile.models.feature.controller
 
-import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.feature.FeatureLogic
+import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
@@ -10,14 +9,8 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
-    val dbModels = config.models.filter(_.inputType.isDatabase)
-    val postDb = dbLogic(dbModels, original, config.project.key)
+    val models = config.models.filter(_.features(ModelFeature.Controller))
 
-    val thriftModels = config.models.filter(_.inputType.isThrift)
-    if (thriftModels.isEmpty) { postDb } else { thriftLogic(thriftModels, postDb, config.project.key) }
-  }
-
-  private[this] def dbLogic(models: Seq[ExportModel], original: Seq[String], projectKey: String) = {
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model icons")
     val startIndex = original.indexOf(params.start)
     val endIndex = original.indexOf(params.end)
@@ -30,23 +23,7 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
       }
     }.sorted
 
-    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = projectKey)
-  }
-
-  private[this] def thriftLogic(models: Seq[ExportModel], original: Seq[String], projectKey: String) = {
-    val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "thrift icons")
-    val startIndex = original.indexOf(params.start)
-    val endIndex = original.indexOf(params.end)
-
-    val newLines = models.flatMap { m =>
-      original.indexOf("val " + m.propertyName + " = ") match {
-        case x if x > -1 && x < startIndex => None
-        case x if x > endIndex => None
-        case _ => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
-      }
-    }.sorted
-
-    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = projectKey)
+    TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)
   }
 
   private[this] val icons = IndexedSeq(

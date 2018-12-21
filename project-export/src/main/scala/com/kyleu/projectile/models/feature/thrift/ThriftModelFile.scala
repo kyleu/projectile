@@ -8,7 +8,7 @@ object ThriftModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ThriftFile("models" +: model.pkg, model.className)
 
-    file.add("namespace java " + (config.applicationPackage ++ model.modelPackage).mkString("."))
+    file.add("namespace java " + model.modelPackage(config).mkString("."))
     file.add()
 
     val parent = ("models" +: model.pkg).map(_ => "../").mkString

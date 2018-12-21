@@ -29,7 +29,7 @@ object ProjectUpdateService {
     } else {
       results.mkString(", ")
     }
-    Seq(s"Updated input [${i.key}]: $msg")
+    Seq(s"Updated project [${p.key}], input [${i.key}]: $msg")
   }
 
   def processEnums(svc: ProjectileService, p: Project, i: Input) = {

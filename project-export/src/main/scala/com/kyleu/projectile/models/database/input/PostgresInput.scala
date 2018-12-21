@@ -12,6 +12,9 @@ import com.kyleu.projectile.util.JsonSerializers._
 object PostgresInput {
   implicit val jsonEncoder: Encoder[PostgresInput] = deriveEncoder
   implicit val jsonDecoder: Decoder[PostgresInput] = deriveDecoder
+
+  def rowName(s: String) = if (s.endsWith("Row")) { s } else { s + "Row" }
+  def typeName(s: String) = if (s.endsWith("Type")) { s } else { s + "Type" }
 }
 
 case class PostgresInput(
@@ -36,7 +39,12 @@ case class PostgresInput(
 
   override def exportEnum(key: String) = {
     val e = getPostgresEnum(key)
-    ExportEnum(inputType = InputType.Enum.PostgresEnum, key = e.key, className = ExportHelper.toClassName(ExportHelper.toIdentifier(e.key)), values = e.values)
+    ExportEnum(
+      inputType = InputType.Enum.PostgresEnum,
+      key = e.key,
+      className = PostgresInput.typeName(ExportHelper.toClassName(ExportHelper.toIdentifier(e.key))),
+      values = e.values
+    )
   }
 
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))

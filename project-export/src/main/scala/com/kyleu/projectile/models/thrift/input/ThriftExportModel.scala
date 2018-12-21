@@ -7,8 +7,10 @@ import com.kyleu.projectile.models.output.ExportHelper.{toClassName, toDefaultTi
 import com.kyleu.projectile.models.thrift.schema.ThriftStruct
 
 object ThriftExportModel {
+  def forThriftName(s: String) = s
+
   def loadStructModel(s: ThriftStruct, input: ThriftInput) = {
-    val cn = toClassName(s.key)
+    val cn = forThriftName(toClassName(s.key))
     val title = toDefaultTitle(cn)
     val fields = loadStructFields(s, input)
 

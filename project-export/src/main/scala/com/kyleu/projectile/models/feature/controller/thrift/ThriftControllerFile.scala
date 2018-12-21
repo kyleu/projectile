@@ -10,7 +10,7 @@ object ThriftControllerFile {
   def export(config: ExportConfiguration, service: ExportService) = {
     val file = ScalaFile(
       path = OutputPath.ServerSource,
-      dir = config.applicationPackage ++ service.pkg :+ "controllers" :+ service.propertyName,
+      dir = service.pkg :+ "controllers" :+ service.propertyName,
       key = service.className + "Controller"
     )
 
@@ -30,7 +30,7 @@ object ThriftControllerFile {
     file.add("@javax.inject.Singleton")
     val inject = "@javax.inject.Inject() (override val app: Application)"
     file.add(s"""class ${service.className}Controller $inject extends BaseController("${service.className}") {""", 1)
-    file.add(s"val svc = ThriftServiceRegistry.${service.propertyName}")
+    file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()
     file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
@@ -80,7 +80,8 @@ object ThriftControllerFile {
     file.add("})", -1)
     file.add("}", -1)
 
-    file.add(s"""private[this] def postHelper(title: String, act: Call, argNames: Seq[String], result: (Map[String, Json], TraceData) => Future[Json]) = {""", 1)
+    val postArgs = "title: String, act: Call, argNames: Seq[String], result: (Map[String, Json], TraceData) => Future[Json]"
+    file.add(s"""private[this] def postHelper($postArgs) = {""", 1)
     file.add("withSession(name, admin = true) { implicit request => implicit td =>", 1)
     file.add("val started = DateUtils.now")
     file.add("val args = ControllerUtils.jsonArguments(request.body, argNames: _*)")

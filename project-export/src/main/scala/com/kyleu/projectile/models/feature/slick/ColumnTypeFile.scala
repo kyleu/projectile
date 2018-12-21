@@ -11,7 +11,7 @@ object ColumnTypeFile {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.slickPackage, key = enum.className + "ColumnType")
 
-    file.addImport(config.applicationPackage ++ enum.modelPackage, enum.className)
+    file.addImport(enum.modelPackage(config), enum.className)
     config.addCommonImport(file, "SlickQueryService", "imports", "_")
     file.addImport(Seq("slick", "jdbc"), "JdbcType")
 

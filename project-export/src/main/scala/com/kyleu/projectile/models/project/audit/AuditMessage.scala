@@ -8,6 +8,7 @@ object AuditMessage {
 }
 
 case class AuditMessage(
+    project: String,
     srcModel: String,
     src: String,
     t: String,
