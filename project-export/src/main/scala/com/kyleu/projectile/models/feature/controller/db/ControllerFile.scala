@@ -39,7 +39,7 @@ object ControllerFile {
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
     config.addCommonImport(file, "ServiceController")
-    config.addCommonImport(file, "AuditRecordService")
+    config.addCommonImport(file, "AuditRecordRowService")
 
     config.addCommonImport(file, "OrderBy")
 
@@ -68,9 +68,9 @@ object ControllerFile {
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (", 2)
     ControllerReferences.refServiceArgs(config, model, file) match {
-      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordService")
+      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordRowService")
       case ref =>
-        file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordService,")
+        file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordRowService,")
         file.add(ref)
     }
     file.add(s") extends ServiceController(svc) {", -2)

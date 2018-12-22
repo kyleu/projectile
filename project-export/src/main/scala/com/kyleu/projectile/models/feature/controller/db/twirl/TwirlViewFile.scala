@@ -12,7 +12,7 @@ object TwirlViewFile {
     val file = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "View")
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
-    file.add(s"@(user: $modelPath.user.SystemUser, model: ${model.fullClassPath(config)}, notes: Seq[$modelPath.note.Note]$audits, debug: Boolean)(")
+    file.add(s"@(user: $modelPath.user.SystemUser, model: ${model.fullClassPath(config)}, notes: Seq[$modelPath.note.NoteRow]$audits, debug: Boolean)(")
     val td = s"${(config.utilitiesPackage :+ "tracing").mkString(".")}.TraceData"
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")

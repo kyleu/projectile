@@ -1,17 +1,25 @@
-@(projectile: com.kyleu.projectile.services.ProjectileService)(
+@(projectile: com.kyleu.projectile.services.ProjectileService, recent: Seq[String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, "New Directory") {
-  <form method="post" action="@controllers.routes.HomeController.changeDir()">
+  <form method="get" action="@controllers.routes.HomeController.changeDir()">
     <div class="collection with-header">
       <div class="collection-header">
         <h5><i class=" @com.kyleu.projectile.models.template.Icons.projectile"></i> New Directory</h5>
       </div>
       <div class="collection-item">
-        <input name="dir" type="text" value="@projectile.cfg.path" />
-      </div>
-      <div class="collection-item">
+        <p><input name="dir" type="text" value="@projectile.cfg.path" /></p>
         <input type="submit" class="btn theme" value="Submit" />
       </div>
+      @if(recent.nonEmpty) {
+        <div class="collection-item">
+          Recent Directories:
+          <ul>
+          @recent.map { r =>
+            <li><a class="theme-text" href="@controllers.routes.HomeController.changeDir(Some(r))">@r</a></li>
+          }
+          </ul>
+        </div>
+      }
     </div>
   </form>
 }

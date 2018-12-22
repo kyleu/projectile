@@ -1,7 +1,9 @@
 package controllers
 
 import com.kyleu.projectile.util.JsonSerializers.printJson
-import util.web.{ControllerUtils, PlayServerHelper}
+import better.files._
+import play.api.mvc.Cookie
+import util.web.PlayServerHelper
 
 import scala.concurrent.Future
 
@@ -11,25 +13,30 @@ class HomeController @javax.inject.Inject() () extends BaseController {
     Future.successful(Ok(views.html.index(projectile, projectile.listInputs(), projectile.listProjects())))
   }
 
-  def changeDirForm() = Action.async { implicit request =>
-    Future.successful(Ok(views.html.file.newDirForm(projectile)))
-  }
+  private[this] val directoriesKey = "projectile-recent-directories"
 
-  def changeDir() = Action.async { implicit request =>
-    import better.files._
+  def changeDir(dir: Option[String]) = Action.async { implicit request =>
+    dir match {
+      case Some(d) =>
+        val f = d.toFile
+        if (f.isDirectory && f.isReadable) {
+          val projectileDir = f / ".projectile"
+          if (projectileDir.isDirectory && projectileDir.isReadable) {
+            PlayServerHelper.setNewDirectory(d)
+            val recent = request.cookies.get(directoriesKey).map(_.value.split("::").toSet).getOrElse(Set.empty)
+            val newVal = (recent + d).toList.sorted.mkString("::")
+            val c = request.cookies.get(directoriesKey).map(x => x.copy(value = newVal)).getOrElse(Cookie(directoriesKey, newVal))
+            Future.successful(Redirect(controllers.routes.HomeController.index()).withCookies(c))
+          } else {
+            Future.successful(Ok(views.html.file.initDirForm(projectile, d)))
+          }
+        } else {
+          Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("error" -> s"Directory [${f.pathAsString}] does not exist."))
+        }
 
-    val dir = ControllerUtils.getForm(request.body)("dir")
-    val f = dir.toFile
-    if (f.isDirectory && f.isReadable) {
-      val projectileDir = f / ".projectile"
-      if (projectileDir.isDirectory && projectileDir.isReadable) {
-        PlayServerHelper.setNewDirectory(dir)
-        Future.successful(Redirect(controllers.routes.HomeController.index()))
-      } else {
-        Future.successful(Ok(views.html.file.initDirForm(projectile, dir)))
-      }
-    } else {
-      Future.successful(Redirect(controllers.routes.HomeController.index()).flashing("error" -> s"Directory [${f.pathAsString}] does not exist."))
+      case None =>
+        val recent = request.cookies.get(directoriesKey).map(_.value.split("::").toList).getOrElse(Nil)
+        Future.successful(Ok(views.html.file.newDirForm(projectile, recent)))
     }
   }
 

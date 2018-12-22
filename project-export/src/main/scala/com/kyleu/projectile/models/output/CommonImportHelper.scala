@@ -9,7 +9,7 @@ object CommonImportHelper {
     case None => (s match {
       case "Application" => c.applicationPackage :+ "models"
       case "AuditHelper" => c.systemPackage ++ Seq("services", "audit")
-      case "AuditRecordService" => c.applicationPackage ++ Seq("services", "audit")
+      case "AuditRecordRowService" => c.applicationPackage ++ Seq("services", "audit")
       case "ApplicationDatabase" => c.systemPackage ++ Seq("services", "database")
       case "BaseController" => c.applicationPackage :+ "controllers"
       case "BaseQueries" => c.systemPackage ++ Seq("models", "queries")
@@ -35,7 +35,7 @@ object CommonImportHelper {
       case "GraphQLUtils" => c.systemPackage :+ "graphql"
       case "JsonSerializers" => c.utilitiesPackage
       case "ModelServiceHelper" => c.systemPackage :+ "services"
-      case "NoteSchema" => c.applicationPackage ++ Seq("models", "note")
+      case "NoteRowSchema" => c.applicationPackage ++ Seq("models", "note")
       case "ReftreeUtils" => c.utilitiesPackage
       case "ServiceController" => c.applicationPackage ++ Seq("controllers", "admin")
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")

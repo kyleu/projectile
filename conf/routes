@@ -1,7 +1,6 @@
 GET         /                                        controllers.HomeController.index
 GET         /testbed                                 controllers.HomeController.testbed
-GET         /dir                                     controllers.HomeController.changeDirForm()
-POST        /dir                                     controllers.HomeController.changeDir()
+GET         /dir                                     controllers.HomeController.changeDir(dir: Option[String] ?= None)
 GET         /dir/init                                controllers.HomeController.initialize(d)
 
 # Files

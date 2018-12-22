@@ -20,7 +20,7 @@ object SchemaFile {
     })
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) {
-      config.addCommonImport(file, "NoteSchema")
+      config.addCommonImport(file, "NoteRowSchema")
     }
     SchemaHelper.addImports(config, file)
 
@@ -59,7 +59,7 @@ object SchemaFile {
       if (model.pkColumns.nonEmpty) {
         file.add("Field(", 1)
         file.add("""name = "relatedNotes",""")
-        file.add("""fieldType = ListType(NoteSchema.noteType),""")
+        file.add("""fieldType = ListType(NoteRowSchema.noteRowType),""")
         val pkArgs = model.pkFields.map(f => "c.value." + f.propertyName).mkString(", ")
         file.add(s"""resolve = c => c.ctx.app.coreServices.notes.getFor(c.ctx.creds, "${model.propertyName}", $pkArgs)(c.ctx.trace)""")
         file.add(")", -1)
