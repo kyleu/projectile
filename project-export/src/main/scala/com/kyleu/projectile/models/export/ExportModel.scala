@@ -79,6 +79,11 @@ case class ExportModel(
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == FieldType.TagsType)
   val searchFields = fields.filter(_.inSearch)
 
+  val extraFields = searchFields.filterNot(pkFields.contains).filter {
+    case x if x.t == FieldType.TagsType => false
+    case _ => true
+  }
+
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
   def modelPackage(config: ExportConfiguration) = {

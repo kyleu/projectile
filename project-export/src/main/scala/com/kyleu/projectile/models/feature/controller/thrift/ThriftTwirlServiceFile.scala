@@ -9,8 +9,8 @@ object ThriftTwirlServiceFile {
   def export(config: ExportConfiguration, service: ExportService) = {
     val file = TwirlFile(config.viewPackage ++ Seq("admin", "thrift"), service.propertyName)
 
-    val td = CommonImportHelper.get(config, file, "TraceData")
-    val su = CommonImportHelper.get(config, file, "SystemUser")
+    val td = CommonImportHelper.get(config, "TraceData")
+    val su = CommonImportHelper.get(config, "SystemUser")
 
     file.add(s"@(user: ${(su._1 :+ su._2).mkString(".")}, debug: Boolean = false)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${(td._1 :+ td._2).mkString(".")}")

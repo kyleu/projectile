@@ -27,7 +27,7 @@ object SchemaFile {
     file.add(s"""object ${model.className}Schema extends GraphQLSchemaHelper("${model.propertyName}") {""", 1)
     SchemaHelper.addPrimaryKey(config, model, file)
     SchemaHelper.addPrimaryKeyArguments(config, model, file)
-    SchemaHelper.addIndexArguments(config, model, file)
+    SchemaHelper.addSearchArguments(config, model, file)
     SchemaForeignKey.writeSchema(config, model, file)
     addObjectType(config, model, file)
     addQueryFields(model, file)
@@ -100,9 +100,9 @@ object SchemaFile {
 
     file.add(s"""unitField(name = "${model.propertyName}Search", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
     file.add(s"""runSearch(c.ctx.${model.serviceReference}, c, td).map(toResult)""")
-    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (model.indexedFields.nonEmpty) { "," } else { "" }}", -1)
+    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (model.extraFields.nonEmpty) { "," } else { "" }}", -1)
 
-    SchemaHelper.addIndexedFields(model, file)
+    SchemaHelper.addSearchFields(model, file)
 
     file.add(")", -1)
   }

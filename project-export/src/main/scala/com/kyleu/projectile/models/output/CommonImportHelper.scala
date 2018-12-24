@@ -1,10 +1,9 @@
 package com.kyleu.projectile.models.output
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.output.file.OutputFile
 
 object CommonImportHelper {
-  def get(c: ExportConfiguration, f: OutputFile, s: String) = c.project.classOverrides.get(s) match {
+  def get(c: ExportConfiguration, s: String) = c.project.classOverrides.get(s) match {
     case Some(o) => o.substring(0, o.lastIndexOf('.')).trim.split('.').filter(_.nonEmpty).toSeq -> o.substring(o.lastIndexOf('.') + 1).trim
     case None => (s match {
       case "Application" => c.applicationPackage :+ "models"

@@ -1,11 +1,11 @@
 package com.kyleu.projectile.models.feature.graphql
 
-import com.kyleu.projectile.models.export.ExportField
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.typ.FieldType._
 
 object ExportFieldGraphQL {
-  private[this] def graphQLType(config: ExportConfiguration, field: ExportField): String = field.t match {
+  private[this] def graphQLType(config: ExportConfiguration, name: String, t: FieldType): String = t match {
     case UnitType => "StringType"
 
     case StringType => "StringType"
@@ -37,23 +37,17 @@ object ExportFieldGraphQL {
 
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"
-      case None => throw new IllegalStateException(s"Cannot load enum for field [${field.propertyName}].")
+      case None => throw new IllegalStateException(s"Cannot load enum for field [$name].")
     }
-    case ListType(typ) => s"ListType(${graphQLType(config, field.copy(t = typ))})"
-    case SetType(typ) => s"ListType(${graphQLType(config, field.copy(t = typ))})"
+    case ListType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
+    case SetType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
     case MapType(_, _) => throw new IllegalStateException("Maps are not supported in GraphQL")
 
-    case JsonType => "JsonType"
+    case JsonType => "StringType"
     case CodeType => "StringType"
-    case TagsType => "TagsType"
+    case TagsType => "StringType"
     case ByteArrayType => "ArrayType(StringType)"
   }
 
-  def argType(config: ExportConfiguration, field: ExportField) = if (field.required) {
-    graphQLType(config, field)
-  } else {
-    "OptionInputType(" + graphQLType(config, field) + ")"
-  }
-
-  def listArgType(config: ExportConfiguration, field: ExportField) = "ListInputType(" + graphQLType(config, field) + ")"
+  def argType(config: ExportConfiguration, name: String, t: FieldType, required: Boolean) = graphQLType(config, name, t)
 }

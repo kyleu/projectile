@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.feature.graphql.db
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.feature.graphql.ExportFieldGraphQL
 import com.kyleu.projectile.models.output.file.ScalaFile
@@ -34,61 +35,61 @@ object SchemaHelper {
   }
 
   def addPrimaryKeyArguments(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    model.pkFields.foreach { f =>
-      addArgument(config, model, f, file)
-      addSeqArgument(config, model, f, file)
-    }
+    model.pkFields.foreach(f => addArguments(config, model, f, file))
     file.add()
   }
 
-  def addIndexArguments(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
-    val filtered = model.indexedFields.filterNot(model.pkFields.contains)
-    filtered.foreach { f =>
-      addArgument(config, model, f, file)
-      addSeqArgument(config, model, f, file)
+  def addSearchArguments(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
+    model.extraFields.foreach { f =>
+      addArguments(config, model, f, file)
     }
-    if (filtered.nonEmpty) { file.add() }
+    if (model.extraFields.nonEmpty) { file.add() }
   }
 
-  def addArgument(config: ExportConfiguration, model: ExportModel, field: ExportField, file: ScalaFile) = if (model.pkFields.nonEmpty) {
-    val graphQlArgType = ExportFieldGraphQL.argType(config, field)
+  def addArguments(config: ExportConfiguration, model: ExportModel, field: ExportField, file: ScalaFile) = if (model.pkFields.nonEmpty) {
+    val graphQlArgType = ExportFieldGraphQL.argType(config, field.className, field.t, field.required)
     file.add(s"""val ${model.propertyName}${field.className}Arg = Argument("${field.propertyName}", $graphQlArgType)""")
+    val seqGraphQlArgType = ExportFieldGraphQL.argType(config, field.className, FieldType.ListType(field.t), field.required)
+    file.add(s"""val ${model.propertyName}${field.className}SeqArg = Argument("${field.propertyName}s", $seqGraphQlArgType)""")
   }
 
-  def addSeqArgument(config: ExportConfiguration, model: ExportModel, field: ExportField, file: ScalaFile) = {
-    val graphQlSeqArgType = ExportFieldGraphQL.listArgType(config, field)
-    val arg = s"""Argument("${field.propertyName}s", $graphQlSeqArgType)"""
-    file.add(s"""val ${model.propertyName}${field.className}SeqArg = $arg""")
-  }
+  def addSearchFields(model: ExportModel, file: ScalaFile) = model.extraFields.foreach { field =>
+    val comma = if (model.extraFields.lastOption.contains(field)) { "" } else { "," }
+    val listType = s"ListType(${model.propertyName}Type)"
+    val arg = s"${model.propertyName}${field.className}Arg"
 
-  def addIndexedFields(model: ExportModel, file: ScalaFile) = {
-    model.indexedFields.foreach { field =>
-      val comma = if (model.indexedFields.lastOption.contains(field)) { "" } else { "," }
-      val listType = s"ListType(${model.propertyName}Type)"
-      val arg = s"${model.propertyName}${field.className}Arg"
-      val argPull = if (field.required) {
-        s"c.arg($arg)"
-      } else {
-        s"""c.arg($arg).getOrElse(throw new IllegalStateException("No [${field.propertyName}] provided"))"""
-      }
-      val seqArg = s"${model.propertyName}${field.className}SeqArg"
+    val argSuffix = field.t match {
+      case FieldType.ListType(_) => ".toList"
+      case FieldType.SetType(_) => ".toSet"
+      case FieldType.TagsType => """.map(_ => Tag("?", "?"))"""
+      case _ => ""
+    }
+    val argPull = s"c.arg($arg)$argSuffix"
 
-      if (field.unique) {
-        val optType = s"OptionType(${model.propertyName}Type)"
-        file.add(s"""unitField(name = "${model.propertyName}By${field.className}", desc = None, t = $optType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, $argPull)(td).map(_.headOption)""")
-        file.add(s"""}, $arg),""", -1)
-        file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")
-        file.add(s"""}, $seqArg)$comma""", -1)
-      } else {
-        file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}", desc = None, t = $listType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, $argPull)(td)""")
-        file.add(s"""}, $arg),""", -1)
-        file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
-        file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, c.arg($seqArg))(td)""")
-        file.add(s"""}, $seqArg)$comma""", -1)
-      }
+    val seqArgSuffix = field.t match {
+      case FieldType.ListType(_) => ".map(_.toList)"
+      case FieldType.SetType(_) => ".map(_.toSet)"
+      case FieldType.TagsType => ".map(_ => Nil)"
+      case _ => ""
+    }
+    val seqArgName = s"${model.propertyName}${field.className}SeqArg"
+    val seqArg = s"c.arg($seqArgName)$seqArgSuffix"
+
+    if (field.unique) {
+      val optType = s"OptionType(${model.propertyName}Type)"
+      file.add(s"""unitField(name = "${model.propertyName}By${field.className}", desc = None, t = $optType, f = (c, td) => {""", 1)
+      file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, $argPull)(td).map(_.headOption)""")
+      file.add(s"""}, $arg),""", -1)
+      file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
+      file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, $seqArg)(td)""")
+      file.add(s"""}, $seqArgName)$comma""", -1)
+    } else {
+      file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}", desc = None, t = $listType, f = (c, td) => {""", 1)
+      file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}(c.ctx.creds, $argPull)(td)""")
+      file.add(s"""}, $arg),""", -1)
+      file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
+      file.add(s"""c.ctx.${model.serviceReference}.getBy${field.className}Seq(c.ctx.creds, $seqArg)(td)""")
+      file.add(s"""}, $seqArgName)$comma""", -1)
     }
   }
 }

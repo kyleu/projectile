@@ -52,6 +52,8 @@ object DoobieFile {
         file.add()
         val colProp = field.propertyName
 
+        DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.init, pkg.last))
+
         val sql = s"""(selectFragment ++ whereAnd(fr"$colProp = $$$colProp"))"""
         file.add(s"def getByPrimaryKey($colProp: ${field.scalaType(config)}) = $sql.query[Option[${model.className}]].unique")
 

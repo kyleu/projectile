@@ -42,7 +42,7 @@ case class ExportConfiguration(
     throw new IllegalStateException(s"No service for [$ctx] available with name [$k] among candidates [${services.map(_.key).sorted.mkString(", ")}]")
   }
 
-  def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, f, s) match {
+  def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, s) match {
     case (p, c) if additional.isEmpty => f.addImport(p, c)
     case (p, c) => f.addImport((p :+ c) ++ additional.init, additional.last)
   }
