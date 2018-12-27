@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.export
 
-import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala}
+import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.util.JsonSerializers._
 
 object ExportMethod {
@@ -9,5 +10,6 @@ object ExportMethod {
 }
 
 case class ExportMethod(key: String, args: Seq[ExportField], returnType: FieldType) {
-  lazy val signature = s"$key(${args.map(a => s"${a.key}: ${a.t}").mkString(", ")})"
+  val name = ExportHelper.toIdentifier(key)
+  lazy val signature = s"$name(${args.map(a => s"${a.key}: ${a.t}").mkString(", ")})"
 }

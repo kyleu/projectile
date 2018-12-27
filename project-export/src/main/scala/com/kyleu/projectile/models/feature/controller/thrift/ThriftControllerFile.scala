@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.feature.controller.thrift
 import com.kyleu.projectile.models.export.{ExportMethod, ExportService}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldTypeAsScala
-import com.kyleu.projectile.models.output.OutputPath
+import com.kyleu.projectile.models.output.{CommonImportHelper, OutputPath}
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ThriftControllerFile {
@@ -15,10 +15,17 @@ object ThriftControllerFile {
     )
 
     config.addCommonImport(file, "Application")
-    config.addCommonImport(file, "BaseController")
+
+    val i = CommonImportHelper.get(config, "BaseController")
+    if (i._1 == Seq("controllers")) {
+      file.addImport("_root_" +: i._1, i._2)
+    } else {
+      file.addImport(i._1, i._2)
+    }
+
     config.addCommonImport(file, "ControllerUtils")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "FutureUtils", "defaultContext")
+    config.addCommonImport(file, "ProjectileContext", "defaultContext")
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ThriftServiceRegistry")
     config.addCommonImport(file, "TraceData")
@@ -47,10 +54,10 @@ object ThriftControllerFile {
   private[this] def addMethod(svc: ExportService, m: ExportMethod, config: ExportConfiguration, file: ScalaFile) = {
     file.add()
 
-    file.add(s"""def ${m.key} = getHelper(title = "${m.key}", act = rc.${m.key}(), args = ${ThriftControllerArgumentHelper.defaultArgs(m, config)})""")
+    file.add(s"""def ${m.name} = getHelper(title = "${m.name}", act = rc.${m.name}(), args = ${ThriftControllerArgumentHelper.defaultArgs(m, config)})""")
 
     val argNames = m.args.map("\"" + _.key + "\"").mkString(", ")
-    val postCall = s"""def ${m.key}Call = postHelper(title = "${m.key}", act = rc.${m.key}(), argNames = Seq($argNames), result = (args, td) => svc.${m.key}("""
+    val postCall = s"""def ${m.name}Call = postHelper(title = "${m.name}", act = rc.${m.name}(), argNames = Seq($argNames), result = (args, td) => svc.${m.name}("""
     if (argNames.isEmpty) {
       file.add(postCall + ")(td).map(_.asJson))")
     } else {

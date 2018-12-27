@@ -44,9 +44,9 @@ object CommandLineOutput extends Logging {
     }
   }
 
-  private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.title} (${is.template.title})"
+  private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.template.title}"
   private[this] def logForInput(input: Input) = s"[${input.key}]: $input"
 
-  private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.title} (${ps.template.title})"
+  private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.template.title}"
   private[this] def logForProject(project: Project) = s"[${project.key}]: $project"
 }

@@ -45,6 +45,7 @@ object ControllerFile {
 
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "DateUtils")
+    config.addCommonImport(file, "ProjectileContext", "webContext")
     config.addCommonImport(file, "ReftreeUtils", "_")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
@@ -75,7 +76,6 @@ object ControllerFile {
     }
     file.add(s") extends ServiceController(svc) {", -2)
     file.indent()
-    file.add("import app.contexts.webContext")
     file.add()
     addMutations(file, model, routesClass, viewHtmlPackage)
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"

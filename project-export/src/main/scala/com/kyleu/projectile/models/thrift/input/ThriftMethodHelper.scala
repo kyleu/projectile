@@ -11,7 +11,7 @@ object ThriftMethodHelper {
       case r => s".map(_.mapValues($r).toMap)"
     }
     case FieldType.ListType(typ) => getReturnSubMapping(typ) match {
-      case r if r.isEmpty => ""
+      case r if r.isEmpty => ".map(_.toList)"
       case r => s".map(_.map($r).toList)"
     }
     case FieldType.SetType(typ) => getReturnSubMapping(typ) match {

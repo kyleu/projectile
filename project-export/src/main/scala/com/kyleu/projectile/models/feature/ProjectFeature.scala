@@ -49,7 +49,7 @@ sealed abstract class ProjectFeature(
 
 object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[ProjectFeature] {
   case object Core extends ProjectFeature(
-    value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic), paths = Set(Root),
+    value = "core", title = "Core", tech = "Scala", logic = Some(CoreLogic), paths = Set(Root, SharedSource, ServerSource),
     description = "Scala case classes and Circe Json serializers"
   )
 

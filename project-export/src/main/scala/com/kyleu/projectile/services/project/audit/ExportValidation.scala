@@ -19,7 +19,7 @@ object ExportValidation {
   }
 
   private[this] val magicWord = "Generated File"
-  private[this] val badBoys = Set("target", "public", ".idea", ".git", "project", "charts")
+  private[this] val badBoys = Set("target", "public", ".idea", ".git", "project", "charts", "node_modules")
   private[this] val extensions = Set("graphql", "html", "json", "md", "routes", "scala", "thrift", "txt").map("." + _)
 
   private[this] def getGeneratedFiles(f: File): Seq[File] = {

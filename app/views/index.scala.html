@@ -16,10 +16,10 @@
         You have no inputs configured at this path, go ahead and <a class="theme-text" href="@controllers.input.routes.InputController.formNew()">add one</a>.
       </div>
     }
-    @inputs.sortBy(_.title).map { input =>
+    @inputs.sortBy(_.key).map { input =>
       <a class="collection-item theme-text" href="@controllers.input.routes.InputController.detail(input.key)">
         <i class="@input.template.icon"></i>
-        @input.title
+        @input.key
       </a>
     }
   </div>
@@ -37,10 +37,10 @@
         You have no projects configured at this path, go ahead and <a class="theme-text" href="@controllers.project.routes.ProjectFormController.formNew()">add one</a>.
       </div>
     }
-    @projects.sortBy(_.title).map { project =>
+    @projects.sortBy(_.key).map { project =>
       <a class="collection-item theme-text" href="@controllers.project.routes.ProjectController.detail(project.key)">
         <i class="@project.template.icon"></i>
-        @project.title
+        @project.key
       </a>
     }
   </div>

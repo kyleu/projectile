@@ -1,6 +1,6 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.input.Input)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, input.title + " Input Edit") {
+)@layout.simple(projectile, input.key + " Input Edit") {
   <form method="post" action="@controllers.input.routes.InputController.save()">
     <input id="key" name="key" type="hidden" value="@input.key" />
     <input id="template" name="template" type="hidden" value="@input.template.value" />
@@ -14,12 +14,6 @@
         </div>
         <h5><i class="@input.template.icon"></i> Edit [@input.key]</h5>
         <div>@input.template.title Input</div>
-      </div>
-      <div class="collection-item">
-        <div class="input-field">
-          <input id="title" name="title" type="text" value="@input.title" />
-          <label for="title">Title</label>
-        </div>
       </div>
       <div class="collection-item">
         <div class="input-field">

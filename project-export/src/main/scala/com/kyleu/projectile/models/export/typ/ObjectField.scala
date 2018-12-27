@@ -7,4 +7,4 @@ object ObjectField {
   implicit val jsonDecoder: Decoder[ObjectField] = deriveDecoder
 }
 
-case class ObjectField(k: String, v: FieldType)
+case class ObjectField(k: String, v: FieldType, req: Boolean = false)

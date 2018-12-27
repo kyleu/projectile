@@ -3,6 +3,8 @@ package com.kyleu.projectile.models.feature.controller.thrift
 import com.kyleu.projectile.models.export.ExportMethod
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.input.InputType
+import com.kyleu.projectile.models.output.ExportHelper
 
 object ThriftControllerArgumentHelper {
   def defaultArgs(m: ExportMethod, config: ExportConfiguration) = {
@@ -27,7 +29,13 @@ object ThriftControllerArgumentHelper {
       val vd = getDefault(v, config)
       s"Map($kd -> $vd)"
 
-    case FieldType.EnumType(key) => config.getEnum(key, "field default").className + "TODO"
+    case FieldType.EnumType(key) =>
+      val e = config.getEnum(key, "field default")
+      val v = e.inputType match {
+        case InputType.Enum.ThriftIntEnum => ExportHelper.toClassName(e.values.head.substring(e.values.head.indexOf(':') + 1))
+        case _ => ExportHelper.toClassName(e.values.head)
+      }
+      s"${e.className}.$v.value"
     case FieldType.StructType(key) => config.getModel(key, "field default").className + "()"
 
     case x => throw new IllegalStateException(s"Unhandled field type [$x]")

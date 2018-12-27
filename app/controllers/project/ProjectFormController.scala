@@ -11,17 +11,18 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class ProjectFormController @javax.inject.Inject() () extends BaseController {
   def formNew = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.form.formSummary(projectile, ProjectSummary())))
+    val inputs = projectile.listInputs().map(_.key).sorted
+    Future.successful(Ok(views.html.project.form.formSummary(projectile, ProjectSummary(), inputs)))
   }
 
   def formSummary(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.form.formSummary(projectile, projectile.getProject(key).toSummary)))
+    val inputs = projectile.listInputs().map(_.key).sorted
+    Future.successful(Ok(views.html.project.form.formSummary(projectile, projectile.getProject(key).toSummary, inputs)))
   }
 
   def saveSummary() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      title = form("title"),
       description = form("description")
     ))
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
@@ -96,6 +97,7 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
     val template = ProjectTemplate.withValue(form("template"))
     val summary = projectile.getProjectSummaryOpt(form("key")).getOrElse(ProjectSummary(
       template = template,
+      input = form("input"),
       key = form("key")
     ))
     summary -> form

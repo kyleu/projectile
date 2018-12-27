@@ -5,7 +5,6 @@ import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportServic
 abstract class Input() extends Ordered[Input] {
   def template: InputTemplate
   def key: String
-  def title: String
   def description: String
 
   def exportEnum(key: String): ExportEnum
@@ -17,7 +16,7 @@ abstract class Input() extends Ordered[Input] {
   def exportService(k: String): ExportService
   def exportServices: Seq[ExportService]
 
-  override def compare(that: Input) = title.compare(that.title)
+  override def compare(that: Input) = key.compare(that.key)
 
   def getEnumOpt(k: String) = exportEnums.find(_.key == k)
   def getEnum(k: String) = getEnumOpt(k).getOrElse(throw new IllegalStateException(s"No enum available with key [$k]"))
@@ -28,5 +27,5 @@ abstract class Input() extends Ordered[Input] {
   def getServiceOpt(k: String) = exportServices.find(_.key == k)
   def getService(k: String) = getServiceOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
 
-  override def toString = s"$title - [${exportEnums.size}] enums, [${exportModels.size}] models, and [${exportServices.size}] services"
+  override def toString = s"$key - [${exportEnums.size}] enums, [${exportModels.size}] models, and [${exportServices.size}] services"
 }

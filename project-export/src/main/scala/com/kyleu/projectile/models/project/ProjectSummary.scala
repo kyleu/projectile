@@ -16,7 +16,6 @@ case class ProjectSummary(
     template: ProjectTemplate = ProjectTemplate.Custom,
     key: String = "new",
     input: String = "FIX_SOURCE_INPUT",
-    title: String = "New Project",
     description: String = "...",
     features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
@@ -26,7 +25,7 @@ case class ProjectSummary(
     created: LocalDateTime = DateUtils.now,
     updated: LocalDateTime = DateUtils.now
 ) extends Ordered[ProjectSummary] {
-  override def compare(p: ProjectSummary) = title.compare(p.title)
+  override def compare(p: ProjectSummary) = key.compare(p.key)
 
   def enumFeatures = EnumFeature.values.filter(e => e.dependsOn.forall(features.apply))
   def modelFeatures = ModelFeature.values.filter(e => e.dependsOn.forall(features.apply))

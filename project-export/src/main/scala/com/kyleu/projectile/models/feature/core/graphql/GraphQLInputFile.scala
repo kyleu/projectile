@@ -32,7 +32,12 @@ object GraphQLInputFile {
   private[this] def addInputFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ExportField]) = {
     fields.foreach { f =>
       f.addImport(config, file, Nil)
-      val param = s"${f.propertyName}: ${FieldTypeAsScala.asScala(config, f.t)}"
+      val t = if (f.required) {
+        FieldTypeAsScala.asScala(config, f.t)
+      } else {
+        "Option[" + FieldTypeAsScala.asScala(config, f.t) + "] = None"
+      }
+      val param = s"${f.propertyName}: $t"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
       file.add(param + comma)
     }

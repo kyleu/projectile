@@ -31,7 +31,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
   }
 
   it should "create an input" in {
-    svc.addInput(InputSummary(template = InputTemplate.Postgres, key = inputKey, title = "Test Input"))
+    svc.addInput(InputSummary(template = InputTemplate.Postgres, key = inputKey))
     val i = svc.getInput(inputKey)
     i.key should be(inputKey)
   }
@@ -59,7 +59,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
 
   // Project
   it should "create a project" in {
-    svc.saveProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, title = "Test Project", features = ProjectFeature.set))
+    svc.saveProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, features = ProjectFeature.set))
     val p = svc.getProject(projectKey)
     p.key should be(projectKey)
     p.features should be(ProjectFeature.set)

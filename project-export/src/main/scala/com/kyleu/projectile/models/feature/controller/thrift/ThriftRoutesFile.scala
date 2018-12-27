@@ -18,8 +18,8 @@ object ThriftRoutesFile {
   }
 
   def routeForMethod(m: ExportMethod, controllerRef: String, file: RoutesFile) = {
-    file.add(s"GET  /${ws(m.key)} $controllerRef.${m.key}")
-    file.add(s"POST /${ws(m.key)} $controllerRef.${m.key}Call")
+    file.add(s"GET  /${ws(m.name)} $controllerRef.${m.name}")
+    file.add(s"POST /${ws(m.name)} $controllerRef.${m.name}Call")
     file.add()
   }
 }

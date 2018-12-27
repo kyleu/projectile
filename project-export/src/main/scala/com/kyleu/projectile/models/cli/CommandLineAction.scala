@@ -53,7 +53,7 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     var key = arg[String]()
     var title = opt[Option[String]](description = "Optional title for this input")
     var desc = opt[Option[String]](description = "Optional description for this input")
-    override def toCommand = ProjectileCommand.InputAdd(InputSummary(key = key, title = title.getOrElse(key), description = desc.getOrElse("")))
+    override def toCommand = ProjectileCommand.InputAdd(InputSummary(key = key, description = desc.getOrElse("")))
   }
 
   // Projects
@@ -65,7 +65,7 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     var key = arg[String]()
     var title = opt[Option[String]](description = "Optional title for this project")
     var desc = opt[Option[String]](description = "Optional description for this project")
-    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(key = key, title = title.getOrElse(key), description = desc.getOrElse("")))
+    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(key = key, description = desc.getOrElse("")))
   }
 
   object Server extends Command(name = "server", description = s"Starts the web application") with CommandLineAction {

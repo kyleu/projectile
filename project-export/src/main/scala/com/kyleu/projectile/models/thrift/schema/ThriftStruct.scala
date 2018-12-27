@@ -14,5 +14,7 @@ case class ThriftStruct(
     key: String,
     pkg: Seq[String],
     fields: Seq[ThriftStructField]
-)
+) {
+  override val toString = s"Struct [${(pkg :+ key).mkString(".")}] with fields [${fields.map(f => f.key + ": " + f.t).mkString(", ")}]"
+}
 

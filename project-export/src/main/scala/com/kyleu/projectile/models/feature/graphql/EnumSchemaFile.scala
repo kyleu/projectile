@@ -1,13 +1,20 @@
-package com.kyleu.projectile.models.feature.graphql.db
+package com.kyleu.projectile.models.feature.graphql
 
 import com.kyleu.projectile.models.export.ExportEnum
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.input.InputType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object EnumSchemaFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
+    val t = enum.inputType match {
+      case InputType.Enum.ThriftIntEnum => "Int"
+      case _ => "String"
+    }
+
     val file = ScalaFile(path = OutputPath.ServerSource, enum.modelPackage(config), enum.className + "Schema")
+
     config.addCommonImport(file, "CommonSchema")
     config.addCommonImport(file, "GraphQLContext")
     config.addCommonImport(file, "GraphQLSchemaHelper")
@@ -18,7 +25,7 @@ object EnumSchemaFile {
     file.addImport(Seq("scala", "concurrent"), "Future")
 
     file.add(s"""object ${enum.className}Schema extends GraphQLSchemaHelper("${enum.propertyName}") {""", 1)
-    file.add(s"implicit val ${enum.propertyName}EnumType: EnumType[${enum.className}] = CommonSchema.deriveStringEnumeratumType(", 1)
+    file.add(s"implicit val ${enum.propertyName}EnumType: EnumType[${enum.className}] = CommonSchema.derive${t}EnumeratumType(", 1)
     file.add(s"""name = "${enum.className}",""")
     file.add(s"values = ${enum.className}.values")
     file.add(")", -1)

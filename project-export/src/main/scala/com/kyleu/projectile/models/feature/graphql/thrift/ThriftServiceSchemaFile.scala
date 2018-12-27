@@ -8,13 +8,13 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ThriftServiceSchemaFile {
   def export(config: ExportConfiguration, service: ExportService) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, service.pkg :+ "graphql", service.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, service.pkg, service.className + "Schema")
 
     file.addImport(service.pkg, service.className)
 
     config.addCommonImport(file, "GraphQLSchemaHelper")
     config.addCommonImport(file, "GraphQLContext")
-    config.addCommonImport(file, "FutureUtils", "graphQlContext")
+    config.addCommonImport(file, "ProjectileContext", "graphQlContext")
     file.addImport(Seq("sangria", "schema"), "_")
     file.addImport(Seq("sangria", "marshalling", "circe"), "_")
 
@@ -41,11 +41,16 @@ object ThriftServiceSchemaFile {
 
     val retGraphQlType = ThriftSchemaHelper.graphQlTypeFor(m.returnType, config)
 
+    val extras = m.returnType match {
+      case FieldType.UnitType => ".map(_ => \"OK\")"
+      case _ => ""
+    }
+
     if (m.args.isEmpty) {
       file.add("Field(", 1)
-      file.add(s"""name = "${m.key}",""")
+      file.add(s"""name = "${m.name}",""")
       file.add(s"fieldType = $retGraphQlType,")
-      file.add(s"""resolve = c => traceF(c.ctx, "${m.key}")(td => c.value.${m.key}()(td))""")
+      file.add(s"""resolve = c => traceF(c.ctx, "${m.name}")(td => c.value.${m.name}()(td)$extras)""")
       file.add("),", -1)
     } else {
       file.add("{", 1)
@@ -60,11 +65,11 @@ object ThriftServiceSchemaFile {
         file.add(s"""val ${arg.key}Arg = Argument(name = "${arg.key}", argumentType = $optionInputType)""")
       }
       file.add("Field(", 1)
-      file.add(s"""name = "${m.key}",""")
+      file.add(s"""name = "${m.name}",""")
       file.add(s"fieldType = $retGraphQlType,")
       file.add(s"arguments = ${m.args.map(arg => arg.key + "Arg :: ").mkString}Nil,")
 
-      file.add(s"""resolve = c => traceF(c.ctx, "${m.key}") { td =>""", 1)
+      file.add(s"""resolve = c => traceF(c.ctx, "${m.name}") { td =>""", 1)
       val argsRefs = m.args.map { arg =>
         val extras = arg.t match {
           case FieldType.ListType(_) => ".toList"
@@ -73,11 +78,7 @@ object ThriftServiceSchemaFile {
         }
         s"${arg.key} = c.arg(${arg.key}Arg)$extras"
       }
-      val extras = m.returnType match {
-        case FieldType.UnitType => ".map(_ => \"OK\")"
-        case _ => ""
-      }
-      file.add(s"c.value.${m.key}(${argsRefs.mkString(", ")})(td)$extras")
+      file.add(s"c.value.${m.name}(${argsRefs.mkString(", ")})(td)$extras")
       file.add("}", -1)
       file.add(")", -1)
       file.add("},", -1)

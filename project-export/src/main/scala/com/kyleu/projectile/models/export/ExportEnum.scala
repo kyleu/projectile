@@ -46,6 +46,7 @@ case class ExportEnum(
     val prelude = if (inputType.isThrift) { Nil } else { config.applicationPackage }
     prelude ++ (pkg.lastOption match {
       case Some("models") => pkg
+      case Some("enums") => pkg
       case _ => "models" +: pkg
     })
   }

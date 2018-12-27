@@ -30,8 +30,7 @@ object InjectServiceRegistry extends FeatureLogic.Inject(path = OutputPath.Serve
           case x if x > endIndex => None
           case x if x > -1 && x < startIndex => None
           case _ =>
-            val comma = if (withoutP.isEmpty && withP.lastOption.contains(p)) { "" } else { "," }
-            Some(s"""val ${p}Services: ${prefix}services.$p.${ExportHelper.toClassName(p)}ServiceRegistry$comma""")
+            Some(s"""val ${p}Services: ${prefix}services.$p.${ExportHelper.toClassName(p)}ServiceRegistry,""")
         }
       }.sorted
 

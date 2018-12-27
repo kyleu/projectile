@@ -26,7 +26,9 @@ class HomeController @javax.inject.Inject() () extends BaseController {
             val recent = request.cookies.get(directoriesKey).map(_.value.split("::").toSet).getOrElse(Set.empty)
             val newVal = (recent + d).toList.sorted.mkString("::")
             val c = request.cookies.get(directoriesKey).map(x => x.copy(value = newVal)).getOrElse(Cookie(directoriesKey, newVal))
-            Future.successful(Redirect(controllers.routes.HomeController.index()).withCookies(c))
+            // Future.successful(Redirect(controllers.routes.HomeController.index()).withCookies(c))
+            val out = s"<html><head><title>Dir:${f.name}</title></head><body><p>Changed directory to [$d]</p></body></html>"
+            Future.successful(Ok(play.twirl.api.Html(out)).withCookies(c))
           } else {
             Future.successful(Ok(views.html.file.initDirForm(projectile, d)))
           }

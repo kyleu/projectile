@@ -9,63 +9,47 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "graphql"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
-    val enums = config.enums.filter(_.features(EnumFeature.GraphQL)).sortBy(e => e.modelPackage(config).mkString + e.className)
-    val models = config.models.filter(_.features(ModelFeature.GraphQL)).sortBy(m => m.modelPackage(config).mkString + m.className)
-    val services = config.services.filter(_.features(ServiceFeature.GraphQL)).sortBy(s => s.pkg.mkString + s.className)
+    val enums = config.enums.filter(e => e.features(EnumFeature.GraphQL) && e.inputType.isDatabase).sortBy(e => e.modelPackage(config).mkString + e.className)
+    val models = config.models.filter { m =>
+      m.features(ModelFeature.GraphQL) && m.inputType.isDatabase
+    }.sortBy(m => m.modelPackage(config).mkString + m.className)
+    val services = config.services.filter(s => s.features(ServiceFeature.GraphQL) && s.inputType.isDatabase).sortBy(s => s.pkg.mkString + s.className)
 
     def serviceFieldsFor(s: Seq[String]) = {
-      val newLines = if (services.isEmpty) { Seq("Nil") } else {
-        services.map { s =>
-          val prelude = if (services.headOption.contains(s)) { "" } else "  "
-          val concat = if (services.lastOption.contains(s)) { "" } else " ++"
-          s"$prelude${(s.pkg :+ "services" :+ s"${s.className}Schema").mkString(".")}.serviceFields$concat"
-        }.sorted
-      }
-
+      val newLines = services.map(s => s"${(s.pkg :+ s"${s.className}Schema").mkString(".")}.serviceFields ++").sorted
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "service methods")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     def fetcherFieldsFor(s: Seq[String]) = {
       val fetchers = markers.getOrElse("fetcher", Nil).sorted
-      val newLines = "Seq(" +: fetchers.map { f =>
-        val concat = if (fetchers.lastOption.contains(f)) { "" } else ","
-        "  " + f.trim() + concat
-      } :+ ")"
+      if (fetchers.isEmpty) {
+        s
+      } else {
+        val newLines = "Seq(" +: fetchers.map { f =>
+          val concat = if (fetchers.lastOption.contains(f)) { "" } else ","
+          "  " + f.trim() + concat
+        } :+ ")"
 
-      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model fetchers")
-      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
+        val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model fetchers")
+        TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
+      }
     }
 
     def enumQueryFieldsFor(s: Seq[String]) = {
-      val newLines = enums.map { e =>
-        val prelude = if (enums.headOption.contains(e)) { "" } else "  "
-        val concat = if (enums.lastOption.contains(e)) { "" } else " ++"
-        s"$prelude${e.modelPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields$concat"
-      }
-
+      val newLines = enums.map(e => s"${e.modelPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields ++")
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "enum query fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     def modelQueryFieldsFor(s: Seq[String]) = {
-      val newLines = models.map { m =>
-        val prelude = if (models.headOption.contains(m)) { "" } else "  "
-        val concat = if (models.lastOption.contains(m)) { "" } else " ++"
-        s"$prelude${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.queryFields$concat"
-      }
-
+      val newLines = models.map(m => s"${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.queryFields ++")
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model query fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     def mutationFieldsFor(s: Seq[String]) = {
-      val newLines = models.filter(_.pkFields.nonEmpty).map { m =>
-        val prelude = if (models.headOption.contains(m)) { "" } else "  "
-        val concat = if (models.lastOption.contains(m)) { "" } else " ++"
-        s"$prelude${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.mutationFields$concat"
-      }
-
+      val newLines = models.filter(_.pkFields.nonEmpty).map(m => s"${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.mutationFields ++")
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model mutation fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }

@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.input.InputType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.thrift.input.ThriftFileHelper
@@ -65,7 +66,10 @@ object StructModelFile {
         } else {
           val method = field.t match {
             case FieldType.StringType => ""
-            case FieldType.EnumType(_) => ".map(_.value)"
+            case FieldType.EnumType(key) => config.getEnum(key, "model file").inputType match {
+              case InputType.Enum.ThriftIntEnum => ".map(_.value.toString)"
+              case _ => ".map(_.value)"
+            }
             case _ => ".map(_.toString)"
           }
           s"""DataField("${field.propertyName}", ${field.propertyName}$method)"""

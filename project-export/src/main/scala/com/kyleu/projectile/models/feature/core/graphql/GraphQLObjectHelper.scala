@@ -10,7 +10,12 @@ object GraphQLObjectHelper {
   def addFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ExportField]) = {
     fields.foreach { f =>
       f.addImport(config, file, Nil)
-      val param = s"${f.propertyName}: ${FieldTypeAsScala.asScala(config, f.t)}"
+      val t = if (f.required) {
+        FieldTypeAsScala.asScala(config, f.t)
+      } else {
+        s"Option[${FieldTypeAsScala.asScala(config, f.t)}]"
+      }
+      val param = s"${f.propertyName}: $t"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
       file.add(param + comma)
     }
@@ -19,7 +24,12 @@ object GraphQLObjectHelper {
   def addObjectFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ObjectField]) = {
     fields.foreach { f =>
       FieldTypeImports.imports(config, f.v).foreach(pkg => file.addImport(pkg.init, pkg.last))
-      val param = s"${f.k}: ${FieldTypeAsScala.asScala(config, f.v)}"
+      val t = if (f.req) {
+        FieldTypeAsScala.asScala(config, f.v)
+      } else {
+        s"Option[${FieldTypeAsScala.asScala(config, f.v)}]"
+      }
+      val param = s"${f.k}: $t"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
       file.add(param + comma)
     }
@@ -30,8 +40,12 @@ object GraphQLObjectHelper {
     val args = arguments.map { f =>
       f.addImport(config, file, Nil)
       val typ = FieldTypeAsScala.asScala(config, f.t)
-      val dv = f.defaultValue.map(" = " + _).getOrElse("")
-      s"${f.propertyName}: $typ$dv"
+      val (t, dv) = if (f.required) {
+        typ -> f.defaultValue.map(" = " + _).getOrElse("")
+      } else {
+        s"Option[$typ]" -> f.defaultValue.map(" = Some(" + _ + ")").getOrElse(" = None")
+      }
+      s"${f.propertyName}: $t$dv"
     }.mkString(", ")
     val varsDecl = arguments.map(v => s""""${v.propertyName}" -> ${v.propertyName}.asJson""").mkString(", ")
     file.add(s"def variables($args) = {", 1)

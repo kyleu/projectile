@@ -18,7 +18,6 @@ case class Project(
     template: ProjectTemplate = ProjectTemplate.Custom,
     key: String,
     input: String,
-    title: String,
     description: String = "...",
     features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
@@ -59,12 +58,12 @@ case class Project(
   def getService(svc: String) = getServiceOpt(svc).getOrElse(notFound("service", svc, services.map(_.key)))
   def serviceFeatures = ServiceFeature.values.filter(e => e.dependsOn.forall(features.apply))
 
-  override def compare(p: Project) = title.compare(p.title)
+  override def compare(p: Project) = key.compare(p.key)
 
   lazy val toSummary = this.into[ProjectSummary].transform
 
   val pathset = features.flatMap(_.paths)
   val classOverrideStrings = classOverrides.toSeq.sortBy(_._1).map(x => s"${x._1} = ${x._2}")
 
-  override def toString = s"$title - [${enums.size}] enums, [${models.size}] models, and [${services.size}] services"
+  override def toString = s"$key - [${enums.size}] enums, [${models.size}] models, and [${services.size}] services"
 }

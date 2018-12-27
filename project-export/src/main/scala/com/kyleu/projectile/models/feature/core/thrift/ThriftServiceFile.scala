@@ -41,12 +41,12 @@ object ThriftServiceFile {
       method.args.foreach(a => a.addImport(config, file, svc.pkg))
       file.add()
       val s = FieldTypeAsScala.asScala(config, method.returnType)
-      file.add(s"""def ${method.key}($args)(implicit td: TraceData): Future[$s] = trace("${method.key}") { _ =>""", 1)
+      file.add(s"""def ${method.name}($args)(implicit td: TraceData): Future[$s] = trace("${method.name}") { _ =>""", 1)
       val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg)).mkString(", ")
 
       FieldTypeImports.imports(config, method.returnType).foreach(pkg => file.addImport(pkg.init, pkg.last))
 
-      file.add(s"svc.${method.key}($argsMapped)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
+      file.add(s"svc.${method.name}($argsMapped)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
       file.add("}", -1)
     }
   }

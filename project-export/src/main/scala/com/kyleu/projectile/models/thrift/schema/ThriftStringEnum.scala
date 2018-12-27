@@ -12,4 +12,6 @@ case class ThriftStringEnum(
     key: String,
     pkg: Seq[String],
     values: Seq[String]
-)
+) {
+  override val toString = s"String enum [${(pkg :+ key).mkString(".")}] with values [${values.mkString(", ")}]"
+}

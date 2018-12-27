@@ -19,7 +19,6 @@ object PostgresInput {
 
 case class PostgresInput(
     override val key: String = "new",
-    override val title: String = "New Postgres Input",
     override val description: String = "...",
     url: String = "jdbc:postgresql://localhost/db",
     username: String = "",

@@ -48,9 +48,9 @@ object ThriftSchemaInputHelper {
     types.foreach { colType =>
       getImportType(config, colType).foreach { impType =>
         config.enums.find(_.key == impType) match {
-          case Some(e) => file.addImport(e.pkg :+ "graphql" :+ s"${impType}Schema", s"${e.propertyName}Type")
+          case Some(e) => file.addImport(e.pkg :+ s"${impType}Schema", s"${e.propertyName}EnumType")
           case None => config.models.find(_.key == impType) match {
-            case Some(m) => file.addImport(m.pkg :+ "graphql" :+ s"${impType}Schema", s"${m.propertyName}Type")
+            case Some(m) => file.addImport(m.pkg :+ s"${impType}Schema", s"${m.propertyName}Type")
             case None => // noop?
           }
         }
@@ -62,7 +62,7 @@ object ThriftSchemaInputHelper {
     types.foreach { colType =>
       getImportType(config, colType).foreach { impType =>
         config.models.find(_.key == impType) match {
-          case Some(m) => file.addImport(m.pkg :+ "graphql" :+ s"${impType}Schema", s"${m.propertyName}InputType")
+          case Some(m) => file.addImport(m.pkg :+ s"${impType}Schema", s"${m.propertyName}InputType")
           case None => // noop?
         }
       }

@@ -9,13 +9,12 @@ import com.kyleu.projectile.services.graphql.GraphQLLoader
 
 object GraphQLInput {
   def fromSummary(is: InputSummary, schema: Seq[GraphQLOptions.SchemaQueries], workingDir: File) = {
-    GraphQLInput(key = is.key, title = is.title, description = is.description, schema = schema, workingDir = workingDir)
+    GraphQLInput(key = is.key, description = is.description, schema = schema, workingDir = workingDir)
   }
 }
 
 case class GraphQLInput(
     override val key: String = "new",
-    override val title: String = "New GraphQL Input",
     override val description: String = "...",
     schema: Seq[SchemaQueries] = Nil,
     workingDir: File

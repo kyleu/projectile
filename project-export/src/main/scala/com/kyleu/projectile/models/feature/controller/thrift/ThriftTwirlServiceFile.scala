@@ -14,8 +14,7 @@ object ThriftTwirlServiceFile {
 
     file.add(s"@(user: ${(su._1 :+ su._2).mkString(".")}, debug: Boolean = false)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${(td._1 :+ td._2).mkString(".")}")
-    val trace = "@traceData.logClass(getClass)"
-    file.add(s""")$trace@${config.viewPackage.mkString(".")}.html.admin.layout.page(user, "projects", "${service.className}") {""", 1)
+    file.add(s""")@${config.viewPackage.mkString(".")}.html.admin.layout.page(user, "projects", "${service.className}") {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)
     file.add("""<div class="collection with-header">""", 1)
@@ -36,6 +35,6 @@ object ThriftTwirlServiceFile {
   }
 
   private[this] def methodLink(file: TwirlFile, m: ExportMethod, ref: String) = {
-    file.add(s"""<a class="theme-text collection-item" href="@$ref.${m.key}">${m.signature}</a>""")
+    file.add(s"""<a class="theme-text collection-item" href="@$ref.${m.name}">${m.signature}</a>""")
   }
 }

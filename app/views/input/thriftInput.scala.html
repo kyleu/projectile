@@ -1,10 +1,10 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.thrift.input.ThriftInput)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-) @layout.simple(projectile, input.title + " Input Detail") {
+) @layout.simple(projectile, input.key + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.input.routes.InputController.form(input.key)">Edit</a></div>
-      <h5><i class="@input.template.icon"></i> @input.title</h5>
+      <h5><i class="@input.template.icon"></i> @input.key</h5>
       @input.description
     </div>
   </div>

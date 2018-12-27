@@ -19,7 +19,7 @@ object TwirlRelationFiles {
     listFile.add(s"@(user: $su, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    listFile.add(s")@traceData.logClass(getClass)", -2)
+    listFile.add(s")", -2)
 
     listFile.add(s"@$viewPkg.admin.explore.list(", 1)
     listFile.add("user = user,")

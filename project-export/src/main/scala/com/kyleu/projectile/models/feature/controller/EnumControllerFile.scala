@@ -13,6 +13,7 @@ object EnumControllerFile {
     config.addCommonImport(file, "Application")
     config.addCommonImport(file, "BaseController")
     config.addCommonImport(file, "JsonSerializers", "_")
+    config.addCommonImport(file, "ProjectileContext", "webContext")
     config.addCommonImport(file, "ServiceController")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
@@ -23,7 +24,6 @@ object EnumControllerFile {
     file.add("@javax.inject.Singleton")
     val constructorArgs = s"@javax.inject.Inject() (override val app: Application)"
     file.add(s"""class ${enum.className}Controller $constructorArgs extends BaseController("${enum.propertyName}") {""", 1)
-    file.add("import app.contexts.webContext")
     file.add()
     file.add(s"""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"Future.successful(render {", 1)

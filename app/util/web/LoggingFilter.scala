@@ -2,13 +2,14 @@ package util.web
 
 import javax.inject.Inject
 import akka.stream.Materializer
-import com.kyleu.projectile.util.FutureUtils.defaultContext
 import play.api.mvc._
 import com.kyleu.projectile.util.{Config, Logging}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class LoggingFilter @Inject() (override implicit val mat: Materializer) extends Filter with Logging {
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
+
   val metricsName = Config.metricsId + "_http_requests"
 
   def apply(nextFilter: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {

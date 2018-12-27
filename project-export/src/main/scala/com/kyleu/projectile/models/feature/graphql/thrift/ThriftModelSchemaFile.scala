@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ThriftModelSchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, model.pkg :+ "graphql", model.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, model.pkg, model.className + "Schema")
 
     config.addCommonImport(file, "GraphQLContext")
 

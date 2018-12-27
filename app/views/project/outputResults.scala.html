@@ -1,6 +1,6 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, outputs: Seq[com.kyleu.projectile.models.project.ProjectOutput], files: Seq[com.kyleu.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, if(outputs.size == 1) { s"[${outputs.head.project.title}] Export Result" } else { s"[${outputs.size}] Export Results" }) {
+)@layout.simple(projectile, if(outputs.size == 1) { s"[${outputs.head.project.key}] Export Result" } else { s"[${outputs.size}] Export Results" }) {
   @outputs.map { output =>
     <div class="collection with-header">
       <div class="collection-header">
@@ -8,10 +8,10 @@
           <a class="theme-text" href="@controllers.project.routes.ProjectController.export(output.project.key)">Run Again</a>
           (<a class="theme-text" href="@controllers.project.routes.ProjectController.export(output.project.key, verbose = true)">verbose</a>)
         </div>
-        <h5><i class="@output.project.template.icon"></i> @output.project.title Export Result</h5>
+        <h5><i class="@output.project.template.icon"></i> @output.project.key Export Result</h5>
         <em>
           @com.kyleu.projectile.util.NumberUtils.withCommas(output.fileCount) files generated for
-          <a class="theme-text" href="@controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.title</a>
+          <a class="theme-text" href="@controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.key</a>
           in @{
           com.kyleu.projectile.util.NumberUtils.withCommas(output.duration)
         }ms

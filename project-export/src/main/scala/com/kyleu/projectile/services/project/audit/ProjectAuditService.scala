@@ -9,14 +9,14 @@ import com.kyleu.projectile.models.project.audit.{AuditMessage, AuditResult}
 
 object ProjectAuditService {
   def audit(projectRoot: File, inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
-    val configMessages = inputs.flatMap { i =>
-      val missing = i._1.models.flatMap(checkMissing(i._1, _))
-      missing
-    }
+    val missing = inputs.flatMap(i => i._1.models.flatMap(checkMissing(i._1, _)))
+
+    val configMessages = missing ++ getDupes(inputs)
 
     val orphans = ExportValidation.validate(projectRoot = projectRoot, results = inputs.map(_._2)).map { valResult =>
       AuditMessage(project = "all", srcModel = valResult._1, src = valResult._1, t = "orphan", tgt = valResult._1, message = valResult._2)
     }
+
     val outputMessages = orphans
 
     AuditResult(configMessages = configMessages, outputMessages = outputMessages)
@@ -40,5 +40,22 @@ object ProjectAuditService {
       case _ => None
     }
     missingEnums ++ missingModels
+  }
+
+  private[this] def getDupes(inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
+    def msgForDupe(k: String, dupe: Seq[String]) = {
+      val msg = s"There are [${dupe.size}] generated classes with $k [${dupe.head}]"
+      AuditMessage(project = "all", srcModel = dupe.head, src = dupe.head, t = "duplicate", tgt = dupe.head, message = msg)
+    }
+
+    val dupeClassnames = inputs.flatMap { i =>
+      i._1.models.map(_.className) ++ i._1.enums.map(_.className)
+    }.groupBy(x => x).values.filter(_.size > 1).map(msgForDupe("className", _))
+
+    val dupeKeys = inputs.flatMap { i =>
+      i._1.models.map(_.key) ++ i._1.enums.map(_.key)
+    }.groupBy(x => x).values.filter(_.size > 1).map(msgForDupe("key", _))
+
+    dupeClassnames ++ dupeKeys
   }
 }

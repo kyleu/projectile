@@ -44,7 +44,12 @@ object InputType {
     override val values = findValues
   }
 
-  sealed abstract class Service(override val value: String, isThrift: Boolean = false) extends StringEnumEntry {
+  sealed abstract class Service(
+      override val value: String,
+      val isDatabase: Boolean = false,
+      val isThrift: Boolean = false,
+      val isGraphQL: Boolean = false
+  ) extends StringEnumEntry {
     override val toString = value
   }
 

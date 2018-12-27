@@ -1,8 +1,8 @@
 package com.kyleu.projectile.models.feature.graphql
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.feature.graphql.db.{EnumSchemaFile, GraphQLQueryFiles, SchemaFile}
-import com.kyleu.projectile.models.feature.graphql.thrift.{ThriftEnumSchemaFile, ThriftModelSchemaFile, ThriftServiceSchemaFile}
+import com.kyleu.projectile.models.feature.graphql.db.{GraphQLQueryFiles, SchemaFile}
+import com.kyleu.projectile.models.feature.graphql.thrift.{ThriftModelSchemaFile, ThriftServiceSchemaFile}
 import com.kyleu.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.InputType
 
@@ -10,10 +10,8 @@ object GraphQLLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val enums = config.enums.filter(_.features(EnumFeature.GraphQL)).flatMap { enum =>
       enum.inputType match {
-        case InputType.Enum.PostgresEnum => Seq(EnumSchemaFile.export(config, enum).rendered)
-        case InputType.Enum.ThriftIntEnum => Seq(ThriftEnumSchemaFile.export(config, enum).rendered)
-        case InputType.Enum.ThriftStringEnum => Seq(ThriftEnumSchemaFile.export(config, enum).rendered)
         case InputType.Enum.GraphQLEnum => Nil
+        case _ => Seq(EnumSchemaFile.export(config, enum).rendered)
       }
     }
 

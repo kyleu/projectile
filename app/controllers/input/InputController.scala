@@ -48,7 +48,6 @@ class InputController @javax.inject.Inject() () extends BaseController {
     val summary = InputSummary(
       template = InputTemplate.withValue(form("template")),
       key = form("key"),
-      title = form("title"),
       description = form("description")
     )
     val input = projectile.addInput(summary)

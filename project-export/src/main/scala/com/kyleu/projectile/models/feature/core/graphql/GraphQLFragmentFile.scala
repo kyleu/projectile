@@ -21,7 +21,7 @@ object GraphQLFragmentFile {
     val objCount = GraphQLObjectHelper.writeObjects(s"fragment:${model.className}", config, file, model.fields)
 
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-    file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+    // file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
 
     model.source.foreach { src =>
       addContent(file, src)

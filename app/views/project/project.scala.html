@@ -1,10 +1,10 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile, project.title + " Project Detail") {
+)@layout.simple(projectile, project.key + " Project Detail") {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@controllers.project.routes.ProjectFormController.formSummary(project.key)">Edit Summary</a></div>
-      <h5><i class="@project.template.icon"></i> @project.title</h5>
+      <h5><i class="@project.template.icon"></i> @project.key</h5>
       @project.description
     </div>
     <div class="collection-item">

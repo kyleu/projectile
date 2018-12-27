@@ -6,12 +6,11 @@ import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
 
 object ThriftInput {
-  def fromSummary(is: InputSummary, files: Seq[String]) = ThriftInput(key = is.key, title = is.title, description = is.description, files = files)
+  def fromSummary(is: InputSummary, files: Seq[String]) = ThriftInput(key = is.key, description = is.description, files = files)
 }
 
 case class ThriftInput(
     override val key: String = "new",
-    override val title: String = "New Thrift Input",
     override val description: String = "...",
     files: Seq[String] = Nil,
     typedefs: Map[String, String] = Map.empty,

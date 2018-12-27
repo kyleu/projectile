@@ -1,6 +1,6 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@layout.simple(projectile = projectile, title = project.title + " Enum Members", mainDivClass = "margined") {
+)@layout.simple(projectile = projectile, title = project.key + " Enum Members", mainDivClass = "margined") {
   <form action="" method="post">
   <div class="collection with-header">
     <div class="collection-header">

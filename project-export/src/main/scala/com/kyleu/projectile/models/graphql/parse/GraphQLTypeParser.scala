@@ -53,7 +53,7 @@ object GraphQLTypeParser {
     case o: ObjectType[_, _] => GraphQLSelectionParser.fieldsForSelections(ctx, schema, doc, o, selections) match {
       case Left(name) => true -> FieldType.StructType(key = name)
       case Right(fields) => true -> FieldType.ObjectType(
-        key = o.name + "Wrapper", fields = fields.map(f => com.kyleu.projectile.models.export.typ.ObjectField(k = f.key, v = f.t))
+        key = o.name + "Wrapper", fields = fields.map(f => com.kyleu.projectile.models.export.typ.ObjectField(k = f.key, v = f.t, req = f.required))
       )
     }
 

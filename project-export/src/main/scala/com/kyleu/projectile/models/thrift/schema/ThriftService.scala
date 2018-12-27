@@ -15,4 +15,6 @@ case class ThriftService(
     key: String,
     pkg: Seq[String],
     methods: Seq[ThriftServiceMethod]
-)
+) {
+  override val toString = s"Service [${(pkg :+ key).mkString(".")}] with methods [${methods.mkString(", ")}]"
+}

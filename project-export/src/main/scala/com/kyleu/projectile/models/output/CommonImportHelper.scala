@@ -27,9 +27,9 @@ object CommonImportHelper {
       case "DoobieQueryService" => c.systemPackage ++ Seq("services", "database", "doobie")
       case "DoobieTestHelper" => c.systemPackage ++ Seq("services", "database", "doobie")
       case "Filter" => c.resultsPackage :+ "filter"
-      case "FutureUtils" => c.utilitiesPackage
+      // case "FutureUtils" => c.utilitiesPackage
       case "GraphQLContext" => c.applicationPackage :+ "graphql"
-      case "GraphQLQuery" => c.applicationPackage :+ "graphql"
+      case "GraphQLQuery" => c.systemPackage :+ "graphql"
       case "GraphQLSchemaHelper" => c.applicationPackage :+ "graphql"
       case "GraphQLUtils" => c.systemPackage :+ "graphql"
       case "JsonSerializers" => c.utilitiesPackage
@@ -40,6 +40,7 @@ object CommonImportHelper {
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")
       case "OrderBy" => c.resultsPackage :+ "orderBy"
       case "PagingOptions" => c.resultsPackage :+ "paging"
+      case "ProjectileContext" => c.applicationPackage :+ "models"
       case "RelationCount" => c.systemPackage ++ Seq("models", "result")
       case "ResultFieldHelper" => c.systemPackage ++ Seq("models", "queries")
       case "Row" => c.systemPackage ++ Seq("models", "database")
