@@ -43,6 +43,10 @@ object ThriftServiceSchemaFile {
 
     val extras = m.returnType match {
       case FieldType.UnitType => ".map(_ => \"OK\")"
+      case FieldType.MapType(_, _) =>
+        config.addCommonImport(file, "JsonSerializers", "_")
+        ".map(_.asJson.spaces2)"
+      case FieldType.SetType(_) => ".map(_.toSeq)"
       case _ => ""
     }
 

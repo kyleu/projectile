@@ -40,6 +40,7 @@ object QueriesFile {
     config.addCommonImport(file, "Filter")
     file.add("def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)")
 
+    config.addCommonImport(file, "OrderBy")
     file.add("def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {", 1)
     file.add("new GetAll(filters, orderBys, limit, offset)")
     file.add("}", -1)
@@ -91,7 +92,7 @@ object QueriesFile {
       file.add()
     case pkFields =>
       pkFields.foreach(_.addImport(config, file, Nil))
-      val args = pkFields.map(x => s"${x.propertyName}: ${x.scalaType(config)}").mkString(", ")
+      val args = pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
       val seqArgs = pkFields.map(_.propertyName).mkString(", ")
       file.add(s"def getByPrimaryKey($args) = new GetByPrimaryKey(Seq[Any]($seqArgs))")
       file.add(s"def getByPrimaryKeySeq(idSeq: Seq[${model.pkType(config)}]) = new SeqQuery(", 1)

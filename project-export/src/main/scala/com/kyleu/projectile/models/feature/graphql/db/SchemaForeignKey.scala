@@ -48,40 +48,42 @@ object SchemaForeignKey {
     val fks = model.foreignKeys.filter(_.references.length == 1)
     fks.foreach { fk =>
       config.getModelOpt(fk.targetTable).foreach { targetTable =>
-        val fkCols = fk.references
-        val fields = fkCols.map(h => model.fields.find(_.key == h.source).getOrElse {
-          throw new IllegalStateException(s"Missing source column [${h.source}].")
-        })
-        val targets = fkCols.map(h => targetTable.fields.find(_.key == h.target).getOrElse {
-          throw new IllegalStateException(s"Missing target column [${h.target}].")
-        })
-        fields.foreach(f => f.addImport(config, file, model.pkg))
-        if (targetTable.pkg != model.pkg) { file.addImport(targetTable.modelPackage(config), targetTable.className + "Schema") }
+        if (targetTable.pkFields.nonEmpty) {
+          val fkCols = fk.references
+          val fields = fkCols.map(h => model.fields.find(_.key == h.source).getOrElse {
+            throw new IllegalStateException(s"Missing source column [${h.source}].")
+          })
+          val targets = fkCols.map(h => targetTable.fields.find(_.key == h.target).getOrElse {
+            throw new IllegalStateException(s"Missing target column [${h.target}].")
+          })
+          fields.foreach(f => f.addImport(config, file, model.pkg))
+          if (targetTable.pkg != model.pkg) { file.addImport(targetTable.modelPackage(config), targetTable.className + "Schema") }
 
-        file.add("Field(", 1)
+          file.add("Field(", 1)
 
-        fields match {
-          case field :: Nil =>
-            file.add(s"""name = "${fk.propertyName}",""")
-            if (field.required) {
-              file.add(s"""fieldType = ${targetTable.className}Schema.${targetTable.propertyName}Type,""")
-            } else {
-              file.add(s"""fieldType = OptionType(${targetTable.className}Schema.${targetTable.propertyName}Type),""")
-            }
+          fields match {
+            case field :: Nil =>
+              file.add(s"""name = "${fk.propertyName}",""")
+              if (field.required) {
+                file.add(s"""fieldType = ${targetTable.className}Schema.${targetTable.propertyName}Type,""")
+              } else {
+                file.add(s"""fieldType = OptionType(${targetTable.className}Schema.${targetTable.propertyName}Type),""")
+              }
 
-            val fetcherRef = if (targetTable.pkFields.map(_.propertyName) == targets.map(_.propertyName)) {
-              s"${targetTable.className}Schema.${targetTable.propertyName}ByPrimaryKeyFetcher"
-            } else {
-              s"${targetTable.className}Schema.${targetTable.propertyName}By${targets.map(_.className).mkString}Fetcher"
-            }
-            if (field.required) {
-              file.add(s"resolve = ctx => $fetcherRef.defer(ctx.value.${field.propertyName})")
-            } else {
-              file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.${field.propertyName})")
-            }
-            val comma = if (model.pkColumns.isEmpty && fks.lastOption.contains(fk)) { "" } else { "," }
-            file.add(")" + comma, -1)
-          case _ => throw new IllegalStateException(s"Unhandled foreign key references [${fields.map(_.propertyName).mkString(", ")}].")
+              val fetcherRef = if (targetTable.pkFields.map(_.propertyName) == targets.map(_.propertyName)) {
+                s"${targetTable.className}Schema.${targetTable.propertyName}ByPrimaryKeyFetcher"
+              } else {
+                s"${targetTable.className}Schema.${targetTable.propertyName}By${targets.map(_.className).mkString}Fetcher"
+              }
+              if (field.required) {
+                file.add(s"resolve = ctx => $fetcherRef.defer(ctx.value.${field.propertyName})")
+              } else {
+                file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.${field.propertyName})")
+              }
+              val comma = if (model.pkColumns.isEmpty && fks.lastOption.contains(fk)) { "" } else { "," }
+              file.add(")" + comma, -1)
+            case _ => throw new IllegalStateException(s"Unhandled foreign key references [${fields.map(_.propertyName).mkString(", ")}].")
+          }
         }
       }
     }

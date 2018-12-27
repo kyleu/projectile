@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.graphql.thrift
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -28,12 +29,38 @@ object ThriftModelSchemaFile {
 
     val deriveInput = s"deriveInputObjectType[${model.className}]"
     file.add(s"implicit lazy val ${model.propertyName}InputType: InputType[${model.className}] = $deriveInput(", 1)
+    model.fields.foreach { f =>
+      f.t match {
+        case FieldType.MapType(_, _) =>
+          file.addImport(Seq("sangria", "macros", "derive"), "ReplaceInputField")
+          val t = ThriftSchemaInputHelper.graphQlInputTypeFor(f.t, config)
+          file.add(s"""ReplaceInputField("${f.propertyName}", InputField("${f.propertyName}", $t)),""")
+        case FieldType.SetType(_) =>
+          file.addImport(Seq("sangria", "macros", "derive"), "ReplaceInputField")
+          val t = ThriftSchemaInputHelper.graphQlInputTypeFor(f.t, config)
+          file.add(s"""ReplaceInputField("${f.propertyName}", InputField("${f.propertyName}", $t)),""")
+        case _ => // noop
+      }
+    }
     file.add(s"""InputObjectTypeName("Thrift${model.className}Input")""")
     file.add(")", -1)
     file.add()
 
     file.add(s"implicit lazy val ${model.propertyName}Type: ObjectType[GraphQLContext, ${model.className}] = deriveObjectType(", 1)
     file.add(s"""ObjectTypeName("Thrift${model.className}"),""")
+    model.fields.foreach { f =>
+      f.t match {
+        case FieldType.MapType(_, _) =>
+          file.addImport(Seq("sangria", "macros", "derive"), "ReplaceField")
+          config.addCommonImport(file, "JsonSerializers", "_")
+          file.add(s"""ReplaceField("${f.propertyName}", Field("${f.propertyName}", StringType, resolve = _.value.${f.propertyName}.asJson.spaces2)),""")
+        case FieldType.SetType(_) =>
+          file.addImport(Seq("sangria", "macros", "derive"), "ReplaceField")
+          val t = ThriftSchemaHelper.graphQlTypeFor(f.t, config)
+          file.add(s"""ReplaceField("${f.propertyName}", Field("${f.propertyName}", $t, resolve = _.value.${f.propertyName}.toSeq)),""")
+        case _ => // noop
+      }
+    }
     file.add(s"AddFields(Field(", 1)
     file.add("""name = "toString",""")
     file.add("fieldType = StringType,")

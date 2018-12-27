@@ -10,9 +10,9 @@ object ControllerHelper {
 
   def writeView(config: ExportConfiguration, file: ScalaFile, model: ExportModel, viewPkg: String) = {
     val audited = model.features(ModelFeature.Audit)
-    val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaType(config)}").mkString(", ")
+    val viewArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
-    val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
+    val logArgs = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
 
     file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
@@ -43,11 +43,11 @@ object ControllerHelper {
 
   def writePks(config: ExportConfiguration, model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkFields.nonEmpty) {
     model.pkFields.foreach(_.addImport(config, file, Nil))
-    val viewArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaType(config)}").mkString(", ")
-    val callArgs = model.pkFields.map(x => s"${x.propertyName} = ${x.propertyName}").mkString(", ")
+    val viewArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
+    val callArgs = model.pkFields.map(f => s"${f.propertyName} = ${f.propertyName}").mkString(", ")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
-    val logArgs = model.pkFields.map(x => "$" + x.propertyName).mkString(", ")
-    val redirArgs = model.pkFields.map(x => "res._1." + x.propertyName).mkString(", ")
+    val logArgs = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
+    val redirArgs = model.pkFields.map(f => "res._1." + f.propertyName).mkString(", ")
     file.add()
     writeView(config, file, model, viewPkg)
     file.add()

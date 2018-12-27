@@ -41,7 +41,7 @@ object RoutesFiles {
         val args = pkFields.map { x =>
           s"${x.propertyName}: ${x.scalaTypeFull(config).mkString(".")}"
         }.mkString(", ")
-        val urlArgs = pkFields.map(x => ":" + x.propertyName).mkString("/")
+        val urlArgs = pkFields.map(f => ":" + f.propertyName).mkString("/")
 
         val detailUrl = prefix + "/" + urlArgs
         val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString

@@ -63,7 +63,7 @@ case class Project(
   lazy val toSummary = this.into[ProjectSummary].transform
 
   val pathset = features.flatMap(_.paths)
-  val classOverrideStrings = classOverrides.toSeq.sortBy(_._1).map(x => s"${x._1} = ${x._2}")
+  val classOverrideStrings = classOverrides.toSeq.sortBy(_._1).map(o => s"${o._1} = ${o._2}")
 
   override def toString = s"$key - [${enums.size}] enums, [${models.size}] models, and [${services.size}] services"
 }

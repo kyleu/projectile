@@ -17,16 +17,20 @@ object ThriftFieldThriftHelper {
 
   private[this] def parse(name: String, t: FieldType, required: Boolean): String = t match {
     case FieldType.MapType(_, v) =>
-      val valuesMapped = parseMapped(v, "map").replaceAllLiterally(".map", ".mapValues(")
+      val valuesMapped = parseMapped(v, "map", "mapValues")
       if (required) {
-        s"$name$valuesMapped.toMap"
+        s"$name$valuesMapped"
+      } else if (valuesMapped.isEmpty) {
+        s"$name"
       } else {
-        s"$name.map(x => x$valuesMapped).toMap"
+        s"$name.map(x => x$valuesMapped)"
       }
     case FieldType.ListType(typ) =>
       val mapped = parseMapped(typ, "seq")
       if (required) {
         s"$name$mapped"
+      } else if (mapped.isEmpty) {
+        s"$name"
       } else {
         s"$name.map(x => x$mapped)"
       }
@@ -34,6 +38,8 @@ object ThriftFieldThriftHelper {
       val mapped = parseMapped(typ, "set")
       if (required) {
         s"$name$mapped.toSet"
+      } else if (mapped.isEmpty) {
+        s"$name.map(_.toSet)"
       } else {
         s"$name.map(x => x$mapped.toSet)"
       }
@@ -42,11 +48,15 @@ object ThriftFieldThriftHelper {
     case _ => s"$name.map(_.asThrift)"
   }
 
-  private[this] def parseMapped(t: FieldType, ctx: String): String = t match {
+  private[this] def parseMapped(t: FieldType, ctx: String, key: String = "map"): String = t match {
     case FieldType.MapType(_, _) => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
-    case FieldType.ListType(_) => "" // throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
+    case FieldType.ListType(typ) => typ match {
+      case FieldType.StructType(k) => s".$key(_${parseMapped(typ, ctx)})"
+      case FieldType.EnumType(k) => s".$key(_${parseMapped(typ, ctx)})"
+      case _ => ""
+    }
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
     case _ if FieldType.scalars.apply(t) => ""
-    case _ => s".map(_.asThrift)"
+    case _ => s".$key(_.asThrift)"
   }
 }

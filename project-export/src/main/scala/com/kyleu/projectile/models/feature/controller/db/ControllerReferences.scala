@@ -12,7 +12,7 @@ object ControllerReferences {
       config.addCommonImport(file, "RelationCount")
 
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
-      val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaType(config)}").mkString(", ")
+      val pkArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
       val refServices = references.map(ref => (ref._2, ref._3, ref._4))
 
       file.add()

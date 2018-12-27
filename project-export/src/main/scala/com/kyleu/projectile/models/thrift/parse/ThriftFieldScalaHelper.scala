@@ -17,16 +17,20 @@ object ThriftFieldScalaHelper {
 
   private[this] def parse(root: String, name: String, t: FieldType, required: Boolean): String = t match {
     case FieldType.MapType(_, v) =>
-      val valuesMapped = parseMapped(v, "map").replaceAllLiterally(".map", ".mapValues(")
+      val valuesMapped = parseMapped(v, "map", key = "mapValues")
       if (required) {
         s"$root.$name$valuesMapped.toMap"
+      } else if (valuesMapped.isEmpty) {
+        s"$root.$name.map(_.toMap)"
       } else {
-        s"$root.$name.map(x => x$valuesMapped).toMap"
+        s"$root.$name.map(x => x$valuesMapped.toMap)"
       }
     case FieldType.ListType(typ) =>
       val mapped = parseMapped(typ, "seq")
       if (required) {
         s"$root.$name$mapped.toList"
+      } else if (mapped.isEmpty) {
+        s"$root.$name.map(_.toList)"
       } else {
         s"$root.$name.map(x => x$mapped.toList)"
       }
@@ -34,6 +38,8 @@ object ThriftFieldScalaHelper {
       val mapped = parseMapped(typ, "set")
       if (required) {
         s"$root.$name$mapped.toSet"
+      } else if (mapped.isEmpty) {
+        s"$root.$name.map(_.toSet)"
       } else {
         s"$root.$name.map(x => x$mapped.toSet)"
       }
@@ -48,22 +54,22 @@ object ThriftFieldScalaHelper {
     case _ => throw new IllegalStateException(s"Unhandled type [${t.toString}")
   }
 
-  private[this] def parseMapped(t: FieldType, ctx: String): String = t match {
-    case FieldType.MapType(_, v) => parseMapped(v, ctx + ".map") match {
+  private[this] def parseMapped(t: FieldType, ctx: String, key: String = "map"): String = t match {
+    case FieldType.MapType(_, v) => parseMapped(v, ctx + ".map", key = "mapValues") match {
       case x if x.isEmpty => x
-      case x => s".mapValues(x => x$x)"
+      case x => s".$key(x => x$x)"
     }
     case FieldType.ListType(typ) => parseMapped(typ, ctx + ".list") match {
-      case x if x.isEmpty => x
-      case x => s".map(x => x$x)"
+      case x if x.isEmpty => s"$x.toList)"
+      case x => s".$key(x => x$x.toList)"
     }
     case FieldType.SetType(typ) => parseMapped(typ, ctx + ".set") match {
-      case x if x.isEmpty => x
-      case x => s".map(x => x$x)"
+      case x if x.isEmpty => s"$x.toSet"
+      case x => s".$key(x => x$x.toSet)"
     }
     case _ if FieldType.scalars.apply(t) => ""
-    case FieldType.EnumType(key) => s".map($key.fromThrift)"
-    case FieldType.StructType(key) => s".map($key.fromThrift)"
+    case FieldType.EnumType(k) => s".$key($k.fromThrift)"
+    case FieldType.StructType(k) => s".$key($k.fromThrift)"
     case _ => throw new IllegalStateException(s"Unhandled nested type [${t.toString}")
   }
 }

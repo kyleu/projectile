@@ -28,7 +28,7 @@ object EnumControllerFile {
     file.add(s"""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"Future.successful(render {", 1)
     val listArgs = s"""request.identity, "${enum.className}", "explore""""
-    file.add(s"case Accepts.Html() => Ok(${prefix}views.html.admin.layout.listPage($listArgs, ${enum.className}.values.map(x => Html(x.toString))))")
+    file.add(s"case Accepts.Html() => Ok(${prefix}views.html.admin.layout.listPage($listArgs, ${enum.className}.values.map(v => Html(v.toString))))")
     file.add(s"""case Accepts.Json() => Ok(${enum.className}.values.asJson)""")
     file.add(s"""case ServiceController.acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")
     file.add(s"})", -1)

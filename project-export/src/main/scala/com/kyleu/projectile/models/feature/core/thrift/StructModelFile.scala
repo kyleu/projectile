@@ -51,7 +51,7 @@ object StructModelFile {
     file.indent()
     file.add(s"lazy val asThrift = ${thriftModel.mkString(".")}(", 1)
     model.fields.foreach { field =>
-      val out = ThriftFieldThriftHelper.getFromField(field).stripSuffix(".toMap")
+      val out = ThriftFieldThriftHelper.getFromField(field)
       val comma = if (model.fields.lastOption.contains(field)) { "" } else { "," }
       file.add(field.propertyName + " = " + out + comma)
     }

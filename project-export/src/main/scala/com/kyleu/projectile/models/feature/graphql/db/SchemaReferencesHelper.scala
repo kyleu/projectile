@@ -12,24 +12,26 @@ object SchemaReferencesHelper {
       val srcModel = ref._3
       val srcField = ref._4
       val tgtField = ref._2
-      if (srcModel.pkg != model.pkg) {
-        file.addImport(srcModel.modelPackage(config), srcModel.className + "Schema")
+      if (srcModel.pkFields.nonEmpty) {
+        if (srcModel.pkg != model.pkg) {
+          file.addImport(srcModel.modelPackage(config), srcModel.className + "Schema")
+        }
+        file.add("Field(", 1)
+        file.add(s"""name = "${ref._1.propertyName}",""")
+        file.add(s"""fieldType = ListType(${srcModel.className}Schema.${srcModel.propertyName}Type),""")
+
+        val relationRef = s"${srcModel.className}Schema.${srcModel.propertyName}By${srcField.className}"
+        val fetcherRef = relationRef + "Fetcher"
+        val v = if (srcField.required) { s"c.value.${tgtField.propertyName}" } else { s"Some(c.value.${tgtField.propertyName})" }
+
+        val call = if (ref._1.notNull) { "deferRelSeq" } else { "deferRelSeqOpt" }
+        file.add(s"resolve = c => $fetcherRef.$call(", 1)
+        file.add(s"${relationRef}Relation, $v")
+        file.add(")", -1)
+
+        val comma = if (model.pkColumns.isEmpty && references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
+        file.add(")" + comma, -1)
       }
-      file.add("Field(", 1)
-      file.add(s"""name = "${ref._1.propertyName}",""")
-      file.add(s"""fieldType = ListType(${srcModel.className}Schema.${srcModel.propertyName}Type),""")
-
-      val relationRef = s"${srcModel.className}Schema.${srcModel.propertyName}By${srcField.className}"
-      val fetcherRef = relationRef + "Fetcher"
-      val v = if (srcField.required) { s"c.value.${tgtField.propertyName}" } else { s"Some(c.value.${tgtField.propertyName})" }
-
-      val call = if (ref._1.notNull) { "deferRelSeq" } else { "deferRelSeqOpt" }
-      file.add(s"resolve = c => $fetcherRef.$call(", 1)
-      file.add(s"${relationRef}Relation, $v")
-      file.add(")", -1)
-
-      val comma = if (model.pkColumns.isEmpty && references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
-      file.add(")" + comma, -1)
     }
   }
 }
