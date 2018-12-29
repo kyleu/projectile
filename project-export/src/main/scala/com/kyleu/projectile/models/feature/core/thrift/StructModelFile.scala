@@ -85,7 +85,7 @@ object StructModelFile {
 
   private[this] def addFields(config: ExportConfiguration, pkg: Seq[String], fields: Seq[ExportField], file: ScalaFile) = {
     fields.foreach { field =>
-      //field.addImport(file, model.modelPackage(config))
+      field.addImport(config, file, pkg)
       val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
       val decl = ThriftFileHelper.declarationFor(config, field.required, field.propertyName, field.defaultValue, field.t)
       file.add(decl + comma)

@@ -10,7 +10,7 @@ import io.scalaland.chimney.dsl._
 
 object ThriftInputService {
   private[this] val fn = "thrift-files.json"
-
+  private[this] val refKey = "reference:"
   def saveThriftDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
     (dir / fn).overwrite(printJson(ThriftOptions().asJson))
   }
@@ -29,7 +29,10 @@ object ThriftInputService {
     val dir = cfg.inputDirectory / summ.key
 
     val pc = loadFile[ThriftOptions](dir / fn, "Thrift files")
-    val files = pc.files.map(cfg.workingDirectory / _)
+    val files = pc.files.map {
+      case x if x.startsWith(refKey) => (true, cfg.workingDirectory / x.stripPrefix(refKey))
+      case x => (false, cfg.workingDirectory / x)
+    }
     ThriftParseService.loadThriftInput(files, ThriftInput.fromSummary(summ, pc.files))
   }
 }

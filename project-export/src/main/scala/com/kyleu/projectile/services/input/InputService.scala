@@ -68,17 +68,7 @@ class InputService(val cfg: ConfigService) {
       val pgi = pg.copy(enums = s.enums, tables = s.tables, views = s.views)
       PostgresInputService.savePostgres(cfg, pgi)
       pgi
-    case t: ThriftInput =>
-      val files = t.files.map { o =>
-        val f = cfg.workingDirectory / o
-        if (f.exists && f.isRegularFile && f.isReadable) {
-          f
-        } else {
-          throw new IllegalStateException(s"Unable to load thrift definition at [${f.pathAsString}]")
-        }
-      }
-      val ti = ThriftParseService.loadThriftInput(files, t)
-      ThriftInputService.saveThrift(cfg, ti)
+    case t: ThriftInput => ThriftInputService.saveThrift(cfg, t)
     case g: GraphQLInput => GraphQLInputService.saveGraphQL(cfg, g)
     case x => throw new IllegalStateException(s"Unable to process [$x]")
   }

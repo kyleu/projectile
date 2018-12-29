@@ -10,6 +10,7 @@ object TwirlListFile {
     val listFile = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
+    val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
 
     listFile.add(s"@(user: $modelPkg.user.SystemUser, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
@@ -31,7 +32,7 @@ object TwirlListFile {
     listFile.add(s"rows = modelSeq.map(model => $viewPkg.${model.propertyName}DataRow(model)),")
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
-    listFile.add(s"calls = $modelPkg.result.web.ListCalls(", 1)
+    listFile.add(s"calls = $listCalls(", 1)
     val rc = TwirlHelper.routesClass(config, model)
     listFile.add(s"newCall = Some($rc.createForm()),")
     listFile.add(s"orderBy = Some($rc.list(q, _, _, Some(limit), Some(0))),")

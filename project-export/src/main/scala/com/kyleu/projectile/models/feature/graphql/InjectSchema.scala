@@ -29,7 +29,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
         val newLines = "Seq(" +: fetchers.map { f =>
           val concat = if (fetchers.lastOption.contains(f)) { "" } else ","
           "  " + f.trim() + concat
-        } :+ ")"
+        } :+ ") ++"
 
         val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model fetchers")
         TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)

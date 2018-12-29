@@ -56,16 +56,16 @@ object ThriftFieldScalaHelper {
 
   private[this] def parseMapped(t: FieldType, ctx: String, key: String = "map"): String = t match {
     case FieldType.MapType(_, v) => parseMapped(v, ctx + ".map", key = "mapValues") match {
-      case x if x.isEmpty => x
-      case x => s".$key(x => x$x)"
+      case x if x.isEmpty => s".$key(_$x)"
+      case x => s".$key(_$x)"
     }
     case FieldType.ListType(typ) => parseMapped(typ, ctx + ".list") match {
-      case x if x.isEmpty => s"$x.toList)"
-      case x => s".$key(x => x$x.toList)"
+      case x if x.isEmpty => s".$key(_$x.toList)"
+      case x => s".$key(_$x.toList)"
     }
     case FieldType.SetType(typ) => parseMapped(typ, ctx + ".set") match {
-      case x if x.isEmpty => s"$x.toSet"
-      case x => s".$key(x => x$x.toSet)"
+      case x if x.isEmpty => s".$key(_$x.toSet)"
+      case x => s".$key(_$x.toSet)"
     }
     case _ if FieldType.scalars.apply(t) => ""
     case FieldType.EnumType(k) => s".$key($k.fromThrift)"

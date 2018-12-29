@@ -7,8 +7,8 @@ import com.google.common.io.Files
 import com.kyleu.projectile.models.thrift.input.ThriftInput
 
 object ThriftParseService {
-  def loadThriftInput(files: Seq[File], t: ThriftInput) = {
-    val results = files.map(loadFile)
+  def loadThriftInput(files: Seq[(Boolean, File)], t: ThriftInput) = {
+    val results = files.map(f => loadFile(f._1, f._2))
     t.copy(
       typedefs = results.flatMap(_.allTypedefs).toMap,
       intEnums = clean(results.flatMap(_.allIntEnums).map(e => e.key -> e)),
@@ -18,7 +18,7 @@ object ThriftParseService {
     )
   }
 
-  def loadFile(file: File) = parse(file)
+  def loadFile(reference: Boolean, file: File) = parse(reference, file)
 
   private[this] def clean[T](seq: Seq[(String, T)]) = {
     val grouped = seq.groupBy(_._1)
@@ -34,7 +34,7 @@ object ThriftParseService {
     }.toSeq.sortBy(_._1).map(_._2)
   }
 
-  private[this] def parse(file: File): ThriftParseResult = {
+  private[this] def parse(reference: Boolean, file: File): ThriftParseResult = {
     import scala.collection.JavaConverters._
 
     val src = Files.asByteSource(file.toJava).asCharSource(Charsets.UTF_8)
@@ -46,16 +46,15 @@ object ThriftParseService {
       Option(h.getNamespace("java")).filterNot(_.isEmpty)
     }.getOrElse(throw new IllegalStateException("No package"))
 
-    val includes = h.getIncludes.asScala
-    val included = includes.map { inc =>
+    val included = h.getIncludes.asScala.map { inc =>
       val f = file.parent / inc
       if (f.exists) {
-        parse(f)
+        parse(reference = true, file = f)
       } else {
         val other = file.parent / (inc + ".include")
-        parse(other)
+        parse(reference = true, file = other)
       }
     }
-    ThriftParseResult(filename = file.name, pkg = pkg.split('.'), decls = d, includes = included, lines = file.lines.toSeq)
+    ThriftParseResult(filename = file.name, reference = reference, pkg = pkg.split('.'), decls = d, includes = included, lines = file.lines.toSeq)
   }
 }

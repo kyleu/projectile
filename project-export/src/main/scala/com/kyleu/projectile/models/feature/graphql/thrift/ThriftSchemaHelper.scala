@@ -17,7 +17,7 @@ object ThriftSchemaHelper {
     case FieldType.ListType(typ) => s"ListType(${graphQlTypeFor(typ, config)})"
     case FieldType.SetType(typ) => s"ListType(${graphQlTypeFor(typ, config)})"
     case FieldType.MapType(_, _) => s"StringType"
-    case FieldType.EnumType(key) => config.getEnum(key, "graphql type").propertyName + "Type"
+    case FieldType.EnumType(key) => config.getEnum(key, "graphql type").propertyName + "EnumType"
     case FieldType.StructType(key) => config.getModel(key, "graphql type").propertyName + "Type"
     case x => ExportHelper.toIdentifier(x.value) + "Type"
   }

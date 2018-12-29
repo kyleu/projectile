@@ -37,7 +37,7 @@ object ThriftFileHelper {
     s"$name: $propType${propDefault(config, colType, required, value)}"
   }
 
-  private[this] def defaultForType(config: ExportConfiguration, colType: FieldType, required: Boolean) = colType match {
+  private[this] def defaultForType(config: ExportConfiguration, colType: FieldType, required: Boolean): String = colType match {
     case _ if !required => "None"
     case FieldType.ListType(_) => "Nil"
     case FieldType.SetType(_) => "Set.empty"
@@ -68,7 +68,7 @@ object ThriftFileHelper {
       case _ => " = " + v
     }
     case Some(v) => colType match {
-      case FieldType.EnumType(_) => " = Some(" + defaultForType(config, colType, required) + ")"
+      case FieldType.EnumType(_) => " = " + defaultForType(config, colType, required)
       case _ => " = Some(" + v + ")"
     }
     case None => " = " + defaultForType(config, colType, required)

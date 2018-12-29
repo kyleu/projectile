@@ -53,11 +53,14 @@ object ThriftModelSchemaFile {
         case FieldType.MapType(_, _) =>
           file.addImport(Seq("sangria", "macros", "derive"), "ReplaceField")
           config.addCommonImport(file, "JsonSerializers", "_")
-          file.add(s"""ReplaceField("${f.propertyName}", Field("${f.propertyName}", StringType, resolve = _.value.${f.propertyName}.asJson.spaces2)),""")
+          val t = if (f.required) { "StringType" } else { "OptionType(StringType)" }
+          val extra = if (f.required) { ".asJson.spaces2" } else { ".map(_.asJson.spaces2)" }
+          file.add(s"""ReplaceField("${f.propertyName}", Field("${f.propertyName}", $t, resolve = _.value.${f.propertyName}$extra)),""")
         case FieldType.SetType(_) =>
           file.addImport(Seq("sangria", "macros", "derive"), "ReplaceField")
-          val t = ThriftSchemaHelper.graphQlTypeFor(f.t, config)
-          file.add(s"""ReplaceField("${f.propertyName}", Field("${f.propertyName}", $t, resolve = _.value.${f.propertyName}.toSeq)),""")
+          val t = ThriftSchemaHelper.graphQlTypeFor(f.t, config, req = f.required)
+          val extra = if (f.required) { ".toSeq" } else { ".map(_.toSeq)" }
+          file.add(s"""ReplaceField("${f.propertyName}", Field("${f.propertyName}", $t, resolve = _.value.${f.propertyName}$extra)),""")
         case _ => // noop
       }
     }

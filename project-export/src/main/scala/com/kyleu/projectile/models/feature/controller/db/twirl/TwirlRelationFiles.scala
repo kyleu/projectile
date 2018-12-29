@@ -14,6 +14,7 @@ object TwirlRelationFiles {
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.viewPackage :+ "html").mkString(".")
+    val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
 
     val su = s"$modelPkg.user.SystemUser"
     listFile.add(s"@(user: $su, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
@@ -37,7 +38,7 @@ object TwirlRelationFiles {
     listFile.add("totalCount = None,")
     val modelViewPkg = (config.applicationPackage ++ model.viewHtmlPackage).mkString(".")
     listFile.add(s"rows = modelSeq.map(model => $modelViewPkg.${model.propertyName}DataRow(model)),")
-    listFile.add(s"calls = $modelPkg.result.web.ListCalls(", 1)
+    listFile.add(s"calls = $listCalls(", 1)
     listFile.add(s"orderBy = Some($viewCall($refProps, _, _, Some(limit), Some(0))),")
     listFile.add(s"search = None,")
     listFile.add(s"next = $viewCall($refProps, orderBy, orderAsc, Some(limit), Some(offset + limit)),")

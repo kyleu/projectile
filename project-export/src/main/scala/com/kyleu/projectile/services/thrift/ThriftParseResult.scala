@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, 
 
 case class ThriftParseResult(
     filename: String,
+    reference: Boolean,
     pkg: Seq[String],
     decls: Seq[Definition],
     includes: Seq[ThriftParseResult],

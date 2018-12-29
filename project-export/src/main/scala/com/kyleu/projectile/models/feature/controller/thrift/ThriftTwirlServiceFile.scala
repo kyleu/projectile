@@ -14,7 +14,7 @@ object ThriftTwirlServiceFile {
 
     file.add(s"@(user: ${(su._1 :+ su._2).mkString(".")}, debug: Boolean = false)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${(td._1 :+ td._2).mkString(".")}")
-    file.add(s""")@${config.viewPackage.mkString(".")}.html.admin.layout.page(user, "projects", "${service.className}") {""", 1)
+    file.add(s""")@${config.viewPackage.mkString(".")}.html.admin.layout.page(user, "thrift", "${service.className}") {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)
     file.add("""<div class="collection with-header">""", 1)
@@ -23,6 +23,7 @@ object ThriftTwirlServiceFile {
     file.add(s"<h4>${service.className}</h4>")
     file.add(s"<em>${service.pkg.mkString(".")}</em>")
     file.add("</div>", -1)
+    file.add(s"""<div class="collection-item">@views.html.admin.thrift.thriftServiceRef("${service.className}")</div>""")
 
     val routesRef = s"${service.pkg.mkString(".")}.controllers.${service.propertyName}.routes.${service.className}Controller"
     service.methods.foreach(m => methodLink(file, m, routesRef))

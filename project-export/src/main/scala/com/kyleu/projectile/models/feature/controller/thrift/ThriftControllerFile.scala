@@ -32,7 +32,6 @@ object ThriftControllerFile {
     file.addImport(Seq("io", "circe"), "Json")
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "api", "mvc"), "Call")
-    file.addImport(service.pkg.dropRight(1) :+ "models", "_")
 
     file.add("@javax.inject.Singleton")
     val inject = "@javax.inject.Inject() (override val app: Application)"
@@ -63,6 +62,7 @@ object ThriftControllerFile {
     } else {
       file.add(postCall, 1)
       m.args.foreach { arg =>
+        arg.addImport(config, file, Nil)
         val argRootType = FieldTypeAsScala.asScala(config, arg.t)
         val argType = if (arg.required) { argRootType } else { s"Option[$argRootType]" }
         val ex = s"""throw new IllegalStateException(s"[${arg.key}] json [$${args("${arg.key}")}] is not a valid [$argType].")"""
