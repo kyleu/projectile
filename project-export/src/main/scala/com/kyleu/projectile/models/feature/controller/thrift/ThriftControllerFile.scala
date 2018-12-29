@@ -99,8 +99,13 @@ object ThriftControllerFile {
     file.add("""))""", -1)
     file.add(s"""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson)))""")
     file.add("}", -1)
-    val err = "Some((x.getClass.getSimpleName, x.getMessage))"
-    file.add(s"""result(args, td).map(res => ren(res = Some(res))).recover { case scala.util.control.NonFatal(x) => ren(err = $err) }""")
+
+    file.add(s"result(args, td).map(res => ren(res = Some(res))).recover {", 1)
+    file.add("case scala.util.control.NonFatal(x) =>", 1)
+    file.add("""log.error(s"Error calling thrift method [$title]", x)""")
+    file.add("ren(err = Some((x.getClass.getSimpleName, x.getMessage)))")
+    file.add("}", -2)
+
     file.add("}", -1)
     file.add("}", -1)
   }

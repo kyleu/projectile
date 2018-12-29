@@ -27,6 +27,11 @@ object IntEnumFile {
     file.add()
     file.add("override val values = findValues")
     file.add(s"def fromThrift(t: ${thriftEnum.mkString(".")}) = ${enum.key}.withValue(t.getValue)")
+
+    file.add("def withName(s: String) = values.find(_.name == s).getOrElse {", 1)
+    file.add(s"""throw new IllegalStateException(s"No ${enum.className} with name [$$s] among candidates [$${values.map(_.name).mkString(", ")}]")""")
+    file.add("}", -1)
+
     file.add("}", -1)
 
     file

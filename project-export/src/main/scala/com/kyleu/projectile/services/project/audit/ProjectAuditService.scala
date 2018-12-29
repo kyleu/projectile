@@ -49,12 +49,12 @@ object ProjectAuditService {
     }
 
     val dupeClassnames = inputs.flatMap { i =>
-      i._1.models.map(_.className) ++ i._1.enums.map(_.className)
-    }.groupBy(x => x).values.filter(_.size > 1).map(msgForDupe("className", _))
+      (i._1.models.map(_.className) ++ i._1.enums.map(_.className)).groupBy(x => x).values.filter(_.size > 1).map(msgForDupe("className", _))
+    }
 
     val dupeKeys = inputs.flatMap { i =>
-      i._1.models.map(_.key) ++ i._1.enums.map(_.key)
-    }.groupBy(x => x).values.filter(_.size > 1).map(msgForDupe("key", _))
+      (i._1.models.map(_.key) ++ i._1.enums.map(_.key)).groupBy(x => x).values.filter(_.size > 1).map(msgForDupe("key", _))
+    }
 
     dupeClassnames ++ dupeKeys
   }

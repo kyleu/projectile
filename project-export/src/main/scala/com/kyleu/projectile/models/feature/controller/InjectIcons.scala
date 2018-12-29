@@ -9,17 +9,19 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
-    val models = config.models.filter(_.features(ModelFeature.Controller))
+    val models = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
 
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model icons")
     val startIndex = original.indexOf(params.start)
     val endIndex = original.indexOf(params.end)
 
     val newLines = models.flatMap { m =>
+      val ret = Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
       original.indexOf("val " + m.propertyName + " = ") match {
         case x if x > -1 && x < startIndex => None
         case x if x > endIndex => None
-        case _ => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomIcon(m.propertyName))}"""")
+        case -1 => ret
+        case _ => None
       }
     }.sorted
 
