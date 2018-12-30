@@ -1,5 +1,6 @@
 package com.kyleu.projectile.services.project.update
 
+import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.{Input, InputTemplate}
 import com.kyleu.projectile.models.project.Project
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
@@ -35,7 +36,7 @@ object ProjectUpdateService {
   def processEnums(svc: ProjectileService, p: Project, i: Input) = {
     val (unchanged, enumsToAdd) = i.exportEnums.partition(ek => p.enums.exists(_.key == ek.key))
     val enumsToRemove = p.enums.filterNot(ek => i.exportEnums.exists(_.key == ek.key))
-    val ef = i.exportEnums.headOption.map(_.features).getOrElse(p.enumFeatures.toSet)
+    val ef = p.defaultEnumFeatures.map(EnumFeature.withValue)
 
     if (saveUnchanged) { unchanged.map(e => svc.saveEnumMember(p.key, p.getEnum(e.key))) }
 
@@ -51,7 +52,7 @@ object ProjectUpdateService {
   def processModels(svc: ProjectileService, p: Project, i: Input) = {
     val (unchanged, modelsToAdd) = i.exportModels.partition(ek => p.models.exists(_.key == ek.key))
     val modelsToRemove = p.models.filterNot(mk => i.exportModels.exists(_.key == mk.key))
-    val mf = i.exportModels.headOption.map(_.features).getOrElse(p.modelFeatures.toSet)
+    val mf = p.defaultModelFeatures.map(ModelFeature.withValue)
 
     if (saveUnchanged) { unchanged.map(m => svc.saveModelMember(p.key, p.getModel(m.key))) }
 
@@ -67,7 +68,7 @@ object ProjectUpdateService {
   def processServices(svc: ProjectileService, p: Project, i: Input) = {
     val (unchanged, servicesToAdd) = i.exportServices.partition(sk => p.services.exists(_.key == sk.key))
     val servicesToRemove = p.services.filterNot(sk => i.exportServices.exists(_.key == sk.key))
-    val sf = i.exportServices.headOption.map(_.features).getOrElse(p.serviceFeatures.toSet)
+    val sf = p.defaultServiceFeatures.map(ServiceFeature.withValue)
 
     if (saveUnchanged) { unchanged.map(s => svc.saveServiceMember(p.key, p.getService(s.key))) }
 

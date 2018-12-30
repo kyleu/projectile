@@ -36,14 +36,14 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
       case "all" =>
         val toSave = i.exportModels.flatMap {
           case m if p.getModelOpt(m.key).isDefined => None
-          case m => Some(ModelMember(pkg = m.pkg, key = m.key, features = p.modelFeatures.toSet))
+          case m => Some(ModelMember(pkg = m.pkg, key = m.key, features = p.defaultModelFeatures.map(ModelFeature.withValue)))
         }
         val saved = projectile.saveModelMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} models"))
       case _ =>
         val orig = i.exportModel(modelKey)
-        val m = ModelMember(pkg = orig.pkg, key = modelKey, features = p.modelFeatures.toSet)
+        val m = ModelMember(pkg = orig.pkg, key = modelKey, features = p.defaultModelFeatures.map(ModelFeature.withValue))
         projectile.saveModelMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectModelController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added model [${m.key}]"))

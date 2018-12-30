@@ -36,14 +36,14 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
       case "all" =>
         val toSave = i.exportEnums.flatMap {
           case e if p.getEnumOpt(e.key).isDefined => None
-          case e => Some(member.EnumMember(pkg = e.pkg, key = e.key, features = p.enumFeatures.toSet))
+          case e => Some(member.EnumMember(pkg = e.pkg, key = e.key, features = p.defaultEnumFeatures.map(EnumFeature.withValue)))
         }
         val saved = projectile.saveEnumMembers(key, toSave)
         val redir = Redirect(controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} enums"))
       case _ =>
         val orig = i.exportEnum(enumKey)
-        val m = EnumMember(pkg = orig.pkg, key = enumKey, features = p.enumFeatures.toSet)
+        val m = EnumMember(pkg = orig.pkg, key = enumKey, features = p.defaultEnumFeatures.map(EnumFeature.withValue))
         projectile.saveEnumMember(key, m)
         val redir = Redirect(controllers.project.routes.ProjectEnumController.detail(key, m.key))
         Future.successful(redir.flashing("success" -> s"Added enum [${m.key}]"))
