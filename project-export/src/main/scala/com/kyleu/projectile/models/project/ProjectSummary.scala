@@ -21,6 +21,9 @@ case class ProjectSummary(
     paths: Map[OutputPath, String] = Map.empty,
     packages: Map[OutputPackage, Seq[String]] = Map.empty,
     classOverrides: Map[String, String] = Map.empty,
+    defaultEnumFeatures: Set[String] = Set("core"),
+    defaultModelFeatures: Set[String] = Set("core", "json"),
+    defaultServiceFeatures: Set[String] = Set("core"),
     status: Option[String] = None,
     created: LocalDateTime = DateUtils.now,
     updated: LocalDateTime = DateUtils.now

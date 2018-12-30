@@ -125,4 +125,19 @@ class ProjectModelController @javax.inject.Inject() () extends BaseController {
     projectile.removeModelMember(key, member)
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed model [$member]"))
   }
+
+  def formFeatures(key: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.project.form.formModelFeatures(projectile, projectile.getProjectSummary(key))))
+  }
+
+  def saveFeatures(key: String) = Action.async { implicit request =>
+    val form = ControllerUtils.getForm(request.body)
+    val summary = projectile.getProjectSummary(key)
+    val features = form("features").split(',').map(ModelFeature.withValue).map(_.value).toSet
+    projectile.saveProject(summary.copy(defaultModelFeatures = features))
+
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(summary.key)).flashing(
+      "success" -> s"Saved default model features for project [${summary.key}]"
+    ))
+  }
 }

@@ -1,17 +1,17 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.ProjectSummary)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@layout.simple(projectile, project.key + " Feature Edit") {
-  <form method="post" action="@controllers.project.routes.ProjectEnumController.saveFeatures(project.key)">
+  <form method="post" action="@controllers.project.routes.ProjectServiceController.saveFeatures(project.key)">
     <div class="collection with-header">
       <div class="collection-header">
-        <h5><i class="@project.template.icon"></i> Default [@project.key] Enum Features</h5>
+        <h5><i class="@project.template.icon"></i> Default [@project.key] Service Features</h5>
         <div>@project.template.title Project</div>
       </div>
-       @project.enumFeatures.map { feat =>
+       @project.serviceFeatures.map { feat =>
         <div class="collection-item">
           <p>
             <label>
-              <input name="features" type="checkbox" value="@feat.value" @if(project.defaultEnumFeatures(feat.value)) { checked="checked" } />
+              <input name="features" type="checkbox" value="@feat.value" @if(project.defaultServiceFeatures(feat.value)) { checked="checked" } />
               <span>@feat.title</span>
             </label>
           </p>

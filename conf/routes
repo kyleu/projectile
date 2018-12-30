@@ -53,6 +53,8 @@ GET         /project/:key/enums                      controllers.project.BulkPro
 POST        /project/:key/enums                      controllers.project.BulkProjectController.enumBulkEdit(key)
 
 GET         /project/:key/enum                       controllers.project.ProjectEnumController.formNew(key)
+GET         /project/:key/enum/defaults              controllers.project.ProjectEnumController.formFeatures(key)
+POST        /project/:key/enum/defaults              controllers.project.ProjectEnumController.saveFeatures(key)
 GET         /project/:key/enum/add                   controllers.project.ProjectEnumController.add(key, enumKey)
 GET         /project/:key/enum/:e                    controllers.project.ProjectEnumController.detail(key, e)
 POST        /project/:key/enum/:e                    controllers.project.ProjectEnumController.save(key, e)
@@ -63,6 +65,8 @@ GET         /project/:key/models                     controllers.project.BulkPro
 POST        /project/:key/models                     controllers.project.BulkProjectController.modelBulkEdit(key)
 
 GET         /project/:key/model                      controllers.project.ProjectModelController.formNew(key)
+GET         /project/:key/model/defaults             controllers.project.ProjectModelController.formFeatures(key)
+POST        /project/:key/model/defaults             controllers.project.ProjectModelController.saveFeatures(key)
 GET         /project/:key/model/add                  controllers.project.ProjectModelController.add(key, modelKey)
 GET         /project/:key/model/:m                   controllers.project.ProjectModelController.detail(key, m)
 POST        /project/:key/model/:m                   controllers.project.ProjectModelController.save(key, m)
@@ -73,6 +77,8 @@ GET         /project/:key/services                   controllers.project.BulkPro
 POST        /project/:key/services                   controllers.project.BulkProjectController.serviceBulkEdit(key)
 
 GET         /project/:key/service                    controllers.project.ProjectServiceController.formNew(key)
+GET         /project/:key/service/defaults           controllers.project.ProjectServiceController.formFeatures(key)
+POST        /project/:key/service/defaults           controllers.project.ProjectServiceController.saveFeatures(key)
 GET         /project/:key/service/add                controllers.project.ProjectServiceController.add(key, serviceKey)
 GET         /project/:key/service/:m                 controllers.project.ProjectServiceController.detail(key, m)
 POST        /project/:key/service/:m                 controllers.project.ProjectServiceController.save(key, m)

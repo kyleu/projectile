@@ -83,4 +83,19 @@ class ProjectEnumController @javax.inject.Inject() () extends BaseController {
     projectile.removeEnumMember(key, member)
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed enum [$member]"))
   }
+
+  def formFeatures(key: String) = Action.async { implicit request =>
+    Future.successful(Ok(views.html.project.form.formEnumFeatures(projectile, projectile.getProjectSummary(key))))
+  }
+
+  def saveFeatures(key: String) = Action.async { implicit request =>
+    val form = ControllerUtils.getForm(request.body)
+    val summary = projectile.getProjectSummary(key)
+    val features = form("features").split(',').map(EnumFeature.withValue).map(_.value).toSet
+    projectile.saveProject(summary.copy(defaultEnumFeatures = features))
+
+    Future.successful(Redirect(controllers.project.routes.ProjectController.detail(summary.key)).flashing(
+      "success" -> s"Saved default enum features for project [${summary.key}]"
+    ))
+  }
 }
