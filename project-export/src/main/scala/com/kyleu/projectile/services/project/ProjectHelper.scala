@@ -9,6 +9,7 @@ import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.output.OutputService
 import com.kyleu.projectile.services.project.update.ProjectUpdateService
+import com.kyleu.projectile.util.JsonFileLoader
 import com.kyleu.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._
 
@@ -77,7 +78,7 @@ trait ProjectHelper { this: ProjectileService =>
   private[this] def loadDir[A: Decoder](k: String) = {
     val d = dir / k
     if (d.exists && d.isDirectory && d.isReadable) {
-      d.children.filter(f => f.isRegularFile && f.name.endsWith(".json")).map(f => loadFile[A](f, k)).toList
+      d.children.filter(f => f.isRegularFile && f.name.endsWith(".json")).map(f => JsonFileLoader.loadFile[A](f, k)).toList
     } else {
       Nil
     }

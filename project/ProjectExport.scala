@@ -15,6 +15,5 @@ object ProjectExport {
     name := "projectile-export",
     description := "Project configuration, export, and code generation from Projectile",
     libraryDependencies ++= dependencies,
-    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Shared.projectId, Shared.projectName, Shared.projectPort).taskValue,
-  )
+  ).dependsOn(LibraryProjects.`projectile-lib-scala`)
 }

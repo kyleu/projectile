@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.thrift.ThriftParseService
+import com.kyleu.projectile.util.JsonFileLoader
 import com.kyleu.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._
 
@@ -28,7 +29,7 @@ object ThriftInputService {
   def loadThrift(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
 
-    val pc = loadFile[ThriftOptions](dir / fn, "Thrift files")
+    val pc = JsonFileLoader.loadFile[ThriftOptions](dir / fn, "Thrift files")
     val files = pc.files.map {
       case x if x.startsWith(refKey) => (true, cfg.workingDirectory / x.stripPrefix(refKey))
       case x => (false, cfg.workingDirectory / x)

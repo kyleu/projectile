@@ -4,6 +4,7 @@ import better.files.File
 import com.kyleu.projectile.models.graphql.input.{GraphQLInput, GraphQLOptions}
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.services.config.ConfigService
+import com.kyleu.projectile.util.JsonFileLoader
 import com.kyleu.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._
 
@@ -27,7 +28,7 @@ object GraphQLInputService {
   def loadGraphQL(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
 
-    val pc = loadFile[GraphQLOptions](dir / fn, "GraphQL query files")
+    val pc = JsonFileLoader.loadFile[GraphQLOptions](dir / fn, "GraphQL query files")
     GraphQLInput.fromSummary(summ, pc.schema, cfg.workingDirectory)
   }
 }

@@ -2,7 +2,6 @@ package com.kyleu.projectile.util
 
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
-import better.files.File
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.decoding.ConfiguredDecoder
 import io.circe.generic.extras.encoding.ConfiguredObjectEncoder
@@ -53,14 +52,5 @@ object JsonSerializers {
   def extract[T: Decoder](json: Json) = json.as[T] match {
     case Right(u) => u
     case Left(x) => throw x
-  }
-
-  def loadFile[T: Decoder](f: File, ctx: String) = if (f.exists && f.isRegularFile && f.isReadable) {
-    decodeJson[T](f.contentAsString) match {
-      case Right(is) => is
-      case Left(x) => throw new IllegalStateException(s"Error loading [$ctx] from [${f.pathAsString}]: ${x.getMessage}", x)
-    }
-  } else {
-    throw new IllegalStateException(s"Cannot load [${f.pathAsString}] for [$ctx]")
   }
 }

@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresI
 import com.kyleu.projectile.models.database.schema.{EnumType, Table, View}
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.services.config.ConfigService
+import com.kyleu.projectile.util.JsonFileLoader
 import com.kyleu.projectile.util.JsonSerializers._
 
 import scala.util.control.NonFatal
@@ -56,13 +57,13 @@ object PostgresInputService {
   def loadPostgres(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
 
-    val pc = loadFile[PostgresConnection](dir / fn, "Postgres connection")
+    val pc = JsonFileLoader.loadFile[PostgresConnection](dir / fn, "Postgres connection")
 
     def loadDir[A: Decoder](k: String) = {
       val d = dir / k
       if (d.exists && d.isDirectory && d.isReadable) {
         d.children.map(f => try {
-          loadFile[A](f, k)
+          JsonFileLoader.loadFile[A](f, k)
         } catch {
           case NonFatal(x) => throw new IllegalStateException(s"Error loading postgres file [${f.pathAsString}]", x)
         }).toList

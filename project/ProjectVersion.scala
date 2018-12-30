@@ -15,7 +15,7 @@ object ProjectVersion {
       |}
       |""".stripMargin.trim
 
-    val file = (sourceManaged in Compile).value / "version" / "com" / "projectile" / "util" / "Version.scala"
+    val file = (sourceManaged in Compile).value / "version" / "com" / "kyleu" / "projectile" / "util" / "Version.scala"
     val current = if(file.exists) { IO.read(file) } else { "" }
     if(current != content) { IO.write(file, content) }
     Seq(file)
