@@ -29,7 +29,7 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   }
 
   def formFeatures(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(views.html.project.form.formFeatures(projectile, projectile.getProject(key))))
+    Future.successful(Ok(views.html.project.form.formProjectFeatures(projectile, projectile.getProject(key))))
   }
 
   def saveFeatures() = Action.async { implicit request =>

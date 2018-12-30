@@ -12,6 +12,7 @@ trait InputHelper { this: ProjectileService =>
   private[this] val inputSvc = new InputService(cfg)
 
   def listInputs() = inputSvc.list()
+  def getInputSummary(key: String) = inputSvc.getSummary(key)
   def getInput(key: String) = inputSvc.load(key)
   def addInput(summary: InputSummary) = inputSvc.add(summary)
   def setPostgresOptions(key: String, conn: PostgresConnection) = inputSvc.setPostgresOptions(key, conn)

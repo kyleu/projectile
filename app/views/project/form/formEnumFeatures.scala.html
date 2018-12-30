@@ -1,0 +1,34 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.ProjectSummary)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@layout.simple(projectile, project.key + " Feature Edit") {
+  <form method="post" action="@controllers.project.routes.ProjectEnumController.saveFeatures(project.key)">
+    <div class="collection with-header">
+      <div class="collection-header">
+        <h5><i class="@project.template.icon"></i> Default [@project.key] Enum Features</h5>
+        <div>@project.template.title Project</div>
+      </div>
+       @project.enumFeatures.map { feat =>
+        <div class="collection-item">
+          <p>
+            <label>
+              <input name="features" type="checkbox" value="@feat.value" @if(project.defaultEnumFeatures(feat)) { checked="checked" } />
+              <span>@feat.title</span>
+            </label>
+          </p>
+          <p>
+            <em>@feat.description</em>
+          </p>
+        </div>
+      }
+      <div class="collection-item">
+        <input class="btn theme" type="submit" value="Save" />
+        <a class="btn-flat theme-text" href="@controllers.project.routes.ProjectController.detail(project.key)">Cancel</a>
+      </div>
+    </div>
+  </form>
+  <style>
+    .input-field {
+      margin-top: 16px;
+    }
+  </style>
+}

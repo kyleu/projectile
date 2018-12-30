@@ -8,7 +8,8 @@ import scala.concurrent.Future
 class ProjectController @javax.inject.Inject() () extends BaseController {
   def detail(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    Future.successful(Ok(views.html.project.project(projectile, p)))
+    val i = projectile.getInputSummary(p.input)
+    Future.successful(Ok(views.html.project.project(projectile, i.template, p)))
   }
 
   def remove(key: String) = Action.async { implicit request =>
@@ -18,7 +19,7 @@ class ProjectController @javax.inject.Inject() () extends BaseController {
 
   def update(key: String) = Action.async { implicit request =>
     val result = projectile.updateProject(key)
-    val msg = s"Updated project [$key]: ${result.mkString("\n")}"
+    val msg = result.mkString("\n")
     Future.successful(Redirect(controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
   }
 
