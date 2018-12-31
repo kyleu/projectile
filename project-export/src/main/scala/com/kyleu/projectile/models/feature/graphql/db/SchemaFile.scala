@@ -10,7 +10,7 @@ object SchemaFile {
   val resultArgs = "paging = r.paging, filters = r.args.filters, orderBys = r.args.orderBys, totalCount = r.count, results = r.results, durationMs = r.dur"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, model.modelPackage(config), model.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, model.graphqlPackage(config), model.className + "Schema")
 
     model.fields.foreach(_.t match {
       case EnumType(key) =>

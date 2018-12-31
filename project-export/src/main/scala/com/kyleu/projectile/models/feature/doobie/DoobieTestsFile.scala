@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object DoobieTestsFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerTest, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "DoobieTests")
+    val file = ScalaFile(path = OutputPath.ServerTest, dir = model.doobiePackage(config), key = model.className + "DoobieTests")
 
     file.addImport(Seq("org", "scalatest"), "_")
     file.addImport(model.modelPackage(config), model.className)

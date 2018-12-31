@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.service
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
@@ -9,21 +10,25 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object QueriesFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.queriesPackage, key = model.className + "Queries")
+    val file = ScalaFile(path = path, dir = model.queriesPackage(config), key = model.className + "Queries")
 
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Row")
     config.addCommonImport(file, "DatabaseField")
     config.addCommonImport(file, "DatabaseFieldType", "_")
 
-    if (model.pkg.nonEmpty) {
+    if (config.systemPackage.nonEmpty || model.pkg.nonEmpty) {
       config.addCommonImport(file, "BaseQueries")
     }
 
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.key}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      f.addImport(config, file, Nil)
+      f.t match {
+        case FieldType.EnumType(_) => f.addImport(config, file, Nil)
+        case FieldType.StructType(_) => f.addImport(config, file, Nil)
+        case _ => // noop
+      }
       val ftyp = QueriesHelper.classNameForSqlType(f.t, config)
       val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.key}", typ = $ftyp)"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }

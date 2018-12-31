@@ -98,9 +98,10 @@ case class ExportModel(
     })
   }
 
-  val queriesPackage = List("models", "queries") ++ pkg
-  val slickPackage = List("models", "table") ++ pkg
-  val doobiePackage = List("models", "doobie") ++ pkg
+  def queriesPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "queries") ++ pkg
+  def graphqlPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "graphql") ++ pkg
+  def slickPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "table") ++ pkg
+  def doobiePackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "doobie") ++ pkg
 
   val servicePackage = List("services") ++ pkg
 

@@ -25,7 +25,7 @@ object ThriftControllerFile {
 
     config.addCommonImport(file, "ControllerUtils")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "ProjectileContext", "defaultContext")
+    config.addCommonImport(file, "Implicits", "_")
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ThriftServiceRegistry")
     config.addCommonImport(file, "TraceData")

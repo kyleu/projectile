@@ -1,0 +1,26 @@
+package com.kyleu.projectile.services.database.slick
+
+import javax.sql.DataSource
+import com.kyleu.projectile.services.database.slick.PostgresProfileEx.api._
+import slick.dbio.NoStream
+import slick.sql.SqlAction
+import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
+
+object SlickQueryService {
+  val imports = PostgresProfileEx.api
+}
+
+class SlickQueryService(key: String, dataSource: DataSource, maxConnections: Int, tracingService: TracingService) {
+  private[this] val db = Database.forDataSource(
+    ds = dataSource,
+    maxConnections = Some(maxConnections),
+    executor = AsyncExecutor("slick.pool", maxConnections, 10000)
+  )
+
+  def run[R](act: SqlAction[R, NoStream, Nothing])(implicit parentTd: TraceData) = tracingService.trace("run") { td =>
+    td.tag("sql", act.statements.mkString("\n\n"))
+    db.run(act)
+  }
+
+  def close() = db.close()
+}

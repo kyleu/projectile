@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object EnumDoobieFile {
   def export(config: ExportConfiguration, enum: ExportEnum) = {
     val path = if (enum.features(EnumFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ enum.doobiePackage, key = enum.className + "Doobie")
+    val file = ScalaFile(path = path, dir = enum.doobiePackage(config), key = enum.className + "Doobie")
 
     file.addImport(enum.modelPackage(config), enum.className)
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")

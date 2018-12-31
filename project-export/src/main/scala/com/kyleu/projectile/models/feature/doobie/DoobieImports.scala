@@ -8,7 +8,7 @@ object DoobieImports {
   def imports(config: ExportConfiguration, t: FieldType): Seq[Seq[String]] = t match {
     case EnumType(key) =>
       val e = config.getEnum(key, "doobieImports")
-      Seq(config.getEnum(key, "imports").doobiePackage :+ (e.className + "Doobie") :+ (e.propertyName + "Meta"))
+      Seq(e.doobiePackage(config) :+ (e.className + "Doobie") :+ (e.propertyName + "Meta"))
 
     case ListType(typ) => imports(config, typ)
     case SetType(typ) => imports(config, typ)

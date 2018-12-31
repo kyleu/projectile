@@ -45,7 +45,7 @@ object ControllerFile {
 
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "ProjectileContext", "webContext")
+    config.addCommonImport(file, "Implicits", "_")
     config.addCommonImport(file, "ReftreeUtils", "_")
 
     file.addImport(Seq("scala", "concurrent"), "Future")

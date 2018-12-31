@@ -10,14 +10,14 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.slickPackage, key = model.className + "Table")
+    val file = ScalaFile(path = path, dir = model.slickPackage(config), key = model.className + "Table")
 
     config.addCommonImport(file, "SlickQueryService", "imports", "_")
 
     model.fields.foreach(_.t match {
       case EnumType(key) =>
         val e = config.getEnum(key, "table file")
-        file.addImport(config.applicationPackage ++ e.slickPackage :+ s"${e.className}ColumnType", s"${e.propertyName}ColumnType")
+        file.addImport(e.slickPackage(config) :+ s"${e.className}ColumnType", s"${e.propertyName}ColumnType")
       case _ => // noop
     })
 

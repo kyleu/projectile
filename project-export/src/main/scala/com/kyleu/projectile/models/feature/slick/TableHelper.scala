@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object TableHelper {
   def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
-    field.addImport(config = config, file = file, pkg = model.slickPackage)
+    field.addImport(config = config, file = file, pkg = model.slickPackage(config))
     field.t match {
       case FieldType.TagsType => config.addCommonImport(file, "Tag")
       case FieldType.EnumType(key) =>
@@ -28,7 +28,7 @@ object TableHelper {
   }
 
   def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
-    model.fields.foreach(_.addImport(config = config, file = file, pkg = model.slickPackage))
+    model.fields.foreach(_.addImport(config = config, file = file, pkg = model.slickPackage(config)))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>

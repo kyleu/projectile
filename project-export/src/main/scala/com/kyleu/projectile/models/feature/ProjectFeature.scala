@@ -68,14 +68,14 @@ object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[Pr
     description = "Logs audits of changed properties for models"
   )
 
-  case object GraphQL extends ProjectFeature(
-    value = "graphql", title = "GraphQL", tech = "Scala", logic = Some(GraphQLLogic), paths = Set(GraphQLOutput),
-    description = "Sangria bindings for an exported GraphQL schema"
-  )
-
   case object Service extends ProjectFeature(
     value = "service", title = "Service", tech = "Scala", logic = Some(ServiceLogic), paths = Set(ServerSource),
     description = "Custom service and supporting queries for common operations"
+  )
+
+  case object GraphQL extends ProjectFeature(
+    value = "graphql", title = "GraphQL", tech = "Scala", logic = Some(GraphQLLogic), paths = Set(GraphQLOutput),
+    description = "Sangria bindings for an exported GraphQL schema"
   )
 
   case object Controller extends ProjectFeature(

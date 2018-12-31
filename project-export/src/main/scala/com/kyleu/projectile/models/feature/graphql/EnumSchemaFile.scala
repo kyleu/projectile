@@ -13,7 +13,7 @@ object EnumSchemaFile {
       case _ => "String"
     }
 
-    val file = ScalaFile(path = OutputPath.ServerSource, enum.modelPackage(config), enum.className + "Schema")
+    val file = ScalaFile(path = OutputPath.ServerSource, enum.graphqlPackage(config), enum.className + "Schema")
 
     config.addCommonImport(file, "CommonSchema")
     config.addCommonImport(file, "GraphQLContext")

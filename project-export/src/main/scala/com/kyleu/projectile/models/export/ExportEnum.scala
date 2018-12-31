@@ -39,8 +39,9 @@ case class ExportEnum(
 
   def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
 
-  val slickPackage = List("models", "table") ++ pkg
-  val doobiePackage = List("models", "doobie") ++ pkg
+  def graphqlPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "graphql") ++ pkg
+  def slickPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "table") ++ pkg
+  def doobiePackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "doobie") ++ pkg
 
   def modelPackage(config: ExportConfiguration) = {
     val prelude = if (inputType.isThrift) { Nil } else { config.applicationPackage }

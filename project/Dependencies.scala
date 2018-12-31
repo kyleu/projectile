@@ -28,6 +28,35 @@ object Dependencies {
 
   object Database {
     val postgres = "org.postgresql" % "postgresql" % "42.2.5"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "3.2.0"
+
+    object Slick {
+      val version = "3.2.3"
+      val pgVersion = "0.16.3"
+
+      val core = "com.typesafe.slick" %% "slick" % version
+      val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
+      val pg = "com.github.tminglei" %% "slick-pg" % pgVersion
+      val pgCirce = "com.github.tminglei" %% "slick-pg_circe-json" % pgVersion
+      val slickless = "io.underscore" %% "slickless" % "0.3.3"
+      
+      val all = Seq(core, hikariCp, pg, pgCirce, slickless)
+    }
+
+    object Doobie {
+      val version = "0.6.0"
+
+      val core = "org.tpolecat" %% "doobie-core" % version
+      val hikariCp = "org.tpolecat" %% "doobie-hikari" % version
+      val postgres = "org.tpolecat" %% "doobie-postgres" % version
+      val testing = "org.tpolecat" %% "doobie-scalatest" % version % "test"
+      
+      val all = Seq(core, hikariCp, postgres, testing)
+    }
+
+    val flyway = "org.flywaydb" % "flyway-core" % "5.2.3"
+
+    val all = Seq(postgres, hikariCp, flyway) ++ Slick.all ++ Doobie.all
   }
 
   object GraphQL {
@@ -55,13 +84,18 @@ object Dependencies {
     val chimney = "io.scalaland" %% "chimney" % "0.2.1"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.10"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
+    val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
     val guava = "com.google.guava" % "guava" % "27.0-jre"
+    val javaxInject = "javax.inject" % "javax.inject" % "1"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.25"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
+    val typesafeConfig = "com.typesafe" % "config" % "1.3.2"
   }
 
   object Testing {

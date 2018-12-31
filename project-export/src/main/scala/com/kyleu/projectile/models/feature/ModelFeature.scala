@@ -49,7 +49,7 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
   )
 
   case object Controller extends ModelFeature(
-    value = "controller", title = "Controller", description = "Creates a Play Framework controller for this model", dependsOn = Set(ProjectFeature.GraphQL)
+    value = "controller", title = "Controller", description = "Creates a Play Framework controller for this model", dependsOn = Set(ProjectFeature.Controller)
   )
 
   case object GraphQL extends ModelFeature(

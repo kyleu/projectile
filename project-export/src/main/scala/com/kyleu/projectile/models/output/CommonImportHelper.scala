@@ -15,7 +15,7 @@ object CommonImportHelper {
       case "BaseResult" => c.resultsPackage
       case "CommonSchema" => c.systemPackage :+ "graphql"
       case "ControllerUtils" => c.utilitiesPackage :+ "web"
-      case "Credentials" => c.applicationPackage ++ Seq("models", "auth")
+      case "Credentials" => c.systemPackage ++ Seq("services")
       case "CsvUtils" => c.utilitiesPackage
       case "DatabaseField" => c.systemPackage ++ Seq("models", "database")
       case "DatabaseFieldType" => c.systemPackage ++ Seq("models", "database")
@@ -28,9 +28,9 @@ object CommonImportHelper {
       case "DoobieTestHelper" => c.systemPackage ++ Seq("services", "database", "doobie")
       case "Filter" => c.resultsPackage :+ "filter"
       // case "FutureUtils" => c.utilitiesPackage
-      case "GraphQLContext" => c.applicationPackage :+ "graphql"
+      case "GraphQLContext" => c.systemPackage :+ "graphql"
       case "GraphQLQuery" => c.systemPackage :+ "graphql"
-      case "GraphQLSchemaHelper" => c.applicationPackage :+ "graphql"
+      case "GraphQLSchemaHelper" => c.systemPackage :+ "graphql"
       case "GraphQLUtils" => c.systemPackage :+ "graphql"
       case "JsonSerializers" => c.utilitiesPackage
       case "ModelServiceHelper" => c.systemPackage :+ "services"
@@ -40,7 +40,7 @@ object CommonImportHelper {
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")
       case "OrderBy" => c.resultsPackage :+ "orderBy"
       case "PagingOptions" => c.resultsPackage :+ "paging"
-      case "ProjectileContext" => c.applicationPackage :+ "models"
+      case "Implicits" => Seq("scala", "concurrent", "ExecutionContext")
       case "RelationCount" => c.systemPackage ++ Seq("models", "result")
       case "ResultFieldHelper" => c.systemPackage ++ Seq("models", "queries")
       case "Row" => c.systemPackage ++ Seq("models", "database")

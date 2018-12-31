@@ -69,5 +69,5 @@ object Server {
 
   lazy val `projectile-server` = withProjects(Project(id = Shared.projectId, base = file(".")).enablePlugins(
     SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin,
-  ).settings(serverSettings: _*), SbtExportPlugin.`projectile-sbt`, ProjectExport.`projectile-export`)
+  ).settings(serverSettings: _*), SbtExportPlugin.`projectile-sbt`, ProjectExport.`projectile-export`).aggregate(LibraryProjects.all: _*)
 }

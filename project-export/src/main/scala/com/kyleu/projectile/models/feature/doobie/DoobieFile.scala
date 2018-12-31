@@ -11,15 +11,19 @@ object DoobieFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.doobiePackage, key = model.className + "Doobie")
+    val file = ScalaFile(path = path, dir = model.doobiePackage(config), key = model.className + "Doobie")
     val cols = model.fields.map(_.key)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 
     file.addImport(model.modelPackage(config), model.className)
-    if (model.pkg.nonEmpty) {
+    if (config.systemPackage.nonEmpty || model.pkg.nonEmpty) {
       config.addCommonImport(file, "DoobieQueries")
     }
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
+
+    model.fields.foreach { field =>
+      DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.init, pkg.last))
+    }
 
     file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.key}") {""", 1)
 
@@ -43,7 +47,7 @@ object DoobieFile {
   }
 
   private[this] def addQueries(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
-    model.pkFields.foreach(_.addImport(config = config, file = file, pkg = model.doobiePackage))
+    model.pkFields.foreach(_.addImport(config = config, file = file, pkg = model.doobiePackage(config)))
     model.pkFields match {
       case Nil => // noop
       case field :: Nil =>
@@ -51,8 +55,6 @@ object DoobieFile {
 
         file.add()
         val colProp = field.propertyName
-
-        DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.init, pkg.last))
 
         val sql = s"""(selectFragment ++ whereAnd(fr"$colProp = $$$colProp"))"""
         file.add(s"def getByPrimaryKey($colProp: ${field.scalaType(config)}) = $sql.query[Option[${model.className}]].unique")
@@ -74,7 +76,7 @@ object DoobieFile {
           file.addImport(Seq("cats", "data"), "NonEmptyList")
 
           val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
-          col.addImport(config = config, file = file, pkg = model.doobiePackage)
+          col.addImport(config = config, file = file, pkg = model.doobiePackage(config))
           val propId = col.propertyName
           val propCls = col.className
 

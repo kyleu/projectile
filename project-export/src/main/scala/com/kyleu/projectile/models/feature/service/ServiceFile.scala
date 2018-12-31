@@ -16,11 +16,11 @@ object ServiceFile {
     val queriesFilename = model.className + "Queries"
 
     file.addImport(model.modelPackage(config), model.className)
-    file.addImport(config.applicationPackage ++ model.queriesPackage, model.className + "Queries")
+    file.addImport(model.queriesPackage(config), model.className + "Queries")
     file.addImport(Seq("scala", "concurrent"), "Future")
 
     config.addCommonImport(file, "ApplicationDatabase")
-    config.addCommonImport(file, "ProjectileContext", "serviceContext")
+    config.addCommonImport(file, "Implicits", "_")
     config.addCommonImport(file, "DataField")
 
     config.addCommonImport(file, "Credentials")
@@ -30,7 +30,7 @@ object ServiceFile {
     config.addCommonImport(file, "TraceData")
     config.addCommonImport(file, "TracingService")
 
-    if (model.pkg.nonEmpty) {
+    if (config.systemPackage.nonEmpty || model.pkg.nonEmpty) {
       config.addCommonImport(file, "ModelServiceHelper")
     }
 

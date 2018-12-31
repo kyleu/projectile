@@ -13,7 +13,7 @@ object EnumControllerFile {
     config.addCommonImport(file, "Application")
     config.addCommonImport(file, "BaseController")
     config.addCommonImport(file, "JsonSerializers", "_")
-    config.addCommonImport(file, "ProjectileContext", "webContext")
+    config.addCommonImport(file, "Implicits", "_")
     config.addCommonImport(file, "ServiceController")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
