@@ -36,8 +36,7 @@ object TwirlRelationFiles {
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
     listFile.add("totalCount = None,")
-    val modelViewPkg = (config.applicationPackage ++ model.viewHtmlPackage).mkString(".")
-    listFile.add(s"rows = modelSeq.map(model => $modelViewPkg.${model.propertyName}DataRow(model)),")
+    listFile.add(s"rows = modelSeq.map(model => ${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}DataRow(model)),")
     listFile.add(s"calls = $listCalls(", 1)
     listFile.add(s"orderBy = Some($viewCall($refProps, _, _, Some(limit), Some(0))),")
     listFile.add(s"search = None,")
@@ -56,7 +55,7 @@ object TwirlRelationFiles {
     model.foreignKeys.flatMap {
       case fk if fk.references.lengthCompare(1) == 0 =>
         val refFields = fk.references.map(r => model.getField(r.source))
-        val listFile = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "By" + refFields.map(_.className).mkString)
+        val listFile = TwirlFile(model.viewPackage(config), model.propertyName + "By" + refFields.map(_.className).mkString)
         writeTable(config, model, refFields, listFile)
         Some(listFile)
       case _ => None

@@ -9,6 +9,6 @@ object TwirlHelper {
   }
 
   def routesClass(config: ExportConfiguration, model: ExportModel) = {
-    (config.applicationPackage ++ model.routesPackage :+ (model.className + "Controller")).mkString(".")
+    (model.routesPackage(config) :+ (model.className + "Controller")).mkString(".")
   }
 }

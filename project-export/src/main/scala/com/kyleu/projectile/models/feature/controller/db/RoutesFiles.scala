@@ -12,7 +12,7 @@ object RoutesFiles {
   val relationArgs = "orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " + limitArgs
 
   def routesContentFor(config: ExportConfiguration, model: ExportModel, solo: Boolean = false) = {
-    val controllerClass = ((config.applicationPackage ++ model.controllerPackage) :+ (model.className + "Controller")).mkString(".")
+    val controllerClass = (model.controllerPackage(config) :+ (model.className + "Controller")).mkString(".")
 
     val prefix = if (solo) { "" } else { s"/${model.propertyName}" }
     val root = if (solo) { "/" } else { s"/${model.propertyName}" }

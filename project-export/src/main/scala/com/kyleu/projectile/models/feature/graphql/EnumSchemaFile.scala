@@ -16,8 +16,9 @@ object EnumSchemaFile {
     val file = ScalaFile(path = OutputPath.ServerSource, enum.graphqlPackage(config), enum.className + "Schema")
 
     config.addCommonImport(file, "CommonSchema")
-    config.addCommonImport(file, "GraphQLContext")
     config.addCommonImport(file, "GraphQLSchemaHelper")
+
+    file.addImport(enum.modelPackage(config), enum.className)
 
     file.addImport(Seq("sangria", "schema"), "EnumType")
     file.addImport(Seq("sangria", "schema"), "ListType")

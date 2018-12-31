@@ -37,19 +37,19 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
     }
 
     def enumQueryFieldsFor(s: Seq[String]) = {
-      val newLines = enums.map(e => s"${e.modelPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields ++")
+      val newLines = enums.map(e => s"${e.graphqlPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields ++")
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "enum query fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     def modelQueryFieldsFor(s: Seq[String]) = {
-      val newLines = models.map(m => s"${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.queryFields ++")
+      val newLines = models.map(m => s"${(m.graphqlPackage(config) :+ m.className).mkString(".")}Schema.queryFields ++")
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model query fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     def mutationFieldsFor(s: Seq[String]) = {
-      val newLines = models.filter(_.pkFields.nonEmpty).map(m => s"${(m.modelPackage(config) :+ m.className).mkString(".")}Schema.mutationFields ++")
+      val newLines = models.filter(_.pkFields.nonEmpty).map(m => s"${(m.graphqlPackage(config) :+ m.className).mkString(".")}Schema.mutationFields ++")
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model mutation fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }

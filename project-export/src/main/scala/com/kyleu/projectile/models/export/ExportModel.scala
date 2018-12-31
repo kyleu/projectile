@@ -103,13 +103,15 @@ case class ExportModel(
   def slickPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "table") ++ pkg
   def doobiePackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "doobie") ++ pkg
 
-  val servicePackage = List("services") ++ pkg
+  def servicePackage(config: ExportConfiguration) = config.applicationPackage ++ List("services") ++ pkg
 
-  val controllerPackage = List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
-  val routesPackage = controllerPackage :+ "routes"
+  def controllerPackage(config: ExportConfiguration) = {
+    config.applicationPackage ++ List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
+  }
+  def routesPackage(config: ExportConfiguration) = controllerPackage(config) :+ "routes"
 
-  val viewPackage = Seq("views", "admin") ++ pkg
-  val viewHtmlPackage = Seq("views", "html", "admin") ++ pkg
+  def viewPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "admin") ++ pkg
+  def viewHtmlPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "html", "admin") ++ pkg
 
   val serviceReference = pkg match {
     case Nil => "services." + propertyName + "Service"

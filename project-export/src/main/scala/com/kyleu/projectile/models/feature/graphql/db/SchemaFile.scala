@@ -12,12 +12,17 @@ object SchemaFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, model.graphqlPackage(config), model.className + "Schema")
 
-    model.fields.foreach(_.t match {
-      case EnumType(key) =>
-        val e = config.getEnum(key, "schema file")
-        file.addImport(e.modelPackage(config) :+ e.className + "Schema", s"${e.propertyName}EnumType")
-      case _ => // noop
-    })
+    file.addImport(model.modelPackage(config), model.className)
+    file.addImport(model.modelPackage(config), model.className + "Result")
+
+    model.fields.foreach { f =>
+      f.t match {
+        case EnumType(key) =>
+          val e = config.getEnum(key, "schema file")
+          file.addImport(e.graphqlPackage(config) :+ e.className + "Schema", s"${e.propertyName}EnumType")
+        case _ => // noop
+      }
+    }
 
     if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) {
       config.addCommonImport(file, "NoteRowSchema")

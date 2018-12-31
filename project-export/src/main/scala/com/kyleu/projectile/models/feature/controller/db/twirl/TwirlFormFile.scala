@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlFormFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "Form")
+    val file = TwirlFile(model.viewPackage(config), model.propertyName + "Form")
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.viewPackage :+ "html").mkString(".")

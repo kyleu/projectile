@@ -11,7 +11,7 @@ object ServiceRegistryFiles {
     val packages = packageModels.groupBy(_.pkg.head).toSeq.filter(_._2.nonEmpty).sortBy(_._1)
 
     val svcContent = packages.map(m => m._1 -> m._2.map { m =>
-      s"""    val ${m.propertyName}Service: ${(config.applicationPackage ++ m.servicePackage :+ (m.className + "Service")).mkString(".")}"""
+      s"""    val ${m.propertyName}Service: ${(m.servicePackage(config) :+ (m.className + "Service")).mkString(".")}"""
     }.sorted)
 
     svcContent.map { p =>

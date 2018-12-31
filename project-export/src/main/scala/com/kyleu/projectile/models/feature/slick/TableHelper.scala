@@ -11,7 +11,7 @@ object TableHelper {
     field.t match {
       case FieldType.TagsType => config.addCommonImport(file, "Tag")
       case FieldType.EnumType(key) =>
-        val pkg = config.applicationPackage ++ Seq("models") ++ config.getEnum(key, "table file").pkg
+        val pkg = config.getEnum(key, "table file").modelPackage(config)
         file.addImport(pkg, config.getEnum(key, "table file").className)
       case _ => // noop
     }

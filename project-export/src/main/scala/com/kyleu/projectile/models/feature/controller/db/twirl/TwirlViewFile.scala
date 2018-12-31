@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.output.file.TwirlFile
 object TwirlViewFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
-    val file = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "View")
+    val file = TwirlFile(model.viewPackage(config), model.propertyName + "View")
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
     file.add(s"@(user: $modelPath.user.SystemUser, model: ${model.fullClassPath(config)}, notes: Seq[$modelPath.note.NoteRow]$audits, debug: Boolean)(")

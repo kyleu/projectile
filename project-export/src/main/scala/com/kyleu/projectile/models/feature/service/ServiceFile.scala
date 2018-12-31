@@ -12,7 +12,7 @@ object ServiceFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.servicePackage, key = model.className + "Service")
+    val file = ScalaFile(path = path, dir = model.servicePackage(config), key = model.className + "Service")
     val queriesFilename = model.className + "Queries"
 
     file.addImport(model.modelPackage(config), model.className)

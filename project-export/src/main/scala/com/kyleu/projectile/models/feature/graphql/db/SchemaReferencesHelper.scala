@@ -14,7 +14,7 @@ object SchemaReferencesHelper {
       val tgtField = ref._2
       if (srcModel.pkFields.nonEmpty) {
         if (srcModel.pkg != model.pkg) {
-          file.addImport(srcModel.modelPackage(config), srcModel.className + "Schema")
+          file.addImport(srcModel.graphqlPackage(config), srcModel.className + "Schema")
         }
         file.add("Field(", 1)
         file.add(s"""name = "${ref._1.propertyName}",""")

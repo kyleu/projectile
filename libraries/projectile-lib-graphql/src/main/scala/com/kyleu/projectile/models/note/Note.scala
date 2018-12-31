@@ -1,4 +1,3 @@
-/* Generated File */
 package com.kyleu.projectile.models.note
 
 import java.time.LocalDateTime
@@ -12,7 +11,10 @@ object Note {
   implicit val jsonEncoder: Encoder[Note] = deriveEncoder
   implicit val jsonDecoder: Decoder[Note] = deriveDecoder
 
-  def empty(id: UUID = UUID.randomUUID, relType: Option[String] = None, relPk: Option[String] = None, text: String = "", author: UUID = UUID.randomUUID, created: LocalDateTime = DateUtils.now) = {
+  def empty(
+    id: UUID = UUID.randomUUID, relType: Option[String] = None, relPk: Option[String] = None,
+    text: String = "", author: UUID = UUID.randomUUID, created: LocalDateTime = DateUtils.now
+  ) = {
     Note(id, relType, relPk, text, author, created)
   }
 }

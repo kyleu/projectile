@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlDataRowFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "DataRow")
+    val file = TwirlFile(model.viewPackage(config), model.propertyName + "DataRow")
     file.add(s"@(model: ${model.fullClassPath(config)})<tr>", 1)
     model.searchFields.foreach { c =>
       val href = model.pkFields match {

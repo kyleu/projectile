@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlSearchResultFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "SearchResult")
+    val file = TwirlFile(model.viewPackage(config), model.propertyName + "SearchResult")
 
     file.add(s"""@(model: ${model.fullClassPath(config)}, hit: String)<div class="search-result">""", 1)
     file.add(s"""<div class="right">${model.title}</div>""")

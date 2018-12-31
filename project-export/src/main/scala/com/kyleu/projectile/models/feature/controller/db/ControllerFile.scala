@@ -32,9 +32,9 @@ object ControllerFile {
   }
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val file = ScalaFile(path = OutputPath.ServerSource, config.applicationPackage ++ model.controllerPackage, model.className + "Controller")
-    val viewHtmlPackage = (config.applicationPackage ++ model.viewHtmlPackage).mkString(".")
-    val routesClass = (config.applicationPackage ++ model.routesPackage :+ (model.className + "Controller")).mkString(".")
+    val file = ScalaFile(path = OutputPath.ServerSource, model.controllerPackage(config), model.className + "Controller")
+    val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
+    val routesClass = (model.routesPackage(config) :+ (model.className + "Controller")).mkString(".")
 
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
@@ -51,7 +51,7 @@ object ControllerFile {
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "api", "http"), "MimeTypes")
 
-    file.addImport(config.applicationPackage ++ model.servicePackage, model.className + "Service")
+    file.addImport(model.servicePackage(config), model.className + "Service")
     file.addImport(model.modelPackage(config), model.className + "Result")
 
     if (model.propertyName != "audit") {

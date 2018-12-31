@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.file.TwirlFile
 object TwirlListFile {
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val listFile = TwirlFile(config.applicationPackage ++ model.viewPackage, model.propertyName + "List")
+    val listFile = TwirlFile(model.viewPackage(config), model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
@@ -28,7 +28,7 @@ object TwirlListFile {
     }
     listFile.add("),", -1)
     listFile.add("totalCount = totalCount,")
-    val viewPkg = (config.applicationPackage ++ model.viewHtmlPackage).mkString(".")
+    val viewPkg = model.viewHtmlPackage(config).mkString(".")
     listFile.add(s"rows = modelSeq.map(model => $viewPkg.${model.propertyName}DataRow(model)),")
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
