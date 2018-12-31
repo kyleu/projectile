@@ -14,7 +14,7 @@ object QueryTranslations extends Logging {
     case NUMERIC | DECIMAL => BigDecimalType
     case BIT | BOOLEAN => BooleanType
     case TINYINT => ByteType
-    case SMALLINT => ShortType
+    case SMALLINT => IntegerType // TODO ShortType
     case INTEGER | DISTINCT | ROWID => colSize match {
       case Some(x) if x >= 10 => LongType
       case _ => IntegerType

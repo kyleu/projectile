@@ -113,10 +113,7 @@ case class ExportModel(
   def viewPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "admin") ++ pkg
   def viewHtmlPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "html", "admin") ++ pkg
 
-  val serviceReference = pkg match {
-    case Nil => "services." + propertyName + "Service"
-    case _ => "services." + pkg.head + "Services." + propertyName + "Service"
-  }
+  val injectedService = s"injector.getInstance(classOf[${className}Service])"
 
   def validReferences(config: ExportConfiguration) = {
     references.filter(ref => config.getModelOpt(ref.srcTable).isDefined)

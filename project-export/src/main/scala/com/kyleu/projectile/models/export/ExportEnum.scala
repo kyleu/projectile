@@ -39,7 +39,11 @@ case class ExportEnum(
 
   def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
 
-  def graphqlPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "graphql") ++ pkg
+  def graphqlPackage(config: ExportConfiguration) = if (inputType.isThrift) {
+    pkg
+  } else {
+    config.applicationPackage ++ List("models", "graphql") ++ pkg
+  }
   def slickPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "table") ++ pkg
   def doobiePackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "doobie") ++ pkg
 

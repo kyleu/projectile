@@ -16,7 +16,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = if (stringModels.isEmpty) { Nil } else {
         "Seq(" +: stringModels.map { m =>
           val comma = if (stringModels.lastOption.contains(m)) { "" } else { "," }
-          s"  ${m.model.serviceReference}.searchExact(creds, q = q, limit = Some(5)).map(_.map(model => ${m.viewClass}(model, ${m.message})))$comma"
+          s"  ${m.model.injectedService}.searchExact(creds, q = q, limit = Some(5)).map(_.map(model => ${m.viewClass}(model, ${m.message})))$comma"
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "string searches")
@@ -30,7 +30,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = if (intModels.isEmpty) { Nil } else {
         "Seq(" +: intModels.map { m =>
           val comma = if (intModels.lastOption.contains(m)) { "" } else { "," }
-          s"  ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map(model => ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          s"  ${m.model.injectedService}.getByPrimaryKey(creds, id).map(_.map(model => ${m.viewClass}(model, ${m.message})).toSeq)$comma"
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "int searches")
@@ -44,7 +44,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = if (uuidModels.isEmpty) { Nil } else {
         "Seq(" +: uuidModels.map { m =>
           val comma = if (uuidModels.lastOption.contains(m)) { "" } else { "," }
-          s"  ${m.model.serviceReference}.getByPrimaryKey(creds, id).map(_.map(model => ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          s"  ${m.model.injectedService}.getByPrimaryKey(creds, id).map(_.map(model => ${m.viewClass}(model, ${m.message})).toSeq)$comma"
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "uuid searches")

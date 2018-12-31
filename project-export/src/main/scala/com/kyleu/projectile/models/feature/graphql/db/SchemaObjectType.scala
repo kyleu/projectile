@@ -24,9 +24,9 @@ object SchemaObjectType {
       if (model.pkColumns.nonEmpty) {
         file.add("Field(", 1)
         file.add("""name = "relatedNotes",""")
-        file.add("""fieldType = ListType(NoteRowSchema.noteRowType),""")
+        file.add("""fieldType = ListType(NoteSchema.noteType),""")
         val pkArgs = model.pkFields.map(f => "c.value." + f.propertyName).mkString(", ")
-        file.add(s"""resolve = c => c.ctx.app.coreServices.notes.getFor(c.ctx.creds, "${model.propertyName}", $pkArgs)(c.ctx.trace)""")
+        file.add(s"""resolve = c => c.ctx.noteLookup(c.ctx.creds, "${model.propertyName}", $pkArgs)(c.ctx.trace)""")
         file.add(")", -1)
       }
       if (model.pkColumns.nonEmpty || model.foreignKeys.nonEmpty || references.nonEmpty) {

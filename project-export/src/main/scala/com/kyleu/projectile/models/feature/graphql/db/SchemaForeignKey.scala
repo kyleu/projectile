@@ -20,7 +20,7 @@ object SchemaForeignKey {
             val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
             file.addMarker("fetcher", (src.graphqlPackage(config) :+ s"${src.className}Schema" :+ fn).mkString("."))
             file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
-            file.add(s"c.${src.serviceReference}.getBy${srcCol.className}Seq(c.creds, values)(c.trace)")
+            file.add(s"c.${src.injectedService}.getBy${srcCol.className}Seq(c.creds, values)(c.trace)")
             file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
             file.add()
           } else {
@@ -33,7 +33,7 @@ object SchemaForeignKey {
             file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")
             file.add(s"val ${relName}Fetcher = Fetcher.rel[GraphQLContext, ${src.className}, ${src.className}, ${src.pkType(config)}](", 1)
             val rels = if (srcCol.required) { s"rels(${relName}Relation)" } else { s"rels(${relName}Relation).flatten" }
-            file.add(s"getByPrimaryKeySeq, (c, rels) => c.${src.serviceReference}.getBy${srcCol.className}Seq(c.creds, $rels)(c.trace)")
+            file.add(s"getByPrimaryKeySeq, (c, rels) => c.${src.injectedService}.getBy${srcCol.className}Seq(c.creds, $rels)(c.trace)")
             file.add(")", -1)
 
             file.add()

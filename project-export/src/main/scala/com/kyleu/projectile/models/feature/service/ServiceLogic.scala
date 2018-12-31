@@ -11,11 +11,7 @@ object ServiceLogic extends FeatureLogic {
       Seq(QueriesFile.export(config, model).rendered, ServiceFile.export(config, model).rendered)
     }
 
-    val registries = ServiceRegistryFiles.files(config, svcModels).map(_.rendered)
-
-    debug(s"Exported [${models.size}] models and [${registries.size}] registries")
-    models ++ registries
+    debug(s"Exported [${models.size}] models")
+    models
   }
-
-  override val injections = Seq(InjectServiceRegistry)
 }

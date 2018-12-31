@@ -15,8 +15,7 @@ object CommonImportHelper {
       case "BaseResult" => c.resultsPackage
       case "CommonSchema" => c.systemPackage :+ "graphql"
       case "ControllerUtils" => c.utilitiesPackage :+ "web"
-      // TODO case "Credentials" => c.systemPackage ++ Seq("services")
-      case "Credentials" => c.applicationPackage ++ Seq("models", "auth")
+      case "Credentials" => c.systemPackage ++ Seq("services")
       case "CsvUtils" => c.utilitiesPackage
       case "DatabaseField" => c.systemPackage ++ Seq("models", "database")
       case "DatabaseFieldType" => c.systemPackage ++ Seq("models", "database")
@@ -35,7 +34,7 @@ object CommonImportHelper {
       case "Implicits" => Seq("scala", "concurrent", "ExecutionContext")
       case "JsonSerializers" => c.utilitiesPackage
       case "ModelServiceHelper" => c.systemPackage :+ "services"
-      case "NoteRowSchema" => c.applicationPackage ++ Seq("models", "graphql", "note")
+      case "NoteSchema" => c.systemPackage ++ Seq("models", "graphql", "note")
       case "ReftreeUtils" => c.utilitiesPackage
       case "ServiceController" => c.applicationPackage ++ Seq("controllers", "admin")
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")

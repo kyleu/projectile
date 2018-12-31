@@ -39,7 +39,7 @@ object Dependencies {
       val pg = "com.github.tminglei" %% "slick-pg" % pgVersion
       val pgCirce = "com.github.tminglei" %% "slick-pg_circe-json" % pgVersion
       val slickless = "io.underscore" %% "slickless" % "0.3.3"
-      
+
       val all = Seq(core, hikariCp, pg, pgCirce, slickless)
     }
 
@@ -50,7 +50,7 @@ object Dependencies {
       val hikariCp = "org.tpolecat" %% "doobie-hikari" % version
       val postgres = "org.tpolecat" %% "doobie-postgres" % version
       val testing = "org.tpolecat" %% "doobie-scalatest" % version % "test"
-      
+
       val all = Seq(core, hikariCp, postgres, testing)
     }
 
@@ -90,6 +90,7 @@ object Dependencies {
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
     val guava = "com.google.guava" % "guava" % "27.0-jre"
+    val guice = "com.google.inject" % "guice" % "4.2.0"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"

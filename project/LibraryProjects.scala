@@ -31,13 +31,13 @@ object LibraryProjects {
   lazy val `projectile-lib-service` = (project in file("libraries/projectile-lib-service")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-service",
     description := "Common service classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Utils.csv, Utils.javaxInject)
+    libraryDependencies ++= Seq(Utils.csv, Utils.javaxInject, Utils.scalaGuice)
   ).dependsOn(`projectile-lib-jdbc`)
 
   lazy val `projectile-lib-graphql` = (project in file("libraries/projectile-lib-graphql")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-graphql",
     description := "Common GraphQL classes used by code generated from Projectile",
-    libraryDependencies ++= Serialization.all ++ Seq(GraphQL.circe, GraphQL.sangria)
+    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria, Utils.guice)
   ).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Shared.commonSettings: _*).settings(
