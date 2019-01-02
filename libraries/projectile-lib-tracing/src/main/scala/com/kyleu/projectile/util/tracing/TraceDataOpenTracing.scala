@@ -3,6 +3,7 @@ package com.kyleu.projectile.util.tracing
 import datadog.opentracing.DDSpanContext
 import io.jaegertracing.internal.JaegerSpanContext
 import io.opentracing.Span
+import io.opentracing.noop.NoopSpanContext
 
 final case class TraceDataOpenTracing(span: Span) extends TraceData {
   override val isNoop = false
@@ -15,6 +16,8 @@ final case class TraceDataOpenTracing(span: Span) extends TraceData {
   override val (traceId, spanId) = span.context match {
     case j: JaegerSpanContext => j.getTraceId.toString -> j.getSpanId.toString
     case d: DDSpanContext => d.getTraceId -> d.getSpanId
+    case x: NoopSpanContext => "noop" -> "noop"
+    case x => x.getClass.getSimpleName -> "none"
   }
 
   override def toString = span.context.toString
