@@ -9,7 +9,7 @@ object Shared {
   val projectPort = 20000
 
   object Versions {
-    val app = "0.6.6-SNAPSHOT"
+    val app = "0.7.0"
     val scala = "2.12.8"
   }
 
@@ -65,7 +65,6 @@ object Shared {
     },
 
     publishMavenStyle := true,
-    pomIncludeRepository := { _ => false },
 
     publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
 
