@@ -1,4 +1,4 @@
-import sbt._
+  import sbt._
 
 object Dependencies {
   object Play {
@@ -52,9 +52,15 @@ object Dependencies {
   }
 
   object Serialization {
-    private[this] val version = "0.11.0"
-    private[this] val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
+    val version = "0.11.0"
+    val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
     val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson28" % "0.10.0")
+  }
+
+  object ScalaJS {
+    val jQueryVersion = "0.9.4"
+    val javaTimeVersion = "2.0.0-M13"
+    val scalatagsVersion = "0.6.7"
   }
 
   object Metrics {
@@ -90,6 +96,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.3.8"
+    val enumeratumCirceVersion = "1.5.18"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
     val chimney = "io.scalaland" %% "chimney" % "0.3.0"
@@ -99,7 +106,7 @@ object Dependencies {
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
-    val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
+    val enumeratum = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val guava = "com.google.guava" % "guava" % "27.0.1-jre"
     val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
