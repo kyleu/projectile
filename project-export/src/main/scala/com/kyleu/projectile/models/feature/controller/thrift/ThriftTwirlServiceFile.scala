@@ -23,9 +23,9 @@ object ThriftTwirlServiceFile {
     file.add(s"<h4>${service.className}</h4>")
     file.add(s"<em>${service.pkg.mkString(".")}</em>")
     file.add("</div>", -1)
-    file.add(s"""<div class="collection-item">@views.html.admin.thrift.thriftServiceRef("${service.className}")</div>""")
+    file.add(s"""<div class="collection-item">@com.kyleu.projectile.web.views.html.admin.thrift.thriftServiceRef("${service.className}")</div>""")
 
-    val routesRef = s"${service.pkg.mkString(".")}.controllers.${service.propertyName}.routes.${service.className}Controller"
+    val routesRef = s"${service.pkg.mkString(".")}.com.kyleu.projectile.web.controllers.${service.propertyName}.routes.${service.className}Controller"
     service.methods.foreach(m => methodLink(file, m, routesRef))
 
     file.add("</div>", -1)

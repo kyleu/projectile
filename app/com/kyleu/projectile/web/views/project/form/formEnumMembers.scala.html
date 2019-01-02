@@ -1,0 +1,66 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.Project)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile = projectile, title = project.key + " Enum Members", mainDivClass = "margined") {
+  <form action="" method="post">
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <input type="submit" class="btn theme" value="Save" />
+      </div>
+      <h5><i class="@project.template.icon"></i> [@project.key] Enum Members</h5>
+      <div>@com.kyleu.projectile.util.NumberUtils.withCommas(project.enums.size) Available</div>
+    </div>
+    <div class="collection-item">
+      @if(project.enums.isEmpty) {
+        No enums available. Why not <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.formNew(project.key)" class="theme-text">add some</a>?
+      } else {
+        <table>
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Name</th>
+              <th>Property Override</th>
+              <th>Class Override</th>
+              @project.enumFeatures.map { f =>
+                <th style="width: 120px;">
+                  @f.title
+                  <div>
+                    <a href="" onclick="checkAll('@f.value'); return false;" class="theme-text">All</a> /
+                    <a href="" onclick="uncheckAll('@f.value'); return false;" class="theme-text">@com.kyleu.projectile.util.NullUtils.str</a>
+                  </div>
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @project.enums.sortBy(_.key).map { e =>
+              <tr>
+                <td><input id="@e.key-package" name="@e.key-package" type="text" value="@e.pkg.mkString(".")" /></td>
+                <td>@e.key</td>
+                <td><input id="@e.key-propertyName" name="@e.key-propertyName" type="text" value="@e.getOverride("propertyName", "")" /></td>
+                <td><input id="@e.key-className" name="@e.key-className" type="text" value="@e.getOverride("className", "")" /></td>
+                @project.enumFeatures.map { f =>
+                  <td>
+                    <label for="@e.key-feature-@f.value">
+                      <input id="@e.key-feature-@f.value" name="@e.key-feature-@f.value" class="input-@f.value" value="true" type="checkbox" @if(e.features(f)) { checked="checked" } />
+                      <span></span>
+                    </label>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+  </form>
+  <script>
+    function checkAll(k) {
+      $(".input-" + k).attr("checked", "checked");
+    }
+    function uncheckAll(k) {
+      $(".input-" + k).removeAttr("checked");
+    }
+  </script>
+}

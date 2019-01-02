@@ -6,7 +6,7 @@ import com.kyleu.projectile.util.NullUtils
 
 object ServerHelper {
   lazy val inst = try {
-    Some(getClass.getClassLoader.loadClass("util.web.PlayServerHelper$").getField("MODULE$").get(NullUtils.inst).asInstanceOf[ServerHelper])
+    Some(getClass.getClassLoader.loadClass("com.kyleu.projectile.web.PlayServerHelper$").getField("MODULE$").get(NullUtils.inst).asInstanceOf[ServerHelper])
   } catch {
     case _: ClassNotFoundException => None
   }

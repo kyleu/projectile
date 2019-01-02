@@ -55,13 +55,6 @@ object LibraryProjects {
     libraryDependencies ++= Seq(GraphQL.circe, GraphQL.playJson, GraphQL.sangria, Utils.guice)
   ).dependsOn(`projectile-lib-service`)
 
-  lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Shared.commonSettings: _*).settings(
-    name := "projectile-lib-play",
-    description := "Common Play Framework classes used by code generated from Projectile",
-    resolvers += Resolver.bintrayRepo("stanch", "maven"),
-    libraryDependencies ++= Seq(Play.lib, Utils.reftree, play.sbt.PlayImport.ws)
-  ).dependsOn(`projectile-lib-service`, `projectile-lib-graphql`)
-
   lazy val `projectile-lib-scalajs` = (project in file("libraries/projectile-lib-scalajs")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-scalajs",
     description := "Common ScalaJS classes used by code generated from Projectile",
@@ -73,6 +66,13 @@ object LibraryProjects {
     )
   ).enablePlugins(ScalaJSPlugin, ScalaJSWeb)
 
+  lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Shared.commonSettings: _*).settings(
+    name := "projectile-lib-play",
+    description := "Common Play Framework classes used by code generated from Projectile",
+    resolvers += Resolver.bintrayRepo("stanch", "maven"),
+    libraryDependencies ++= Seq(Play.lib, Utils.reftree, play.sbt.PlayImport.ws)
+  ).dependsOn(`projectile-lib-service`, `projectile-lib-graphql`)
+
   lazy val `projectile-lib-auth` = (project in file("libraries/projectile-lib-auth")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-auth",
     description := "Common Silhouette authentication classes used by code generated from Projectile",
@@ -81,6 +81,6 @@ object LibraryProjects {
 
   lazy val all: Seq[ProjectReference] = Seq(
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
-    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-play`, `projectile-lib-scalajs`, `projectile-lib-auth`
+    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`, `projectile-lib-play`, `projectile-lib-auth`
   )
 }

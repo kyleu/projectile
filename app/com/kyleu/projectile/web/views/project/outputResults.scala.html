@@ -1,0 +1,144 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, outputs: Seq[com.kyleu.projectile.models.project.ProjectOutput], files: Seq[com.kyleu.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(outputs.size == 1) { s"[${outputs.head.project.key}] Export Result" } else { s"[${outputs.size}] Export Results" }) {
+  @outputs.map { output =>
+    <div class="collection with-header">
+      <div class="collection-header">
+        <div class="right">
+          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.export(output.project.key)">Run Again</a>
+          (<a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.export(output.project.key, verbose = true)">verbose</a>)
+        </div>
+        <h5><i class="@output.project.template.icon"></i> @output.project.key Export Result</h5>
+        <em>
+          @com.kyleu.projectile.util.NumberUtils.withCommas(output.fileCount) files generated for
+          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.key</a>
+          in @{
+          com.kyleu.projectile.util.NumberUtils.withCommas(output.duration)
+        }ms
+        </em>
+      </div>
+
+      <div class="collection-item">
+        <h6>Root</h6>
+        <ul class="collapsible expandable">
+          <li>
+            <div class="collapsible-header">
+              <i class=" @com.kyleu.projectile.models.template.Icons.logs"></i> Logs
+              <span class="badge">@output.rootLogs.size</span>
+            </div>
+            <div class="collapsible-body">
+              @if(output.rootLogs.isEmpty) {
+                <div>No root logs...</div>
+              }
+              @output.rootLogs.map { l =>
+                <div>
+                  <div class="right">@{
+                    l.occurred
+                  }ms</div>
+                  @l.content
+                </div>
+              }
+            </div>
+          </li>
+          @if(files.nonEmpty) {
+            <li>
+              <div class="collapsible-header">
+                <i class=" @com.kyleu.projectile.models.template.Icons.file"></i> Files
+                <span class="badge">@files.size</span>
+              </div>
+              <div class="collapsible-body">
+              @files.filter(x => verbose || x.logs.nonEmpty).sortBy(_.path).map { f =>
+                <div>
+                  <div class="right">@f.logs.map { log =>
+                    <div>@log</div>
+                  }</div>
+                  @f.path
+                </div>
+              }
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      @output.featureOutput.map { fo =>
+        <div class="collection-item">
+          <h6>@fo.feature.title</h6>
+          <ul class="collapsible expandable">
+            <li>
+              <div class="collapsible-header">
+                <i class=" @com.kyleu.projectile.models.template.Icons.logs"></i> Logs
+                <span class="badge">@fo.logs.size</span>
+              </div>
+              <div class="collapsible-body">
+                @if(fo.logs.isEmpty) {
+                  <div>No logs...</div>
+                }
+                @fo.logs.map { l =>
+                  <div>
+                    <div class="right">@{
+                      l.occurred
+                    }ms</div>
+                    @l.content
+                  </div>
+                }
+              </div>
+            </li>
+            @defining(fo.files.filter(f => verbose || files.exists(x => x.file == f.toString && x.logs.nonEmpty)).sortBy(_.filename)) { changedFiles =>
+              @if(changedFiles.isEmpty) {
+                <li>
+                  <div class="collapsible-header">
+                    No files updated
+                  </div>
+                  <div class="collapsible-body">
+                    Run in verbose mode to see all generated files
+                  </div>
+                </li>
+              }
+              @changedFiles.map { f =>
+                <li>
+                  <div class="collapsible-header">
+                    <i class="@f.icon"></i> @f.filename
+                    <span class="badge">@f.path.value</span>
+                  </div>
+                  <div class="collapsible-body">
+                    <pre style="overflow: auto;">@f.content</pre>
+                  </div>
+                </li>
+              }
+            }
+            @defining(fo.injections.filter(f => verbose || files.exists(x => x.file == f.toString && x.logs.nonEmpty)).sortBy(_.filename)) { injectFiles =>
+              @if(injectFiles.isEmpty) {
+                <li>
+                  <div class="collapsible-header">
+                    No files injected
+                  </div>
+                  <div class="collapsible-body">
+                    Run in verbose mode to see all injected files
+                  </div>
+                </li>
+              }
+              @injectFiles.map { f =>
+                <li>
+                  <div class="collapsible-header">
+                    <i class="@com.kyleu.projectile.models.template.Icons.inject"></i> @f.filename
+                    <span class="badge">@f.path.value</span>
+                  </div>
+                  <div class="collapsible-body">
+                    <pre style="overflow: auto;">@f.content</pre>
+                  </div>
+                </li>
+              }
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+
+  <script>
+    $(function(){
+      $('.collapsible').collapsible({accordion: false});
+    });
+  </script>
+}

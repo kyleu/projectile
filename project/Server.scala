@@ -32,7 +32,7 @@ object Server {
 
     // Play
     RoutesKeys.routesGenerator := InjectedRoutesGenerator,
-    RoutesKeys.routesImport ++= Seq("util.web.QueryStringUtils._"),
+    RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.web.util.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
     PlayKeys.playDefaultPort := Shared.projectPort,
@@ -67,6 +67,8 @@ object Server {
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
   lazy val `projectile-server` = withProjects(Project(id = Shared.projectId, base = file(".")).enablePlugins(
-    SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin,
-  ).settings(serverSettings: _*), SbtExportPlugin.`projectile-sbt`, ProjectExport.`projectile-export`).aggregate(LibraryProjects.all: _*)
+    SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin
+  ).settings(serverSettings: _*), SbtExportPlugin.`projectile-sbt`, ProjectExport.`projectile-export`).dependsOn(
+    LibraryProjects.`projectile-lib-auth`
+  ).aggregate(LibraryProjects.all: _*)
 }

@@ -1,0 +1,11 @@
+@(log: com.kyleu.projectile.models.project.audit.AuditMessage)<div class="collection-item">
+  <div class="right">
+    @if(log.srcModel == log.tgt) {
+      @log.srcModel
+    } else {
+      @log.srcModel -&gt; @log.tgt
+    }
+    <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix(log.project, log.t, log.src, log.tgt)">Fix</a>
+  </div>
+  @log.message
+</div>

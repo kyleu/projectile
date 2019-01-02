@@ -1,0 +1,42 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.input.Input)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Edit") {
+  <form method="post" action="@com.kyleu.projectile.web.controllers.input.routes.InputController.save()">
+    <input id="key" name="key" type="hidden" value="@input.key" />
+    <input id="template" name="template" type="hidden" value="@input.template.value" />
+
+    <div class="collection with-header">
+      <div class="collection-header">
+        <div class="right">
+          <a onclick="return confirm('Are you sure you wish to remove input [@input.key]?')" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.remove(input.key)" class="theme-text">
+            Remove
+          </a>
+        </div>
+        <h5><i class="@input.template.icon"></i> Edit [@input.key]</h5>
+        <div>@input.template.title Input</div>
+      </div>
+      <div class="collection-item">
+        <div class="input-field">
+          <input id="description" name="description" type="text" value="@input.description" />
+          <label for="description">Description</label>
+        </div>
+      </div>
+      @if(input.isInstanceOf[com.kyleu.projectile.models.database.input.PostgresInput]) {
+        <div class="collection-item">
+          <div class="input-field">
+            <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")" class="theme-text">Connection Settings</a>
+          </div>
+        </div>
+      }
+      <div class="collection-item">
+        <input class="btn theme" type="submit" value="Save" />
+        <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)">Cancel</a>
+      </div>
+    </div>
+  </form>
+  <style>
+    .input-field {
+      margin-top: 16px;
+    }
+  </style>
+}

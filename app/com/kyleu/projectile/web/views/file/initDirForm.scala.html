@@ -1,0 +1,16 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, dir: String)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "Init Projectile Directory") {
+    <div class="collection with-header">
+      <div class="collection-header">
+        <h5><i class=" @com.kyleu.projectile.models.template.Icons.projectile"></i> Init Projectile Directory</h5>
+      </div>
+      <div class="collection-item">
+        The directory <code>@dir</code> isn't configured for projectile.
+      </div>
+      <div class="collection-item">
+        <a class="btn theme" href="@com.kyleu.projectile.web.controllers.routes.HomeController.initialize(dir)">Initialize</a>
+        <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.routes.HomeController.index()">Cancel</a>
+      </div>
+    </div>
+}

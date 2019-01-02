@@ -1,0 +1,29 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, key: String, inputServices: Seq[(String, Boolean)])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Service") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> New [@key] Service</h5>
+    </div>
+    <div class="collection-item">
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.add(key, "all")" class="theme-text">Add All</a>
+      </div>
+      <h6>Services</h6>
+      @if(inputServices.isEmpty) {
+        <em>No available services</em>
+      }
+      <ul>
+      @inputServices.map { service =>
+        <li>
+          @if(service._2) {
+            @service._1 <em>(already added)</em>
+          } else {
+            <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.add(key, service._1)" class="theme-text">@service._1</a>
+          }
+        </li>
+      }
+      </ul>
+    </div>
+  </div>
+}
