@@ -11,6 +11,7 @@ lazy val `projectile-lib-tracing` = LibraryProjects.`projectile-lib-tracing`
 lazy val `projectile-lib-jdbc` = LibraryProjects.`projectile-lib-jdbc`
 lazy val `projectile-lib-doobie` = LibraryProjects.`projectile-lib-doobie`
 lazy val `projectile-lib-slick` = LibraryProjects.`projectile-lib-slick`
+lazy val `projectile-lib-thrift` = LibraryProjects.`projectile-lib-thrift`
 lazy val `projectile-lib-service` = LibraryProjects.`projectile-lib-service`
 lazy val `projectile-lib-graphql` = LibraryProjects.`projectile-lib-graphql`
 lazy val `projectile-lib-play` = LibraryProjects.`projectile-lib-play`

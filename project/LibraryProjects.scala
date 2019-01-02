@@ -2,8 +2,6 @@ import sbt.Keys._
 import sbt._
 import Dependencies._
 
-import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import webscalajs.ScalaJSWeb
 
@@ -43,6 +41,12 @@ object LibraryProjects {
     libraryDependencies ++= Database.Slick.all
   ).dependsOn(`projectile-lib-jdbc`)
 
+  lazy val `projectile-lib-thrift` = (project in file("libraries/projectile-lib-thrift")).settings(Shared.commonSettings: _*).settings(
+    name := "projectile-lib-thrift",
+    description := "Common Thrift classes used by code generated from Projectile",
+    libraryDependencies ++= Seq(Thrift.core)
+  ).dependsOn(`projectile-lib-tracing`)
+
   lazy val `projectile-lib-service` = (project in file("libraries/projectile-lib-service")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-service",
     description := "Common service classes used by code generated from Projectile",
@@ -58,12 +62,14 @@ object LibraryProjects {
   lazy val `projectile-lib-scalajs` = (project in file("libraries/projectile-lib-scalajs")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-scalajs",
     description := "Common ScalaJS classes used by code generated from Projectile",
-    libraryDependencies ++= Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(
-      "be.doeraene" %%% "scalajs-jquery" % ScalaJS.jQueryVersion,
-      "com.lihaoyi" %%% "scalatags" % ScalaJS.scalatagsVersion,
-      "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion,
-      "io.github.cquiroz" %%% "scala-java-time" % ScalaJS.javaTimeVersion
-    )
+    libraryDependencies ++= {
+      import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
+      val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
+      val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
+      val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
+      val scalatags = "com.lihaoyi" %%% "scalatags" % "0.6.7"
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(jQuery, scalatags, enumeratum, javaTime)
+    }
   ).enablePlugins(ScalaJSPlugin, ScalaJSWeb)
 
   lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Shared.commonSettings: _*).settings(
@@ -80,7 +86,8 @@ object LibraryProjects {
   ).dependsOn(`projectile-lib-play`)
 
   lazy val all: Seq[ProjectReference] = Seq(
-    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
+    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
+    `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`, `projectile-lib-play`, `projectile-lib-auth`
   )
 }

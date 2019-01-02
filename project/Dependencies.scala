@@ -54,13 +54,12 @@ object Dependencies {
   object Serialization {
     val version = "0.11.0"
     val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
-    val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson28" % "0.10.0")
+    val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson29" % "0.10.0")
   }
 
-  object ScalaJS {
-    val jQueryVersion = "0.9.4"
-    val javaTimeVersion = "2.0.0-M13"
-    val scalatagsVersion = "0.6.7"
+  object Thrift {
+    val version = "18.3.0"
+    val core = "com.twitter" %% "finagle-core" % version
   }
 
   object Metrics {
