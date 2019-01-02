@@ -9,7 +9,9 @@ object FieldTypeImports {
     case UuidType => Seq(Seq("java", "util") :+ FieldTypeAsScala.asScala(config, t))
     case DateType | TimeType | TimestampType | TimestampZonedType => Seq(Seq("java", "time") :+ FieldTypeAsScala.asScala(config, t))
     case JsonType => Seq(Seq("io", "circe") :+ FieldTypeAsScala.asScala(config, t))
-    case TagsType => Seq(CommonImportHelper.get(config, "Tag")._1 :+ CommonImportHelper.get(config, "Tag")._2)
+    case TagsType =>
+      val ret = CommonImportHelper.get(config, "Tag")
+      Seq(ret._1 :+ ret._2)
     case EnumType(key) => Seq(config.getEnum(key, "imports").modelPackage(config) :+ FieldTypeAsScala.asScala(config, t))
     case StructType(key) => Seq(config.getModel(key, "imports").modelPackage(config) :+ FieldTypeAsScala.asScala(config, t))
 

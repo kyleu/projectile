@@ -6,9 +6,10 @@ import com.kyleu.projectile.models.input.{Input, InputSummary}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.JsonSerializers.printJson
+import com.kyleu.projectile.util.tracing.TraceData
 
 object CommandLineOutput extends Logging {
-  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => log.info(s))
+  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => log.info(s)(TraceData.noop))
 
   def logsFor(r: ProjectileResponse): Seq[String] = r match {
     case OK => Seq("Success: OK")

@@ -17,11 +17,10 @@ object Server {
   private[this] val dependencies = {
     import Dependencies._
     Serialization.all ++ Seq(
-      Akka.actor, Akka.logging, Akka.protobuf, Akka.stream, Akka.visualMailbox,
       Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
       GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
       WebJars.jquery, WebJars.fontAwesome, WebJars.materialize,
-      Utils.scalaGuice, Utils.clistMacros, Akka.testkit, Play.test
+      Utils.scalaGuice, Utils.clistMacros
     )
   }
 

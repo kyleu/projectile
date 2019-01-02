@@ -4,6 +4,7 @@ import java.sql.Types._
 
 import com.kyleu.projectile.models.export.typ.FieldType._
 import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.tracing.TraceData
 
 object QueryTranslations extends Logging {
   def forType(i: Int, n: String, colSize: Option[Int] = None, enums: Seq[com.kyleu.projectile.models.database.schema.EnumType]) = i match {
@@ -42,11 +43,11 @@ object QueryTranslations extends Logging {
     }
 
     case JAVA_OBJECT =>
-      log.warn(s"Encountered object type [$i:$n].")
+      log.warn(s"Encountered object type [$i:$n].")(TraceData.noop)
       StringType
 
     case _ =>
-      log.warn(s"Encountered unknown column type [$i].")
+      log.warn(s"Encountered unknown column type [$i].")(TraceData.noop)
       StringType
   }
 
@@ -69,7 +70,7 @@ object QueryTranslations extends Logging {
     case "varbit" => StringType
     case x if x.startsWith("gbtreekey") => StringType
     case x =>
-      log.warn(s"Encountered unknown field type [$x]. ")
+      log.warn(s"Encountered unknown field type [$x]. ")(TraceData.noop)
       StringType
   }
 }

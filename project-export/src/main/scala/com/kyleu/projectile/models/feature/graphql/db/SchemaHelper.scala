@@ -25,7 +25,7 @@ object SchemaHelper {
     val hasId = s"HasId[${model.className}, ${model.pkType(config)}]"
     file.add(s"implicit val ${model.propertyName}PrimaryKeyId: $hasId = $hasId($method)")
     file.add(s"private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[${model.pkType(config)}]) = {", 1)
-    file.add(s"c.${model.injectedService}.getByPrimaryKeySeq(c.creds, idSeq)(c.trace)")
+    file.add(s"c.${model.injectedService(config)}.getByPrimaryKeySeq(c.creds, idSeq)(c.trace)")
     file.add("}", -1)
     file.addImport(Seq("sangria", "execution", "deferred"), "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
@@ -53,7 +53,7 @@ object SchemaHelper {
     file.add(s"""val ${model.propertyName}${field.className}SeqArg = Argument("${field.propertyName}s", $seqGraphQlArgType)""")
   }
 
-  def addSearchFields(model: ExportModel, file: ScalaFile) = model.extraFields.foreach { field =>
+  def addSearchFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.extraFields.foreach { field =>
     val comma = if (model.extraFields.lastOption.contains(field)) { "" } else { "," }
     val listType = s"ListType(${model.propertyName}Type)"
     val arg = s"${model.propertyName}${field.className}Arg"
@@ -78,17 +78,17 @@ object SchemaHelper {
     if (field.unique) {
       val optType = s"OptionType(${model.propertyName}Type)"
       file.add(s"""unitField(name = "${model.propertyName}By${field.className}", desc = None, t = $optType, f = (c, td) => {""", 1)
-      file.add(s"""c.ctx.${model.injectedService}.getBy${field.className}(c.ctx.creds, $argPull)(td).map(_.headOption)""")
+      file.add(s"""c.ctx.${model.injectedService(config)}.getBy${field.className}(c.ctx.creds, $argPull)(td).map(_.headOption)""")
       file.add(s"""}, $arg),""", -1)
       file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
-      file.add(s"""c.ctx.${model.injectedService}.getBy${field.className}Seq(c.ctx.creds, $seqArg)(td)""")
+      file.add(s"""c.ctx.${model.injectedService(config)}.getBy${field.className}Seq(c.ctx.creds, $seqArg)(td)""")
       file.add(s"""}, $seqArgName)$comma""", -1)
     } else {
       file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}", desc = None, t = $listType, f = (c, td) => {""", 1)
-      file.add(s"""c.ctx.${model.injectedService}.getBy${field.className}(c.ctx.creds, $argPull)(td)""")
+      file.add(s"""c.ctx.${model.injectedService(config)}.getBy${field.className}(c.ctx.creds, $argPull)(td)""")
       file.add(s"""}, $arg),""", -1)
       file.add(s"""unitField(name = "${model.propertyPlural}By${field.className}Seq", desc = None, t = $listType, f = (c, td) => {""", 1)
-      file.add(s"""c.ctx.${model.injectedService}.getBy${field.className}Seq(c.ctx.creds, $seqArg)(td)""")
+      file.add(s"""c.ctx.${model.injectedService(config)}.getBy${field.className}Seq(c.ctx.creds, $seqArg)(td)""")
       file.add(s"""}, $seqArgName)$comma""", -1)
     }
   }

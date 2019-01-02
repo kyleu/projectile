@@ -14,7 +14,6 @@ object SchemaFile {
 
     file.addImport(model.modelPackage(config), model.className)
     file.addImport(model.modelPackage(config), model.className + "Result")
-    file.addImport(model.servicePackage(config), model.className + "Service")
 
     model.fields.foreach { f =>
       f.t match {
@@ -25,7 +24,7 @@ object SchemaFile {
       }
     }
 
-    if (model.pkColumns.nonEmpty && (!model.pkg.contains("note"))) {
+    if (model.pkColumns.nonEmpty) {
       config.addCommonImport(file, "NoteSchema")
     }
     SchemaHelper.addImports(config, file)
@@ -36,7 +35,7 @@ object SchemaFile {
     SchemaHelper.addSearchArguments(config, model, file)
     SchemaForeignKey.writeSchema(config, model, file)
     SchemaObjectType.addObjectType(config, model, file)
-    addQueryFields(model, file)
+    addQueryFields(config, model, file)
     SchemaMutationHelper.addMutationFields(config, model, file)
     file.add()
     file.add(s"private[this] def toResult(r: GraphQLSchemaHelper.SearchResult[${model.className}]) = {", 1)
@@ -46,13 +45,13 @@ object SchemaFile {
     file
   }
 
-  private[this] def addQueryFields(model: ExportModel, file: ScalaFile) = {
+  private[this] def addQueryFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     file.add("val queryFields = fields(", 1)
 
     if (model.pkFields.nonEmpty) {
       file.add(s"""unitField(name = "${model.propertyName}", desc = None, t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
       val args = model.pkFields.map(pkField => pkField -> s"${model.propertyName}${pkField.className}Arg")
-      file.add(s"""c.ctx.${model.injectedService}.getByPrimaryKey(c.ctx.creds, ${
+      file.add(s"""c.ctx.${model.injectedService(config)}.getByPrimaryKey(c.ctx.creds, ${
         args.map {
           case a if a._1.required => s"c.arg(${a._2})"
           case a => s"""c.arg(${a._2}).getOrElse(throw new IllegalStateException("No [${a._1.propertyName}] provided"))"""
@@ -65,16 +64,16 @@ object SchemaFile {
       case pkField :: Nil =>
         file.add(s"""unitField(name = "${model.propertyName}Seq", desc = None, t = ListType(${model.propertyName}Type), f = (c, td) => {""", 1)
         val arg = s"${model.propertyName}${pkField.className}SeqArg"
-        file.add(s"""c.ctx.${model.injectedService}.getByPrimaryKeySeq(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"""c.ctx.${model.injectedService(config)}.getByPrimaryKeySeq(c.ctx.creds, c.arg($arg))(td)""")
         file.add(s"}, $arg),", -1)
       case _ => // noop
     }
 
     file.add(s"""unitField(name = "${model.propertyName}Search", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
-    file.add(s"""runSearch(c.ctx.${model.injectedService}, c, td).map(toResult)""")
+    file.add(s"""runSearch(c.ctx.${model.injectedService(config)}, c, td).map(toResult)""")
     file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (model.extraFields.nonEmpty) { "," } else { "" }}", -1)
 
-    SchemaHelper.addSearchFields(model, file)
+    SchemaHelper.addSearchFields(config, model, file)
 
     file.add(")", -1)
   }

@@ -11,7 +11,7 @@ object InjectAuditLookup extends FeatureLogic.Inject(path = OutputPath.ServerSou
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val newLines = config.models.filter(_.features(ModelFeature.Service)).filterNot(_.propertyName == "audit").filter(_.pkFields.nonEmpty).map { model =>
-      val svc = model.injectedService.replaceAllLiterally("services.", "registry.")
+      val svc = model.injectedService(config)
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
         case FieldType.EnumType(key) =>
           val e = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum."))

@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.database.query
 import java.sql.{Connection, PreparedStatement, Types}
 
 import com.kyleu.projectile.models.database.query.Query.RawQuery
+import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.util.{Logging, NullUtils}
 
 import scala.annotation.tailrec
@@ -25,7 +26,7 @@ trait Queryable extends Logging {
   }
 
   def apply[A](connection: Connection, query: RawQuery[A]): A = {
-    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
+    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")(TraceData.noop)
     val stmt = connection.prepareStatement(query.sql)
     try {
       prepare(stmt, query.values)

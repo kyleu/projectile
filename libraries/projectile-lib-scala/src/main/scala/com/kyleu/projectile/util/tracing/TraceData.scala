@@ -15,4 +15,7 @@ class TraceData protected () {
   def annotate(v: String): Unit = {}
 
   def logClass(cls: Class[_]): Unit = {}
+
+  def traceId: String = "NOOP"
+  def spanId: String = "NOOP"
 }

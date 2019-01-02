@@ -94,6 +94,7 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
 
   override def close() = {
     ds.foreach(_.close())
+    ds = None
     true
   }
 }

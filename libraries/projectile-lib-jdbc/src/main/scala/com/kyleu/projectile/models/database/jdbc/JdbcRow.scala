@@ -45,6 +45,10 @@ class JdbcRow(rs: ResultSet) extends Row {
   def asArray[T: reflect.ClassTag](index: Int): Option[Array[T]] = extractArray[T](rs.getArray(index + 1))
   def asArray[T: reflect.ClassTag](name: String): Option[Array[T]] = extractArray[T](rs.getArray(name))
 
+  override def toSeq = {
+    (0 until rs.getMetaData.getColumnCount).map(i => Option(rs.getObject(i + 1)))
+  }
+
   @SuppressWarnings(Array("AsInstanceOf"))
   private[this] def extractOpt[T](x: AnyRef) = x match {
     case _ if rs.wasNull => None

@@ -9,11 +9,11 @@ object ThriftTwirlServiceFile {
   def export(config: ExportConfiguration, service: ExportService) = {
     val file = TwirlFile(config.viewPackage ++ Seq("admin", "thrift"), service.propertyName)
 
-    val td = CommonImportHelper.get(config, "TraceData")
-    val su = CommonImportHelper.get(config, "SystemUser")
+    val td = CommonImportHelper.getString(config, "TraceData")
+    val su = CommonImportHelper.getString(config, "SystemUser")
 
-    file.add(s"@(user: ${(su._1 :+ su._2).mkString(".")}, debug: Boolean = false)(")
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: ${(td._1 :+ td._2).mkString(".")}")
+    file.add(s"@(user: $su, debug: Boolean = false)(")
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     file.add(s""")@${config.viewPackage.mkString(".")}.html.admin.layout.page(user, "thrift", "${service.className}") {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)

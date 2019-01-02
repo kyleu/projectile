@@ -8,7 +8,6 @@ object ControllerReferences {
   def write(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val references = model.transformedReferencesDistinct(config)
     if (references.nonEmpty) {
-      config.addCommonImport(file, "Credentials")
       config.addCommonImport(file, "RelationCount")
 
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
@@ -17,10 +16,9 @@ object ControllerReferences {
 
       file.add()
       file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", admin = true) { implicit request => implicit td =>""", 1)
-      file.add(s"val creds = Credentials.fromRequest(request)")
 
       refServices.foreach { r =>
-        file.add(s"val ${r._2.propertyName}By${r._3.className}F = ${r._2.propertyName}S.countBy${r._3.className}(creds, $pkRefs)")
+        file.add(s"val ${r._2.propertyName}By${r._3.className}F = ${r._2.propertyName}S.countBy${r._3.className}(request, $pkRefs)")
       }
       val forArgs = refServices.map(r => s"${r._2.propertyName}C <- ${r._2.propertyName}By${r._3.className}F").mkString("; ")
       file.add(s"for ($forArgs) yield {", 1)

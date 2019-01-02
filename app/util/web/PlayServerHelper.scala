@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.command.ProjectileResponse.OK
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.tracing.TraceData
 import play.api._
 import play.core.server._
 
@@ -34,11 +35,11 @@ object PlayServerHelper extends Logging with ServerHelper {
 
   private[this] def setSvc(svc: ProjectileService) = {
     if (!svc.cfg.available) {
-      log.info(s"Initializing [.projectile] config directory for [${svc.cfg.path}]")
+      log.info(s"Initializing [.projectile] config directory for [${svc.cfg.path}]")(TraceData.noop)
       svc.cfg.init()
     }
     activeService = Some(svc)
-    log.info(s"Set active service to $svc")
+    log.info(s"Set active service to $svc")(TraceData.noop)
   }
 
   private[this] def start(port: Option[Int]) = {

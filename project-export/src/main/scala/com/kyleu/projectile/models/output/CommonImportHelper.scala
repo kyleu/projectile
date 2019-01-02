@@ -34,8 +34,9 @@ object CommonImportHelper {
       case "Implicits" => Seq("scala", "concurrent", "ExecutionContext")
       case "JsonSerializers" => c.utilitiesPackage
       case "ModelServiceHelper" => c.systemPackage :+ "services"
+      case "Note" => c.systemPackage ++ Seq("models", "note")
       case "NoteSchema" => c.systemPackage ++ Seq("models", "graphql", "note")
-      case "ReftreeUtils" => c.utilitiesPackage
+      case "ReftreeUtils" => c.systemPackage ++ Seq("util")
       case "ServiceController" => c.applicationPackage ++ Seq("controllers", "admin")
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")
       case "OrderBy" => c.resultsPackage :+ "orderBy"
@@ -44,7 +45,7 @@ object CommonImportHelper {
       case "ResultFieldHelper" => c.systemPackage ++ Seq("models", "queries")
       case "Row" => c.systemPackage ++ Seq("models", "database")
       case "Tag" => c.tagsPackage
-      case "SystemUser" => c.applicationPackage ++ Seq("models", "user")
+      case "SystemUser" => c.systemPackage ++ Seq("models", "user")
       case "ThriftFutureUtils" => c.utilitiesPackage :+ "thrift"
       case "ThriftService" => c.utilitiesPackage :+ "thrift"
       case "ThriftServiceHelper" => c.utilitiesPackage :+ "thrift"
@@ -53,5 +54,10 @@ object CommonImportHelper {
       case "TracingService" => c.utilitiesPackage :+ "tracing"
       case _ => throw new IllegalStateException(s"No common import available with key [$s]")
     }) -> s
+  }
+
+  def getString(c: ExportConfiguration, s: String) = {
+    val ret = get(c, s)
+    (ret._1 :+ ret._2).mkString(".")
   }
 }

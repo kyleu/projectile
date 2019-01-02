@@ -2,6 +2,7 @@ package util.web
 
 import javax.inject.Inject
 import akka.stream.Materializer
+import com.kyleu.projectile.util.tracing.TraceData
 import play.api.mvc._
 import com.kyleu.projectile.util.{Config, Logging}
 
@@ -21,7 +22,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
           result
         } else {
           val requestTime = System.nanoTime - startNanos
-          log.info(s"${result.header.status} (${requestTime / 1000000000.0}s): ${request.method} ${request.uri}")
+          log.info(s"${result.header.status} (${requestTime / 1000000000.0}s): ${request.method} ${request.uri}")(TraceData.noop)
           result.withHeaders("X-Request-Time-Ms" -> (requestTime * 1000000).toInt.toString)
         }
       },

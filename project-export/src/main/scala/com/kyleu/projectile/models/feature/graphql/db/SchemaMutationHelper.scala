@@ -15,15 +15,15 @@ object SchemaMutationHelper {
     file.add("fields = fields(", 1)
 
     file.add(s"""unitField(name = "create", desc = None, t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
-    file.add(s"""c.ctx.${model.injectedService}.create(c.ctx.creds, c.arg(dataFieldsArg))(td)""")
+    file.add(s"""c.ctx.${model.injectedService(config)}.create(c.ctx.creds, c.arg(dataFieldsArg))(td)""")
     file.add("}, dataFieldsArg),", -1)
 
     file.add(s"""unitField(name = "update", desc = None, t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
-    file.add(s"""c.ctx.${model.injectedService}.update(c.ctx.creds, $argProps, c.arg(dataFieldsArg))(td).map(_._1)""")
+    file.add(s"""c.ctx.${model.injectedService(config)}.update(c.ctx.creds, $argProps, c.arg(dataFieldsArg))(td).map(_._1)""")
     file.add(s"}, ${pkArgs.mkString(", ")}, dataFieldsArg),", -1)
 
     file.add(s"""unitField(name = "remove", desc = None, t = ${model.propertyName}Type, f = (c, td) => {""", 1)
-    file.add(s"""c.ctx.${model.injectedService}.remove(c.ctx.creds, $argProps)(td)""")
+    file.add(s"""c.ctx.${model.injectedService(config)}.remove(c.ctx.creds, $argProps)(td)""")
     file.add(s"}, ${pkArgs.mkString(", ")})", -1)
 
     file.add(")", -1)

@@ -8,22 +8,8 @@ object Dependencies {
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.6.10"
+    val json = "com.typesafe.play" %% "play-json" % "2.6.13"
     val test = "com.typesafe.play" %% "play-test" % version % "test"
-  }
-
-  object Akka {
-    private[this] val version = "2.5.17"
-    val actor = "com.typesafe.akka" %% "akka-actor" % version
-    val remote = "com.typesafe.akka" %% "akka-remote" % version
-    val logging = "com.typesafe.akka" %% "akka-slf4j" % version
-    val cluster = "com.typesafe.akka" %% "akka-cluster" % version
-    val clusterMetrics = "com.typesafe.akka" %% "akka-cluster-metrics" % version
-    val clusterTools = "com.typesafe.akka" %% "akka-cluster-tools" % version
-    val protobuf = "com.typesafe.akka" %% "akka-protobuf" % version
-    val stream = "com.typesafe.akka" %% "akka-stream" % version
-    val visualMailbox = "de.aktey.akka.visualmailbox" %% "collector" % "1.1.0"
-    val testkit = "com.typesafe.akka" %% "akka-testkit" % version % "test"
   }
 
   object Database {
@@ -32,7 +18,7 @@ object Dependencies {
 
     object Slick {
       val version = "3.2.3"
-      val pgVersion = "0.16.3"
+      val pgVersion = "0.17.0"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
@@ -66,9 +52,34 @@ object Dependencies {
   }
 
   object Serialization {
-    private[this] val version = "0.10.1"
+    private[this] val version = "0.11.0"
     private[this] val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
     val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson28" % "0.10.0")
+  }
+
+  object Metrics {
+    val version = "1.1.1"
+    val micrometerCore = "io.micrometer" % "micrometer-core" % version
+    val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
+    val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
+  }
+
+  object Tracing {
+    val version = "0.32.0"
+    val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
+    val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
+    val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.17.0"
+  }
+
+  object Authentication {
+    private[this] val version = "5.0.6"
+    val silhouette = "com.mohiva" %% "play-silhouette" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
+    val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
+    val persistence = "com.mohiva" %% "play-silhouette-persistence" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
+    val crypto = "com.mohiva" %% "play-silhouette-crypto-jca" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
+
+    val all = Seq(silhouette, hasher, persistence, crypto)
   }
 
   object WebJars {
@@ -80,23 +91,24 @@ object Dependencies {
   object Utils {
     val scapegoatVersion = "1.3.8"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.6.0"
-    val chimney = "io.scalaland" %% "chimney" % "0.2.1"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
+    val chimney = "io.scalaland" %% "chimney" % "0.3.0"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
-    val commonsCodec = "commons-codec" % "commons-codec" % "1.10"
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.11"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % "1.5.18"
-    val guava = "com.google.guava" % "guava" % "27.0-jre"
-    val guice = "com.google.inject" % "guice" % "4.2.0"
+    val guava = "com.google.guava" % "guava" % "27.0.1-jre"
+    val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.1"
+    val reftree = "org.stanch" %% "reftree" % "1.2.0"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.25"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
-    val typesafeConfig = "com.typesafe" % "config" % "1.3.2"
+    val typesafeConfig = "com.typesafe" % "config" % "1.3.3"
   }
 
   object Testing {

@@ -4,6 +4,7 @@ import java.sql.{Connection, DatabaseMetaData}
 
 import com.kyleu.projectile.models.database.schema.{EnumType, Table}
 import com.kyleu.projectile.services.database.query.JdbcRow
+import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.util.{Logging, NullUtils}
 
 import scala.util.control.NonFatal
@@ -18,12 +19,12 @@ object MetadataTables extends Logging {
     Nil
   } else {
     val startMs = System.currentTimeMillis
-    log.info(s"Loading [${tables.size}] tables...")
+    log.info(s"Loading [${tables.size}] tables...")(TraceData.noop)
     val ret = tables.zipWithIndex.map { table =>
-      if (table._2 > 0 && table._2 % 10 == 0) { log.info(s"Processed [${table._2}/${tables.size}] tables...") }
+      if (table._2 > 0 && table._2 % 10 == 0) { log.info(s"Processed [${table._2}/${tables.size}] tables...")(TraceData.noop) }
       getTableDetails(conn, metadata, table._1, enums)
     }
-    log.info(s"[${tables.size}] tables loaded in [${System.currentTimeMillis - startMs}ms]")
+    log.info(s"[${tables.size}] tables loaded in [${System.currentTimeMillis - startMs}ms]")(TraceData.noop)
     ret
   }
 
@@ -38,7 +39,7 @@ object MetadataTables extends Logging {
     )
   } catch {
     case NonFatal(x) =>
-      log.warn(s"Unable to get table details for [${table.name}]", x)
+      log.warn(s"Unable to get table details for [${table.name}]", x)(TraceData.noop)
       table
   }
 

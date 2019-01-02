@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlViewFile {
@@ -12,7 +13,9 @@ object TwirlViewFile {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "View")
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
-    file.add(s"@(user: $modelPath.user.SystemUser, model: ${model.fullClassPath(config)}, notes: Seq[$modelPath.note.NoteRow]$audits, debug: Boolean)(")
+    val su = CommonImportHelper.getString(config, "SystemUser")
+    val note = CommonImportHelper.getString(config, "Note")
+    file.add(s"@(user: $su, model: ${model.fullClassPath(config)}, notes: Seq[$note]$audits, debug: Boolean)(")
     val td = s"${(config.utilitiesPackage :+ "tracing").mkString(".")}.TraceData"
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")

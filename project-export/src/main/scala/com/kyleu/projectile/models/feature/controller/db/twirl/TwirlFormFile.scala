@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db.twirl
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlFormFile {
@@ -11,7 +12,7 @@ object TwirlFormFile {
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.viewPackage :+ "html").mkString(".")
 
-    val su = s"$modelPkg.user.SystemUser"
+    val su = CommonImportHelper.getString(config, "SystemUser")
     file.add(s"@(user: $su, model: ${model.fullClassPath(config)}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")

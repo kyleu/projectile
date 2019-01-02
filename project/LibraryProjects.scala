@@ -10,6 +10,16 @@ object LibraryProjects {
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(Shared.projectId, Shared.projectName, Shared.projectPort).taskValue
   )
 
+  lazy val `projectile-lib-tracing` = (project in file("libraries/projectile-lib-tracing")).settings(Shared.commonSettings: _*).settings(
+    name := "projectile-lib-tracing",
+    description := "Common OpenTracing classes used by code generated from Projectile",
+    libraryDependencies ++= Seq(
+      Metrics.micrometerCore, Metrics.micrometerStatsd, Metrics.micrometerPrometheus,
+      Tracing.datadogTracing, Tracing.jaegerCore, Tracing.jaegerThrift, Tracing.jaegerMetrics,
+      Utils.javaxInject, Utils.typesafeConfig
+    )
+  ).dependsOn(`projectile-lib-scala`)
+
   lazy val `projectile-lib-jdbc` = (project in file("libraries/projectile-lib-jdbc")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-jdbc",
     description := "Common database classes used by code generated from Projectile",
@@ -32,22 +42,29 @@ object LibraryProjects {
     name := "projectile-lib-service",
     description := "Common service classes used by code generated from Projectile",
     libraryDependencies ++= Seq(Utils.csv, Utils.javaxInject, Utils.scalaGuice)
-  ).dependsOn(`projectile-lib-jdbc`)
+  ).dependsOn(`projectile-lib-jdbc`, `projectile-lib-tracing`)
 
   lazy val `projectile-lib-graphql` = (project in file("libraries/projectile-lib-graphql")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-graphql",
     description := "Common GraphQL classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria, Utils.guice)
+    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.playJson, GraphQL.sangria, Utils.guice)
   ).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Shared.commonSettings: _*).settings(
     name := "projectile-lib-play",
     description := "Common Play Framework classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Play.lib)
-  ).dependsOn(`projectile-lib-service`)
+    resolvers += Resolver.bintrayRepo("stanch", "maven"),
+    libraryDependencies ++= Seq(Play.lib, Utils.reftree, play.sbt.PlayImport.ws)
+  ).dependsOn(`projectile-lib-service`, `projectile-lib-graphql`)
+
+  lazy val `projectile-lib-auth` = (project in file("libraries/projectile-lib-auth")).settings(Shared.commonSettings: _*).settings(
+    name := "projectile-lib-auth",
+    description := "Common Silhouette authentication classes used by code generated from Projectile",
+    libraryDependencies ++= Authentication.all
+  ).dependsOn(`projectile-lib-play`)
 
   lazy val all: Seq[ProjectReference] = Seq(
-    `projectile-lib-scala`, `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
-    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-play`
+    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
+    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-play`, `projectile-lib-auth`
   )
 }

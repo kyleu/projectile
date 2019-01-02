@@ -3,13 +3,14 @@ package com.kyleu.projectile.services.config
 import better.files.File
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.tracing.TraceData
 
 object ConfigValidator extends Logging {
   def validate(svc: ConfigService, verbose: Boolean) = {
     val startMs = System.currentTimeMillis
 
     if (verbose) {
-      log.info("Checking configuration and verifying files...")
+      log.info("Checking configuration and verifying files...")(TraceData.noop)
     }
 
     checkDir(svc.workingDirectory, "Working").orElse(checkDir(svc.configDirectory, "Config")) match {
@@ -32,15 +33,15 @@ object ConfigValidator extends Logging {
   }
 
   private[this] def error(err: String) = {
-    log.error(err)
+    log.error(err)(TraceData.noop)
     ProjectileResponse.Error(err)
   }
 
   private[this] def alrightyThen(startMs: Long, verbose: Boolean) = {
     if (verbose) {
-      log.info(s"Completed checks in [${System.currentTimeMillis - startMs}ms]")
+      log.info(s"Completed checks in [${System.currentTimeMillis - startMs}ms]")(TraceData.noop)
     }
-    log.info("You're all good!")
+    log.info("You're all good!")(TraceData.noop)
     ProjectileResponse.OK
   }
 }

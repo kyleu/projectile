@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db.twirl
 
 import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlRelationFiles {
@@ -16,7 +17,7 @@ object TwirlRelationFiles {
     val viewPkg = (config.viewPackage :+ "html").mkString(".")
     val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
 
-    val su = s"$modelPkg.user.SystemUser"
+    val su = CommonImportHelper.getString(config, "SystemUser")
     listFile.add(s"@(user: $su, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
