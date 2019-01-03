@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.graphql.parse
 
 import com.kyleu.projectile.models.export.{ExportEnum, ExportField, ExportModel}
 import com.kyleu.projectile.models.input.InputType
+import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import sangria.ast.{Document, VariableDefinition}
 import sangria.schema.{EnumType, InputObjectType, ObjectType, Schema}
@@ -28,7 +29,7 @@ object GraphQLDocumentHelper {
       className = cn,
       title = title,
       description = None,
-      plural = title + "s",
+      plural = ExportHelper.toDefaultPlural(title),
       arguments = arguments.toList,
       fields = fields.toList,
       source = source

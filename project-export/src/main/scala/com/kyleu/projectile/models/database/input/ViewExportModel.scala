@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.export.config.ExportConfigurationDefault
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel}
 import com.kyleu.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import com.kyleu.projectile.models.input.InputType
+import com.kyleu.projectile.models.output.ExportHelper
 
 object ViewExportModel {
   def loadViewModel(v: View, enums: Seq[ExportEnum]) = {
@@ -19,7 +20,7 @@ object ViewExportModel {
       className = cn,
       title = title,
       description = v.description,
-      plural = title + "s",
+      plural = ExportHelper.toDefaultPlural(title),
       arguments = Nil,
       fields = loadViewFields(v, enums),
       pkColumns = Nil,

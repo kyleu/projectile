@@ -8,7 +8,7 @@ object ThriftRoutesFile {
 
   def export(service: ExportService) = {
     val file = RoutesFile("thrift" + service.className)
-    val controllerRef = s"${service.pkg.mkString(".")}.com.kyleu.projectile.web.controllers.${service.propertyName}.${service.className}Controller"
+    val controllerRef = s"${service.pkg.mkString(".")}.controllers.${service.propertyName}.${service.className}Controller"
 
     file.add(s"# ${service.className} Routes")
     file.add(s"GET  /${ws("")} $controllerRef.list()")

@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.export.config.{ExportConfigurationDefault, Ex
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel}
 import com.kyleu.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
 import com.kyleu.projectile.models.input.InputType
+import com.kyleu.projectile.models.output.ExportHelper
 
 object TableExportModel {
   def loadTableModel(t: Table, tables: Seq[Table], enums: Seq[ExportEnum]) = {
@@ -19,7 +20,7 @@ object TableExportModel {
       className = cn,
       title = title,
       description = t.description,
-      plural = title + "s",
+      plural = ExportHelper.toDefaultPlural(title),
       arguments = Nil,
       fields = loadTableFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(t),

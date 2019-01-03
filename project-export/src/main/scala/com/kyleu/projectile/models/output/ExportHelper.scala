@@ -21,6 +21,11 @@ object ExportHelper {
   }
   def toDefaultTitle(s: String) = toClassName(s).flatMap(c => if (c.isUpper) { Seq(' ', c) } else { Seq(c) }).trim
 
+  def toDefaultPlural(str: String) = str match {
+    case x if x.endsWith("s") => x
+    case _ => str + "s"
+  }
+
   val getAllArgs = "orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
 }

@@ -22,7 +22,7 @@ object ThriftExportModel {
       className = cn,
       title = title,
       description = None,
-      plural = title + "s",
+      plural = ExportHelper.toDefaultPlural(title),
       arguments = Nil,
       fields = fields
     )

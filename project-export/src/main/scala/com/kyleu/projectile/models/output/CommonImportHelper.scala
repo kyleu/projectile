@@ -14,7 +14,7 @@ object CommonImportHelper {
       case "BaseQueries" => c.systemPackage ++ Seq("models", "queries")
       case "BaseResult" => c.resultsPackage
       case "CommonSchema" => c.systemPackage :+ "graphql"
-      case "ControllerUtils" => c.utilitiesPackage :+ "web"
+      case "ControllerUtils" => c.systemPackage ++ Seq("web", "util")
       case "Credentials" => c.systemPackage ++ Seq("services")
       case "CsvUtils" => c.utilitiesPackage
       case "DatabaseField" => c.systemPackage ++ Seq("models", "database")
@@ -36,7 +36,7 @@ object CommonImportHelper {
       case "ModelServiceHelper" => c.systemPackage :+ "services"
       case "Note" => c.systemPackage ++ Seq("models", "note")
       case "NoteSchema" => c.systemPackage ++ Seq("models", "graphql", "note")
-      case "ReftreeUtils" => c.systemPackage ++ Seq("util")
+      case "ReftreeUtils" => c.systemPackage ++ Seq("web", "util")
       case "ServiceController" => c.applicationPackage ++ Seq("controllers", "admin")
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")
       case "OrderBy" => c.resultsPackage :+ "orderBy"
