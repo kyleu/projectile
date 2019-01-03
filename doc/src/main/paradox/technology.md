@@ -4,8 +4,6 @@ A GraphQL schema is provided, accessible in the administration section.
 
 Projectile relies on a whole lot of tremendous open source projects. Here's a few of them.
 
-* [Boilerplay](https://kyleu.com/boilerplay)
-* [Database Flow](https://databaseflow.com)
 * [Scala](http://www.scala-lang.org)
 * [Play Framework](https://www.playframework.com)
 * [Akka](http://akka.io)

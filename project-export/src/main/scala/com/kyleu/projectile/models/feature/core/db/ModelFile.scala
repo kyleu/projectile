@@ -57,13 +57,9 @@ object ModelFile {
       }
       file.add(")", -1)
       file.add()
-      val title = if (model.summaryFields.isEmpty) {
-        model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
-      } else {
-        model.summaryFields.map(f => "$" + f.propertyName + "").mkString(" / ") + " (" + model.pkFields.map(f => "$" + f.propertyName + "").mkString(", ") + ")"
-      }
-      val pk = model.pkFields.map(f => f.propertyName + ".toString").mkString(" + \"/\" + ")
-      file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = $pk, title = s"$title")""")
+      val pk = if (model.pkFields.isEmpty) { "\"no-pk\"" } else { model.pkFields.map(f => f.propertyName + ".toString").mkString(" + \"/\" + ") }
+
+      file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = $pk, title = s"${getTitle(model)}")""")
 
       file.add("}", -1)
     } else {
@@ -73,6 +69,14 @@ object ModelFile {
       }
     }
     file
+  }
+
+  private[this] def getTitle(model: ExportModel) = {
+    val fields = if (model.summaryFields.isEmpty) { model.pkFields } else { model.summaryFields }
+    fields.map {
+      case f if f.required => s"""${f.propertyName}: $$${f.propertyName}"""
+      case f => s"""${f.propertyName}: $${${f.propertyName}.map(_.toString).getOrElse("-empty-")}"""
+    }.mkString(", ")
   }
 
   private[this] def process(file: ScalaFile, field: ExportField, last: Boolean) = {
