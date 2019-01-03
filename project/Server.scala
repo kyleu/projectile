@@ -74,5 +74,5 @@ object Server {
     ProjectExport.`projectile-export`
   ).dependsOn(
     LibraryProjects.`projectile-lib-auth`
-  ).aggregate(LibraryProjects.all: _*)
+  ).aggregate(LibraryProjects.allReferences: _*)
 }

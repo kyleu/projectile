@@ -74,9 +74,11 @@ object LibraryProjects {
     libraryDependencies ++= Authentication.all ++ WebJars.all
   ).dependsOn(`projectile-lib-play`)
 
-  lazy val all: Seq[ProjectReference] = Seq(
+  lazy val all = Seq(
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`, `projectile-lib-play`, `projectile-lib-auth`
   )
+
+  lazy val allReferences = all.map(_.project)
 }

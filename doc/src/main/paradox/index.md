@@ -3,6 +3,7 @@
 @@@ index
 
 * [Getting Started](gettingStarted.md)
+* [Code Generation](codegen/index.md)
 * [Libraries](libraries/index.md)
 * [Technology](technology.md)
 * [Troubleshooting](troubleshooting.md)

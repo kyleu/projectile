@@ -7,3 +7,5 @@
   artifact="projectile-lib-slick_2.12"
   version="latest"
 }
+
+[API Documentation](/api/projectile-lib-slick)

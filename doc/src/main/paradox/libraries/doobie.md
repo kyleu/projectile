@@ -7,3 +7,5 @@
   artifact="projectile-lib-doobie_2.12"
   version="latest"
 }
+
+[API Documentation](/api/projectile-lib-doobie)

@@ -7,3 +7,5 @@
   artifact="projectile-lib-tracing_2.12"
   version="latest"
 }
+
+[API Documentation](/api/projectile-lib-tracing)

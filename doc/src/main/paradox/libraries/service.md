@@ -7,3 +7,5 @@
   artifact="projectile-lib-service_2.12"
   version="latest"
 }
+
+[API Documentation](/api/projectile-lib-service)

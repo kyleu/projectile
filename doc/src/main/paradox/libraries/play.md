@@ -7,3 +7,5 @@
   artifact="projectile-lib-play_2.12"
   version="latest"
 }
+
+[API Documentation](/api/projectile-lib-play)
