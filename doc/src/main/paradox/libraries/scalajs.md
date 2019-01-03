@@ -1,4 +1,4 @@
-# Scala.js Library
+# Scala.js
 
 `projectile-lib-scalajs`
 

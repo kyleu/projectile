@@ -1,4 +1,4 @@
-# Slick Library
+# Slick
 
 `projectile-lib-slick`
 

@@ -3,12 +3,17 @@
 @@@ index
 
 * [Getting Started](gettingStarted.md)
+* [Libraries](libraries/index.md)
 * [Technology](technology.md)
 * [Troubleshooting](troubleshooting.md)
 
 @@@
 
-It makes projects.
+https://kyleu.com/projectile
+
+https://github.com/KyleU/projectile
+
+It makes projects. More details soon.
 
 Projectile relies on a whole lot of tremendous open source projects. [Here's a few of them](technology.md).
 

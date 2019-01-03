@@ -1,4 +1,4 @@
-# Play Library
+# Play
 
 `projectile-lib-play`
 

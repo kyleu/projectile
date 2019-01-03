@@ -1,4 +1,4 @@
-# Authentication Library
+# Authentication
 
 `projectile-lib-auth`
 

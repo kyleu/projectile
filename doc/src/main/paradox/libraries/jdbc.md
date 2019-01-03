@@ -1,4 +1,4 @@
-# JDBC Library
+# JDBC
 
 `projectile-lib-jdbc`
 

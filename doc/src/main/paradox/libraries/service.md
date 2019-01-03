@@ -1,4 +1,4 @@
-# Service Library
+# Service
 
 `projectile-lib-service`
 

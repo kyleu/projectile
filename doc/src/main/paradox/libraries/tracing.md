@@ -1,4 +1,4 @@
-# Tracing Library
+# Tracing
 
 `projectile-lib-tracing`
 

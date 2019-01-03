@@ -1,4 +1,4 @@
-# Doobie Library
+# Doobie
 
 `projectile-lib-doobie`
 

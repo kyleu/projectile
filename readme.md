@@ -2,6 +2,8 @@
 
 It makes projects.
 
+https://kyleu.com/projectile
+
 https://github.com/KyleU/projectile
 
 ## License

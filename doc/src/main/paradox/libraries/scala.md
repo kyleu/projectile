@@ -1,4 +1,4 @@
-# Scala Library
+# Scala
 
 `projectile-lib-scala`
 

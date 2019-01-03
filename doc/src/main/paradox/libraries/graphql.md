@@ -1,4 +1,4 @@
-# GraphQL Library
+# GraphQL
 
 `projectile-lib-graphql`
 

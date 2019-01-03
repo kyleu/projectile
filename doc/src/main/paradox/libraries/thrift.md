@@ -1,4 +1,4 @@
-# Thrift Library
+# Thrift
 
 `projectile-lib-thrift`
 
