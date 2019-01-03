@@ -71,7 +71,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-auth` = (project in file("libraries/projectile-lib-auth")).settings(Shared.commonSettings: _*).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
-    libraryDependencies ++= Authentication.all
+    libraryDependencies ++= Authentication.all ++ WebJars.all
   ).dependsOn(`projectile-lib-play`)
 
   lazy val all: Seq[ProjectReference] = Seq(
