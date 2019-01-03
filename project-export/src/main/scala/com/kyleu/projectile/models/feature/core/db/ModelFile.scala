@@ -62,8 +62,8 @@ object ModelFile {
       } else {
         model.summaryFields.map(f => "$" + f.propertyName + "").mkString(" / ") + " (" + model.pkFields.map(f => "$" + f.propertyName + "").mkString(", ") + ")"
       }
-      val pk = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
-      file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = Seq($pk), title = s"$title")""")
+      val pk = model.pkFields.map(f => f.propertyName + ".toString").mkString(" + \"/\" + ")
+      file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = $pk, title = s"$title")""")
 
       file.add("}", -1)
     } else {

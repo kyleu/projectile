@@ -31,10 +31,13 @@ object TwirlFormFile {
     file.add("<table>", 1)
     file.add("<tbody>", 1)
 
+    var hasAutocomplete = false
+
     model.fields.foreach { field =>
       val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.key)).map { fk =>
         fk -> config.getModel(fk.targetTable, s"foreign key ${fk.name}")
       }
+      autocomplete.foreach(_ => hasAutocomplete = true)
       TwirlFormFields.fieldFor(config, model, field, file, autocomplete)
     }
 
@@ -48,7 +51,9 @@ object TwirlFormFile {
     file.add("}", -1)
 
     file.add(s"@$viewPkg.components.includeScalaJs(debug)")
-    // file.add(s"@$viewPkg.components.includeAutocomplete(debug)")
+    if (hasAutocomplete) {
+      file.add(s"@$viewPkg.components.includeAutocomplete(debug)")
+    }
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
 
     file

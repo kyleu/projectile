@@ -7,8 +7,4 @@ object DataSummary {
   implicit val jsonDecoder: Decoder[DataSummary] = deriveDecoder
 }
 
-case class DataSummary(
-    model: String,
-    pk: Seq[String],
-    title: String
-)
+case class DataSummary(model: String, pk: String, title: String)

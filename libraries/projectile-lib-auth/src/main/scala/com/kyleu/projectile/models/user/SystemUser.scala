@@ -65,8 +65,5 @@ final case class SystemUser(
     DataField("created", Some(created.toString))
   )
 
-  def toSummary = {
-    val title = username + " (" + id + ")"
-    DataSummary(model = "systemUser", pk = Seq(id.toString), title = title)
-  }
+  def toSummary = DataSummary(model = "systemUser", pk = id.toString, title = s"$username: $role")
 }

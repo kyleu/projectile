@@ -40,20 +40,18 @@ object FieldDefault {
 
       val dyn = js.Dynamic.global.$(s"#input-$name", formEl)
 
-      dyn.autocomplete(js.Dynamic.literal(
-        limit = 5,
-        multiple = js.Dynamic.literal(enable = false),
-        dropdown = js.Dynamic.literal(
-          el = s"#dropdown-$name",
-          itemTemplate = startLi + """<a href="javascript:void(0)"><%= item.text %></a>""" + endLi,
-          noItem = s"No matching $model records found."
-        ),
-        getData = (s: String, callback: js.Function2[String, js.Array[js.Object with js.Dynamic], Unit]) => {
-          $.getJSON(url, js.Dynamic.literal(q = s), (data: js.Array[js.Object with js.Dynamic]) => {
-            callback(s, data.map(r => js.Dynamic.literal(id = r.pk.toString, text = r.title)))
-          })
-        }
-      ))
+      val options = js.Dynamic.literal(
+        url = (s: String) => s"$url?q=$s",
+        getValue = "pk",
+        template = js.Dynamic.literal(
+          `type` = "description",
+          fields = js.Dynamic.literal(
+            description = "title"
+          )
+        )
+      )
+
+      dyn.easyAutocomplete(options)
     }
     val originalValue = input.value().toString
     input.keyup((_: JQueryEventObject) => {
