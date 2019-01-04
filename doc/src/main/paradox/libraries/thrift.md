@@ -8,4 +8,4 @@
   version="latest"
 }
 
-[API Documentation](/api/projectile-lib-thrift)
+[API Documentation](../api/projectile-lib-thrift)

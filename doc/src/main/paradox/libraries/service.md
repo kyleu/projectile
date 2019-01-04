@@ -8,4 +8,4 @@
   version="latest"
 }
 
-[API Documentation](/api/projectile-lib-service)
+[API Documentation](../api/projectile-lib-service)

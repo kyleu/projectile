@@ -2,17 +2,17 @@
 
 @@@ index
 
-* [Authentication](auth.md)
-* [Doobie](doobie.md)
-* [GraphQL](graphql.md)
-* [JDBC](jdbc.md)
-* [Play Framework](play.md)
 * [Scala](scala.md)
-* [Scala.js](scalajs.md)
-* [Service](service.md)
-* [Slick](slick.md)
-* [Thrift](thrift.md)
 * [Tracing](tracing.md)
+* [JDBC](jdbc.md)
+* [Slick](slick.md)
+* [Doobie](doobie.md)
+* [Thrift](thrift.md)
+* [GraphQL](graphql.md)
+* [Service](service.md)
+* [Scala.js](scalajs.md)
+* [Play](play.md)
+* [Auth](auth.md)
 
 @@@
 

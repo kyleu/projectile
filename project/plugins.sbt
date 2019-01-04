@@ -42,5 +42,6 @@ addSbtPlugin("com.github.xuwei-k" % "sbt-class-diagram" % "0.2.1") // classDiagr
 
 // Documentation
 addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.4.1")
+addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.5.1")
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2" exclude("com.lightbend.paradox", "sbt-paradox"))
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.2")

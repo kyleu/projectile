@@ -1,4 +1,4 @@
-# Authentication
+# Auth
 
 `projectile-lib-auth`
 
@@ -8,4 +8,4 @@
   version="latest"
 }
 
-[API Documentation](/api/projectile-lib-auth)
+[API Documentation](../api/projectile-lib-auth)

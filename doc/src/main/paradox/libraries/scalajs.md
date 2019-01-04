@@ -8,4 +8,4 @@
   version="latest"
 }
 
-[API Documentation](/api/projectile-lib-scalajs)
+[API Documentation](../api/projectile-lib-scalajs)

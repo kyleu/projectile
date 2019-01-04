@@ -8,4 +8,4 @@
   version="latest"
 }
 
-[API Documentation](/api/projectile-lib-doobie)
+[API Documentation](../api/projectile-lib-doobie)
