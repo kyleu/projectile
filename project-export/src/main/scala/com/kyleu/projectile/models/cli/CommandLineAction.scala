@@ -46,7 +46,7 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
 
   // Inputs
   object InputList extends Command(name = "input", description = "Lists summaries of inputs, or details if key provided") with CommandLineAction {
-    var key = arg[Option[String]]()
+    var key = arg[Option[String]](required = false)
     override def toCommand = ProjectileCommand.Inputs(key)
   }
   object InputAdd extends Command(name = "input-add", description = "Add an input to the system") with CommandLineAction {
@@ -58,7 +58,7 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
 
   // Projects
   object ProjectList extends Command(name = "project", description = "Lists summaries of Projectile projects, or details of key") with CommandLineAction {
-    var key = arg[Option[String]]()
+    var key = arg[Option[String]](required = false)
     override def toCommand = ProjectileCommand.Projects(key)
   }
   object ProjectAdd extends Command(name = "project-add", description = "Adds a project to the system") with CommandLineAction {

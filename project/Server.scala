@@ -24,9 +24,9 @@ object Server {
     )
   }
 
-  private[this] lazy val serverSettings = Shared.commonSettings ++ Seq(
-    name := Shared.projectId,
-    description := Shared.projectName,
+  private[this] lazy val serverSettings = Common.settings ++ Seq(
+    name := Common.projectId,
+    description := Common.projectName,
 
     libraryDependencies ++= dependencies,
 
@@ -35,7 +35,7 @@ object Server {
     RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.web.util.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
-    PlayKeys.playDefaultPort := Shared.projectPort,
+    PlayKeys.playDefaultPort := Common.projectPort,
     PlayKeys.playInteractionMode := PlayUtils.NonBlockingInteractionMode,
 
     // Sbt-Web
@@ -45,12 +45,15 @@ object Server {
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
 
+    // Prevent Scaladoc
+    sources in (Compile,doc) := Seq.empty,
+    
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),
     git.remoteRepo := scmInfo.value.get.connection,
 
     // Fat-Jar Assembly
-    assemblyJarName in assembly := Shared.projectId + ".jar",
+    assemblyJarName in assembly := Common.projectId + ".jar",
     assemblyMergeStrategy in assembly := {
       case "play/reference-overrides.conf" => MergeStrategy.concat
       case x => (assemblyMergeStrategy in assembly).value(x)
@@ -67,7 +70,7 @@ object Server {
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
   lazy val `projectile-server` = withProjects(
-    Project(id = Shared.projectId, base = file(".")).enablePlugins(
+    Project(id = Common.projectId, base = file(".")).enablePlugins(
       SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin
     ).settings(serverSettings: _*), 
     SbtExportPlugin.`projectile-sbt`, 

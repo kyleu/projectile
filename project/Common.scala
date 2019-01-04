@@ -3,13 +3,13 @@ import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
 
-object Shared {
+object Common {
   val projectId = "projectile"
   val projectName = "Projectile"
   val projectPort = 20000
 
   object Versions {
-    val app = "0.9.0-SNAPSHOT"
+    val app = "0.9.0"
     val scala = "2.12.8"
   }
 
@@ -23,9 +23,9 @@ object Shared {
     "-Ystatistics:typer" +: Seq("no-profiledb", "show-profiles", "generate-macro-flamegraph").map(s => s"-P:scalac-profiling:$s")
   } else { Nil })
 
-  lazy val commonSettings = Seq(
-    version := Shared.Versions.app,
-    scalaVersion := Shared.Versions.scala,
+  lazy val settings = Seq(
+    version := Common.Versions.app,
+    scalaVersion := Common.Versions.scala,
     organization := "com.kyleu",
 
     licenses := Seq("MIT" -> url("http://www.opensource.org/licenses/mit-license.php")),

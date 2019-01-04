@@ -15,7 +15,7 @@ object Documentation {
   )
 
   lazy val doc = Project(id = "doc", base = file("./doc")).enablePlugins(
-    ParadoxPlugin, ParadoxSitePlugin, SiteScaladocPlugin, GhpagesPlugin).settings(Shared.commonSettings: _*).settings(
+    ParadoxPlugin, ParadoxSitePlugin, SiteScaladocPlugin, GhpagesPlugin).settings(Common.settings: _*).settings(
     paradoxTheme := Some(builtinParadoxTheme("generic")),
     sourceDirectory in Paradox := sourceDirectory.value / "main" / "paradox",
     git.remoteRepo := "git@github.com:KyleU/projectile.git"

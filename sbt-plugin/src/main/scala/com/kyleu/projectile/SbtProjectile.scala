@@ -27,7 +27,10 @@ object SbtProjectile extends AutoPlugin {
         val action = ProjectileCLI.parse(args)
         val result = action.map(act => svc.process(act.toCommand, act.verbose))
         result match {
-          case Some(r) => (s"Code generation completed in [${System.currentTimeMillis - startMs}ms]" +: CommandLineOutput.logsFor(r)).foreach(log)
+          case Some(r) =>
+            val rc = r.getClass.getSimpleName.stripSuffix("$")
+            val msg = s"Projectile execution with args [${args.mkString(" ")}] completed in [${System.currentTimeMillis - startMs}ms]"
+            (msg +: CommandLineOutput.logsFor(r)).foreach(log)
           case None => log("No arguments")
         }
       } catch {
