@@ -2,9 +2,6 @@ import sbt.Keys._
 import sbt._
 import Dependencies._
 
-import org.scalajs.sbtplugin.ScalaJSPlugin
-import webscalajs.ScalaJSWeb
-
 object LibraryProjects {
   lazy val `projectile-lib-scala` = (project in file("libraries/projectile-lib-scala")).settings(Common.settings: _*).settings(
     description := "Common classes used by code generated from Projectile",
@@ -61,18 +58,18 @@ object LibraryProjects {
       val scalatags = "com.lihaoyi" %%% "scalatags" % "0.6.7"
       Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(jQuery, scalatags, enumeratum, javaTime)
     }
-  ).enablePlugins(ScalaJSPlugin, ScalaJSWeb)
+  ).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
 
   lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Common.settings: _*).settings(
     description := "Common Play Framework classes used by code generated from Projectile",
     resolvers += Resolver.bintrayRepo("stanch", "maven"),
-    libraryDependencies ++= Seq(Play.lib, Utils.reftree, play.sbt.PlayImport.ws)
-  ).dependsOn(`projectile-lib-service`, `projectile-lib-graphql`)
+    libraryDependencies ++= Seq(Utils.reftree, play.sbt.PlayImport.ws)
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`, `projectile-lib-graphql`)
 
   lazy val `projectile-lib-auth` = (project in file("libraries/projectile-lib-auth")).settings(Common.settings: _*).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
     libraryDependencies ++= Authentication.all ++ WebJars.all
-  ).dependsOn(`projectile-lib-play`)
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val all = Seq(
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,

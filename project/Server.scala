@@ -1,6 +1,5 @@
 import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport.{scapegoatIgnoredFiles, scapegoatDisabledInspections}
 import com.typesafe.sbt.GitPlugin.autoImport.git
-import com.typesafe.sbt.digest.Import._
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.less.Import._
@@ -40,14 +39,14 @@ object Server {
 
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
-    pipelineStages ++= Seq(digest, gzip),
+    pipelineStages += gzip,
     includeFilter in (Assets, LessKeys.less) := "*.less",
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
 
     // Prevent Scaladoc
-    sources in (Compile,doc) := Seq.empty,
-    
+    sources in (Compile, doc) := Seq.empty,
+
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),
     git.remoteRepo := scmInfo.value.get.connection,
@@ -72,10 +71,8 @@ object Server {
   lazy val `projectile-server` = withProjects(
     Project(id = Common.projectId, base = file(".")).enablePlugins(
       SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin
-    ).settings(serverSettings: _*), 
-    SbtExportPlugin.`projectile-sbt`, 
+    ).settings(serverSettings: _*),
+    SbtExportPlugin.`projectile-sbt`,
     ProjectExport.`projectile-export`
-  ).dependsOn(
-    LibraryProjects.`projectile-lib-auth`
-  ).aggregate(LibraryProjects.allReferences: _*)
+  ).dependsOn(LibraryProjects.`projectile-lib-auth`).aggregate(LibraryProjects.allReferences: _*)
 }
