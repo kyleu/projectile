@@ -23,20 +23,23 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   def saveSummary() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      description = form("description")
+      description = form("description"),
+      template = ProjectTemplate.withValue(form("template"))
     ))
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
 
   def formFeatures(key: String) = Action.async { implicit request =>
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formProjectFeatures(projectile, projectile.getProject(key))))
+    val p = projectile.getProject(key)
+    val i = projectile.getInputSummary(p.input)
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formProjectFeatures(projectile, i.template, p)))
   }
 
   def saveFeatures() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
-    val project = projectile.saveProject(summary.copy(
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ProjectFeature.withValue).toSet
-    ))
+    val features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ProjectFeature.withValue).toSet
+    println("###: " + features)
+    val project = projectile.saveProject(summary.copy(features = features))
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
 

@@ -3,7 +3,6 @@ package com.kyleu.projectile.models.input
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 
 object InputType {
-
   sealed abstract class Enum(
       override val value: String,
       val isDatabase: Boolean = false,

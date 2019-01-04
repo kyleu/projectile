@@ -4,18 +4,16 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formSummary(project.key)">Edit Summary</a></div>
-      <h5><i class="@project.template.icon"></i> @project.key</h5>
-      @project.description
+      <h5><i class="@project.template.icon"></i> @project.description</h5>
+      Built from <a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(project.input)">@project.input</a>
     </div>
     <div class="collection-item">
       <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formFeatures(project.key)">Edit Features</a></div>
       <h6>Features</h6>
       <div>
-      @project.template.features.toSeq.sortBy(_.title).map { feature =>
-        @if(project.features.contains(feature)) {
-          @feature!
-        } else {
-          @feature?
+      @project.availableFeatures(inputType).map { feature =>
+        @defining(if(project.features.contains(feature)) { com.kyleu.projectile.models.template.Icons.selected } else { com.kyleu.projectile.models.template.Icons.empty }) { icon =>
+          <div class="chip" title="@feature.description"><i class="fa @icon"></i> @feature</div>
         }
       }
       </div>

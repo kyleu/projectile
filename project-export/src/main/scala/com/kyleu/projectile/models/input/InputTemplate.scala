@@ -40,4 +40,5 @@ object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[Inpu
   )
 
   override val values = findValues
+  val all = values.toSet
 }

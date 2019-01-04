@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 import io.scalaland.chimney.dsl._
 import com.kyleu.projectile.models.output.{OutputPackage, OutputPath}
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature, ServiceFeature}
+import com.kyleu.projectile.models.input.InputTemplate
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
@@ -35,6 +36,11 @@ case class Project(
 ) extends Ordered[Project] {
   private[this] def notFound(t: String, k: String, candidates: => Seq[String]) = {
     throw new IllegalStateException(s"No $t in project [$key] with key [$k] among candidates [${candidates.mkString(", ")}]")
+  }
+
+  def availableFeatures(inputTemplate: InputTemplate) = ProjectFeature.values.filter {
+    case f if template.features.contains(f) => f.appliesTo(inputTemplate)
+    case _ => false
   }
 
   def getPath(p: OutputPath): String = p match {
