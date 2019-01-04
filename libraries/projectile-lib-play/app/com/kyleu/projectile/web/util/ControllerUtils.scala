@@ -9,7 +9,7 @@ import play.api.mvc.AnyContent
 object ControllerUtils {
   def getForm(body: AnyContent, prefix: Option[String] = None) = body.asFormUrlEncoded match {
     case Some(f) =>
-      val fullMap = f.mapValues(x => x.mkString(","))
+      val fullMap = f.mapValues(_.mkString(","))
       prefix.map(p => fullMap.filterKeys(_.startsWith(p)).map(x => x._1.stripPrefix(p) -> x._2)).getOrElse(fullMap)
     case None => throw new IllegalStateException("Missing form post.")
   }

@@ -23,8 +23,8 @@ object Documentation {
 
     paradoxProperties ++= Map(
       "material.color.primary" -> "green",
-      "material.color.accent" -> "blue",
-      "material.logo.icon" -> "settings",
+      "material.color.accent" -> "green",
+      "material.logo" -> "settings",
       "material.favicon" -> "logo.png",
       "material.repo" -> "https://github.com/KyleU/projectile",
       "material.repo.type" -> "github",
