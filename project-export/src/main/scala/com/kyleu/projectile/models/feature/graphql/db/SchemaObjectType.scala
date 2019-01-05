@@ -2,12 +2,14 @@ package com.kyleu.projectile.models.feature.graphql.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object SchemaObjectType {
   def addObjectType(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
     val references = model.validReferences(config)
+    val withNotes = model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)
     if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && references.isEmpty) {
       file.add(s"implicit lazy val ${model.propertyName}Type: sangria.schema.ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
     } else {
@@ -19,9 +21,9 @@ object SchemaObjectType {
       if (model.pkColumns.nonEmpty || model.foreignKeys.nonEmpty || references.nonEmpty) {
         file.add("sangria.macros.derive.AddFields(", 1)
       }
-      SchemaReferencesHelper.writeFields(config, model, file)
-      SchemaForeignKey.writeFields(config, model, file)
-      if (model.pkColumns.nonEmpty) {
+      SchemaReferencesHelper.writeFields(config, model, file, model.foreignKeys.isEmpty && (!withNotes))
+      SchemaForeignKey.writeFields(config, model, file, !withNotes)
+      if (withNotes) {
         file.add("Field(", 1)
         file.add("""name = "relatedNotes",""")
         file.add("""fieldType = ListType(NoteSchema.noteType),""")

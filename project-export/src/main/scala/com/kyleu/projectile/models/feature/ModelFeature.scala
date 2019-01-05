@@ -56,6 +56,14 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
     value = "graphql", title = "GraphQL", description = "Creates a Sangria GraphQL schema that includes this model", dependsOn = Set(ProjectFeature.GraphQL)
   )
 
+  case object Notes extends ModelFeature(
+    value = "notes", title = "Notes", description = "TODO", dependsOn = Set(ProjectFeature.Notes)
+  )
+
+  case object Tests extends ModelFeature(
+    value = "tests", title = "Tests", description = "TODO", dependsOn = Set(ProjectFeature.Tests)
+  )
+
   case object Thrift extends ModelFeature(
     value = "thrift", title = "Thrift", description = "Generates Thrift definitions for models and services", dependsOn = Set(ProjectFeature.Thrift)
   )

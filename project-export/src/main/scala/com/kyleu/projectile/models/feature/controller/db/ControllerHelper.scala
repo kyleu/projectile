@@ -10,34 +10,39 @@ object ControllerHelper {
 
   def writeView(config: ExportConfiguration, file: ScalaFile, model: ExportModel, viewPkg: String) = {
     val audited = model.features(ModelFeature.Audit)
+    val withNotes = model.features(ModelFeature.Notes)
+
     val viewArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
+    val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
     val logArgs = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
 
     file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
-    file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
-
     if (audited) {
       file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     }
-
+    if (withNotes) {
+      file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+    }
     file.add()
-    file.add(s"""notesF.flatMap(notes => ${if (audited) { "auditsF.flatMap(audits => " } else { "" }}modelF.map {""", 1)
 
-    file.add("case Some(model) => renderChoice(t) {", 1)
+    val audMap = if (audited) { "auditsF.flatMap(audits => " } else { "" }
     val auditHelp = if (audited) { "audits, " } else { "" }
 
-    val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
+    val notesMap = if (withNotes) { "notesF.flatMap(notes => " } else { "" }
+    val notesHelp = if (withNotes) { "notes, " } else { "" }
 
-    file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View(request.identity, model, notes, ${auditHelp}app.config.debug))")
+    file.add(s"""${notesMap}${audMap}modelF.map {""", 1)
+    file.add("case Some(model) => renderChoice(t) {", 1)
+    file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View(request.identity, model, $notesHelp${auditHelp}app.config.debug))")
     file.add(s"case MimeTypes.JSON => Ok(model.asJson)")
     file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)")
     file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)")
 
     file.add("}", -1)
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
-    file.add(s"}${if (audited) { ")" } else { "" }})", -1)
+    file.add(s"}${if (withNotes) { ")" } else { "" }}${if (audited) { ")" } else { "" }}", -1)
     file.add("}", -1)
   }
 

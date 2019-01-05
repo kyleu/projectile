@@ -38,7 +38,6 @@ class ProjectFormController @javax.inject.Inject() () extends BaseController {
   def saveFeatures() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ProjectFeature.withValue).toSet
-    println("###: " + features)
     val project = projectile.saveProject(summary.copy(features = features))
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }

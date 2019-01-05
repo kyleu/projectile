@@ -12,10 +12,12 @@ object TwirlViewFile {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "View")
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
-    val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
+
     val su = CommonImportHelper.getString(config, "SystemUser")
-    val note = CommonImportHelper.getString(config, "Note")
-    file.add(s"@(user: $su, model: ${model.fullClassPath(config)}, notes: Seq[$note]$audits, debug: Boolean)(")
+    val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
+    val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
+
+    file.add(s"@(user: $su, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
     val td = s"${(config.utilitiesPackage :+ "tracing").mkString(".")}.TraceData"
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
@@ -41,43 +43,16 @@ object TwirlViewFile {
     file.add("<div class=\"collection-item\">", 1)
     file.add("<table class=\"highlight\">", 1)
     file.add("<tbody>", 1)
-    model.fields.foreach { field =>
-      file.add("<tr>", 1)
-      file.add(s"<th>${field.title}</th>")
-      model.foreignKeys.find(_.references.forall(_.source == field.key)) match {
-        case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
-          file.add("<td>", 1)
-          val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
-          if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
-            throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
-          }
-          if (field.required) {
-            file.add(s"@model.${field.propertyName}")
-          } else {
-            file.add(s"@model.${field.propertyName}.getOrElse(${config.utilitiesPackage.mkString(".")}.NullUtils.str)")
-          }
-          if (field.required) {
-            val icon = TwirlHelper.iconHtml(config, tgt.propertyName)
-            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
-          } else {
-            file.add(s"@model.${field.propertyName}.map { v =>", 1)
-            val rc = TwirlHelper.routesClass(config, tgt)
-            file.add(s"""<a class="theme-text" href="@$rc.view(v)">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
-            file.add("}", -1)
-          }
-          file.add("</td>", -1)
-        case _ if field.t == FieldType.CodeType || field.t == FieldType.JsonType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
-        case _ => file.add(s"<td>@model.${field.propertyName}</td>")
-      }
-      file.add("</tr>", -1)
-    }
+    addFields(config, model, file)
     file.add("</tbody>", -1)
     file.add("</table>", -1)
     file.add("</div>", -1)
 
     if (model.pkFields.nonEmpty) {
       val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
-      file.add(s"""@$viewPkg.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
+      if (model.features(ModelFeature.Notes)) {
+        file.add(s"""@$viewPkg.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
+      }
       if (model.features(ModelFeature.Audit)) {
         file.add(s"""@$viewPkg.audit.auditRecords(auditRecords, "${model.propertyName}", "${model.title}", $modelPks)""")
       }
@@ -89,7 +64,7 @@ object TwirlViewFile {
     file
   }
 
-  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.validReferences(config).nonEmpty) {
+  private[this] def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.validReferences(config).nonEmpty) {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     file.add()
     file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
@@ -111,5 +86,36 @@ object TwirlViewFile {
     file.add("</ul>", -1)
     file.add(s"@${(config.viewPackage ++ Seq("html", "components")).mkString(".")}.includeScalaJs(debug)")
     file.add(s"""<script>$$(function() { new RelationService('@${TwirlHelper.routesClass(config, model)}.relationCounts($args)') });</script>""")
+  }
+
+  private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = model.fields.foreach { field =>
+    file.add("<tr>", 1)
+    file.add(s"<th>${field.title}</th>")
+    model.foreignKeys.find(_.references.forall(_.source == field.key)) match {
+      case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
+        file.add("<td>", 1)
+        val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
+        if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
+          throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
+        }
+        if (field.required) {
+          file.add(s"@model.${field.propertyName}")
+        } else {
+          file.add(s"@model.${field.propertyName}.getOrElse(${config.utilitiesPackage.mkString(".")}.NullUtils.str)")
+        }
+        if (field.required) {
+          val icon = TwirlHelper.iconHtml(config, tgt.propertyName)
+          file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
+        } else {
+          file.add(s"@model.${field.propertyName}.map { v =>", 1)
+          val rc = TwirlHelper.routesClass(config, tgt)
+          file.add(s"""<a class="theme-text" href="@$rc.view(v)">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
+          file.add("}", -1)
+        }
+        file.add("</td>", -1)
+      case _ if field.t == FieldType.CodeType || field.t == FieldType.JsonType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
+      case _ => file.add(s"<td>@model.${field.propertyName}</td>")
+    }
+    file.add("</tr>", -1)
   }
 }

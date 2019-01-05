@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.feature.graphql.db
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
+import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -24,7 +25,7 @@ object SchemaFile {
       }
     }
 
-    if (model.pkColumns.nonEmpty) {
+    if (model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)) {
       config.addCommonImport(file, "NoteSchema")
     }
     SchemaHelper.addImports(config, file)

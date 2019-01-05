@@ -100,6 +100,11 @@ object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[Pr
     appliesTo = Set(InputTemplate.Postgres), description = "Allows the creation and viewing of notes for any model instance"
   )
 
+  case object Tests extends ProjectFeature(
+    value = "tests", title = "Tests", tech = "Scala", logic = None, paths = Set(ServerSource),
+    appliesTo = Set(InputTemplate.Postgres), description = "Scalatest unit tests for selected features"
+  )
+
   case object Thrift extends ProjectFeature(
     value = "thrift", title = "Thrift", tech = "Thrift", logic = Some(ThriftLogic), paths = Set(ThriftOutput),
     appliesTo = Set(InputTemplate.Postgres), description = "Thrift definitions for exported models and services"

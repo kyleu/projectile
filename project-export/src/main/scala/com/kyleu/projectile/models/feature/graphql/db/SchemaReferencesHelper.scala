@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object SchemaReferencesHelper {
-  def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
+  def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, isLast: Boolean) = {
     val hasFk = model.foreignKeys.exists(_.references.size == 1)
     val references = model.transformedReferences(config)
     references.foreach { ref =>
@@ -29,7 +29,7 @@ object SchemaReferencesHelper {
         file.add(s"${relationRef}Relation, $v")
         file.add(")", -1)
 
-        val comma = if (model.pkColumns.isEmpty && references.lastOption.contains(ref) && !hasFk) { "" } else { "," }
+        val comma = if (references.lastOption.contains(ref) && isLast) { "" } else { "," }
         file.add(")" + comma, -1)
       }
     }

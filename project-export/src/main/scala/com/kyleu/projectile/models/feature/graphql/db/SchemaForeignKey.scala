@@ -44,7 +44,7 @@ object SchemaForeignKey {
     }
   }
 
-  def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.foreignKeys.nonEmpty) {
+  def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, isLast: Boolean) = if (model.foreignKeys.nonEmpty) {
     val fks = model.foreignKeys.filter(_.references.length == 1)
     fks.foreach { fk =>
       config.getModelOpt(fk.targetTable).foreach { targetTable =>
@@ -80,7 +80,7 @@ object SchemaForeignKey {
               } else {
                 file.add(s"resolve = ctx => $fetcherRef.deferOpt(ctx.value.${field.propertyName})")
               }
-              val comma = if (model.pkColumns.isEmpty && fks.lastOption.contains(fk)) { "" } else { "," }
+              val comma = if (fks.lastOption.contains(fk) && isLast) { "" } else { "," }
               file.add(")" + comma, -1)
             case _ => throw new IllegalStateException(s"Unhandled foreign key references [${fields.map(_.propertyName).mkString(", ")}].")
           }

@@ -6,7 +6,8 @@ import com.kyleu.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeat
 object DoobieLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val models = config.models.filter(_.inputType.isDatabase).filter(_.features(ModelFeature.Doobie)).flatMap { model =>
-      Seq(DoobieFile.export(config, model).rendered, DoobieTestsFile.export(config, model).rendered)
+      val testsOpt = if (model.features(ModelFeature.Tests)) { Seq(DoobieTestsFile.export(config, model).rendered) } else { Nil }
+      DoobieFile.export(config, model).rendered +: testsOpt
     }
 
     val enums = config.enums.filter(_.inputType.isDatabase).filter(_.features(EnumFeature.Doobie)).flatMap { enum =>
