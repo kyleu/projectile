@@ -3,14 +3,20 @@ package com.kyleu.projectile.services.audit
 import better.files._
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.project.ProjectOutput
+import com.kyleu.projectile.services.ProjectileService
 
 object ExportValidation {
-  def validate(projectRoot: File, results: Seq[ProjectOutput]) = {
+  def validate(svc: ProjectileService, results: Seq[ProjectOutput]) = {
     val out = results.flatMap { result =>
-      result.files.map(f => result.getDirectory(result.getDirectory(projectRoot, OutputPath.Root), f.path) / f.filePath)
+      val cfg = svc.configForProject(result.project.key)
+      result.files.map(f => result.getDirectory(result.getDirectory(cfg.workingDirectory, OutputPath.Root), f.path) / f.filePath)
     }
 
-    val roots = results.map(_.getDirectory(projectRoot, OutputPath.Root)).distinct
+    val roots = results.map { r =>
+      val cfg = svc.configForProject(r.project.key)
+      r.getDirectory(cfg.workingDirectory, OutputPath.Root)
+    }.distinct
+
     val files = roots.flatMap(root => getGeneratedFiles(root).distinct.map { f =>
       f -> root.relativize(f.path).toString.stripPrefix("/")
     })

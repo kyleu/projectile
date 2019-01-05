@@ -34,9 +34,9 @@ object PlayServerHelper extends Logging with ServerHelper {
   }
 
   private[this] def setSvc(svc: ProjectileService) = {
-    if (!svc.cfg.available) {
-      log.info(s"Initializing [.projectile] config directory for [${svc.cfg.path}]")(TraceData.noop)
-      svc.cfg.init()
+    if (!svc.rootCfg.available) {
+      log.info(s"Initializing [.projectile] config directory for [${svc.rootCfg.path}]")(TraceData.noop)
+      svc.init()
     }
     activeService = Some(svc)
     log.info(s"Set active service to $svc")(TraceData.noop)

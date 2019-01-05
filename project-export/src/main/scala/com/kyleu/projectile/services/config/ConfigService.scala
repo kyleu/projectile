@@ -9,8 +9,15 @@ class ConfigService(val path: String) extends Logging {
   val configDirectory = workingDirectory / ".projectile"
 
   val inputDirectory = configDirectory / "input"
+  def containsInput(key: String) = (inputDirectory / key).exists
+  def configForInput(key: String): Option[ConfigService] = if (containsInput(key)) { Some(this) } else { linkedConfigs.find(_.containsInput(key)) }
 
   val projectDirectory = configDirectory / "project"
+  def containsProject(key: String) = (projectDirectory / key).exists
+  def configForProject(key: String): Option[ConfigService] = {
+    if (containsProject(key)) { Some(this) } else { linkedConfigs.find(_.containsProject(key)) }
+  }
+
   def projectDir(key: String) = {
     val dir = projectDirectory / key
     if (dir.exists && dir.isDirectory && dir.isWriteable) {

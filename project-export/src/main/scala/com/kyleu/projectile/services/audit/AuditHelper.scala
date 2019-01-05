@@ -9,8 +9,11 @@ trait AuditHelper { this: ProjectileService =>
   private[this] lazy val exportSvc = new ProjectExportService(this)
 
   def audit(keys: Seq[String], verbose: Boolean) = {
-    val inputs = keys.map(key => loadConfig(key) -> exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose))
-    ProjectAuditService.audit(cfg.workingDirectory, inputs)
+    val inputs = keys.map { key =>
+      val cfg = configForProject(key)
+      loadConfig(key) -> exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
+    }
+    ProjectAuditService.audit(this, inputs)
   }
 
   def fix(key: String, t: String, src: String, tgt: String): String = {
@@ -27,7 +30,7 @@ trait AuditHelper { this: ProjectileService =>
           case "output" => auditResult.outputMessages.map(m => fixMessage(m, Some(auditResult))).mkString(", ")
           case x => throw new IllegalStateException(s"Unhandled fix source [$x]")
         }
-      case "orphan" => fixOrphan(cfg.workingDirectory, msg.src)
+      case "orphan" => fixOrphan(rootCfg.workingDirectory, msg.src)
       case x => throw new IllegalStateException(s"I don't know how to fix a [$x] yet")
     }
   }

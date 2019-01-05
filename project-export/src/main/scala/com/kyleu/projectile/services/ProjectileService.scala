@@ -11,9 +11,12 @@ import com.kyleu.projectile.services.project.ProjectHelper
 import com.kyleu.projectile.services.audit.AuditHelper
 import com.kyleu.projectile.util.JsonSerializers._
 
-class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends InputHelper with ProjectHelper with AuditHelper {
-  val rootDir = better.files.File(cfg.path)
+class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) extends InputHelper with ProjectHelper with AuditHelper {
+  val rootDir = better.files.File(rootCfg.path)
   val fullPath = rootDir.pathAsString
+
+  def configForInput(key: String) = rootCfg.configForInput(key).getOrElse(throw new IllegalStateException(s"Cannot find input [$key]"))
+  def configForProject(key: String) = rootCfg.configForProject(key).getOrElse(throw new IllegalStateException(s"Cannot find project [$key]"))
 
   def process(cmd: ProjectileCommand, verbose: Boolean = false): ProjectileResponse = {
     import com.kyleu.projectile.models.command.ProjectileCommand._
@@ -35,8 +38,8 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     processCore.orElse(processInput).orElse(processProject).apply(cmd)
   }
 
-  def init() = cfg.init()
-  def doctor(verbose: Boolean) = ConfigValidator.validate(cfg, verbose)
+  def init() = rootCfg.init()
+  def doctor(verbose: Boolean) = ConfigValidator.validate(rootCfg, verbose)
   def testbed() = JsonResponse(Json.True)
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
@@ -72,5 +75,5 @@ class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends
     }
   }
 
-  override val toString = s"Projectile Service @ ${cfg.workingDirectory}"
+  override val toString = s"Projectile Service @ ${rootCfg.workingDirectory}"
 }

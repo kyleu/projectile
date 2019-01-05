@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.thrift.input.ThriftOptions
 import com.kyleu.projectile.services.ProjectileService
 
 trait InputHelper { this: ProjectileService =>
-  private[this] val inputSvc = new InputService(cfg)
+  private[this] val inputSvc = new InputService(rootCfg)
 
   def listInputs() = inputSvc.list()
   def getInputSummary(key: String) = inputSvc.getSummary(key)

@@ -4,6 +4,8 @@ import better.files.File
 import com.kyleu.projectile.util.NumberUtils
 import com.kyleu.projectile.models.output.file.OutputFile
 import com.kyleu.projectile.models.project.ProjectOutput
+import com.kyleu.projectile.services.ProjectileService
+import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.util.JsonSerializers._
 
 object OutputService {
@@ -15,14 +17,15 @@ object OutputService {
   case class WriteResult(file: String, path: String, logs: Seq[String])
 }
 
-class OutputService(projectRoot: File) {
+class OutputService(svc: ProjectileService) {
   def persist(o: ProjectOutput, verbose: Boolean) = {
+    val cfg = svc.configForProject(o.project.key)
     o.featureOutput.flatMap { fo =>
       fo.files.map { f =>
-        val result = write(f, o.getDirectory(projectRoot, f.path), verbose)
+        val result = write(cfg, f, o.getDirectory(cfg.workingDirectory, f.path), verbose)
         OutputService.WriteResult(f.toString, result._1, result._2)
       } ++ fo.injections.map { i =>
-        val f = o.getDirectory(projectRoot, i.path) / i.dir.mkString("/") / i.filename
+        val f = o.getDirectory(cfg.workingDirectory, i.path) / i.dir.mkString("/") / i.filename
         if (i.status == "OK") {
           if (f.exists && f.isReadable) {
             val p = i.toString
@@ -44,11 +47,11 @@ class OutputService(projectRoot: File) {
     }
   }
 
-  private[this] def write(file: OutputFile.Rendered, dir: File, verbose: Boolean) = {
+  private[this] def write(cfg: ConfigService, file: OutputFile.Rendered, dir: File, verbose: Boolean) = {
     val f = dir / (file.dir :+ file.filename).mkString("/")
     val existed = f.exists
     f.createFileIfNotExists(createParents = true)
-    val path = projectRoot.relativize(f).toString
+    val path = cfg.workingDirectory.relativize(f).toString
     val original = f.contentAsString
     if (original == file.content) {
       if (verbose) {

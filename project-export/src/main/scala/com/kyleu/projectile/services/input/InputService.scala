@@ -7,9 +7,7 @@ import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.database.schema.SchemaHelper
-import com.kyleu.projectile.services.thrift.ThriftParseService
 import com.kyleu.projectile.util.JsonFileLoader
-import com.kyleu.projectile.util.JsonSerializers._
 
 class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory

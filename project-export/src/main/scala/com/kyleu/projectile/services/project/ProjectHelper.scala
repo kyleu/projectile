@@ -1,5 +1,6 @@
 package com.kyleu.projectile.services.project
 
+import better.files.File
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.export.config.ExportConfiguration
@@ -13,23 +14,21 @@ import com.kyleu.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._
 
 trait ProjectHelper { this: ProjectileService =>
-  private[this] lazy val summarySvc = new ProjectSummaryService(cfg)
+  private[this] lazy val summarySvc = new ProjectSummaryService(rootCfg)
 
   private[this] lazy val enumSvc = new EnumMemberService(this)
   private[this] lazy val modelSvc = new ModelMemberService(this)
   private[this] lazy val serviceSvc = new ServiceMemberService(this)
 
   private[this] lazy val exportSvc = new ProjectExportService(this)
-  private[this] lazy val outputSvc = new OutputService(cfg.workingDirectory)
-
-  private[this] val dir = cfg.projectDirectory
+  private[this] lazy val outputSvc = new OutputService(this)
 
   def listProjects() = summarySvc.list()
 
-  def getProject(key: String) = load(key)
+  def getProject(key: String) = load(configForProject(key).projectDirectory, key)
   def getProjectSummaryOpt(key: String) = summarySvc.getSummary(key)
   def getProjectSummary(key: String) = getProjectSummaryOpt(key).getOrElse(throw new IllegalStateException(s"No project with key [$key]"))
-  def updateProject(key: String) = ProjectUpdateService.update(this, load(key))
+  def updateProject(key: String) = ProjectUpdateService.update(this, load(configForProject(key).projectDirectory, key))
   def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
   def removeProject(key: String) = removeProjectFiles(key)
 
@@ -46,7 +45,7 @@ trait ProjectHelper { this: ProjectileService =>
   def removeServiceMember(key: String, member: String) = serviceSvc.removeService(key, member)
 
   def exportProject(key: String, verbose: Boolean) = {
-    val o = exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
+    val o = exportSvc.getOutput(projectRoot = configForProject(key).workingDirectory, key = key, verbose = verbose)
     o -> outputSvc.persist(o = o, verbose = verbose)
   }
 
@@ -62,19 +61,19 @@ trait ProjectHelper { this: ProjectileService =>
   }
 
   private[this] def removeProjectFiles(key: String) = {
-    (dir / key).delete(swallowIOExceptions = true)
+    (configForProject(key).workingDirectory / key).delete(swallowIOExceptions = true)
     ProjectileResponse.OK
   }
 
-  private[this] def load(key: String) = summarySvc.getSummary(key)
+  private[this] def load(dir: File, key: String) = summarySvc.getSummary(key)
     .getOrElse(throw new IllegalStateException(s"No project found with key [$key]"))
     .into[Project]
-    .withFieldComputed(_.enums, _ => loadDir[EnumMember](s"$key/enum"))
-    .withFieldComputed(_.models, _ => loadDir[ModelMember](s"$key/model"))
-    .withFieldComputed(_.services, _ => loadDir[ServiceMember](s"$key/service"))
+    .withFieldComputed(_.enums, _ => loadDir[EnumMember](dir, s"$key/enum"))
+    .withFieldComputed(_.models, _ => loadDir[ModelMember](dir, s"$key/model"))
+    .withFieldComputed(_.services, _ => loadDir[ServiceMember](dir, s"$key/service"))
     .transform
 
-  private[this] def loadDir[A: Decoder](k: String) = {
+  private[this] def loadDir[A: Decoder](dir: File, k: String) = {
     val d = dir / k
     if (d.exists && d.isDirectory && d.isReadable) {
       d.children.filter(f => f.isRegularFile && f.name.endsWith(".json")).map(f => JsonFileLoader.loadFile[A](f, k)).toList

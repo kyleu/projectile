@@ -1,19 +1,19 @@
 package com.kyleu.projectile.services.audit
 
-import better.files.File
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
 import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.models.project.audit.{AuditMessage, AuditResult}
+import com.kyleu.projectile.services.ProjectileService
 
 object ProjectAuditService {
-  def audit(projectRoot: File, inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
+  def audit(svc: ProjectileService, inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
     val missing = inputs.flatMap(i => i._1.models.flatMap(checkMissing(i._1, _)))
 
     val configMessages = missing ++ getDupes(inputs)
 
-    val orphans = ExportValidation.validate(projectRoot = projectRoot, results = inputs.map(_._2)).map { valResult =>
+    val orphans = ExportValidation.validate(svc = svc, results = inputs.map(_._2)).map { valResult =>
       AuditMessage(project = "all", srcModel = valResult._1, src = valResult._1, t = "orphan", tgt = valResult._1, message = valResult._2)
     }
 
