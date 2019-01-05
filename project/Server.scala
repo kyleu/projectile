@@ -45,7 +45,8 @@ object Server {
     LessKeys.compress in Assets := true,
 
     // Prevent Scaladoc
-    sources in (Compile, doc) := Seq.empty,
+    sources in (Compile, doc) := Seq.empty,     
+    publish := {},
 
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),

@@ -9,6 +9,7 @@ import sbt.{Project, file}
 import sbt.Keys._
 import sbt._
 import _root_.io.github.jonas.paradox.material.theme.ParadoxMaterialThemePlugin
+import com.typesafe.sbt.site.SitePreviewPlugin.autoImport.previewLaunchBrowser
 
 object Documentation {
   private[this] lazy val docProjects = LibraryProjects.all ++ Seq(
@@ -29,10 +30,11 @@ object Documentation {
       "material.repo" -> "https://github.com/KyleU/projectile",
       "material.repo.type" -> "github",
       "material.repo.name" -> "KyleU/projectile",
-      "material.copyright" -> "Kyle Unverferth",
       "material.author" -> "Kyle Unverferth",
       "material.custom.stylesheet" -> "projectile.css"
-    )
+    ),
+
+    previewLaunchBrowser := false
   )
 
   private[this] def forProject(project: Project) = {
