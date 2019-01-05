@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.services.config.{ConfigService, ConfigValidator}
 import com.kyleu.projectile.services.input.InputHelper
 import com.kyleu.projectile.services.project.ProjectHelper
-import com.kyleu.projectile.services.project.audit.AuditHelper
+import com.kyleu.projectile.services.audit.AuditHelper
 import com.kyleu.projectile.util.JsonSerializers._
 
 class ProjectileService(val cfg: ConfigService = new ConfigService(".")) extends InputHelper with ProjectHelper with AuditHelper {

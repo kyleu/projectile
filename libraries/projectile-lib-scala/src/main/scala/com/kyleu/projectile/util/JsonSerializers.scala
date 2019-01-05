@@ -53,4 +53,9 @@ object JsonSerializers {
     case Right(u) => u
     case Left(x) => throw x
   }
+
+  def extractString[T: Decoder](s: String) = extract[T](parseJson(s) match {
+    case Right(u) => u
+    case Left(x) => throw x
+  })
 }

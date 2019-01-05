@@ -8,7 +8,6 @@ import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, Serv
 import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.output.OutputService
-import com.kyleu.projectile.services.project.update.ProjectUpdateService
 import com.kyleu.projectile.util.JsonFileLoader
 import com.kyleu.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._

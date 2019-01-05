@@ -1,4 +1,4 @@
-package com.kyleu.projectile.services.project.update
+package com.kyleu.projectile.services.project
 
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.{Input, InputTemplate}
