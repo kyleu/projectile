@@ -11,8 +11,7 @@ object ProjectExport {
     )
   }
 
-  lazy val `projectile-export` = (project in file("project-export")).settings(Common.settings: _*).settings(
-    name := "projectile-export",
+  lazy val `projectile-export` = (project in file("projectile-export")).settings(Common.settings: _*).settings(
     description := "Project configuration, export, and code generation from Projectile",
     libraryDependencies ++= dependencies,
   ).dependsOn(LibraryProjects.`projectile-lib-scala`)

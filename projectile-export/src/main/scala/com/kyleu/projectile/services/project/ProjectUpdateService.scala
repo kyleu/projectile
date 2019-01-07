@@ -25,12 +25,12 @@ object ProjectUpdateService {
     val serviceResults = processServices(svc, p, i)
 
     val results = enumResults ++ modelResults ++ serviceResults
-    val msg = if (results.isEmpty) {
-      "No changes required"
+    if (results.isEmpty) {
+      Nil
     } else {
-      results.mkString(", ")
+      val hashCode = i.hashCode()
+      Seq(s"Updated project [${p.key}] with hashcode [$hashCode]: ${results.mkString(", ")}")
     }
-    Seq(s"Updated project [${p.key}], input [${i.key}]: $msg")
   }
 
   def processEnums(svc: ProjectileService, p: Project, i: Input) = {

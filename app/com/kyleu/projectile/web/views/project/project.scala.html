@@ -4,7 +4,7 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formSummary(project.key)">Edit Summary</a></div>
-      <h5><i class="@project.template.icon"></i> @project.description</h5>
+      <h5><i class="@project.template.icon"></i> @if(project.description.trim.isEmpty) { @project.key } else { @project.description }</h5>
       Built from <a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(project.input)">@project.input</a>
     </div>
     <div class="collection-item">

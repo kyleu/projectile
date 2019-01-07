@@ -36,6 +36,10 @@ object SbtProjectile extends AutoPlugin {
       } catch {
         case x: Throwable => log(s"Error running [${args.mkString(" ")}]: $x")
       }
-    }
+    },
+    sourceGenerators in Compile += Def.task {
+      val paths = ((sourceManaged in Compile).value / "projectile") ** "*.scala"
+      paths.get
+    }.taskValue
   )
 }

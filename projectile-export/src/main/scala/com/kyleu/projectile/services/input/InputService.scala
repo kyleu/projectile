@@ -12,33 +12,44 @@ import com.kyleu.projectile.util.JsonFileLoader
 class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory
 
-  def list() = dir.children.filter(_.isDirectory).toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
+  def immediateList() = if (dir.exists) {
+    dir.children.filter(_.isDirectory).toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
+  } else {
+    Nil
+  }
 
-  def getSummary(key: String) = {
+  def list(): Seq[InputSummary] = immediateList() ++ cfg.linkedConfigs.map(c => new InputService(c)).flatMap(_.list()).sortBy(_.key)
+
+  def getSummary(key: String): InputSummary = {
     val f = dir / key / s"input.json"
     if (f.exists && f.isRegularFile && f.isReadable) {
       JsonFileLoader.loadFile[InputSummary](f, "input summary").copy(key = key)
     } else {
-      throw new IllegalStateException(s"Cannot load input with key [$key]")
+      cfg.linkedConfigs.find(_.containsInput(key)) match {
+        case Some(c) => new InputService(c).getSummary(key)
+        case _ => throw new IllegalStateException(s"Cannot load input with key [$key]")
+      }
     }
   }
 
   def load(key: String): Input = {
     val summ = getSummary(key)
+    val c = configFor(key)
     summ.template match {
-      case InputTemplate.Postgres => PostgresInputService.loadPostgres(cfg, summ)
+      case InputTemplate.Postgres => PostgresInputService.loadPostgres(c, summ)
       case InputTemplate.Filesystem => throw new IllegalStateException("Unable to load filesystem inputs (coming soon)")
-      case InputTemplate.Thrift => ThriftInputService.loadThrift(cfg, summ)
-      case InputTemplate.GraphQL => GraphQLInputService.loadGraphQL(cfg, summ)
+      case InputTemplate.Thrift => ThriftInputService.loadThrift(c, summ)
+      case InputTemplate.GraphQL => GraphQLInputService.loadGraphQL(c, summ)
     }
   }
 
   def add(is: InputSummary) = {
-    val dir = SummaryInputService.saveSummary(cfg, is)
+    val c = configFor(is.key)
+    val dir = SummaryInputService.saveSummary(c, is)
     is.template match {
-      case InputTemplate.Postgres => PostgresInputService.savePostgresDefault(cfg, dir)
+      case InputTemplate.Postgres => PostgresInputService.savePostgresDefault(c, dir)
       case InputTemplate.Filesystem => throw new IllegalStateException("Unable to add filesystem inputs (coming soon)")
-      case InputTemplate.Thrift => ThriftInputService.saveThriftDefault(cfg, dir)
+      case InputTemplate.Thrift => ThriftInputService.saveThriftDefault(c, dir)
       case InputTemplate.GraphQL => GraphQLInputService.saveGraphQLDefault(cfg, dir)
     }
     load(is.key)
@@ -71,4 +82,6 @@ class InputService(val cfg: ConfigService) {
     case g: GraphQLInput => GraphQLInputService.saveGraphQL(cfg, g)
     case x => throw new IllegalStateException(s"Unable to process [$x]")
   }
+
+  private def configFor(key: String) = cfg.configForInput(key).getOrElse(throw new IllegalStateException(s"No config found with key [$key]"))
 }
