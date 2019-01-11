@@ -44,10 +44,6 @@ object Server {
     excludeFilter in (Assets, LessKeys.less) := "_*.less",
     LessKeys.compress in Assets := true,
 
-    // Prevent Scaladoc
-    sources in (Compile, doc) := Seq.empty,     
-    publish := {},
-
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),
     git.remoteRepo := scmInfo.value.get.connection,

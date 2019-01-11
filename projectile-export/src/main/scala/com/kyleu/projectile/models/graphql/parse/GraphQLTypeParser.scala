@@ -22,6 +22,7 @@ object GraphQLTypeParser {
   def getType(ctx: String, schema: Schema[_, _], doc: Document, t: Type): (Boolean, FieldType) = t match {
     case NotNullType(ofType, _) => true -> getType(ctx, schema, doc, ofType)._2
     case ListType(ofType, _) => true -> FieldType.ListType(getType(ctx, schema, doc, ofType)._2)
+    case named: NamedType if named.name == "Number" => false -> getScalarType("Int")
     case named: NamedType => false -> schema.allTypes.get(named.name).map {
       case e: EnumType[_] => FieldType.EnumType(e.name)
       case i: InputObjectType[_] => FieldType.StructType(i.name)

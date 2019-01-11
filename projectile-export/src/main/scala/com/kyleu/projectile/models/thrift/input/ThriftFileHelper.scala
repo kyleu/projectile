@@ -33,8 +33,8 @@ object ThriftFileHelper {
     value: Option[String],
     colType: FieldType
   ) = {
-    val propType = if (required) { FieldTypeAsScala.asScala(config, colType) } else { "Option[" + FieldTypeAsScala.asScala(config, colType) + "]" }
-    s"$name: $propType${propDefault(config, colType, required, value)}"
+    val propType = if (required || value.isDefined) { FieldTypeAsScala.asScala(config, colType) } else { "Option[" + FieldTypeAsScala.asScala(config, colType) + "]" }
+    s"$name: $propType${propDefault(config, colType, required || value.isDefined, value)}"
   }
 
   private[this] def defaultForType(config: ExportConfiguration, colType: FieldType, required: Boolean): String = colType match {
@@ -61,7 +61,7 @@ object ThriftFileHelper {
     case x => x + "()"
   }
 
-  private[this] def propDefault(config: ExportConfiguration, colType: FieldType, required: Boolean, value: Option[Any]) = value match {
+  private[this] def propDefault(config: ExportConfiguration, colType: FieldType, required: Boolean, value: Option[String]) = value match {
     case Some(v) if required => colType match {
       case FieldType.EnumType(_) => " = " + defaultForType(config, colType, required)
       case FieldType.StructType(_) => " = " + defaultForType(config, colType, required)

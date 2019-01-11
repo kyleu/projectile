@@ -1,5 +1,6 @@
 package com.kyleu.projectile.models.thrift.input
 
+import com.facebook.swift.parser.model.ConstIdentifier
 import com.kyleu.projectile.models.export._
 import com.kyleu.projectile.models.input.InputType
 import com.kyleu.projectile.models.output.ExportHelper
@@ -24,7 +25,10 @@ object ThriftExportService {
       title = ExportHelper.toDefaultTitle(arg.key),
       description = None,
       t = t,
-      defaultValue = arg.value.map(_.toString),
+      defaultValue = arg.value.map {
+        case c: ConstIdentifier => c.value
+        case x => x.toString
+      },
       required = arg.required
     )
   }.toList
