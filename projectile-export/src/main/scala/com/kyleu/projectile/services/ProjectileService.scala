@@ -8,10 +8,11 @@ import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.services.config.{ConfigService, ConfigValidator}
 import com.kyleu.projectile.services.input.InputHelper
 import com.kyleu.projectile.services.project.ProjectHelper
-import com.kyleu.projectile.services.audit.AuditHelper
+import com.kyleu.projectile.services.project.audit.AuditHelper
+import com.kyleu.projectile.services.project.codegen.CodegenHelper
 import com.kyleu.projectile.util.JsonSerializers._
 
-class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) extends InputHelper with ProjectHelper with AuditHelper {
+class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) extends InputHelper with ProjectHelper with CodegenHelper with AuditHelper {
   val rootDir = better.files.File(rootCfg.path)
   val fullPath = rootDir.pathAsString
 
@@ -69,10 +70,7 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
       case None => CompositeResult(listProjects().map(p => projectResults(p.key)))
     }
     case Audit => ProjectAuditResult(auditAll(verbose = false))
-    case ProjectCodegen(key) => key match {
-      case Some(k) => codegenProject(k, verbose = false)
-      case None => CompositeResult(listProjects().map(p => codegenProject(p.key, verbose = false)))
-    }
+    case Codegen(keys) => ProjectCodegenResult(codegen(keys, verbose = false))
   }
 
   override val toString = s"Projectile Service @ ${rootCfg.workingDirectory}"

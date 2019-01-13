@@ -28,4 +28,6 @@ abstract class Input() extends Ordered[Input] {
   def getService(k: String) = getServiceOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
 
   override def toString = s"$key - [${exportEnums.size}] enums, [${exportModels.size}] models, and [${exportServices.size}] services"
+
+  lazy val hash = exportEnums.hashCode * exportModels.hashCode * exportServices.hashCode()
 }

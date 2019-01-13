@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.input.{Input, InputSummary}
 import com.kyleu.projectile.models.project.audit.AuditResult
+import com.kyleu.projectile.models.project.codegen.CodegenResult
 import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSummary}
 import com.kyleu.projectile.services.output.OutputService
 import com.kyleu.projectile.util.Logging
@@ -28,6 +29,7 @@ object CommandLineOutput extends Logging {
     case ProjectUpdateResult(key, resp) => s"[$key] Updated:" +: resp.map(" - " + _)
     case ProjectExportResult(output, files) => logForExportResult(output, files)
     case ProjectAuditResult(result) => logForAuditResult(result)
+    case ProjectCodegenResult(result) => logForCodegenResult(result)
     case CompositeResult(results) => logForCompositeResult(results)
   }
 
@@ -59,6 +61,26 @@ object CommandLineOutput extends Logging {
       s" - [${result.outputMessages.size}] Output Messages:" +: result.outputMessages.map(m => s"   - ${m.tgt}: ${m.message}")
     }
     s"Audit Result:" +: (cfgMsgs ++ outputMsgs)
+  }
+
+  private[this] def logForCodegenResult(result: CodegenResult) = {
+    val filteredExportResults = result.exportResults.filter(er => er._2.exists(_.logs.nonEmpty))
+    val exportMessages = if (filteredExportResults.isEmpty) {
+      Nil
+    } else {
+      s"Exported [${filteredExportResults.size}] projects:" +: filteredExportResults.flatMap { er =>
+        s"  ${er._1.project.key}:" +: er._2.filter(_.logs.nonEmpty).map(msg => s"  - ${msg.file}: ${msg.logs.mkString(", ")}")
+      }
+    }
+    val auditMessages = result.auditResults.toSeq.flatMap { aud =>
+      val msgs = aud.configMessages ++ aud.outputMessages
+      if (msgs.isEmpty) {
+        Nil
+      } else {
+        s"[${msgs.size}] audit messages:" +: msgs.map(m => "  - " + m.toString)
+      }
+    }
+    result.updates ++ exportMessages ++ auditMessages
   }
 
   def logForCompositeResult(results: Seq[ProjectileResponse]): Seq[String] = results.size match {

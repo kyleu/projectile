@@ -34,6 +34,7 @@ POST        /project/overrides                       com.kyleu.projectile.web.co
 GET         /project/all/audit                       com.kyleu.projectile.web.controllers.project.BulkProjectController.auditAll
 GET         /project/all/export                      com.kyleu.projectile.web.controllers.project.BulkProjectController.exportAll
 GET         /project/all/update                      com.kyleu.projectile.web.controllers.project.BulkProjectController.updateAll
+GET         /project/codegen                         com.kyleu.projectile.web.controllers.project.BulkProjectController.codegen(verbose: Boolean ?= false)
 
 GET         /project/:key                            com.kyleu.projectile.web.controllers.project.ProjectController.detail(key)
 GET         /project/:key/remove                     com.kyleu.projectile.web.controllers.project.ProjectController.remove(key)

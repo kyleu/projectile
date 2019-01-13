@@ -1,0 +1,18 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, r: com.kyleu.projectile.models.project.codegen.CodegenResult)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "Codegen Result") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.codegen()">Run Again</a>
+        (<a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.codegen(verbose = true)">verbose</a>)
+      </div>
+      <h5><i class="@com.kyleu.projectile.models.template.Icons.projectile"></i> Codegen Result</h5>
+      <em>@r.exportResults.size projects exported in @com.kyleu.projectile.util.NumberUtils.withCommas(r.durationMs)ms</em>
+    </div>
+
+    <div class="collection-item">
+      TODO
+    </div>
+  </div>
+}

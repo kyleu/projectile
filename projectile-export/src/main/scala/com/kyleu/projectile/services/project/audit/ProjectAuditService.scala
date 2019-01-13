@@ -1,4 +1,4 @@
-package com.kyleu.projectile.services.audit
+package com.kyleu.projectile.services.project.audit
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration

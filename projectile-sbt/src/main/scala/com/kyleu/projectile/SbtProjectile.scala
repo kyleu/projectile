@@ -1,6 +1,7 @@
 package com.kyleu.projectile
 
 import com.kyleu.projectile.models.cli.CommandLineOutput
+import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 import sbt.Keys._
@@ -10,9 +11,10 @@ import complete.DefaultParsers.spaceDelimited
 object SbtProjectile extends AutoPlugin {
   object autoImport {
     val projectile = inputKey[Unit]("Generate better code from your database, Thrift files, or GraphQL queries using Projectile")
+    val projectileCodegen = taskKey[Unit]("Runs Projectile, refreshing the generated files in your project")
   }
 
-  override lazy val projectSettings = inConfig(Test)(projectileSettings) ++ inConfig(Compile)(projectileSettings)
+  override lazy val projectSettings = inConfig(Compile)(projectileSettings)
 
   private[this] val projectileSettings: Seq[Setting[_]] = Seq(
     autoImport.projectile := {
@@ -37,15 +39,20 @@ object SbtProjectile extends AutoPlugin {
         case x: Throwable => log(s"Error running [${args.mkString(" ")}]: $x")
       }
     },
-    sourceGenerators in Compile += Def.task {
+    autoImport.projectileCodegen := {
       val streamValue = streams.value
       def log(s: String) = streamValue.log.info(s)
       val svc = new ProjectileService(new ConfigService(baseDirectory.value.getPath))
-      svc.updateAll().foreach(log)
-      val exportResult = svc.exportAll()
-      val auditResult = svc.auditAll(verbose = false)
-      val paths = ((sourceManaged in Compile).value / "projectile") ** "*.scala"
-      paths.get
-    }.taskValue
+      try {
+        CommandLineOutput.logsFor(ProjectileResponse.ProjectCodegenResult(svc.codegen(verbose = false))).foreach(log)
+      } catch {
+        case x: Throwable => log(s"Error running codegen: $x")
+      }
+    },
+    compile in Compile := {
+      autoImport.projectileCodegen.value
+      (compile in Compile).value
+    },
+    sourceGenerators in Compile += Def.task((((sourceManaged in Compile).value / "projectile") ** "*.scala").get).taskValue
   )
 }

@@ -92,4 +92,8 @@ class BulkProjectController @javax.inject.Inject() () extends BaseController {
     val msg = s"Saved [${updated.size}] project model members"
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
   }
+
+  def codegen(verbose: Boolean) = Action.async { implicit request =>
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.codegenResults(projectile, projectile.codegen(verbose = verbose))))
+  }
 }

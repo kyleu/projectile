@@ -39,7 +39,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class ProjectUpdate(key: Option[String]) extends ProjectileCommand
   case class ProjectExport(key: Option[String]) extends ProjectileCommand
 
-  case class ProjectCodegen(key: Option[String]) extends ProjectileCommand
+  case class Codegen(keys: Seq[String]) extends ProjectileCommand
 
   case class ProjectAdd(project: ProjectSummary) extends ProjectileCommand
   case class ProjectSave(project: Project) extends ProjectileCommand

@@ -1,4 +1,4 @@
-package com.kyleu.projectile.services.audit
+package com.kyleu.projectile.services.project.audit
 
 import better.files._
 import com.kyleu.projectile.models.output.OutputPath

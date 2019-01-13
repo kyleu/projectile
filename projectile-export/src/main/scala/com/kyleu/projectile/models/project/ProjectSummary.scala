@@ -23,10 +23,7 @@ case class ProjectSummary(
     classOverrides: Map[String, String] = Map.empty,
     defaultEnumFeatures: Set[String] = Set("core"),
     defaultModelFeatures: Set[String] = Set("core", "json"),
-    defaultServiceFeatures: Set[String] = Set("core"),
-    status: Option[String] = None,
-    created: LocalDateTime = DateUtils.now,
-    updated: LocalDateTime = DateUtils.now
+    defaultServiceFeatures: Set[String] = Set("core")
 ) extends Ordered[ProjectSummary] {
   override def compare(p: ProjectSummary) = key.compare(p.key)
 

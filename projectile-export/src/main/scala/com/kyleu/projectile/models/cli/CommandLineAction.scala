@@ -39,9 +39,9 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
   object Audit extends Command(name = "audit", description = "Audits the provided project (or all)") with CommandLineAction {
     override def toCommand = ProjectileCommand.Audit
   }
-  object ProjectCodegen extends Command(name = "codegen", description = "Generates code for the provided project (or all)") with CommandLineAction {
+  object Codegen extends Command(name = "codegen", description = "Generates code for the provided projects (or all)") with CommandLineAction {
     var key = arg[Option[String]](required = false)
-    override def toCommand = ProjectileCommand.ProjectCodegen(key)
+    override def toCommand = ProjectileCommand.Codegen(key.toSeq.flatMap(_.split(",").map(_.trim)))
   }
 
   // Inputs

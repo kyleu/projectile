@@ -29,10 +29,7 @@ case class Project(
     services: Seq[ServiceMember] = Nil,
     defaultEnumFeatures: Set[String] = Set("core"),
     defaultModelFeatures: Set[String] = Set("core", "json"),
-    defaultServiceFeatures: Set[String] = Set("core"),
-    status: Option[String] = None,
-    created: LocalDateTime = DateUtils.now,
-    updated: LocalDateTime = DateUtils.now
+    defaultServiceFeatures: Set[String] = Set("core")
 ) extends Ordered[Project] {
   private[this] def notFound(t: String, k: String, candidates: => Seq[String]) = {
     throw new IllegalStateException(s"No $t in project [$key] with key [$k] among candidates [${candidates.mkString(", ")}]")

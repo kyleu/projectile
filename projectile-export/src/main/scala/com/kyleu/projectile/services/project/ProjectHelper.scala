@@ -4,7 +4,6 @@ import better.files.File
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.output.OutputLog
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
@@ -89,11 +88,5 @@ trait ProjectHelper { this: ProjectileService =>
   protected[this] def projectResults(k: String) = {
     val r = exportProject(k, verbose = false)
     ProjectExportResult(r._1, r._2)
-  }
-
-  protected[this] def codegenProject(key: String, verbose: Boolean) = {
-    val updateResult = updateProject(key).map(r => OutputLog(r, 0))
-    val exportResult = projectResults(key)
-    exportResult.copy(output = exportResult.output.copy(rootLogs = updateResult ++ exportResult.output.rootLogs))
   }
 }

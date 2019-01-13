@@ -10,7 +10,9 @@ object ProjectUpdateService {
   private[this] val updateDatabase = true
   private[this] val saveUnchanged = false
 
-  def update(svc: ProjectileService, p: Project) = {
+  def update(svc: ProjectileService, p: Project) = updateInput(svc, p, svc.getInput(p.input))
+
+  def updateInput(svc: ProjectileService, p: Project, i: Input) = {
     val i = svc.getInput(p.input)
     if ((!updateDatabase) && i.template == InputTemplate.Postgres) {
       Seq(s"Skipping update of database input [${i.key}]")
@@ -29,6 +31,7 @@ object ProjectUpdateService {
       Nil
     } else {
       val hashCode = svc.getInput(i.key).hashCode()
+      svc.setProjectHash(p.key, hashCode)
       s"Updated project [${p.key}] with hashcode [$hashCode]:" +: results
     }
   }
