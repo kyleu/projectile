@@ -28,12 +28,12 @@ object ProjectUpdateService {
     if (results.isEmpty) {
       Nil
     } else {
-      val hashCode = i.hashCode()
-      Seq(s"Updated project [${p.key}] with hashcode [$hashCode]: ${results.mkString(", ")}")
+      val hashCode = svc.getInput(i.key).hashCode()
+      s"Updated project [${p.key}] with hashcode [$hashCode]:" +: results
     }
   }
 
-  def processEnums(svc: ProjectileService, p: Project, i: Input) = {
+  private[this] def processEnums(svc: ProjectileService, p: Project, i: Input) = {
     val (unchanged, enumsToAdd) = i.exportEnums.partition(ek => p.enums.exists(_.key == ek.key))
     val enumsToRemove = p.enums.filterNot(ek => i.exportEnums.exists(_.key == ek.key))
     val ef = p.defaultEnumFeatures.map(EnumFeature.withValue)
@@ -49,7 +49,7 @@ object ProjectUpdateService {
     }
   }
 
-  def processModels(svc: ProjectileService, p: Project, i: Input) = {
+  private[this] def processModels(svc: ProjectileService, p: Project, i: Input) = {
     val (unchanged, modelsToAdd) = i.exportModels.partition(ek => p.models.exists(_.key == ek.key))
     val modelsToRemove = p.models.filterNot(mk => i.exportModels.exists(_.key == mk.key))
     val mf = p.defaultModelFeatures.map(ModelFeature.withValue)
@@ -65,7 +65,7 @@ object ProjectUpdateService {
     }
   }
 
-  def processServices(svc: ProjectileService, p: Project, i: Input) = {
+  private[this] def processServices(svc: ProjectileService, p: Project, i: Input) = {
     val (unchanged, servicesToAdd) = i.exportServices.partition(sk => p.services.exists(_.key == sk.key))
     val servicesToRemove = p.services.filterNot(sk => i.exportServices.exists(_.key == sk.key))
     val sf = p.defaultServiceFeatures.map(ServiceFeature.withValue)

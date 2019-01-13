@@ -68,7 +68,7 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
       case Some(k) => projectResults(k)
       case None => CompositeResult(listProjects().map(p => projectResults(p.key)))
     }
-    case Audit => ProjectAuditResult(audit(listProjects().map(_.key), verbose = false))
+    case Audit => ProjectAuditResult(auditAll(verbose = false))
     case ProjectCodegen(key) => key match {
       case Some(k) => codegenProject(k, verbose = false)
       case None => CompositeResult(listProjects().map(p => codegenProject(p.key, verbose = false)))

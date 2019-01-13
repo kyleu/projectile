@@ -10,17 +10,20 @@ import scala.concurrent.Future
 @javax.inject.Singleton
 class BulkProjectController @javax.inject.Inject() () extends BaseController {
   def updateAll() = Action.async { implicit request =>
-    val result = projectile.listProjects().flatMap(project => projectile.updateProject(key = project.key))
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> result.mkString(", ")))
+    val result = projectile.updateAll()
+    val call = com.kyleu.projectile.web.controllers.routes.HomeController.index()
+    Future.successful(Redirect(call).flashing("success" -> result.mkString(", ")))
   }
 
   def exportAll() = Action.async { implicit request =>
-    val result = projectile.listProjects().map(project => projectile.exportProject(key = project.key, verbose = false))
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile = projectile, outputs = result.map(_._1), files = result.flatMap(_._2), verbose = false)))
+    val result = projectile.exportAll()
+    val o = result.map(_._1)
+    val f = result.flatMap(_._2)
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile = projectile, outputs = o, files = f, verbose = false)))
   }
 
   def auditAll() = Action.async { implicit request =>
-    val result = projectile.audit(keys = projectile.listProjects().map(_.key), verbose = false)
+    val result = projectile.auditAll(verbose = false)
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.audit.auditResult(projectile, result)))
   }
 

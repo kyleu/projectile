@@ -28,7 +28,10 @@ trait ProjectHelper { this: ProjectileService =>
   def getProject(key: String) = load(configForProject(key).projectDirectory, key)
   def getProjectSummaryOpt(key: String) = summarySvc.getSummary(key)
   def getProjectSummary(key: String) = getProjectSummaryOpt(key).getOrElse(throw new IllegalStateException(s"No project with key [$key]"))
+
   def updateProject(key: String) = ProjectUpdateService.update(this, load(configForProject(key).projectDirectory, key))
+  def updateAll() = listProjects().flatMap(project => updateProject(key = project.key))
+
   def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
   def removeProject(key: String) = removeProjectFiles(key)
 
@@ -48,6 +51,7 @@ trait ProjectHelper { this: ProjectileService =>
     val o = exportSvc.getOutput(projectRoot = configForProject(key).workingDirectory, key = key, verbose = verbose)
     o -> outputSvc.persist(o = o, verbose = verbose)
   }
+  def exportAll() = listProjects().map(project => exportProject(key = project.key, verbose = false))
 
   def loadConfig(key: String) = {
     val p = getProject(key)

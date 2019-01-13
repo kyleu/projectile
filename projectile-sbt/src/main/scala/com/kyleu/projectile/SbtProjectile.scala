@@ -38,6 +38,12 @@ object SbtProjectile extends AutoPlugin {
       }
     },
     sourceGenerators in Compile += Def.task {
+      val streamValue = streams.value
+      def log(s: String) = streamValue.log.info(s)
+      val svc = new ProjectileService(new ConfigService(baseDirectory.value.getPath))
+      svc.updateAll().foreach(log)
+      val exportResult = svc.exportAll()
+      val auditResult = svc.auditAll(verbose = false)
       val paths = ((sourceManaged in Compile).value / "projectile") ** "*.scala"
       paths.get
     }.taskValue

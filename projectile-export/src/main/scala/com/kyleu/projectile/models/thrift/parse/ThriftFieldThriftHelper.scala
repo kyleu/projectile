@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.thrift.schema.ThriftStructField
 object ThriftFieldThriftHelper {
   def getAsThrift(field: ThriftStructField, input: ThriftInput) = {
     val t = ThriftFileHelper.columnTypeFor(field.t, input)
-    parse(field.name, t, field.required || field.value.isDefined)
+    parse(field.name, t, field.required)
   }
 
   def getFromField(field: ExportField) = {

@@ -29,7 +29,7 @@ object ThriftExportService {
         case c: ConstIdentifier => c.value
         case x => x.toString
       },
-      required = arg.required
+      required = arg.required || arg.value.isDefined
     )
   }.toList
 

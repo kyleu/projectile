@@ -1,6 +1,8 @@
 package com.kyleu.projectile.services.audit
 
 import better.files.File
+import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.models.project.audit.{AuditMessage, AuditResult}
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.project.ProjectExportService
@@ -8,13 +10,19 @@ import com.kyleu.projectile.services.project.ProjectExportService
 trait AuditHelper { this: ProjectileService =>
   private[this] lazy val exportSvc = new ProjectExportService(this)
 
-  def audit(keys: Seq[String], verbose: Boolean) = {
+  def audit(inputs: Seq[(ExportConfiguration, ProjectOutput)], verbose: Boolean) = {
+    ProjectAuditService.audit(this, inputs)
+  }
+
+  def auditKeys(keys: Seq[String], verbose: Boolean) = {
     val inputs = keys.map { key =>
       val cfg = configForProject(key)
       loadConfig(key) -> exportSvc.getOutput(projectRoot = cfg.workingDirectory, key = key, verbose = verbose)
     }
-    ProjectAuditService.audit(this, inputs)
+    audit(inputs, verbose)
   }
+
+  def auditAll(verbose: Boolean) = auditKeys(listProjects().map(_.key), verbose)
 
   def fix(key: String, t: String, src: String, tgt: String): String = {
     val msg = AuditMessage(project = key, srcModel = src, src = src, t = t, tgt = tgt, message = "")
@@ -24,7 +32,7 @@ trait AuditHelper { this: ProjectileService =>
   private[this] def fixMessage(msg: AuditMessage, result: Option[AuditResult] = None): String = {
     msg.t match {
       case "all" =>
-        val auditResult = result.getOrElse(audit(keys = listProjects().map(_.key), verbose = false))
+        val auditResult = result.getOrElse(auditKeys(keys = listProjects().map(_.key), verbose = false))
         msg.src match {
           case "config" => auditResult.configMessages.map(m => fixMessage(m, Some(auditResult))).mkString(", ")
           case "output" => auditResult.outputMessages.map(m => fixMessage(m, Some(auditResult))).mkString(", ")

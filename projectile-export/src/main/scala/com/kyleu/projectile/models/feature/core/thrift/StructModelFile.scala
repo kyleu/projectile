@@ -60,7 +60,7 @@ object StructModelFile {
       file.add()
       file.add("override def toDataFields = Seq(", 1)
       model.fields.foreach { field =>
-        val x = if (field.required || field.defaultValue.isDefined) {
+        val x = if (field.required) {
           val method = if (field.t == FieldType.StringType) { "" } else { ".toString" }
           s"""DataField("${field.propertyName.replaceAllLiterally("`", "")}", Some(${field.propertyName}$method))"""
         } else {
