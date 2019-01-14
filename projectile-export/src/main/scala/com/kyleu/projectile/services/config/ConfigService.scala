@@ -6,6 +6,10 @@ import com.kyleu.projectile.util.{JsonSerializers, Logging}
 
 class ConfigService(val path: String) extends Logging {
   val workingDirectory = better.files.File.apply(path)
+  if (!workingDirectory.exists) {
+    log.warn(s"workingDirectory [${workingDirectory.pathAsString}] does not exist")(TraceData.noop)
+  }
+
   val configDirectory = workingDirectory / ".projectile"
 
   val inputDirectory = configDirectory / "input"
@@ -33,7 +37,10 @@ class ConfigService(val path: String) extends Logging {
     val f = configDirectory / "linked.json"
     if (f.exists && f.isReadable) {
       val dirs = JsonSerializers.extractString[Seq[String]](f.contentAsString)
-      val configs = dirs.map(_.trim).filter(_.nonEmpty).filterNot(_ == ".").distinct.map(d => new ConfigService(d))
+      val configs = dirs.map(_.trim).filter(_.nonEmpty).filterNot(_ == ".").distinct.map { d =>
+        val f = workingDirectory / d
+        new ConfigService(f.pathAsString)
+      }
       configs.foreach {
         case cfg if !cfg.available => log.warn(s"Linked configuration directory [${cfg.path}] is not initialized")(TraceData.noop)
         case _ => // noop
