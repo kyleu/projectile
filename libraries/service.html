@@ -39,7 +39,7 @@ code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}
 </head>
 <body
 data-md-color-primary="green"
-data-md-color-accent="blue"
+data-md-color-accent="green"
 >
 <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
 <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -166,16 +166,41 @@ KyleU/projectile
   <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../libraries/service.html#service" class="header">Service</a>
+  <ul>
+    <li><a href="../libraries/service.html#usage" class="header">Usage</a></li>
+    <li><a href="../libraries/service.html#classes" class="header">Classes</a></li>
+  </ul></li>
+</ul>
 </nav>
 
 </nav>
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 0.9.1*
+<i class="md-icon" title="Version">label_outline</i> 1.0.0
 </label>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../libraries/service.html#service" class="header">Service</a>
+  <ul>
+    <li><a href="../libraries/service.html#usage" class="header">Usage</a></li>
+    <li><a href="../libraries/service.html#classes" class="header">Classes</a></li>
+  </ul></li>
+</ul>
+</nav>
+
 </div>
 </div>
 </div>
@@ -183,14 +208,16 @@ KyleU/projectile
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#service" name="service" class="anchor"><span class="anchor-link"></span></a>Service</h1>
-<p><code>projectile-lib-service</code></p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.kyleu" %% "projectile-lib-service" % "latest"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
+<p>Supports service classes with various helpers (<a href="../api/projectile-lib-service">API Documentation</a>)</p>
+<h3><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h3><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.kyleu" %% "projectile-lib-service" % "latest"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;com.kyleu&lt;/groupId&gt;
   &lt;artifactId&gt;projectile-lib-service_2.12&lt;/artifactId&gt;
   &lt;version&gt;latest&lt;/version&gt;
 &lt;/dependency&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">dependencies {
   compile group: 'com.kyleu', name: 'projectile-lib-service_2.12', version: 'latest'
 }</code></pre></dd></dl>
-<p><a href="../api/projectile-lib-service">API Documentation</a></p>
+<h3><a href="#classes" name="classes" class="anchor"><span class="anchor-link"></span></a>Classes</h3>
+<p>TODO</p>
 </div>
 <div>
 <a href="https://github.com/KyleU/projectile/tree/master/doc/src/main/paradox/libraries/service.md" title="Edit this page" class="md-source-file md-edit">
@@ -199,7 +226,7 @@ Edit this page
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-0.9.1*
+1.0.0
 </span>
 </div>
 </article>
@@ -240,9 +267,6 @@ Scala.js
 <div class="md-footer-meta md-typeset">
 <div class="md-footer-meta__inner md-grid">
 <div class="md-footer-copyright">
-<div class="md-footer-copyright__highlight">
-Kyle Unverferth
-</div>
 Powered by
 <a href="https://github.com/lightbend/paradox">Paradox</a>
 and

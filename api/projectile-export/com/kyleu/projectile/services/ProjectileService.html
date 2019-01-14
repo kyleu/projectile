@@ -272,7 +272,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">ProjectileService</span><span class="result"> extends <a href="input/InputHelper.html" class="extype" name="com.kyleu.projectile.services.input.InputHelper">InputHelper</a> with <a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a> with <a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></span>
+        <span class="name">ProjectileService</span><span class="result"> extends <a href="input/InputHelper.html" class="extype" name="com.kyleu.projectile.services.input.InputHelper">InputHelper</a> with <a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a> with <a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a> with <a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></span>
       </span>
       </h4>
 
@@ -281,7 +281,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a>, <a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a>, <a href="input/InputHelper.html" class="extype" name="com.kyleu.projectile.services.input.InputHelper">InputHelper</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a>, <a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a>, <a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a>, <a href="input/InputHelper.html" class="extype" name="com.kyleu.projectile.services.input.InputHelper">InputHelper</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -307,7 +307,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.kyleu.projectile.services.ProjectileService"><span>ProjectileService</span></li><li class="in" name="com.kyleu.projectile.services.project.audit.AuditHelper"><span>AuditHelper</span></li><li class="in" name="com.kyleu.projectile.services.project.ProjectHelper"><span>ProjectHelper</span></li><li class="in" name="com.kyleu.projectile.services.input.InputHelper"><span>InputHelper</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.kyleu.projectile.services.ProjectileService"><span>ProjectileService</span></li><li class="in" name="com.kyleu.projectile.services.project.audit.AuditHelper"><span>AuditHelper</span></li><li class="in" name="com.kyleu.projectile.services.project.codegen.CodegenHelper"><span>CodegenHelper</span></li><li class="in" name="com.kyleu.projectile.services.project.ProjectHelper"><span>ProjectHelper</span></li><li class="in" name="com.kyleu.projectile.services.input.InputHelper"><span>InputHelper</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -328,9 +328,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.services.ProjectileService#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(cfg:com.kyleu.projectile.services.config.ConfigService):com.kyleu.projectile.services.ProjectileService"></a><a id="&lt;init&gt;:ProjectileService"></a>
+      <a id="&lt;init&gt;(rootCfg:com.kyleu.projectile.services.config.ConfigService):com.kyleu.projectile.services.ProjectileService"></a><a id="&lt;init&gt;:ProjectileService"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#&lt;init&gt;(cfg:com.kyleu.projectile.services.config.ConfigService):com.kyleu.projectile.services.ProjectileService" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#&lt;init&gt;(rootCfg:com.kyleu.projectile.services.config.ConfigService):com.kyleu.projectile.services.ProjectileService" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -339,7 +339,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ProjectileService</span><span class="params">(<span name="cfg">cfg: <a href="config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a> = <span class="symbol"><span class="name"><a href="../../../index.html">new ConfigService(&quot;.&quot;)</a></span></span></span>)</span>
+        <span class="name">ProjectileService</span><span class="params">(<span name="rootCfg">rootCfg: <a href="config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a> = <span class="symbol"><span class="name"><a href="../../../index.html">new ConfigService(&quot;.&quot;)</a></span></span></span>)</span>
       </span>
       
       
@@ -434,9 +434,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.audit.AuditHelper#audit" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="audit(keys:Seq[String],verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult"></a><a id="audit(Seq[String],Boolean):AuditResult"></a>
+      <a id="audit(inputs:Seq[(com.kyleu.projectile.models.export.config.ExportConfiguration,com.kyleu.projectile.models.project.ProjectOutput)],verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult"></a><a id="audit(Seq[(ExportConfiguration,ProjectOutput)],Boolean):AuditResult"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#audit(keys:Seq[String],verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#audit(inputs:Seq[(com.kyleu.projectile.models.export.config.ExportConfiguration,com.kyleu.projectile.models.project.ProjectOutput)],verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -445,26 +445,42 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">audit</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../models/project/audit/AuditResult.html" class="extype" name="com.kyleu.projectile.models.project.audit.AuditResult">AuditResult</a></span>
+        <span class="name">audit</span><span class="params">(<span name="inputs">inputs: <span class="extype" name="scala.Seq">Seq</span>[(<a href="../models/export/config/ExportConfiguration.html" class="extype" name="com.kyleu.projectile.models.export.config.ExportConfiguration">ExportConfiguration</a>, <a href="../models/project/ProjectOutput.html" class="extype" name="com.kyleu.projectile.models.project.ProjectOutput">ProjectOutput</a>)]</span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../models/project/audit/AuditResult.html" class="extype" name="com.kyleu.projectile.models.project.audit.AuditResult">AuditResult</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></dd></dl></div>
-    </li><li name="com.kyleu.projectile.services.ProjectileService#cfg" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="cfg:com.kyleu.projectile.services.config.ConfigService"></a><a id="cfg:ConfigService"></a>
+    </li><li name="com.kyleu.projectile.services.project.audit.AuditHelper#auditAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="auditAll(verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult"></a><a id="auditAll(Boolean):AuditResult"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#cfg:com.kyleu.projectile.services.config.ConfigService" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#auditAll(verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">cfg</span><span class="result">: <a href="config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>
+        <span class="name">auditAll</span><span class="params">(<span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../models/project/audit/AuditResult.html" class="extype" name="com.kyleu.projectile.models.project.audit.AuditResult">AuditResult</a></span>
       </span>
       
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.audit.AuditHelper#auditKeys" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="auditKeys(keys:Seq[String],verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult"></a><a id="auditKeys(Seq[String],Boolean):AuditResult"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#auditKeys(keys:Seq[String],verbose:Boolean):com.kyleu.projectile.models.project.audit.AuditResult" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">auditKeys</span><span class="params">(<span name="keys">keys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../models/project/audit/AuditResult.html" class="extype" name="com.kyleu.projectile.models.project.audit.AuditResult">AuditResult</a></span>
+      </span>
       
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -489,10 +505,10 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#codegenProject" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="codegenProject(key:String,verbose:Boolean):com.kyleu.projectile.models.command.ProjectileResponse.ProjectExportResult"></a><a id="codegenProject(String,Boolean):ProjectExportResult"></a>
+    </li><li name="com.kyleu.projectile.services.project.codegen.CodegenHelper#codegen" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="codegen(projectKeys:Seq[String],verbose:Boolean):com.kyleu.projectile.models.project.codegen.CodegenResult"></a><a id="codegen(Seq[String],Boolean):CodegenResult"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#codegenProject(key:String,verbose:Boolean):com.kyleu.projectile.models.command.ProjectileResponse.ProjectExportResult" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#codegen(projectKeys:Seq[String],verbose:Boolean):com.kyleu.projectile.models.project.codegen.CodegenResult" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -501,10 +517,42 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">codegenProject</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../models/command/ProjectileResponse$$ProjectExportResult.html" class="extype" name="com.kyleu.projectile.models.command.ProjectileResponse.ProjectExportResult">ProjectExportResult</a></span>
+        <span class="name">codegen</span><span class="params">(<span name="projectKeys">projectKeys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../models/project/codegen/CodegenResult.html" class="extype" name="com.kyleu.projectile.models.project.codegen.CodegenResult">CodegenResult</a></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.ProjectileService#configForInput" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="configForInput(key:String):com.kyleu.projectile.services.config.ConfigService"></a><a id="configForInput(String):ConfigService"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#configForInput(key:String):com.kyleu.projectile.services.config.ConfigService" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">configForInput</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.ProjectileService#configForProject" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="configForProject(key:String):com.kyleu.projectile.services.config.ConfigService"></a><a id="configForProject(String):ConfigService"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#configForProject(key:String):com.kyleu.projectile.services.config.ConfigService" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">configForProject</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>
+      </span>
+      
+      
     </li><li name="com.kyleu.projectile.services.ProjectileService#doctor" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="doctor(verbose:Boolean):com.kyleu.projectile.models.command.ProjectileResponsewithProductwithSerializable"></a><a id="doctor(Boolean):ProjectileResponsewithProductwithSerializable"></a>
       <span class="permalink">
@@ -553,6 +601,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#exportAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exportAll():Seq[(com.kyleu.projectile.models.project.ProjectOutput,Seq[com.kyleu.projectile.services.output.OutputService.WriteResult])]"></a><a id="exportAll():Seq[(ProjectOutput,Seq[WriteResult])]"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#exportAll():Seq[(com.kyleu.projectile.models.project.ProjectOutput,Seq[com.kyleu.projectile.services.output.OutputService.WriteResult])]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exportAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[(<a href="../models/project/ProjectOutput.html" class="extype" name="com.kyleu.projectile.models.project.ProjectOutput">ProjectOutput</a>, <span class="extype" name="scala.collection.Seq">Seq</span>[<a href="output/OutputService$$WriteResult.html" class="extype" name="com.kyleu.projectile.services.output.OutputService.WriteResult">WriteResult</a>])]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.ProjectHelper#exportProject" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="exportProject(key:String,verbose:Boolean):(com.kyleu.projectile.models.project.ProjectOutput,Seq[com.kyleu.projectile.services.output.OutputService.WriteResult])"></a><a id="exportProject(String,Boolean):(ProjectOutput,Seq[WriteResult])"></a>
       <span class="permalink">
@@ -690,6 +754,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.codegen.CodegenHelper#getProjectHash" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getProjectHash(project:String):Int"></a><a id="getProjectHash(String):Int"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#getProjectHash(project:String):Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getProjectHash</span><span class="params">(<span name="project">project: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.ProjectHelper#getProjectSummary" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getProjectSummary(key:String):com.kyleu.projectile.models.project.ProjectSummary"></a><a id="getProjectSummary(String):ProjectSummary"></a>
       <span class="permalink">
@@ -774,9 +854,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.kyleu.projectile.services.input.InputHelper#listInputs" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listInputs():List[com.kyleu.projectile.models.input.InputSummary]"></a><a id="listInputs():List[InputSummary]"></a>
+      <a id="listInputs():Seq[com.kyleu.projectile.models.input.InputSummary]"></a><a id="listInputs():Seq[InputSummary]"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#listInputs():List[com.kyleu.projectile.models.input.InputSummary]" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#listInputs():Seq[com.kyleu.projectile.models.input.InputSummary]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -785,14 +865,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listInputs</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[<a href="../models/input/InputSummary.html" class="extype" name="com.kyleu.projectile.models.input.InputSummary">InputSummary</a>]</span>
+        <span class="name">listInputs</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../models/input/InputSummary.html" class="extype" name="com.kyleu.projectile.models.input.InputSummary">InputSummary</a>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="input/InputHelper.html" class="extype" name="com.kyleu.projectile.services.input.InputHelper">InputHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.ProjectHelper#listProjects" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listProjects():List[com.kyleu.projectile.models.project.ProjectSummary]"></a><a id="listProjects():List[ProjectSummary]"></a>
+      <a id="listProjects():Seq[com.kyleu.projectile.models.project.ProjectSummary]"></a><a id="listProjects():Seq[ProjectSummary]"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#listProjects():List[com.kyleu.projectile.models.project.ProjectSummary]" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#listProjects():Seq[com.kyleu.projectile.models.project.ProjectSummary]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -801,7 +881,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listProjects</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[<a href="../models/project/ProjectSummary.html" class="extype" name="com.kyleu.projectile.models.project.ProjectSummary">ProjectSummary</a>]</span>
+        <span class="name">listProjects</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../models/project/ProjectSummary.html" class="extype" name="com.kyleu.projectile.models.project.ProjectSummary">ProjectSummary</a>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
@@ -1035,6 +1115,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.ProjectileService#rootCfg" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rootCfg:com.kyleu.projectile.services.config.ConfigService"></a><a id="rootCfg:ConfigService"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#rootCfg:com.kyleu.projectile.services.config.ConfigService" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rootCfg</span><span class="result">: <a href="config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>
+      </span>
+      
+      
     </li><li name="com.kyleu.projectile.services.ProjectileService#rootDir" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="rootDir:better.files.File"></a><a id="rootDir:File"></a>
       <span class="permalink">
@@ -1179,6 +1275,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="input/InputHelper.html" class="extype" name="com.kyleu.projectile.services.input.InputHelper">InputHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.codegen.CodegenHelper#setProjectHash" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setProjectHash(project:String,hash:Int):better.files.File"></a><a id="setProjectHash(String,Int):File"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#setProjectHash(project:String,hash:Int):better.files.File" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setProjectHash</span><span class="params">(<span name="project">project: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="hash">hash: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="better.files.File">File</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.input.InputHelper#setThriftOptions" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setThriftOptions(key:String,to:com.kyleu.projectile.models.thrift.input.ThriftOptions):com.kyleu.projectile.models.thrift.input.ThriftInput"></a><a id="setThriftOptions(String,ThriftOptions):ThriftInput"></a>
       <span class="permalink">
@@ -1243,6 +1355,22 @@
       </span>
       
       
+    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#updateAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="updateAll():Seq[String]"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#updateAll():Seq[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">updateAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.ProjectHelper#updateProject" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="updateProject(key:String):Seq[String]"></a><a id="updateProject(String):Seq[String]"></a>
       <span class="permalink">
@@ -1339,6 +1467,8 @@
         <div id="inheritedMembers">
         <div class="parent" name="com.kyleu.projectile.services.project.audit.AuditHelper">
               <h3>Inherited from <a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></h3>
+            </div><div class="parent" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">
+              <h3>Inherited from <a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a></h3>
             </div><div class="parent" name="com.kyleu.projectile.services.project.ProjectHelper">
               <h3>Inherited from <a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></h3>
             </div><div class="parent" name="com.kyleu.projectile.services.input.InputHelper">
