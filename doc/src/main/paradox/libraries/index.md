@@ -19,6 +19,6 @@
 Projectile generates Scala code that expects helper classes to be available. 
 
 You can provide your own, or use the Projectile libraries. 
-There's quite a few of them, give me a minute to document them 
+You almost certainly won't need them all, but documentation on the exposed classes is available here.
 
-@@toc { depth=2 }
+@@toc { depth=1 }

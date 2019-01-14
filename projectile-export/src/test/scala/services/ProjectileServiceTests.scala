@@ -18,12 +18,15 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
   val db = "boilerplay"
   lazy val conn = PostgresConnection(url = s"jdbc:postgresql://localhost/$db", username = db, password = db, db = db)
 
+  /*
   "ProjectileService" should "initialize correctly" in {
     cfg.init()
     svc.toString
   }
+  */
 
   // Input
+  /*
   it should "fail to load a missing input" in {
     a[IllegalStateException] should be thrownBy {
       svc.getInput("lol-no")
@@ -43,7 +46,6 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
     i.username should be(conn.username)
   }
 
-  /*
   it should "refresh the input successfully" in {
     val x = svc.refreshInput(inputKey)
     x.enums.size should be(1)
@@ -58,12 +60,14 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
   */
 
   // Project
+  /*
   it should "create a project" in {
     svc.saveProject(ProjectSummary(template = ProjectTemplate.Custom, key = projectKey, features = ProjectFeature.set))
     val p = svc.getProject(projectKey)
     p.key should be(projectKey)
     p.features should be(ProjectFeature.set)
   }
+  */
 
   /*
   // Members
@@ -105,6 +109,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
   */
 
   // Cleanup
+  /*
   it should "remove a project" in {
     svc.removeProject(projectKey)
     a[IllegalStateException] should be thrownBy {
@@ -118,4 +123,5 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
       svc.getInput(inputKey)
     }
   }
+  */
 }

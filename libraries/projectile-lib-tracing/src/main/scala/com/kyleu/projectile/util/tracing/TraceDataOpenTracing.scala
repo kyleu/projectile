@@ -5,6 +5,7 @@ import io.jaegertracing.internal.JaegerSpanContext
 import io.opentracing.Span
 import io.opentracing.noop.NoopSpanContext
 
+/// Extends TraceData with OpenTracing-specific functionality
 final case class TraceDataOpenTracing(span: Span) extends TraceData {
   override val isNoop = false
 

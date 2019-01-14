@@ -1,6 +1,8 @@
 # GraphQL
 
-`projectile-lib-graphql`
+GraphQL utilities and helpers ([API Documentation](../api/projectile-lib-graphql))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,6 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-graphql)
+### Classes
+
+TODO

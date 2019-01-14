@@ -1,6 +1,8 @@
 # Doobie
 
-`projectile-lib-doobie`
+Supporting classes for Doobie queries ([API Documentation](../api/projectile-lib-doobie))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,6 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-doobie)
+### Classes
+
+TODO

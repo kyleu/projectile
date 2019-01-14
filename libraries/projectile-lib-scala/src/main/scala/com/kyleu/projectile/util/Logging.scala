@@ -3,6 +3,7 @@ package com.kyleu.projectile.util
 import com.kyleu.projectile.util.tracing.TraceData
 import org.slf4j.{LoggerFactory, MDC}
 
+/// Provides a logging interface that accepts TraceData in its methods and includes the trace ids in its output
 object Logging {
   val metricsId = "logging"
 
@@ -44,6 +45,7 @@ object Logging {
   }
 }
 
+/// Mix in this trait to have access to the `log` member
 trait Logging {
   protected[this] lazy val log = Logging.TraceLogger(this.getClass)
 }

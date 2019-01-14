@@ -3,6 +3,7 @@ package com.kyleu.projectile.util
 import java.nio.ByteBuffer
 import java.util.UUID
 
+/// Utility methods to transform a `java.util.UUID` to and from a sequence of bytes
 object UuidUtils {
   def toBytes(uuid: UUID) = {
     val bb = ByteBuffer.wrap(new Array[Byte](16))

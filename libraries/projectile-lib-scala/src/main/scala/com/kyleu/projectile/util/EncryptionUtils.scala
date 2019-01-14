@@ -9,6 +9,7 @@ import org.apache.commons.codec.binary.Base64
 
 import scala.util.control.NonFatal
 
+/// Uses a user-provided secret to encrypt and decrypt arbitrary bytes and strings using AES/ECB/PKCS5Padding
 object EncryptionUtils {
   private[this] var key: Option[String] = None
   private[this] val salt = "salt-value-changeme"

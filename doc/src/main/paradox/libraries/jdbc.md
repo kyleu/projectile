@@ -1,6 +1,8 @@
 # JDBC
 
-`projectile-lib-jdbc`
+Imports and models for jdbc database connections ([API Documentation](../api/projectile-lib-jdbc))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,7 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-jdbc)
+
+### Classes
+
+TODO

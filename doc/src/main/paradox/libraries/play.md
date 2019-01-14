@@ -1,6 +1,8 @@
 # Play
 
-`projectile-lib-play`
+Helpers for traced Play Framework controllers and views ([API Documentation](../api/projectile-lib-play))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,6 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-play)
+### Classes
+
+TODO

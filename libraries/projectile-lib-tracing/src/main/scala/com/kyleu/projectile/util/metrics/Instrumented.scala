@@ -14,6 +14,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
+/// Helper class to initialize Prometheus, Datadog, or StatsD metrics reporting
 object Instrumented extends Logging {
   private[this] def cn(x: Any) = x.getClass.getSimpleName.replaceAllLiterally("$", "")
 

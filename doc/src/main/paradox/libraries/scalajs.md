@@ -1,6 +1,8 @@
 # Scala.js
 
-`projectile-lib-scalajs`
+Scala.js helpers ([API Documentation](../api/projectile-lib-scalajs))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,6 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-scalajs)
+### Classes
+
+TODO

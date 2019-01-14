@@ -1,5 +1,6 @@
 package com.kyleu.projectile.util.tracing
 
+/// Use `noop` when you don't have access to an implicit TraceData
 object TraceData {
   // When you see this referenced, we screwed up.
   val todo = new TraceData()
@@ -8,6 +9,7 @@ object TraceData {
   val noop = new TraceData()
 }
 
+/// Used everywhere, `TraceData` is a common trait that exposes authentication and tracing information for OpenTracing services
 class TraceData protected () {
   def isNoop: Boolean = true
 

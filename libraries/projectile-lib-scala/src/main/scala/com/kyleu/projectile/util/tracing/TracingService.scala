@@ -14,6 +14,7 @@ object TracingService {
   }
 }
 
+/// Provides tracing helpers and methods to wrap access to OpenTracing
 trait TracingService extends Logging {
   def noopTrace[A](name: String)(f: TraceData => Future[A]): Future[A] = f(TraceData.noop)
   def topLevelTrace[A](name: String)(f: TraceData => Future[A]): Future[A]

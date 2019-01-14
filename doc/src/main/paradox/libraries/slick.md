@@ -1,6 +1,8 @@
 # Slick
 
-`projectile-lib-slick`
+Access routines for Slick databindings ([API Documentation](../api/projectile-lib-slick))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,6 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-slick)
+### Classes
+
+TODO

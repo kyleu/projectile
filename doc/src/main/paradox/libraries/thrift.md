@@ -1,6 +1,8 @@
 # Thrift
 
-`projectile-lib-thrift`
+Thrift service helpers, such as future conversions ([API Documentation](../api/projectile-lib-thrift))
+
+### Usage
 
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
@@ -8,4 +10,6 @@
   version="latest"
 }
 
-[API Documentation](../api/projectile-lib-thrift)
+### Classes
+
+TODO
