@@ -13,13 +13,19 @@ class ConfigService(val path: String) extends Logging {
   val configDirectory = workingDirectory / ".projectile"
 
   val inputDirectory = configDirectory / "input"
-  def containsInput(key: String) = (inputDirectory / key).exists
-  def configForInput(key: String): Option[ConfigService] = if (containsInput(key)) { Some(this) } else { linkedConfigs.find(_.containsInput(key)) }
+  def containsInput(key: String): Boolean = (inputDirectory / key).exists
+  def configForInput(key: String): Option[ConfigService] = if (containsInput(key)) {
+    Some(this)
+  } else {
+    linkedConfigs.flatMap(_.configForInput(key)).headOption
+  }
 
   val projectDirectory = configDirectory / "project"
-  def containsProject(key: String) = (projectDirectory / key).exists
-  def configForProject(key: String): Option[ConfigService] = {
-    if (containsProject(key)) { Some(this) } else { linkedConfigs.find(_.containsProject(key)) }
+  def containsProject(key: String): Boolean = (projectDirectory / key).exists
+  def configForProject(key: String): Option[ConfigService] = if (containsProject(key)) {
+    Some(this)
+  } else {
+    linkedConfigs.flatMap(_.configForProject(key)).headOption
   }
 
   def projectDir(key: String) = {

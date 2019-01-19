@@ -1,8 +1,8 @@
 scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
 // Web
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.20")
-addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.3")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.21")
+addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.4")
 addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.1.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
 
@@ -15,7 +15,7 @@ addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.8-0.6" exclude("org.scala-
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // App Packaging
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.7")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9")
 
 // Publishing
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.2") // show */*:pgpSecretRing
@@ -41,7 +41,7 @@ addSbtPlugin("com.dwijnand" % "sbt-project-graph" % "0.4.0") // projectsGraphDot
 addSbtPlugin("com.github.xuwei-k" % "sbt-class-diagram" % "0.2.1") // classDiagram
 
 // Documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.4.2")
-addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.5.1")
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.4.4" exclude("com.typesafe.akka", "akka-"))
+addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.6.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2" exclude("com.lightbend.paradox", "sbt-paradox"))
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.2")

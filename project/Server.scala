@@ -62,7 +62,6 @@ object Server {
     scapegoatDisabledInspections := Seq("UnusedMethodParameter")
   )
 
-
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
   lazy val `projectile-server` = withProjects(

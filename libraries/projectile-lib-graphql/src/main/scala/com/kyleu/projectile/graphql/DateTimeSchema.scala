@@ -15,13 +15,16 @@ object DateTimeSchema {
   case object LocalTimeCoercionViolation extends ValueCoercionViolation("Time value expected in format [HH:mm:ss].")
 
   private[this] val fmtZonedDateTime = format.DateTimeFormatter.ISO_ZONED_DATE_TIME
-  private[this] val fmtLocalDateTime = format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
   private[this] val fmtLocalDate = format.DateTimeFormatter.ISO_LOCAL_DATE
   private[this] val fmtLocalTime = format.DateTimeFormatter.ISO_LOCAL_TIME
+  private[this] val fmtLocalDateTime = format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
-  private[this] def parseZonedDateTime(s: String) = Try(ZonedDateTime.parse(s, fmtZonedDateTime)) match {
-    case Success(date) => Right(date)
-    case Failure(_) => Left(ZonedDateTimeCoercionViolation)
+  private[this] def parseZonedDateTime(s: String) = {
+    val fixed = s.replaceAllLiterally(" ", "T").stripSuffix("Z") + "Z"
+    Try(ZonedDateTime.parse(fixed, fmtZonedDateTime)) match {
+      case Success(date) => Right(date)
+      case Failure(ex) => Left(ZonedDateTimeCoercionViolation)
+    }
   }
 
   implicit val zonedDateTimeType: ScalarType[ZonedDateTime] = ScalarType[ZonedDateTime](

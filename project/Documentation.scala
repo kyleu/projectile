@@ -23,10 +23,9 @@ object Documentation {
     git.remoteRepo := "git@github.com:KyleU/projectile.git",
 
     paradoxProperties ++= Map(
-      "material.color.primary" -> "green",
-      "material.color.accent" -> "green",
-      "material.logo" -> "settings",
-      "material.favicon" -> "logo.png",
+      "material.color.primary" -> "blue-grey",
+      "material.color.accent" -> "blue-grey",
+
       "material.repo" -> "https://github.com/KyleU/projectile",
       "material.repo.type" -> "github",
       "material.repo.name" -> "KyleU/projectile",

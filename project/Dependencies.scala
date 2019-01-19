@@ -52,33 +52,33 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.11.0"
+    val version = "0.11.1"
     val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
-    val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson29" % "0.10.0")
+    val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson29" % "0.11.0")
   }
 
   object Thrift {
-    val version = "18.3.0"
+    val version = "18.12.0"
     val core = "com.twitter" %% "finagle-core" % version
   }
 
   object Metrics {
-    val version = "1.1.1"
+    val version = "1.1.2"
     val micrometerCore = "io.micrometer" % "micrometer-core" % version
     val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
     val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
   }
 
   object Tracing {
-    val version = "0.32.0"
+    val version = "0.33.1"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.17.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.21.0"
   }
 
   object Authentication {
-    private[this] val version = "5.0.6"
+    private[this] val version = "5.0.7"
     val silhouette = "com.mohiva" %% "play-silhouette" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
@@ -98,7 +98,7 @@ object Dependencies {
 
   object Utils {
     val scapegoatVersion = "1.3.8"
-    val enumeratumCirceVersion = "1.5.18"
+    val enumeratumCirceVersion = "1.5.19"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
     val chimney = "io.scalaland" %% "chimney" % "0.3.0"

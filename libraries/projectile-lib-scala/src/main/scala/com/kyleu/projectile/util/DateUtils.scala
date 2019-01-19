@@ -2,6 +2,7 @@ package com.kyleu.projectile.util
 
 import java.text.SimpleDateFormat
 import java.time._
+import java.time.format.{DateTimeFormatter, DateTimeParseException}
 
 /// Provides ordering, formatting, and common utilities for Local and Zoned `java.time` date classes
 object DateUtils {
@@ -13,15 +14,18 @@ object DateUtils {
 
   implicit def localDateOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isBefore _)
   implicit def localDateTimeOrdering: Ordering[LocalDateTime] = Ordering.fromLessThan(_ isBefore _)
+  implicit def zonedDateTimeOrdering: Ordering[ZonedDateTime] = Ordering.fromLessThan(_ isBefore _)
 
   def today = LocalDate.now()
   def now = LocalDateTime.now()
   def nowZoned = ZonedDateTime.now()
-  def nowMillis = System.currentTimeMillis
+  def nowMillis = toMillis(now)
   def currentTime = LocalTime.now()
 
+  def toMillisZoned(zdt: ZonedDateTime) = zdt.toInstant.toEpochMilli
   def toMillis(ldt: LocalDateTime) = ldt.atZone(ZoneId.systemDefault).toInstant.toEpochMilli
-  def fromMillis(millis: Long) = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault).toLocalDateTime
+  def fromMillisZoned(millis: Long) = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault)
+  def fromMillis(millis: Long) = fromMillisZoned(millis).toLocalDateTime
 
   def toIsoString(ldt: LocalDateTime) = isoFmt.format(ldt)
   def fromIsoString(s: String) = LocalDateTime.from(isoFmt.parse(s))
@@ -46,12 +50,29 @@ object DateUtils {
   private[this] val dtFmtIso = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
   private[this] val dtFmtDefault = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
   private[this] val dtFmtAmPm = new SimpleDateFormat("yyyy-MM-dd hh:mma")
-  def sqlDateTimeFromString(s: String) = {
+
+  def parseIsoOffsetDateTime(s: String): Option[ZonedDateTime] = {
+    try {
+      Some(ZonedDateTime.parse(s, DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+    } catch {
+      case _: DateTimeParseException => None
+    }
+  }
+
+  def sqlTimestampFromIsoOffsetDateTime(s: String): Option[java.sql.Timestamp] = {
+    parseIsoOffsetDateTime(s).map(zdt => new java.sql.Timestamp(zdt.toInstant.toEpochMilli))
+  }
+
+  def sqlDateTimeFromString(s: String): java.sql.Timestamp = {
     def parse(sdf: SimpleDateFormat) = try {
       Some(new java.sql.Timestamp(sdf.parse(s).getTime))
     } catch {
       case _: java.text.ParseException => None
     }
-    parse(dtFmtIso).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtAmPm)).getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]."))
+    sqlTimestampFromIsoOffsetDateTime(s)
+      .orElse(parse(dtFmtIso))
+      .orElse(parse(dtFmtDefault))
+      .orElse(parse(dtFmtAmPm))
+      .getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]."))
   }
 }

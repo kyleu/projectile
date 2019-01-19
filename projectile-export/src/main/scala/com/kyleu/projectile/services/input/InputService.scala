@@ -25,7 +25,7 @@ class InputService(val cfg: ConfigService) {
     if (f.exists && f.isRegularFile && f.isReadable) {
       JsonFileLoader.loadFile[InputSummary](f, "input summary").copy(key = key)
     } else {
-      cfg.linkedConfigs.find(_.containsInput(key)) match {
+      cfg.configForInput(key) match {
         case Some(c) => new InputService(c).getSummary(key)
         case _ => throw new IllegalStateException(s"Cannot load input with key [$key]")
       }

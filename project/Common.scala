@@ -9,7 +9,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.0.0"
+    val app = "1.0.6"
     val scala = "2.12.8"
   }
 
@@ -28,7 +28,7 @@ object Common {
     scalaVersion := Common.Versions.scala,
     organization := "com.kyleu",
 
-    licenses := Seq("MIT" -> url("http://www.opensource.org/licenses/mit-license.php")),
+    licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0")),
     homepage := Some(url("https://projectile.kyleu.com")),
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "scm:git@github.com:KyleU/projectile.git")),
     developers := List(Developer(id = "kyleu", name = "Kyle Unverferth", email = "opensource@kyleu.com", url = url("http://kyleu.com"))),
@@ -67,7 +67,6 @@ object Common {
     publishMavenStyle := true,
 
     publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
-
   ) ++ (if(profilingEnabled) {
     Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0"))
   } else {

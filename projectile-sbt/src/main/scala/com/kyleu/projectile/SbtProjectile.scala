@@ -44,7 +44,13 @@ object SbtProjectile extends AutoPlugin {
       def log(s: String) = streamValue.log.info(s)
       val svc = new ProjectileService(new ConfigService(baseDirectory.value.getPath))
       try {
-        CommandLineOutput.logsFor(ProjectileResponse.ProjectCodegenResult(svc.codegen(verbose = false))).foreach(log)
+        val startMs = System.currentTimeMillis
+        val result = svc.codegen(verbose = false)
+        val logs = CommandLineOutput.logsFor(ProjectileResponse.ProjectCodegenResult(result))
+        logs.foreach(log)
+        if (logs.isEmpty) {
+          log(s"Projectile completed in [${System.currentTimeMillis - startMs}ms]: No changes required")
+        }
       } catch {
         case x: Throwable => log(s"Error running codegen: $x")
       }

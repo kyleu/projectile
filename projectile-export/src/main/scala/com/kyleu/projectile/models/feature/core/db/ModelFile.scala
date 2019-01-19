@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.core.ModelHelper
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 

@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.database.jdbc
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
+
 import com.kyleu.projectile.util.DateUtils
 
 object Conversions {
@@ -11,7 +12,8 @@ object Conversions {
 
     // Convert Joda times to UTC.
     case d: LocalDate => new java.sql.Date(DateUtils.toMillis(d.atStartOfDay))
-    case d: LocalDateTime => new java.sql.Date(DateUtils.toMillis(d))
+    case dt: LocalDateTime => new java.sql.Timestamp(DateUtils.toMillis(dt))
+    case zdt: ZonedDateTime => new java.sql.Timestamp(DateUtils.toMillisZoned(zdt))
 
     // Pass everything else through.
     case _ => x

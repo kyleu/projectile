@@ -1,55 +1,71 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, inputs: Seq[com.kyleu.projectile.models.input.InputSummary], projects: Seq[com.kyleu.projectile.models.project.ProjectSummary])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, com.kyleu.projectile.util.Version.projectName) {
-  <div class="collection with-header">
-    <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.formNew()">Add Input</a></div>
-      <h5><i class=" @com.kyleu.projectile.models.template.Icons.input"></i> Inputs</h5>
-      @if(inputs.size == 1) {
-        @inputs.size available input
-      } else {
-        @inputs.size available inputs (<a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.refreshAll()">refresh</a> all)
-      }
-    </div>
-    @if(inputs.isEmpty) {
-      <div class="collection-item">
-        You have no inputs configured at this path, go ahead and <a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.formNew()">add one</a>.
+  <div class="row">
+    <div class="col s12">
+      <div class="collection with-header">
+        <div class="collection-header">
+          <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.routes.HomeController.changeDir()">Change Directory</a></div>
+          <strong>@projectile.rootCfg.workingDirectory.pathAsString</strong>
+        </div>
+        <div class="collection-item">
+          <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.updateAll()">Update</a>
+          <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.exportAll()">Export</a>
+          <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.auditAll()">Audit</a>
+          <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.codegen()">Codegen</a>
+        </div>
       </div>
-    }
-    @inputs.sortBy(_.key).map { input =>
-      <a class="collection-item theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)">
-        <i class="@input.template.icon"></i>
-        @input.key
-      </a>
-    }
+    </div>
   </div>
 
-  <div class="collection with-header">
-    <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formNew()">Add Project</a></div>
-      <h5><i class=" @com.kyleu.projectile.models.template.Icons.project"></i> Projects</h5>
-      <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.updateAll()">Update</a>
-      <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.exportAll()">Export</a>
-      <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.auditAll()">Audit</a>
-      <a class="btn theme" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.codegen()">Codegen</a>
-    </div>
-    @if(projects.isEmpty) {
-      <div class="collection-item">
-        You have no projects configured at this path, go ahead and <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formNew()">add one</a>.
+  <div class="row">
+    <div class="col s12 m6">
+      <div class="collection with-header">
+        <div class="collection-header">
+          <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.formNew()">Add Input</a></div>
+          <h5><i class=" @com.kyleu.projectile.models.template.Icons.input"></i> Inputs</h5>
+          @if(inputs.size == 1) {
+            One available input
+          } else {
+            @inputs.size available inputs (<a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.refreshAll()">refresh</a> all)
+          }
+        </div>
+        @if(inputs.isEmpty) {
+          <div class="collection-item">
+            You have no inputs configured at this path, go ahead and <a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.formNew()">add one</a>.
+          </div>
+        }
+        @inputs.sortBy(_.key).map { input =>
+          <a class="collection-item theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)">
+            <i class="@input.template.icon"></i>
+            @input.key
+          </a>
+        }
       </div>
-    }
-    @projects.sortBy(_.key).map { project =>
-      <a class="collection-item theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)">
-        <i class="@project.template.icon"></i>
-        @project.key
-      </a>
-    }
-  </div>
-
-  <div class="collection with-header">
-    <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.routes.HomeController.changeDir()">Change Directory</a></div>
-      <strong>@projectile.rootCfg.workingDirectory.pathAsString</strong>
+    </div>
+    <div class="col s12 m6">
+      <div class="collection with-header">
+        <div class="collection-header">
+          <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formNew()">Add Project</a></div>
+          <h5><i class=" @com.kyleu.projectile.models.template.Icons.project"></i> Projects</h5>
+          @if(projects.size == 1) {
+            One available project
+          } else {
+            @projects.size available projects
+          }
+        </div>
+        @if(projects.isEmpty) {
+          <div class="collection-item">
+            You have no projects configured at this path, go ahead and <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formNew()">add one</a>.
+          </div>
+        }
+        @projects.sortBy(_.key).map { project =>
+          <a class="collection-item theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)">
+            <i class="@project.template.icon"></i>
+            @project.key
+          </a>
+        }
+      </div>
     </div>
   </div>
 }

@@ -18,7 +18,8 @@ class ProjectSummaryService(val cfg: ConfigService) {
   def list(): Seq[ProjectSummary] = immediateList() ++ cfg.linkedConfigs.map(c => new ProjectSummaryService(c)).flatMap(_.list()).sortBy(_.key)
 
   def getSummary(key: String): Option[ProjectSummary] = {
-    val d = cfg.configForProject(key).getOrElse(cfg).projectDirectory
+    val c = cfg.configForProject(key).getOrElse(throw new IllegalStateException(s"Cannot find project with key [$key]"))
+    val d = c.projectDirectory
     val f = d / key / fn
     if (f.exists && f.isRegularFile && f.isReadable) {
       decodeJson[ProjectSummary](f.contentAsString) match {
@@ -26,10 +27,7 @@ class ProjectSummaryService(val cfg: ConfigService) {
         case Left(x) => throw x
       }
     } else {
-      cfg.linkedConfigs.find(_.containsProject(key)) match {
-        case Some(c) => new ProjectSummaryService(c).getSummary(key)
-        case _ => throw new IllegalStateException(s"Cannot load input with key [$key]")
-      }
+      throw new IllegalStateException(s"Cannot load project with key [$key] from [${f.pathAsString}]")
     }
   }
 
