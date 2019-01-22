@@ -3,7 +3,7 @@ package com.kyleu.projectile.web.controllers
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class FileController @javax.inject.Inject() () extends BaseController {
+class FileController @javax.inject.Inject() () extends ProjectileController {
   def viewFile(path: String) = Action.async { implicit request =>
     val f = projectile.rootDir / ".projectile" / path
     if (f.isReadable && f.isRegularFile) {

@@ -1,6 +1,6 @@
 package com.kyleu.projectile.web.controllers.input
 
-import com.kyleu.projectile.web.controllers.BaseController
+import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.models.database.input.PostgresInput
 import com.kyleu.projectile.models.graphql.input.GraphQLInput
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
@@ -10,7 +10,7 @@ import com.kyleu.projectile.web.util.ControllerUtils
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class InputController @javax.inject.Inject() () extends BaseController {
+class InputController @javax.inject.Inject() () extends ProjectileController {
   def detail(key: String) = Action.async { implicit request =>
     val view = projectile.getInput(key) match {
       case i: PostgresInput => com.kyleu.projectile.web.views.html.input.postgresInput(projectile, i)

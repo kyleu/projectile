@@ -1,13 +1,29 @@
 import sbt.Keys._
 import sbt._
 import Dependencies._
+import sbtcrossproject.CrossPlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object LibraryProjects {
+  private[this] lazy val core = (crossProject(JSPlatform, JVMPlatform).withoutSuffixFor(JVMPlatform).crossType(CrossType.Pure) in file(
+    "libraries/projectile-lib-core"
+  )).settings(Common.settings: _*).settings(
+    description := "Classes and utilities shared between Scala and Scala.js",
+    libraryDependencies ++= {
+      val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum
+    },
+    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
+  ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13")
+
+  lazy val `projectile-lib-core` = core.jvm
+  lazy val `projectile-lib-core-js` = core.js
+
   lazy val `projectile-lib-scala` = (project in file("libraries/projectile-lib-scala")).settings(Common.settings: _*).settings(
     description := "Common classes used by code generated from Projectile",
-    libraryDependencies ++= Serialization.all ++ Seq(Utils.enumeratum, Utils.slf4j, Utils.commonsCodec),
-    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
-  )
+    libraryDependencies ++= Seq(Utils.slf4j, Utils.commonsCodec),
+  ).dependsOn(`projectile-lib-core`)
 
   lazy val `projectile-lib-tracing` = (project in file("libraries/projectile-lib-tracing")).settings(Common.settings: _*).settings(
     description := "Common OpenTracing classes used by code generated from Projectile",
@@ -58,7 +74,7 @@ object LibraryProjects {
       val scalatags = "com.lihaoyi" %%% "scalatags" % "0.6.7"
       Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(jQuery, scalatags, enumeratum, javaTime)
     }
-  ).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
+  ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
 
   lazy val `projectile-lib-play` = (project in file("libraries/projectile-lib-play")).settings(Common.settings: _*).settings(
     description := "Common Play Framework classes used by code generated from Projectile",
@@ -72,7 +88,7 @@ object LibraryProjects {
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val all = Seq(
-    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
+    `projectile-lib-core`, `projectile-lib-core-js`, `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`, `projectile-lib-play`, `projectile-lib-auth`
   )

@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.export.typ
 
 import com.kyleu.projectile.models.export.typ.FieldType._
+import com.kyleu.projectile.util.JacksonUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.HCursor
 
@@ -68,6 +69,6 @@ object FieldTypeDecoder {
       case ByteArrayType.value => Right(ByteArrayType)
     }
   } catch {
-    case NonFatal(x) => throw new IllegalStateException("Error parsing: " + printJson(c.value), x)
+    case NonFatal(x) => throw new IllegalStateException("Error parsing: " + JacksonUtils.printJackson(c.value), x)
   }
 }

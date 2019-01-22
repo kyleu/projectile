@@ -2,13 +2,13 @@ package com.kyleu.projectile.web.controllers.project
 
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.project.member.{MemberOverride, ModelMember}
-import com.kyleu.projectile.web.controllers.BaseController
+import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ProjectModelController @javax.inject.Inject() () extends BaseController {
+class ProjectModelController @javax.inject.Inject() () extends ProjectileController {
   def detail(key: String, model: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = projectile.getInput(p.input)

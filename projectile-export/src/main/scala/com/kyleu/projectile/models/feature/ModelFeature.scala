@@ -68,6 +68,10 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
     value = "thrift", title = "Thrift", description = "Generates Thrift definitions for models and services", dependsOn = Set(ProjectFeature.Thrift)
   )
 
+  case object Auth extends ModelFeature(
+    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Service)
+  )
+
   case object Audit extends ModelFeature(
     value = "audit", title = "Audit", description = "Adds audit logic to service methods", dependsOn = Set(ProjectFeature.Audit)
   )

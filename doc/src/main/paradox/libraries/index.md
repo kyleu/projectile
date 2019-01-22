@@ -2,6 +2,7 @@
 
 @@@ index
 
+* [Core](core.md)
 * [Scala](scala.md)
 * [Tracing](tracing.md)
 * [JDBC](jdbc.md)

@@ -2,6 +2,7 @@ package com.kyleu.projectile.services.input
 
 import com.kyleu.projectile.models.input.InputSummary
 import com.kyleu.projectile.services.config.ConfigService
+import com.kyleu.projectile.util.JacksonUtils
 import com.kyleu.projectile.util.JsonSerializers._
 
 object SummaryInputService {
@@ -11,7 +12,7 @@ object SummaryInputService {
     val dir = cfg.inputDirectory / summary.key
     dir.createDirectories()
 
-    val summ = printJson(summary.asJson)
+    val summ = JacksonUtils.printJackson(summary.asJson)
     (dir / fn).overwrite(summ)
 
     dir

@@ -36,27 +36,7 @@ object JsonSerializers {
 
   implicit def encoderOps[A](a: A): io.circe.syntax.EncoderOps[A] = io.circe.syntax.EncoderOps[A](a)
 
-  // Jackson
-  def parseJson(s: String) = io.circe.jackson.parse(s)
-  def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = try {
-    io.circe.jackson.decode[A](s)
-  } catch {
-    case NonFatal(x) => throw new IllegalStateException(s"Error [${x.getMessage}] parsing json: $s", x)
-  }
-  def printJson(j: Json) = io.circe.jackson.jacksonPrint(j)
-
-  // Jawn
-  // def parseJson(s: String) = io.circe.parser.parse(s)
-  // def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
-  // def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
-
-  def extract[T: Decoder](json: Json) = json.as[T] match {
-    case Right(u) => u
-    case Left(x) => throw x
-  }
-
-  def extractString[T: Decoder](s: String) = extract[T](parseJson(s) match {
-    case Right(u) => u
-    case Left(x) => throw x
-  })
+  def parseJson(s: String) = io.circe.parser.parse(s)
+  def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
+  def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
 }

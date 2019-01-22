@@ -3,13 +3,13 @@ package com.kyleu.projectile.web.controllers.project
 import com.kyleu.projectile.models.feature.EnumFeature
 import com.kyleu.projectile.models.project.member
 import com.kyleu.projectile.models.project.member.{EnumMember, MemberOverride}
-import com.kyleu.projectile.web.controllers.BaseController
+import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ProjectEnumController @javax.inject.Inject() () extends BaseController {
+class ProjectEnumController @javax.inject.Inject() () extends ProjectileController {
   def detail(key: String, enum: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val m = p.getEnum(enum)

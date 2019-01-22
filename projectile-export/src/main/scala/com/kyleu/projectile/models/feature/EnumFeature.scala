@@ -36,6 +36,10 @@ object EnumFeature extends StringEnum[EnumFeature] with StringCirceEnum[EnumFeat
     value = "doobie", title = "Doobie", description = "Doobie JDBC bindings for this enum", dependsOn = Set(ProjectFeature.Doobie)
   )
 
+  case object Auth extends EnumFeature(
+    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Service)
+  )
+
   case object Controller extends EnumFeature(
     value = "controller", title = "Controller", description = "Play Framework Controller for this enum, why not", dependsOn = Set(ProjectFeature.Controller)
   )

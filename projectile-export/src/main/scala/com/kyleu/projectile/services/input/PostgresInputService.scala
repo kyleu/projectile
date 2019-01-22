@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresI
 import com.kyleu.projectile.models.database.schema.{EnumType, Table, View}
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.services.config.ConfigService
-import com.kyleu.projectile.util.JsonFileLoader
+import com.kyleu.projectile.util.{JacksonUtils, JsonFileLoader}
 import com.kyleu.projectile.util.JsonSerializers._
 
 import scala.util.control.NonFatal
@@ -15,32 +15,32 @@ object PostgresInputService {
   private[this] val fn = "dbconn.json"
 
   def savePostgresDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
-    (dir / fn).overwrite(printJson(PostgresConnection().asJson))
+    (dir / fn).overwrite(JacksonUtils.printJackson(PostgresConnection().asJson))
   }
 
   def savePostgres(cfg: ConfigService, pgi: PostgresInput) = {
     val summ = pgi.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Postgres).transform
     val dir = SummaryInputService.saveSummary(cfg, summ)
 
-    val dbconn = printJson(pgi.into[PostgresConnection].transform.asJson)
+    val dbconn = JacksonUtils.printJackson(pgi.into[PostgresConnection].transform.asJson)
     (dir / fn).overwrite(dbconn)
 
     if (pgi.enums.nonEmpty) {
       val enumDir = dir / "enum"
       enumDir.createDirectories()
-      pgi.enums.foreach(e => (enumDir / s"${e.key}.json").overwrite(printJson(e.asJson)))
+      pgi.enums.foreach(e => (enumDir / s"${e.key}.json").overwrite(JacksonUtils.printJackson(e.asJson)))
     }
 
     if (pgi.tables.nonEmpty) {
       val tableDir = dir / "table"
       tableDir.createDirectories()
-      pgi.tables.foreach(t => (tableDir / s"${t.name}.json").overwrite(printJson(t.asJson)))
+      pgi.tables.foreach(t => (tableDir / s"${t.name}.json").overwrite(JacksonUtils.printJackson(t.asJson)))
     }
 
     if (pgi.views.nonEmpty) {
       val viewDir = dir / "view"
       viewDir.createDirectories()
-      pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(printJson(v.asJson)))
+      pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(JacksonUtils.printJackson(v.asJson)))
     }
 
     pgi

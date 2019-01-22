@@ -54,7 +54,7 @@ object Dependencies {
   object Serialization {
     val version = "0.11.1"
     val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
-    val all = projects.map(c => "io.circe" %% c % version) :+ ("io.circe" %% "circe-jackson29" % "0.11.0")
+    val jackson = "io.circe" %% "circe-jackson29" % "0.11.0"
   }
 
   object Thrift {

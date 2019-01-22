@@ -1,6 +1,6 @@
 package com.kyleu.projectile.web.controllers.project
 
-import com.kyleu.projectile.web.controllers.BaseController
+import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.models.feature.ProjectFeature
 import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
 import play.api.mvc.{AnyContent, Request}
@@ -9,7 +9,7 @@ import com.kyleu.projectile.web.util.ControllerUtils
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ProjectFormController @javax.inject.Inject() () extends BaseController {
+class ProjectFormController @javax.inject.Inject() () extends ProjectileController {
   def formNew = Action.async { implicit request =>
     val inputs = projectile.listInputs().map(_.key).sorted
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formSummary(projectile, ProjectSummary(), inputs)))

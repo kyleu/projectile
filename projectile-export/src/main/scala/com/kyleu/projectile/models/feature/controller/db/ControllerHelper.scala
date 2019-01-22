@@ -23,7 +23,7 @@ object ControllerHelper {
       file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     }
     if (withNotes) {
-      file.add(s"""val notesF = app.coreServices.notes.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+      file.add(s"""val notesF = noteSvc.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     }
     file.add()
 
@@ -33,7 +33,7 @@ object ControllerHelper {
     val notesMap = if (withNotes) { "notesF.flatMap(notes => " } else { "" }
     val notesHelp = if (withNotes) { "notes, " } else { "" }
 
-    file.add(s"""${notesMap}${audMap}modelF.map {""", 1)
+    file.add(s"""$notesMap${audMap}modelF.map {""", 1)
     file.add("case Some(model) => renderChoice(t) {", 1)
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View(request.identity, model, $notesHelp${auditHelp}app.config.debug))")
     file.add(s"case MimeTypes.JSON => Ok(model.asJson)")

@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.thrift.ThriftParseService
-import com.kyleu.projectile.util.JsonFileLoader
+import com.kyleu.projectile.util.{JacksonUtils, JsonFileLoader}
 import com.kyleu.projectile.util.JsonSerializers._
 import io.scalaland.chimney.dsl._
 
@@ -13,14 +13,14 @@ object ThriftInputService {
   private[this] val fn = "thrift-files.json"
   private[this] val refKey = "reference:"
   def saveThriftDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
-    (dir / fn).overwrite(printJson(ThriftOptions().asJson))
+    (dir / fn).overwrite(JacksonUtils.printJackson(ThriftOptions().asJson))
   }
 
   def saveThrift(cfg: ConfigService, ti: ThriftInput) = {
     val summ = ti.into[InputSummary].withFieldComputed(_.template, _ => InputTemplate.Thrift).transform
     val dir = SummaryInputService.saveSummary(cfg, summ)
 
-    val options = printJson(ti.into[ThriftOptions].transform.asJson)
+    val options = JacksonUtils.printJackson(ti.into[ThriftOptions].transform.asJson)
     (dir / fn).overwrite(options)
 
     ti

@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.feature.controller.db
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -38,7 +39,12 @@ object ControllerFile {
 
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
+
     config.addCommonImport(file, "ServiceController")
+    if (model.features(ModelFeature.Auth)) {
+      config.addCommonImport(file, "ServiceAuthController")
+    }
+
     config.addCommonImport(file, "AuditRecordRowService")
 
     config.addCommonImport(file, "OrderBy")
@@ -68,16 +74,41 @@ object ControllerFile {
 
     file.add("@javax.inject.Singleton")
     file.add(s"class ${model.className}Controller @javax.inject.Inject() (", 2)
+
+    if (model.features(ModelFeature.Notes)) { config.addCommonImport(file, "NoteService") }
+
+    val extraSvcs = {
+      val n = if (model.features(ModelFeature.Notes)) { ", noteSvc: NoteService" } else { "" }
+      val a = if (model.features(ModelFeature.Audit)) { ", auditRecordSvc: AuditRecordRowService" } else { "" }
+      n + a
+    }
+
     ControllerReferences.refServiceArgs(config, model, file) match {
-      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordRowService")
+      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs")
       case ref =>
-        file.add(s"override val app: Application, svc: ${model.className}Service, auditRecordSvc: AuditRecordRowService,")
+        file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs,")
         file.add(ref)
     }
-    file.add(s") extends ServiceController(svc) {", -2)
+    val controller = if (model.features(ModelFeature.Auth)) { "ServiceAuthController" } else { "ServiceController" }
+    file.add(s") extends $controller(svc) {", -2)
     file.indent()
     file.add()
     addMutations(file, model, routesClass, viewHtmlPackage)
+    addListAction(file, model, viewHtmlPackage)
+    file.add(s"""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
+    file.add("""withSession("autocomplete", admin = true) { implicit request => implicit td =>""", 1)
+    file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
+    file.add("search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))")
+    file.add("}", -1)
+    file.add("}", -1)
+    ControllerHelper.writeForeignKeys(config, model, file)
+    ControllerHelper.writePks(config, model, file, viewHtmlPackage, routesClass)
+    ControllerReferences.write(config, model, file)
+    file.add("}", -1)
+    file
+  }
+
+  private[this] def addListAction(file: ScalaFile, model: ExportModel, viewHtmlPackage: String) = {
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
     file.add("""withSession("list", admin = true) { implicit request => implicit td =>""", 1)
@@ -96,16 +127,5 @@ object ControllerFile {
     file.add("}", -1)
     file.add("}", -1)
     file.add()
-    file.add(s"""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
-    file.add("""withSession("autocomplete", admin = true) { implicit request => implicit td =>""", 1)
-    file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
-    file.add("search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))")
-    file.add("}", -1)
-    file.add("}", -1)
-    ControllerHelper.writeForeignKeys(config, model, file)
-    ControllerHelper.writePks(config, model, file, viewHtmlPackage, routesClass)
-    ControllerReferences.write(config, model, file)
-    file.add("}", -1)
-    file
   }
 }

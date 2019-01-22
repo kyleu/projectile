@@ -1,11 +1,11 @@
 package com.kyleu.projectile.web.controllers.project
 
-import com.kyleu.projectile.web.controllers.BaseController
+import com.kyleu.projectile.web.controllers.ProjectileController
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class ProjectController @javax.inject.Inject() () extends BaseController {
+class ProjectController @javax.inject.Inject() () extends ProjectileController {
   def detail(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = projectile.getInputSummary(p.input)

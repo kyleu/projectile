@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.controller
 
 import com.kyleu.projectile.models.export.ExportEnum
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.feature.EnumFeature
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -11,7 +12,11 @@ object EnumControllerFile {
     file.addImport(enum.modelPackage(config), enum.className)
 
     config.addCommonImport(file, "Application")
-    config.addCommonImport(file, "BaseController")
+    if (enum.features(EnumFeature.Auth)) {
+      config.addCommonImport(file, "AuthController")
+    } else {
+      config.addCommonImport(file, "BaseController")
+    }
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "Implicits", "_")
     config.addCommonImport(file, "ServiceController")
@@ -23,7 +28,8 @@ object EnumControllerFile {
 
     file.add("@javax.inject.Singleton")
     val constructorArgs = s"@javax.inject.Inject() (override val app: Application)"
-    file.add(s"""class ${enum.className}Controller $constructorArgs extends BaseController("${enum.propertyName}") {""", 1)
+    val controller = if (enum.features(EnumFeature.Auth)) { "AuthController" } else { "BaseController" }
+    file.add(s"""class ${enum.className}Controller $constructorArgs extends $controller("${enum.propertyName}") {""", 1)
     file.add()
     file.add(s"""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"Future.successful(render {", 1)

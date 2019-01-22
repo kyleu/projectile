@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.feature.controller.thrift
 import com.kyleu.projectile.models.export.{ExportMethod, ExportService}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldTypeAsScala
+import com.kyleu.projectile.models.feature.ServiceFeature
 import com.kyleu.projectile.models.output.{CommonImportHelper, OutputPath}
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -16,7 +17,12 @@ object ThriftControllerFile {
 
     config.addCommonImport(file, "Application")
 
-    val i = CommonImportHelper.get(config, "BaseController")
+    val i = if (service.features(ServiceFeature.Auth)) {
+      CommonImportHelper.get(config, "AuthController")
+    } else {
+      CommonImportHelper.get(config, "BaseController")
+    }
+
     if (i._1 == Seq("controllers")) {
       file.addImport("_root_" +: i._1, i._2)
     } else {
@@ -35,7 +41,8 @@ object ThriftControllerFile {
 
     file.add("@javax.inject.Singleton")
     val inject = "@javax.inject.Inject() (override val app: Application)"
-    file.add(s"""class ${service.className}Controller $inject extends BaseController("${service.className}") {""", 1)
+    val controller = if (service.features(ServiceFeature.Auth)) { "AuthController" } else { "BaseController" }
+    file.add(s"""class ${service.className}Controller $inject extends $controller("${service.className}") {""", 1)
     file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()

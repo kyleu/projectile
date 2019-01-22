@@ -8,7 +8,7 @@ import com.kyleu.projectile.web.util.PlayServerHelper
 import scala.concurrent.Future
 
 @javax.inject.Singleton
-class HomeController @javax.inject.Inject() () extends BaseController {
+class HomeController @javax.inject.Inject() () extends ProjectileController {
   def index = Action.async { implicit request =>
     Future.successful(Ok(com.kyleu.projectile.web.views.html.index(projectile, projectile.listInputs(), projectile.listProjects())))
   }

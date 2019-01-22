@@ -3,6 +3,7 @@ package com.kyleu.projectile.services.project
 import io.scalaland.chimney.dsl._
 import com.kyleu.projectile.models.project._
 import com.kyleu.projectile.services.config.ConfigService
+import com.kyleu.projectile.util.JacksonUtils
 import com.kyleu.projectile.util.JsonSerializers._
 
 class ProjectSummaryService(val cfg: ConfigService) {
@@ -22,7 +23,7 @@ class ProjectSummaryService(val cfg: ConfigService) {
     val d = c.projectDirectory
     val f = d / key / fn
     if (f.exists && f.isRegularFile && f.isReadable) {
-      decodeJson[ProjectSummary](f.contentAsString) match {
+      JacksonUtils.decodeJackson[ProjectSummary](f.contentAsString) match {
         case Right(is) => Some(is.copy(key = key))
         case Left(x) => throw x
       }
@@ -35,7 +36,7 @@ class ProjectSummaryService(val cfg: ConfigService) {
     val d = cfg.configForProject(p.key).getOrElse(cfg).projectDirectory
     val f = d / p.key / fn
     f.createFileIfNotExists(createParents = true)
-    f.overwrite(printJson(p.asJson))
+    f.overwrite(JacksonUtils.printJackson(p.asJson))
     p.into[Project].transform
   }
 }

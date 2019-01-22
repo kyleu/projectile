@@ -4,6 +4,7 @@ import better.files.File
 import com.kyleu.projectile.models.input.Input
 import com.kyleu.projectile.models.project.member.EnumMember
 import com.kyleu.projectile.services.ProjectileService
+import com.kyleu.projectile.util.JacksonUtils
 import com.kyleu.projectile.util.JsonSerializers._
 
 class EnumMemberService(val svc: ProjectileService) {
@@ -27,7 +28,7 @@ class EnumMemberService(val svc: ProjectileService) {
     val dir = svc.configForProject(p).projectDir(p)
     val f = fileFor(dir, member.key)
     f.createFileIfNotExists(createParents = true)
-    val content = printJson(member.asJson)
+    val content = JacksonUtils.printJackson(member.asJson)
     f.overwrite(content)
     m
   }

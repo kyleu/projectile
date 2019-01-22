@@ -4,8 +4,8 @@ import sbt.Keys._
 object ProjectExport {
   private[this] val dependencies = {
     import Dependencies._
-    Serialization.all ++ Seq(
-      GraphQL.sangria, GraphQL.circe, Database.postgres,
+    Seq(
+      GraphQL.sangria, GraphQL.circe, Database.postgres, Serialization.jackson,
       Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang, Utils.enumeratum,
       Utils.guava, Utils.clist, Utils.clistMacros, Utils.logging, Utils.thriftParser, Testing.scalaTest
     )

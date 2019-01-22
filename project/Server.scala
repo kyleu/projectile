@@ -1,4 +1,4 @@
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport.{scapegoatIgnoredFiles, scapegoatDisabledInspections}
+import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport.{scapegoatDisabledInspections, scapegoatIgnoredFiles}
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
@@ -6,6 +6,7 @@ import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
+import play.sbt.PlayFilters
 import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys
 import sbt.Keys._
@@ -15,11 +16,9 @@ import sbtassembly.AssemblyPlugin.autoImport._
 object Server {
   private[this] val dependencies = {
     import Dependencies._
-    Serialization.all ++ Seq(
-      Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
-      GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
-      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize,
-      Utils.scalaGuice, Utils.clistMacros
+    Seq(
+      Play.filters, Play.guice, Play.ws, Play.json, Play.cache, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
+      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize, Utils.scalaGuice, Utils.clistMacros
     )
   }
 
@@ -67,8 +66,8 @@ object Server {
   lazy val `projectile-server` = withProjects(
     Project(id = Common.projectId, base = file(".")).enablePlugins(
       SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin
-    ).settings(serverSettings: _*),
+    ).disablePlugins(PlayFilters).settings(serverSettings: _*),
     SbtExportPlugin.`projectile-sbt`,
     ProjectExport.`projectile-export`
-  ).dependsOn(LibraryProjects.`projectile-lib-auth`).aggregate(LibraryProjects.allReferences: _*)
+  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(LibraryProjects.allReferences: _*)
 }

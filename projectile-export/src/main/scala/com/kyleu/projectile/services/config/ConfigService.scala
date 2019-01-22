@@ -2,7 +2,7 @@ package com.kyleu.projectile.services.config
 
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.util.tracing.TraceData
-import com.kyleu.projectile.util.{JsonSerializers, Logging}
+import com.kyleu.projectile.util.{JacksonUtils, Logging}
 
 class ConfigService(val path: String) extends Logging {
   val workingDirectory = better.files.File.apply(path)
@@ -42,7 +42,7 @@ class ConfigService(val path: String) extends Logging {
   val linkedConfigs = {
     val f = configDirectory / "linked.json"
     if (f.exists && f.isReadable) {
-      val dirs = JsonSerializers.extractString[Seq[String]](f.contentAsString)
+      val dirs = JacksonUtils.extractString[Seq[String]](f.contentAsString)
       val configs = dirs.map(_.trim).filter(_.nonEmpty).filterNot(_ == ".").distinct.map { d =>
         val f = workingDirectory / d
         new ConfigService(f.pathAsString)

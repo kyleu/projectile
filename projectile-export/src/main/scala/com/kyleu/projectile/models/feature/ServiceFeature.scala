@@ -28,6 +28,10 @@ object ServiceFeature extends StringEnum[ServiceFeature] with StringCirceEnum[Se
     value = "controller", title = "Controller", description = "Creates a Play Framework controller for this service", dependsOn = Set(ProjectFeature.Controller)
   )
 
+  case object Auth extends ServiceFeature(
+    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Service)
+  )
+
   override val values = findValues
   val set = values.toSet
 }
