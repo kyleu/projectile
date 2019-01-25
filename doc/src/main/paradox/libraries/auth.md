@@ -4,11 +4,15 @@ Classes to support Play Framework apps with authentication ([API Documentation](
 
 ### Usage
 
+@@@vars
+
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
   artifact="projectile-lib-auth_2.12"
-  version="latest"
+  version="$project.version$"
 }
+
+@@@
 
 ### Classes
 

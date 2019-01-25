@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.time._
 import java.time.format.{DateTimeFormatter, DateTimeParseException}
 
-/// Provides ordering, formatting, and common utilities for Local and Zoned `java.time` date classes
+/** Provides ordering, formatting, and common utilities for Local and Zoned `java.time` date classes */
 object DateUtils {
   private[this] val isoFmt = format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
   private[this] val isoZonedFmt = format.DateTimeFormatter.ISO_ZONED_DATE_TIME

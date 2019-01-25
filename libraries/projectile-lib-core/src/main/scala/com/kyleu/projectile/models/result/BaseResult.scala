@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.models.result.paging.PagingOptions
 
-/// Wrapper case class used for search results
+/** Wrapper case class used for search results */
 abstract class BaseResult[T] {
   def paging: PagingOptions
   def filters: Seq[Filter]

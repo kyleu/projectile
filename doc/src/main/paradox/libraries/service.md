@@ -4,11 +4,15 @@ Supports service classes with various helpers ([API Documentation](../api/projec
 
 ### Usage
 
+@@@vars
+
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
   artifact="projectile-lib-service_2.12"
-  version="latest"
+  version="$project.version$"
 }
+
+@@@
 
 ### Classes
 

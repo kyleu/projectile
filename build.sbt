@@ -6,7 +6,7 @@ pgpSecretRing := file("/Users/kyle/.gnupg/pubring.kbx")
 
 lazy val doc = Documentation.doc
 
-lazy val `projectile-lib-core` = LibraryProjects.`projectile-lib-core`
+lazy val `projectile-lib-core-jvm` = LibraryProjects.`projectile-lib-core-jvm`
 lazy val `projectile-lib-core-js` = LibraryProjects.`projectile-lib-core-js`
 
 lazy val `projectile-lib-scala` = LibraryProjects.`projectile-lib-scala`

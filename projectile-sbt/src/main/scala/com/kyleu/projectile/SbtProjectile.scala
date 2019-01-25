@@ -55,10 +55,7 @@ object SbtProjectile extends AutoPlugin {
         case x: Throwable => log(s"Error running codegen: $x")
       }
     },
-    compile in Compile := {
-      autoImport.projectileCodegen.value
-      (compile in Compile).value
-    },
+    compile := (compile in Compile).dependsOn(autoImport.projectileCodegen).value,
     sourceGenerators in Compile += Def.task((((sourceManaged in Compile).value / "projectile") ** "*.scala").get).taskValue
   )
 }

@@ -4,11 +4,15 @@ Helpers for traced Play Framework controllers and views ([API Documentation](../
 
 ### Usage
 
+@@@vars
+
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
   artifact="projectile-lib-play_2.12"
-  version="latest"
+  version="$project.version$"
 }
+
+@@@
 
 ### Classes
 

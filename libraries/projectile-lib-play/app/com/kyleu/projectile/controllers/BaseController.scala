@@ -19,7 +19,7 @@ abstract class BaseController(val name: String) extends InjectedController with 
 
   protected[this] lazy val metricsName = cn(this)
 
-  protected def req(action: String)(block: Request[AnyContent] => TraceData => Future[Result])(implicit ec: ExecutionContext) = {
+  protected def act(action: String)(block: Request[AnyContent] => TraceData => Future[Result])(implicit ec: ExecutionContext) = {
     Action.async { implicit request =>
       Instrumented.timeFuture(metricsName + "_request", "action", name + "_" + action) {
         tracing.trace(name + ".controller." + action) { td =>

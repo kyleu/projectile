@@ -21,6 +21,10 @@ object Documentation {
     git.remoteRepo := "git@github.com:KyleU/projectile.git",
 
     paradoxProperties ++= Map(
+      "project.id" -> Common.projectId,
+      "project.name" -> Common.projectName,
+      "project.version" -> Common.Versions.app,
+
       "material.color.primary" -> "blue-grey",
       "material.color.accent" -> "blue-grey",
 

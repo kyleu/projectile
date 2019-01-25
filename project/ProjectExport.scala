@@ -14,5 +14,5 @@ object ProjectExport {
   lazy val `projectile-export` = (project in file("projectile-export")).settings(Common.settings: _*).settings(
     description := "Project configuration, export, and code generation from Projectile",
     libraryDependencies ++= dependencies,
-  ).dependsOn(LibraryProjects.`projectile-lib-scala`)
+  ).dependsOn(LibraryProjects.`projectile-lib-scala`).disablePlugins(sbtassembly.AssemblyPlugin)
 }

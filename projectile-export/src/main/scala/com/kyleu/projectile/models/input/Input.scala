@@ -29,5 +29,10 @@ abstract class Input() extends Ordered[Input] {
 
   override def toString = s"$key - [${exportEnums.size}] enums, [${exportModels.size}] models, and [${exportServices.size}] services"
 
-  lazy val hash = exportEnums.hashCode * exportModels.hashCode * exportServices.hashCode()
+  lazy val hash = {
+    val e = exportEnums.map(_.hashCode).sum
+    val m = exportModels.map(_.hashCode).sum
+    val s = exportServices.map(_.hashCode).sum
+    e + m + s
+  }
 }

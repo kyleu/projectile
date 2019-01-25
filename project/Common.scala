@@ -9,7 +9,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.0.7"
+    val app = "1.1.0-SNAPSHOT"
     val scala = "2.12.8"
   }
 
@@ -41,32 +41,10 @@ object Common {
 
     cpdSkipDuplicateFiles := true,
 
-    test in assembly := {},
-    assemblyMergeStrategy in assembly := {
-      case PathList("javax", "servlet", _ @ _*) => MergeStrategy.first
-      case PathList("javax", "xml", _ @ _*) => MergeStrategy.first
-      case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
-      case PathList("org", "apache", "commons", "logging", _ @ _*) => MergeStrategy.first
-      case PathList("org", "w3c", "dom", _ @ _*) => MergeStrategy.first
-      case PathList("org", "w3c", "dom", "events", _ @ _*) => MergeStrategy.first
-      case PathList("javax", "annotation", _ @ _*) => MergeStrategy.first
-      case PathList("net", "jcip", "annotations", _ @ _*) => MergeStrategy.first
-      case PathList("play", "api", "libs", "ws", _ @ _*) => MergeStrategy.first
-      case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
-      case PathList("sqlj", _ @ _*) => MergeStrategy.first
-      case PathList("play", "reference-overrides.conf") => MergeStrategy.first
-      case "module-info.class" => MergeStrategy.discard
-      case "messages" => MergeStrategy.concat
-      case "pom.xml" => MergeStrategy.discard
-      case "JS_DEPENDENCIES" => MergeStrategy.discard
-      case "pom.properties" => MergeStrategy.discard
-      case "application.conf" => MergeStrategy.concat
-      case x => (assemblyMergeStrategy in assembly).value(x)
-    },
-
     publishMavenStyle := true,
 
     publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
+    // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
   ) ++ (if(profilingEnabled) {
     Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0"))
   } else {

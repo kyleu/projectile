@@ -58,7 +58,7 @@ object Dependencies {
   }
 
   object Thrift {
-    val version = "18.12.0"
+    val version = "19.1.0"
     val core = "com.twitter" %% "finagle-core" % version
   }
 
@@ -74,7 +74,7 @@ object Dependencies {
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.21.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.22.0"
   }
 
   object Authentication {
@@ -113,7 +113,7 @@ object Dependencies {
     val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
-    val reftree = "org.stanch" %% "reftree" % "1.2.0"
+    val reftree = "org.stanch" %% "reftree" % "1.2.0" % "provided"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.25"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"

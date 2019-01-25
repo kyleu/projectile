@@ -48,32 +48,32 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
     value = "service", title = "Service", description = "Generates a service with common CRUD and search methods", dependsOn = Set(ProjectFeature.Service)
   )
 
-  case object Controller extends ModelFeature(
-    value = "controller", title = "Controller", description = "Creates a Play Framework controller for this model", dependsOn = Set(ProjectFeature.Controller)
-  )
-
-  case object GraphQL extends ModelFeature(
-    value = "graphql", title = "GraphQL", description = "Creates a Sangria GraphQL schema that includes this model", dependsOn = Set(ProjectFeature.GraphQL)
-  )
-
-  case object Notes extends ModelFeature(
-    value = "notes", title = "Notes", description = "TODO", dependsOn = Set(ProjectFeature.Notes)
-  )
-
-  case object Tests extends ModelFeature(
-    value = "tests", title = "Tests", description = "TODO", dependsOn = Set(ProjectFeature.Tests)
+  case object Audit extends ModelFeature(
+    value = "audit", title = "Audit", description = "Adds audit logic to service methods", dependsOn = Set(ProjectFeature.Audit)
   )
 
   case object Thrift extends ModelFeature(
     value = "thrift", title = "Thrift", description = "Generates Thrift definitions for models and services", dependsOn = Set(ProjectFeature.Thrift)
   )
 
-  case object Auth extends ModelFeature(
-    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Service)
+  case object GraphQL extends ModelFeature(
+    value = "graphql", title = "GraphQL", description = "Creates a Sangria GraphQL schema that includes this model", dependsOn = Set(ProjectFeature.GraphQL)
   )
 
-  case object Audit extends ModelFeature(
-    value = "audit", title = "Audit", description = "Adds audit logic to service methods", dependsOn = Set(ProjectFeature.Audit)
+  case object Controller extends ModelFeature(
+    value = "controller", title = "Controller", description = "Creates a Play Framework controller for this model", dependsOn = Set(ProjectFeature.Controller)
+  )
+
+  case object Notes extends ModelFeature(
+    value = "notes", title = "Notes", description = "Retrieves related notes in generated controller views", dependsOn = Set(ProjectFeature.Notes)
+  )
+
+  case object Auth extends ModelFeature(
+    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Controller)
+  )
+
+  case object Tests extends ModelFeature(
+    value = "tests", title = "Tests", description = "TODO", dependsOn = Set(ProjectFeature.Tests)
   )
 
   override val values = findValues

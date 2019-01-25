@@ -13,7 +13,7 @@ import scala.concurrent.Future
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
-/// Implements TracingService to provide system-wide tracing support
+/** Implements TracingService to provide system-wide tracing support */
 @javax.inject.Singleton
 class OpenTracingService @javax.inject.Inject() (cnf: MetricsConfig) extends TracingService {
   private[this] var cfg: Option[Configuration] = None

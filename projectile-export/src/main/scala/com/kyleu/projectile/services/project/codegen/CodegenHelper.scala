@@ -6,7 +6,7 @@ import com.kyleu.projectile.services.ProjectileService
 trait CodegenHelper { this: ProjectileService =>
   def getProjectHash(project: String) = {
     val f = configForProject(project).projectDirectory / project / "inputHash.json"
-    if (f.exists && f.isRegularFile) { f.contentAsString.toInt } else { 0 }
+    if (f.exists && f.isRegularFile) { f.contentAsString.trim.toInt } else { 0 }
   }
 
   def setProjectHash(project: String, hash: Int) = {

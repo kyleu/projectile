@@ -2,7 +2,7 @@ package com.kyleu.projectile.util.metrics
 
 import com.typesafe.config.Config
 
-/// Case class containing all of the information needed to report metrics. Usually created from a config file.
+/** Case class containing all of the information needed to report metrics. Usually created from a config file */
 @javax.inject.Singleton
 class MetricsConfig @javax.inject.Inject() (cnf: Config) {
   val micrometerEnabled = cnf.getBoolean("metrics.micrometer.enabled")

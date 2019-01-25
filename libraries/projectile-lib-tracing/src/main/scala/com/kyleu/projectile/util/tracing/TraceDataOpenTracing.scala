@@ -5,7 +5,7 @@ import io.jaegertracing.internal.JaegerSpanContext
 import io.opentracing.Span
 import io.opentracing.noop.NoopSpanContext
 
-/// Extends TraceData with OpenTracing-specific functionality
+/** Extends TraceData with OpenTracing-specific functionality */
 final case class TraceDataOpenTracing(span: Span) extends TraceData {
   override val isNoop = false
 
@@ -15,9 +15,9 @@ final case class TraceDataOpenTracing(span: Span) extends TraceData {
   override def logClass(cls: Class[_]): Unit = span.log(cls.getSimpleName.stripSuffix("$"))
 
   override val (traceId, spanId) = span.context match {
-    case j: JaegerSpanContext => j.getTraceId.toString -> j.getSpanId.toString
+    case j: JaegerSpanContext => j.getTraceId -> j.getSpanId.toString
     case d: DDSpanContext => d.getTraceId -> d.getSpanId
-    case x: NoopSpanContext => "noop" -> "noop"
+    case _: NoopSpanContext => "noop" -> "noop"
     case x => x.getClass.getSimpleName -> "none"
   }
 

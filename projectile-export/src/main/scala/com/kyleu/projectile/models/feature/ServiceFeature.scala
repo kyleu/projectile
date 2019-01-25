@@ -29,7 +29,7 @@ object ServiceFeature extends StringEnum[ServiceFeature] with StringCirceEnum[Se
   )
 
   case object Auth extends ServiceFeature(
-    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Service)
+    value = "auth", title = "Auth", description = "Weaves credentials through service and controller calls", dependsOn = Set(ProjectFeature.Controller)
   )
 
   override val values = findValues

@@ -9,9 +9,8 @@ import io.circe.java8.time._
 import shapeless.Lazy
 
 import scala.language.implicitConversions
-import scala.util.control.NonFatal
 
-/// Provides all the imports and utility methods you need to work with Circe using dates, uuids, enums and sealed traits
+/** Provides all the imports and utility methods you need to work with Circe using dates, uuids, enums and sealed traits */
 object JsonSerializers {
   type Decoder[A] = io.circe.Decoder[A]
   type Encoder[A] = io.circe.Encoder[A]

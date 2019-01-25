@@ -4,42 +4,46 @@ Classes and utilities shared between Scala and Scala.js ([API Documentation](../
 
 ### Usage
 
+@@@vars
+
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
   artifact="projectile-lib-core_2.12"
-  version="latest"
+  version="$project.version$"
 }
+
+@@@
 
 ### Classes
 
-#### com.kyleu.projectile.models.result.BaseResult
+#### [BaseResult](../api/core/com/kyleu/projectile/models/result/BaseResult.html)
 
 Wrapper case class used for search results
 
-#### com.kyleu.projectile.models.tag.Tag
+#### [Tag](../api/core/com/kyleu/projectile/models/tag/Tag.html)
 
 A simple key and value case class, used where unordered maps aren't appropriate
 
-#### com.kyleu.projectile.util.DateUtils
+#### [DateUtils](../api/core/com/kyleu/projectile/util/DateUtils$.html)
 
 Provides ordering, formatting, and common utilities for Local and Zoned `java.time` date classes
 
-#### com.kyleu.projectile.util.JsonSerializers
+#### [JsonSerializers](../api/core/com/kyleu/projectile/util/JsonSerializers$.html)
 
 Provides all the imports and utility methods you need to work with Circe using dates, uuids, enums and sealed traits
 
-#### com.kyleu.projectile.util.NullUtils
+#### [NullUtils](../api/core/com/kyleu/projectile/util/NullUtils$.html)
 
 Rather than use `null` references in your code, NullUtils is provided for common operations and values involving nulls
 
-#### com.kyleu.projectile.util.NumberUtils
+#### [NumberUtils](../api/core/com/kyleu/projectile/util/NumberUtils$.html)
 
 Currently only provides a cross-platform method for formatting numbers
 
-#### com.kyleu.projectile.util.StringUtils
+#### [StringUtils](../api/core/com/kyleu/projectile/util/StringUtils$.html)
 
 Exposes a method to split a string to an ordered sequence of lines
 
-#### com.kyleu.projectile.util.UuidUtils
+#### [UuidUtils](../api/core/com/kyleu/projectile/util/UuidUtils$.html)
 
 Utility methods to transform a `java.util.UUID` to and from a sequence of bytes

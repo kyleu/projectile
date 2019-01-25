@@ -82,13 +82,13 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
     )
 
     projectile.saveServiceMembers(key, Seq(newMember))
-    val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.detail(key, serviceKey))
-    Future.successful(redir.flashing("success" -> s"Saved model [$serviceKey]"))
+    val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.detail(key, serviceKey))
+    Future.successful(redir.flashing("success" -> s"Saved service [$serviceKey]"))
   }
 
   def remove(key: String, member: String) = Action.async { implicit request =>
-    projectile.removeModelMember(key, member)
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed model [$member]"))
+    projectile.removeServiceMember(key, member)
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed service [$member]"))
   }
 
   def formFeatures(key: String) = Action.async { implicit request =>

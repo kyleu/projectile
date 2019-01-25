@@ -4,12 +4,15 @@ Imports and models for jdbc database connections ([API Documentation](../api/pro
 
 ### Usage
 
+@@@vars
+
 @@dependency[sbt,Maven,Gradle] {
   group="com.kyleu"
   artifact="projectile-lib-jdbc_2.12"
-  version="latest"
+  version="$project.version$"
 }
 
+@@@
 
 ### Classes
 

@@ -4,6 +4,7 @@ import java.util.TimeZone
 
 import akka.actor.ActorSystem
 import com.kyleu.projectile.models.auth.AuthEnv
+import com.kyleu.projectile.models.database.DatabaseConfig
 import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
@@ -15,6 +16,7 @@ import play.api.inject.ApplicationLifecycle
 import play.api.mvc.Call
 
 import scala.concurrent.{Await, Future}
+import scala.util.control.NonFatal
 
 object Application {
   var initialized = false
@@ -55,7 +57,13 @@ class Application @javax.inject.Inject() (
 
     lifecycle.addStopHook(() => Future.successful(stop()))
 
-    ApplicationDatabase.open(config.cnf.underlying, tracing)
+    try {
+      ApplicationDatabase.open(config.cnf.underlying, tracing)
+    } catch {
+      case NonFatal(x) =>
+        val c = DatabaseConfig.fromConfig(config.cnf.underlying, "database.application")
+        throw new IllegalArgumentException(s"Cannot connect to database using [$c]: $x", x)
+    }
 
     Future.successful(true)
   }

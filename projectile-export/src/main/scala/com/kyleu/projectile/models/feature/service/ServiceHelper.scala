@@ -48,7 +48,10 @@ object ServiceHelper {
         file.add("}", -1)
 
         val seqArgs = s"${colProp}Seq: Seq[${field.scalaType(config)}]"
-        file.add(s"def getByPrimaryKeySeq(creds: Credentials, $seqArgs)$td = {", 1)
+        file.add(s"def getByPrimaryKeySeq(creds: Credentials, $seqArgs)$td = if (${colProp}Seq.isEmpty) {", 1)
+        file.add("Future.successful(Nil)")
+        file.add("} else {", -1)
+        file.indent()
         file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKeySeq(${colProp}Seq))(td))""")
         file.add("}", -1)
       case fields => // multiple columns
@@ -60,7 +63,10 @@ object ServiceHelper {
         file.add(s"""traceF("get.by.primary.key")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKey($queryArgs))(td))""")
         file.add("}", -1)
 
-        file.add(s"def getByPrimaryKeySeq(creds: Credentials, pkSeq: Seq[$tupleTyp])$td = {", 1)
+        file.add(s"def getByPrimaryKeySeq(creds: Credentials, pkSeq: Seq[$tupleTyp])$td = if (pkSeq.isEmpty) {", 1)
+        file.add("Future.successful(Nil)")
+        file.add("} else {", -1)
+        file.indent()
         file.add(s"""traceF("get.by.primary.key.seq")(td => ApplicationDatabase.queryF(${model.className}Queries.getByPrimaryKeySeq(pkSeq))(td))""")
         file.add("}", -1)
     }
@@ -93,8 +99,13 @@ object ServiceHelper {
     file.add(s"""ApplicationDatabase.queryF(${model.className}Queries.GetBy$propCls($propId, orderBys, limit, offset))(td)""")
     file.add("}", -1)
     val fkSeqArgs = s"creds: Credentials, ${propId}Seq: Seq[${field.scalaType(config)}]"
-    file.add(s"""def getBy${propCls}Seq($fkSeqArgs)(implicit trace: TraceData) = traceF("get.by.$propId.seq") { td =>""", 1)
+    file.add(s"""def getBy${propCls}Seq($fkSeqArgs)(implicit trace: TraceData) = if (${propId}Seq.isEmpty) {""", 1)
+    file.add("Future.successful(Nil)")
+    file.add("} else {", -1)
+    file.indent()
+    file.add(s"""traceF("get.by.$propId.seq") { td =>""", 1)
     file.add(s"ApplicationDatabase.queryF(${model.className}Queries.GetBy${propCls}Seq(${propId}Seq))(td)")
+    file.add("}", -1)
     file.add("}", -1)
 
     file.add()

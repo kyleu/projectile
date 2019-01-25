@@ -4,7 +4,7 @@ import io.circe.Json
 
 import scala.util.control.NonFatal
 
-/// A JSON parser that supports comments and included external files
+/** A JSON parser that supports comments and included external files */
 class JsonIncludeParser(loadJson: String => Json) {
   private[this] val includeKey = "#include:"
 

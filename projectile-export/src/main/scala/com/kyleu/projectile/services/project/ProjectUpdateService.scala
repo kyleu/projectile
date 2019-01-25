@@ -27,12 +27,14 @@ object ProjectUpdateService {
     val serviceResults = processServices(svc, p, i)
 
     val results = enumResults ++ modelResults ++ serviceResults
+
+    val hash = svc.getInput(i.key).hash
+    svc.setProjectHash(p.key, hash)
+
     if (results.isEmpty) {
       Nil
     } else {
-      val hashCode = svc.getInput(i.key).hashCode()
-      svc.setProjectHash(p.key, hashCode)
-      s"Updated project [${p.key}] with hashcode [$hashCode]:" +: results
+      s"Updated project [${p.key}] with hashcode [$hash]:" +: results
     }
   }
 
