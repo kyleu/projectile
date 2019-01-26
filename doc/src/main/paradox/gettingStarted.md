@@ -4,22 +4,14 @@ There are several ways to run Projectile:
 
 ## SBT Plugin
 
-- Add the following to your `plugins.sbt`: 
-
-@@@vars
-```
-addSbtPlugin("com.kyleu" % "projectile-sbt" % "$project.version$")
-```
-@@@
-
-- Now, projectile will run each time you compile your project (don't worry, it only adds a few milliseconds)
+An SBT plugin (@ref[details here](codegen/sbt-plugin.md)) is provided for running Projectile from within your project's SBT session
 
 
 ## Release Jar
 
 - Download the leatest release from [Github](https://github.com/Kyleu/projectile/releases). Only a single file, `projectile.jar`, is needed
 
-- From your projects directory, run `java -jar projectile.jar`, this will print CLI usage
+- From your project's directory, run `java -jar projectile.jar`, this will print CLI usage
 
 - To run the web server, run `java -jar projectile.jar server`
 

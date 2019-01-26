@@ -13,3 +13,6 @@ Projectile relies on a whole lot of tremendous open source projects. Here's a fe
 * [circe](https://circe.github.io/circe)
 * [Font Awesome](http://fontawesome.io)
 * [JQuery](https://jquery.com/)
+* [Slick](http://slick.lightbend.com)
+* [Doobie](https://tpolecat.github.io/doobie)
+* [OpenAPI](https://swagger.io/docs/specification/about)

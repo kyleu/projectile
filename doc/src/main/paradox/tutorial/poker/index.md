@@ -17,7 +17,7 @@ The Planning Poker tutorial will start with a small Scala application, add Proje
 
 ## Demo Site
 
-You can see the end result of this tutorial at https://estimate.project
+You can see the end result of this tutorial at https://estimate.poker
 
 ## Overview
 

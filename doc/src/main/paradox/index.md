@@ -13,7 +13,7 @@
 
 https://github.com/KyleU/projectile
 
-Projectile generates code to help you work with your database, Thrift definitions and GraphQL queries.
+Projectile generates code to help you work with your APIs and data.
 
 Projectile relies on a whole lot of tremendous open source projects. [Here's a few of them](technology.md).
 

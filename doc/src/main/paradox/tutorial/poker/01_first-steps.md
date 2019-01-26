@@ -4,7 +4,7 @@ This tutorial will lead you through creating a real-time web application that fa
 
 The basic idea is to create a PostgreSQL database, use that to have Projectile generate some code, and then repeat as we add features. 
 
-With luck, we'll end up with a useful web application, identical to the version available [here](https://estimate.project)
+With luck, we'll end up with a useful web application, identical to the version available [here](https://estimate.poker)
 
 ## Clone the repo
 
@@ -12,14 +12,14 @@ Projectile goes to great lengths to minimize the amount of boilerplate you need 
 To save us both some typing, go ahead and clone the repository for this tutorial
 
 ```shell
-git clone --branch tutorial-1 https://github.com/KyleU/estimate.project.git
+git clone --branch tutorial-1 https://github.com/KyleU/estimate.poker.git
 ```
 
 ## Explore the project
 
 There's only a few files in the project, so let's take a look at them:
 
-#### project/[plugins.sbt](https://github.com/KyleU/estimate.project/blob/master/project/plugins.sbt)
+#### project/[plugins.sbt](https://github.com/KyleU/estimate.poker/blob/master/project/plugins.sbt)
 
 Adds the Projectile sbt plugin, which runs on compile to update any generated code
 
@@ -29,7 +29,7 @@ addSbtPlugin("com.kyleu" % "projectile-sbt" % "$project.version$")
 ```
 @@@
 
-#### [build.sbt](https://github.com/KyleU/estimate.project/blob/master/build.sbt)
+#### [build.sbt](https://github.com/KyleU/estimate.poker/blob/master/build.sbt)
 
 Adds the Projectile scala library as a dependency, for common utilities and helper classes
 
