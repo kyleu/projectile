@@ -1,0 +1,13 @@
+GET         /                       com.kyleu.projectile.web.controllers.input.InputController.formNew()
+POST        /                       com.kyleu.projectile.web.controllers.input.InputController.save()
+
+GET         /all/refresh            com.kyleu.projectile.web.controllers.input.InputController.refreshAll
+
+GET         /:key                   com.kyleu.projectile.web.controllers.input.InputController.detail(key)
+GET         /:key/remove            com.kyleu.projectile.web.controllers.input.InputController.remove(key)
+GET         /:key/form              com.kyleu.projectile.web.controllers.input.InputController.form(key)
+GET         /:key/refresh           com.kyleu.projectile.web.controllers.input.InputController.refresh(key)
+
+GET         /:key/enum/:e           com.kyleu.projectile.web.controllers.input.InputController.enumDetail(key, e)
+GET         /:key/model/:m          com.kyleu.projectile.web.controllers.input.InputController.modelDetail(key, m)
+GET         /:key/service/:s        com.kyleu.projectile.web.controllers.input.InputController.serviceDetail(key, s)

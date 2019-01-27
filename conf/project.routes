@@ -1,0 +1,60 @@
+GET         /                              com.kyleu.projectile.web.controllers.project.ProjectFormController.formNew()
+POST        /summary                       com.kyleu.projectile.web.controllers.project.ProjectFormController.saveSummary()
+POST        /features                      com.kyleu.projectile.web.controllers.project.ProjectFormController.saveFeatures()
+POST        /packages                      com.kyleu.projectile.web.controllers.project.ProjectFormController.savePackages()
+POST        /paths                         com.kyleu.projectile.web.controllers.project.ProjectFormController.savePaths()
+POST        /overrides                     com.kyleu.projectile.web.controllers.project.ProjectFormController.saveClassOverrides()
+
+GET         /all/audit                     com.kyleu.projectile.web.controllers.project.BulkProjectController.auditAll
+GET         /all/export                    com.kyleu.projectile.web.controllers.project.BulkProjectController.exportAll
+GET         /all/update                    com.kyleu.projectile.web.controllers.project.BulkProjectController.updateAll
+GET         /codegen                       com.kyleu.projectile.web.controllers.project.BulkProjectController.codegen(verbose: Boolean ?= false)
+
+GET         /:key                          com.kyleu.projectile.web.controllers.project.ProjectController.detail(key)
+GET         /:key/remove                   com.kyleu.projectile.web.controllers.project.ProjectController.remove(key)
+
+GET         /:key/export                   com.kyleu.projectile.web.controllers.project.ProjectController.export(key, verbose: Boolean ?= false)
+GET         /:key/update                   com.kyleu.projectile.web.controllers.project.ProjectController.update(key)
+GET         /:key/fix                      com.kyleu.projectile.web.controllers.project.ProjectController.fix(key, t, src, tgt)
+
+GET         /:key/summary                  com.kyleu.projectile.web.controllers.project.ProjectFormController.formSummary(key)
+GET         /:key/features                 com.kyleu.projectile.web.controllers.project.ProjectFormController.formFeatures(key)
+GET         /:key/packages                 com.kyleu.projectile.web.controllers.project.ProjectFormController.formPackages(key)
+GET         /:key/paths                    com.kyleu.projectile.web.controllers.project.ProjectFormController.formPaths(key)
+GET         /:key/overrides                com.kyleu.projectile.web.controllers.project.ProjectFormController.formClassOverrides(key)
+
+# Enums
+GET         /:key/enums                    com.kyleu.projectile.web.controllers.project.BulkProjectController.enumBulkEditForm(key)
+POST        /:key/enums                    com.kyleu.projectile.web.controllers.project.BulkProjectController.enumBulkEdit(key)
+
+GET         /:key/enum                     com.kyleu.projectile.web.controllers.project.ProjectEnumController.formNew(key)
+GET         /:key/enum/defaults            com.kyleu.projectile.web.controllers.project.ProjectEnumController.formFeatures(key)
+POST        /:key/enum/defaults            com.kyleu.projectile.web.controllers.project.ProjectEnumController.saveFeatures(key)
+GET         /:key/enum/add                 com.kyleu.projectile.web.controllers.project.ProjectEnumController.add(key, enumKey)
+GET         /:key/enum/:e                  com.kyleu.projectile.web.controllers.project.ProjectEnumController.detail(key, e)
+POST        /:key/enum/:e                  com.kyleu.projectile.web.controllers.project.ProjectEnumController.save(key, e)
+GET         /:key/enum/:e/remove           com.kyleu.projectile.web.controllers.project.ProjectEnumController.remove(key, e)
+
+# Models
+GET         /:key/models                   com.kyleu.projectile.web.controllers.project.BulkProjectController.modelBulkEditForm(key)
+POST        /:key/models                   com.kyleu.projectile.web.controllers.project.BulkProjectController.modelBulkEdit(key)
+
+GET         /:key/model                    com.kyleu.projectile.web.controllers.project.ProjectModelController.formNew(key)
+GET         /:key/model/defaults           com.kyleu.projectile.web.controllers.project.ProjectModelController.formFeatures(key)
+POST        /:key/model/defaults           com.kyleu.projectile.web.controllers.project.ProjectModelController.saveFeatures(key)
+GET         /:key/model/add                com.kyleu.projectile.web.controllers.project.ProjectModelController.add(key, modelKey)
+GET         /:key/model/:m                 com.kyleu.projectile.web.controllers.project.ProjectModelController.detail(key, m)
+POST        /:key/model/:m                 com.kyleu.projectile.web.controllers.project.ProjectModelController.save(key, m)
+GET         /:key/model/:m/remove          com.kyleu.projectile.web.controllers.project.ProjectModelController.remove(key, m)
+
+# Services
+GET         /:key/services                 com.kyleu.projectile.web.controllers.project.BulkProjectController.serviceBulkEditForm(key)
+POST        /:key/services                 com.kyleu.projectile.web.controllers.project.BulkProjectController.serviceBulkEdit(key)
+
+GET         /:key/service                  com.kyleu.projectile.web.controllers.project.ProjectServiceController.formNew(key)
+GET         /:key/service/defaults         com.kyleu.projectile.web.controllers.project.ProjectServiceController.formFeatures(key)
+POST        /:key/service/defaults         com.kyleu.projectile.web.controllers.project.ProjectServiceController.saveFeatures(key)
+GET         /:key/service/add              com.kyleu.projectile.web.controllers.project.ProjectServiceController.add(key, serviceKey)
+GET         /:key/service/:m               com.kyleu.projectile.web.controllers.project.ProjectServiceController.detail(key, m)
+POST        /:key/service/:m               com.kyleu.projectile.web.controllers.project.ProjectServiceController.save(key, m)
+GET         /:key/service/:m/remove        com.kyleu.projectile.web.controllers.project.ProjectServiceController.remove(key, m)
