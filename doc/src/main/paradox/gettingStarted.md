@@ -2,11 +2,6 @@
 
 There are several ways to run Projectile:
 
-## SBT Plugin
-
-An SBT plugin (@ref[details here](codegen/sbt-plugin.md)) is provided for running Projectile from within your project's SBT session
-
-
 ## Release Jar
 
 - Download the leatest release from [Github](https://github.com/Kyleu/projectile/releases). Only a single file, `projectile.jar`, is needed
@@ -16,9 +11,26 @@ An SBT plugin (@ref[details here](codegen/sbt-plugin.md)) is provided for runnin
 - To run the web server, run `java -jar projectile.jar server`
 
 
+## Shell script
+
+Save [this file](https://raw.githubusercontent.com/KyleU/projectile/master/bin/projectile.sh) as `projectile.sh` and mark it executable. 
+Once executed, it will download and run the latest release from Github
+
+
+## Ammonite
+
+Save [this file](https://raw.githubusercontent.com/KyleU/projectile/master/bin/projectile.sc) as `projectile.sc`. 
+Run with `amm projectile.sc` and it will download the dependencies
+
+
+## SBT Plugin
+
+An SBT plugin (@ref[details here](codegen/sbt-plugin.md)) is provided for running Projectile from within your project's SBT session
+
+
 ## Run From Source
 
-- Clone [Projectile](https://github.com/Kyleu/projectile)
+Clone [Projectile](https://github.com/Kyleu/projectile)
 
 ```shell
 $ cd projectile

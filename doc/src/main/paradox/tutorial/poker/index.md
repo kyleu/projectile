@@ -1,4 +1,4 @@
-# Planning Poker
+# Estimate Poker
 
 @@@ index
 
@@ -8,7 +8,7 @@
 
 @@@
 
-The Planning Poker tutorial will start with a small Scala application, add Projectile, and export more and more features, finally producing a web application with:
+The Estimate Poker tutorial will start with a small Scala application, add Projectile, and export more and more features, finally producing a web application with:
 
 - Websocket transport of shared Scala classes for real-time client updates
 - Play Framework admin site with UI for data access, search, and mutations
