@@ -7,7 +7,7 @@ interp.load.ivy(
 
 import com.kyleu.projectile.web.util.PlayServerHelper._
 
-startServer(30000)
+startServer(20000)
 
 println("Projectile started, press any key to exit")
 System.in.read()
