@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.cli
 import enumeratum.{CirceEnum, Enum, EnumEntry}
 import com.kyleu.projectile.models.command.ProjectileCommand
 import com.kyleu.projectile.models.input.InputSummary
-import com.kyleu.projectile.models.project.ProjectSummary
+import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
 import com.kyleu.projectile.util.Version
 import org.backuity.clist.{Command, arg, opt}
 
@@ -65,7 +65,9 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     var key = arg[String]()
     var title = opt[Option[String]](description = "Optional title for this project")
     var desc = opt[Option[String]](description = "Optional description for this project")
-    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(key = key, description = desc.getOrElse("")))
+    var template = opt[Option[String]](description = s"Template to use for for this project, one of [${ProjectTemplate.values.mkString(", ")}]")
+    val t = ProjectTemplate.Custom
+    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(template = t, key = key, input = "", description = desc.getOrElse("")))
   }
 
   object Server extends Command(name = "server", description = s"Starts the web application") with CommandLineAction {

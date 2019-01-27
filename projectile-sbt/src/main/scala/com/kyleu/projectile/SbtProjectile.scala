@@ -10,13 +10,15 @@ import complete.DefaultParsers.spaceDelimited
 
 object SbtProjectile extends AutoPlugin {
   object autoImport {
-    val projectile = inputKey[Unit]("Generate better code from your database, Thrift files, or GraphQL queries using Projectile")
-    val projectileCodegen = taskKey[Unit]("Runs Projectile, refreshing the generated files in your project")
+    val projectile = inputKey[Unit](
+      "Generate code from your database, Thrift files, or GraphQL queries using Projectile"
+    )
+    val projectileCodegen = taskKey[Unit](
+      "Runs Projectile, refreshing the generated files in your project"
+    )
   }
 
-  override lazy val projectSettings = inConfig(Compile)(projectileSettings)
-
-  private[this] val projectileSettings: Seq[Setting[_]] = Seq(
+  override lazy val projectSettings = Seq(
     autoImport.projectile := {
       val streamValue = streams.value
       def log(s: String) = streamValue.log.info(s)
@@ -55,7 +57,7 @@ object SbtProjectile extends AutoPlugin {
         case x: Throwable => log(s"Error running codegen: $x")
       }
     },
-    compile := (compile in Compile).dependsOn(autoImport.projectileCodegen).value,
-    sourceGenerators in Compile += Def.task((((sourceManaged in Compile).value / "projectile") ** "*.scala").get).taskValue
+    // sourceGenerators in Compile += Def.task((((sourceManaged in Compile).value / "projectile") ** "*.scala").get).taskValue,
+    (compile in Compile) := (compile in Compile).dependsOn(autoImport.projectileCodegen).value
   )
 }

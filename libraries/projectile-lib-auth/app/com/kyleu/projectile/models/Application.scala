@@ -16,11 +16,10 @@ import play.api.inject.ApplicationLifecycle
 import play.api.mvc.Call
 
 import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
 import scala.util.control.NonFatal
 
 object Application {
-  var initialized = false
-
   case class Actions(projectName: String, failedRedirect: Call)
 }
 
@@ -38,16 +37,10 @@ class Application @javax.inject.Inject() (
 
   val projectName = actions.projectName
 
-  if (Application.initialized) {
-    log.info("Skipping initialization after failure.")(TraceData.noop)
-  } else {
-    import scala.concurrent.duration._
-    Await.result(start(), 20.seconds)
-  }
+  Await.result(start(), 20.seconds)
 
   private[this] def start() = tracing.topLevelTrace("application.start") { implicit tn =>
     log.info(s"$projectName is starting.")
-    Application.initialized = true
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     System.setProperty("user.timezone", "UTC")

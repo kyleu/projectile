@@ -28,11 +28,11 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
       case Testbed => testbed()
       case s: ServerStart => ServerHelper.inst match {
         case Some(srv) => srv.startServer(s.port)
-        case None => throw new IllegalStateException("No server available")
+        case None => serverHelp()
       }
       case ServerStop => ServerHelper.inst match {
         case Some(srv) => srv.stopServer()
-        case None => throw new IllegalStateException("No server available")
+        case None => serverHelp()
       }
     }
 
@@ -42,6 +42,8 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
   def init() = rootCfg.init()
   def doctor(verbose: Boolean) = ConfigValidator.validate(rootCfg, verbose)
   def testbed() = JsonResponse(Json.True)
+
+  def serverHelp() = Error(ServerHelper.sbtError)
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
     case Projects(key) => key match {

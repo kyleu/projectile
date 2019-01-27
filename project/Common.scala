@@ -1,7 +1,6 @@
 import com.github.sbt.cpd.CpdKeys.cpdSkipDuplicateFiles
 import sbt.Keys._
 import sbt._
-import sbtassembly.AssemblyPlugin.autoImport._
 
 object Common {
   val projectId = "projectile"
@@ -9,7 +8,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.1.0"
+    val app = "1.1.2"
     val scala = "2.12.8"
   }
 

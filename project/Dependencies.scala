@@ -113,7 +113,7 @@ object Dependencies {
     val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
-    val reftree = "org.stanch" %% "reftree" % "1.2.0" % "provided"
+    val reftree = "io.github.stanch" %% "reftree" % "1.3.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.25"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"

@@ -45,7 +45,9 @@ object ControllerFile {
       config.addCommonImport(file, "ServiceAuthController")
     }
 
-    config.addCommonImport(file, "AuditRecordRowService")
+    if (model.features(ModelFeature.Audit)) {
+      config.addCommonImport(file, "AuditRecordRowService")
+    }
 
     config.addCommonImport(file, "OrderBy")
 

@@ -17,8 +17,10 @@ object Server {
   private[this] val dependencies = {
     import Dependencies._
     Seq(
-      Play.filters, Play.guice, Play.ws, Play.json, Play.cache, GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
-      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize, Utils.scalaGuice, Utils.clistMacros
+      Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
+      GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
+      Utils.scalaGuice, Utils.clistMacros,
+      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize
     )
   }
 
@@ -36,6 +38,13 @@ object Server {
     PlayKeys.playDefaultPort := Common.projectPort,
     PlayKeys.playInteractionMode := PlayUtils.NonBlockingInteractionMode,
 
+    // Assets
+    packagedArtifacts in publishLocal := {
+      val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+      val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
+      artifacts + (Artifact(moduleName.value, "jar", "jar", "assets") -> assets)
+    },
+
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
     pipelineStages += gzip,
@@ -46,9 +55,6 @@ object Server {
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),
     git.remoteRepo := scmInfo.value.get.connection,
-
-    // Publish assets
-    (managedClasspath in Runtime) += (packageBin in Assets).value,
 
     // Fat-Jar Assembly
     test in assembly := {},

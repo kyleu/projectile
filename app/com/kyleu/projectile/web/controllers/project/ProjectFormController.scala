@@ -12,7 +12,11 @@ import scala.concurrent.Future
 class ProjectFormController @javax.inject.Inject() () extends ProjectileController {
   def formNew = Action.async { implicit request =>
     val inputs = projectile.listInputs().map(_.key).sorted
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formSummary(projectile, ProjectSummary(), inputs)))
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formSummary(projectile, ProjectSummary(
+      template = ProjectTemplate.Custom,
+      key = "",
+      input = inputs.headOption.getOrElse("")
+    ), inputs)))
   }
 
   def formSummary(key: String) = Action.async { implicit request =>
@@ -96,11 +100,16 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
 
   private[this] def getSummary(request: Request[AnyContent]) = {
     val form = ControllerUtils.getForm(request.body)
-    val template = ProjectTemplate.withValue(form("template"))
+    val template = ProjectTemplate.withValueOpt(form("template")).getOrElse {
+      throw new IllegalStateException(s"No template with key [${form("template")}] found among [${ProjectTemplate.values.mkString(", ")}]")
+    }
+    if (form("key").trim.isEmpty) {
+      throw new IllegalStateException(s"No project key provided")
+    }
     val summary = projectile.getProjectSummaryOpt(form("key")).getOrElse(ProjectSummary(
       template = template,
-      input = form("input"),
-      key = form("key")
+      input = form("input").trim,
+      key = form("key").trim
     ))
     summary -> form
   }

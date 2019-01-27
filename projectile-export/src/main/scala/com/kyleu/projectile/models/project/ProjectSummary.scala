@@ -1,10 +1,7 @@
 package com.kyleu.projectile.models.project
 
-import java.time.LocalDateTime
-
 import com.kyleu.projectile.models.output.{OutputPackage, OutputPath}
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature, ServiceFeature}
-import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 
 object ProjectSummary {
@@ -13,9 +10,9 @@ object ProjectSummary {
 }
 
 case class ProjectSummary(
-    template: ProjectTemplate = ProjectTemplate.Custom,
-    key: String = "new",
-    input: String = "FIX_SOURCE_INPUT",
+    template: ProjectTemplate,
+    key: String,
+    input: String,
     description: String = "...",
     features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
