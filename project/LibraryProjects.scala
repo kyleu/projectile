@@ -84,7 +84,7 @@ object LibraryProjects {
   lazy val `projectile-lib-play` = libraryProject(project in file("libraries/projectile-lib-play")).settings(
     description := "Common Play Framework classes used by code generated from Projectile",
     libraryDependencies ++= Seq(Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`, `projectile-lib-graphql`)
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",

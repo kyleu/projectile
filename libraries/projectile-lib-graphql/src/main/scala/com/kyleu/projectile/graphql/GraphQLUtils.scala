@@ -16,7 +16,6 @@ import scala.concurrent.ExecutionContext
 import scala.language.experimental.macros
 
 object GraphQLUtils {
-  type TraceData = com.kyleu.projectile.util.tracing.TraceData
   type Context[Ctx, Val] = sangria.schema.Context[Ctx, Val]
 
   type GraphQLField = sangria.macros.derive.GraphQLField

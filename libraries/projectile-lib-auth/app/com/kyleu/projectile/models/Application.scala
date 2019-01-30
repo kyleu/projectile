@@ -13,14 +13,13 @@ import com.kyleu.projectile.web.util.TracingWSClient
 import com.mohiva.play.silhouette.api.Silhouette
 import play.api.Environment
 import play.api.inject.ApplicationLifecycle
-import play.api.mvc.Call
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.util.control.NonFatal
 
 object Application {
-  case class Actions(projectName: String, failedRedirect: Call)
+  case class Actions(projectName: String, failedRedirect: String = "/profile/signin")
 }
 
 @javax.inject.Singleton

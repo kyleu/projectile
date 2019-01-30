@@ -3,15 +3,13 @@ package com.kyleu.projectile.models.feature.doobie
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object DoobieFile {
   private[this] val tq = "\"\"\""
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = model.doobiePackage(config), key = model.className + "Doobie")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.doobiePackage(config), key = model.className + "Doobie")
     val cols = model.fields.map(_.key)
     val quotedCols = cols.map("\"" + _ + "\"").mkString(", ")
 

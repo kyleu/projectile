@@ -4,13 +4,11 @@ import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object QueriesFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = model.queriesPackage(config), key = model.className + "Queries")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.queriesPackage(config), key = model.className + "Queries")
 
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Row")

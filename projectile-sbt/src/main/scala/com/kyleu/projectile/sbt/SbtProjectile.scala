@@ -1,5 +1,6 @@
-package com.kyleu.projectile
+package com.kyleu.projectile.sbt
 
+import com.kyleu.projectile.ProjectileCLI
 import com.kyleu.projectile.models.cli.CommandLineOutput
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.services.ProjectileService
@@ -32,7 +33,6 @@ object SbtProjectile extends AutoPlugin {
         val result = action.map(act => svc.process(act.toCommand, act.verbose))
         result match {
           case Some(r) =>
-            val rc = r.getClass.getSimpleName.stripSuffix("$")
             val msg = s"Projectile execution with args [${args.mkString(" ")}] completed in [${System.currentTimeMillis - startMs}ms]"
             (msg +: CommandLineOutput.logsFor(r)).foreach(log)
           case None => log("No arguments")

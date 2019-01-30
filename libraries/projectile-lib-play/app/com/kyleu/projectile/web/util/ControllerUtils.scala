@@ -17,10 +17,10 @@ object ControllerUtils {
   def errorsToString(errors: Seq[FormError]) = errors.map(e => e.key + ": " + e.message).mkString(", ")
 
   def jsonBody(body: AnyContent) = body.asJson.map { json =>
-    import sangria.marshalling.MarshallingUtil._
-    import sangria.marshalling.circe._
-    import sangria.marshalling.playJson._
-    json.convertMarshaled[io.circe.Json]
+    JsonSerializers.parseJson(json.toString) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    }
   }.getOrElse(throw new IllegalStateException("Http post with json body required."))
 
   def jsonFormOrBody(body: AnyContent, key: String) = {

@@ -3,7 +3,6 @@ package com.kyleu.projectile.models.feature.service
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ServiceFile {
@@ -11,8 +10,7 @@ object ServiceFile {
   private[this] val searchArgs = "filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = model.servicePackage(config), key = model.className + "Service")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.servicePackage(config), key = model.className + "Service")
     val queriesFilename = model.className + "Queries"
 
     file.addImport(model.modelPackage(config), model.className)

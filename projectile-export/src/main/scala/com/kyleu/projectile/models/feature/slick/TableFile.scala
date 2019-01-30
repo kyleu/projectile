@@ -3,14 +3,12 @@ package com.kyleu.projectile.models.feature.slick
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
-import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object TableFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
-    val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
-    val file = ScalaFile(path = path, dir = model.slickPackage(config), key = model.className + "Table")
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = model.slickPackage(config), key = model.className + "Table")
 
     config.addCommonImport(file, "SlickQueryService", "imports", "_")
 

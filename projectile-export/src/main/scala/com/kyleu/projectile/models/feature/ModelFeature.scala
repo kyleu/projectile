@@ -73,7 +73,7 @@ object ModelFeature extends StringEnum[ModelFeature] with StringCirceEnum[ModelF
   )
 
   case object Tests extends ModelFeature(
-    value = "tests", title = "Tests", description = "TODO", dependsOn = Set(ProjectFeature.Tests)
+    value = "tests", title = "Tests", description = "Generates unit tests for Doobie and Slick definitions", dependsOn = Set(ProjectFeature.Tests)
   )
 
   override val values = findValues
