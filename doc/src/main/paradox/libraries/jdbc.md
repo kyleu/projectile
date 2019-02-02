@@ -1,6 +1,6 @@
 # JDBC
 
-Imports and models for jdbc database connections ([API Documentation](../api/projectile-lib-jdbc))
+Imports and models for jdbc database connections ([API Documentation](../api/projectile-lib-jdbc/com/kyleu/projectile/index.html))
 
 ### Usage
 

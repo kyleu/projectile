@@ -1,6 +1,6 @@
 # Auth
 
-Classes to support Play Framework apps with authentication ([API Documentation](../api/projectile-lib-auth))
+Classes to support Play Framework apps with authentication ([API Documentation](../api/projectile-lib-auth/com/kyleu/projectile/index.html))
 
 ### Usage
 

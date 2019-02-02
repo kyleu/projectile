@@ -1,6 +1,6 @@
 # Thrift
 
-Thrift service helpers, such as future conversions ([API Documentation](../api/projectile-lib-thrift))
+Thrift service helpers, such as future conversions ([API Documentation](../api/projectile-lib-thrift/com/kyleu/projectile/index.html))
 
 ### Usage
 

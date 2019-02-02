@@ -26,7 +26,7 @@ object LibraryProjects {
   lazy val `projectile-lib-core-js` = `projectile-lib-core`.js.withId("projectile-lib-core-js")
 
   lazy val `projectile-lib-scala` = libraryProject(project in file("libraries/projectile-lib-scala")).settings(
-    description := "Common classes used by code generated from Projectile",
+    description := "Common classes relating to core models and utilities",
     libraryDependencies ++= Seq(Utils.slf4j, Utils.commonsCodec),
   ).dependsOn(`projectile-lib-core-jvm`)
 
@@ -70,7 +70,7 @@ object LibraryProjects {
   ).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-scalajs` = libraryProject(project in file("libraries/projectile-lib-scalajs")).settings(
-    description := "Common ScalaJS classes used by code generated from Projectile",
+    description := "Common Scala.js classes used by code generated from Projectile",
     libraryDependencies ++= {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
@@ -87,7 +87,7 @@ object LibraryProjects {
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-websocket` = libraryProject(project in file("libraries/projectile-lib-websocket")).settings(
-    description := "Websocket controller and admin actions for websocket connections"
+    description := "Websocket controller and admin actions for actor-backed websocket connections"
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
@@ -96,7 +96,7 @@ object LibraryProjects {
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val `projectile-lib-auth-graphql` = libraryProject(project in file("libraries/projectile-lib-auth-graphql")).settings(
-    description := "GraphQL controllers and views",
+    description := "Secure GraphQL controllers and views, including GraphiQL and GraphQL Voyager",
     libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-auth`)
 
@@ -105,7 +105,7 @@ object LibraryProjects {
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-play`, `projectile-lib-websocket`, 
+    `projectile-lib-play`, `projectile-lib-websocket`,
     `projectile-lib-auth`, `projectile-lib-auth-graphql`
   )
 

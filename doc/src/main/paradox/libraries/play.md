@@ -1,6 +1,6 @@
 # Play
 
-Helpers for traced Play Framework controllers and views ([API Documentation](../api/projectile-lib-play))
+Helpers for traced Play Framework controllers and views ([API Documentation](../api/projectile-lib-play/com/kyleu/projectile/index.html))
 
 ### Usage
 

@@ -21,5 +21,7 @@ class EchoConnectionService(
 
   override def onConnect() = out.tell(Json.fromString("connected"), self)
 
-  def onRequest(request: Json) = out.tell(request, self)
+  override def receive = {
+    case j: Json => out.tell(j, self)
+  }
 }

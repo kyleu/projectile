@@ -1,6 +1,6 @@
 # Service
 
-Supports service classes with various helpers ([API Documentation](../api/projectile-lib-service))
+Supports service classes with various helpers ([API Documentation](../api/projectile-lib-service/com/kyleu/projectile/index.html))
 
 ### Usage
 

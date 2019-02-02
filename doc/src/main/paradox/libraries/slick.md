@@ -1,6 +1,6 @@
 # Slick
 
-Access routines for Slick databindings ([API Documentation](../api/projectile-lib-slick))
+Access routines for Slick databindings ([API Documentation](../api/projectile-lib-slick/com/kyleu/projectile/index.html))
 
 ### Usage
 
