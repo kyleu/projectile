@@ -6,7 +6,10 @@ import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.NullUtils
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 
-final case class UserCredentials(user: SystemUser, remoteAddress: String = NullUtils.str, tags: Map[String, String] = Map.empty) extends Credentials
+final case class UserCredentials(user: SystemUser, remoteAddress: String = NullUtils.str, tags: Map[String, String] = Map.empty) extends Credentials {
+  override def id = "user:" + user.id.toString
+  override def name = user.username
+}
 
 object UserCredentials {
   implicit val jsonEncoder: Encoder[UserCredentials] = deriveEncoder

@@ -9,14 +9,19 @@ lazy val `projectile-lib-core-js` = LibraryProjects.`projectile-lib-core-js`
 
 lazy val `projectile-lib-scala` = LibraryProjects.`projectile-lib-scala`
 lazy val `projectile-lib-tracing` = LibraryProjects.`projectile-lib-tracing`
+
 lazy val `projectile-lib-jdbc` = LibraryProjects.`projectile-lib-jdbc`
 lazy val `projectile-lib-doobie` = LibraryProjects.`projectile-lib-doobie`
 lazy val `projectile-lib-slick` = LibraryProjects.`projectile-lib-slick`
+
 lazy val `projectile-lib-thrift` = LibraryProjects.`projectile-lib-thrift`
+
 lazy val `projectile-lib-service` = LibraryProjects.`projectile-lib-service`
 lazy val `projectile-lib-graphql` = LibraryProjects.`projectile-lib-graphql`
-lazy val `projectile-lib-play` = LibraryProjects.`projectile-lib-play`
 lazy val `projectile-lib-scalajs` = LibraryProjects.`projectile-lib-scalajs`
+
+lazy val `projectile-lib-play` = LibraryProjects.`projectile-lib-play`
+lazy val `projectile-lib-websocket` = LibraryProjects.`projectile-lib-websocket`
 lazy val `projectile-lib-auth` = LibraryProjects.`projectile-lib-auth`
 lazy val `projectile-lib-auth-graphql` = LibraryProjects.`projectile-lib-auth-graphql`
 

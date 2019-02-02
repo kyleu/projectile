@@ -86,6 +86,10 @@ object LibraryProjects {
     libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
 
+  lazy val `projectile-lib-websocket` = libraryProject(project in file("libraries/projectile-lib-websocket")).settings(
+    description := "Websocket controller and admin actions for websocket connections"
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
+
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
     libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
@@ -101,7 +105,8 @@ object LibraryProjects {
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-play`, `projectile-lib-auth`, `projectile-lib-auth-graphql`
+    `projectile-lib-play`, `projectile-lib-websocket`, 
+    `projectile-lib-auth`, `projectile-lib-auth-graphql`
   )
 
   lazy val allReferences = all.map(_.project)

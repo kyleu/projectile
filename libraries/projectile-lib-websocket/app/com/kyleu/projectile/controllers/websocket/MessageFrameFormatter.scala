@@ -1,4 +1,4 @@
-package com.kyleu.projectile.web.util
+package com.kyleu.projectile.controllers.websocket
 
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.Logging
