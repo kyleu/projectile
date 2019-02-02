@@ -43,7 +43,7 @@ object ExportFieldGraphQL {
     case SetType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
     case MapType(_, _) => throw new IllegalStateException("Maps are not supported in GraphQL")
 
-    case JsonType => "StringType"
+    case JsonType => "jsonType"
     case CodeType => "StringType"
     case TagsType => "StringType"
     case ByteArrayType => "ArrayType(StringType)"

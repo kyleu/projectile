@@ -47,6 +47,8 @@ private class TracingWSRequest(
   }
   override def withCookies(cookies: WSCookie*) = new TracingWSRequest(spanName, request.withCookies(cookies: _*), tracer, traceData)
 
+  // override def withUrl(url: String) = new TracingWSRequest(spanName, request.withUrl(url), tracer, traceData)
+
   private[this] def annotate(data: TraceData, callType: String) = {
     data.tag("call", callType)
     data.tag("http.url", request.url)

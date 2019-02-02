@@ -26,22 +26,10 @@ addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0")
 
 // Code Quality
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0") // scalastyle
-addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.7")
 addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.1") // scalariformFormat
-addSbtPlugin("com.github.sbt" % "sbt-cpd" % "2.0.0")
-
-// Utilities
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.0") // dependencyGraph
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.4") // dependencyUpdates
-addSbtPlugin("com.orrsella" % "sbt-stats" % "1.0.7") // stats
-addSbtPlugin("com.typesafe.sbt" % "sbt-license-report" % "1.2.0")
-
-// Visualization
-addSbtPlugin("com.dwijnand" % "sbt-project-graph" % "0.4.0") // projectsGraphDot
-addSbtPlugin("com.github.xuwei-k" % "sbt-class-diagram" % "0.2.1") // classDiagram
 
 // Documentation
 addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.4.4" exclude("com.typesafe.akka", "akka-"))
 addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.6.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2" exclude("com.lightbend.paradox", "sbt-paradox"))
-addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.2")
+addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.3")

@@ -41,7 +41,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-jdbc` = libraryProject(project in file("libraries/projectile-lib-jdbc")).settings(
     description := "Common database classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Database.postgres, Database.hikariCp, Utils.commonsCodec, Utils.typesafeConfig)
+    libraryDependencies ++= Seq(Database.postgres, Database.hikariCp, Database.flyway, Utils.commonsCodec, Utils.typesafeConfig)
   ).dependsOn(`projectile-lib-scala`)
 
   lazy val `projectile-lib-doobie` = libraryProject(project in file("libraries/projectile-lib-doobie")).settings(
@@ -83,18 +83,25 @@ object LibraryProjects {
 
   lazy val `projectile-lib-play` = libraryProject(project in file("libraries/projectile-lib-play")).settings(
     description := "Common Play Framework classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
+    libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
-    libraryDependencies ++= Authentication.all
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
+  lazy val `projectile-lib-auth-graphql` = libraryProject(project in file("libraries/projectile-lib-auth-graphql")).settings(
+    description := "GraphQL controllers and views",
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-auth`)
+
   lazy val all = Seq(
-    `projectile-lib-core-jvm`, `projectile-lib-core-js`, `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
+    `projectile-lib-core-jvm`, `projectile-lib-core-js`,
+    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
-    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`, `projectile-lib-play`, `projectile-lib-auth`
+    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
+    `projectile-lib-play`, `projectile-lib-auth`, `projectile-lib-auth-graphql`
   )
 
   lazy val allReferences = all.map(_.project)

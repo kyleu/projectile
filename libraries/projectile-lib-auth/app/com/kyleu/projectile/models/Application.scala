@@ -5,6 +5,7 @@ import java.util.TimeZone
 import akka.actor.ActorSystem
 import com.kyleu.projectile.models.auth.AuthEnv
 import com.kyleu.projectile.models.database.DatabaseConfig
+import com.kyleu.projectile.services.cache.CacheService
 import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
@@ -62,6 +63,7 @@ class Application @javax.inject.Inject() (
 
   private[this] def stop() = {
     ApplicationDatabase.close()
+    CacheService.close()
     if (config.metrics.tracingEnabled) { tracing.close() }
     if (config.metrics.micrometerEnabled) { Instrumented.stop() }
   }

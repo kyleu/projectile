@@ -2,23 +2,24 @@
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.20"
+    private[this] val version = "2.6.21"
     val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
     val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.6.13"
+    val json = "com.typesafe.play" %% "play-json" % "2.7.1"
     val test = "com.typesafe.play" %% "play-test" % version % "test"
   }
 
   object Database {
     val postgres = "org.postgresql" % "postgresql" % "42.2.5"
     val hikariCp = "com.zaxxer" % "HikariCP" % "3.2.0"
+    val flyway = "org.flywaydb" % "flyway-core" % "5.2.3"
 
     object Slick {
-      val version = "3.2.3"
-      val pgVersion = "0.17.0"
+      val version = "3.3.0"
+      val pgVersion = "0.17.1"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
@@ -39,10 +40,6 @@ object Dependencies {
 
       val all = Seq(core, hikariCp, postgres, testing)
     }
-
-    val flyway = "org.flywaydb" % "flyway-core" % "5.2.3"
-
-    val all = Seq(postgres, hikariCp, flyway) ++ Slick.all ++ Doobie.all
   }
 
   object GraphQL {
@@ -92,12 +89,12 @@ object Dependencies {
     val fontAwesome = "org.webjars" % "font-awesome" % "4.7.0" intransitive()
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.3" intransitive()
 
-    val all = Seq(autocomplete, fontAwesome, jquery, materialize)
+    val all = Seq(autocomplete, fontAwesome, jquery, materialize, swaggerUi)
   }
 
   object Utils {
-    val scapegoatVersion = "1.3.8"
     val enumeratumCirceVersion = "1.5.19"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"

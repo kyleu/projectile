@@ -13,10 +13,16 @@ import play.twirl.api.Html
 import scala.concurrent._
 
 object ErrorHandler {
-  trait Actions {
-    def badRequest(path: String, error: String)(implicit session: Session, flash: Flash, td: TraceData): Html
-    def serverError(error: String, ex: Option[Throwable])(implicit session: Session, flash: Flash, td: TraceData): Html
-    def notFound(path: String)(implicit session: Session, flash: Flash, td: TraceData): Html
+  class Actions() {
+    def badRequest(path: String, error: String)(implicit session: Session, flash: Flash, td: TraceData): Html = {
+      com.kyleu.projectile.views.html.error.badRequest(path, error)
+    }
+    def serverError(error: String, ex: Option[Throwable])(implicit session: Session, flash: Flash, td: TraceData): Html = {
+      com.kyleu.projectile.views.html.error.serverError(error, ex)
+    }
+    def notFound(path: String)(implicit session: Session, flash: Flash, td: TraceData): Html = {
+      com.kyleu.projectile.views.html.error.notFound(path)
+    }
   }
 }
 

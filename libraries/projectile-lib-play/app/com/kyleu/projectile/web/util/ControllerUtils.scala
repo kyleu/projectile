@@ -17,7 +17,7 @@ object ControllerUtils {
   def errorsToString(errors: Seq[FormError]) = errors.map(e => e.key + ": " + e.message).mkString(", ")
 
   def jsonBody(body: AnyContent) = body.asJson.map { json =>
-    JsonSerializers.parseJson(json.toString) match {
+    JsonSerializers.parseJson(play.api.libs.json.Json.stringify(json)) match {
       case Right(x) => x
       case Left(x) => throw x
     }

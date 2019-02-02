@@ -1,4 +1,3 @@
-import com.github.sbt.cpd.CpdKeys.cpdSkipDuplicateFiles
 import sbt.Keys._
 import sbt._
 
@@ -8,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.1.3"
+    val app = "1.1.4-SNAPSHOT"
     val scala = "2.12.8"
   }
 
@@ -37,8 +36,6 @@ object Common {
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false).withWarnDirectEvictions(false),
-
-    cpdSkipDuplicateFiles := true,
 
     publishMavenStyle := true,
 

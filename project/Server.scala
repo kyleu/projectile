@@ -1,4 +1,3 @@
-import com.sksamuel.scapegoat.sbt.ScapegoatSbtPlugin.autoImport.{scapegoatDisabledInspections, scapegoatIgnoredFiles}
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
@@ -82,19 +81,13 @@ object Server {
       case x => (assemblyMergeStrategy in assembly).value(x)
     },
     fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
-    mainClass in assembly := Some("CLI"),
-
-    // Code Quality
-    scapegoatIgnoredFiles := Seq(".*/Routes.scala", ".*/RoutesPrefix.scala", ".*/*ReverseRoutes.scala", ".*/*.template.scala"),
-    scapegoatDisabledInspections := Seq("UnusedMethodParameter"),
+    mainClass in assembly := Some("CLI")
   )
 
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
   lazy val `projectile-server` = withProjects(
-    Project(id = Common.projectId, base = file(".")).enablePlugins(
-      SbtWeb, play.sbt.PlayScala, diagram.ClassDiagramPlugin
-    ).disablePlugins(PlayFilters).settings(serverSettings: _*),
+    Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, play.sbt.PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     SbtExportPlugin.`projectile-sbt`,
     ProjectExport.`projectile-export`
   ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(LibraryProjects.allReferences: _*)

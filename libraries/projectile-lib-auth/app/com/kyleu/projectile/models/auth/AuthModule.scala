@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.auth
 
 import com.google.inject.{AbstractModule, Provides}
 import com.kyleu.projectile.models.Configuration
-import com.kyleu.projectile.models.user.SystemUser
+import com.kyleu.projectile.services.user.{OAuth2InfoService, PasswordInfoService, SystemUserSearchService}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder, Signer}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.{AuthenticatorService, AvatarService, IdentityService}
@@ -16,7 +16,6 @@ import com.mohiva.play.silhouette.impl.providers.state.{CsrfStateItemHandler, Cs
 import com.mohiva.play.silhouette.impl.services.GravatarService
 import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, SecureRandomIDGenerator}
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
-import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import net.codingwell.scalaguice.ScalaModule
 import play.api.libs.ws.WSClient
@@ -31,7 +30,6 @@ class AuthModule extends AbstractModule with ScalaModule {
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
-    //bind[].to[]
   }
 
   @Provides
@@ -41,7 +39,7 @@ class AuthModule extends AbstractModule with ScalaModule {
   def provideEnvironment(
     authenticatorService: AuthenticatorService[CookieAuthenticator],
     eventBus: EventBus,
-    userSearchService: IdentityService[SystemUser]
+    userSearchService: SystemUserSearchService
   ): Environment[AuthEnv] = {
     Environment[AuthEnv](userSearchService, authenticatorService, Seq.empty, eventBus)
   }
@@ -72,7 +70,7 @@ class AuthModule extends AbstractModule with ScalaModule {
   }
 
   @Provides
-  def provideAuthInfoRepository(password: DelegableAuthInfoDAO[PasswordInfo], oauth2: DelegableAuthInfoDAO[OAuth2Info]): AuthInfoRepository = {
+  def provideAuthInfoRepository(password: PasswordInfoService, oauth2: OAuth2InfoService): AuthInfoRepository = {
     new DelegableAuthInfoRepository(password, oauth2)
   }
 
