@@ -76,8 +76,9 @@ object LibraryProjects {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
       val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
-      val scalatags = "com.lihaoyi" %%% "scalatags" % "0.6.7"
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(jQuery, scalatags, enumeratum, javaTime)
+      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.2"
+
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(jQuery, enumeratum, javaTime, jsDom)
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
 
@@ -85,10 +86,6 @@ object LibraryProjects {
     description := "Common Play Framework classes used by code generated from Projectile",
     libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
-
-  lazy val `projectile-lib-websocket` = libraryProject(project in file("libraries/projectile-lib-websocket")).settings(
-    description := "Websocket controller and admin actions for actor-backed websocket connections"
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
@@ -99,6 +96,10 @@ object LibraryProjects {
     description := "Secure GraphQL controllers and views, including GraphiQL and GraphQL Voyager",
     libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-auth`)
+
+  lazy val `projectile-lib-websocket` = libraryProject(project in file("libraries/projectile-lib-websocket")).settings(
+    description := "Websocket controller and admin actions for actor-backed websocket connections"
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-auth-graphql`)
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,

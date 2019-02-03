@@ -10,8 +10,7 @@ import com.kyleu.projectile.util.{DateUtils, Logging}
 import com.kyleu.projectile.util.tracing.TraceData
 
 object ConnectionSupervisor {
-  protected var factory: Option[ActorRefFactory] = None
-  def getFactory = factory.getOrElse(throw new IllegalStateException("No ConnectionSupervisor has been started."))
+  protected var initialized = false
 
   final case class Broadcast(msg: String)
   final case class ConnectionRecord(id: UUID, userId: String, username: String, actorRef: ActorRef, started: LocalDateTime) {
@@ -28,9 +27,11 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
   private[this] def connectionById(id: UUID) = connections.get(id)
 
   override def preStart() = {
-    ConnectionSupervisor.factory.foreach(_ => throw new IllegalStateException("Only one ConnectionSupervisor can be started."))
+    if (ConnectionSupervisor.initialized) {
+      log.warn("Only one ConnectionSupervisor can be started.")
+    }
     log.debug(s"Connection Supervisor started")
-    ConnectionSupervisor.factory = Some(context)
+    ConnectionSupervisor.initialized = true
   }
 
   override val supervisorStrategy = OneForOneStrategy() {
@@ -57,6 +58,10 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
 
     case im: InternalMessage => log.warn(s"Unhandled connection supervisor internal message [${im.getClass.getSimpleName}].")
     case x => log.warn(s"ConnectionSupervisor encountered unknown message: ${x.toString}")
+  }
+
+  override def postStop() = {
+    ConnectionSupervisor.initialized = false
   }
 
   private[this] def handleGetSystemStatus() = sender().tell(ConnectionStatus(connections.map(_._2.desc).toSeq.sortBy(_.username)), self)

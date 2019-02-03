@@ -15,7 +15,7 @@ object Dependencies {
   object Database {
     val postgres = "org.postgresql" % "postgresql" % "42.2.5"
     val hikariCp = "com.zaxxer" % "HikariCP" % "3.2.0"
-    val flyway = "org.flywaydb" % "flyway-core" % "5.2.3"
+    val flyway = "org.flywaydb" % "flyway-core" % "5.2.4"
 
     object Slick {
       val version = "3.3.0"

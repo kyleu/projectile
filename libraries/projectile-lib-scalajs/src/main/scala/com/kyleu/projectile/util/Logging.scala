@@ -4,7 +4,6 @@ import java.util.TimeZone
 
 import org.scalajs.dom
 import org.scalajs.dom.raw.{Element, Event}
-import scalatags.Text.all._
 
 import scala.scalajs.js.Dynamic.global
 
@@ -16,9 +15,9 @@ object Logging {
   private[this] var container: Option[Element] = None
 
   private[this] def logElement(level: String, msg: String) = container.foreach { parent =>
-    val el = div(cls := "log-message")(div(cls := "log-timestamp")(JavaScriptUtils.niceCurrentTime()), msg)
+    val el = s"""<div class="log-message"><div class="log-timestamp">${JavaScriptUtils.niceCurrentTime()}</div>$msg</div>"""
     val domEl = dom.document.createElement("div")
-    domEl.innerHTML = el.toString()
+    domEl.innerHTML = el
     parent.appendChild(domEl)
     parent.scrollTop = parent.scrollHeight.toDouble
   }
