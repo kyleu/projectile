@@ -30,6 +30,7 @@ class AuthActions(val projectName: String) {
   def changePasswordUrl = "/profile/password/change"
 
   def adminIndexUrl = "/admin/system"
+  def adminMenu: (SystemUser, String, AuthActions) => HtmlFormat.Appendable = com.kyleu.projectile.views.html.admin.layout.defaultMenu.apply
 
   def signin(
     user: Option[SystemUser], form: Form[Credentials], providers: scala.Seq[String], allowRegistration: Boolean

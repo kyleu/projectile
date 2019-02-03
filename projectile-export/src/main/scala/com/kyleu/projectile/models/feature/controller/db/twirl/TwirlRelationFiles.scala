@@ -14,17 +14,18 @@ object TwirlRelationFiles {
     val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull(config).mkString(".")).mkString(", ")
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
-    val viewPkg = (config.viewPackage :+ "html").mkString(".")
     val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
 
     val su = CommonImportHelper.getString(config, "SystemUser")
-    listFile.add(s"@(user: $su, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
+    val aa = CommonImportHelper.getString(config, "AuthActions")
+    listFile.add(s"@(user: $su, authActions: $aa, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     listFile.add(s")", -2)
 
-    listFile.add(s"@$viewPkg.admin.explore.list(", 1)
+    listFile.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
     listFile.add("user = user,")
+    listFile.add("authActions = authActions,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")
     listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")

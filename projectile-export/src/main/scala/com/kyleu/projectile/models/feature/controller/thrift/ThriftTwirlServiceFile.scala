@@ -14,7 +14,7 @@ object ThriftTwirlServiceFile {
 
     file.add(s"@(user: $su, debug: Boolean = false)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    file.add(s""")@${config.viewPackage.mkString(".")}.html.admin.layout.page(user, "thrift", "${service.className}") {""", 1)
+    file.add(s""")@${config.systemViewPackage.mkString(".")}.html.admin.layout.page(user, "thrift", "${service.className}") {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)
     file.add("""<div class="collection with-header">""", 1)

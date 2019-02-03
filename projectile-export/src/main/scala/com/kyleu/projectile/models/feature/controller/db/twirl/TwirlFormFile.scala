@@ -11,12 +11,15 @@ object TwirlFormFile {
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.viewPackage :+ "html").mkString(".")
+    val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
 
     val su = CommonImportHelper.getString(config, "SystemUser")
-    file.add(s"@(user: $su, model: ${model.fullClassPath(config)}, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(")
+    val aa = CommonImportHelper.getString(config, "AuthActions")
+    val extraArgs = "title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false"
+    file.add(s"@(user: $su, authActions: $aa, model: ${model.fullClassPath(config)}, $extraArgs)(")
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    file.add(s""")@$viewPkg.admin.layout.page(user, "explore", title) {""", 1)
+    file.add(s""")@$systemViewPkg.admin.layout.page(user, authActions, "explore", title) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     file.add("""<div class="collection with-header">""", 1)
@@ -52,7 +55,7 @@ object TwirlFormFile {
 
     file.add(s"@$viewPkg.components.includeScalaJs(debug)")
     if (hasAutocomplete) {
-      file.add(s"@$viewPkg.components.includeAutocomplete(debug)")
+      file.add(s"@$systemViewPkg.components.includeAutocomplete(debug)")
     }
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
 

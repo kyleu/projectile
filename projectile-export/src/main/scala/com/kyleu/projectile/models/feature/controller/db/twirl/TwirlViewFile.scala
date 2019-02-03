@@ -14,15 +14,17 @@ object TwirlViewFile {
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
 
     val su = CommonImportHelper.getString(config, "SystemUser")
+    val aa = CommonImportHelper.getString(config, "AuthActions")
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
     val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
 
-    file.add(s"@(user: $su, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
+    file.add(s"@(user: $su, authActions: $aa, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
     val td = s"${(config.utilitiesPackage :+ "tracing").mkString(".")}.TraceData"
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
     val viewPkg = (config.viewPackage ++ Seq("html", "admin")).mkString(".")
-    file.add(s""")@$viewPkg.layout.page(user, "explore", s"${model.title} [$toInterp]") {""", 1)
+    val systemViewPkg = (config.systemViewPackage ++ Seq("html", "admin")).mkString(".")
+    file.add(s""")@$systemViewPkg.layout.page(user, authActions, "explore", s"${model.title} [$toInterp]") {""", 1)
 
     file.add("""<div class="collection with-header">""", 1)
     file.add("<div class=\"collection-header\">", 1)

@@ -1,0 +1,23 @@
+@(user: com.kyleu.projectile.models.user.SystemUser, activeSection: String, authActions: com.kyleu.projectile.models.auth.AuthActions)
+@com.kyleu.projectile.views.html.components.userDropdown(Some(user))
+<header>
+  <nav id="topnav" class="theme">
+    <a href="@authActions.indexUrl" class="brand-logo center">@authActions.projectName</a>
+
+    <ul class="left hide-on-small-only">
+      <li><a href="@authActions.adminIndexUrl">Admin</a></li>
+    </ul>
+
+    <ul class="right hide-on-small-only nav-name">
+      <li><a class="dropdown-trigger" href="@authActions.profileUrl" data-target="dropdown-user">
+        @user.username <i id="user-dropdown-toggle" class="fa fa-angle-down right"></i>
+      </a></li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  $(function() {
+    $(".dropdown-trigger").dropdown();
+  });
+</script>

@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.output.file.OutputFile
 
 object TwirlFormFields {
   def fieldFor(config: ExportConfiguration, model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
-    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
+    val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
     field.t match {
       case FieldType.EnumType(key) => file.add(s"@$formPkg.selectField(${enumArgsFor(config, field, key)})")
       case FieldType.CodeType => file.add(s"@$formPkg.codeField(${argsFor(field)})")
@@ -46,7 +46,7 @@ object TwirlFormFields {
   }
 
   private[this] def zonedDateTimeField(config: ExportConfiguration, field: ExportField, file: OutputFile) = {
-    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
+    val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
     val prop = field.propertyName
     val valString = if (field.required) { s"Some(model.$prop)" } else { s"""model.$prop""" }
     val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.optional}"""
@@ -54,7 +54,7 @@ object TwirlFormFields {
   }
 
   private[this] def timeField(config: ExportConfiguration, field: ExportField, file: OutputFile, t: String) = {
-    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
+    val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
     val prop = field.propertyName
     val valString = if (field.required) { s"Some(model.$prop)" } else { s"""model.$prop""" }
     val args = s"""selected = isNew, key = "$prop", title = "${field.title}", value = $valString, nullable = ${field.optional}"""
@@ -62,7 +62,7 @@ object TwirlFormFields {
   }
 
   private[this] def autocompleteField(config: ExportConfiguration, field: ExportField, autocomplete: (ForeignKey, ExportModel), file: OutputFile) = {
-    val formPkg = (config.viewPackage ++ Seq("html", "components", "form")).mkString(".")
+    val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
     file.add(s"@$formPkg.autocompleteField(", 1)
     file.add(argsFor(field) + ",")
     val url = s"${TwirlHelper.routesClass(config, autocomplete._2)}.autocomplete()"

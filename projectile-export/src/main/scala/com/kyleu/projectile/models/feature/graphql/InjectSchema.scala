@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "Schema.scala") {
-  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "graphql"
+  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "graphql"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val enums = config.enums.filter(e => e.features(EnumFeature.GraphQL) && e.inputType.isDatabase).sortBy(e => e.modelPackage(config).mkString + e.className)

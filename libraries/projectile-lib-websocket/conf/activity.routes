@@ -1,8 +1,6 @@
 # Activity routes
-# GET        /                    com.kyleu.projectile.controllers.activity.ActivityController.activityIndex
-# GET        /broadcast           com.kyleu.projectile.controllers.activity.ActivityController.broadcast(msg: Option[String] ?= None)
-# GET        /connection          com.kyleu.projectile.controllers.activity.ActivityController.connectionList
-# GET        /connection/:id      com.kyleu.projectile.controllers.activity.ActivityController.connectionDetail(id: java.util.UUID)
-# GET        /client/:id          com.kyleu.projectile.controllers.activity.ActivityController.clientDetail(id: java.util.UUID)
-# GET        /session             com.kyleu.projectile.controllers.activity.ActivityController.sessionList
-# GET        /session/:id         com.kyleu.projectile.controllers.activity.ActivityController.sessionDetail(id: java.util.UUID)
+GET        /                    com.kyleu.projectile.controllers.activity.ActivityController.activityIndex
+GET        /broadcast           com.kyleu.projectile.controllers.activity.ActivityController.broadcast(msg: Option[String] ?= None)
+GET        /connection          com.kyleu.projectile.controllers.activity.ActivityController.connectionList
+GET        /connection/:id      com.kyleu.projectile.controllers.activity.ActivityController.connectionDetail(id: java.util.UUID)
+GET        /client/:id          com.kyleu.projectile.controllers.activity.ActivityController.clientDetail(id: java.util.UUID)

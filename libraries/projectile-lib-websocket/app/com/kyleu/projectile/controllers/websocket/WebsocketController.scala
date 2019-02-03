@@ -16,6 +16,12 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+object WebsocketController {
+  def errJson(t: String, b: String) = {
+    Json.fromJsonObject(JsonObject.apply("status" -> "error".asJson, "top" -> t.asJson, "bottom" -> b.asJson))
+  }
+}
+
 abstract class WebsocketController[ReqMsg: Decoder, RspMsg: Encoder](name: String) extends AuthController(name) {
   implicit def system: ActorSystem
   implicit def materializer: Materializer
@@ -24,10 +30,6 @@ abstract class WebsocketController[ReqMsg: Decoder, RspMsg: Encoder](name: Strin
   protected[this] def onConnect(id: UUID, creds: Credentials, out: ActorRef, sourceAddr: String): Props
 
   private[this] val formatter = new MessageFrameFormatter[ReqMsg, RspMsg]()
-
-  protected[this] def errJson(t: String, b: String) = {
-    Json.fromJsonObject(JsonObject.apply("status" -> "error".asJson, "top" -> t.asJson, "bottom" -> b.asJson))
-  }
 
   protected[this] def connectAnonymous() = WebSocket.accept[ReqMsg, RspMsg] { request =>
     implicit val req: Request[AnyContent] = Request(request, AnyContentAsEmpty)

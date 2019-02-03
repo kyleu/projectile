@@ -12,6 +12,7 @@ object EnumControllerFile {
     file.addImport(enum.modelPackage(config), enum.className)
 
     config.addCommonImport(file, "Application")
+    config.addCommonImport(file, "AuthActions")
     if (enum.features(EnumFeature.Auth)) {
       config.addCommonImport(file, "AuthController")
     } else {
@@ -24,16 +25,16 @@ object EnumControllerFile {
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "twirl", "api"), "Html")
 
-    val prefix = config.applicationPackage.map(_ + ".").mkString
+    val prefix = config.systemPackage.map(_ + ".").mkString
 
     file.add("@javax.inject.Singleton")
-    val constructorArgs = s"@javax.inject.Inject() (override val app: Application)"
+    val constructorArgs = s"@javax.inject.Inject() (override val app: Application, authActions: AuthActions)"
     val controller = if (enum.features(EnumFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${enum.className}Controller $constructorArgs extends $controller("${enum.propertyName}") {""", 1)
     file.add()
     file.add(s"""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"Future.successful(render {", 1)
-    val listArgs = s"""request.identity, "${enum.className}", "explore""""
+    val listArgs = s"""request.identity, authActions, "${enum.className}", "explore""""
     file.add(s"case Accepts.Html() => Ok(${prefix}views.html.admin.layout.listPage($listArgs, ${enum.className}.values.map(v => Html(v.toString))))")
     file.add(s"""case Accepts.Json() => Ok(${enum.className}.values.asJson)""")
     file.add(s"""case ServiceController.acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")

@@ -8,30 +8,6 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ControllerFile {
-
-  private[this] def addMutations(file: ScalaFile, model: ExportModel, routesClass: String, viewHtmlPackage: String) = if (!model.readOnly) {
-    file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
-    file.add(s"val cancel = $routesClass.list()")
-    file.add(s"val call = $routesClass.create()")
-    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    file.add(s"""request.identity, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
-    file.add(")))", -1)
-    file.add("}", -1)
-    file.add()
-    file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
-    file.add("svc.create(request, modelForm(request.body)).map {", 1)
-    if (model.pkFields.isEmpty) {
-      file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
-    } else {
-      val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
-      file.add(s"case Some(model) => Redirect($routesClass.view($viewArgs))")
-    }
-    file.add(s"case None => Redirect($routesClass.list())")
-    file.add("}", -1)
-    file.add("}", -1)
-    file.add()
-  }
-
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = ScalaFile(path = OutputPath.ServerSource, model.controllerPackage(config), model.className + "Controller")
     val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
@@ -39,6 +15,7 @@ object ControllerFile {
 
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
+    config.addCommonImport(file, "AuthActions")
 
     config.addCommonImport(file, "ServiceController")
     if (model.features(ModelFeature.Auth)) {
@@ -86,9 +63,9 @@ object ControllerFile {
     }
 
     ControllerReferences.refServiceArgs(config, model, file) match {
-      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs")
+      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, authActions: AuthActions, svc: ${model.className}Service$extraSvcs")
       case ref =>
-        file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs,")
+        file.add(s"override val app: Application, authActions: AuthActions, svc: ${model.className}Service$extraSvcs,")
         file.add(ref)
     }
     val controller = if (model.features(ModelFeature.Auth)) { "ServiceAuthController" } else { "ServiceController" }
@@ -119,13 +96,36 @@ object ControllerFile {
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}List(", 1)
-    file.add("request.identity, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
+    file.add("request.identity, authActions, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
     file.add("))", -1)
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
     file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
     file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)")
     file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)")
     file.add("})", -1)
+    file.add("}", -1)
+    file.add("}", -1)
+    file.add()
+  }
+
+  private[this] def addMutations(file: ScalaFile, model: ExportModel, routesClass: String, viewHtmlPackage: String) = if (!model.readOnly) {
+    file.add("""def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"val cancel = $routesClass.list()")
+    file.add(s"val call = $routesClass.create()")
+    file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
+    file.add(s"""request.identity, authActions, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
+    file.add(")))", -1)
+    file.add("}", -1)
+    file.add()
+    file.add("""def create = withSession("create", admin = true) { implicit request => implicit td =>""", 1)
+    file.add("svc.create(request, modelForm(request.body)).map {", 1)
+    if (model.pkFields.isEmpty) {
+      file.add("case Some(_) => throw new IllegalStateException(\"No primary key.\")")
+    } else {
+      val viewArgs = model.pkFields.map("model." + _.propertyName).mkString(", ")
+      file.add(s"case Some(model) => Redirect($routesClass.view($viewArgs))")
+    }
+    file.add(s"case None => Redirect($routesClass.list())")
     file.add("}", -1)
     file.add("}", -1)
     file.add()

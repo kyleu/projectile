@@ -18,10 +18,10 @@ case class ExportConfiguration(
     services: Seq[ExportService]
 ) {
   val applicationPackage = project.getPackage(OutputPackage.Application)
+  val systemPackage = project.getPackage(OutputPackage.System)
 
   val viewPackage = applicationPackage ++ project.getPackage(OutputPackage.TwirlViews)
-
-  val systemPackage = project.getPackage(OutputPackage.System)
+  val systemViewPackage = systemPackage ++ project.getPackage(OutputPackage.TwirlViews)
 
   val resultsPackage = systemPackage ++ project.getPackage(OutputPackage.Results)
   val tagsPackage = systemPackage ++ project.getPackage(OutputPackage.Tags)
