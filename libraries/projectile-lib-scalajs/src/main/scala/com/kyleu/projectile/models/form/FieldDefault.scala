@@ -57,5 +57,8 @@ object FieldDefault {
     input.keyup((_: JQueryEventObject) => {
       checkbox.prop("checked", originalValue != input.value().toString)
     })
+    input.on("change", (_: JQueryEventObject) => {
+      checkbox.prop("checked", originalValue != input.value().toString)
+    })
   }
 }
