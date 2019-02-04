@@ -30,7 +30,10 @@ object DoobieQueryService {
     implicit val zonedDateTimeMeta: Meta[ZonedDateTime] = {
       Meta[Timestamp].timap(ts => ZonedDateTime.from(ts.toLocalDateTime))(dt => Timestamp.from(dt.toInstant))
     }
-    implicit val jsonMeta: Meta[Json] = Meta[String].timap(s => JsonSerializers.parseJson(s).right.get)(j => j.spaces2)
+    implicit val jsonMeta: Meta[Json] = Meta[String].timap(s => JsonSerializers.parseJson(s) match {
+      case Right(x) => x
+      case Left(x) => throw x
+    })(j => j.spaces2)
     implicit val tagsMeta: Meta[List[Tag]] = Meta[Map[String, String]].timap(Tag.fromMap)(Tag.toMap)
 
     def in[F[_]: Reducible, A: Param](f: Fragment, fs: F[A]): Fragment = doobie.Fragments.in(f, fs)
@@ -40,7 +43,7 @@ object DoobieQueryService {
   }
 }
 
-class DoobieQueryService(key: String, dataSource: DataSource) {
+class DoobieQueryService(dataSource: DataSource) {
   val ec = ExecutionContext.global
   implicit val cs: ContextShift[IO] = IO.contextShift(ec)
 

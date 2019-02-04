@@ -60,7 +60,7 @@ object CommandLineOutput extends Logging {
     } else {
       s" - [${result.outputMessages.size}] Output Messages:" +: result.outputMessages.map(m => s"   - ${m.tgt}: ${m.message}")
     }
-    s"Audit Result:" +: (cfgMsgs ++ outputMsgs)
+    "Audit Result:" +: (cfgMsgs ++ outputMsgs)
   }
 
   private[this] def logForCodegenResult(result: CodegenResult) = {
@@ -85,7 +85,7 @@ object CommandLineOutput extends Logging {
 
   def logForCompositeResult(results: Seq[ProjectileResponse]): Seq[String] = results.size match {
     case 0 => Seq("No results")
-    case 1 => logsFor(results.head)
+    case 1 => logsFor(results.headOption.getOrElse(throw new IllegalStateException()))
     case _ => results.zipWithIndex.flatMap(r => s"Result [${r._2}]:" +: logsFor(r._1))
   }
 }

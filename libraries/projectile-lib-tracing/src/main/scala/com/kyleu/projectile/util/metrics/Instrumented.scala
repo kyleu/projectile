@@ -41,7 +41,7 @@ object Instrumented extends Logging {
         registry
 
       case "prometheus" =>
-        log.info(s"Prometheus metrics started")(TraceData.noop)
+        log.info("Prometheus metrics started")(TraceData.noop)
         new PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
       case _ => throw new IllegalStateException(s"Invalid metrics engine [$engine]")

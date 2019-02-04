@@ -17,7 +17,7 @@ object TwirlListFile {
     listFile.add(s"@(user: $su, authActions: $aa, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    listFile.add(s")", -2)
+    listFile.add(")", -2)
     listFile.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
     listFile.add("user = user,")
     listFile.add("authActions = authActions,")

@@ -47,7 +47,7 @@ object TextSectionHelper {
       val prior = if (l.isEmpty) { Nil } else { l.init }
       val current = l match {
         case Nil => "_prelude" -> Nil
-        case _ => l.last
+        case _ => l.lastOption.getOrElse(throw new IllegalStateException())
       }
 
       r.indexOf(sectionKey) match {

@@ -8,26 +8,31 @@ import io.circe.HCursor
 import scala.util.control.NonFatal
 
 object FieldTypeDecoder {
+  private[this] def extract[T](e: Either[Throwable, T]) = e match {
+    case Left(x) => throw x
+    case Right(x) => x
+  }
+
   private[this] val listTypeDecoder: Decoder[ListType] = (c: HCursor) => Right(ListType(
-    typ = decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]).right.get
+    typ = extract(decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]))
   ))
 
   private[this] val setTypeDecoder: Decoder[SetType] = (c: HCursor) => Right(SetType(
-    typ = decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]).right.get
+    typ = extract(decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]))
   ))
 
   private[this] val mapTypeDecoder: Decoder[MapType] = (c: HCursor) => Right(MapType(
-    k = decodeFieldType.apply(c.downField("k").asInstanceOf[HCursor]).right.get,
-    v = decodeFieldType.apply(c.downField("v").asInstanceOf[HCursor]).right.get
+    k = extract(decodeFieldType.apply(c.downField("k").asInstanceOf[HCursor])),
+    v = extract(decodeFieldType.apply(c.downField("v").asInstanceOf[HCursor]))
   ))
 
-  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(key = c.downField("key").as[String].right.get))
+  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(key = extract(c.downField("key").as[String])))
 
-  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(key = c.downField("key").as[String].right.get))
+  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(key = extract(c.downField("key").as[String])))
 
   private[this] val objectTypeDecoder: Decoder[ObjectType] = (c: HCursor) => Right(ObjectType(
-    key = c.downField("key").as[String].right.get,
-    fields = c.downField("fields").as[Seq[ObjectField]].right.get
+    key = extract(c.downField("key").as[String]),
+    fields = extract(c.downField("fields").as[Seq[ObjectField]])
   ))
 
   implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => try {

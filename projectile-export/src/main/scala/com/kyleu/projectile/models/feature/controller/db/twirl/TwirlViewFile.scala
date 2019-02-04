@@ -82,7 +82,7 @@ object TwirlViewFile {
       file.add(TwirlHelper.iconHtml(config, src.propertyName))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add("</div>", -1)
-      file.add(s"""<div class="collapsible-body"><span>Loading...</span></div>""")
+      file.add("""<div class="collapsible-body"><span>Loading...</span></div>""")
       file.add("</li>", -1)
     }
     file.add("</ul>", -1)

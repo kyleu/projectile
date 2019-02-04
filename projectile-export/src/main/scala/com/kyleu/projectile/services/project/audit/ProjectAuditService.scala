@@ -44,8 +44,9 @@ object ProjectAuditService {
 
   private[this] def getDupes(inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
     def msgForDupe(k: String, dupe: Seq[String]) = {
-      val msg = s"There are [${dupe.size}] generated classes with $k [${dupe.head}]"
-      AuditMessage(project = "all", srcModel = dupe.head, src = dupe.head, t = "duplicate", tgt = dupe.head, message = msg)
+      val head = dupe.headOption.getOrElse(throw new IllegalStateException())
+      val msg = s"There are [${dupe.size}] generated classes with $k [$head]"
+      AuditMessage(project = "all", srcModel = head, src = head, t = "duplicate", tgt = head, message = msg)
     }
 
     val dupeClassnames = inputs.flatMap { i =>

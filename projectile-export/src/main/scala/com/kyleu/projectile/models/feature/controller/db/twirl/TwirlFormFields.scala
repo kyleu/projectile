@@ -18,7 +18,7 @@ object TwirlFormFields {
       case FieldType.TimeType => timeField(config, field, file, "Time", selected)
       case FieldType.TimestampType => timeField(config, field, file, "DateTime", selected)
       case FieldType.TimestampZonedType => zonedDateTimeField(config, field, file, selected)
-      case _ if autocomplete.isDefined => autocompleteField(config, field, autocomplete.get, file, selected)
+      case _ if autocomplete.isDefined => autocompleteField(config, field, autocomplete.getOrElse(throw new IllegalStateException()), file, selected)
       case _ => file.add(s"@$formPkg.textField(${argsFor(field, selected)})")
     }
   }

@@ -12,7 +12,9 @@ object InjectExploreHtml extends FeatureLogic.Inject(path = OutputPath.ServerSou
   private[this] def modelsFor(config: ExportConfiguration) = {
     val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
     val roots = filtered.filter(_.pkg.isEmpty).sortBy(_.title)
-    val pkgGroups = filtered.filterNot(_.pkg.isEmpty).groupBy(_.pkg.head).mapValues(_.sortBy(_.title)).toSeq.sortBy(_._1)
+    val pkgGroups = filtered.filterNot(_.pkg.isEmpty).groupBy(_.pkg.headOption.getOrElse(
+      throw new IllegalStateException()
+    )).mapValues(_.sortBy(_.title)).toSeq.sortBy(_._1)
     roots -> pkgGroups
   }
 

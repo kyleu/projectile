@@ -23,7 +23,7 @@ object GraphQLObjectHelper {
 
   def addObjectFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ObjectField]) = {
     fields.foreach { f =>
-      FieldTypeImports.imports(config, f.v).foreach(pkg => file.addImport(pkg.init, pkg.last))
+      FieldTypeImports.imports(config, f.v).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
       val t = if (f.req) {
         FieldTypeAsScala.asScala(config, f.v)
       } else {
@@ -79,7 +79,7 @@ object GraphQLObjectHelper {
       throw new IllegalStateException(s"Duplicate conflicting references [${dupes.mkString(", ")}] for [$ctx]")
     }
 
-    objs.mapValues(_.head).foreach { o =>
+    objs.mapValues(_.headOption.getOrElse(throw new IllegalStateException())).foreach { o =>
       val cn = ExportHelper.toClassName(o._1)
       file.add(s"object $cn {", 1)
       file.add(s"implicit val jsonDecoder: Decoder[$cn] = deriveDecoder")

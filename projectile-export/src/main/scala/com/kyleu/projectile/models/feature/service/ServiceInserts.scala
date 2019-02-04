@@ -35,7 +35,7 @@ object ServiceInserts {
     file.add(s"""traceF("insertBatch")(td => ApplicationDatabase.executeF($queriesFilename.insertBatch(models))(td))""")
     file.add("}", -1)
 
-    file.add(s"""def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = traceF("create") { td =>""", 1)
+    file.add("""def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = traceF("create") { td =>""", 1)
     file.add(s"""ApplicationDatabase.executeF($queriesFilename.create(fields))(td).flatMap { _ =>""", 1)
     model.pkFields match {
       case Nil => file.add(s"Future.successful(None: Option[${model.className}])")

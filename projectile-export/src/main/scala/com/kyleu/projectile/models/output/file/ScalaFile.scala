@@ -21,7 +21,7 @@ case class ScalaFile(
     } else {
       imports.toSeq.groupBy(_._1).mapValues(_.map(_._2)).toList.sortBy(_._1).map { i =>
         i._2.size match {
-          case 1 => s"import ${i._1}.${i._2.head}"
+          case 1 => s"import ${i._1}.${i._2.headOption.getOrElse(throw new IllegalStateException())}"
           case _ => s"import ${i._1}.{${i._2.sorted.mkString(", ")}}"
         }
       }.mkString("\n") + "\n\n"

@@ -78,7 +78,7 @@ object RoutesFiles {
       val solo = es.isEmpty && ms.size == 1
 
       if (solo) {
-        p -> routesContentFor(config, ms.head, solo = true)
+        p -> routesContentFor(config, ms.headOption.getOrElse(throw new IllegalStateException()), solo = true)
       } else {
         p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(config, e)))
       }

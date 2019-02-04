@@ -24,7 +24,7 @@ object TableExportModel {
       arguments = Nil,
       fields = loadTableFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(t),
-      foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.head).toList,
+      foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.headOption.getOrElse(throw new IllegalStateException())).toList,
       references = ExportConfigurationHelper.references(tables, t, Map.empty)
     )
   }

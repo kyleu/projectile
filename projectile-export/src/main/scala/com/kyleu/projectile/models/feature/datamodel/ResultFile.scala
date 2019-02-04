@@ -30,7 +30,7 @@ object ResultFile {
     file.add("override val paging: PagingOptions = PagingOptions(),")
     file.add(s"override val results: Seq[${model.className}] = Nil,")
     file.add("override val durationMs: Int = 0,")
-    file.add(s"override val occurred: LocalDateTime = DateUtils.now")
+    file.add("override val occurred: LocalDateTime = DateUtils.now")
     file.add(s") extends BaseResult[${model.className}]", -2)
 
     file.add()

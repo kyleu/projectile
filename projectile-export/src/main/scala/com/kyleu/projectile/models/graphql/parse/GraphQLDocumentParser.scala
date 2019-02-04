@@ -62,7 +62,7 @@ object GraphQLDocumentParser extends Logging {
     val key = o.name.getOrElse(throw new IllegalStateException("All operations must be named"))
     val typ = o.operationType match {
       case OperationType.Query => schema.query
-      case OperationType.Mutation => schema.mutation.get
+      case OperationType.Mutation => schema.mutation.getOrElse(throw new IllegalStateException())
       case _ => throw new IllegalStateException(s"Unsupported operation [${o.operationType}]")
     }
     val result = GraphQLSelectionParser.fieldsForSelections(s"$it:$key", schema, doc, typ, o.selections)

@@ -64,7 +64,7 @@ object ThriftModelSchemaFile {
         case _ => // noop
       }
     }
-    file.add(s"AddFields(Field(", 1)
+    file.add("AddFields(Field(", 1)
     file.add("""name = "toString",""")
     file.add("fieldType = StringType,")
     file.add("resolve = c => c.value.toString")

@@ -35,15 +35,17 @@ trait ProjectHelper { this: ProjectileService =>
   def removeProject(key: String) = removeProjectFiles(key)
 
   def saveEnumMembers(key: String, members: Seq[EnumMember]) = enumSvc.saveEnums(key, members)
-  def saveEnumMember(key: String, member: EnumMember) = saveEnumMembers(key, Seq(member)).head
+  def saveEnumMember(key: String, member: EnumMember) = saveEnumMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())
   def removeEnumMember(key: String, member: String) = enumSvc.removeEnum(key, member)
 
   def saveModelMembers(key: String, members: Seq[ModelMember]) = modelSvc.saveModels(key, members)
-  def saveModelMember(key: String, member: ModelMember) = saveModelMembers(key, Seq(member)).head
+  def saveModelMember(key: String, member: ModelMember) = saveModelMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())
   def removeModelMember(key: String, member: String) = modelSvc.removeModel(key, member)
 
   def saveServiceMembers(key: String, members: Seq[ServiceMember]) = serviceSvc.saveServices(key, members)
-  def saveServiceMember(key: String, member: ServiceMember) = saveServiceMembers(key, Seq(member)).head
+  def saveServiceMember(key: String, member: ServiceMember) = {
+    saveServiceMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())
+  }
   def removeServiceMember(key: String, member: String) = serviceSvc.removeService(key, member)
 
   def exportProject(key: String, verbose: Boolean) = {

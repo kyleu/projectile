@@ -77,6 +77,6 @@ object ThriftMethodHelper {
     case FieldType.ListType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
     case _ if FieldType.scalars(t) => ""
-    case _ => s".asThrift"
+    case _ => ".asThrift"
   }
 }

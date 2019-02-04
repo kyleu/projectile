@@ -37,7 +37,7 @@ object ExportField {
       s"${enum.className}.$cn"
 
     case JsonType => "Json.obj()"
-    case TagsType => s"List.empty[Tag]"
+    case TagsType => "List.empty[Tag]"
 
     case _ => "\"" + defaultValue.getOrElse("") + "\""
   }
@@ -66,7 +66,7 @@ case class ExportField(
   def scalaTypeFull(config: ExportConfiguration) = FieldTypeImports.imports(config, t).headOption.getOrElse(Seq(scalaType(config)))
 
   def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String]) = {
-    FieldTypeImports.imports(config, t).foreach(pkg => file.addImport(pkg.init, pkg.last))
+    FieldTypeImports.imports(config, t).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
   }
 
   def defaultString(config: ExportConfiguration) = ExportField.getDefaultString(config, t, defaultValue)

@@ -20,7 +20,9 @@ class FileController @javax.inject.Inject() () extends ProjectileController {
     } else {
       None
     }
-    val newContent = request.body.asFormUrlEncoded.get("content").head
+    val newContent = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException("Body is not form encoded"))("content").headOption.getOrElse(
+      throw new IllegalStateException("Body does not contain \"content\" element")
+    )
 
     val msg = if (originalContent.contains(newContent)) {
       "No change needed"

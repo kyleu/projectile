@@ -44,6 +44,6 @@ case class ExportConfiguration(
 
   def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, s) match {
     case (p, c) if additional.isEmpty => f.addImport(p, c)
-    case (p, c) => f.addImport((p :+ c) ++ additional.init, additional.last)
+    case (p, c) => f.addImport((p :+ c) ++ additional.init, additional.lastOption.getOrElse(throw new IllegalStateException()))
   }
 }

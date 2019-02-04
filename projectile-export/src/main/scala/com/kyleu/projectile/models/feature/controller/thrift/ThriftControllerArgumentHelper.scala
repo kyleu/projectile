@@ -32,8 +32,10 @@ object ThriftControllerArgumentHelper {
     case FieldType.EnumType(key) =>
       val e = config.getEnum(key, "field default")
       val v = e.inputType match {
-        case InputType.Enum.ThriftIntEnum => ExportHelper.toClassName(e.values.head.substring(e.values.head.indexOf(':') + 1))
-        case _ => ExportHelper.toClassName(e.values.head)
+        case InputType.Enum.ThriftIntEnum => ExportHelper.toClassName(e.values.headOption.getOrElse(
+          throw new IllegalStateException()
+        ).substring(e.values.headOption.getOrElse(throw new IllegalStateException()).indexOf(':') + 1))
+        case _ => ExportHelper.toClassName(e.values.headOption.getOrElse(throw new IllegalStateException()))
       }
       s"${e.className}.$v.value"
     case FieldType.StructType(key) => config.getModel(key, "field default").className + "()"

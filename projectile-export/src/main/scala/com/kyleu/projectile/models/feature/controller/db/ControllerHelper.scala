@@ -37,9 +37,9 @@ object ControllerHelper {
     file.add("case Some(model) => renderChoice(t) {", 1)
     val extraViewArgs = s"request.identity, authActions, model, $notesHelp${auditHelp}app.config.debug"
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))")
-    file.add(s"case MimeTypes.JSON => Ok(model.asJson)")
-    file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)")
-    file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)")
+    file.add("case MimeTypes.JSON => Ok(model.asJson)")
+    file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)")
+    file.add("case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)")
 
     file.add("}", -1)
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs]")""")
@@ -61,7 +61,7 @@ object ControllerHelper {
     file.add(s"val cancel = $routesClass.view($getArgs)")
     file.add(s"val call = $routesClass.edit($getArgs)")
     file.add(s"svc.getByPrimaryKey(request, $getArgs).map {", 1)
-    file.add(s"case Some(model) => Ok(", 1)
+    file.add("case Some(model) => Ok(", 1)
     val extraArgs = "cancel, call, debug = app.config.debug"
     file.add(s"""$viewPkg.${model.propertyName}Form(request.identity, authActions, model, s"${model.title} [$logArgs]", $extraArgs)""")
     file.add(")", -1)
@@ -101,10 +101,10 @@ object ControllerHelper {
         file.add(s"case MimeTypes.HTML => Ok(${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls(", 1)
         file.add(s"""request.identity, authActions, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
         file.add("))", -1)
-        file.add(s"case MimeTypes.JSON => Ok(models.asJson)")
+        file.add("case MimeTypes.JSON => Ok(models.asJson)")
         file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")
-        file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = models)).as(ServiceController.MimeTypes.png)")
-        file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(ServiceController.MimeTypes.svg)")
+        file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = models)).as(ServiceController.MimeTypes.png)")
+        file.add("case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(ServiceController.MimeTypes.svg)")
 
         file.add("})", -1)
         file.add("}", -1)

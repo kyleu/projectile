@@ -91,7 +91,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
   def saveClassOverrides() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      classOverrides = form(s"overrides").split('\n').map(_.trim).filter(_.nonEmpty).map { o =>
+      classOverrides = form("overrides").split('\n').map(_.trim).filter(_.nonEmpty).map { o =>
         o.substring(0, o.indexOf("=")).trim -> o.substring(o.indexOf("=") + 1).trim
       }.toMap
     ))
@@ -104,7 +104,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
       throw new IllegalStateException(s"No template with key [${form("template")}] found among [${ProjectTemplate.values.mkString(", ")}]")
     }
     if (form("key").trim.isEmpty) {
-      throw new IllegalStateException(s"No project key provided")
+      throw new IllegalStateException("No project key provided")
     }
     val summary = projectile.getProjectSummaryOpt(form("key")).getOrElse(ProjectSummary(
       template = template,

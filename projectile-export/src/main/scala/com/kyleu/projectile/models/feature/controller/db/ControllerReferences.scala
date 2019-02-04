@@ -23,7 +23,7 @@ object ControllerReferences {
       val forArgs = refServices.map(r => s"${r._2.propertyName}C <- ${r._2.propertyName}By${r._3.className}F").mkString("; ")
       file.add(s"for ($forArgs) yield {", 1)
 
-      file.add(s"Ok(Seq(", 1)
+      file.add("Ok(Seq(", 1)
       refServices.foreach { r =>
         val comma = if (refServices.lastOption.contains(r)) { "" } else { "," }
         file.add(s"""RelationCount(model = "${r._2.propertyName}", field = "${r._3.propertyName}", count = ${r._2.propertyName}C)$comma""")

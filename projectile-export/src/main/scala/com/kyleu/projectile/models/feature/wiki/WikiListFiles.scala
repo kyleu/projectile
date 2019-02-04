@@ -10,13 +10,13 @@ object WikiListFiles {
     val file = MarkdownFile(OutputPath.WikiMarkdown, Seq("database"), "Database")
     file.addHeader("Database")
 
-    file.addHeader(s"[Tables](DatabaseTables)", 2)
+    file.addHeader("[Tables](DatabaseTables)", 2)
     config.models.filter(_.features(ModelFeature.Core)).filter(_.inputType.isDatabase).sortBy(_.key).foreach { m =>
       file.add(s" - [${m.key}](DatabaseTable${m.className})")
     }
     file.add()
 
-    file.addHeader(s"[Enums](DatabaseEnums)", 2)
+    file.addHeader("[Enums](DatabaseEnums)", 2)
     config.enums.filter(_.features(EnumFeature.Core)).filter(_.inputType.isDatabase).sortBy(_.key).foreach { e =>
       file.add(s" - [${e.key}](DatabaseEnum${e.className})")
     }

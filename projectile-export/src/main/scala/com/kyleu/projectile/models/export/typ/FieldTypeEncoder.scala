@@ -14,12 +14,12 @@ object FieldTypeEncoder {
 
   implicit val encodeFieldType: Encoder[FieldType] = (x: FieldType) => {
     val o = x match {
-      case e: EnumType => e.asJson.asObject.get
-      case l: ListType => l.asJson.asObject.get
-      case s: SetType => s.asJson.asObject.get
-      case m: MapType => m.asJson.asObject.get
-      case s: StructType => s.asJson.asObject.get
-      case o: ObjectType => o.asJson.asObject.get
+      case e: EnumType => e.asJson.asObject.getOrElse(throw new IllegalStateException())
+      case l: ListType => l.asJson.asObject.getOrElse(throw new IllegalStateException())
+      case s: SetType => s.asJson.asObject.getOrElse(throw new IllegalStateException())
+      case m: MapType => m.asJson.asObject.getOrElse(throw new IllegalStateException())
+      case s: StructType => s.asJson.asObject.getOrElse(throw new IllegalStateException())
+      case o: ObjectType => o.asJson.asObject.getOrElse(throw new IllegalStateException())
       case _ => JsonObject.empty
     }
     o.add("t", x.value.asJson).asJson

@@ -14,7 +14,7 @@ object DoobieTestsFile {
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     model.fields.foreach { field =>
-      DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.init, pkg.last))
+      DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
     }
 
     file.add(s"class ${model.className}DoobieTests extends FlatSpec with Matchers {", 1)

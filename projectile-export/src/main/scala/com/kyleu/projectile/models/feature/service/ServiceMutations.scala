@@ -18,7 +18,7 @@ object ServiceMutations {
       file.add()
       file.add(s"def remove(creds: Credentials, $sig)$trace = {", 1)
       file.add(s"""traceF("remove")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
-      file.add(s"case Some(current) =>", 1)
+      file.add("case Some(current) =>", 1)
       if (model.features(ModelFeature.Audit)) {
         config.addCommonImport(file, "AuditHelper")
         val audit = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")

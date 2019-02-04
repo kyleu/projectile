@@ -1,6 +1,10 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, outputs: Seq[com.kyleu.projectile.models.project.ProjectOutput], files: Seq[com.kyleu.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(outputs.size == 1) { s"[${outputs.head.project.key}] Export Result" } else { s"[${outputs.size}] Export Results" }) {
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(outputs.size == 1) {
+  s"[${outputs.headOption.getOrElse(throw new IllegalStateException("No outputs")).project.key}] Export Result"
+} else {
+  s"[${outputs.size}] Export Results"
+}) {
   @outputs.map { output =>
     <div class="collection with-header">
       <div class="collection-header">

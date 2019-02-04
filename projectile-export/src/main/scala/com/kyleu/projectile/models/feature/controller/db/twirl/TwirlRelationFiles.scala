@@ -21,7 +21,7 @@ object TwirlRelationFiles {
     listFile.add(s"@(user: $su, authActions: $aa, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    listFile.add(s")", -2)
+    listFile.add(")", -2)
 
     listFile.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
     listFile.add("user = user,")
@@ -41,7 +41,7 @@ object TwirlRelationFiles {
     listFile.add(s"rows = modelSeq.map(model => ${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}DataRow(model)),")
     listFile.add(s"calls = $listCalls(", 1)
     listFile.add(s"orderBy = Some($viewCall($refProps, _, _, Some(limit), Some(0))),")
-    listFile.add(s"search = None,")
+    listFile.add("search = None,")
     listFile.add(s"next = $viewCall($refProps, orderBy, orderAsc, Some(limit), Some(offset + limit)),")
     listFile.add(s"prev = $viewCall($refProps, orderBy, orderAsc, Some(limit), Some(offset - limit)),")
     listFile.add("),", -1)

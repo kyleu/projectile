@@ -33,7 +33,7 @@ class OutputService(svc: ProjectileService) {
               f.overwrite(i.content)
               OutputService.WriteResult(p, i.dir.mkString("/"), Seq(s"Overwrote [${NumberUtils.withCommas(i.content.length)}] bytes"))
             } else if (verbose) {
-              OutputService.WriteResult(p, i.dir.mkString("/"), Seq(s"Ignoring unchanged file"))
+              OutputService.WriteResult(p, i.dir.mkString("/"), Seq("Ignoring unchanged file"))
             } else {
               OutputService.WriteResult(p, i.dir.mkString("/"), Nil)
             }
@@ -55,7 +55,7 @@ class OutputService(svc: ProjectileService) {
     val original = f.contentAsString
     if (original == file.content) {
       if (verbose) {
-        path -> Seq(s"Ignoring unchanged file")
+        path -> Seq("Ignoring unchanged file")
       } else {
         path -> Nil
       }
@@ -68,7 +68,7 @@ class OutputService(svc: ProjectileService) {
       }
     } else {
       if (verbose) {
-        path -> Seq(s"Ignoring file as it has been modified, and is no longer generated")
+        path -> Seq("Ignoring file as it has been modified, and is no longer generated")
       } else {
         path -> Nil
       }

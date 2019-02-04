@@ -70,8 +70,8 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(template = t, key = key, input = "", description = desc.getOrElse("")))
   }
 
-  object Server extends Command(name = "server", description = s"Starts the web application") with CommandLineAction {
-    var port = opt[Int](description = s"Http port for the server", default = Version.projectPort)
+  object Server extends Command(name = "server", description = "Starts the web application") with CommandLineAction {
+    var port = opt[Int](description = "Http port for the server", default = Version.projectPort)
     override def toCommand = ProjectileCommand.ServerStart(port)
   }
 

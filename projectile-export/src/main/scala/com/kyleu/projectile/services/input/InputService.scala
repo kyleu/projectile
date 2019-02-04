@@ -21,7 +21,7 @@ class InputService(val cfg: ConfigService) {
   def list(): Seq[InputSummary] = immediateList() ++ cfg.linkedConfigs.map(c => new InputService(c)).flatMap(_.list()).sortBy(_.key)
 
   def getSummary(key: String): InputSummary = {
-    val f = dir / key / s"input.json"
+    val f = dir / key / "input.json"
     if (f.exists && f.isRegularFile && f.isReadable) {
       JsonFileLoader.loadFile[InputSummary](f, "input summary").copy(key = key)
     } else {

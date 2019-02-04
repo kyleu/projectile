@@ -25,7 +25,7 @@ object ThriftServiceSchemaFile {
     file.add("Field(", 1)
     file.add("""name = "healthcheck",""")
     file.add("fieldType = StringType,")
-    file.add(s"""resolve = c => traceF(c.ctx, "healthcheck")(td => c.value.healthcheck(td))""")
+    file.add("""resolve = c => traceF(c.ctx, "healthcheck")(td => c.value.healthcheck(td))""")
     file.add(")", -1)
     file.add(")", -1)
     file.add()

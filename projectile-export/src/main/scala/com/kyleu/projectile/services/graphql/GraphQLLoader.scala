@@ -28,12 +28,12 @@ object GraphQLLoader {
 
     Schema.buildFromAst(QueryParser.parse(schemaContent) match {
       case Success(s) => s
-      case Failure(x) => throw new IllegalStateException(s"Error loading schema", x)
+      case Failure(x) => throw new IllegalStateException("Error loading schema", x)
     })
   }
 
   def parseQueryFiles(s: GraphQLOptions.SchemaQueries, parsedContents: Map[String, String]) = {
-    val docs = s.fileClasses.map(f => QueryParser.parse(parsedContents(f._1)).get)
+    val docs = s.fileClasses.map(f => QueryParser.parse(parsedContents(f._1)).getOrElse(throw new IllegalStateException()))
     s.schemaClass -> docs.foldLeft(Document.emptyStub)((d, f) => d.merge(f))
   }
 }

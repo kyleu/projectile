@@ -67,7 +67,7 @@ object GraphQLQueryFiles {
     file.add(s"# Creates a new ${model.className} entity")
     file.add(s"mutation ${model.className}Create {", 1)
     file.add(s"${model.propertyName} {", 1)
-    file.add(s"""create(fields: [{k: "", v: ""}]) {""", 1)
+    file.add("""create(fields: [{k: "", v: ""}]) {""", 1)
     model.fields.foreach(f => addField(f, file))
     file.add("}", -1)
     file.add("}", -1)

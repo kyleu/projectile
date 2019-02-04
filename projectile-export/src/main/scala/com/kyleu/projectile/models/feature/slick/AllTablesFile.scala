@@ -14,8 +14,8 @@ object AllTablesFile {
     val schema = (ms ++ es).map(x => (x._1 :+ x._2 :+ "query" :+ "schema").mkString(".")).sorted.mkString(",\n    ")
 
     config.addCommonImport(file, "SlickQueryService", "imports", "_")
-    file.add(s"object AllTables {", 1)
-    file.add(s"val schema = Seq(", 1)
+    file.add("object AllTables {", 1)
+    file.add("val schema = Seq(", 1)
     file.add(schema)
     file.add(")", -1)
     file.add("}", -1)

@@ -33,7 +33,7 @@ object InjectBindables extends FeatureLogic.Inject(path = OutputPath.ServerSourc
 
       sb.append(s"private[this] def ${prop}Extractor(v: Either[String, $t]) = v match {")
       sb.append(s"  case Right(s) => Right($cp.withValue(s))")
-      sb.append(s"  case Left(x) => throw new IllegalStateException(x)")
+      sb.append("  case Left(x) => throw new IllegalStateException(x)")
       sb.append("}")
 
       val pArg = s"implicit binder: PathBindable[$t]"

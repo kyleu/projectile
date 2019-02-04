@@ -1,6 +1,6 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.web.views.html.layout.simple(projectile, s"New Input") {
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Input") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.input.routes.InputController.save()">
   <div class="collection with-header">
     <div class="collection-header">

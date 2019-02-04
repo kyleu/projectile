@@ -23,7 +23,7 @@ object CsvUtils {
         s"# $n export with $amt out of $totes results, generated ${DateUtils.niceDateTime(DateUtils.now)}."
       ))
     }
-
+    trace.annotate("exported")
     new String(os.toByteArray)
   }
 }

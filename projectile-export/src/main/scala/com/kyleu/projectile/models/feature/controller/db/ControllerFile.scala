@@ -74,7 +74,7 @@ object ControllerFile {
     file.add()
     addMutations(file, model, routesClass, viewHtmlPackage)
     addListAction(file, model, viewHtmlPackage)
-    file.add(s"""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
+    file.add("""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
     file.add("""withSession("autocomplete", admin = true) { implicit request => implicit td =>""", 1)
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
     file.add("search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))")
@@ -91,7 +91,7 @@ object ControllerFile {
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
     file.add("""withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    file.add(s"val startMs = DateUtils.nowMillis")
+    file.add("val startMs = DateUtils.nowMillis")
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
@@ -100,8 +100,8 @@ object ControllerFile {
     file.add("))", -1)
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
     file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
-    file.add(s"case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)")
-    file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)")
+    file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)")
+    file.add("case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)")
     file.add("})", -1)
     file.add("}", -1)
     file.add("}", -1)
