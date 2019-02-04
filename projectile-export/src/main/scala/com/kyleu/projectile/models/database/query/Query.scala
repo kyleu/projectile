@@ -16,7 +16,7 @@ object Query {
     override final def reduce(rows: Iterator[JdbcRow]) = if (rows.hasNext) {
       rows.map(map).next()
     } else {
-      throw new IllegalStateException(s"No row returned for [$sql].")
+      throw new IllegalStateException(s"No row returned for [$sql]")
     }
   }
 

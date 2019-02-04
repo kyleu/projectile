@@ -31,6 +31,6 @@ case class ExportService(
 
   def getMethodOpt(k: String) = methods.find(f => f.key == k)
   def getMethod(k: String) = getMethodOpt(k).getOrElse {
-    throw new IllegalStateException(s"No method for service [$className] with name [$k]. Available methods: [${methods.mkString(", ")}].")
+    throw new IllegalStateException(s"No method for service [$className] with name [$k]. Available methods: [${methods.mkString(", ")}]")
   }
 }

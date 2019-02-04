@@ -15,7 +15,9 @@ object QueriesHelper {
       case FieldType.IntegerType => "IntArrayType"
       case FieldType.LongType => "LongArrayType"
       case FieldType.UuidType => "UuidArrayType"
-      case _ => "StringArrayType"
+      case FieldType.StringType => "StringArrayType"
+      case FieldType.EnumType(key) => s"EnumArrayType[${config.getEnum(key, "sql array").className}]"
+      case _ => throw new IllegalStateException(s"Arrays of [$t] are not currently supported")
     }
     case FieldType.EnumType(k) => s"EnumType(${config.getEnum(k, "sql class name").className})"
     case _ => t.className
@@ -49,7 +51,7 @@ object QueriesHelper {
     config.addCommonImport(file, "ResultFieldHelper")
     config.addCommonImport(file, "OrderBy")
 
-    val field = model.fields.find(_.key == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]."))
+    val field = model.fields.find(_.key == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]"))
     field.addImport(config, file, Nil)
     val propId = columnPropertyIds.getOrElse(field.propertyName, field.propertyName)
     val propCls = field.className

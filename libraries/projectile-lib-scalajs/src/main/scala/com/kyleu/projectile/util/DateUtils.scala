@@ -51,6 +51,6 @@ object DateUtils {
     } catch {
       case _: java.text.ParseException => None
     }
-    parse(dtFmtIso).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtAmPm)).getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]."))
+    parse(dtFmtIso).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtAmPm)).getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]"))
   }
 }

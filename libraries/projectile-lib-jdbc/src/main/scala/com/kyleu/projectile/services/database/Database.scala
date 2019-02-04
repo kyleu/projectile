@@ -25,7 +25,7 @@ trait Database[Conn] extends Logging {
   }
 
   private[this] var config: Option[DatabaseConfig] = None
-  def getConfig = config.getOrElse(throw new IllegalStateException("Database not open."))
+  def getConfig = config.getOrElse(throw new IllegalStateException("Database not open"))
 
   protected[this] def start(cfg: DatabaseConfig, svc: TracingService) = {
     tracingServiceOpt = Some(svc)

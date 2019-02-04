@@ -53,7 +53,7 @@ class OpenTracingService @javax.inject.Inject() (cnf: MetricsConfig) extends Tra
     val metrics = new MicrometerMetricsFactory()
 
     val loc = s"${cnf.tracingServer}:${cnf.tracingPort}"
-    log.info(s"Tracing enabled, sending results to [$loc] using sample rate [${cnf.tracingSampleRate}].")(TraceData.noop)
+    log.info(s"Tracing enabled, sending results to [$loc] using sample rate [${cnf.tracingSampleRate}]")(TraceData.noop)
     cfg = Some(new Configuration("project").withSampler(sampler).withReporter(reporter).withMetricsFactory(metrics))
     cfg.get.getTracer
   } else {

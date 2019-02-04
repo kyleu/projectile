@@ -60,7 +60,7 @@ abstract class WebsocketController[ReqMsg: Decoder, RspMsg: Encoder](name: Strin
       case HandlerResult(_, Some(user)) => Right(WebsocketUtils.actorRef(connId) { out =>
         onConnect(id = connId, creds = UserCredentials(user, request.remoteAddress), out = out, sourceAddr = request.remoteAddress)
       })
-      case HandlerResult(_, None) => Left(Redirect("/").flashing("error" -> "You're not signed in."))
+      case HandlerResult(_, None) => Left(Redirect("/").flashing("error" -> "You're not signed in"))
     }
   }(formatter.transformer())
 }

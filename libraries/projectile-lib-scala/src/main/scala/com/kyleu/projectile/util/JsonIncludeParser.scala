@@ -24,7 +24,7 @@ class JsonIncludeParser(loadJson: String => Json) {
         case (k, v) if k.startsWith(includeKey) =>
           val incKey = path + k.drop(includeKey.length)
           v.asString match {
-            case Some("*") => parseWithIncludes(incKey).asObject.getOrElse(throw new IllegalStateException(s"File [$incKey] must be a json object.")).toList
+            case Some("*") => parseWithIncludes(incKey).asObject.getOrElse(throw new IllegalStateException(s"File [$incKey] must be a json object")).toList
             case _ => throw new IllegalStateException("Invalid IncKey value: " + v.spaces2)
           }
         case (k, v) => v.asString match {
@@ -38,6 +38,6 @@ class JsonIncludeParser(loadJson: String => Json) {
     }
   } catch {
     case x: IllegalStateException => throw x
-    case NonFatal(x) => throw new IllegalStateException(s"Unable to parse json from [$path$fn].", x)
+    case NonFatal(x) => throw new IllegalStateException(s"Unable to parse json from [$path$fn]", x)
   }
 }

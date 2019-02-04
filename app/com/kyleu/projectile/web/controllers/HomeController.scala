@@ -33,7 +33,8 @@ class HomeController @javax.inject.Inject() () extends ProjectileController {
             Future.successful(Ok(com.kyleu.projectile.web.views.html.file.initDirForm(projectile, d)))
           }
         } else {
-          Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("error" -> s"Directory [${f.pathAsString}] does not exist."))
+          val result = Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index())
+          Future.successful(result.flashing("error" -> s"Directory [${f.pathAsString}] does not exist"))
         }
 
       case None =>
@@ -55,7 +56,7 @@ class HomeController @javax.inject.Inject() () extends ProjectileController {
 
   def refreshAll = Action.async { implicit request =>
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing {
-      "success" -> "Refreshed a bunch of stuff. You're welcome."
+      "success" -> "Refreshed a bunch of stuff; you're welcome"
     })
   }
 }

@@ -13,7 +13,7 @@ import scala.util.control.NonFatal
 object EncryptionUtils {
   private[this] var key: Option[String] = None
   private[this] val salt = "salt-value-changeme"
-  private[this] lazy val spec = keyToSpec(key.getOrElse(throw new IllegalStateException("Encryption key has not been set.")))
+  private[this] lazy val spec = keyToSpec(key.getOrElse(throw new IllegalStateException("Encryption key has not been set")))
 
   def setKey(k: String) = key = Some(k)
 

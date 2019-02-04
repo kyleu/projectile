@@ -12,13 +12,13 @@ object FieldDefault {
   def onDefault(t: String, name: String, formEl: JQuery, checkbox: JQuery) = {
     val input = $(s"#input-$name", formEl)
     if (input.length != 1) {
-      throw new IllegalStateException(s"Found [${input.length}] $t input elements with id [input-$name].")
+      throw new IllegalStateException(s"Found [${input.length}] $t input elements with id [input-$name]")
     }
 
     if (input.hasClass("nullable")) {
       val nullable = $(s"#nullable-$name", formEl)
       if (nullable.length != 1) {
-        throw new IllegalStateException(s"Found [${nullable.length}] $t nullable elements with id [nullable-$name].")
+        throw new IllegalStateException(s"Found [${nullable.length}] $t nullable elements with id [nullable-$name]")
       }
       var lastVal: Option[String] = None
       nullable.click { _: JQueryEventObject =>
@@ -36,7 +36,7 @@ object FieldDefault {
     if (input.hasClass("lookup")) {
       val model = input.data("model").toString
       val url = input.data("url").toString
-      Logging.info(s" - Wiring [$model] autocomplete for [$name] as [$url].")
+      Logging.info(s" - Wiring [$model] autocomplete for [$name] as [$url]")
 
       val dyn = js.Dynamic.global.$(s"#input-$name", formEl)
 

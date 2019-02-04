@@ -63,10 +63,10 @@ class SocialAuthController @javax.inject.Inject() (
 
         rsp.recover {
           case e: ProviderException =>
-            log.error("Unexpected provider error.", e)
-            Redirect(actions.signinUrl).flashing("error" -> "Could not authenticate.")
+            log.error("Unexpected provider error", e)
+            Redirect(actions.signinUrl).flashing("error" -> "Could not authenticate")
         }
-      case _ => throw new IllegalStateException(s"Invalid provider [$provider].")
+      case _ => throw new IllegalStateException(s"Invalid provider [$provider]")
     }
   }
 }

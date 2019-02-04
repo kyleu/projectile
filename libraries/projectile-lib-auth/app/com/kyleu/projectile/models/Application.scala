@@ -40,7 +40,7 @@ class Application @javax.inject.Inject() (
   Await.result(start(), 20.seconds)
 
   private[this] def start() = tracing.topLevelTrace("application.start") { implicit tn =>
-    log.info(s"$projectName is starting.")
+    log.info(s"$projectName is starting")
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     System.setProperty("user.timezone", "UTC")

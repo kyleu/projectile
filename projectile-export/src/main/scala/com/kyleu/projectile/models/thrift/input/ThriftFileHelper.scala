@@ -88,7 +88,7 @@ object ThriftFileHelper {
     case x if x.contains('.') => x.split('.').toList match {
       case _ :: cls :: Nil => typeForClass(cls, input)
       case cls :: Nil => typeForClass(cls, input)
-      case _ => throw new IllegalStateException(s"Cannot match [$x].")
+      case _ => throw new IllegalStateException(s"Cannot match [$x]")
     }
     case x => typeForClass(x, input)
   }

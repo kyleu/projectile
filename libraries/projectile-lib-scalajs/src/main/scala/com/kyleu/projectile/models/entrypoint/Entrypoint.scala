@@ -13,5 +13,5 @@ object Entrypoint {
 
 abstract class Entrypoint(val key: String) {
   Entrypoint.initIfNeeded()
-  Logging.info(s"Started with entrypoint [$key].")
+  Logging.info(s"Started with entrypoint [$key]")
 }

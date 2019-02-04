@@ -51,7 +51,7 @@ trait Queryable extends Logging {
         prepare(stmt, actualValues)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to prepare query for [${query.sql}].", x)(TraceData.noop)
+          log.error(s"Unable to prepare query for [${query.sql}]", x)(TraceData.noop)
           throw x
       }
       val results = stmt.executeQuery()
@@ -59,7 +59,7 @@ trait Queryable extends Logging {
         query.handle(results)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to handle query results for [${query.sql}].", x)(TraceData.noop)
+          log.error(s"Unable to handle query results for [${query.sql}]", x)(TraceData.noop)
           throw x
       } finally {
         results.close()
@@ -78,14 +78,14 @@ trait Queryable extends Logging {
     } catch {
       case NonFatal(x) =>
         stmt.close()
-        log.error(s"Unable to prepare statement [${statement.sql}].", x)(TraceData.noop)
+        log.error(s"Unable to prepare statement [${statement.sql}]", x)(TraceData.noop)
         throw x
     }
     try {
       stmt.executeUpdate()
     } catch {
       case NonFatal(x) =>
-        log.error(s"Unable to execute statement [${statement.sql}].", x)(TraceData.noop)
+        log.error(s"Unable to execute statement [${statement.sql}]", x)(TraceData.noop)
         throw x
     } finally {
       stmt.close()
@@ -101,7 +101,7 @@ trait Queryable extends Logging {
         prepare(stmt, actualValues)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to prepare raw query [${query.sql}].", x)(TraceData.noop)
+          log.error(s"Unable to prepare raw query [${query.sql}]", x)(TraceData.noop)
           throw x
       }
       val isResultset = stmt.execute()
@@ -111,7 +111,7 @@ trait Queryable extends Logging {
           Left(query.handle(res))
         } catch {
           case NonFatal(x) =>
-            log.error(s"Unable to handle query results for [${query.sql}].", x)(TraceData.noop)
+            log.error(s"Unable to handle query results for [${query.sql}]", x)(TraceData.noop)
             throw x
         } finally {
           res.close()

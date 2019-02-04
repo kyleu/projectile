@@ -14,7 +14,7 @@ object InjectAuditLookup extends FeatureLogic.Inject(path = OutputPath.ServerSou
       val svc = model.injectedService(config)
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
         case FieldType.EnumType(key) =>
-          val e = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum."))
+          val e = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum"))
           s"enumArg(${e.fullClassPath(config)})(arg(${pkf._2}))"
         case _ => s"${pkf._1.t.value}Arg(arg(${pkf._2}))"
       }).mkString(", ")

@@ -20,22 +20,22 @@ class NetworkSocket[T: Decoder](handler: EventHandler[T]) {
   private[this] var receivedBytes = 0
 
   def open(url: String) = if (connected) {
-    throw new IllegalStateException("Already connected.")
+    throw new IllegalStateException("Already connected")
   } else if (connecting) {
-    throw new IllegalStateException("Already connecting.")
+    throw new IllegalStateException("Already connecting")
   } else {
     openSocket(url)
   }
 
   def sendString(s: String): Unit = {
-    val socket = ws.getOrElse(throw new IllegalStateException("No available socket connection."))
+    val socket = ws.getOrElse(throw new IllegalStateException("No available socket connection"))
     sentMessageCount += 1
     sentBytes += s.getBytes.length
     socket.send(s)
   }
 
   def sendBinary(data: Array[Byte]): Unit = {
-    val socket = ws.getOrElse(throw new IllegalStateException("No available socket connection."))
+    val socket = ws.getOrElse(throw new IllegalStateException("No available socket connection"))
     sentMessageCount += 1
     sentBytes += data.length
     socket.send(ArrayBufferOps.convertBuffer(ByteBuffer.wrap(data)))
@@ -77,7 +77,7 @@ class NetworkSocket[T: Decoder](handler: EventHandler[T]) {
         case Right(x) => x
         case Left(err) => throw err
       })
-    case x => throw new IllegalStateException(s"Unhandled message data of type [$x].")
+    case x => throw new IllegalStateException(s"Unhandled message data of type [$x]")
   }
 
   private[this] def onCloseEvent(event: Event) = {

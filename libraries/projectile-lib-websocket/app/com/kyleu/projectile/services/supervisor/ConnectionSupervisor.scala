@@ -28,7 +28,7 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
 
   override def preStart() = {
     if (ConnectionSupervisor.initialized) {
-      log.warn("Only one ConnectionSupervisor can be started.")
+      log.warn("Only one ConnectionSupervisor can be started")
     }
     log.debug(s"Connection Supervisor started")
     ConnectionSupervisor.initialized = true
@@ -56,7 +56,7 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
 
     case b: ConnectionSupervisor.Broadcast => connections.foreach(_._2.actorRef.tell(b.msg, self))
 
-    case im: InternalMessage => log.warn(s"Unhandled connection supervisor internal message [${im.getClass.getSimpleName}].")
+    case im: InternalMessage => log.warn(s"Unhandled connection supervisor internal message [${im.getClass.getSimpleName}]")
     case x => log.warn(s"ConnectionSupervisor encountered unknown message: ${x.toString}")
   }
 
@@ -77,11 +77,11 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
   }
 
   protected[this] def handleConnectionStarted(id: UUID, userId: String, name: String, connection: ActorRef) = {
-    log.debug(s"Connection [$id] registered to user [$userId] with path [${connection.path}].")
+    log.debug(s"Connection [$id] registered to user [$userId] with path [${connection.path}]")
     connections(id) = ConnectionSupervisor.ConnectionRecord(id, userId, name, connection, DateUtils.now)
   }
 
   protected[this] def handleConnectionStopped(id: UUID) = {
-    connections.remove(id).foreach(sock => log.debug(s"Connection [$id] [${sock.actorRef.path}] removed from Audit supervisor."))
+    connections.remove(id).foreach(sock => log.debug(s"Connection [$id] [${sock.actorRef.path}] removed from Audit supervisor"))
   }
 }

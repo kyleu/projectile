@@ -112,7 +112,7 @@ object ModelOpenApiPathsFile {
   }
 
   private[this] def addView(model: ExportModel, enums: Seq[ExportEnum], file: JsonFile) = {
-    file.add(s""""summary": "View the ${model.className} entity matching the provided [${pkString(model)}].",""")
+    file.add(s""""summary": "View the ${model.className} entity matching the provided [${pkString(model)}]",""")
     file.add("\"operationId\": \"" + model.fullClassName + ".view\",")
     file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
     addParams(model.pkFields, enums, file)
@@ -120,7 +120,7 @@ object ModelOpenApiPathsFile {
   }
 
   private[this] def addEdit(model: ExportModel, enums: Seq[ExportEnum], file: JsonFile) = {
-    file.add(s""""summary": "Updates the ${model.className} entity matching the provided [${pkString(model)}] using the provided fields.",""")
+    file.add(s""""summary": "Updates the ${model.className} entity matching the provided [${pkString(model)}] using the provided fields",""")
     file.add("\"operationId\": \"" + model.fullClassName + ".edit\",")
     file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
     addParams(model.pkFields, enums, file)
@@ -141,10 +141,10 @@ object ModelOpenApiPathsFile {
 
   private[this] def addForeignKey(model: ExportModel, fk: ForeignKey, enums: Seq[ExportEnum], file: JsonFile, route: String) = fk.references match {
     case h :: Nil =>
-      val field = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+      val field = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
       file.add(s""""$route/by${field.className}/{${field.propertyName}}": {""", 1)
       file.add("\"get\": {", 1)
-      file.add(s""""summary": "Finds the ${model.className} entities associated to the provided [${field.propertyName}].",""")
+      file.add(s""""summary": "Finds the ${model.className} entities associated to the provided [${field.propertyName}]",""")
       file.add("\"operationId\": \"" + model.fullClassName + ".by" + field.className + "\",")
       file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
       addParams(Seq(field), enums, file)
@@ -155,7 +155,7 @@ object ModelOpenApiPathsFile {
   }
 
   private[this] def addRemove(model: ExportModel, enums: Seq[ExportEnum], file: JsonFile) = {
-    file.add(s""""summary": "Removes the ${model.className} entity matching the provided [${pkString(model)}].",""")
+    file.add(s""""summary": "Removes the ${model.className} entity matching the provided [${pkString(model)}]",""")
     file.add("\"operationId\": \"" + model.fullClassName + ".remove\",")
     file.add("\"tags\": [\"" + model.pkg.mkString(".") + "\"],")
     addParams(model.pkFields, enums, file)

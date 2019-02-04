@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.output.ExportHelper
 object ExportConfigurationHelper {
   def pkColumns(t: Table) = {
     t.primaryKey.map(_.columns).getOrElse(Nil).map(c => t.columns.find(_.name == c).getOrElse {
-      throw new IllegalStateException(s"Cannot derive primary key for [${t.name}] with key [${t.primaryKey}].")
+      throw new IllegalStateException(s"Cannot derive primary key for [${t.name}] with key [${t.primaryKey}]")
     })
   }
 
@@ -29,7 +29,7 @@ object ExportConfigurationHelper {
             }
 
             val tgtCol = t.columns.find(_.name == ref.target).getOrElse(
-              throw new IllegalStateException(s"Missing column [${ref.target}] in table [${t.name}].")
+              throw new IllegalStateException(s"Missing column [${ref.target}] in table [${t.name}]")
             )
             Seq(ExportModel.Reference(
               name = name, propertyName = propertyName, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull

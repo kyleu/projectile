@@ -32,13 +32,13 @@ class RegistrationController @javax.inject.Inject() (
       ))
       Future.successful(Ok(actions.registerForm(request.identity, form)))
     } else {
-      Future.successful(Redirect(actions.indexUrl).flashing("error" -> "You cannot sign up at this time. Contact your administrator."))
+      Future.successful(Redirect(actions.indexUrl).flashing("error" -> "You cannot sign up at this time, please contact your administrator"))
     }
   }
 
   def register = withoutSession("register") { implicit request => implicit td =>
     if (!actions.allowRegistration) {
-      throw new IllegalStateException("You cannot sign up at this time. Contact your administrator.")
+      throw new IllegalStateException("You cannot sign up at this time, please contact your administrator")
     }
     UserForms.registrationForm.bindFromRequest.fold(
       form => Future.successful(BadRequest(actions.registerForm(request.identity, form))),
@@ -46,10 +46,10 @@ class RegistrationController @javax.inject.Inject() (
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email.toLowerCase)
         userSearchService.getByLoginInfo(loginInfo).flatMap {
           case _ if data.password != data.passwordConfirm => Future.successful(
-            Redirect(actions.registerUrl).flashing("error" -> "Passwords do not match.")
+            Redirect(actions.registerUrl).flashing("error" -> "Passwords do not match")
           )
           case Some(_) => Future.successful(
-            Redirect(actions.registerUrl).flashing("error" -> "That email address is already in use.")
+            Redirect(actions.registerUrl).flashing("error" -> "That email address is already in use")
           )
           case None =>
             val authInfo = hasher.hash(data.password)

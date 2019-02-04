@@ -13,7 +13,7 @@ object MetadataIndexes {
       val idxCols = cols._2.sortBy(_._4).map { col =>
         IndexColumn(name = col._5, ascending = col._6)
       }
-      val idxInfo = cols._2.headOption.getOrElse(throw new IllegalStateException("Missing index info."))
+      val idxInfo = cols._2.headOption.getOrElse(throw new IllegalStateException("Missing index info"))
       Index(
         name = idxInfo._1,
         unique = idxInfo._2,

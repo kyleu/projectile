@@ -47,7 +47,7 @@ class AuthenticationController @javax.inject.Inject() (
                 }
               }
             }
-            case None => Future.failed(new IdentityNotFoundException(s"Couldn't find user [${loginInfo.providerID}]."))
+            case None => Future.failed(new IdentityNotFoundException(s"Couldn't find user [${loginInfo.providerID}]"))
           }
         }.recover {
           case _: ProviderException => Redirect(actions.signinUrl).flashing("error" -> "Invalid credentials")

@@ -10,7 +10,7 @@ class SocketConnection[Sent: Encoder, Received: Decoder](val key: String, val pa
 
   def connect(path: String) = {
     val url = websocketUrl(path)
-    Logging.debug(s"Socket [$key] starting with url [$url].")
+    Logging.debug(s"Socket [$key] starting with url [$url]")
     socket.open(url)
   }
 
@@ -23,6 +23,6 @@ class SocketConnection[Sent: Encoder, Received: Decoder](val key: String, val pa
   def sendMessage(rm: Sent): Unit = if (socket.isConnected) {
     socket.sendString(rm.asJson.spaces2)
   } else {
-    Logging.warn(s"Attempted send of message [${rm.getClass.getSimpleName}] when not connected.")
+    Logging.warn(s"Attempted send of message [${rm.getClass.getSimpleName}] when not connected")
   }
 }

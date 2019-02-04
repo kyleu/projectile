@@ -30,7 +30,7 @@ abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: S
 
   def add(line: String = "", indentDelta: Int = 0): Unit = {
     if (hasRendered) {
-      throw new IllegalStateException("Already rendered.")
+      throw new IllegalStateException("Already rendered")
     }
     if (indentDelta < 0) {
       currentIndent += indentDelta

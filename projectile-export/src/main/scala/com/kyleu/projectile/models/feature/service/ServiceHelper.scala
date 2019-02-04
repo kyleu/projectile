@@ -44,7 +44,7 @@ object ServiceHelper {
         file.add("}", -1)
 
         file.add(s"def getByPrimaryKeyRequired(creds: Credentials, $colProp: ${field.scalaType(config)})$td = getByPrimaryKey(creds, $colProp).map { opt =>", 1)
-        file.add(s"""opt.getOrElse(throw new IllegalStateException(s"Cannot load ${model.propertyName} with $colProp [$$$colProp]."))""")
+        file.add(s"""opt.getOrElse(throw new IllegalStateException(s"Cannot load ${model.propertyName} with $colProp [$$$colProp]"))""")
         file.add("}", -1)
 
         val seqArgs = s"${colProp}Seq: Seq[${field.scalaType(config)}]"
@@ -86,7 +86,7 @@ object ServiceHelper {
 
   private[this] def addRelationMethodsToFile(config: ExportConfiguration, model: ExportModel, file: ScalaFile, col: String) = {
     val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
-    val field = model.fields.find(_.key == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]."))
+    val field = model.fields.find(_.key == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]"))
     field.addImport(config, file, Nil)
     val propId = field.propertyName
     val propCls = field.className

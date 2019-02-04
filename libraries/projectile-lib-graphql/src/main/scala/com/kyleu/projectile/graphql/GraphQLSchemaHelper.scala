@@ -58,7 +58,7 @@ abstract class GraphQLSchemaHelper(val name: String) {
       case Some(q) if q.nonEmpty => svc.searchWithCount(c.ctx.creds, Some(q), args.filters, args.orderBys, args.limit, args.offset)(td)
       case _ => svc.getAllWithCount(c.ctx.creds, args.filters, args.orderBys, args.limit, args.offset)(td)
     }
-    c.ctx.trace.annotate("Composing search result.")
+    c.ctx.trace.annotate("Composing search result")
     f.map(x => GraphQLSchemaHelper.SearchResult(x._1, x._2, args))
   }
 }

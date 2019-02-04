@@ -57,7 +57,9 @@ object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[Datab
   }
   case object TimestampZonedType extends DatabaseFieldType[java.time.ZonedDateTime]("timestamp") {
     override def apply(row: Row, col: String) = ZonedDateTime.ofInstant(row.as[java.sql.Timestamp](col).toInstant, ZoneOffset.UTC)
-    override def opt(row: Row, col: String) = row.asOpt[java.sql.Timestamp](col).map(t => ZonedDateTime.ofInstant(t.toInstant, ZoneOffset.UTC))
+    override def opt(row: Row, col: String) = {
+      row.asOpt[java.sql.Timestamp](col).map(t => ZonedDateTime.ofInstant(t.toInstant, ZoneOffset.UTC))
+    }
   }
 
   case object RefType extends DatabaseFieldType[String]("ref")
@@ -96,6 +98,12 @@ object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[Datab
   case object LongArrayType extends DatabaseFieldType[List[Long]]("longArray") {
     override def apply(row: Row, col: String) = row.as[PgArray](col).getArray.asInstanceOf[Array[Long]].toList
     override def opt(row: Row, col: String) = row.asOpt[PgArray](col).map(_.asInstanceOf[Array[Long]].toList)
+  }
+  final case class EnumArrayType[T <: StringEnumEntry](t: StringEnum[T]) extends DatabaseFieldType[List[T]]("enumArray") {
+    override def apply(row: Row, col: String) = row.as[PgArray](col).getArray.asInstanceOf[Array[Any]].map(x => t.withValue(x.toString)).toList
+    override def opt(row: Row, col: String) = {
+      row.asOpt[PgArray](col).map(_.getArray.asInstanceOf[Array[Any]].map(x => t.withValue(x.toString)).toList)
+    }
   }
   case object StringArrayType extends DatabaseFieldType[List[String]]("stringArray") {
     override def apply(row: Row, col: String) = row.as[PgArray](col).getArray.asInstanceOf[Array[Any]].map(_.toString).toList

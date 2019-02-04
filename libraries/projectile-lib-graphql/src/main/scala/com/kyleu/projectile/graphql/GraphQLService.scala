@@ -18,11 +18,11 @@ import scala.util.{Failure, Success}
 class GraphQLService @javax.inject.Inject() (tracing: TracingService, noteService: NoteService, injector: Injector, schema: GraphQLSchema) extends Logging {
   protected val exceptionHandler = ExceptionHandler {
     case (_, e: IllegalStateException) =>
-      log.warn("Error encountered while running GraphQL query.", e)(TraceData.noop)
+      log.warn("Error encountered while running GraphQL query", e)(TraceData.noop)
       HandledException(message = e.getMessage, additionalFields = Map.empty)
   }
 
-  private[this] val rejectComplexQueries = QueryReducer.rejectComplexQueries[Any](1000, (_, _) => new IllegalArgumentException("Query is too complex."))
+  private[this] val rejectComplexQueries = QueryReducer.rejectComplexQueries[Any](1000, (_, _) => new IllegalArgumentException("Query is too complex"))
 
   def executeQuery(
     query: String, variables: Option[Json], operation: Option[String], creds: Credentials, debug: Boolean

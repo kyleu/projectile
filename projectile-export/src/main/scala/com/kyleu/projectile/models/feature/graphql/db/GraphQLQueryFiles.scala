@@ -64,7 +64,7 @@ object GraphQLQueryFiles {
   private[this] def exportCreate(config: ExportConfiguration, model: ExportModel) = {
     val file = GraphQLFile("explore" +: model.pkg, model.className + ".create")
 
-    file.add(s"# Creates a new ${model.className} entity.")
+    file.add(s"# Creates a new ${model.className} entity")
     file.add(s"mutation ${model.className}Create {", 1)
     file.add(s"${model.propertyName} {", 1)
     file.add(s"""create(fields: [{k: "", v: ""}]) {""", 1)
@@ -79,7 +79,7 @@ object GraphQLQueryFiles {
   private[this] def exportUpdate(config: ExportConfiguration, model: ExportModel, args: String) = {
     val file = GraphQLFile("explore" +: model.pkg, model.className + ".update")
 
-    file.add(s"# Updates a single ${model.className} entity using the provided fields.")
+    file.add(s"# Updates a single ${model.className} entity using the provided fields")
     file.add(s"mutation ${model.className}Update {", 1)
     file.add(s"${model.propertyName} {", 1)
     file.add(s"""update($args, fields: [{k: "", v: ""}]) {""", 1)
@@ -94,7 +94,7 @@ object GraphQLQueryFiles {
   private[this] def exportRemove(config: ExportConfiguration, model: ExportModel, args: String) = {
     val file = GraphQLFile("explore" +: model.pkg, model.className + ".remove")
 
-    file.add(s"# Remove a single ${model.className} entity from the system.")
+    file.add(s"# Remove a single ${model.className} entity from the system")
     file.add(s"mutation ${model.className}Remove {", 1)
     file.add(s"${model.propertyName} {", 1)
     file.add(s"remove($args) {", 1)

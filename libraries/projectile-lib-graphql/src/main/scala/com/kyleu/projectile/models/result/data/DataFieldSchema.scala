@@ -8,7 +8,7 @@ import sangria.validation.ValueCoercionViolation
 import com.kyleu.projectile.models.result.data.DataField._
 
 object DataFieldSchema {
-  case object VarCoercionViolation extends ValueCoercionViolation("String, bool or int value expected.")
+  case object VarCoercionViolation extends ValueCoercionViolation("String, bool or int value expected")
 
   val varType = ScalarType[String](
     name = "Var",

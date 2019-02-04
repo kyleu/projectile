@@ -14,7 +14,7 @@ object InjectAuditRoutes extends FeatureLogic.Inject(path = OutputPath.ServerSou
     val newLines = config.models.filter(_.features(ModelFeature.Controller)).filter(_.pkFields.nonEmpty).map { model =>
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
         case FieldType.EnumType(key) =>
-          val cn = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum.")).className
+          val cn = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum")).className
           s"enumArg($cn)(arg(${pkf._2}))"
         case _ => s"${pkf._1.t.value}Arg(arg(${pkf._2}))"
       }).mkString(", ")

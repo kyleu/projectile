@@ -33,7 +33,7 @@ class GraphQLController @javax.inject.Inject() (override val app: Application, g
       case None if request.headers.get("admin-graphql-auth").exists(x => EncryptionUtils.decrypt(x) == secretKey) => true // All Cool, config backdoor
       case None =>
         val enc = EncryptionUtils.encrypt(secretKey)
-        log.warn(s"Invalid graphql authentication. To access the server without logging in, add the header [admin-graphql-auth] with value [$enc].")
+        log.warn(s"Invalid graphql authentication. To access the server without logging in, add the header [admin-graphql-auth] with value [$enc]")
         false
     }
 

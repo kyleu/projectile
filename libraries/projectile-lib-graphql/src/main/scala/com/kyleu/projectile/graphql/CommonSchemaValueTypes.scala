@@ -5,12 +5,12 @@ import sangria.schema._
 import sangria.validation.{FloatCoercionViolation, ValueCoercionViolation}
 
 protected[graphql] trait CommonSchemaValueTypes {
-  case object ByteCoercionViolation extends ValueCoercionViolation("Byte value expected in the range of an 8-bit number.")
-  case object ShortCoercionViolation extends ValueCoercionViolation("Short value expected in the range of a 16-bit number.")
+  case object ByteCoercionViolation extends ValueCoercionViolation("Byte value expected in the range of an 8-bit number")
+  case object ShortCoercionViolation extends ValueCoercionViolation("Short value expected in the range of a 16-bit number")
 
   implicit val shortType: ScalarType[Short] = ScalarType[Short](
     name = "Short",
-    description = Some("A 16 bit number."),
+    description = Some("A 16 bit number"),
     coerceOutput = (u, _) => u.toInt,
     coerceUserInput = {
       case i: Int if i <= Short.MaxValue && i >= Short.MinValue => Right(i.toShort)
@@ -24,7 +24,7 @@ protected[graphql] trait CommonSchemaValueTypes {
 
   implicit val byteType: ScalarType[Byte] = ScalarType[Byte](
     name = "Byte",
-    description = Some("A single byte, expressed as an integer."),
+    description = Some("A single byte, expressed as an integer"),
     coerceOutput = (u, _) => u.toInt,
     coerceUserInput = {
       case i: Int => Right(i.toByte)
@@ -38,7 +38,7 @@ protected[graphql] trait CommonSchemaValueTypes {
 
   implicit val floatType: ScalarType[Float] = ScalarType[Float](
     name = "FloatFixed",
-    description = Some("The `FloatFixed` scalar type represents signed double-precision fractional values as specified by [IEEE 754]."),
+    description = Some("The `FloatFixed` scalar type represents signed double-precision fractional values as specified by [IEEE 754]"),
     coerceOutput = (v, _) => { if (java.lang.Float.isNaN(v) || java.lang.Float.isInfinite(v)) { NullUtils.inst } else { v } },
     coerceUserInput = {
       case i: Int => Right(i.toFloat)

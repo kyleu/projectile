@@ -14,7 +14,7 @@ object MarkdownFile {
       case 'l' => (0 until c._2).map(_ => "-")
       case 'r' => (0 until (c._2 - 1)).map(_ => "-") :+ ':'
       case 'c' => ':' +: (0 until c._2 - 2).map(_ => "-") :+ ':'
-      case _ => throw new IllegalStateException("Please pass one of [l, r, c] for alignment.")
+      case _ => throw new IllegalStateException("Please pass one of [l, r, c] for alignment")
     }).mkString).mkString("|"))
     content.foreach { row =>
       md.add("| " + cols.zip(row).map(c => " " + c._2.padTo(c._1._2 - 1, " ").mkString).mkString("|").trim)

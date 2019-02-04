@@ -73,6 +73,6 @@ object DateUtils {
       .orElse(parse(dtFmtIso))
       .orElse(parse(dtFmtDefault))
       .orElse(parse(dtFmtAmPm))
-      .getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]."))
+      .getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]"))
   }
 }

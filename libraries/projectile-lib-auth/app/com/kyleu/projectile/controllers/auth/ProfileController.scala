@@ -55,11 +55,11 @@ class ProfileController @javax.inject.Inject() (
       },
       changePass => {
         if (changePass.newPassword != changePass.confirm) {
-          Future.successful(errorResponse("Passwords do not match."))
+          Future.successful(errorResponse("Passwords do not match"))
         } else {
           val email = request.identity.profile.providerKey
           credentialsProvider.authenticate(Credentials(email, changePass.oldPassword)).flatMap { loginInfo =>
-            val okResponse = Redirect(actions.profileUrl).flashing("success" -> "Password changed.")
+            val okResponse = Redirect(actions.profileUrl).flashing("success" -> "Password changed")
             for {
               _ <- authInfoRepository.update(loginInfo, hasher.hash(changePass.newPassword))
               authenticator <- app.silhouette.env.authenticatorService.create(loginInfo)

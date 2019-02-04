@@ -128,7 +128,7 @@ case class ExportModel(
   }
 
   def getField(k: String) = getFieldOpt(k).getOrElse {
-    throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}].")
+    throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}]")
   }
   def getFieldOpt(k: String) = fields.find(f => f.key == k || f.propertyName == k)
 }

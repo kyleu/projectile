@@ -39,8 +39,8 @@ class JdbcRow(rs: ResultSet) extends Row {
   def asOpt[T](idx: Int): Option[T] = extractOpt(rs.getObject(idx))
   override def asOpt[T](key: String): Option[T] = extractOpt(rs.getObject(key))
 
-  def as[T](idx: Int): T = asOpt(idx).getOrElse(throw new IllegalArgumentException(s"Column [$idx] is null."))
-  override def as[T](key: String): T = asOpt(key).getOrElse(throw new IllegalArgumentException(s"Column [$key] is null."))
+  def as[T](idx: Int): T = asOpt(idx).getOrElse(throw new IllegalArgumentException(s"Column [$idx] is null"))
+  override def as[T](key: String): T = asOpt(key).getOrElse(throw new IllegalArgumentException(s"Column [$key] is null"))
 
   def asArray[T: reflect.ClassTag](index: Int): Option[Array[T]] = extractArray[T](rs.getArray(index + 1))
   def asArray[T: reflect.ClassTag](name: String): Option[Array[T]] = extractArray[T](rs.getArray(name))

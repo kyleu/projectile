@@ -43,11 +43,11 @@ object QueryTranslations extends Logging {
     }
 
     case JAVA_OBJECT =>
-      log.warn(s"Encountered object type [$i:$n].")(TraceData.noop)
+      log.warn(s"Encountered object type [$i:$n]")(TraceData.noop)
       StringType
 
     case _ =>
-      log.warn(s"Encountered unknown column type [$i].")(TraceData.noop)
+      log.warn(s"Encountered unknown column type [$i]")(TraceData.noop)
       StringType
   }
 

@@ -14,7 +14,7 @@ object ProjectileCLI extends Logging {
 
   def runBatch(args: Array[String]) = {
     if (args.length != 2) {
-      throw new IllegalStateException("When calling batch, please pass only a single path as the argument.")
+      throw new IllegalStateException("When calling batch, please pass only a single path as the argument")
     }
     val f = better.files.File(args(1))
     if (f.exists && f.isRegularFile && f.isReadable) {

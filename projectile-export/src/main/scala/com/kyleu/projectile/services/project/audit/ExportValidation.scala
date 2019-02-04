@@ -29,7 +29,7 @@ object ExportValidation {
   private[this] val extensions = Set("graphql", "html", "json", "md", "routes", "scala", "thrift", "txt").map("." + _)
 
   private[this] def getGeneratedFiles(f: File): Seq[File] = {
-    if (!f.isDirectory) { throw new IllegalStateException(s"[$f] is not a directory.") }
+    if (!f.isDirectory) { throw new IllegalStateException(s"[$f] is not a directory") }
     f.children.toSeq.flatMap {
       case child if badBoys(child.name) => Nil
       case child if child.isDirectory => getGeneratedFiles(child)

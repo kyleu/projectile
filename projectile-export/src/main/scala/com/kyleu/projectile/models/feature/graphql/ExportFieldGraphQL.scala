@@ -37,7 +37,7 @@ object ExportFieldGraphQL {
 
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"
-      case None => throw new IllegalStateException(s"Cannot load enum for field [$name].")
+      case None => throw new IllegalStateException(s"Cannot load enum for field [$name]")
     }
     case ListType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
     case SetType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"

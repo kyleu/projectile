@@ -46,7 +46,7 @@ abstract class ServiceController[T](val svc: ModelServiceHelper[T]) extends Base
     case Some("json") => f(MimeTypes.JSON)
     case Some("png") => f(ServiceController.MimeTypes.png)
     case Some("svg") => f(ServiceController.MimeTypes.svg)
-    case Some(x) => throw new IllegalStateException(s"Unhandled output format [$x].")
+    case Some(x) => throw new IllegalStateException(s"Unhandled output format [$x]")
   }
 
   def csvResponse(filename: String, content: String) = {

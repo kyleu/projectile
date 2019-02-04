@@ -9,10 +9,10 @@ import sangria.validation.ValueCoercionViolation
 import scala.util.{Failure, Success, Try}
 
 object DateTimeSchema {
-  case object ZonedDateTimeCoercionViolation extends ValueCoercionViolation("Date/time value expected in format [yyyy-MM-dd HH:mm:ssZZ].")
-  case object LocalDateTimeCoercionViolation extends ValueCoercionViolation("Date/time value expected in format [yyyy-MM-dd HH:mm:ss].")
-  case object LocalDateCoercionViolation extends ValueCoercionViolation("Date value expected in format [yyyy-MM-dd].")
-  case object LocalTimeCoercionViolation extends ValueCoercionViolation("Time value expected in format [HH:mm:ss].")
+  case object ZonedDateTimeCoercionViolation extends ValueCoercionViolation("Date/time value expected in format [yyyy-MM-dd HH:mm:ssZZ]")
+  case object LocalDateTimeCoercionViolation extends ValueCoercionViolation("Date/time value expected in format [yyyy-MM-dd HH:mm:ss]")
+  case object LocalDateCoercionViolation extends ValueCoercionViolation("Date value expected in format [yyyy-MM-dd]")
+  case object LocalTimeCoercionViolation extends ValueCoercionViolation("Time value expected in format [HH:mm:ss]")
 
   private[this] val fmtZonedDateTime = format.DateTimeFormatter.ISO_ZONED_DATE_TIME
   private[this] val fmtLocalDate = format.DateTimeFormatter.ISO_LOCAL_DATE

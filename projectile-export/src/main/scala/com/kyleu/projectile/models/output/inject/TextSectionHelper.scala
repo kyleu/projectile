@@ -28,11 +28,11 @@ object TextSectionHelper {
 
     val startIndex = lines.indexWhere(_.contains(start))
     if (startIndex == -1) {
-      throw new IllegalStateException(s"Cannot inject [$filename]. No start key matching [$start] in [$oSize] bytes.")
+      throw new IllegalStateException(s"Cannot inject [$filename]. No start key matching [$start] in [$oSize] bytes")
     }
     val endIndex = lines.indexWhere(_.contains(end))
     if (endIndex == -1) {
-      throw new IllegalStateException(s"Cannot inject [$filename]. No end key matching [$end] in [$oSize] bytes.")
+      throw new IllegalStateException(s"Cannot inject [$filename]. No end key matching [$end] in [$oSize] bytes")
     }
 
     val wsSize = lines(startIndex).length - lines(startIndex).replaceAll("^\\s+", "").length

@@ -10,7 +10,7 @@ object MetadataTimezone {
       case d: Double => d
       case bd: java.math.BigDecimal => bd.doubleValue
       case s: String => s.replaceAllLiterally(":", ".").toDouble
-      case x => throw new IllegalStateException(s"Encountered unexpected [${x.getClass.getSimpleName}:$x] from timezone query.")
+      case x => throw new IllegalStateException(s"Encountered unexpected [${x.getClass.getSimpleName}:$x] from timezone query")
     }
   }
   */

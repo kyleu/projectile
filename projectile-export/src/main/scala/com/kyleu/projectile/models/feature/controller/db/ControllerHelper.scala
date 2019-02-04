@@ -42,7 +42,7 @@ object ControllerHelper {
     file.add(s"case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)")
 
     file.add("}", -1)
-    file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
+    file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs]")""")
     file.add(s"}${if (withNotes) { ")" } else { "" }}${if (audited) { ")" } else { "" }}", -1)
     file.add("}", -1)
   }
@@ -65,7 +65,7 @@ object ControllerHelper {
     val extraArgs = "cancel, call, debug = app.config.debug"
     file.add(s"""$viewPkg.${model.propertyName}Form(request.identity, authActions, model, s"${model.title} [$logArgs]", $extraArgs)""")
     file.add(")", -1)
-    file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs].")""")
+    file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs]")""")
     file.add("}", -1)
     file.add("}", -1)
     file.add()
@@ -87,7 +87,7 @@ object ControllerHelper {
   def writeForeignKeys(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
     fk.references match {
       case h :: Nil =>
-        val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+        val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
         col.addImport(config, file, Nil)
         val propId = col.propertyName
         val propCls = col.className

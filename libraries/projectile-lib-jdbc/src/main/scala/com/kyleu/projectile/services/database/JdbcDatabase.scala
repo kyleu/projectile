@@ -16,10 +16,10 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
   private[this] def time[A](method: String, name: String)(f: => A) = f
 
   private[this] var ds: Option[HikariDataSource] = None
-  def source = ds.getOrElse(throw new IllegalStateException("Database not initialized."))
+  def source = ds.getOrElse(throw new IllegalStateException("Database not initialized"))
 
   def open(cfg: com.typesafe.config.Config, svc: TracingService) = {
-    ds.foreach(_ => throw new IllegalStateException("Database already initialized."))
+    ds.foreach(_ => throw new IllegalStateException("Database already initialized"))
 
     Class.forName("org.postgresql.Driver")
     val config = DatabaseConfig.fromConfig(cfg, configPrefix)
@@ -66,7 +66,7 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
       time("execute", statement.getClass.getName) { executeUpdate(connection, statement) }
     } catch {
       case NonFatal(x) =>
-        log.error(s"Error executing [${statement.name}] with [${statement.values.size}] values and sql [${statement.sql}].", x)
+        log.error(s"Error executing [${statement.name}] with [${statement.values.size}] values and sql [${statement.sql}]", x)
         throw x
     } finally {
       if (conn.isEmpty) { connection.close() }
@@ -80,7 +80,7 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
       time[A]("query", query.getClass.getName)(apply(connection, query))
     } catch {
       case NonFatal(x) =>
-        log.error(s"Error running query [${query.name}] with [${query.values.size}] values and sql [${query.sql}].", x)
+        log.error(s"Error running query [${query.name}] with [${query.values.size}] values and sql [${query.sql}]", x)
         throw x
     } finally {
       if (conn.isEmpty) { connection.close() }

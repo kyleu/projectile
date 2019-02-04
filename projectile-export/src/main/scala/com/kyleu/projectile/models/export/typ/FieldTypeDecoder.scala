@@ -31,7 +31,7 @@ object FieldTypeDecoder {
   ))
 
   implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => try {
-    val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute.")))
+    val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute")))
     t match {
       case StringType.value => Right(StringType)
       case EncryptedStringType.value => Right(EncryptedStringType)

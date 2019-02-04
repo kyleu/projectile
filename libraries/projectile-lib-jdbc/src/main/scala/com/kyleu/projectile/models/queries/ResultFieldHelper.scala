@@ -9,7 +9,7 @@ import com.kyleu.projectile.util.{DateUtils, EncryptionUtils}
 object ResultFieldHelper {
   def sqlForField(t: String, field: String, fields: Seq[DatabaseField]) = fields.find(_.prop == field) match {
     case Some(f) => EngineHelper.quote(f.col)
-    case None => throw new IllegalStateException(s"Invalid $t field [$field]. Allowed fields are [${fields.map(_.prop).mkString(", ")}].")
+    case None => throw new IllegalStateException(s"Invalid $t field [$field]. Allowed fields are [${fields.map(_.prop).mkString(", ")}]")
   }
 
   def valueForField(t: String, field: String, value: Option[String], fields: Seq[DatabaseField]): Option[Any] = fields.find(_.prop == field) match {
@@ -23,7 +23,7 @@ object ResultFieldHelper {
         case TimestampZonedType => v.map(DateUtils.sqlDateTimeFromString)
         case _ => value
       }
-    case None => throw new IllegalStateException(s"Invalid $t field [$field]. Allowed fields are [${fields.map(_.prop).mkString(", ")}].")
+    case None => throw new IllegalStateException(s"Invalid $t field [$field]. Allowed fields are [${fields.map(_.prop).mkString(", ")}]")
   }
 
   def orderClause(fields: Seq[DatabaseField], orderBys: OrderBy*) = if (orderBys.isEmpty) {
@@ -44,7 +44,7 @@ object ResultFieldHelper {
         case FilterOp.Like => "(" + filter.v.map(_ => s"$col like ?").mkString(" or ") + ")"
         case FilterOp.GreaterThanOrEqual => "(" + vals.map(_ => s"$col >= ?").mkString(" or ") + ")"
         case FilterOp.LessThanOrEqual => "(" + vals.map(_ => s"$col <= ?").mkString(" or ") + ")"
-        case x => throw new IllegalStateException(s"Operation [$x] is not currently supported.")
+        case x => throw new IllegalStateException(s"Operation [$x] is not currently supported")
       }
     }
     val clauseString = clauses.mkString(" and ")

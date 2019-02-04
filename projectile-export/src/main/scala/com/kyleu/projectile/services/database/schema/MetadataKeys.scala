@@ -32,7 +32,7 @@ object MetadataKeys {
     val rows = new JdbcRow.Iter(rs).map(fromRow).toList
     val grouped = rows.groupBy(_._1)
     grouped.map { row =>
-      val first = row._2.headOption.getOrElse(throw new IllegalStateException("Missing column info."))
+      val first = row._2.headOption.getOrElse(throw new IllegalStateException("Missing column info"))
       ForeignKey(
         name = first._1,
         propertyName = ExportHelper.toIdentifier(ExportHelper.toClassName(first._1)) + "Rel",

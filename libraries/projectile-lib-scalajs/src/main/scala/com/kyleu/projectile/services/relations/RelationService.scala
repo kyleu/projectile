@@ -10,7 +10,7 @@ import com.kyleu.projectile.util.{Logging, NumberUtils}
 
 @JSExportTopLevel("RelationService")
 class RelationService(url: String) extends Entrypoint("relation") {
-  Logging.debug(s"Relation service running, using [$url].")
+  Logging.debug(s"Relation service running, using [$url]")
 
   private[this] def onComplete(body: JQuery, data: String): Unit = {
     body.html(data)
@@ -41,7 +41,7 @@ class RelationService(url: String) extends Entrypoint("relation") {
     val jq = $(s"#relation-$model-$field")
     val title = $(".title", jq)
     if (jq.length != 1) {
-      throw new IllegalStateException(s"Missing relation section for [$model:$field].")
+      throw new IllegalStateException(s"Missing relation section for [$model:$field]")
     }
     if (count == 1) {
       val singular = jq.data("singular").toString

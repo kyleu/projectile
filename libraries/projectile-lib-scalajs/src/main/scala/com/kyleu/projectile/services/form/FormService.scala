@@ -13,7 +13,7 @@ import scala.scalajs.js.annotation.JSExportTopLevel
 class FormService(id: String) extends Entrypoint("form") {
   val formEl = $("#" + id)
   if (formEl.length != 1) {
-    throw new IllegalStateException(s"Found [${formEl.length}] form elements with id [$id].")
+    throw new IllegalStateException(s"Found [${formEl.length}] form elements with id [$id]")
   }
 
   val fields = $(".data-input", formEl)
@@ -51,7 +51,7 @@ class FormService(id: String) extends Entrypoint("form") {
 
   scalajs.js.Dynamic.global.$("select").formSelect()
 
-  Logging.info(s"Form service started. [${fields.length}] fields.")
+  Logging.info(s"Form service started. [${fields.length}] fields")
 
   private[this] def wireField(checkbox: JQuery) = {
     val name = checkbox.data("name").toString

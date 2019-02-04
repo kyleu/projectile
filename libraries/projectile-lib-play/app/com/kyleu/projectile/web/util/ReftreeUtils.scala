@@ -50,7 +50,7 @@ object ReftreeUtils extends Logging {
   private[this] def fin(t: String, filename: String) = {
     val out = dir.resolve(filename)
     val bytes = Files.readAllBytes(out)
-    log.info(s"Generated reftree for [$t] in file [$out].")(TraceData.noop)
+    log.info(s"Generated reftree for [$t] in file [$out]")(TraceData.noop)
     Files.delete(out)
     bytes
   }

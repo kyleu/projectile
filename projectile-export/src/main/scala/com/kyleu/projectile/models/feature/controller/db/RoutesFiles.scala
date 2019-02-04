@@ -26,7 +26,7 @@ object RoutesFiles {
     val fks = model.foreignKeys.flatMap { fk =>
       fk.references match {
         case h :: Nil =>
-          val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]."))
+          val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
           val urlArgs = s"by${col.className}/:${col.propertyName}"
           val detailUrl = prefix + "/" + urlArgs
           val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString

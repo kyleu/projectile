@@ -25,11 +25,11 @@ class ActivityController @javax.inject.Inject() (
 
   def broadcast(msg: Option[String]) = withSession("activity.broadcast", admin = true) { implicit request => implicit td =>
     msg.map(_.trim) match {
-      case None => throw new IllegalStateException("Must provide \"msg\" parameter.")
-      case Some(message) if message.isEmpty => throw new IllegalStateException("Empty message.")
+      case None => throw new IllegalStateException("Must provide \"msg\" parameter")
+      case Some(message) if message.isEmpty => throw new IllegalStateException("Empty message")
       case Some(message) =>
         connSupervisor ! ConnectionSupervisor.Broadcast(message)
-        val status = s"Message [$message] broadcast successfully."
+        val status = s"Message [$message] broadcast successfully"
         Future.successful(Redirect(com.kyleu.projectile.controllers.activity.routes.ActivityController.activityIndex()).flashing("success" -> status))
     }
   }

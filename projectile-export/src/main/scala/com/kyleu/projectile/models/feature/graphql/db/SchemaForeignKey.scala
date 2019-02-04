@@ -51,10 +51,10 @@ object SchemaForeignKey {
         if (targetTable.pkFields.nonEmpty) {
           val fkCols = fk.references
           val fields = fkCols.map(h => model.fields.find(_.key == h.source).getOrElse {
-            throw new IllegalStateException(s"Missing source column [${h.source}].")
+            throw new IllegalStateException(s"Missing source column [${h.source}]")
           })
           val targets = fkCols.map(h => targetTable.fields.find(_.key == h.target).getOrElse {
-            throw new IllegalStateException(s"Missing target column [${h.target}].")
+            throw new IllegalStateException(s"Missing target column [${h.target}]")
           })
           fields.foreach(f => f.addImport(config, file, model.pkg))
           if (targetTable.pkg != model.pkg) { file.addImport(targetTable.graphqlPackage(config), targetTable.className + "Schema") }
@@ -82,7 +82,7 @@ object SchemaForeignKey {
               }
               val comma = if (fks.lastOption.contains(fk) && isLast) { "" } else { "," }
               file.add(")" + comma, -1)
-            case _ => throw new IllegalStateException(s"Unhandled foreign key references [${fields.map(_.propertyName).mkString(", ")}].")
+            case _ => throw new IllegalStateException(s"Unhandled foreign key references [${fields.map(_.propertyName).mkString(", ")}]")
           }
         }
       }

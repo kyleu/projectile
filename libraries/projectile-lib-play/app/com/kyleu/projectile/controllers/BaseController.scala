@@ -40,7 +40,7 @@ abstract class BaseController(val name: String) extends InjectedController with 
 
   protected def modelForm(body: AnyContent) = body.asFormUrlEncoded match {
     case Some(x) => ControllerUtils.modelForm(x)
-    case None => ControllerUtils.jsonBody(body).as[Seq[DataField]].getOrElse(throw new IllegalStateException("Json must be an array of DataFields."))
+    case None => ControllerUtils.jsonBody(body).as[Seq[DataField]].getOrElse(throw new IllegalStateException("Json must be an array of DataFields"))
   }
 
   protected def enhanceRequest(request: Request[AnyContent], trace: TraceData) = {

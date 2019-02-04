@@ -34,7 +34,7 @@ object FeatureLogic {
           content = newContent.map(_ + "\n").mkString
         ))
       } else {
-        info(s"Cannot load file [${f.pathAsString}] for injection.")
+        info(s"Cannot load file [${f.pathAsString}] for injection")
         Nil
       }
     }

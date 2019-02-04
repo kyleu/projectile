@@ -45,7 +45,7 @@ class SlickQueryService(key: String, dataSource: DataSource, maxConnections: Int
           |$tabs Main: $mainInfo
           |$tabs Children:
           |$formattedChildren
-			  """.stripMargin.trim
+        """.stripMargin.trim
       }
 
       debugValues.foreach(v => td.tag(s"value.${v._1}", v._2.toString))

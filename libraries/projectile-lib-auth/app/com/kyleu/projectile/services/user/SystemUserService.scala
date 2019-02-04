@@ -34,7 +34,7 @@ class SystemUserService @javax.inject.Inject() (val tracing: TracingService, has
 
   def updateUser(creds: Credentials, model: SystemUser)(implicit trace: TraceData) = tracing.trace("update") { td =>
     ApplicationDatabase.executeF(SystemUserQueries.UpdateUser(model))(td).map { rowsAffected =>
-      if (rowsAffected != 1) { throw new IllegalStateException(s"Attempt to update user [${model.id}] affected [$rowsAffected}] rows.") }
+      if (rowsAffected != 1) { throw new IllegalStateException(s"Attempt to update user [${model.id}] affected [$rowsAffected}] rows") }
       UserCache.cacheUser(model)
       model
     }

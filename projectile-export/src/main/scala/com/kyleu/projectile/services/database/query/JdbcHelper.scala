@@ -12,7 +12,7 @@ object JdbcHelper {
       val ret = new StringWriter()
       IOUtils.copy(c.getCharacterStream, ret)
       ret.toString
-    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as a string.")
+    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as a string")
   }
 
   def intVal(a: Any) = a match {
@@ -21,7 +21,7 @@ object JdbcHelper {
     case bd: java.math.BigDecimal => bd.intValue
     case bi: java.math.BigInteger => bi.intValue
     case s: String => s.toInt
-    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as an int.")
+    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as an int")
   }
 
   def longVal(a: Any) = a match {
@@ -30,7 +30,7 @@ object JdbcHelper {
     case i: Int => i.toLong
     case bd: java.math.BigDecimal => bd.longValue
     case bi: java.math.BigInteger => bi.longValue
-    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as long.")
+    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as long")
   }
 
   def boolVal(a: Any) = a match {
@@ -38,6 +38,6 @@ object JdbcHelper {
     case i: Int => i > 0
     case s: Short => s > 0
     case bd: java.math.BigDecimal => bd.intValue > 0
-    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as a boolean.")
+    case x => throw new IllegalArgumentException(s"Cannot parse [${x.getClass.getName}] as a boolean")
   }
 }

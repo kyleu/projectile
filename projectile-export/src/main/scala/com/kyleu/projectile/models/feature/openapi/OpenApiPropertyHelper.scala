@@ -26,7 +26,7 @@ object OpenApiPropertyHelper {
       file.add("\"example\": \"2018-01-01\"")
     case FieldType.TagsType | FieldType.JsonType => file.add("\"type\": \"object\"")
     case FieldType.EnumType(key) =>
-      val e = enums.find(_.key == key).getOrElse(throw new IllegalStateException(s"Cannot file enum [$key]."))
+      val e = enums.find(_.key == key).getOrElse(throw new IllegalStateException(s"Cannot file enum [$key]"))
       file.add("\"type\": \"" + e.className + "\"")
     case FieldType.ListType(typ) =>
       file.add("\"type\": \"array\",")
