@@ -1,6 +1,6 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.web.views.html.layout.materialize(title, scripts = scripts, stylesheets = controllers.routes.Assets.versioned(s"stylesheets/${com.kyleu.projectile.util.Version.projectId}.min.css").url +: stylesheets) {
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.views.html.layout.materialize(title, scripts = scripts, stylesheets = stylesheets) {
   <header>
     <nav id="topnav" class="theme">
       <a title="@projectile.fullPath" href="@com.kyleu.projectile.web.controllers.routes.HomeController.index()" class="brand-logo center">

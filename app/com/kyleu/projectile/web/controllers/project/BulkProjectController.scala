@@ -2,6 +2,7 @@ package com.kyleu.projectile.web.controllers.project
 
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.project.member.MemberOverride
+import com.kyleu.projectile.util.StringUtils
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
 
@@ -44,7 +45,7 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
     val memberKeys = form.keys.filter(_.endsWith("-package")).map(_.stripSuffix("-package")).toSeq.sorted
     val newMembers = memberKeys.map { k =>
       val e = p.getEnum(k)
-      val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
+      val pkg = StringUtils.toList(form(s"$k-package"), '.')
       val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(EnumFeature.withValue).toSet
       e.copy(pkg = pkg, features = features, overrides = overridesFor(e.overrides, k, form))
     }
@@ -64,7 +65,7 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
     val memberKeys = form.keys.filter(_.endsWith("-package")).map(_.stripSuffix("-package")).toSeq.sorted
     val newMembers = memberKeys.map { k =>
       val m = p.getModel(k)
-      val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
+      val pkg = StringUtils.toList(form(s"$k-package"), '.')
       val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(ModelFeature.withValue).toSet
       m.copy(pkg = pkg, features = features, overrides = overridesFor(m.overrides, k, form))
     }
@@ -84,7 +85,7 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
     val memberKeys = form.keys.filter(_.endsWith("-package")).map(_.stripSuffix("-package")).toSeq.sorted
     val newMembers = memberKeys.map { k =>
       val s = p.getService(k)
-      val pkg = form(s"$k-package").split('.').map(_.trim).filter(_.nonEmpty)
+      val pkg = StringUtils.toList(form(s"$k-package"), '.')
       val features = form.keys.filter(_.startsWith(s"$k-feature-")).map(_.stripPrefix(s"$k-feature-")).map(ServiceFeature.withValue).toSet
       s.copy(pkg = pkg, features = features, overrides = overridesFor(s.overrides, k, form))
     }

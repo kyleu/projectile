@@ -2,6 +2,7 @@ package com.kyleu.projectile.web.controllers.project
 
 import com.kyleu.projectile.models.feature.ServiceFeature
 import com.kyleu.projectile.models.project.member.{MemberOverride, ServiceMember}
+import com.kyleu.projectile.util.StringUtils
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
 
@@ -75,9 +76,9 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
     }
 
     val newMember = m.copy(
-      pkg = form("package").split('.').map(_.trim).filter(_.nonEmpty),
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ServiceFeature.withValue).toSet,
-      ignored = form.getOrElse("ignored", "").split(',').map(_.trim).filter(_.nonEmpty).toSet,
+      pkg = StringUtils.toList(form("package"), '.'),
+      features = StringUtils.toList(form.getOrElse("features", "")).map(ServiceFeature.withValue).toSet,
+      ignored = StringUtils.toList(form.getOrElse("ignored", "")).toSet,
       overrides = nameOverrides ++ methodOverrides
     )
 
@@ -98,7 +99,7 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
   def saveFeatures(key: String) = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = projectile.getProjectSummary(key)
-    val features = form("features").split(',').map(ServiceFeature.withValue).map(_.value).toSet
+    val features = StringUtils.toList(form("features")).map(ServiceFeature.withValue).map(_.value).toSet
     projectile.saveProject(summary.copy(defaultServiceFeatures = features))
 
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(summary.key)).flashing(

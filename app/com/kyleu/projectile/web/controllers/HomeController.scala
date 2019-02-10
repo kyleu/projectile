@@ -50,8 +50,7 @@ class HomeController @javax.inject.Inject() () extends ProjectileController {
   }
 
   def testbed = Action.async { implicit request =>
-    val startMs = System.currentTimeMillis
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.file.result(projectile, "Testbed", printJson(projectile.testbed().json), System.currentTimeMillis - startMs)))
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.testbed(projectile)))
   }
 
   def refreshAll = Action.async { implicit request =>

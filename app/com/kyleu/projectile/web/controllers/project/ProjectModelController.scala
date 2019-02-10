@@ -2,6 +2,7 @@ package com.kyleu.projectile.web.controllers.project
 
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.project.member.{MemberOverride, ModelMember}
+import com.kyleu.projectile.util.StringUtils
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
 
@@ -110,9 +111,9 @@ class ProjectModelController @javax.inject.Inject() () extends ProjectileControl
     }
 
     val newMember = m.copy(
-      pkg = form("package").split('.').map(_.trim).filter(_.nonEmpty),
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ModelFeature.withValue).toSet,
-      ignored = form.getOrElse("ignored", "").split(',').map(_.trim).filter(_.nonEmpty).toSet,
+      pkg = StringUtils.toList(form("package"), '.'),
+      features = StringUtils.toList(form.getOrElse("features", "")).map(ModelFeature.withValue).toSet,
+      ignored = StringUtils.toList(form.getOrElse("ignored", "")).toSet,
       overrides = nameOverrides ++ fieldOverrides ++ foreignKeyOverrides ++ referenceOverrides
     )
 
@@ -133,7 +134,7 @@ class ProjectModelController @javax.inject.Inject() () extends ProjectileControl
   def saveFeatures(key: String) = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = projectile.getProjectSummary(key)
-    val features = form("features").split(',').map(ModelFeature.withValue).map(_.value).toSet
+    val features = StringUtils.toList(form("features")).map(ModelFeature.withValue).map(_.value).toSet
     projectile.saveProject(summary.copy(defaultModelFeatures = features))
 
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(summary.key)).flashing(

@@ -3,6 +3,7 @@ package com.kyleu.projectile.web.controllers.project
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.models.feature.ProjectFeature
 import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
+import com.kyleu.projectile.util.StringUtils
 import play.api.mvc.{AnyContent, Request}
 import com.kyleu.projectile.web.util.ControllerUtils
 
@@ -41,7 +42,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
 
   def saveFeatures() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
-    val features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(ProjectFeature.withValue).toSet
+    val features = StringUtils.toList(form.getOrElse("features", "")).map(ProjectFeature.withValue).toSet
     val project = projectile.saveProject(summary.copy(features = features))
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
@@ -72,7 +73,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
     val project = projectile.saveProject(summary.copy(
       packages = com.kyleu.projectile.models.output.OutputPackage.values.flatMap { p =>
         form.get(s"package.${p.value}").flatMap { pkg =>
-          val x = pkg.split('.').map(_.trim).filter(_.nonEmpty).toSeq
+          val x = StringUtils.toList(pkg, '.')
           if (x == p.defaultVal) {
             None
           } else {
@@ -91,9 +92,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
   def saveClassOverrides() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
     val project = projectile.saveProject(summary.copy(
-      classOverrides = form("overrides").split('\n').map(_.trim).filter(_.nonEmpty).map { o =>
-        o.substring(0, o.indexOf("=")).trim -> o.substring(o.indexOf("=") + 1).trim
-      }.toMap
+      classOverrides = StringUtils.toMap(form("overrides"), '\n')
     ))
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }

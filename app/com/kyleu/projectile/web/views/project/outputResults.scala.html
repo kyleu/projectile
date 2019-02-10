@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, outputs: Seq[com.kyleu.projectile.models.project.ProjectOutput], files: Seq[com.kyleu.projectile.services.output.OutputService.WriteResult], verbose: Boolean)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(outputs.size == 1) {
   s"[${outputs.headOption.getOrElse(throw new IllegalStateException("No outputs")).project.key}] Export Result"
 } else {

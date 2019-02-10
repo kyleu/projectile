@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, key: String, p: com.kyleu.projectile.models.project.ProjectSummary, member: com.kyleu.projectile.models.project.member.ModelMember, m: com.kyleu.projectile.models.export.ExportModel)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, m.title + " Model") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.save(p.key, m.key)">
     <div class="collection with-header">

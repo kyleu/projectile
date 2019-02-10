@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, key: String, p: com.kyleu.projectile.models.project.ProjectSummary, m: com.kyleu.projectile.models.project.member.EnumMember, e: com.kyleu.projectile.models.export.ExportEnum)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, e.className + " Enum") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.save(p.key, e.key)">
     <div class="collection with-header">

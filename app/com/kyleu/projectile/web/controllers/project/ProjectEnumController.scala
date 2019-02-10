@@ -3,6 +3,7 @@ package com.kyleu.projectile.web.controllers.project
 import com.kyleu.projectile.models.feature.EnumFeature
 import com.kyleu.projectile.models.project.member
 import com.kyleu.projectile.models.project.member.{EnumMember, MemberOverride}
+import com.kyleu.projectile.util.StringUtils
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
 
@@ -59,9 +60,9 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
 
     val form = ControllerUtils.getForm(request.body)
     val newMember = m.copy(
-      pkg = form("package").split('.').map(_.trim).filter(_.nonEmpty),
-      features = form.getOrElse("features", "").split(',').map(_.trim).filter(_.nonEmpty).map(EnumFeature.withValue).toSet,
-      ignored = form.getOrElse("ignored", "").split(',').map(_.trim).filter(_.nonEmpty).toSet,
+      pkg = StringUtils.toList(form("package"), '.'),
+      features = StringUtils.toList(form.getOrElse("features", "")).map(EnumFeature.withValue).toSet,
+      ignored = StringUtils.toList(form.getOrElse("ignored", "")).toSet,
       overrides = Seq(
         form("propertyName") match {
           case x if x.nonEmpty && x != e.propertyName => Some(MemberOverride("propertyName", x))
@@ -91,7 +92,7 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
   def saveFeatures(key: String) = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = projectile.getProjectSummary(key)
-    val features = form("features").split(',').map(EnumFeature.withValue).map(_.value).toSet
+    val features = StringUtils.toList(form("features")).map(EnumFeature.withValue).map(_.value).toSet
     projectile.saveProject(summary.copy(defaultEnumFeatures = features))
 
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(summary.key)).flashing(
