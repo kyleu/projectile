@@ -3,7 +3,7 @@ package com.kyleu.projectile
 import com.kyleu.projectile.models.cli.CommandLineAction
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
-import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.{Logging, StringUtils}
 import com.kyleu.projectile.util.Version.{projectId, projectName, version}
 import org.backuity.clist.{Cli, ParsingException}
 
@@ -18,7 +18,7 @@ object ProjectileCLI extends Logging {
     }
     val f = better.files.File(args(1))
     if (f.exists && f.isRegularFile && f.isReadable) {
-      f.lines.toList.map(l => l -> runArgs(l.split(' ').map(_.trim).filter(_.nonEmpty)))
+      f.lines.toList.map(l => l -> runArgs(StringUtils.toList(l, ' ')))
     } else {
       throw new IllegalStateException(s"Cannot read batch file [${f.pathAsString}]")
     }

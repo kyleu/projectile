@@ -1,0 +1,5 @@
+@(
+    selected: Boolean, key: String, title: String, value: Option[Seq[String]], nullable: Boolean, dataType: String = "collection"
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = dataType) {
+  <input id="input-@key" class="tag-editor@if(nullable) { nullable}" data-t="@dataType" type="text" name="@key" value="@value.getOrElse(Nil).mkString(",")" />
+}

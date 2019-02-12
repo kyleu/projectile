@@ -22,45 +22,32 @@ object WebsocketController {
   }
 }
 
-abstract class WebsocketController[ReqMsg: Decoder, RspMsg: Encoder](name: String) extends AuthController(name) {
+abstract class WebsocketController[ClientMsg: Decoder, ServerMsg: Encoder](name: String) extends AuthController(name) {
   implicit def system: ActorSystem
   implicit def materializer: Materializer
 
-  protected[this] def connectionSupervisor: ActorRef
-  protected[this] def onConnect(id: UUID, creds: Credentials, out: ActorRef, sourceAddr: String): Props
+  protected[this] def onConnect(connectionId: UUID, request: RequestHeader, creds: Credentials, out: ActorRef): Props
 
-  private[this] val formatter = new MessageFrameFormatter[ReqMsg, RspMsg]()
+  private[this] val formatter = new MessageFrameFormatter[ClientMsg, ServerMsg]()
 
-  protected[this] def connectAnonymous() = WebSocket.accept[ReqMsg, RspMsg] { request =>
-    implicit val req: Request[AnyContent] = Request(request, AnyContentAsEmpty)
-    val connId = UUID.randomUUID()
-    WebsocketUtils.actorRef(connId) { out =>
-      onConnect(id = connId, creds = Credentials.anonymous, out = out, sourceAddr = request.remoteAddress)
+  def connectAnonymous() = WebSocket.accept[ClientMsg, ServerMsg] { request =>
+    val connectionId = UUID.randomUUID()
+    WebsocketUtils.actorRef(connectionId) { out =>
+      onConnect(connectionId = connectionId, creds = Credentials.anonymous, out = out, request = request)
     }
   }(formatter.transformer())
 
-  protected[this] def connectOptAuth() = WebSocket.acceptOrResult[ReqMsg, RspMsg] { request =>
+  def connect() = WebSocket.acceptOrResult[ClientMsg, ServerMsg] { request =>
+    val connectionId = UUID.randomUUID()
     implicit val req: Request[AnyContent] = Request(request, AnyContentAsEmpty)
-    val connId = UUID.randomUUID()
     app.silhouette.UserAwareRequestHandler { ua => Future.successful(HandlerResult(Ok, ua.identity)) }.map {
-      case HandlerResult(_, user) => Right(WebsocketUtils.actorRef(connId) { out =>
+      case HandlerResult(_, user) => Right(WebsocketUtils.actorRef(connectionId) { out =>
         val creds = user match {
           case Some(u) => UserCredentials(u, request.remoteAddress)
           case None => Credentials.anonymous
         }
-        onConnect(id = connId, creds = creds, out = out, sourceAddr = request.remoteAddress)
+        onConnect(connectionId = connectionId, request = request, creds = creds, out = out)
       })
-    }
-  }(formatter.transformer())
-
-  protected[this] def connectAuth() = WebSocket.acceptOrResult[ReqMsg, RspMsg] { request =>
-    implicit val req: Request[AnyContent] = Request(request, AnyContentAsEmpty)
-    val connId = UUID.randomUUID()
-    app.silhouette.SecuredRequestHandler { secured => Future.successful(HandlerResult(Ok, Some(secured.identity))) }.map {
-      case HandlerResult(_, Some(user)) => Right(WebsocketUtils.actorRef(connId) { out =>
-        onConnect(id = connId, creds = UserCredentials(user, request.remoteAddress), out = out, sourceAddr = request.remoteAddress)
-      })
-      case HandlerResult(_, None) => Left(Redirect("/").flashing("error" -> "You're not signed in"))
     }
   }(formatter.transformer())
 }

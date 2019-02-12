@@ -62,11 +62,10 @@ object QueriesFile {
     QueriesHelper.writeForeignKeys(config, model, file)
 
     if (!model.readOnly) {
+      config.addCommonImport(file, "DataField")
       file.add(s"def insert(model: ${model.className}) = new Insert(model)")
       file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
-
-      config.addCommonImport(file, "DataField")
-      file.add("def create(dataFields: Seq[DataField]) = new CreateFields(dataFields)")
+      file.add("def create(dataFields: Seq[DataField]) = new InsertFields(dataFields)")
     }
 
     if (model.pkFields.nonEmpty) {

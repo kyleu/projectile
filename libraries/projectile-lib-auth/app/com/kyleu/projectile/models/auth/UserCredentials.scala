@@ -17,6 +17,7 @@ object UserCredentials {
 
   val system = UserCredentials(SystemUser.system, "localhost")
 
-  def fromInsecureRequest(request: UserAwareRequest[AuthEnv, _]) = UserCredentials(request.identity.getOrElse(SystemUser.api), request.remoteAddress)
+  def fromInsecureRequest(request: UserAwareRequest[AuthEnv, _]) = request.identity.map(u => UserCredentials(u, request.remoteAddress))
+
   def fromRequest(request: SecuredRequest[AuthEnv, _]) = UserCredentials(request.identity, request.remoteAddress)
 }

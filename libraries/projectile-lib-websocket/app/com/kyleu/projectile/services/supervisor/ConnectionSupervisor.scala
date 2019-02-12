@@ -3,11 +3,11 @@ package com.kyleu.projectile.services.supervisor
 import java.time.LocalDateTime
 import java.util.UUID
 
-import akka.actor.{Actor, ActorRef, ActorRefFactory, OneForOneStrategy, Props, SupervisorStrategy}
-import com.kyleu.projectile.models.supervisor.{ConnectionDescription, InternalMessage}
+import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, SupervisorStrategy}
 import com.kyleu.projectile.models.supervisor.InternalMessage._
-import com.kyleu.projectile.util.{DateUtils, Logging}
+import com.kyleu.projectile.models.supervisor.{ConnectionDescription, InternalMessage}
 import com.kyleu.projectile.util.tracing.TraceData
+import com.kyleu.projectile.util.{DateUtils, Logging}
 
 object ConnectionSupervisor {
   protected var initialized = false

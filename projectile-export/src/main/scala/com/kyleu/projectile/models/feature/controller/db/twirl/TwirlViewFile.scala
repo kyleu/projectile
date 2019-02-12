@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.feature.controller.db.twirl
 
-import com.kyleu.projectile.models.export.ExportModel
+import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.feature.ModelFeature
@@ -14,6 +14,7 @@ object TwirlViewFile {
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
 
     val su = CommonImportHelper.getString(config, "SystemUser")
+    val nu = CommonImportHelper.getString(config, "NullUtils")
     val aa = CommonImportHelper.getString(config, "AuthActions")
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
     val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
@@ -90,6 +91,25 @@ object TwirlViewFile {
     file.add(s"""<script>$$(function() { new RelationService('@${TwirlHelper.routesClass(config, model)}.relationCounts($args)') });</script>""")
   }
 
+  private[this] def forField(config: ExportConfiguration, field: ExportField) = field.t match {
+    case FieldType.ListType(_) if field.required => s"""@model.${field.propertyName}.mkString(", ")"""
+    case FieldType.ListType(_) => s"""@model.${field.propertyName}.map(_.mkString(", "))"""
+    case FieldType.SetType(_) if field.required => s"""@model.${field.propertyName}.mkString(", ")"""
+    case FieldType.SetType(_) => s"""@model.${field.propertyName}.map(_.mkString(", "))"""
+    case FieldType.MapType(_, _) if field.required => s"""@model.${field.propertyName}.map(x => x._2 + "=" + x._1).mkString(", ")"""
+    case FieldType.MapType(_, _) => s"""@model.${field.propertyName}.map(_.map(x => x._2 + "=" + x._1).mkString(", "))"""
+    case FieldType.TagsType if field.required => s"""@model.${field.propertyName}.map(x => x.k + "=" + x.v).mkString(", ")"""
+    case FieldType.TagsType => s"""@model.${field.propertyName}.map(_.map(x => x.k + "=" + x.v).mkString(", "))"""
+
+    case FieldType.CodeType | FieldType.JsonType if field.required => s"<pre>@model.${field.propertyName}<pre>"
+    case FieldType.CodeType | FieldType.JsonType => s"<pre>@model.${field.propertyName}.getOrElse(com.kyleu.projectile.util.NullUtils.str)<pre>"
+
+    case _ if field.required => s"@model.${field.propertyName}"
+    case _ =>
+      val nu = CommonImportHelper.getString(config, "NullUtils")
+      s"@model.${field.propertyName}.getOrElse($nu.str)"
+  }
+
   private[this] def addFields(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = model.fields.foreach { field =>
     file.add("<tr>", 1)
     file.add(s"<th>${field.title}</th>")
@@ -100,11 +120,7 @@ object TwirlViewFile {
         if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
           throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
         }
-        if (field.required) {
-          file.add(s"@model.${field.propertyName}")
-        } else {
-          file.add(s"@model.${field.propertyName}.getOrElse(${config.utilitiesPackage.mkString(".")}.NullUtils.str)")
-        }
+        file.add(forField(config, field))
         if (field.required) {
           val icon = TwirlHelper.iconHtml(config, tgt.propertyName)
           file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
@@ -115,8 +131,7 @@ object TwirlViewFile {
           file.add("}", -1)
         }
         file.add("</td>", -1)
-      case _ if field.t == FieldType.CodeType || field.t == FieldType.JsonType => file.add(s"<td><pre>@model.${field.propertyName}<pre></td>")
-      case _ => file.add(s"<td>@model.${field.propertyName}</td>")
+      case _ => file.add(s"<td>${forField(config, field)}</td>")
     }
     file.add("</tr>", -1)
   }

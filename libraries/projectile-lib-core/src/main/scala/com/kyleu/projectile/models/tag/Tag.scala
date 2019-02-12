@@ -1,15 +1,13 @@
 package com.kyleu.projectile.models.tag
 
 import com.kyleu.projectile.util.JsonSerializers._
+import com.kyleu.projectile.util.StringUtils
 
 object Tag {
   implicit val jsonEncoder: Encoder[Tag] = deriveEncoder
   implicit val jsonDecoder: Decoder[Tag] = deriveDecoder
 
-  def fromString(s: String) = s.split(",").map(_.split("=").toList match {
-    case h :: t :: Nil => Tag(h, t)
-    case x => throw new IllegalStateException("Parse error: " + x.toString)
-  }).toSeq
+  def fromString(s: String) = StringUtils.toTags(s)
 
   def toString(seq: Seq[Tag]) = seq.map(t => t.k + "=" + t.v).mkString(",")
 

@@ -12,13 +12,6 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     override val values: Seq[Any] = toDataSeq(model)
   }
 
-  protected class InsertFields(dataFields: Seq[DataField]) extends Statement {
-    override val name = s"$key.insert.fields"
-    private[this] val cols = dataFields.map(f => ResultFieldHelper.sqlForField("update", f.k, fields))
-    override val sql = s"insert into ${quote(tableName)} (${cols.mkString(", ")}) values (${cols.map(_ => "?").mkString(", ")})"
-    override val values: Seq[Any] = dataFields.map(_.v)
-  }
-
   protected class InsertBatch(models: Seq[T]) extends Statement {
     override val name = s"$key.insert.batch"
     private[this] val valuesClause = models.map(_ => s"($columnPlaceholders)").mkString(", ")
@@ -31,8 +24,8 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     override val sql = s"""delete from ${quote(tableName)} where $pkWhereClause"""
   }
 
-  protected class CreateFields(dataFields: Seq[DataField]) extends Statement {
-    override val name = s"$key.create.fields"
+  protected class InsertFields(dataFields: Seq[DataField]) extends Statement {
+    override val name = s"$key.insert.fields"
     private[this] val cols = dataFields.map(f => ResultFieldHelper.sqlForField("insert", f.k, fields))
     override val sql = s"""insert into ${quote(tableName)} (${cols.mkString(", ")}) values (${cols.map(_ => "?").mkString(", ")})"""
     override val values = dataFields.map(f => ResultFieldHelper.valueForField("create", f.k, f.v, fields))

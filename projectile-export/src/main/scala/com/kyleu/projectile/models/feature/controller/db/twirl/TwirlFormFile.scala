@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db.twirl
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
@@ -57,6 +58,16 @@ object TwirlFormFile {
     if (hasAutocomplete) {
       file.add(s"@$systemViewPkg.components.includeAutocomplete(debug)")
     }
+
+    var hasTagEditor = model.fields.exists(_.t match {
+      case FieldType.ListType(_) | FieldType.SetType(_) => true
+      case FieldType.MapType(_, _) | FieldType.TagsType => true
+      case _ => false
+    })
+    if (hasTagEditor) {
+      file.add(s"@$systemViewPkg.components.includeTagEditor(debug)")
+    }
+
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
 
     file

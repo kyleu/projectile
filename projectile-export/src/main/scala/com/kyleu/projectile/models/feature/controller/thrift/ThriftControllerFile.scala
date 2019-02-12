@@ -16,6 +16,7 @@ object ThriftControllerFile {
     )
 
     config.addCommonImport(file, "Application")
+    config.addCommonImport(file, "AuthActions")
 
     val i = if (service.features(ServiceFeature.Auth)) {
       CommonImportHelper.get(config, "AuthController")
@@ -40,7 +41,7 @@ object ThriftControllerFile {
     file.addImport(Seq("play", "api", "mvc"), "Call")
 
     file.add("@javax.inject.Singleton")
-    val inject = "@javax.inject.Inject() (override val app: Application)"
+    val inject = "@javax.inject.Inject() (override val app: Application, authActions: AuthActions)"
     val controller = if (service.features(ServiceFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${service.className}Controller $inject extends $controller("${service.className}") {""", 1)
     file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")
@@ -87,8 +88,8 @@ object ThriftControllerFile {
     val args = "title: String, act: Call, args: Json"
     file.add(s"""private[this] def getHelper($args) = withSession(title, admin = true) { implicit request => implicit td =>""", 1)
     file.add("""Future.successful(render {""", 1)
-    file.add(s"case Accepts.Html() => Ok(${config.viewPackage.mkString(".")}.html.admin.layout.methodCall(", 1)
-    file.add("user = request.identity, title = title, svc = listCall, args = args, act = act, debug = app.config.debug")
+    file.add(s"case Accepts.Html() => Ok(${config.systemViewPackage.mkString(".")}.html.admin.layout.methodCall(", 1)
+    file.add("user = request.identity, authActions = authActions, title = title, svc = listCall, args = args, act = act, debug = app.config.debug")
     file.add("))", -1)
     file.add("""case Accepts.Json() => Ok(Json.obj("name" -> title.asJson, "arguments" -> args.asJson))""")
     file.add("})", -1)
@@ -100,11 +101,11 @@ object ThriftControllerFile {
     file.add("val started = DateUtils.now")
     file.add("val args = ControllerUtils.jsonArguments(request.body, argNames: _*)")
     file.add("""def ren(res: Option[Json] = None, err: Option[(String, String)] = None) = render {""", 1)
-    file.add(s"""case Accepts.Html() => Ok(${config.viewPackage.mkString(".")}.html.admin.layout.methodCall(""", 1)
-    file.add("""user = request.identity, title = title, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err,""")
+    file.add(s"""case Accepts.Html() => Ok(${config.systemViewPackage.mkString(".")}.html.admin.layout.methodCall(""", 1)
+    file.add("""user = request.identity, authActions = authActions, title = title, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err,""")
     file.add("""started = Some(started), completed = Some(DateUtils.now), debug = app.config.debug""")
     file.add("""))""", -1)
-    file.add("""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson)))""")
+    file.add(s"""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson)))""")
     file.add("}", -1)
 
     file.add("result(args, td).map(res => ren(res = Some(res))).recover {", 1)

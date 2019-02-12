@@ -1,5 +1,6 @@
 package com.kyleu.projectile.services.project.codegen
 
+import com.kyleu.projectile.models.input.InputTemplate
 import com.kyleu.projectile.models.project.codegen.CodegenResult
 import com.kyleu.projectile.services.ProjectileService
 
@@ -18,7 +19,12 @@ trait CodegenHelper { this: ProjectileService =>
     val startMs = System.currentTimeMillis
     val projects = listProjects().filter(p => if (projectKeys.isEmpty) { true } else { projectKeys.contains(p.key) })
 
-    val workingSet = projects.map(p => (p, getProjectHash(p.key), getInput(p.input)))
+    val workingSet = projects.flatMap { p =>
+      getInputSummary(p.input).template match {
+        case InputTemplate.Postgres => None
+        case _ => Some((p, getProjectHash(p.key), getInput(p.input)))
+      }
+    }
 
     val updates = workingSet.flatMap {
       case (_, h, i) if h == i.hash => None

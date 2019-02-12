@@ -1,4 +1,4 @@
-package com.kyleu.projectile.controllers.activity
+package com.kyleu.projectile.controllers.connection
 
 import java.util.UUID
 
@@ -14,9 +14,9 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @javax.inject.Singleton
-class ActivityController @javax.inject.Inject() (
+class ConnectionActivityController @javax.inject.Inject() (
     override val app: Application,
-    @javax.inject.Named("connection-service") val connSupervisor: ActorRef
+    @javax.inject.Named("connection-supervisor") val connSupervisor: ActorRef
 ) extends AuthController("admin.activity") {
 
   def activityIndex = withSession("activity.index", admin = true) { implicit request => implicit td =>

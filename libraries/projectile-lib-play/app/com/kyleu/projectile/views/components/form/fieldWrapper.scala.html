@@ -1,7 +1,7 @@
 @(selected: Boolean, key: String, title: String, nullable: Boolean, dataType: String = "string")(content: Html)<tr>
   <td>
-    <label for="@{key}.include">
-      <input type="checkbox" name="@{key}.include" id="@{key}.include" value="true" @if(selected) { checked="checked" } class="data-input" data-type="@dataType" data-name="@key" />
+    <label for="@{key}-include">
+      <input type="checkbox" name="@{key}-include" id="@{key}-include" value="true" @if(selected) { checked="checked" } class="data-input" data-type="@dataType" data-name="@key" />
       <span>@title</span>
     </label>
   </td>

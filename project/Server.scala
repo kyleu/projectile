@@ -1,7 +1,6 @@
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
-import com.typesafe.sbt.less.Import._
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
@@ -47,9 +46,6 @@ object Server {
     // Sbt-Web
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
     pipelineStages += gzip,
-    includeFilter in (Assets, LessKeys.less) := "*.less",
-    excludeFilter in (Assets, LessKeys.less) := "_*.less",
-    LessKeys.compress in Assets := true,
 
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),

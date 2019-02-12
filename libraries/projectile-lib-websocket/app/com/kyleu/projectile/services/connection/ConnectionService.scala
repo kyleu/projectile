@@ -15,7 +15,7 @@ abstract class ConnectionService[Req, Rsp](
   protected[this] implicit val td: TraceData = TraceData.noop
 
   override def preStart() = {
-    log.info(s"Starting player connection for user [${creds.id}: ${creds.name}]")
+    log.info(s"Starting [$channel] connection for user [${creds.id}: ${creds.name}]")
     val msg = ConnectionStarted(creds = creds, channel = channel, id = id, userId = creds.id, username = creds.name, conn = self)
     connSupervisor.tell(msg, self)
     onConnect()

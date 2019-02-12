@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.StructType
 import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala}
 import com.kyleu.projectile.models.output.ExportHelper
+import com.kyleu.projectile.util.StringUtils
 
 object ThriftFileHelper {
   def columnTypeFor(t: ThriftType, input: ThriftInput): FieldType = t match {
@@ -85,7 +86,7 @@ object ThriftFileHelper {
   private[this] def colTypeForIdentifier(name: String, input: ThriftInput): FieldType = name match {
     case "I64" => FieldType.LongType
     case "I32" => FieldType.IntegerType
-    case x if x.contains('.') => x.split('.').toList match {
+    case x if x.contains('.') => StringUtils.toList(x, '.') match {
       case _ :: cls :: Nil => typeForClass(cls, input)
       case cls :: Nil => typeForClass(cls, input)
       case _ => throw new IllegalStateException(s"Cannot match [$x]")

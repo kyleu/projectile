@@ -17,10 +17,10 @@ object FieldHelper {
     fInput.change((_: JQueryEventObject) => checkbox.prop("checked", originalValue))
   }
 
-  def onDate(name: String, formEl: JQuery, checkbox: JQuery) = {
+  def wire(name: String, formEl: JQuery, checkbox: JQuery) = {
     val input = $(s"#input-$name", formEl)
     if (input.length != 1) {
-      throw new IllegalStateException(s"Found [${input.length}] date input elements with id [input-$name]")
+      throw new IllegalStateException(s"Found [${input.length}] elements with id [input-$name]")
     }
     val originalValue = input.value().toString
     input.keyup((_: JQueryEventObject) => {
@@ -28,14 +28,8 @@ object FieldHelper {
     })
   }
 
-  def onTime(name: String, formEl: JQuery, checkbox: JQuery) = {
-    val input = $(s"#input-$name", formEl)
-    if (input.length != 1) {
-      throw new IllegalStateException(s"Found [${input.length}] date input elements with id [input-$name]")
-    }
-    val originalValue = input.value().toString
-    input.keyup((_: JQueryEventObject) => {
-      checkbox.prop("checked", originalValue != input.value().toString)
-    })
+  def wireTimestamp(name: String, formEl: JQuery, checkbox: JQuery) = {
+    wire(name + "-date", formEl, checkbox)
+    wire(name + "-time", formEl, checkbox)
   }
 }

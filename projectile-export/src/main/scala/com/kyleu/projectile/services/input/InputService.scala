@@ -13,20 +13,25 @@ class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory
 
   def immediateList() = if (dir.exists) {
-    dir.children.filter(_.isDirectory).toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary)
+    dir.children.filter(_.isDirectory).toList.map(_.name.stripSuffix(".json")).sorted.map(getSummary(_))
   } else {
     Nil
   }
 
   def list(): Seq[InputSummary] = immediateList() ++ cfg.linkedConfigs.map(c => new InputService(c)).flatMap(_.list()).sortBy(_.key)
 
-  def getSummary(key: String): InputSummary = {
+  def getSummary(key: String, observed: Seq[String] = Nil): InputSummary = {
     val f = dir / key / "input.json"
     if (f.exists && f.isRegularFile && f.isReadable) {
       JsonFileLoader.loadFile[InputSummary](f, "input summary").copy(key = key)
     } else {
       cfg.configForInput(key) match {
-        case Some(c) => new InputService(c).getSummary(key)
+        case Some(c) =>
+          val path = f.pathAsString
+          if (observed.contains(path)) {
+            throw new IllegalStateException(s"Loop detected with input [$key]: ${observed.mkString(", ")}")
+          }
+          new InputService(c).getSummary(key, observed :+ path)
         case _ => throw new IllegalStateException(s"Cannot load input with key [$key]")
       }
     }

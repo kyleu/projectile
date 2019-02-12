@@ -4,7 +4,7 @@ import enumeratum.{CirceEnum, Enum, EnumEntry}
 import com.kyleu.projectile.models.command.ProjectileCommand
 import com.kyleu.projectile.models.input.InputSummary
 import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
-import com.kyleu.projectile.util.Version
+import com.kyleu.projectile.util.{StringUtils, Version}
 import org.backuity.clist.{Command, arg, opt}
 
 sealed trait CommandLineAction extends EnumEntry { this: Command =>
@@ -41,7 +41,7 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
   }
   object Codegen extends Command(name = "codegen", description = "Generates code for the provided projects (or all)") with CommandLineAction {
     var key = arg[Option[String]](required = false)
-    override def toCommand = ProjectileCommand.Codegen(key.toSeq.flatMap(_.split(",").map(_.trim)))
+    override def toCommand = ProjectileCommand.Codegen(key.toSeq.flatMap(StringUtils.toList(_)))
   }
 
   // Inputs

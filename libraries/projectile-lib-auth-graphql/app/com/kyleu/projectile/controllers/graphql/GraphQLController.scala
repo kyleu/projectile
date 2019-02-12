@@ -3,7 +3,7 @@ package com.kyleu.projectile.controllers.graphql
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.graphql.GraphQLService
 import com.kyleu.projectile.models.Application
-import com.kyleu.projectile.models.user.Role
+import com.kyleu.projectile.models.user.{Role, SystemUser}
 import io.circe.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -12,7 +12,6 @@ import com.kyleu.projectile.util.EncryptionUtils
 import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.circe._
 import sangria.parser.SyntaxError
-
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.web.util.ControllerUtils.{jsonBody, jsonObject}
 
@@ -43,7 +42,8 @@ class GraphQLController @javax.inject.Inject() (override val app: Application, g
       val variables = body.get("variables").map(x => graphQLService.parseVariables(x.toString))
       val operation = body.get("operationName").flatMap(_.asString)
 
-      executeQuery(query, variables, operation, UserCredentials.fromInsecureRequest(request), app.config.debug)
+      val creds = UserCredentials.fromInsecureRequest(request).getOrElse(UserCredentials(user = SystemUser.api, remoteAddress = request.remoteAddress))
+      executeQuery(query, variables, operation, creds, app.config.debug)
     } else {
       failRequest(request)
     }

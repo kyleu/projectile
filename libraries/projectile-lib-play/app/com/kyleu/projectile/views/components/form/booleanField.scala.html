@@ -1,6 +1,6 @@
 @(
-    selected: Boolean, key: String, title: String, value: Option[Boolean], nullable: Boolean, dataType: String = "string"
-)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = dataType) {
+    selected: Boolean, key: String, title: String, value: Option[Boolean], nullable: Boolean
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = "boolean") {
   <label for="input-@key-true">
     <input type="radio" id="input-@key-true" name="@key" value="true" @if(value.contains(true)) { checked="checked" } />
     <span>True</span>

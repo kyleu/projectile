@@ -6,7 +6,7 @@
     stylesheets: Seq[String] = Nil
 )(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: com.kyleu.projectile.util.tracing.TraceData
-)@com.kyleu.projectile.views.html.layout.materialize(title, scripts = scripts, stylesheets = "/assets/stylesheets/app.min.css" +: stylesheets) {
+)@com.kyleu.projectile.views.html.layout.materialize(title, scripts = scripts, stylesheets = stylesheets) {
   <header>
     @com.kyleu.projectile.views.html.components.userDropdown(user)
 

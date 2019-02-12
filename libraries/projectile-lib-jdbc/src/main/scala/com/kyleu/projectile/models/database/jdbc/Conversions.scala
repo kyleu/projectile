@@ -15,6 +15,8 @@ object Conversions {
     case dt: LocalDateTime => new java.sql.Timestamp(DateUtils.toMillis(dt))
     case zdt: ZonedDateTime => new java.sql.Timestamp(DateUtils.toMillisZoned(zdt))
 
+    // case s: Seq[_] => "{" + s.map("\"" + _ + "\"").mkString(", ") + "}"
+
     // Pass everything else through.
     case _ => x
   }

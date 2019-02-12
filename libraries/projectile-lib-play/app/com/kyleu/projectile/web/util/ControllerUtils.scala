@@ -43,16 +43,13 @@ object ControllerUtils {
 
   def modelForm(rawForm: Map[String, Seq[String]]) = {
     val form = rawForm.mapValues(_.headOption.getOrElse(throw new IllegalStateException("Empty form field")))
-    val fields = form.toSeq.filter(x => x._1.endsWith(".include") && x._2 == "true").map(_._1.stripSuffix(".include"))
+    val fields = form.toSeq.filter(x => x._1.endsWith("-include") && x._2 == "true").map(_._1.stripSuffix("-include"))
     def valFor(f: String) = form.get(f) match {
       case Some(x) if x == NullUtils.str => None
       case Some(x) => Some(x)
       case None => form.get(f + "-date") match {
-        case Some(d) => form.get(f + "-time") match {
-          case Some(t) => Some(s"$d $t")
-          case None => throw new IllegalStateException(s"Cannot find matching time value for included date field [$f]")
-        }
-        case None => throw new IllegalStateException(s"Cannot find value for included field [$f]")
+        case Some(d) => Some(s"$d${form.get(f + "-time").map(" " + _).getOrElse("")}")
+        case None => Some(form.getOrElse(f + "-time", throw new IllegalStateException(s"Cannot find value for included field [$f]")))
       }
     }
     fields.map(f => DataField(f, valFor(f)))

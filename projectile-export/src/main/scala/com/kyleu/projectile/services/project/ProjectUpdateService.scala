@@ -1,27 +1,17 @@
 package com.kyleu.projectile.services.project
 
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
-import com.kyleu.projectile.models.input.{Input, InputTemplate}
+import com.kyleu.projectile.models.input.Input
 import com.kyleu.projectile.models.project.Project
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
 import com.kyleu.projectile.services.ProjectileService
 
 object ProjectUpdateService {
-  private[this] val updateDatabase = true
   private[this] val saveUnchanged = false
 
   def update(svc: ProjectileService, p: Project) = updateInput(svc, p, svc.getInput(p.input))
 
   def updateInput(svc: ProjectileService, p: Project, i: Input) = {
-    val i = svc.getInput(p.input)
-    if ((!updateDatabase) && i.template == InputTemplate.Postgres) {
-      Seq(s"Skipping update of database input [${i.key}]")
-    } else {
-      doUpdate(svc, p, i)
-    }
-  }
-
-  private[this] def doUpdate(svc: ProjectileService, p: Project, i: Input) = {
     val enumResults = processEnums(svc, p, i)
     val modelResults = processModels(svc, p, i)
     val serviceResults = processServices(svc, p, i)

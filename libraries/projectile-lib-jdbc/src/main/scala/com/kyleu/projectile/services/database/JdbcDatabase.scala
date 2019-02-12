@@ -66,7 +66,8 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
       time("execute", statement.getClass.getName) { executeUpdate(connection, statement) }
     } catch {
       case NonFatal(x) =>
-        log.error(s"Error executing [${statement.name}] with [${statement.values.size}] values and sql [${statement.sql}]", x)
+        val v = statement.values.mkString(", ")
+        log.error(s"Error executing [${statement.name}] with [${statement.values.size}] values and sql [${statement.sql}] (Values: $v)", x)
         throw x
     } finally {
       if (conn.isEmpty) { connection.close() }
@@ -80,7 +81,8 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
       time[A]("query", query.getClass.getName)(apply(connection, query))
     } catch {
       case NonFatal(x) =>
-        log.error(s"Error running query [${query.name}] with [${query.values.size}] values and sql [${query.sql}]", x)
+        val v = query.values.mkString(", ")
+        log.error(s"Error running query [${query.name}] with [${query.values.size}] values and sql [${query.sql}] (Values: $v)", x)
         throw x
     } finally {
       if (conn.isEmpty) { connection.close() }

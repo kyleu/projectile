@@ -4,7 +4,7 @@ import com.kyleu.projectile.models.database.DatabaseField
 import com.kyleu.projectile.models.database.DatabaseFieldType._
 import com.kyleu.projectile.models.result.filter.{Filter, FilterOp}
 import com.kyleu.projectile.models.result.orderBy.OrderBy
-import com.kyleu.projectile.util.{DateUtils, EncryptionUtils}
+import com.kyleu.projectile.util.{DateUtils, EncryptionUtils, StringUtils}
 
 object ResultFieldHelper {
   def sqlForField(t: String, field: String, fields: Seq[DatabaseField]) = fields.find(_.prop == field) match {
@@ -21,6 +21,8 @@ object ResultFieldHelper {
         case TimeType => v.map(DateUtils.fromTimeString)
         case TimestampType => v.map(DateUtils.sqlDateTimeFromString)
         case TimestampZonedType => v.map(DateUtils.sqlDateTimeFromString)
+        case TagsType => v.map(s => StringUtils.toMap(s).map(x => "\"" + x._1 + "\" => \"" + x._2 + "\"").mkString(","))
+        case _ if f.typ.key.endsWith("Array") => v.map(s => "{" + StringUtils.toList(s).map("\"" + _ + "\"").mkString(",") + "}")
         case _ => value
       }
     case None => throw new IllegalStateException(s"Invalid $t field [$field]. Allowed fields are [${fields.map(_.prop).mkString(", ")}]")

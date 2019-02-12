@@ -1,6 +1,6 @@
 package com.kyleu.projectile.services.cache
 
-import net.sf.ehcache.{CacheManager, Element}
+import net.sf.ehcache.{CacheManager, Element, ObjectExistsException}
 import org.apache.commons.lang3.reflect.TypeUtils
 
 import scala.reflect.ClassTag
@@ -12,11 +12,21 @@ object CacheService {
 
   private[this] var manager: Option[CacheManager] = None
   def mgr = manager.getOrElse {
-    val c = CacheManager.create()
-    c.addCache(projectId)
-    initialized = true
-    manager = Some(c)
-    c
+    synchronized {
+      manager.getOrElse {
+        val c = CacheManager.create()
+        try {
+          c.addCache(projectId)
+        } catch {
+          case x: ObjectExistsException =>
+            c.removeCache(projectId)
+            c.addCache(projectId)
+        }
+        initialized = true
+        manager = Some(c)
+        c
+      }
+    }
   }
 
   protected[this] def cache = mgr.getCache(projectId)

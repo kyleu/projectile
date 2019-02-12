@@ -9,41 +9,45 @@ object TwirlDataRowFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "DataRow")
     file.add(s"@(model: ${model.fullClassPath(config)})<tr>", 1)
-    model.searchFields.foreach { c =>
+
+    model.searchFields.foreach { field =>
       val href = model.pkFields match {
         case Nil => ""
         case fields =>
           val args = fields.map(f => s"model.${f.propertyName}").mkString(", ")
           s"""@${TwirlHelper.routesClass(config, model)}.view($args)"""
       }
-      if (model.pkFields.exists(pkField => pkField.propertyName == c.propertyName)) {
-        file.add(s"""<td><a href="$href" class="theme-text">@model.${c.propertyName}</a></td>""")
+      file.add(s"<td>", 1)
+      if (model.pkFields.exists(pkField => pkField.propertyName == field.propertyName)) {
+        file.add(s"""<a href="$href" class="theme-text">@model.${field.propertyName}</a>""")
       } else {
-        model.foreignKeys.find(_.references.forall(_.source == c.key)) match {
-          case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
-            file.add("<td>", 1)
-            val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
-            if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
-              throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
-            }
-
-            file.add(s"@model.${c.propertyName}")
-            if (c.required) {
-              file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${c.propertyName})">""", 1)
-              file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
-              file.add("</a>", -1)
-            } else {
-              file.add(s"@model.${c.propertyName}.map { v =>", 1)
-              file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">""", 1)
-              file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
-              file.add("</a>", -1)
-              file.add("}", -1)
-            }
-            file.add("</td>", -1)
-          case _ if c.t == FieldType.CodeType => file.add(s"<td><pre>@model.${c.propertyName}</pre></td>")
-          case _ => file.add(s"<td>@model.${c.propertyName}</td>")
+        field.t match {
+          case FieldType.CodeType => file.add(s"<pre>@model.${field.propertyName}</pre>")
+          case _ => file.add(s"@model.${field.propertyName}")
         }
       }
+
+      model.foreignKeys.find(_.references.forall(_.source == field.key)).foreach {
+        case fk if config.getModelOpt(fk.targetTable).isDefined =>
+          val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
+          if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
+            throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
+          }
+          if (field.required) {
+            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">""", 1)
+            file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
+            file.add("</a>", -1)
+          } else {
+            file.add(s"@model.${field.propertyName}.map { v =>", 1)
+            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">""", 1)
+            file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
+            file.add("</a>", -1)
+            file.add("}", -1)
+          }
+        case _ => // noop
+      }
+
+      file.add(s"</td>", -1)
     }
     file.add("</tr>", -1)
     file

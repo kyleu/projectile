@@ -1,0 +1,57 @@
+@import url(_materialize.less);
+
+// Navbar
+nav {
+  a {
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.nb-container {
+  height: 48px;
+}
+
+#topnav {
+  height: 48px;
+  line-height: 48px;
+
+  .button-collapse i {
+    height: 48px;
+    line-height: 48px;
+  }
+
+  .brand-logo {
+    margin: 0 14px;
+    font-size: 1.6rem;
+
+    &.center {
+      margin: 0;
+    }
+
+    i {
+      height: 48px;
+      line-height: 48px;
+      margin-right: 6px;
+    }
+  }
+
+  @media only screen and (max-width: 992px) {
+    .brand-logo {
+      margin: 0;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .fa-search {
+      margin-top: 20px;
+    }
+  }
+}
+
+main {
+  margin-top: 20px;
+}
+
+.margined {
+  margin: 20px;
+}

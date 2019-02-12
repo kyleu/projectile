@@ -1,10 +1,11 @@
 package com.kyleu.projectile.models.output
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.util.StringUtils
 
 object CommonImportHelper {
   def get(c: ExportConfiguration, s: String) = c.project.classOverrides.get(s) match {
-    case Some(o) => o.substring(0, o.lastIndexOf('.')).trim.split('.').filter(_.nonEmpty).toSeq -> o.substring(o.lastIndexOf('.') + 1).trim
+    case Some(o) => StringUtils.toList(o.substring(0, o.lastIndexOf('.')).trim, '.') -> o.substring(o.lastIndexOf('.') + 1).trim
     case None => (s match {
       case "Application" => c.systemPackage :+ "models"
       case "ApplicationDatabase" => c.systemPackage ++ Seq("services", "database")
@@ -40,6 +41,7 @@ object CommonImportHelper {
       case "Note" => c.systemPackage ++ Seq("models", "note")
       case "NoteSchema" => c.systemPackage ++ Seq("models", "graphql", "note")
       case "NoteService" => c.systemPackage :+ "services" :+ "note"
+      case "NullUtils" => c.utilitiesPackage
       case "OrderBy" => c.resultsPackage :+ "orderBy"
       case "PagingOptions" => c.resultsPackage :+ "paging"
       case "RelationCount" => c.systemPackage ++ Seq("models", "result")

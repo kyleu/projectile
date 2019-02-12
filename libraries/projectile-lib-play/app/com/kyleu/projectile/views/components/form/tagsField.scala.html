@@ -1,0 +1,5 @@
+@(
+    selected: Boolean, key: String, title: String, value: Option[Seq[com.kyleu.projectile.models.tag.Tag]], nullable: Boolean
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = "map") {
+  <input id="input-@key" class="tag-editor@if(nullable) { nullable}" data-t="tags" type="text" name="@key" value="@value.map(com.kyleu.projectile.util.StringUtils.fromTags).getOrElse("")" />
+}
