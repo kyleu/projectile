@@ -1,4 +1,4 @@
-package com.kyleu.projectile.models.supervisor
+package com.kyleu.projectile.models.connection
 
 import java.time.LocalDateTime
 import java.util.UUID

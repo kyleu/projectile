@@ -1,11 +1,11 @@
-package com.kyleu.projectile.services.supervisor
+package com.kyleu.projectile.services.connection
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, SupervisorStrategy}
-import com.kyleu.projectile.models.supervisor.InternalMessage._
-import com.kyleu.projectile.models.supervisor.{ConnectionDescription, InternalMessage}
+import com.kyleu.projectile.models.connection.ConnectionMessage._
+import com.kyleu.projectile.models.connection.{ConnectionDescription, ConnectionMessage}
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.util.{DateUtils, Logging}
 
@@ -50,13 +50,13 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
     case ss: ConnectionStarted => handleConnectionStarted(ss.id, ss.creds.id, ss.creds.name, ss.conn)
     case ss: ConnectionStopped => handleConnectionStopped(ss.id)
 
-    case GetSystemStatus => handleGetSystemStatus()
+    case GetConnectionStatus => handleGetConnectionStatus()
     case sst: ConnectionTraceRequest => handleSendConnectionTrace(sst)
     case sct: ClientTraceRequest => handleSendClientTrace(sct)
 
     case b: ConnectionSupervisor.Broadcast => connections.foreach(_._2.actorRef.tell(b.msg, self))
 
-    case im: InternalMessage => log.warn(s"Unhandled connection supervisor internal message [${im.getClass.getSimpleName}]")
+    case cm: ConnectionMessage => log.warn(s"Unhandled connection message [${cm.getClass.getSimpleName}]")
     case x => log.warn(s"ConnectionSupervisor encountered unknown message: ${x.toString}")
   }
 
@@ -64,7 +64,7 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
     ConnectionSupervisor.initialized = false
   }
 
-  private[this] def handleGetSystemStatus() = sender().tell(ConnectionStatus(connections.map(_._2.desc).toSeq.sortBy(_.username)), self)
+  private[this] def handleGetConnectionStatus() = sender().tell(ConnectionStatus(connections.map(_._2.desc).toSeq.sortBy(_.username)), self)
 
   private[this] def handleSendConnectionTrace(ct: ConnectionTraceRequest) = connectionById(ct.id) match {
     case Some(c) => c.actorRef forward ct
@@ -82,6 +82,6 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
   }
 
   protected[this] def handleConnectionStopped(id: UUID) = {
-    connections.remove(id).foreach(sock => log.debug(s"Connection [$id] [${sock.actorRef.path}] removed from Audit supervisor"))
+    connections.remove(id).foreach(sock => log.debug(s"Connection [$id] [${sock.actorRef.path}] removed from supervisor"))
   }
 }

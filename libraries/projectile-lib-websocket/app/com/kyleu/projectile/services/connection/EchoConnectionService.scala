@@ -3,6 +3,7 @@ package com.kyleu.projectile.services.connection
 import java.util.UUID
 
 import akka.actor.{ActorRef, Props}
+import com.kyleu.projectile.models.connection.ConnectionMessage.ConnectionTraceResponse
 import com.kyleu.projectile.services.Credentials
 import io.circe.Json
 
@@ -19,7 +20,10 @@ class EchoConnectionService(
 
   override def onConnect() = out.tell(Json.fromString("connected"), self)
 
-  override def receive = {
+  override def status() = ConnectionTraceResponse(id, Json.fromString("Echo Service"))
+
+  override def onMessage = {
     case j: Json => out.tell(j, self)
+    case x => throw new IllegalStateException(s"Invalid echo message [$x], json expected")
   }
 }

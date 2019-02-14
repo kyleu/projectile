@@ -17,7 +17,8 @@ object LibraryProjects {
     description := "Classes and utilities shared between Scala and Scala.js",
     libraryDependencies ++= {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum
+      // val magnolia = "io.circe" %%% "circe-magnolia-derivation" % "0.4.0"
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum // :+ magnolia
     },
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
   ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13").disablePlugins(AssemblyPlugin)
@@ -73,12 +74,10 @@ object LibraryProjects {
     description := "Common Scala.js classes used by code generated from Projectile",
     libraryDependencies ++= {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-      val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
       val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
       val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.2"
-
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) ++ Seq(jQuery, enumeratum, javaTime, jsDom)
+      Seq(jQuery, javaTime, jsDom)
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
 
