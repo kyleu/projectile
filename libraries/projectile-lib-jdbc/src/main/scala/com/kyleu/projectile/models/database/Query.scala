@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.database
 import com.kyleu.projectile.models.database.jdbc.JdbcRow
 
 trait RawQuery[A] {
-  def name: String
+  def name: String = this.getClass.getSimpleName
   def sql: String
   def values: Seq[Any] = Seq.empty
   def handle(results: java.sql.ResultSet): A

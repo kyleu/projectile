@@ -22,7 +22,7 @@ object ResultFieldHelper {
         case TimestampType => v.map(DateUtils.sqlDateTimeFromString)
         case TimestampZonedType => v.map(DateUtils.sqlDateTimeFromString)
         case TagsType => v.map(s => StringUtils.toMap(s).map(x => "\"" + x._1 + "\" => \"" + x._2 + "\"").mkString(","))
-        case _ if f.typ.key.endsWith("Array") => v.map(s => "{" + StringUtils.toList(s).map("\"" + _ + "\"").mkString(",") + "}")
+        case _ if f.typ.isList => v.map(s => "{" + StringUtils.toList(s).map("\"" + _ + "\"").mkString(",") + "}")
         case _ => value
       }
     case None => throw new IllegalStateException(s"Invalid $t field [$field]. Allowed fields are [${fields.map(_.prop).mkString(", ")}]")

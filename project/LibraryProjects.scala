@@ -105,8 +105,7 @@ object LibraryProjects {
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-play`, `projectile-lib-websocket`,
-    `projectile-lib-auth`, `projectile-lib-auth-graphql`
+    `projectile-lib-play`, `projectile-lib-auth`, `projectile-lib-auth-graphql`, `projectile-lib-websocket`
   )
 
   lazy val allReferences = all.map(_.project)

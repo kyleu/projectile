@@ -18,13 +18,12 @@ class ProjectSummaryService(val cfg: ConfigService) {
 
   def list(): Seq[ProjectSummary] = immediateList() ++ cfg.linkedConfigs.map(c => new ProjectSummaryService(c)).flatMap(_.list()).sortBy(_.key)
 
-  def getSummary(key: String): Option[ProjectSummary] = {
-    val c = cfg.configForProject(key).getOrElse(throw new IllegalStateException(s"Cannot find project with key [$key]"))
+  def getSummary(key: String): Option[ProjectSummary] = cfg.configForProject(key).map { c =>
     val d = c.projectDirectory
     val f = d / key / fn
     if (f.exists && f.isRegularFile && f.isReadable) {
       JacksonUtils.decodeJackson[ProjectSummary](f.contentAsString) match {
-        case Right(is) => Some(is.copy(key = key))
+        case Right(is) => is.copy(key = key)
         case Left(x) => throw x
       }
     } else {

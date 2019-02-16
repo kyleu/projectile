@@ -11,7 +11,14 @@ abstract class BaseQueries[T <: Product](val key: String, val tableName: String)
   protected def fromRow(row: Row): T
 
   protected def toDataSeq(t: T): Seq[Any] = t.productIterator.toSeq.zip(fields).map {
-    case x if x._2.typ == DatabaseFieldType.EncryptedStringType => EncryptionUtils.encrypt(x._1.toString)
+    case x if x._2.typ == DatabaseFieldType.EncryptedStringType => x._1 match {
+      case value: Option[_] => value.map(l => EncryptionUtils.encrypt(l.toString))
+      case _ => EncryptionUtils.encrypt(x._1.toString)
+    }
+    case x if x._2.typ.isList => x._1 match {
+      case value: Option[_] => value.map(l => "{" + l.asInstanceOf[List[_]].map("\"" + _ + "\"").mkString(",") + "}")
+      case _ => "{" + x._1.asInstanceOf[List[_]].map("\"" + _ + "\"").mkString(",") + "}"
+    }
     case x => x._1
   }
 

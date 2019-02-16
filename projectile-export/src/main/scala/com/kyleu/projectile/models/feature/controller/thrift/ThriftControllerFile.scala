@@ -48,7 +48,8 @@ object ThriftControllerFile {
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()
     file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    file.add(s"Future.successful(Ok(${(config.viewPackage :+ "html" :+ "admin" :+ "thrift").mkString(".")}.${service.propertyName}(request.identity)))")
+    val params = "request.identity, authActions"
+    file.add(s"Future.successful(Ok(${(config.viewPackage :+ "html" :+ "admin" :+ "thrift").mkString(".")}.${service.propertyName}($params)))")
     file.add("}", -1)
 
     service.methods.foreach(m => addMethod(service, m, config, file))

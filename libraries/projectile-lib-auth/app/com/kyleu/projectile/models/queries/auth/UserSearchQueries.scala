@@ -8,9 +8,9 @@ import com.kyleu.projectile.models.queries.EngineHelper.quote
 object UserSearchQueries {
   private[this] val tableName = SystemUserQueries.tableName
 
-  final case class IsUsernameInUse(name: String) extends SingleRowQuery[Boolean] {
+  final case class IsUsernameInUse(n: String) extends SingleRowQuery[Boolean] {
     override val sql = s"""select count(*) as c from ${quote(tableName)} where ${quote("username")} = ?"""
-    override val values = Seq(name)
+    override val values = Seq(n)
     override def map(row: Row) = row.as[Long]("c") != 0L
   }
 

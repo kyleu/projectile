@@ -15,7 +15,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
     val inputs = projectile.listInputs().map(_.key).sorted
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formSummary(projectile, ProjectSummary(
       template = ProjectTemplate.Custom,
-      key = "",
+      key = "new",
       input = inputs.headOption.getOrElse("")
     ), inputs)))
   }
