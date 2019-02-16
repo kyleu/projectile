@@ -51,9 +51,9 @@ object ThriftServiceFile {
       file.add(s"""def ${method.name}($args)(implicit td: TraceData): Future[$s] = trace("${method.name}") { _ =>""", 1)
       val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg)).mkString(", ")
       FieldTypeImports.imports(config, method.returnType).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
-      file.add(s"val request = Request($thriftServiceCanonicalName.${method.name.capitalize}.Args($argsMapped))")
-      file.add(s"val response = svc.${method.name}(request)")
-      file.add(s"response.map(_.value)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
+      file.add(s"val _request = Request($thriftServiceCanonicalName.${method.name.capitalize}.Args($argsMapped))")
+      file.add(s"val _response = svc.${method.name}(_request)")
+      file.add(s"_response.map(_.value)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
       file.add("}", -1)
     }
   }
