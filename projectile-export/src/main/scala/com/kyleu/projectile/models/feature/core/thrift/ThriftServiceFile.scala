@@ -34,7 +34,7 @@ object ThriftServiceFile {
     file.add(s"""class ${svc.className} @javax.inject.Inject() (url: String) extends ThriftServiceHelper("${svc.key}") {""", 1)
     file.add()
     file.add(s"""val svc: $thriftServiceCanonicalName.ReqRepServicePerEndpoint = """, 1)
-    file.add(s"""ThriftMux.client.servicePerEndpoint[$thriftServiceCanonicalName.ReqRepServicePerEndpoint](url, ${svc.className}) """, 2)
+    file.add(s"""ThriftMux.client.servicePerEndpoint[$thriftServiceCanonicalName.ReqRepServicePerEndpoint](url, "${svc.className}") """, 2)
 
     addMethods(thriftServiceCanonicalName, config, file, svc)
     file.add("}", -1)
