@@ -14,8 +14,6 @@ object ThriftServiceFile {
     file.addImport(Seq("scala", "concurrent"), "Future")
     val thriftService = svc.pkg.dropRight(1) :+ svc.key
 
-    file.addImport(thriftService, "ReqRepServicePerEndpoint")
-
     config.addCommonImport(file, "TraceData")
     config.addCommonImport(file, "ThriftFutureUtils", "toScalaFuture")
     config.addCommonImport(file, "ThriftService")
