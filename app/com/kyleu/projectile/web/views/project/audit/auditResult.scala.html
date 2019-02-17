@@ -4,7 +4,7 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.auditAll()">Run Again</a>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.auditAll()">Run Again</a>
       </div>
       <h5><i class="@com.kyleu.projectile.models.template.Icons.audit"></i> Audit Result</h5>
     </div>
@@ -14,7 +14,7 @@
     <div class="collection-header">
       @if(result.configMessages.nonEmpty) {
         <div class="right">
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix("all", "all", "config", "")">Fix All</a>
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix("all", "all", "config", "")">Fix All</a>
         </div>
       }
       <h6>Configuration Result</h6>
@@ -33,7 +33,7 @@
     <div class="collection-header">
       @if(result.outputMessages.nonEmpty) {
         <div class="right">
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix("all", "all", "output", "")">Fix All</a>
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix("all", "all", "output", "")">Fix All</a>
         </div>
       }
       <h6>Output Result</h6>

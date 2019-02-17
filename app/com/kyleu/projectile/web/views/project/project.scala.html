@@ -3,12 +3,12 @@
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Project Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formSummary(project.key)">Edit Summary</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formSummary(project.key)">Edit Summary</a></div>
       <h5><i class="@project.template.icon"></i> @if(project.description.trim.isEmpty) { @project.key } else { @project.description }</h5>
-      Built from <a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(project.input)">@project.input</a>
+      Built from <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(project.input)">@project.input</a>
     </div>
     <div class="collection-item">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formFeatures(project.key)">Edit Features</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formFeatures(project.key)">Edit Features</a></div>
       <h6>Features</h6>
       <div>
       @project.availableFeatures(inputType).map { feature =>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="collection-item">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formPaths(project.key)">Edit Paths</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formPaths(project.key)">Edit Paths</a></div>
       <h6>Path Overrides</h6>
       <div>
       @if(project.paths.isEmpty) {
@@ -35,7 +35,7 @@
     </div>
 
     <div class="collection-item">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formPackages(project.key)">Edit Packages</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formPackages(project.key)">Edit Packages</a></div>
       <h6>Package Overrides</h6>
       <div>
         @if(project.packages.isEmpty) {
@@ -50,7 +50,7 @@
     </div>
 
     <div class="collection-item">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formClassOverrides(project.key)">Edit Class Overrides</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formClassOverrides(project.key)">Edit Class Overrides</a></div>
       <h6>Class Overrides</h6>
       <div>
         @if(project.classOverrides.isEmpty) {
@@ -71,9 +71,9 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.formFeatures(project.key)">Default Features</a> /
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.enumBulkEditForm(project.key)">Bulk Edit</a> /
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.formNew(project.key)">Add</a>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.formFeatures(project.key)">Default Features</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.enumBulkEditForm(project.key)">Bulk Edit</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.formNew(project.key)">Add</a>
       </div>
       <h6><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @project.enums.size Enums</h6>
     </div>
@@ -83,7 +83,7 @@
     @project.enums.sortBy(_.key).map { e =>
       <div class="collection-item">
         <div class="right">@e.pkg.mkString(".")</div>
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.detail(project.key, e.key)">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.detail(project.key, e.key)">
           <i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @e.key
         </a>
       </div>
@@ -93,9 +93,9 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.formFeatures(project.key)">Default Features</a> /
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.modelBulkEditForm(project.key)">Bulk Edit</a> /
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.formNew(project.key)">Add</a>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.formFeatures(project.key)">Default Features</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.modelBulkEditForm(project.key)">Bulk Edit</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.formNew(project.key)">Add</a>
       </div>
       <h6><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @project.models.size Models</h6>
     </div>
@@ -105,7 +105,7 @@
     @project.models.sortBy(_.key).map { m =>
       <div class="collection-item">
         <div class="right">@m.pkg.mkString(".")</div>
-        <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.detail(project.key, m.key)">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.detail(project.key, m.key)">
           <i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @m.key
         </a>
       </div>
@@ -116,9 +116,9 @@
     <div class="collection with-header">
       <div class="collection-header">
         <div class="right">
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formFeatures(project.key)">Default Features</a> /
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.serviceBulkEditForm(project.key)">Bulk Edit</a> /
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formNew(project.key)">Add</a>
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formFeatures(project.key)">Default Features</a> /
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.serviceBulkEditForm(project.key)">Bulk Edit</a> /
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formNew(project.key)">Add</a>
         </div>
         <h6><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @project.services.size Services</h6>
       </div>
@@ -128,7 +128,7 @@
       @project.services.sortBy(_.key).map { svc =>
         <div class="collection-item">
           <div class="right">@svc.pkg.mkString(".")</div>
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.detail(project.key, svc.key)">
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.detail(project.key, svc.key)">
             <i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @svc.key
           </a>
         </div>

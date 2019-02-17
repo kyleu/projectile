@@ -9,13 +9,13 @@
     <div class="collection with-header">
       <div class="collection-header">
         <div class="right">
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.export(output.project.key)">Run Again</a>
-          (<a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.export(output.project.key, verbose = true)">verbose</a>)
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.export(output.project.key)">Run Again</a>
+          (<a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.export(output.project.key, verbose = true)">verbose</a>)
         </div>
         <h5><i class="@output.project.template.icon"></i> @output.project.key Export Result</h5>
         <em>
           @com.kyleu.projectile.util.NumberUtils.withCommas(output.fileCount) files generated for
-          <a class="theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.key</a>
+          <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(output.project.key)">@output.project.key</a>
           in @{
           com.kyleu.projectile.util.NumberUtils.withCommas(output.duration)
         }ms

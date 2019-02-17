@@ -2,4 +2,3 @@
 GET        /                      com.kyleu.projectile.controllers.connection.ConnectionActivityController.connectionList
 GET        /broadcast             com.kyleu.projectile.controllers.connection.ConnectionActivityController.broadcast(msg: Option[String] ?= None)
 GET        /connection/:id        com.kyleu.projectile.controllers.connection.ConnectionActivityController.connectionDetail(id: java.util.UUID)
-GET        /client/:id            com.kyleu.projectile.controllers.connection.ConnectionActivityController.clientDetail(id: java.util.UUID)

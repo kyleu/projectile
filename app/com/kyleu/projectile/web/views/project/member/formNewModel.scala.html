@@ -7,7 +7,7 @@
     </div>
     <div class="collection-item">
       <div class="right">
-        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.add(key, "all")" class="theme-text">Add All</a>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.add(key, "all")">Add All</a>
       </div>
       <h6>Models</h6>
       @if(inputModels.isEmpty) {
@@ -19,7 +19,7 @@
           @if(model._2) {
             @model._1 <em>(already added)</em>
           } else {
-            <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.add(key, model._1)" class="theme-text">@model._1</a>
+            <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.add(key, model._1)">@model._1</a>
           }
         </li>
       }

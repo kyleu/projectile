@@ -15,10 +15,8 @@ object ConnectionMessage {
 
   case object GetConnectionStatus extends ConnectionMessage
   final case class ConnectionTraceRequest(id: UUID) extends ConnectionMessage
-  final case class ClientTraceRequest(id: UUID) extends ConnectionMessage
 
   // Response
   final case class ConnectionStatus(connections: Seq[ConnectionDescription]) extends ConnectionMessage
   final case class ConnectionTraceResponse(id: UUID, data: Json) extends ConnectionMessage
-  final case class ClientTraceResponse(id: UUID, data: Json) extends ConnectionMessage
 }

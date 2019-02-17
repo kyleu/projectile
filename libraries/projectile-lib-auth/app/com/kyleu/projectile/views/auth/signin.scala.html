@@ -8,7 +8,7 @@
           <div class="card-content">
             @if(providers.nonEmpty) {
               <div class="right">@providers.map { p =>
-                <a class="theme-text" href="@actions.signinUrlForProvider(p)">
+                <a href="@actions.signinUrlForProvider(p)">
                   @if(p == "google") { Sign in with Google } else { @p }
                 </a>
               }</div>
@@ -47,7 +47,7 @@
           <p style="text-align: center;">
             @if(allowRegistration) {
               Not a member?
-              <a class="theme-text" href="@actions.registerUrl">Sign Up</a>.
+              <a href="@actions.registerUrl">Sign Up</a>.
             } else {
               Registration is disabled on this server. Contact your administrator to get an account.
             }

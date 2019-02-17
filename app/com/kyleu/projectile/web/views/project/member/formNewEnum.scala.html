@@ -7,7 +7,7 @@
     </div>
     <div class="collection-item">
       <div class="right">
-        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.add(key, "all")" class="theme-text">Add All</a>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.add(key, "all")">Add All</a>
       </div>
       <h6>Enums</h6>
       @if(inputEnums.isEmpty) {
@@ -19,7 +19,7 @@
             @if(enum._2) {
               @enum._1 <em>(already added)</em>
             } else {
-              <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.add(key, enum._1)" class="theme-text">@enum._1</a>
+              <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.add(key, enum._1)">@enum._1</a>
             }
           </li>
         }

@@ -3,7 +3,7 @@
 ) @com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
       <h5><i class="@input.template.icon"></i> @input.key</h5>
       @input.description (@input.hash)
     </div>
@@ -51,7 +51,7 @@
       @input.intEnums.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.enumDetail(input.key, e.key)" class="theme-text">@e.key</a>
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.enumDetail(input.key, e.key)">@e.key</a>
         </div>
       }
     </div>
@@ -65,7 +65,7 @@
       @input.stringEnums.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.enumDetail(input.key, e.key)" class="theme-text">@e.key</a>
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.enumDetail(input.key, e.key)">@e.key</a>
         </div>
       }
     </div>
@@ -79,7 +79,7 @@
       @input.structs.sortBy(_.key).map { s =>
         <div class="collection-item">
           <div class="right">@s.fields.size fields</div>
-          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.modelDetail(input.key, s.key)" class="theme-text">@s.key</a>
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.modelDetail(input.key, s.key)">@s.key</a>
         </div>
       }
     </div>
@@ -93,7 +93,7 @@
       @input.services.sortBy(_.key).map { s =>
         <div class="collection-item">
           <div class="right">@s.methods.size methods</div>
-          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.serviceDetail(input.key, s.key)" class="theme-text">@s.key</a>
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.serviceDetail(input.key, s.key)">@s.key</a>
         </div>
       }
     </div>

@@ -8,7 +8,7 @@
     <div class="collection with-header">
       <div class="collection-header">
         <div class="right">
-          <a onclick="return confirm('Are you sure you wish to remove input [@input.key]?')" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.remove(input.key)" class="theme-text">
+          <a onclick="return confirm('Are you sure you wish to remove input [@input.key]?')" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.remove(input.key)">
             Remove
           </a>
         </div>
@@ -24,7 +24,7 @@
       @if(input.isInstanceOf[com.kyleu.projectile.models.database.input.PostgresInput]) {
         <div class="collection-item">
           <div class="input-field">
-            <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")" class="theme-text">Connection Settings</a>
+            <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")">Connection Settings</a>
           </div>
         </div>
       }

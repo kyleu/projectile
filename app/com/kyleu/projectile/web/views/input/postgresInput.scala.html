@@ -3,7 +3,7 @@
 ) @com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a class="theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
       <h5><i class="@input.template.icon"></i> @input.key</h5>
       @input.description (@input.hash)
     </div>
@@ -34,7 +34,7 @@
       @input.enums.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
-          <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/enum/${e.key}.json")" class="theme-text">@e.key</a>
+          <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/enum/${e.key}.json")">@e.key</a>
         </div>
       }
     </div>
@@ -48,7 +48,7 @@
       @input.tables.sortBy(_.name).map { t =>
         <div class="collection-item">
           <div class="right">@t.columns.size columns</div>
-          <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/table/${t.name}.json")" class="theme-text">@t.name</a>
+          <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/table/${t.name}.json")">@t.name</a>
         </div>
       }
     </div>
@@ -62,7 +62,7 @@
       @input.views.sortBy(_.name).map { v =>
         <div class="collection-item">
           <div class="right">@v.columns.size columns</div>
-          <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/view/${v.name}.json")" class="theme-text">@v.name</a>
+          <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/view/${v.name}.json")">@v.name</a>
         </div>
       }
     </div>

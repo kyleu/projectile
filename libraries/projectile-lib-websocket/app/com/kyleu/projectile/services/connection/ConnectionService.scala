@@ -5,7 +5,6 @@ import java.util.UUID
 import akka.actor.{Actor, ActorRef, Timers}
 import com.kyleu.projectile.models.connection.ConnectionMessage._
 import com.kyleu.projectile.services.Credentials
-import com.kyleu.projectile.util.JsonSerializers.Json
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData
 
@@ -28,8 +27,6 @@ abstract class ConnectionService[Req, Rsp](
 
   final override def receive = {
     case _: ConnectionTraceRequest => sender().tell(status(), self)
-    case _: ClientTraceRequest => sendClientTrace()
-    case ct: ClientTraceResponse => returnClientTrace(ct.id, ct.data)
 
     case x if onMessage.isDefinedAt(x) => onMessage(x)
     case x => log.error(s"Unhandled connection service message [$x]")
@@ -37,20 +34,5 @@ abstract class ConnectionService[Req, Rsp](
 
   override def postStop() = {
     connSupervisor.tell(ConnectionStopped(id), self)
-  }
-
-  // Trace
-  private[this] var pendingClientTrace: Option[ActorRef] = None
-
-  protected[this] def sendClientTrace() = {
-    pendingClientTrace = Some(sender())
-    out.tell("trace", self)
-  }
-
-  protected[this] def returnClientTrace(id: UUID, data: Json) = pendingClientTrace match {
-    case Some(a) =>
-      pendingClientTrace = None
-      a.tell(ClientTraceResponse(id, data), self)
-    case None => throw new IllegalStateException("No pending client trace")
   }
 }

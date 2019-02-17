@@ -29,8 +29,7 @@
             @connections.map { connection =>
               <tr>
                 <td>
-                  <a href="@com.kyleu.projectile.controllers.connection.routes.ConnectionActivityController.connectionDetail(connection.id)" class="theme-text">@connection.id</a>
-                  (<a href="@com.kyleu.projectile.controllers.connection.routes.ConnectionActivityController.clientDetail(connection.id)" class="theme-text">client</a>)
+                  <a href="@com.kyleu.projectile.controllers.connection.routes.ConnectionActivityController.connectionDetail(connection.id)">@connection.id</a>
                 </td>
                 <td>@connection.userId</td>
                 <td>@connection.channel</td>

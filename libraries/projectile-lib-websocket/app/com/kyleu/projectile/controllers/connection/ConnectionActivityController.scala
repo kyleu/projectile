@@ -32,12 +32,6 @@ class ConnectionActivityController @javax.inject.Inject() (
     }
   }
 
-  def clientDetail(id: UUID) = withSession("activity.client.detail", admin = true) { implicit request => implicit td =>
-    ask(connSupervisor, ClientTraceRequest(id))(20.seconds).mapTo[ClientTraceResponse].map { c =>
-      Ok(com.kyleu.projectile.views.html.activity.clientDetail(request.identity, authActions, c))
-    }
-  }
-
   def broadcast(msg: Option[String]) = withSession("activity.broadcast", admin = true) { implicit request => implicit td =>
     msg.map(_.trim) match {
       case None => throw new IllegalStateException("Must provide \"msg\" parameter")

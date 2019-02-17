@@ -12,7 +12,7 @@
     </div>
     <div class="collection-item">
       @if(project.services.isEmpty) {
-        No services available. Why not <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formNew(project.key)" class="theme-text">add some</a>?
+        No services available. Why not <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formNew(project.key)">add some</a>?
       } else {
         <table>
           <thead>
@@ -25,8 +25,8 @@
                 <th style="width: 120px;">
                   @f.title
                   <div>
-                    <a href="" onclick="checkAll('@f.value'); return false;" class="theme-text">All</a> /
-                    <a href="" onclick="uncheckAll('@f.value'); return false;" class="theme-text">@com.kyleu.projectile.util.NullUtils.str</a>
+                    <a href="" onclick="checkAll('@f.value'); return false;">All</a> /
+                    <a href="" onclick="uncheckAll('@f.value'); return false;">@com.kyleu.projectile.util.NullUtils.str</a>
                   </div>
                 </th>
               }
