@@ -7,6 +7,7 @@ import akka.stream.Materializer
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.BinarySerializers.Pickler
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.web.util.WebsocketUtils
 import com.mohiva.play.silhouette.api.HandlerResult
@@ -22,7 +23,7 @@ object WebsocketController {
   }
 }
 
-abstract class WebsocketController[ClientMsg: Decoder, ServerMsg: Encoder](name: String) extends AuthController(name) {
+abstract class WebsocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encoder: Pickler](name: String) extends AuthController(name) {
   implicit def system: ActorSystem
   implicit def materializer: Materializer
 
@@ -30,14 +31,14 @@ abstract class WebsocketController[ClientMsg: Decoder, ServerMsg: Encoder](name:
 
   private[this] val formatter = new MessageFrameFormatter[ClientMsg, ServerMsg]()
 
-  def connectAnonymous() = WebSocket.accept[ClientMsg, ServerMsg] { request =>
+  def connectAnonymous(binary: Boolean) = WebSocket.accept[ClientMsg, ServerMsg] { request =>
     val connectionId = UUID.randomUUID()
     WebsocketUtils.actorRef(connectionId) { out =>
       onConnect(connectionId = connectionId, creds = Credentials.anonymous, out = out, request = request)
     }
-  }(formatter.transformer())
+  }(formatter.transformer(binary))
 
-  def connect() = WebSocket.acceptOrResult[ClientMsg, ServerMsg] { request =>
+  def connect(binary: Boolean) = WebSocket.acceptOrResult[ClientMsg, ServerMsg] { request =>
     val connectionId = UUID.randomUUID()
     implicit val req: Request[AnyContent] = Request(request, AnyContentAsEmpty)
     app.silhouette.UserAwareRequestHandler { ua => Future.successful(HandlerResult(Ok, ua.identity)) }.map {
@@ -49,5 +50,5 @@ abstract class WebsocketController[ClientMsg: Decoder, ServerMsg: Encoder](name:
         onConnect(connectionId = connectionId, request = request, creds = creds, out = out)
       })
     }
-  }(formatter.transformer())
+  }(formatter.transformer(binary))
 }

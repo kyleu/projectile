@@ -18,7 +18,8 @@ object LibraryProjects {
     libraryDependencies ++= {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
       // val magnolia = "io.circe" %%% "circe-magnolia-derivation" % "0.4.0"
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum // :+ magnolia
+      val boopickle = "me.chrons" %%% "boopickle" % Utils.booPickleVersion
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum /* :+ magnolia */ :+ boopickle
     },
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
   ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13").disablePlugins(AssemblyPlugin)
@@ -76,7 +77,7 @@ object LibraryProjects {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
       val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
-      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.2"
+      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.6"
       Seq(jQuery, javaTime, jsDom)
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
