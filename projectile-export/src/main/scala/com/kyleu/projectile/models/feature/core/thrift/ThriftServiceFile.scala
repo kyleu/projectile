@@ -10,6 +10,7 @@ import com.kyleu.projectile.models.thrift.input.{ThriftFileHelper, ThriftMethodH
 object ThriftServiceFile {
   def export(config: ExportConfiguration, svc: ExportService) = {
     val file = ScalaFile(path = OutputPath.ServerSource, dir = svc.pkg, key = svc.className)
+    val classCanonicalName = (svc.pkg :+ svc.className).mkString(".")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
     val thriftService = svc.pkg.dropRight(1) :+ svc.key
@@ -23,6 +24,18 @@ object ThriftServiceFile {
 
     val thriftServiceCanonicalName = thriftService.mkString(".")
     val thriftReqRepServicePerEndpointCanonicalName = s"$thriftServiceCanonicalName.ReqRepServicePerEndpoint"
+
+    file.add(
+      s"""
+         |/***
+         |* {{{
+         |* val svcPerEndpoint = $classCanonicalName.mkServicePerEndpoint(url)
+         |* val myService = $classCanonicalName
+         |*   .from(svcPerEndpoint)
+         |*   .withTraceDataSerializer(td => Map.empty)
+         |* }}}
+         |*/
+       """.stripMargin)
     file.add(s"object ${svc.className} extends ThriftService(", 1)
     file.add(s"""key = "${svc.key}",""")
     file.add(s"""pkg = "${svc.pkg.mkString(".")}",""")
