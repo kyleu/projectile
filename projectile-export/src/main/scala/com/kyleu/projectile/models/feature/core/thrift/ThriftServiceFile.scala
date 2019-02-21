@@ -64,7 +64,7 @@ object ThriftServiceFile {
     file.add(s"""import ${svc.className}._""")
     file.add()
     file.add("@javax.inject.Singleton")
-    file.add(s"""class ${svc.className} @javax.inject.Inject() (svc: $thriftServiceCanonicalName.ReqRepServicePerEndpoint, options: Options = Options.default) {""", 1)
+    file.add(s"""class ${svc.className} @javax.inject.Inject() (svc: $thriftServiceCanonicalName.ReqRepServicePerEndpoint, options: ${svc.className}.Options = ${svc.className}.Options.default) {""", 1)
     file.add(s"""private def injectTraceDataToHeaders(options: Options)(headers: Map[String, String], td: TraceData): Map[String, String] = {""", 1)
     file.add(s"""options.traceDataSerializer match {""", 1)
     file.add(s"""case Some(traceDataSerializer) => headers ++ traceDataSerializer(td)""")
