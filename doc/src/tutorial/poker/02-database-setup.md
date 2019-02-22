@@ -3,7 +3,7 @@
 @@@ note { title=Prerequisites }
 
 This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate.poker), 
-and have completed the [previous tutorial step](01_first-steps.md)
+and have completed the [previous tutorial step](01-hello-world.md)
 
 @@@
 
@@ -21,4 +21,4 @@ Then, run [schema.sql](https://github.com/KyleU/estimate.poker/blob/master/ddl/s
 
 Connect to your database, and run `select * from session`. If at least one row comes back, you're in business.
 
-Now it's time to configure Projectile, giving it the configuration it needs to generate some code, so @ref[get going](03_adding-projectile.md)!
+Now it's time to configure Projectile, giving it the configuration it needs to generate some code, so @ref[get going](03-adding-projectile.md)!

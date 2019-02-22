@@ -3,7 +3,7 @@
 @@@ note { title=Prerequisites }
 
 This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate.poker),
-checked out tag `tutorial-2`, and have created a database as described in the [previous tutorial step](02_database-setup.md) 
+checked out tag `tutorial-2`, and have created a database as described in the [previous tutorial step](02-database-setup.md) 
 
 @@@
 

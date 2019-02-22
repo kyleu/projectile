@@ -1,4 +1,4 @@
-# First Steps
+# Hello World
 
 This tutorial will lead you through creating a real-time web application that facilitates [planning poker](https://en.wikipedia.org/wiki/Planning_poker) sessions.
 
@@ -53,6 +53,7 @@ The rest of the files are common sbt boilerplate, setting the correct sbt and Ja
 
 From the directory you cloned the project to, run `sbt` (you'll need sbt installed, obviously). From the interactive command prompt, you can run tasks like `compile` and `publish`.
 
-If you `run` the project, `Entrypoint` will be called, which print's the obligatory "Hello World".
+If you `run` the project, `Entrypoint` will be called, which print's the obligatory "Hello World". 
+You can also run the sbt task by calling `projectile`, which will print the usage instructions
 
-There's not much to be impressed by yet, so let's @ref[move on](02_database-setup.md)!
+There's not much to be impressed by yet, so let's @ref[move on](02-database-setup.md)!

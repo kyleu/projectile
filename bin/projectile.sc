@@ -1,6 +1,6 @@
 interp.load.ivy(
-  coursier.Dependency(coursier.Module("com.kyleu", "projectile_2.12"), "1.1.4"),
-  coursier.Dependency(coursier.Module("com.kyleu", "projectile_2.12"), "1.1.4", attributes = coursier.Attributes(classifier = "assets"))
+  coursier.Dependency(coursier.Module("com.kyleu", "projectile_2.12"), "1.3.0"),
+  coursier.Dependency(coursier.Module("com.kyleu", "projectile_2.12"), "1.3.0", attributes = coursier.Attributes(classifier = "assets"))
 )
 
 @

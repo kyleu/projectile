@@ -2,9 +2,9 @@
 
 @@@ index
 
-* [First Steps](01_first-steps.md)
-* [Scala Project](02_database-setup.md)
-* [Adding Projectile](03_adding-projectile.md)
+* [First Steps](01-hello-world.md)
+* [Scala Project](02-database-setup.md)
+* [Adding Projectile](03-adding-projectile.md)
 
 @@@
 
@@ -21,10 +21,10 @@ You can see the end result of this tutorial at https://estimate.poker
 
 ## Overview
 
-- @ref[First Steps](01_first-steps.md) will help you clone and build an initial Scala sbt project
+- @ref[First Steps](01-hello-world.md) will help you clone and build an initial Scala sbt project
 
-- @ref[Database Setup](02_database-setup.md) will guide you though configuring a new postgres database
+- @ref[Database Setup](02-database-setup.md) will guide you though configuring a new postgres database
 
-- @ref[Adding Projectile](03_adding-projectile.md) will use Projectile to create our first generated classes
+- @ref[Adding Projectile](03-adding-projectile.md) will use Projectile to create our first generated classes
 
 
