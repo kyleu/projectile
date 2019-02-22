@@ -1,9 +1,9 @@
 package com.kyleu.projectile.models.thrift.input
 
 import com.kyleu.projectile.models.export.ExportEnum
-import com.kyleu.projectile.models.input.{InputType, Input, InputSummary, InputTemplate}
+import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate, InputType}
 import com.kyleu.projectile.models.output.ExportHelper
-import com.kyleu.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
+import com.kyleu.projectile.models.thrift.schema._
 
 object ThriftInput {
   def fromSummary(is: InputSummary, files: Seq[String]) = ThriftInput(key = is.key, description = is.description, files = files)
@@ -17,6 +17,7 @@ case class ThriftInput(
     intEnums: Seq[ThriftIntEnum] = Nil,
     stringEnums: Seq[ThriftStringEnum] = Nil,
     structs: Seq[ThriftStruct] = Nil,
+    unions: Seq[ThriftUnion] = Nil,
     services: Seq[ThriftService] = Nil
 ) extends Input {
   override def template = InputTemplate.Thrift
@@ -41,15 +42,19 @@ case class ThriftInput(
   }
 
   override lazy val exportEnums = stringEnums.map(e => exportEnum(e.key)) ++ intEnums.map(e => exportEnum(e.key))
-
   lazy val exportModelNames = structs.map(_.key).toSet
 
   override def exportModel(k: String) = structs.find(_.key == k) match {
     case Some(struct) => ThriftExportModel.loadStructModel(struct, this)
     case None => throw new IllegalStateException(s"Cannot find struct [$k] in input [$key]")
   }
-
   override lazy val exportModels = structs.map(e => exportModel(e.key))
+
+  override def exportUnion(k: String) = unions.find(_.key == k) match {
+    case Some(union) => ThriftExportUnion.loadUnion(union, this)
+    case None => throw new IllegalStateException(s"Cannot find union [$k] in input [$key]")
+  }
+  override lazy val exportUnions = unions.map(u => exportUnion(u.key))
 
   override def exportService(k: String) = services.find(_.key == k) match {
     case Some(svc) => ThriftExportService.loadService(svc, this)

@@ -37,11 +37,11 @@ object IntEnumFile {
     file
   }
 
-  private[this] def addFields(model: ExportEnum, file: ScalaFile) = model.valuesWithClassNames.foreach { v =>
+  private[this] def addFields(enum: ExportEnum, file: ScalaFile) = enum.valuesWithClassNames.foreach { v =>
     val (i, s) = v._1.indexOf(':') match {
       case -1 => 0 -> v._1
       case x => v._1.substring(0, x).toInt -> v._1.substring(x + 1)
     }
-    file.add(s"""case object ${ExportHelper.toClassName(v._2)} extends ${model.className}($i, "$s")""")
+    file.add(s"""case object ${ExportHelper.toClassName(v._2)} extends ${enum.className}($i, "$s")""")
   }
 }

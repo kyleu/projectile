@@ -47,6 +47,13 @@ GET         /:key/model/:m                 com.kyleu.projectile.web.controllers.
 POST        /:key/model/:m                 com.kyleu.projectile.web.controllers.project.ProjectModelController.save(key, m)
 GET         /:key/model/:m/remove          com.kyleu.projectile.web.controllers.project.ProjectModelController.remove(key, m)
 
+# Unions
+GET         /:key/union                    com.kyleu.projectile.web.controllers.project.ProjectUnionController.formNew(key)
+GET         /:key/union/add                com.kyleu.projectile.web.controllers.project.ProjectUnionController.add(key, enumKey)
+GET         /:key/union/:e                 com.kyleu.projectile.web.controllers.project.ProjectUnionController.detail(key, e)
+POST        /:key/union/:e                 com.kyleu.projectile.web.controllers.project.ProjectUnionController.save(key, e)
+GET         /:key/union/:e/remove          com.kyleu.projectile.web.controllers.project.ProjectUnionController.remove(key, e)
+
 # Services
 GET         /:key/services                 com.kyleu.projectile.web.controllers.project.BulkProjectController.serviceBulkEditForm(key)
 POST        /:key/services                 com.kyleu.projectile.web.controllers.project.BulkProjectController.serviceBulkEdit(key)

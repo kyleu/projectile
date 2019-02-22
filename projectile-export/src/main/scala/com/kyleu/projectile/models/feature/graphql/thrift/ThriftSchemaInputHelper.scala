@@ -37,6 +37,7 @@ object ThriftSchemaInputHelper {
     case ListType(typ) => s"ListInputType(${graphQlInputTypeFor(typ, config)})"
     case SetType(typ) => s"ListInputType(${graphQlInputTypeFor(typ, config)})"
     case MapType(_, _) => "StringType"
+    case UnionType(_, _) => "StringType"
 
     case JsonType => "StringType"
     case CodeType => "StringType"

@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.feature.core
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.core.db.{EnumFile, ModelFile}
 import com.kyleu.projectile.models.feature.core.graphql.{GraphQLEnumFile, GraphQLFragmentFile, GraphQLInputFile, GraphQLOperationFile}
-import com.kyleu.projectile.models.feature.core.thrift.{IntEnumFile, StringEnumFile, StructModelFile, ThriftServiceFile}
+import com.kyleu.projectile.models.feature.core.thrift._
 import com.kyleu.projectile.models.feature.{EnumFeature, FeatureLogic, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.InputType
 
@@ -29,12 +29,19 @@ object CoreLogic extends FeatureLogic {
         case InputType.Model.GraphQLReference => Nil
       }
     }
+    val unions = config.unions.flatMap { union =>
+      union.inputType match {
+        case InputType.Union.ThriftUnion => Seq(ThriftUnionFile.export(config, union).rendered)
+        case InputType.Union.GraphQLUnion => Nil
+      }
+    }
     val services = config.services.filter(_.features(ServiceFeature.Core)).flatMap { svc =>
       svc.inputType match {
         case InputType.Service.ThriftService => Seq(ThriftServiceFile.export(config, svc).rendered)
       }
     }
-    debug(s"Exported [${enums.size}] enums, [${models.size}] models, and [${services.size}] services, creating [${models.size + enums.size}] files")
-    enums ++ models ++ services
+    val fc = enums.size + models.size + unions.size + services.size
+    debug(s"Exported [${enums.size}] enums, [${models.size}] models, [${unions.size}] unions, and [${services.size}] services, creating [${fc}] files")
+    enums ++ models ++ unions ++ services
   }
 }

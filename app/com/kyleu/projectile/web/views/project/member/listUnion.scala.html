@@ -1,0 +1,21 @@
+@(inputType: com.kyleu.projectile.models.input.InputTemplate, project: com.kyleu.projectile.models.project.Project)@if(inputType.supportsUnion) {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.formNew(project.key)">Add</a>
+      </div>
+      <h6><i class=" @com.kyleu.projectile.models.template.Icons.union"></i> @project.unions.size Unions</h6>
+    </div>
+    @if(project.unions.isEmpty) {
+      <div class="collection-item">No project unions.</div>
+    }
+    @project.unions.sortBy(_.key).map { union =>
+      <div class="collection-item">
+        <div class="right">@union.pkg.mkString(".")</div>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.detail(project.key, union.key)">
+          <i class=" @com.kyleu.projectile.models.template.Icons.union"></i> @union.key
+        </a>
+      </div>
+    }
+  </div>
+}

@@ -7,8 +7,11 @@ sealed abstract class InputTemplate(
     override val value: String,
     val title: String,
     val description: String,
-    val icon: String
-) extends StringEnumEntry
+    val icon: String,
+) extends StringEnumEntry {
+  def supportsUnion = false
+  def supportsService = false
+}
 
 object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[InputTemplate] {
   case object Postgres extends InputTemplate(
@@ -23,14 +26,19 @@ object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[Inpu
     title = "Thrift Definitions",
     description = "Enums, structs, and services from a collection of Thrift IDL files",
     icon = Icons.thrift
-  )
+  ) {
+    override val supportsUnion = true
+    override val supportsService = true
+  }
 
   case object GraphQL extends InputTemplate(
     value = "graphql",
     title = "GraphQL Queries",
     description = "GraphQL query models from a file containing GraphQL queries",
     icon = Icons.graphql
-  )
+  ) {
+    override val supportsUnion = true
+  }
 
   case object Filesystem extends InputTemplate(
     value = "filesystem",

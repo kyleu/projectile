@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.export.config
 
-import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportService}
+import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportService, ExportUnion}
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.output.{CommonImportHelper, OutputPackage}
 import com.kyleu.projectile.models.project.Project
@@ -15,6 +15,7 @@ case class ExportConfiguration(
     project: Project,
     enums: Seq[ExportEnum],
     models: Seq[ExportModel],
+    unions: Seq[ExportUnion],
     services: Seq[ExportService]
 ) {
   val applicationPackage = project.getPackage(OutputPackage.Application)
@@ -35,6 +36,11 @@ case class ExportConfiguration(
   def getModelOpt(k: String) = models.find(_.key == k)
   def getModel(k: String, ctx: String) = getModelOpt(k).getOrElse {
     throw new IllegalStateException(s"No model for [$ctx] available with name [$k] among candidates [${models.map(_.key).sorted.mkString(", ")}]")
+  }
+
+  def getUnionOpt(k: String) = unions.find(_.key == k)
+  def getUnion(k: String, ctx: String) = getUnionOpt(k).getOrElse {
+    throw new IllegalStateException(s"No union for [$ctx] available with name [$k] among candidates [${unions.map(_.key).sorted.mkString(", ")}]")
   }
 
   def getServiceOpt(k: String) = services.find(_.key == k)

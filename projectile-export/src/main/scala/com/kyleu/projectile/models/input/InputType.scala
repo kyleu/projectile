@@ -43,6 +43,22 @@ object InputType {
     override val values = findValues
   }
 
+  sealed abstract class Union(
+      override val value: String,
+      val isDatabase: Boolean = false,
+      val isThrift: Boolean = false,
+      val isGraphQL: Boolean = false
+  ) extends StringEnumEntry {
+    override val toString = value
+  }
+
+  object Union extends StringEnum[Union] with StringCirceEnum[Union] {
+    case object ThriftUnion extends Union(value = "thrift-union", isThrift = true)
+    case object GraphQLUnion extends Union(value = "graphql-union", isGraphQL = true)
+
+    override val values = findValues
+  }
+
   sealed abstract class Service(
       override val value: String,
       val isDatabase: Boolean = false,

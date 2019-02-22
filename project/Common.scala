@@ -7,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.2.0"
+    val app = "1.3.0"
     val scala = "2.12.8"
   }
 
@@ -40,7 +40,6 @@ object Common {
     publishMavenStyle := true,
 
     publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
-    // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
   ) ++ (if(profilingEnabled) {
     Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0"))
   } else {

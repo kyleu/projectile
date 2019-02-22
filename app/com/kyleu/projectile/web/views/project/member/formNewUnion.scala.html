@@ -1,0 +1,29 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, key: String, inputUnions: Seq[(String, Boolean)])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Union") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.union"></i> New [@key] Union</h5>
+    </div>
+    <div class="collection-item">
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.add(key, "all")">Add All</a>
+      </div>
+      <h6>Unions</h6>
+      @if(inputUnions.isEmpty) {
+        <em>No available unions</em>
+      }
+      <ul>
+        @inputUnions.map { union =>
+          <li>
+            @if(union._2) {
+              @union._1 <em>(already added)</em>
+            } else {
+              <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.add(key, union._1)">@union._1</a>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+}

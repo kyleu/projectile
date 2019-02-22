@@ -42,6 +42,10 @@ object ExportFieldThrift {
     case ListType(typ) => s"list<${thriftType(typ, config)}>"
     case SetType(typ) => s"set<${thriftType(typ, config)}>"
     case MapType(k, v) => s"map<${thriftType(k, config)}, ${thriftType(v, config)}>"
+    case UnionType(k, _) => config.getUnionOpt(k) match {
+      case Some(u) => u.className
+      case None => "string"
+    }
 
     case JsonType => "string"
     case CodeType => "string"

@@ -34,7 +34,7 @@ object StringEnumFile {
     file
   }
 
-  private[this] def addFields(model: ExportEnum, file: ScalaFile) = model.valuesWithClassNames.foreach { v =>
-    file.add(s"""case object ${v._2} extends ${model.className}("${v._1}")""")
+  private[this] def addFields(enum: ExportEnum, file: ScalaFile) = enum.valuesWithClassNames.foreach { v =>
+    file.add(s"""case object ${v._2} extends ${enum.className}("${v._1}")""")
   }
 }

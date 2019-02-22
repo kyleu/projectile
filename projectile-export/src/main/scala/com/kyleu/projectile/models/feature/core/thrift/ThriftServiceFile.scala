@@ -31,7 +31,7 @@ object ThriftServiceFile {
     file.add("@javax.inject.Singleton")
     file.add(s"""class ${svc.className} @javax.inject.Inject() (url: String) extends ThriftServiceHelper("${svc.key}") {""", 1)
     file.add()
-    file.add(s"""val svc = ThriftMux.client.servicePerEndpoint[$thriftServiceCanonicalName.ReqRepServicePerEndpoint](url, "${svc.className}")""", 1)
+    file.add(s"""val svc = ThriftMux.client.servicePerEndpoint[$thriftServiceCanonicalName.ReqRepServicePerEndpoint](url, "${svc.className}")""")
     addMethods(thriftServiceCanonicalName, config, file, svc)
     file.add("}", -1)
 

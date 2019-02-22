@@ -32,10 +32,6 @@ case class PostgresInput(
 ) extends Input {
   override def template = InputTemplate.Postgres
 
-  private[this] def getPostgresEnum(k: String) = enums.find(_.key == k).getOrElse {
-    throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${enums.map(_.key).mkString(", ")}]")
-  }
-
   override def exportEnum(key: String) = {
     val e = getPostgresEnum(key)
     ExportEnum(
@@ -45,7 +41,6 @@ case class PostgresInput(
       values = e.values
     )
   }
-
   override lazy val exportEnums = enums.map(e => exportEnum(e.key))
 
   override def exportModel(k: String) = {
@@ -57,11 +52,12 @@ case class PostgresInput(
       }
     }
   }
-
   override lazy val exportModels = tables.map(e => exportModel(e.name))
 
-  override def exportService(k: String) = throw new IllegalStateException("Services not supported for Postgres inputs")
+  override def exportUnion(k: String) = throw new IllegalStateException("What does a union even mean for postgres?")
+  override lazy val exportUnions = Nil
 
+  override def exportService(k: String) = throw new IllegalStateException("Services not supported for Postgres inputs")
   override def exportServices = Nil
 
   def newConnection() = {
@@ -71,5 +67,9 @@ case class PostgresInput(
     props.setProperty("password", password)
     props.setProperty("ssl", ssl.toString)
     DriverManager.getConnection(url, props)
+  }
+
+  private[this] def getPostgresEnum(k: String) = enums.find(_.key == k).getOrElse {
+    throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${enums.map(_.key).mkString(", ")}]")
   }
 }

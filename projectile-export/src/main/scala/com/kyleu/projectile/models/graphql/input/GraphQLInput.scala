@@ -4,7 +4,7 @@ import better.files.File
 import com.kyleu.projectile.models.export.ExportService
 import com.kyleu.projectile.models.graphql.input.GraphQLOptions.SchemaQueries
 import com.kyleu.projectile.models.graphql.parse.GraphQLDocumentParser
-import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate, InputType}
+import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.kyleu.projectile.services.graphql.GraphQLLoader
 
 object GraphQLInput {
@@ -40,6 +40,9 @@ case class GraphQLInput(
   override def exportEnum(k: String) = exportEnums.find(_.key == k).getOrElse {
     throw new IllegalStateException(s"No input enum defined with key [$k] among candidates [${exportEnums.map(_.key).sorted.mkString(", ")}]")
   }
+
+  override def exportUnion(k: String) = throw new IllegalStateException("Currently unable to support GraphQL unions")
+  override lazy val exportUnions = Nil
 
   override lazy val exportModels = parsedObjects.collect { case Right(x) => x }
   override def exportModel(k: String) = exportModels.find(_.key == k).getOrElse {

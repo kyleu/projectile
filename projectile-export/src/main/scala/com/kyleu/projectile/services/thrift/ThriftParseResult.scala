@@ -1,7 +1,7 @@
 package com.kyleu.projectile.services.thrift
 
 import com.facebook.swift.parser.model._
-import com.kyleu.projectile.models.thrift.schema.{ThriftIntEnum, ThriftService, ThriftStringEnum, ThriftStruct}
+import com.kyleu.projectile.models.thrift.schema._
 
 case class ThriftParseResult(
     filename: String,
@@ -31,6 +31,9 @@ case class ThriftParseResult(
 
   lazy val structs = decls.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).map(ThriftStruct.fromStruct(_, pkg))
   lazy val allStructs = structs ++ includes.flatMap(_.structs)
+
+  lazy val unions = decls.filter(_.isInstanceOf[Union]).map(_.asInstanceOf[Union]).map(ThriftUnion.fromStruct(_, pkg))
+  lazy val allUnions = unions ++ includes.flatMap(_.unions)
 
   lazy val services = decls.filter(_.isInstanceOf[Service]).map(_.asInstanceOf[Service]).map(ThriftService.fromThrift(_, pkg))
   lazy val allServices = services ++ includes.flatMap(_.services)

@@ -24,6 +24,7 @@ object Icons {
   val enum = fa("tag")
 
   val model = fa("puzzle-piece")
+  val union = fa("magnet")
   val service = fa("rocket")
 
   val table = fa("folder-open-o")

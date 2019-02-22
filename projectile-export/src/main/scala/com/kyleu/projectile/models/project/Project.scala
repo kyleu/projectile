@@ -1,13 +1,10 @@
 package com.kyleu.projectile.models.project
 
-import java.time.LocalDateTime
-
 import io.scalaland.chimney.dsl._
 import com.kyleu.projectile.models.output.{OutputPackage, OutputPath}
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.InputTemplate
-import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
-import com.kyleu.projectile.util.DateUtils
+import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
 import com.kyleu.projectile.util.JsonSerializers._
 
 object Project {
@@ -26,6 +23,7 @@ case class Project(
     classOverrides: Map[String, String] = Map.empty,
     enums: Seq[EnumMember] = Nil,
     models: Seq[ModelMember] = Nil,
+    unions: Seq[UnionMember] = Nil,
     services: Seq[ServiceMember] = Nil,
     defaultEnumFeatures: Set[String] = Set("core"),
     defaultModelFeatures: Set[String] = Set("core", "json"),
@@ -59,6 +57,9 @@ case class Project(
   def getModelOpt(model: String) = models.find(_.key == model)
   def getModel(model: String) = getModelOpt(model).getOrElse(notFound("model", model, models.map(_.key)))
   def modelFeatures = ModelFeature.values.filter(e => e.dependsOn.forall(features.apply))
+
+  def getUnionOpt(union: String) = unions.find(_.key == union)
+  def getUnion(union: String) = getUnionOpt(union).getOrElse(notFound("union", union, unions.map(_.key)))
 
   def getServiceOpt(svc: String) = services.find(_.key == svc)
   def getService(svc: String) = getServiceOpt(svc).getOrElse(notFound("service", svc, services.map(_.key)))

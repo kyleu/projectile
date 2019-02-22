@@ -49,6 +49,7 @@ object DateUtils {
 
   private[this] val dtFmtIso = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
   private[this] val dtFmtDefault = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  private[this] val dtFmtStd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
   private[this] val dtFmtAmPm = new SimpleDateFormat("yyyy-MM-dd hh:mma")
 
   def parseIsoOffsetDateTime(s: String): Option[ZonedDateTime] = {
@@ -70,9 +71,7 @@ object DateUtils {
       case _: java.text.ParseException => None
     }
     sqlTimestampFromIsoOffsetDateTime(s)
-      .orElse(parse(dtFmtIso))
-      .orElse(parse(dtFmtDefault))
-      .orElse(parse(dtFmtAmPm))
+      .orElse(parse(dtFmtIso)).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtStd)).orElse(parse(dtFmtAmPm))
       .getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]"))
   }
 }

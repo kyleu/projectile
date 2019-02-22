@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.input
 
-import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportService}
+import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportService, ExportUnion}
 
 abstract class Input() extends Ordered[Input] {
   def template: InputTemplate
@@ -13,6 +13,9 @@ abstract class Input() extends Ordered[Input] {
   def exportModel(k: String): ExportModel
   def exportModels: Seq[ExportModel]
 
+  def exportUnion(k: String): ExportUnion
+  def exportUnions: Seq[ExportUnion]
+
   def exportService(k: String): ExportService
   def exportServices: Seq[ExportService]
 
@@ -23,6 +26,9 @@ abstract class Input() extends Ordered[Input] {
 
   def getModelOpt(k: String) = exportModels.find(_.key == k)
   def getModel(k: String) = getModelOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))
+
+  def getUnionOpt(k: String) = exportUnions.find(_.key == k)
+  def getUnion(k: String) = getUnionOpt(k).getOrElse(throw new IllegalStateException(s"No union available with key [$k]"))
 
   def getServiceOpt(k: String) = exportServices.find(_.key == k)
   def getService(k: String) = getServiceOpt(k).getOrElse(throw new IllegalStateException(s"No model available with key [$k]"))

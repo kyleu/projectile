@@ -7,6 +7,7 @@ import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.feature.core.ModelHelper
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
+import com.kyleu.projectile.util.NullUtils
 
 object ModelFile {
   val includeDefaults = false
@@ -76,7 +77,7 @@ object ModelFile {
     val fields = if (model.summaryFields.isEmpty) { model.pkFields } else { model.summaryFields }
     fields.map {
       case f if f.required => s"""${f.propertyName}: $$${f.propertyName}"""
-      case f => s"""${f.propertyName}: $${${f.propertyName}.map(_.toString).getOrElse("-empty-")}"""
+      case f => s"""${f.propertyName}: $${${f.propertyName}.map(_.toString).getOrElse("${NullUtils.str}")}"""
     }.mkString(", ")
   }
 

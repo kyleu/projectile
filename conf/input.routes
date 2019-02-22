@@ -10,4 +10,5 @@ GET         /:key/refresh           com.kyleu.projectile.web.controllers.input.I
 
 GET         /:key/enum/:e           com.kyleu.projectile.web.controllers.input.InputController.enumDetail(key, e)
 GET         /:key/model/:m          com.kyleu.projectile.web.controllers.input.InputController.modelDetail(key, m)
+GET         /:key/union/:u          com.kyleu.projectile.web.controllers.input.InputController.unionDetail(key, u)
 GET         /:key/service/:s        com.kyleu.projectile.web.controllers.input.InputController.serviceDetail(key, s)
