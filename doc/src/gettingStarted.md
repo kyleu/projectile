@@ -4,7 +4,7 @@ There are several ways to run Projectile:
 
 ## Release Jar
 
-- Download the leatest release from [Github](https://github.com/Kyleu/projectile/releases). Only a single file, `projectile.jar`, is needed
+- Download the leatest release from [GitHub](https://github.com/Kyleu/projectile/releases). Only a single file, `projectile.jar`, is needed
 
 - From your project's directory, run `java -jar projectile.jar`, this will print CLI usage
 
@@ -14,7 +14,7 @@ There are several ways to run Projectile:
 ## Shell script
 
 Save [this file](https://raw.githubusercontent.com/KyleU/projectile/master/bin/projectile.sh) as `projectile.sh` and mark it executable. 
-Once executed, it will download and run the latest release from Github
+Once executed, it will download and run the latest release from GitHub
 
 
 ## Ammonite

@@ -117,7 +117,7 @@ object ProjectFeature extends StringEnum[ProjectFeature] with StringCirceEnum[Pr
 
   case object Wiki extends ProjectFeature(
     value = "wiki", title = "Wiki", tech = "Markdown", logic = Some(WikiLogic), paths = Set(WikiMarkdown),
-    appliesTo = Set(InputTemplate.Postgres), description = "Markdown documentation in Github wiki format"
+    appliesTo = Set(InputTemplate.Postgres), description = "Markdown documentation in GitHub wiki format"
   )
 
   override val values = findValues
