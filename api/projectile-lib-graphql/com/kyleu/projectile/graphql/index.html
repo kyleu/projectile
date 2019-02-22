@@ -113,10 +113,11 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="" href="../index.html"><span class="name">projectile</span></a>
+        <a title="lib-projectile-graphql" href="../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
+      <p class="shortcomment cmt">lib-projectile-graphql</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-graphql</p><p>Common GraphQL classes used by code generated from Projectile
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.graphql" visbl="pub" class="indented4 current" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="graphql"></a><a id="graphql:graphql"></a>
       <span class="permalink">
@@ -154,9 +155,17 @@
                         <a class="class" href="GraphQLContext.html" title=""></a>
                         <a href="GraphQLContext.html" title="">GraphQLContext</a>
                       </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="trait" href="GraphQLSchema.html" title=""></a>
+                        <a href="GraphQLSchema.html" title="">GraphQLSchema</a>
+                      </li><li class="current-entities indented4">
                         <a class="object" href="GraphQLSchemaHelper$.html" title=""></a>
                         <a class="class" href="GraphQLSchemaHelper.html" title=""></a>
                         <a href="GraphQLSchemaHelper.html" title="">GraphQLSchemaHelper</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="GraphQLService.html" title=""></a>
+                        <a href="GraphQLService.html" title="">GraphQLService</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="object" href="GraphQLUtils$.html" title=""></a>
@@ -288,7 +297,23 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="GraphQLContext.html"><span class="name">GraphQLContext</span></a><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../models/note/Note.html" class="extype" name="com.kyleu.projectile.models.note.Note">Note</a>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="" href="GraphQLContext.html"><span class="name">GraphQLContext</span></a><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.graphql.GraphQLSchema" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="GraphQLSchemaextendsAnyRef"></a><a id="GraphQLSchema:GraphQLSchema"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/graphql/index.html#GraphQLSchemaextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="GraphQLSchema.html"><span class="name">GraphQLSchema</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       
       
@@ -308,6 +333,25 @@
       </span>
       
       
+    </li><li name="com.kyleu.projectile.graphql.GraphQLService" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GraphQLServiceextendsLogging"></a><a id="GraphQLService:GraphQLService"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/graphql/index.html#GraphQLServiceextendsLogging" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="GraphQLService.html"><span class="name">GraphQLService</span></a><span class="result"> extends <span class="extype" name="com.kyleu.projectile.util.Logging">Logging</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Singleton</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li></ol>
             </div>
 

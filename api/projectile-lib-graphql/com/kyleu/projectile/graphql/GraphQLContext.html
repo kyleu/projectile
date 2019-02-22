@@ -113,10 +113,11 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="" href="../index.html"><span class="name">projectile</span></a>
+        <a title="lib-projectile-graphql" href="../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
+      <p class="shortcomment cmt">lib-projectile-graphql</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-graphql</p><p>Common GraphQL classes used by code generated from Projectile
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.graphql" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="graphql"></a><a id="graphql:graphql"></a>
       <span class="permalink">
@@ -154,9 +155,17 @@
                         <a class="class" href="" title=""></a>
                         <a href="" title="">GraphQLContext</a>
                       </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="trait" href="GraphQLSchema.html" title=""></a>
+                        <a href="GraphQLSchema.html" title="">GraphQLSchema</a>
+                      </li><li class="current-entities indented4">
                         <a class="object" href="GraphQLSchemaHelper$.html" title=""></a>
                         <a class="class" href="GraphQLSchemaHelper.html" title=""></a>
                         <a href="GraphQLSchemaHelper.html" title="">GraphQLSchemaHelper</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="GraphQLService.html" title=""></a>
+                        <a href="GraphQLService.html" title="">GraphQLService</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="object" href="GraphQLUtils$.html" title=""></a>
@@ -188,7 +197,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../models/note/Note.html" class="extype" name="com.kyleu.projectile.models.note.Note">Note</a>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -255,7 +264,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../models/note/Note.html" class="extype" name="com.kyleu.projectile.models.note.Note">Note</a>]]</span>)</span>
+        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>)</span>
       </span>
       
       
@@ -490,7 +499,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">noteLookup</span><span class="result">: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../models/note/Note.html" class="extype" name="com.kyleu.projectile.models.note.Note">Note</a>]]</span>
+        <span class="name">noteLookup</span><span class="result">: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>
       </span>
       
       

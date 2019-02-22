@@ -141,6 +141,10 @@ KyleU/projectile
 </div>
 <ul>
   <li><a href="../gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="../tutorial/index.html" class="page">Tutorials</a>
+  <ul>
+    <li><a href="../tutorial/poker/index.html" class="page">Estimate Poker</a></li>
+  </ul></li>
   <li><a href="../codegen/index.html" class="active page">Code Generation</a>
   <ul>
     <li><a href="../codegen/database.html" class="page">Database</a></li>
@@ -150,6 +154,7 @@ KyleU/projectile
   </ul></li>
   <li><a href="../libraries/index.html" class="page">Scala Libraries</a>
   <ul>
+    <li><a href="../libraries/core.html" class="page">Core</a></li>
     <li><a href="../libraries/scala.html" class="page">Scala</a></li>
     <li><a href="../libraries/tracing.html" class="page">Tracing</a></li>
     <li><a href="../libraries/jdbc.html" class="page">JDBC</a></li>
@@ -160,22 +165,53 @@ KyleU/projectile
     <li><a href="../libraries/service.html" class="page">Service</a></li>
     <li><a href="../libraries/scalajs.html" class="page">Scala.js</a></li>
     <li><a href="../libraries/play.html" class="page">Play</a></li>
+    <li><a href="../libraries/websocket.html" class="page">Websocket</a></li>
     <li><a href="../libraries/auth.html" class="page">Auth</a></li>
+    <li><a href="../libraries/auth-graphql.html" class="page">AuthGraphQL</a></li>
   </ul></li>
   <li><a href="../technology.html" class="page">Technology</a></li>
   <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../codegen/index.html#code-generation" class="header">Code Generation</a>
+  <ul>
+    <li><a href="../codegen/index.html#" class="header"><a href="database.html">Database Export</a></a></li>
+    <li><a href="../codegen/index.html#" class="header"><a href="thrift.html">Thrift Export</a></a></li>
+    <li><a href="../codegen/index.html#" class="header"><a href="graphql.html">GraphQL Export</a></a></li>
+    <li><a href="../codegen/index.html#" class="header"><a href="sbt-plugin.html">SBT Plugin</a></a></li>
+  </ul></li>
+</ul>
 </nav>
 
 </nav>
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.0.0
+<i class="md-icon" title="Version">label_outline</i> 1.3.0
 </label>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../codegen/index.html#code-generation" class="header">Code Generation</a>
+  <ul>
+    <li><a href="../codegen/index.html#" class="header"><a href="database.html">Database Export</a></a></li>
+    <li><a href="../codegen/index.html#" class="header"><a href="thrift.html">Thrift Export</a></a></li>
+    <li><a href="../codegen/index.html#" class="header"><a href="graphql.html">GraphQL Export</a></a></li>
+    <li><a href="../codegen/index.html#" class="header"><a href="sbt-plugin.html">SBT Plugin</a></a></li>
+  </ul></li>
+</ul>
+</nav>
+
 </div>
 </div>
 </div>
@@ -183,25 +219,24 @@ KyleU/projectile
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#code-generation" name="code-generation" class="anchor"><span class="anchor-link"></span></a>Code Generation</h1>
-<p>Projectile generates code. More details soon.</p>
 <p><a href="/api/projectile-export">API Documentation</a></p>
-<div class="toc ">
-<ul>
-  <li><a href="../codegen/database.html" class="page">Database</a></li>
-  <li><a href="../codegen/thrift.html" class="page">Thrift</a></li>
-  <li><a href="../codegen/graphql.html" class="page">GraphQL</a></li>
-  <li><a href="../codegen/sbt-plugin.html" class="page">SBT Plugin</a></li>
-</ul>
-</div>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="database.html">Database Export</a></h4>
+<p>For PostgreSQL databases, Projectile can manage a full admin web application, <a href="http://slick.lightbend.com">Slick</a> and <a href="https://tpolecat.github.io/doobie">Doobie</a> queries, GraphQL and OpenAPI endpoints, and more.</p>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="thrift.html">Thrift Export</a></h4>
+<p>For Thrift APIs, Projectile can extend <a href="https://github.com/twitter/scrooge">Scrooge</a>-generated Scala code to provide case classes with Json serialization, services that use Scala Futures, and native scalars.</p>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="graphql.html">GraphQL Export</a></h4>
+<p>For a GraphQL schema and a set of queries, Projectile can create strongly-typed Scala representations of your models and services, and helper methods to call a running api. </p>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="sbt-plugin.html">SBT Plugin</a></h4>
+<p>An SBT plugin is provided that updates your generated code on compilation.</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.0.0/doc/src/main/paradox/codegen/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.0/doc/src/codegen/index.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.0.0
+1.3.0
 </span>
 </div>
 </article>
@@ -211,7 +246,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../gettingStarted.html" title="Getting Started" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../tutorial/poker/03_adding-projectile.html" title="Adding Projectile" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -220,7 +255,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Getting Started
+Adding Projectile
 </span>
 </div>
 </a>

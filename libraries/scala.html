@@ -141,6 +141,10 @@ KyleU/projectile
 </div>
 <ul>
   <li><a href="../gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="../tutorial/index.html" class="page">Tutorials</a>
+  <ul>
+    <li><a href="../tutorial/poker/index.html" class="page">Estimate Poker</a></li>
+  </ul></li>
   <li><a href="../codegen/index.html" class="page">Code Generation</a>
   <ul>
     <li><a href="../codegen/database.html" class="page">Database</a></li>
@@ -150,6 +154,7 @@ KyleU/projectile
   </ul></li>
   <li><a href="../libraries/index.html" class="page">Scala Libraries</a>
   <ul>
+    <li><a href="../libraries/core.html" class="page">Core</a></li>
     <li><a href="../libraries/scala.html" class="active page">Scala</a></li>
     <li><a href="../libraries/tracing.html" class="page">Tracing</a></li>
     <li><a href="../libraries/jdbc.html" class="page">JDBC</a></li>
@@ -160,7 +165,9 @@ KyleU/projectile
     <li><a href="../libraries/service.html" class="page">Service</a></li>
     <li><a href="../libraries/scalajs.html" class="page">Scala.js</a></li>
     <li><a href="../libraries/play.html" class="page">Play</a></li>
+    <li><a href="../libraries/websocket.html" class="page">Websocket</a></li>
     <li><a href="../libraries/auth.html" class="page">Auth</a></li>
+    <li><a href="../libraries/auth-graphql.html" class="page">AuthGraphQL</a></li>
   </ul></li>
   <li><a href="../technology.html" class="page">Technology</a></li>
   <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
@@ -180,7 +187,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.0.0
+<i class="md-icon" title="Version">label_outline</i> 1.3.0
 </label>
 </li>
 </ul>
@@ -208,50 +215,34 @@ KyleU/projectile
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#scala" name="scala" class="anchor"><span class="anchor-link"></span></a>Scala</h1>
-<p>Common classes relating to core models and utilities (<a href="../api/projectile-lib-scala">API Documentation</a>) </p>
-<h3><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h3><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.kyleu" %% "projectile-lib-scala" % "latest"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
+<p>Common classes relating to core models and utilities (<a href="../api/projectile-lib-scala/com/kyleu/projectile/index.html">API Documentation</a>) </p>
+<h3><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h3><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.kyleu" %% "projectile-lib-scala" % "1.3.0"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;com.kyleu&lt;/groupId&gt;
   &lt;artifactId&gt;projectile-lib-scala_2.12&lt;/artifactId&gt;
-  &lt;version&gt;latest&lt;/version&gt;
+  &lt;version&gt;1.3.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">dependencies {
-  compile group: 'com.kyleu', name: 'projectile-lib-scala_2.12', version: 'latest'
+  compile group: 'com.kyleu', name: 'projectile-lib-scala_2.12', version: '1.3.0'
 }</code></pre></dd></dl>
 <h3><a href="#classes" name="classes" class="anchor"><span class="anchor-link"></span></a>Classes</h3>
-<h4><a href="#com-kyleu-projectile-models-result-baseresult" name="com-kyleu-projectile-models-result-baseresult" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.models.result.BaseResult</h4>
-<p>Wrapper case class used for search results</p>
-<h4><a href="#com-kyleu-projectile-models-tag-tag" name="com-kyleu-projectile-models-tag-tag" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.models.tag.Tag</h4>
-<p>A simple key and value case class, used where unordered maps aren&rsquo;t appropriate</p>
-<h4><a href="#com-kyleu-projectile-util-dateutils" name="com-kyleu-projectile-util-dateutils" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.DateUtils</h4>
-<p>Provides ordering, formatting, and common utilities for Local and Zoned <code>java.time</code> date classes</p>
-<h4><a href="#com-kyleu-projectile-util-encryptionutils" name="com-kyleu-projectile-util-encryptionutils" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.EncryptionUtils</h4>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="../api/projectile-lib-scala/com/kyleu/projectile/util/EncryptionUtils$.html">EncryptionUtils</a></h4>
 <p>Uses a user-provided secret to encrypt and decrypt arbitrary bytes and strings using AES/ECB/PKCS5Padding</p>
-<h4><a href="#com-kyleu-projectile-util-jsonincludeparser" name="com-kyleu-projectile-util-jsonincludeparser" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.JsonIncludeParser</h4>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="../api/projectile-lib-scala/com/kyleu/projectile/util/JsonIncludeParser.html">JsonIncludeParser</a></h4>
 <p>A JSON parser that supports comments and included external files</p>
-<h4><a href="#com-kyleu-projectile-util-jsonserializers" name="com-kyleu-projectile-util-jsonserializers" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.JsonSerializers</h4>
-<p>Provides all the imports and utility methods you need to work with Circe using dates, uuids, enums and sealed traits</p>
-<h4><a href="#com-kyleu-projectile-util-logging" name="com-kyleu-projectile-util-logging" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.Logging</h4>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="../api/projectile-lib-scala/com/kyleu/projectile/util/Logging.html">Logging</a></h4>
 <p>Provides a logging interface that accepts TraceData in its methods and includes the trace ids in its output</p>
-<h4><a href="#com-kyleu-projectile-util-nullutils" name="com-kyleu-projectile-util-nullutils" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.NullUtils</h4>
-<p>Rather than use <code>null</code> references in your code, NullUtils is provided for common operations and values involving nulls</p>
-<h4><a href="#com-kyleu-projectile-util-numberutils" name="com-kyleu-projectile-util-numberutils" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.NumberUtils</h4>
-<p>Currently only provides a cross-platform method for formatting numbers</p>
-<h4><a href="#com-kyleu-projectile-util-stringutils" name="com-kyleu-projectile-util-stringutils" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.StringUtils</h4>
-<p>Exposes a method to split a string to an ordered sequence of lines</p>
-<h4><a href="#com-kyleu-projectile-util-uuidutils" name="com-kyleu-projectile-util-uuidutils" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.UuidUtils</h4>
-<p>Utility methods to transform a <code>java.util.UUID</code> to and from a sequence of bytes</p>
-<h4><a href="#com-kyleu-projectile-util-tracing-tracedata" name="com-kyleu-projectile-util-tracing-tracedata" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.tracing.TraceData</h4>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="../api/projectile-lib-scala/com/kyleu/projectile/util/tracing/TraceData.html">TraceData</a></h4>
 <p>Used everywhere, <code>TraceData</code> is a common trait that exposes authentication and tracing information for OpenTracing services</p>
-<h4><a href="#com-kyleu-projectile-util-tracing-traceservice" name="com-kyleu-projectile-util-tracing-traceservice" class="anchor"><span class="anchor-link"></span></a>com.kyleu.projectile.util.tracing.TraceService</h4>
+<h4><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="../api/projectile-lib-scala/com/kyleu/projectile/util/tracing/TracingService.html">TracingService</a></h4>
 <p>Provides tracing helpers and methods to wrap access to OpenTracing</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.0.0/doc/src/main/paradox/libraries/scala.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.0/doc/src/libraries/scala.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.0.0
+1.3.0
 </span>
 </div>
 </article>
@@ -261,7 +252,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../libraries/index.html" title="Scala Libraries" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../libraries/core.html" title="Core" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -270,7 +261,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Scala Libraries
+Core
 </span>
 </div>
 </a>

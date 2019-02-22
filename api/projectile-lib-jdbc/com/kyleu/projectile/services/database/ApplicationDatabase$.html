@@ -113,10 +113,11 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="" href="../../index.html"><span class="name">projectile</span></a>
+        <a title="lib-projectile-jdbc" href="../../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
+      <p class="shortcomment cmt">lib-projectile-jdbc</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-jdbc</p><p>Common database classes used by code generated from Projectile
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="services"></a><a id="services:services"></a>
       <span class="permalink">
@@ -151,8 +152,8 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.kyleu.projectile.services">services</a></dd></dl></div>
     </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="object" href="" title=""></a>
-                        <a href="" title="">ApplicationDatabase</a>
+                        <a class="object" href="" title="The database used for all application models"></a>
+                        <a href="" title="The database used for all application models">ApplicationDatabase</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="trait" href="Database.html" title=""></a>
@@ -161,6 +162,10 @@
                         <span class="separator"></span>
                         <a class="class" href="JdbcDatabase.html" title=""></a>
                         <a href="JdbcDatabase.html" title="">JdbcDatabase</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="object" href="MigrateTask$.html" title=""></a>
+                        <a href="MigrateTask$.html" title="">MigrateTask</a>
                       </li>
               </ul>
             </div>
@@ -189,7 +194,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The database used for all application models</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -602,6 +607,38 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="JdbcDatabase.html" class="extype" name="com.kyleu.projectile.services.database.JdbcDatabase">JdbcDatabase</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.database.ApplicationDatabase#migrate" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="migrate()(implicittd:com.kyleu.projectile.util.tracing.TraceData):Unit"></a><a id="migrate()(TraceData):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/database/ApplicationDatabase$.html#migrate()(implicittd:com.kyleu.projectile.util.tracing.TraceData):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">migrate</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="td">td: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.database.ApplicationDatabase#migrateSafe" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="migrateSafe():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/database/ApplicationDatabase$.html#migrateSafe():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">migrateSafe</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">

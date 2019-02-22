@@ -175,6 +175,10 @@
                         <a href="ThriftExportService$.html" title="">ThriftExportService</a>
                       </li><li class="current-entities indented6">
                         <span class="separator"></span>
+                        <a class="object" href="ThriftExportUnion$.html" title=""></a>
+                        <a href="ThriftExportUnion$.html" title="">ThriftExportUnion</a>
+                      </li><li class="current-entities indented6">
+                        <span class="separator"></span>
                         <a class="object" href="ThriftFileHelper$.html" title=""></a>
                         <a href="ThriftFileHelper$.html" title="">ThriftFileHelper</a>
                       </li><li class="current-entities indented6">
@@ -214,7 +218,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">ThriftInput</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;new&quot;</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;...&quot;</span></span>, <span name="files">files: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="typedefs">typedefs: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Map.empty</span></span>, <span name="intEnums">intEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftIntEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftIntEnum">ThriftIntEnum</a>] = <span class="symbol">Nil</span></span>, <span name="stringEnums">stringEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStringEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStringEnum">ThriftStringEnum</a>] = <span class="symbol">Nil</span></span>, <span name="structs">structs: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStruct.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStruct">ThriftStruct</a>] = <span class="symbol">Nil</span></span>, <span name="services">services: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftService.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftService">ThriftService</a>] = <span class="symbol">Nil</span></span>)</span><span class="result"> extends <a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">ThriftInput</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;new&quot;</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;...&quot;</span></span>, <span name="files">files: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="typedefs">typedefs: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Map.empty</span></span>, <span name="intEnums">intEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftIntEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftIntEnum">ThriftIntEnum</a>] = <span class="symbol">Nil</span></span>, <span name="stringEnums">stringEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStringEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStringEnum">ThriftStringEnum</a>] = <span class="symbol">Nil</span></span>, <span name="structs">structs: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStruct.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStruct">ThriftStruct</a>] = <span class="symbol">Nil</span></span>, <span name="unions">unions: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftUnion.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftUnion">ThriftUnion</a>] = <span class="symbol">Nil</span></span>, <span name="services">services: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftService.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftService">ThriftService</a>] = <span class="symbol">Nil</span></span>)</span><span class="result"> extends <a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -270,9 +274,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.models.thrift.input.ThriftInput#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(key:String,description:String,files:Seq[String],typedefs:Map[String,String],intEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftIntEnum],stringEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStringEnum],structs:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStruct],services:Seq[com.kyleu.projectile.models.thrift.schema.ThriftService]):com.kyleu.projectile.models.thrift.input.ThriftInput"></a><a id="&lt;init&gt;:ThriftInput"></a>
+      <a id="&lt;init&gt;(key:String,description:String,files:Seq[String],typedefs:Map[String,String],intEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftIntEnum],stringEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStringEnum],structs:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStruct],unions:Seq[com.kyleu.projectile.models.thrift.schema.ThriftUnion],services:Seq[com.kyleu.projectile.models.thrift.schema.ThriftService]):com.kyleu.projectile.models.thrift.input.ThriftInput"></a><a id="&lt;init&gt;:ThriftInput"></a>
       <span class="permalink">
-      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#&lt;init&gt;(key:String,description:String,files:Seq[String],typedefs:Map[String,String],intEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftIntEnum],stringEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStringEnum],structs:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStruct],services:Seq[com.kyleu.projectile.models.thrift.schema.ThriftService]):com.kyleu.projectile.models.thrift.input.ThriftInput" title="Permalink">
+      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#&lt;init&gt;(key:String,description:String,files:Seq[String],typedefs:Map[String,String],intEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftIntEnum],stringEnums:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStringEnum],structs:Seq[com.kyleu.projectile.models.thrift.schema.ThriftStruct],unions:Seq[com.kyleu.projectile.models.thrift.schema.ThriftUnion],services:Seq[com.kyleu.projectile.models.thrift.schema.ThriftService]):com.kyleu.projectile.models.thrift.input.ThriftInput" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -281,7 +285,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ThriftInput</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;new&quot;</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;...&quot;</span></span>, <span name="files">files: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="typedefs">typedefs: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Map.empty</span></span>, <span name="intEnums">intEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftIntEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftIntEnum">ThriftIntEnum</a>] = <span class="symbol">Nil</span></span>, <span name="stringEnums">stringEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStringEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStringEnum">ThriftStringEnum</a>] = <span class="symbol">Nil</span></span>, <span name="structs">structs: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStruct.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStruct">ThriftStruct</a>] = <span class="symbol">Nil</span></span>, <span name="services">services: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftService.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftService">ThriftService</a>] = <span class="symbol">Nil</span></span>)</span>
+        <span class="name">ThriftInput</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;new&quot;</span></span>, <span name="description">description: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;...&quot;</span></span>, <span name="files">files: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Nil</span></span>, <span name="typedefs">typedefs: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Map.empty</span></span>, <span name="intEnums">intEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftIntEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftIntEnum">ThriftIntEnum</a>] = <span class="symbol">Nil</span></span>, <span name="stringEnums">stringEnums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStringEnum.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStringEnum">ThriftStringEnum</a>] = <span class="symbol">Nil</span></span>, <span name="structs">structs: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftStruct.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftStruct">ThriftStruct</a>] = <span class="symbol">Nil</span></span>, <span name="unions">unions: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftUnion.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftUnion">ThriftUnion</a>] = <span class="symbol">Nil</span></span>, <span name="services">services: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftService.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftService">ThriftService</a>] = <span class="symbol">Nil</span></span>)</span>
       </span>
       
       
@@ -623,6 +627,38 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.models.thrift.input.ThriftInput">ThriftInput</a> → <a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.models.thrift.input.ThriftInput#exportUnion" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exportUnion(k:String):com.kyleu.projectile.models.export.ExportUnion"></a><a id="exportUnion(String):ExportUnion"></a>
+      <span class="permalink">
+      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#exportUnion(k:String):com.kyleu.projectile.models.export.ExportUnion" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exportUnion</span><span class="params">(<span name="k">k: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="../../export/ExportUnion.html" class="extype" name="com.kyleu.projectile.models.export.ExportUnion">ExportUnion</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.models.thrift.input.ThriftInput">ThriftInput</a> → <a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.models.thrift.input.ThriftInput#exportUnions" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="exportUnions:Seq[com.kyleu.projectile.models.export.ExportUnion]"></a><a id="exportUnions:Seq[ExportUnion]"></a>
+      <span class="permalink">
+      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#exportUnions:Seq[com.kyleu.projectile.models.export.ExportUnion]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">lazy val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">exportUnions</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../export/ExportUnion.html" class="extype" name="com.kyleu.projectile.models.export.ExportUnion">ExportUnion</a>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.models.thrift.input.ThriftInput">ThriftInput</a> → <a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.models.thrift.input.ThriftInput#files" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="files:Seq[String]"></a>
       <span class="permalink">
@@ -773,6 +809,38 @@
       </span>
       <span class="symbol">
         <span class="name">getServiceOpt</span><span class="params">(<span name="k">k: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="../../export/ExportService.html" class="extype" name="com.kyleu.projectile.models.export.ExportService">ExportService</a>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.models.input.Input#getUnion" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getUnion(k:String):com.kyleu.projectile.models.export.ExportUnion"></a><a id="getUnion(String):ExportUnion"></a>
+      <span class="permalink">
+      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#getUnion(k:String):com.kyleu.projectile.models.export.ExportUnion" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getUnion</span><span class="params">(<span name="k">k: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="../../export/ExportUnion.html" class="extype" name="com.kyleu.projectile.models.export.ExportUnion">ExportUnion</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.models.input.Input#getUnionOpt" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getUnionOpt(k:String):Option[com.kyleu.projectile.models.export.ExportUnion]"></a><a id="getUnionOpt(String):Option[ExportUnion]"></a>
+      <span class="permalink">
+      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#getUnionOpt(k:String):Option[com.kyleu.projectile.models.export.ExportUnion]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getUnionOpt</span><span class="params">(<span name="k">k: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="../../export/ExportUnion.html" class="extype" name="com.kyleu.projectile.models.export.ExportUnion">ExportUnion</a>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../input/Input.html" class="extype" name="com.kyleu.projectile.models.input.Input">Input</a></dd></dl></div>
@@ -1003,6 +1071,22 @@
       </span>
       <span class="symbol">
         <span class="name">typedefs</span><span class="result">: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.models.thrift.input.ThriftInput#unions" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="unions:Seq[com.kyleu.projectile.models.thrift.schema.ThriftUnion]"></a><a id="unions:Seq[ThriftUnion]"></a>
+      <span class="permalink">
+      <a href="../../../../../../com/kyleu/projectile/models/thrift/input/ThriftInput.html#unions:Seq[com.kyleu.projectile.models.thrift.schema.ThriftUnion]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unions</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../schema/ThriftUnion.html" class="extype" name="com.kyleu.projectile.models.thrift.schema.ThriftUnion">ThriftUnion</a>]</span>
       </span>
       
       
