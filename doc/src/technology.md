@@ -1,7 +1,5 @@
 ## Technology
 
-A GraphQL schema is provided, accessible in the administration section.
-
 Projectile relies on a whole lot of tremendous open source projects. Here's a few of them.
 
 * [Scala](http://www.scala-lang.org)
