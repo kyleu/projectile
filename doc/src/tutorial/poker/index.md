@@ -2,11 +2,13 @@
 
 @@@ index
 
-* [First Steps](01-hello-world.md)
-* [Scala Project](02-database-setup.md)
+* [Hello World](01-hello-world.md)
+* [Database Setup](02-database-setup.md)
 * [Adding Projectile](03-configuring-projectile.md)
 * [Basic Codegen](04-basic-codegen.md)
-* [Web Application](05-web-application.md)
+* [More Features](05-more-features.md)
+* [Web Application](06-web-application.md)
+* [Coming Soon](07-coming-soon.md)
 
 @@@
 
@@ -30,10 +32,12 @@ You can see the end result of this tutorial at https://estimate.poker
 
 ## Overview
 
-- @ref[First Steps](01-hello-world.md) will help you clone and build an initial Scala sbt project
-- @ref[Database Setup](02-database-setup.md) will guide you though configuring a new postgres database
-- @ref[Configuring Projectile](03-configuring-projectile.md) will configure Projectile and get your first project set up
+- @ref[Hello World](01-hello-world.md) will help you clone and build an initial Scala sbt project
+- @ref[Database Setup](02-database-setup.md) guides you though configuring a new postgres database
+- @ref[Configuring Projectile](03-configuring-projectile.md) configures Projectile and get your first project set up
 - @ref[Basic Codegen](04-basic-codegen.md) will create our first generated classes using Projectile
-- @ref[Web Application](05-web-application.md) will turn our console-based duckling into a beautiful web swan
+- @ref[More Features](05-more-features.md) adds database queries, services, a GraphQL endpoint
+- @ref[Web Application](06-web-application.md) will turn our console-based duckling into a beautiful web swan
+- @ref[Coming Soon](07-coming-soon.md) TODO
 
 

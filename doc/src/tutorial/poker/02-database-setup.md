@@ -2,8 +2,8 @@
 
 @@@ note { title=Prerequisites }
 
-This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate), 
-and have completed the [previous tutorial step](01-hello-world.md)
+This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate),
+and have completed the @ref[previous tutorial step](01-hello-world.md)
 
 @@@
 

@@ -1,10 +1,10 @@
-# Adding Projectile
+# Configuring Projectile
 
 @@@ note { title=Prerequisites }
 
 This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate), 
-switched to the `02-database-setup` branch, 
-and have created a database as described in the @ref[previous tutorial step](02-database-setup.md) 
+switched to the `02-database-setup` branch,
+and have created a database as described in the @ref[previous tutorial step](02-database-setup.md)
 
 @@@
 
@@ -27,7 +27,7 @@ Once you save the connection, you're brought to the connection details screen. W
 ![input detail](img/03-03-input-detail.png)
 
 Click "Connection Settings" and fill in the correct url and credentials.
-If you ran the initial database creation script from [step 2](02-database-setup.md), use "estimate" as the database, username, and password.
+If you ran the initial database creation script from @ref[step 2](02-database-setup.md), use "estimate" as the database, username, and password.
 Return to the input detail screen, and click the "Refresh" button. 
 It will hopefully connect to the database and return something looking like this:
 

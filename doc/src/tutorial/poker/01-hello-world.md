@@ -2,7 +2,7 @@
 
 This tutorial will lead you through creating a real-time web application that facilitates [planning poker](https://en.wikipedia.org/wiki/Planning_poker) sessions.
 
-The basic idea is to create a PostgreSQL database, use that to have Projectile generate some code, and then repeat as we add features. 
+The basic idea is to create a PostgreSQL database, use that to have Projectile generate some code, and then repeat as we add features.
 
 With luck, we'll end up with a useful web application, identical to the version available [here](https://estimate.poker)
 
