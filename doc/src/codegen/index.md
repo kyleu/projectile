@@ -9,7 +9,7 @@
 
 @@@
 
-[API Documentation](/api/projectile-export)
+[API Documentation](../api/projectile-export/com/kyleu/projectile/index.html)
 
 #### @ref[Database Export](database.md)
 
