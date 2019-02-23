@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Adding Projectile · Projectile</title>
+<title>Configuring Projectile · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Adding Projectile
+Configuring Projectile
 </span>
 </div>
 </div>
@@ -175,7 +175,7 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/03-configuring-projectile.html#adding-projectile" class="header">Adding Projectile</a>
+  <li><a href="../../tutorial/poker/03-configuring-projectile.html#configuring-projectile" class="header">Configuring Projectile</a>
   <ul>
     <li><a href="../../tutorial/poker/03-configuring-projectile.html#explore-the-code" class="header">Explore the code</a></li>
     <li><a href="../../tutorial/poker/03-configuring-projectile.html#next-steps" class="header">Next steps</a></li>
@@ -187,7 +187,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.3.0
+<i class="md-icon" title="Version">label_outline</i> 1.3.1
 </label>
 </li>
 </ul>
@@ -200,7 +200,7 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/03-configuring-projectile.html#adding-projectile" class="header">Adding Projectile</a>
+  <li><a href="../../tutorial/poker/03-configuring-projectile.html#configuring-projectile" class="header">Configuring Projectile</a>
   <ul>
     <li><a href="../../tutorial/poker/03-configuring-projectile.html#explore-the-code" class="header">Explore the code</a></li>
     <li><a href="../../tutorial/poker/03-configuring-projectile.html#next-steps" class="header">Next steps</a></li>
@@ -214,8 +214,8 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#adding-projectile" name="adding-projectile" class="anchor"><span class="anchor-link"></span></a>Adding Projectile</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
-<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a>, switched to the <code>02-database-setup</code> branch, and have created a database as described in the <a href="02-database-setup.html">previous tutorial step</a> </p></div>
+<h1><a href="#configuring-projectile" name="configuring-projectile" class="anchor"><span class="anchor-link"></span></a>Configuring Projectile</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
+<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a>, switched to the <code>02-database-setup</code> branch, and have created a database as described in the <a href="02-database-setup.html">previous tutorial step</a></p></div>
 <p>Now that we have a working project, let&rsquo;s get Projectile configured so we can start generating code.</p>
 <p>There&rsquo;s a semi-functional command-line interface, but it&rsquo;s poorly documented, so we&rsquo;ll use the UI provided by Projectile.</p>
 <p>Using one of the methods described in <a href="../../gettingStarted.html">Getting Started</a>, launch the projectile server, and open <a href="http://localhost:20000">http://localhost:20000</a></p>
@@ -225,7 +225,7 @@ KyleU/projectile
 <p><img src="img/03-02-new-input.png" alt="new input" /></p>
 <p>Once you save the connection, you&rsquo;re brought to the connection details screen. We need to configure the database connection.</p>
 <p><img src="img/03-03-input-detail.png" alt="input detail" /></p>
-<p>Click &ldquo;Connection Settings&rdquo; and fill in the correct url and credentials. If you ran the initial database creation script from <a href="02-database-setup.md">step 2</a>, use &ldquo;estimate&rdquo; as the database, username, and password. Return to the input detail screen, and click the &ldquo;Refresh&rdquo; button. It will hopefully connect to the database and return something looking like this:</p>
+<p>Click &ldquo;Connection Settings&rdquo; and fill in the correct url and credentials. If you ran the initial database creation script from <a href="02-database-setup.html">step 2</a>, use &ldquo;estimate&rdquo; as the database, username, and password. Return to the input detail screen, and click the &ldquo;Refresh&rdquo; button. It will hopefully connect to the database and return something looking like this:</p>
 <p><img src="img/03-04-input-refreshed.png" alt="input refreshed" /></p>
 <p>Note that there&rsquo;s 11 tables and some enums too. Feel free to click around and explore the input definition. When you&rsquo;re ready, return to the <a href="http://localhost:20000">Projectile homepage</a>, where we&rsquo;ll create a project.</p>
 <p>Create a new project by clicking the &ldquo;Add Project&rdquo; link, and filling out the form thusly:</p>
@@ -241,13 +241,13 @@ KyleU/projectile
 <p>We&rsquo;re ready to generate some code, so <a href="04-basic-codegen.html">get going</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.0/doc/src/tutorial/poker/03-configuring-projectile.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.1/doc/src/tutorial/poker/03-configuring-projectile.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.3.0
+1.3.1
 </span>
 </div>
 </article>

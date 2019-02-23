@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Estimate Poker · Projectile</title>
+<title>More Features · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Estimate Poker
+More Features
 </span>
 </div>
 </div>
@@ -143,7 +143,7 @@ KyleU/projectile
   <li><a href="../../gettingStarted.html" class="page">Getting Started</a></li>
   <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html" class="active page">Estimate Poker</a></li>
+    <li><a href="../../tutorial/poker/index.html" class="page">Estimate Poker</a></li>
   </ul></li>
   <li><a href="../../codegen/index.html" class="page">Code Generation</a>
   <ul>
@@ -175,11 +175,14 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">Estimate Poker</a>
+  <li><a href="../../tutorial/poker/05-more-features.html#more-features" class="header">More Features</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source Code</a></li>
-    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo Site</a></li>
-    <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#generated-queries" class="header">Generated Queries</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#generated-services" class="header">Generated Services</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#generated-slick-bindings" class="header">Generated Slick Bindings</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -201,11 +204,14 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">Estimate Poker</a>
+  <li><a href="../../tutorial/poker/05-more-features.html#more-features" class="header">More Features</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source Code</a></li>
-    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo Site</a></li>
-    <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#generated-queries" class="header">Generated Queries</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#generated-services" class="header">Generated Services</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#generated-slick-bindings" class="header">Generated Slick Bindings</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/05-more-features.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -216,31 +222,88 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#estimate-poker" name="estimate-poker" class="anchor"><span class="anchor-link"></span></a>Estimate Poker</h1>
-<p>The Estimate Poker tutorial will start with a small Scala application, add Projectile, export more and more features, and finally produce a web application with:</p>
-<ul>
-  <li>Websocket transport of shared Scala classes for real-time client updates</li>
-  <li>Play Framework admin site with UI for data access, search, and mutations</li>
-  <li>Full GraphQL API, with a schema visualizer and query IDE</li>
-  <li>Code generated services to reduce CRUD boilerplate</li>
-</ul>
-<h2><a href="#source-code" name="source-code" class="anchor"><span class="anchor-link"></span></a>Source Code</h2>
-<p>The source code for this project is available at <a href="https://github.com/KyleU/estimate">https://github.com/KyleU/estimate</a></p>
-<h2><a href="#demo-site" name="demo-site" class="anchor"><span class="anchor-link"></span></a>Demo Site</h2>
-<p>You can see the end result of this tutorial at <a href="https://estimate.poker">https://estimate.poker</a></p>
-<h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
-<ul>
-  <li><a href="01-hello-world.html">Hello World</a> will help you clone and build an initial Scala sbt project</li>
-  <li><a href="02-database-setup.html">Database Setup</a> guides you though configuring a new postgres database</li>
-  <li><a href="03-configuring-projectile.html">Configuring Projectile</a> configures Projectile and get your first project set up</li>
-  <li><a href="04-basic-codegen.html">Basic Codegen</a> will create our first generated classes using Projectile</li>
-  <li><a href="05-more-features.html">More Features</a> adds database queries, services, a GraphQL endpoint</li>
-  <li><a href="06-web-application.html">Web Application</a> will turn our console-based duckling into a beautiful web swan</li>
-  <li><a href="07-coming-soon.html">Coming Soon</a> TODO</li>
-</ul>
+<h1><a href="#more-features" name="more-features" class="anchor"><span class="anchor-link"></span></a>More Features</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
+<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>04-basic-codegen</code> branch</p></div>
+<p>Case classes are cool and all, but we&rsquo;re here to interact with a database, so let&rsquo;s add more features! We&rsquo;ll be adding generated JDBC queries and asynchronous services.</p>
+<p>To start, we&rsquo;ll need to add new <a href="../../libraries/index.html">supporting libraries</a>. Open up <code>build.sbt</code> and change the <code>libraryDependencies</code> line to:</p>
+<pre class="prettyprint"><code class="language-scala">libraryDependencies ++= Seq(&quot;service&quot;, &quot;graphql&quot;, &quot;slick&quot;).map(x =&gt; &quot;com.kyleu&quot; %% s&quot;projectile-lib-$x&quot; % &quot;1.3.0&quot;)
+</code></pre>
+<p>This will add <a href="../../libraries/service.html">projectile-lib-service</a>, <a href="../../libraries/graphql.html">projectile-lib-graphql</a>, and <a href="../../libraries/slick.html">projectile-lib-slick</a> to our build.</p>
+<p>Now return to the <a href="http://localhost:20000/project/estimate">project detail page</a>, and select &ldquo;Edit Features&rdquo;. To match the libraries we included, let&rsquo;s enable features &ldquo;Service&rdquo;, &ldquo;GraphQL&rdquo;, and &ldquo;Slick&rdquo;. </p>
+<p>Now that those are added, export the project again by either clicking the &ldquo;Export&rdquo; button of the project detail page, or running &ldquo;projectile export&rdquo; from sbt. Go ahead and compile your project again. Assuming it succeeded (remember to restart sbt after you change the libraryDependencies), you&rsquo;ve now got a project with full database functionality and slick bindings!</p>
+<h2><a href="#generated-queries" name="generated-queries" class="anchor"><span class="anchor-link"></span></a>Generated Queries</h2>
+<p>To work with the database tables and views, strongly-typed database queries for searching and common CRUD operations were generated. See <a href="https://github.com/KyleU/estimate/blob/05-more-features/src/main/scala/models/queries/session/SessionRowQueries.scala">here</a> for an example of what was generated for <code>Session</code></p>
+<h2><a href="#generated-services" name="generated-services" class="anchor"><span class="anchor-link"></span></a>Generated Services</h2>
+<p>Basic asynchronous services exposing all of the queries were generated.</p>
+<h2><a href="#generated-slick-bindings" name="generated-slick-bindings" class="anchor"><span class="anchor-link"></span></a>Generated Slick Bindings</h2>
+<p>If you like functional database interactions, you&rsquo;ll love the <a href="http://slick.lightbend.com">Slick</a> bindings that were generated. See <a href="https://github.com/KyleU/estimate/blob/05-more-features/src/main/scala/models/table/session/SessionRowTable.scala">here</a> for an example of what was generated for <code>Session</code></p>
+<h2><a href="#use-what-youve-built" name="use-what-youve-built" class="anchor"><span class="anchor-link"></span></a>Use what you&rsquo;ve built</h2>
+<p>Let&rsquo;s modify Entrypoint to open the database, insert a new Session, and retrieve it, serializing to json. Before we do, we&rsquo;ll have to add <a href="https://github.com/KyleU/estimate/blob/05-more-features/src/main/resources/application.conf">this file</a> to <code>src/main/resources/application.conf</code>. There&rsquo;s a lot to unpack here, see the <a href="../../libraries/index.html">library documentation</a> for more details of database and slick usage</p>
+<pre class="prettyprint"><code class="language-scala">import java.util.UUID
+
+import com.kyleu.projectile.services.database.ApplicationDatabase
+import com.kyleu.projectile.services.database.slick.ApplicationSlick
+import com.kyleu.projectile.services.database.slick.SlickQueryService.imports._
+import com.kyleu.projectile.util.JsonSerializers._
+import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
+import com.typesafe.config.ConfigFactory
+import models.queries.session.SessionRowQueries
+import models.session.{SessionRow, SessionStatusType}
+import models.table.session.SessionRowTable
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
+object Entrypoint {
+  def main(args: Array[String]): Unit = {
+    val cfg = ConfigFactory.load()
+    implicit val td: TraceData = TraceData.noop
+
+    ApplicationDatabase.open(cfg, TracingService.noop)
+    ApplicationSlick.open(TracingService.noop)
+
+    val id = UUID.randomUUID
+    val title = scala.util.Random.alphanumeric.take(8).mkString
+    val newSession = SessionRow.empty(id = id, title = title, slug = title.toLowerCase, status = SessionStatusType.Active)
+
+    val future = ApplicationDatabase.executeF(SessionRowQueries.insert(newSession)).flatMap { _ =&gt;
+      ApplicationSlick.slick.run(&quot;getSession&quot;)(SessionRowTable.query.filter(_.id === id).result.head)
+    }
+
+    val session = Await.result(future, 10.seconds)
+    println(session.asJson.spaces2)
+  }
+}
+</code></pre>
+<p>Yep, that worked</p>
+<pre><code>sbt:estimate.poker&gt; run
+[info] Running Entrypoint
+{
+  &quot;id&quot; : &quot;ceb7e9f2-03d7-4b72-95e2-d1ec9fbcbfa9&quot;,
+  &quot;title&quot; : &quot;gdCvAi7n&quot;,
+  &quot;slug&quot; : &quot;gdcvai7n&quot;,
+  &quot;choices&quot; : [
+  ],
+  &quot;options&quot; : {
+
+  },
+  &quot;status&quot; : &quot;Active&quot;,
+  &quot;created&quot; : &quot;2019-02-23T11:44:03.577966&quot;,
+  &quot;completed&quot; : null
+}
+[success] Total time: 1s
+</code></pre>
+<p>It doesn&rsquo;t look like much, but Entrypoint now opens a database and Slick context, inserts a new session with JDBC, then uses Slick to retrieve the newly-inserted row and print the json representation. We also generated dependency-injected services and a GraphQL schema, but those will have to until after the next step, where we configure a <a href="https://www.playframework.com">Play Framework</a> web application</p>
+<h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
+<p><a href="https://github.com/KyleU/estimate/tree/05-more-features">https://github.com/KyleU/estimate/tree/05-more-features</a></p>
+<p>See this branch&rsquo;s Pull Request for detailed comments on the modified files</p>
+<p><a href="https://github.com/KyleU/estimate/pull/5">https://github.com/KyleU/estimate/pull/5</a></p>
+<h2><a href="#next-steps" name="next-steps" class="anchor"><span class="anchor-link"></span></a>Next steps</h2>
+<p>A console app isn&rsquo;t that impressive, so let&rsquo;s <a href="06-web-application.html">make a web application</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.1/doc/src/tutorial/poker/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.1/doc/src/tutorial/poker/05-more-features.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -256,7 +319,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../../tutorial/index.html" title="Tutorials" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../../tutorial/poker/04-basic-codegen.html" title="Basic Codegen" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -265,17 +328,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Tutorials
+Basic Codegen
 </span>
 </div>
 </a>
-<a href="../../tutorial/poker/01-hello-world.html" title="Hello World" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../../tutorial/poker/06-web-application.html" title="Web Application" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Hello World
+Web Application
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

@@ -175,10 +175,14 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/05-web-application.html#web-application" class="header">Web Application</a>
+  <li><a href="../../tutorial/poker/06-web-application.html#web-application" class="header">Web Application</a>
   <ul>
-    <li><a href="../../tutorial/poker/05-web-application.html#explore-the-code" class="header">Explore the code</a></li>
-    <li><a href="../../tutorial/poker/05-web-application.html#next-steps" class="header">Next steps</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#scala-build-definition" class="header">Scala build definition</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#housekeeping" class="header">Housekeeping</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#configuration" class="header">Configuration</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#success-" class="header">Success!</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -187,7 +191,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.3.0
+<i class="md-icon" title="Version">label_outline</i> 1.3.1
 </label>
 </li>
 </ul>
@@ -200,10 +204,14 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/05-web-application.html#web-application" class="header">Web Application</a>
+  <li><a href="../../tutorial/poker/06-web-application.html#web-application" class="header">Web Application</a>
   <ul>
-    <li><a href="../../tutorial/poker/05-web-application.html#explore-the-code" class="header">Explore the code</a></li>
-    <li><a href="../../tutorial/poker/05-web-application.html#next-steps" class="header">Next steps</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#scala-build-definition" class="header">Scala build definition</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#housekeeping" class="header">Housekeeping</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#configuration" class="header">Configuration</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#success-" class="header">Success!</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/06-web-application.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -215,23 +223,68 @@ KyleU/projectile
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#web-application" name="web-application" class="anchor"><span class="anchor-link"></span></a>Web Application</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
-<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>04-basic-codegen</code> branch</p></div>
-<p>TODO: Webapp</p>
+<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>05-more-features</code> branch</p></div>
+<p>So we currently have a pretty great little console app that lets us work with the database, but a <a href="https://www.playframework.com">Play Framework</a> web application would be even cooler</p>
+<h2><a href="#scala-build-definition" name="scala-build-definition" class="anchor"><span class="anchor-link"></span></a>Scala build definition</h2>
+<p>Now is as good a time as any to move from <code>.sbt</code> files to a Scala build. First let&rsquo;s add the Play plugin and a few others:</p>
+<p>Change your <code>project/plugins.sbt</code> to match <a href="https://github.com/KyleU/estimate/blob/06-web-application/project/plugins.sbt">this</a></p>
+<p>Now, create three new files in <code>/project</code>:</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/project/Common.scala"><code>project/Common.scala</code></a></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/project/Dependencies.scala"><code>project/Dependencies.scala</code></a></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/project/Server.scala"><code>project/Server.scala</code></a></li>
+</ul>
+<p>And, finally, change your <code>build.sbt</code> to match <a href="https://github.com/KyleU/estimate/blob/06-web-application/build.sbt">this</a> single line</p>
+<h2><a href="#housekeeping" name="housekeeping" class="anchor"><span class="anchor-link"></span></a>Housekeeping</h2><div class="callout warning "><div class="callout-title">Disclaimer</div>
+<p>This next part is very boring. We&rsquo;re going to switch Projectile&rsquo;s configuration to a Play app, regenerate the files, and audit to clean up the old stuff.</p>
+<p>If you want to skip this section, checkout the git tag <a href="https://github.com/KyleU/estimate/tree/06-web-application-housekeeping"><code>06-web-application-housekeeping</code></a>, where these steps have already been performed.</p></div>
+<p>Play Framework projects use <code>app</code> for the source root. We&rsquo;ve been using <code>src/main/scala</code> up to this point, so we&rsquo;ll need to change Projectile to expect a Play app&rsquo;s setup. Open the <a href="http://localhost:20000/project/estimate">project details</a> page, and select &ldquo;Edit Summary&rdquo;. </p>
+<p>Change the template from &ldquo;Scala Library&rdquo; to &ldquo;Play Framework&rdquo;, and save changes. Now the directories are set up correctly, but our old files still exist.</p>
+<p>Export the project, then audit and fix all to remove the old files. You&rsquo;ll also need to move <code>application.conf</code> to <code>/conf</code>, and you may as well delete <code>Entrypoint</code></p>
+<p>Compile, and you should be able to <code>run</code> in sbt to start the server (though it&rsquo;ll only throw 404s for now)</p>
+<h2><a href="#configuration" name="configuration" class="anchor"><span class="anchor-link"></span></a>Configuration</h2><div class="callout warning "><div class="callout-title">Disclaimer</div>
+<p>This next part is very boring. We&rsquo;re going to add a Play controller, routes file, and Twirl template. </p>
+<p>If you want to skip this section, checkout the git branch <a href="https://github.com/KyleU/estimate/tree/06-web-application"><code>06-web-application</code></a>, where these steps have already been performed.</p></div>
+<p>Now that we&rsquo;ve converted to Play, we&rsquo;ll need to configure some stuff before we can use the Projectile web libraries. </p>
+<p><code>conf/application.conf</code> can slim down:</p>
+<pre><code>projectName = &quot;estimate&quot;
+secretKey = &quot;change_this_secret_key&quot;
+
+include &quot;projectile-auth.conf&quot;
+
+play {
+  modules.enabled += &quot;models.ProjectileModule&quot;
+  server.http.port = 24000
+}
+</code></pre>
+<p>Then add the following files:</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/app/assets/stylesheets/main.less"><code>app/assets/stylesheets/main.less</code></a>: Basic styles for our app</li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/app/controllers/HomeController.scala"><code>app/controllers/HomeController.scala</code></a>: A Play Framework controller supporting authentication</li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/app/models/ProjectileModule.scala"><code>app/models/ProjectileModule.scala</code></a>: A Guice module that injects a few classes needed by <code>projectile-lib-auth</code></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/app/util/Config.scala"><code>app/util/Config.scala</code></a>: A simple class to track our project info</li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/app/views/index.scala.html"><code>app/views/index.scala.html</code></a>: A basic home page, using the base template from <code>projectile-lib-auth</code></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/06-web-application/conf/routes"><code>conf/routes</code></a>: This wires up the authentication routes and HomeController&rsquo;s lone action</li>
+</ul>
+<h2><a href="#success-" name="success-" class="anchor"><span class="anchor-link"></span></a>Success!</h2>
+<p>If we&rsquo;ve got everything set up correctly, we should have a web application with authentication and a Material Design theme.</p>
+<p><img src="img/06-01-success.png" alt="success" /></p>
+<p>You can sign up for a local account using the menu in the upper right. The &ldquo;admin&rdquo; link is broken right now, that&rsquo;s what we&rsquo;ll fix next</p>
 <h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
-<p><a href="https://github.com/KyleU/estimate/tree/05-web-application">https://github.com/KyleU/estimate/tree/05-web-application</a></p>
-<p>See this branch&rsquo;s Pull Request for detailed comments on the generated files</p>
-<p><a href="https://github.com/KyleU/estimate/pull/5">https://github.com/KyleU/estimate/pull/5</a></p>
+<p><a href="https://github.com/KyleU/estimate/tree/06-web-application">https://github.com/KyleU/estimate/tree/06-web-application</a></p>
+<p>See this branch&rsquo;s Pull Request for detailed comments on the modified files</p>
+<p><a href="https://github.com/KyleU/estimate/pull/6">https://github.com/KyleU/estimate/pull/6</a></p>
 <h2><a href="#next-steps" name="next-steps" class="anchor"><span class="anchor-link"></span></a>Next steps</h2>
 <p>TODO</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.0/doc/src/tutorial/poker/05-web-application.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.1/doc/src/tutorial/poker/06-web-application.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.3.0
+1.3.1
 </span>
 </div>
 </article>
@@ -241,7 +294,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../../tutorial/poker/04-basic-codegen.html" title="Basic Codegen" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../../tutorial/poker/05-more-features.html" title="More Features" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -250,17 +303,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Basic Codegen
+More Features
 </span>
 </div>
 </a>
-<a href="../../codegen/index.html" title="Code Generation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../../tutorial/poker/07-coming-soon.html" title="Coming Soon" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Code Generation
+Coming Soon
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
