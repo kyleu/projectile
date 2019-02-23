@@ -1,10 +1,12 @@
+import Dependencies._
+import com.typesafe.sbt.less.Import.LessKeys
+import com.typesafe.sbt.web.SbtWeb.autoImport.Assets
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys._
 import sbt._
-import Dependencies._
+import sbtassembly.AssemblyPlugin
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-import sbtassembly.AssemblyPlugin
 
 object LibraryProjects {
   private[this] def libraryProject[T <: Project](p: T) = {
@@ -89,7 +91,8 @@ object LibraryProjects {
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache,
+    includeFilter in (Assets, LessKeys.less) := "projectile.less"
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val `projectile-lib-auth-graphql` = libraryProject(project in file("libraries/projectile-lib-auth-graphql")).settings(
