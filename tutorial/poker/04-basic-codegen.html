@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Database Setup · Projectile</title>
+<title>Basic Codegen · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Database Setup
+Basic Codegen
 </span>
 </div>
 </div>
@@ -173,6 +173,14 @@ KyleU/projectile
   <li><a href="../../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../../tutorial/poker/04-basic-codegen.html#basic-codegen" class="header">Basic Codegen</a>
+  <ul>
+    <li><a href="../../tutorial/poker/04-basic-codegen.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/04-basic-codegen.html#next-steps" class="header">Next steps</a></li>
+  </ul></li>
+</ul>
 </nav>
 
 </nav>
@@ -186,25 +194,41 @@ KyleU/projectile
 </div>
 </div>
 </div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../../tutorial/poker/04-basic-codegen.html#basic-codegen" class="header">Basic Codegen</a>
+  <ul>
+    <li><a href="../../tutorial/poker/04-basic-codegen.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/04-basic-codegen.html#next-steps" class="header">Next steps</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#database-setup" name="database-setup" class="anchor"><span class="anchor-link"></span></a>Database Setup</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
-<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate.poker">estimate.poker</a>, and have completed the <a href="01_first-steps.md">previous tutorial step</a></p></div>
-<p>Now that we have a basic project configured, let&rsquo;s add a database schema for Projectile to use for code generation. </p>
-<p>Go ahead and checkout the <code>tutorial-2</code> tag by running <code>git checkout -b tutorial-2</code>. This adds four files in <code>./ddl</code>:</p>
-<ul>
-  <li><a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/create-db.ddl.sql">create-db.ddl.sql</a>, containing statements to create the database and user</li>
-  <li><a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/schema.sql">schema.sql</a>, describing all of the tables and types needed in the database</li>
-  <li><a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/seed-data.sql">seed-data.sql</a>, inserting initial test data, so we have something to look at</li>
-  <li><a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/drop.ddl.sql">drop.ddl.sql</a>, which, when run, removes everything created by <a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/schema.sql">schema.sql</a></li>
-</ul>
-<p>Using a tool like <code>psql</code> or <a href="https://databaseflow.com">Database Flow</a>, run <a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/create-db.ddl.sql">create-db.ddl.sql</a>, or manually create an empty database named <code>estimate</code>. Then, run <a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/schema.sql">schema.sql</a> to create the database structure, and <a href="https://github.com/KyleU/estimate.poker/blob/master/ddl/seed-data.sql">seed-data.sql</a> to create the initital data.</p>
-<p>Connect to your database, and run <code>select * from session</code>. If at least one row comes back, you&rsquo;re in business.</p>
-<p>Now it&rsquo;s time to configure Projectile, giving it the configuration it needs to generate some code, so <a href="03_adding-projectile.html">get going</a>!</p>
+<h1><a href="#basic-codegen" name="basic-codegen" class="anchor"><span class="anchor-link"></span></a>Basic Codegen</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
+<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>03-configuring-projectile</code> branch</p></div>
+<p>Now that you&rsquo;ve got Projectile configured, go ahead either run &ldquo;projectile export&rdquo; from SBT, or click the big &ldquo;Export&rdquo; button in the UI. </p>
+<p>TODO: Review of generated files (modify Entrypoint)</p>
+<p>TODO: Set packages</p>
+<p>TODO: Audit to clean up old files</p>
+<h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
+<p><a href="https://github.com/KyleU/estimate/tree/04-basic-codegen">https://github.com/KyleU/estimate/tree/04-basic-codegen</a> </p>
+<p>See this branch&rsquo;s Pull Request for detailed comments on the generated files</p>
+<p><a href="https://github.com/KyleU/estimate/pull/4">https://github.com/KyleU/estimate/pull/4</a></p>
+<h2><a href="#next-steps" name="next-steps" class="anchor"><span class="anchor-link"></span></a>Next steps</h2>
+<p>A console app isn&rsquo;t that impressive, so let&rsquo;s <a href="05-web-application.html">make a web application</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.0/doc/src/tutorial/poker/02_database-setup.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.0/doc/src/tutorial/poker/04-basic-codegen.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -220,7 +244,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../../tutorial/poker/01_first-steps.html" title="First Steps" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../../tutorial/poker/03-configuring-projectile.html" title="Adding Projectile" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -229,17 +253,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-First Steps
+Adding Projectile
 </span>
 </div>
 </a>
-<a href="../../tutorial/poker/03_adding-projectile.html" title="Adding Projectile" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../../tutorial/poker/05-web-application.html" title="Web Application" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Adding Projectile
+Web Application
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
