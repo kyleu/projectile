@@ -28,6 +28,13 @@
           </div>
         </div>
       }
+      @if(input.isInstanceOf[com.kyleu.projectile.models.thrift.input.ThriftInput]) {
+        <div class="collection-item">
+          <div class="input-field">
+            <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/thrift-files.json")">Thrift Files</a>
+          </div>
+        </div>
+      }
       <div class="collection-item">
         <input class="btn theme" type="submit" value="Save" />
         <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)">Cancel</a>

@@ -14,7 +14,6 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
   def formNew = Action.async { implicit request =>
     val inputs = projectile.listInputs().map(_.key).sorted
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formSummary(projectile, ProjectSummary(
-      template = ProjectTemplate.Custom,
       key = "new",
       input = inputs.headOption.getOrElse("")
     ), inputs)))
@@ -31,6 +30,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
       description = form("description"),
       template = ProjectTemplate.withValue(form("template"))
     ))
+    projectile.updateProject(project.key)
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))
   }
 
@@ -105,11 +105,7 @@ class ProjectFormController @javax.inject.Inject() () extends ProjectileControll
     if (form("key").trim.isEmpty) {
       throw new IllegalStateException("No project key provided")
     }
-    val summary = projectile.getProjectSummaryOpt(form("key")).getOrElse(ProjectSummary(
-      template = template,
-      input = form("input").trim,
-      key = form("key").trim
-    ))
-    summary -> form
+    val summary = projectile.getProjectSummaryOpt(form("key")).getOrElse(ProjectSummary.newObj(key = form("key").trim))
+    summary.copy(template = template, input = form("input").trim) -> form
   }
 }

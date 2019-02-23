@@ -7,12 +7,14 @@ import com.kyleu.projectile.util.JsonSerializers._
 object ProjectSummary {
   implicit val jsonEncoder: Encoder[ProjectSummary] = deriveEncoder
   implicit val jsonDecoder: Decoder[ProjectSummary] = deriveDecoder
+
+  def newObj(key: String) = ProjectSummary(key = key, features = Set(ProjectFeature.Core, ProjectFeature.DataModel))
 }
 
 case class ProjectSummary(
-    template: ProjectTemplate,
     key: String,
-    input: String,
+    template: ProjectTemplate = ProjectTemplate.Custom,
+    input: String = "invalid",
     description: String = "...",
     features: Set[ProjectFeature] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,

@@ -1,15 +1,15 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, summary: com.kyleu.projectile.models.project.ProjectSummary, inputs: Seq[String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
-)@com.kyleu.projectile.web.views.html.layout.simple(projectile, summary.key) {
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(summary.key == "new") { "New Project" } else { summary.key }) {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.saveSummary()">
   <div class="collection with-header">
     <div class="collection-header">
-      <h5><i class=" @com.kyleu.projectile.models.template.Icons.project"></i> @summary.key</h5>
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.project"></i> @if(summary.key == "new") { New Project } else { @summary.key }</h5>
     </div>
     @if(summary.key == "new") {
       <div class="collection-item">
         <div class="input-field">
-          <input id="key" name="key" type="text" required class="validate" value="NewProjectKey" />
+          <input id="key" name="key" type="text" required class="validate" value="" />
           <label for="key">Key</label>
         </div>
       </div>
@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="collection-item">
-      <input class="btn theme" type="submit" value="Create Project" />
+      <input class="btn theme" type="submit" @if(summary.key == "new") { value="Create Project" } else { value="Save Changes" } />
       <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.routes.HomeController.index()">Cancel</a>
     </div>
   </div>

@@ -21,12 +21,15 @@
 
   <div id="input-detail">
     <div class="collection">
-      @if(input.files.isEmpty) {
-        <div class="collection-item">No Thrift IDL files</div>
-      }
-      @input.files.map { f =>
-        <div class="collection-item">@f</div>
-      }
+      <div class="collection-item">
+        <div class="right"><a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/thrift-files.json")">Change Files</a></div>
+        @if(input.files.isEmpty) {
+          <div>No Thrift IDL files</div>
+        }
+        @input.files.map { f =>
+          <div>@f</div>
+        }
+      </div>
       <div class="collection-item">
         <a class="btn theme" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
       </div>
