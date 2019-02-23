@@ -3,7 +3,6 @@
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Edit") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.input.routes.InputController.save()">
     <input id="key" name="key" type="hidden" value="@input.key" />
-    <input id="template" name="template" type="hidden" value="@input.template.value" />
 
     <div class="collection with-header">
       <div class="collection-header">

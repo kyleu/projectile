@@ -55,8 +55,7 @@ object Dependencies {
   }
 
   object Thrift {
-    val version = "19.1.0"
-    val core = "com.twitter" %% "finagle-core" % version
+    val core = "com.twitter" %% "finagle-core" % "19.2.0"
   }
 
   object Metrics {
@@ -71,7 +70,7 @@ object Dependencies {
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.23.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.24.0"
   }
 
   object Authentication {
@@ -89,7 +88,7 @@ object Dependencies {
     val fontAwesome = "org.webjars" % "font-awesome" % "4.7.0" intransitive()
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.5" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.8" intransitive()
 
     val all = Seq(autocomplete, fontAwesome, jquery, materialize, swaggerUi)
   }
@@ -113,7 +112,7 @@ object Dependencies {
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
     val reftree = "io.github.stanch" %% "reftree" % "1.3.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
-    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.25"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.3"
   }

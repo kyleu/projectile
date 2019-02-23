@@ -46,7 +46,7 @@
     <div class="col s12 m6">
       <div class="collection with-header">
         <div class="collection-header">
-          <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formNew()">Add Project</a></div>
+          <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.formNew()">Add Project</a></div>
           <h5><i class=" @com.kyleu.projectile.models.template.Icons.project"></i> Projects</h5>
           @if(projects.size == 1) {
             One available project
@@ -56,7 +56,7 @@
         </div>
         @if(projects.isEmpty) {
           <div class="collection-item">
-            You have no projects configured at this path, go ahead and <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.formNew()">add one</a>.
+            You have no projects configured at this path, go ahead and <a href="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.formNew()">add one</a>.
           </div>
         }
         @projects.sortBy(_.key).map { project =>

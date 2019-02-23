@@ -2,17 +2,13 @@ package com.kyleu.projectile.models.project
 
 import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.feature.ProjectFeature
-import com.kyleu.projectile.models.feature.ProjectFeature._
 import com.kyleu.projectile.models.template.Icons
 
 sealed abstract class ProjectTemplate(
     override val value: String,
     val title: String,
     val description: String,
-    val repo: String,
-    val icon: String,
-    val features: Set[ProjectFeature]
+    val icon: String
 ) extends StringEnumEntry {
   def path(p: OutputPath) = p match {
     case OutputPath.Root => "."
@@ -33,18 +29,14 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     value = "scala-library",
     title = "Scala Library",
     description = "A simple Scala library, built with sbt, that depends on Circe and Enumeratum",
-    repo = "https://github.com/KyleU/projectile-template-scala-library.git",
-    icon = Icons.library,
-    features = Set(Core, DataModel, Service, GraphQL, Slick, Doobie, OpenAPI, Wiki)
+    icon = Icons.library
   )
 
   case object Play extends ProjectTemplate(
     value = "play",
     title = "Play Framework",
-    description = "A simple Scala Play Framework application with some useful defaults and helper classes",
-    repo = "https://github.com/KyleU/projectile-template-play.git",
-    icon = Icons.library,
-    features = ProjectFeature.values.toSet
+    description = "A Play Framework application with some useful defaults and helper classes",
+    icon = Icons.library
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.GraphQLOutput => "conf/graphql"
@@ -58,13 +50,11 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
     }
   }
 
-  case object Boilerplay extends ProjectTemplate(
-    value = "boilerplay",
-    title = "Boilerplay",
-    description = "Constantly updated, Boilerplay is a starter web application with loads of features",
-    repo = "https://github.com/KyleU/boilerplay.git",
-    icon = Icons.web,
-    features = ProjectFeature.values.toSet
+  case object ScalaJS extends ProjectTemplate(
+    value = "scalajs",
+    title = "Scala.js",
+    description = "A full web application with shared models and a Scala.js client project",
+    icon = Icons.web
   ) {
     override def path(p: OutputPath) = p match {
       case OutputPath.GraphQLOutput => "conf/graphql"
@@ -83,10 +73,8 @@ object ProjectTemplate extends StringEnum[ProjectTemplate] with StringCirceEnum[
   case object Custom extends ProjectTemplate(
     value = "custom",
     title = "Custom",
-    description = "A custom template allows you to specify default options manually",
-    repo = "",
-    icon = Icons.project,
-    features = ProjectFeature.values.toSet
+    description = "A custom template allowing you to specify paths and options manually",
+    icon = Icons.project
   )
 
   override val values = findValues

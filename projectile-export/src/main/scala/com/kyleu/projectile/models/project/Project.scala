@@ -33,10 +33,7 @@ case class Project(
     throw new IllegalStateException(s"No $t in project [$key] with key [$k] among candidates [${candidates.mkString(", ")}]")
   }
 
-  def availableFeatures(inputTemplate: InputTemplate) = ProjectFeature.values.filter {
-    case f if template.features.contains(f) => f.appliesTo(inputTemplate)
-    case _ => false
-  }
+  def availableFeatures(inputTemplate: InputTemplate) = ProjectFeature.values.filter(_.appliesTo(inputTemplate))
 
   def getPath(p: OutputPath): String = p match {
     case OutputPath.Root => paths.getOrElse(p, template.path(p))

@@ -1,7 +1,7 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, summary: com.kyleu.projectile.models.project.ProjectSummary, inputs: Seq[String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(summary.key == "new") { "New Project" } else { summary.key }) {
-  <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.saveSummary()">
+  <form method="post" action="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.saveSummary()">
   <div class="collection with-header">
     <div class="collection-header">
       <h5><i class=" @com.kyleu.projectile.models.template.Icons.project"></i> @if(summary.key == "new") { New Project } else { @summary.key }</h5>
@@ -41,9 +41,9 @@
         <select id="template" name="template">
         @com.kyleu.projectile.models.project.ProjectTemplate.values.map { t =>
           @if(summary.template == t) {
-            <option value="@t.value" selected="selected">@t.title</option>
+            <option value="@t.value" selected="selected">@t.title: @t.description</option>
           } else {
-            <option value="@t.value">@t.title</option>
+            <option value="@t.value">@t.title: @t.description</option>
           }
         }
         </select>

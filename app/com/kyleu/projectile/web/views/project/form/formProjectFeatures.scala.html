@@ -1,9 +1,8 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, inputTemplate: com.kyleu.projectile.models.input.InputTemplate, project: com.kyleu.projectile.models.project.Project)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Feature Edit") {
-  <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectFormController.saveFeatures()">
+  <form method="post" action="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.saveFeatures()">
     <input id="key" name="key" type="hidden" value="@project.key" />
-    <input id="template" name="template" type="hidden" value="@project.template.value" />
 
     <div class="collection with-header">
       <div class="collection-header">
