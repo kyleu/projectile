@@ -65,6 +65,13 @@ Update the following file:
 - [`conf/routes`](https://github.com/KyleU/estimate/blob/07-admin-site/conf/routes): Wires `projectile.routes`, `system.routes`, and `graphql.routes`
 
 
+## Exporting new features
+
+Head back to the project detail page in the Projectile UI and add the "Controller", and "Notes" features.
+
+Generate the new code by hitting "Export", and you're in business.
+
+
 ## The result
 
 If all went well (or you checked out the `07-admin-site` branch), you've now got a full admin site. See @ref[database codegen](../../codegen/database.md) for a tour of the features.

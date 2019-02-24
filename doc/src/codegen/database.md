@@ -1,18 +1,24 @@
 # Database
 
-Projectile reads the details of your PostgreSQL database, and generates Scala code intended to be used alongside the [Projectile libraries](libraries/index.nd).
-It creates only what you ask for, from basic case classes to a full admin site with GraphQL. @ref[Get started](../gettingStarted.md) 
+@@@ index
 
+* [Core](features/db/core.md)
+* [Service](features/db/service.md)
+* [Slick](features/db/slick.md)
+* [Doobie](features/db/doobie.md)
+* [GraphQL](features/db/graphql.md)
+* [Controller](features/db/controller.md)
+* [Thrift](features/db/thrift.md)
+* [OpenAPI](features/db/openapi.md)
+* [Wiki](features/db/wiki.md)
 
-## Features
+@@@
 
-### @ref[Enumerations](features/db/enums.md) 
+Projectile reads the details of your PostgreSQL database, and generates Scala code intended to be used alongside the @ref[Projectile libraries](../libraries/index.md).
+It creates only what you ask for, from basic case classes to a full admin site with GraphQL.
 
-TODO
+If you've already @ref[installed Projectile](../gettingStarted/installing.md), started the server, and @ref[created your project](../gettingStarted/project.md),
+you can edit the installed features, export your project, and end up with a pleasantly-designed Scala application.  
 
-
-### @ref[Scala case classes](features/db/core.md)
-
-For each table or view, somethingsomething 
-
-
+## Features 
+@@toc { depth=2 }

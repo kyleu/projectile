@@ -2,7 +2,7 @@
 
 @@@ index
 
-* [Getting Started](gettingStarted.md)
+* [Getting Started](gettingStarted/index.md)
 * [Tutorials](tutorial/index.md)
 * [Code Generation](codegen/index.md)
 * [Libraries](libraries/index.md)
