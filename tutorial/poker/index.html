@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Estimate Poker · Projectile</title>
+<title>estimate.poker · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Estimate Poker
+estimate.poker
 </span>
 </div>
 </div>
@@ -147,7 +147,7 @@ KyleU/projectile
   </ul></li>
   <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html" class="active page">Estimate Poker</a></li>
+    <li><a href="../../tutorial/poker/index.html" class="active page">estimate.poker</a></li>
   </ul></li>
   <li><a href="../../codegen/index.html" class="page">Code Generation</a>
   <ul>
@@ -179,10 +179,11 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">Estimate Poker</a>
+  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">estimate.poker</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source Code</a></li>
-    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo Site</a></li>
+    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo site</a></li>
+    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source code</a></li>
+    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
     <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
   </ul></li>
 </ul>
@@ -205,10 +206,11 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">Estimate Poker</a>
+  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">estimate.poker</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source Code</a></li>
-    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo Site</a></li>
+    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo site</a></li>
+    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source code</a></li>
+    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
     <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
   </ul></li>
 </ul>
@@ -220,18 +222,21 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#estimate-poker" name="estimate-poker" class="anchor"><span class="anchor-link"></span></a>Estimate Poker</h1>
-<p>The Estimate Poker tutorial will start with a small Scala application, add Projectile, export more and more features, and finally produce a web application with:</p>
+<h1><a href="#estimate-poker" name="estimate-poker" class="anchor"><span class="anchor-link"></span></a>estimate.poker</h1>
+<p>The estimate.poker tutorial will start with a &ldquo;Hello World&rdquo; Scala application, set up a PostgreSQL database, add Projectile, generate more and more features, and finally produce a web application with:</p>
 <ul>
   <li>Websocket transport of shared Scala classes for real-time client updates</li>
   <li>Play Framework admin site with UI for data access, search, and mutations</li>
   <li>Full GraphQL API, with a schema visualizer and query IDE</li>
   <li>Code generated services to reduce CRUD boilerplate</li>
 </ul>
-<h2><a href="#source-code" name="source-code" class="anchor"><span class="anchor-link"></span></a>Source Code</h2>
-<p>The source code for this project is available at <a href="https://github.com/KyleU/estimate">https://github.com/KyleU/estimate</a></p>
-<h2><a href="#demo-site" name="demo-site" class="anchor"><span class="anchor-link"></span></a>Demo Site</h2>
+<h2><a href="#demo-site" name="demo-site" class="anchor"><span class="anchor-link"></span></a>Demo site</h2>
 <p>You can see the end result of this tutorial at <a href="https://estimate.poker">https://estimate.poker</a></p>
+<h2><a href="#source-code" name="source-code" class="anchor"><span class="anchor-link"></span></a>Source code</h2>
+<p>The source code for this project is available at <a href="https://github.com/KyleU/estimate">https://github.com/KyleU/estimate</a></p>
+<h2><a href="#database-schema" name="database-schema" class="anchor"><span class="anchor-link"></span></a>Database schema</h2>
+<p>The schema is created by a flyway migration, available <a href="https://github.com/KyleU/estimate/blob/master/conf/db/migration/V1__InitialSchema.sql">here</a></p>
+<p><img src="img/02-01-ddl.png" alt="db schema" /></p>
 <h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
 <ul>
   <li><a href="01-hello-world.html">Hello World</a> will help you clone and build an initial Scala sbt project</li>
