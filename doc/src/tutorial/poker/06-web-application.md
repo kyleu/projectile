@@ -100,4 +100,4 @@ https://github.com/KyleU/estimate/pull/6
 
 ## Next steps
 
-TODO
+Now that we've got a web application, let's generate an admin site with a rich UI and performant GraphQL API. @ref[Ready when you are](07-admin-site.md)!

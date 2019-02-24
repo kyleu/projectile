@@ -8,7 +8,8 @@
 * [Basic Codegen](04-basic-codegen.md)
 * [More Features](05-more-features.md)
 * [Web Application](06-web-application.md)
-* [Coming Soon](07-coming-soon.md)
+* [Admin Site](07-admin-site.md)
+* [Coming Soon](08-coming-soon.md)
 
 @@@
 
@@ -38,6 +39,7 @@ You can see the end result of this tutorial at https://estimate.poker
 - @ref[Basic Codegen](04-basic-codegen.md) will create our first generated classes using Projectile
 - @ref[More Features](05-more-features.md) adds database queries, services, a GraphQL endpoint
 - @ref[Web Application](06-web-application.md) will turn our console-based duckling into a beautiful web swan
-- @ref[Coming Soon](07-coming-soon.md) TODO
+- @ref[Admin Site](07-admin-site.md) Generates a full-feature admin site and GraphQL API
+- @ref[Coming Soon](08-coming-soon.md) TODO
 
 

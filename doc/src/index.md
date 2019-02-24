@@ -17,9 +17,9 @@ https://kyleu.com/projectile
 
 https://github.com/KyleU/projectile
 
-## Code Generation
+## @ref[Code Generation](codegen/index.md)
 
-### Postgres Database
+### @ref[Postgres Database](codegen/database.md)
 
 For each table and view, Projectile can generate:
 
@@ -30,12 +30,12 @@ For each table and view, Projectile can generate:
 * Play framework controllers and views exposing an Openapi/Swagger endpoint and a beautiful admin interface supporting local or OAuth login
 
 
-### Thrift IDL
+### @ref[Thrift IDL](codegen/thrift.md)
 
 Projectile monitors your Thrift IDL, and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures
 
 
-### GraphQL Queries
+### @ref[GraphQL Queries](codegen/graphql.md)
 
 Projectile monitors your GraphQL schema and queries, and generates Scala case classes with input and result serialization 
 

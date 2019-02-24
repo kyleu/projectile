@@ -24,7 +24,6 @@ case class PostgresInput(
     username: String = "",
     password: String = "",
     ssl: Boolean = false,
-    db: String = "db",
     catalog: Option[String] = None,
     enums: Seq[EnumType] = Nil,
     tables: Seq[Table] = Nil,

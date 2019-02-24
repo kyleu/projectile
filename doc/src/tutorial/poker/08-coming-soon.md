@@ -1,8 +1,9 @@
+
 # Coming Soon
 
 @@@ note { title=Prerequisites }
 
-This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate) and switched to the `06-web-application` branch
+This page assumes you have checked out a local copy of [estimate.poker](https://github.com/KyleU/estimate) and switched to the `07-admin-site` branch
 
 @@@
 

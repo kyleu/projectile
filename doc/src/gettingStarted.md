@@ -1,34 +1,41 @@
 # Getting Started
 
-There are several ways to run Projectile:
+Projectile runs in your project's directory, creating generated source code based on your database, Thrift, or GraphQL APIs.
 
-## Release Jar
 
-- Download the leatest release from [GitHub](https://github.com/Kyleu/projectile/releases). Only a single file, `projectile.jar`, is needed
+## Download Projectile
+
+### Release Jar
+
+- [Download the latest release]((https://github.com/Kyleu/projectile/releases)) from GitHub. Only a single file, `projectile.jar`, is needed
 
 - From your project's directory, run `java -jar projectile.jar`, this will print CLI usage
 
 - To run the web server, run `java -jar projectile.jar server`
 
 
-## Shell script
+### Shell script
 
 Save [this file](https://raw.githubusercontent.com/KyleU/projectile/master/bin/projectile.sh) as `projectile.sh` and mark it executable. 
-Once executed, it will download and run the latest release from GitHub
+Once executed, it will download and run the latest release from GitHub, printing usage instructions by default.
+Run `projectile.sh server` to start the server
 
 
-## Ammonite
+### Ammonite
 
 Save [this file](https://raw.githubusercontent.com/KyleU/projectile/master/bin/projectile.sc) as `projectile.sc`. 
-Run with `amm projectile.sc` and it will download the dependencies
+Run with `amm projectile.sc` and it will download the dependencies and print usage instructions. 
+Run `amm projectile.sc server` to start the server
 
 
-## SBT Plugin
+### SBT Plugin
 
-An SBT plugin (@ref[details here](codegen/sbt-plugin.md)) is provided for running Projectile from within your project's SBT session
+An SBT plugin (@ref[details here](codegen/sbt-plugin.md)) is provided for running Projectile from within your project's SBT session.
+Because of SBT plugin restrictions, the web server is unavailable, though command-line usage is supported. 
+You can use one of the other methods to launch the server and use a UI to configure your project
 
 
-## Run From Source
+### Run From Source
 
 Clone [Projectile](https://github.com/Kyleu/projectile)
 
