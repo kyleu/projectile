@@ -76,6 +76,16 @@ Generate the new code by hitting "Export", and you're in business.
 
 If all went well (or you checked out the `07-admin-site` branch), you've now got a full admin site. See @ref[database codegen](../../codegen/database.md) for a tour of the features.
 
+![admin site](img/07-01-admin-site.png)
+
+There's a full GraphQL API as well (some sample queries are available in `conf/graphql/explore`)
+
+![graphql ide](img/07-02-graphql-ide.png)
+
+And it includes the [GraphiQL](https://github.com/graphql/graphiql) IDE and [GraphQL Voyager](https://github.com/APIs-guru/graphql-voyager) schema visualization
+
+![graphql visualization](img/07-03-graphql-visualization.png)
+
 
 ## Explore the code
 

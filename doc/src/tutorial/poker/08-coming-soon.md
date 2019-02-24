@@ -13,11 +13,11 @@ TODO: Coming Soon
 
 ## Explore the code
 
-https://github.com/KyleU/estimate/tree/07-???
+https://github.com/KyleU/estimate/tree/08-???
 
 See this branch's Pull Request for detailed comments on the generated files
 
-https://github.com/KyleU/estimate/pull/7
+https://github.com/KyleU/estimate/pull/8
 
 
 ## Next steps

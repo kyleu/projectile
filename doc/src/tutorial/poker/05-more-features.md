@@ -34,6 +34,7 @@ See [here](https://github.com/KyleU/estimate/blob/05-more-features/src/main/scal
 ## Generated Services
 
 Basic asynchronous services exposing all of the queries were generated.
+See [here](https://github.com/KyleU/estimate/blob/05-more-features/src/main/scala/services/session/SessionRowService.scala) for an example of what was generated for `Session`
 
 
 ## Generated Slick Bindings
