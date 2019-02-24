@@ -140,7 +140,11 @@ KyleU/projectile
 
 </div>
 <ul>
-  <li><a href="../gettingStarted.html" class="page">Getting Started</a></li>
+  <li><a href="../gettingStarted/index.html" class="page">Getting Started</a>
+  <ul>
+    <li><a href="../gettingStarted/installing.html" class="page">Installing Projectile</a></li>
+    <li><a href="../gettingStarted/project.html" class="page">Creating a Project</a></li>
+  </ul></li>
   <li><a href="../tutorial/index.html" class="page">Tutorials</a>
   <ul>
     <li><a href="../tutorial/poker/index.html" class="page">Estimate Poker</a></li>
@@ -173,6 +177,13 @@ KyleU/projectile
   <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../codegen/database.html#database" class="header">Database</a>
+  <ul>
+    <li><a href="../codegen/database.html#features" class="header">Features</a></li>
+  </ul></li>
+</ul>
 </nav>
 
 </nav>
@@ -186,11 +197,81 @@ KyleU/projectile
 </div>
 </div>
 </div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul>
+  <li><a href="../codegen/database.html#database" class="header">Database</a>
+  <ul>
+    <li><a href="../codegen/database.html#features" class="header">Features</a></li>
+  </ul></li>
+</ul>
+</nav>
+
+</div>
+</div>
+</div>
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#database" name="database" class="anchor"><span class="anchor-link"></span></a>Database</h1>
-<p>Projectile reads the details of your PostgreSQL database, and generates Scala code intended to be used alongside the <a href="libraries/index.nd">Projectile libraries</a>. It creates only what you ask for, from basic case classes to a full admin site with GraphQL. </p>
+<p>Projectile reads the details of your PostgreSQL database, and generates Scala code intended to be used alongside the <a href="../libraries/index.html">Projectile libraries</a>. It creates only what you ask for, from basic case classes to a full admin site with GraphQL.</p>
+<p>If you&rsquo;ve already <a href="../gettingStarted/installing.html">installed Projectile</a>, started the server, and <a href="../gettingStarted/project.html">created your project</a>, you can edit the installed features, export your project, and end up with a pleasantly-designed Scala application. </p>
+<h2><a href="#features" name="features" class="anchor"><span class="anchor-link"></span></a>Features</h2>
+<div class="toc ">
+<ul>
+  <li><a href="../codegen/features/db/core.html" class="page">Core</a>
+  <ul>
+    <li><a href="../codegen/features/db/core.html#enumeratum-enums" class="header">Enumeratum enums</a></li>
+    <li><a href="../codegen/features/db/core.html#scala-case-classes" class="header">Scala case classes</a></li>
+    <li><a href="../codegen/features/db/core.html#search-results-model" class="header">Search results model</a></li>
+    <li><a href="../codegen/features/db/core.html#json-serialization" class="header">Json serialization</a></li>
+    <li><a href="../codegen/features/db/core.html#datamodel-support" class="header">DataModel support</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/service.html" class="page">Service</a>
+  <ul>
+    <li><a href="../codegen/features/db/service.html#jdbc-queries" class="header">JDBC queries</a></li>
+    <li><a href="../codegen/features/db/service.html#asynchronous-service" class="header">Asynchronous service</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/slick.html" class="page">Slick</a>
+  <ul>
+    <li><a href="../codegen/features/db/slick.html#slick-column-types" class="header">Slick column types</a></li>
+    <li><a href="../codegen/features/db/slick.html#slick-tables" class="header">Slick tables</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/doobie.html" class="page">Doobie</a>
+  <ul>
+    <li><a href="../codegen/features/db/doobie.html#doobie-enum-bindings" class="header">Doobie enum bindings</a></li>
+    <li><a href="../codegen/features/db/doobie.html#doobie-model-bindings" class="header">Doobie model bindings</a></li>
+    <li><a href="../codegen/features/db/doobie.html#scalatest-unit-tests" class="header">Scalatest unit tests</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/graphql.html" class="page">GraphQL</a>
+  <ul>
+    <li><a href="../codegen/features/db/graphql.html#sangria-enum-schemata" class="header">Sangria enum schemata</a></li>
+    <li><a href="../codegen/features/db/graphql.html#sangria-model-schemata" class="header">Sangria model schemata</a></li>
+    <li><a href="../codegen/features/db/graphql.html#example-graphql-queries" class="header">Example GraphQL queries</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/controller.html" class="page">Controller</a>
+  <ul>
+    <li><a href="../codegen/features/db/controller.html#play-framework-controller" class="header">Play Framework controller</a></li>
+    <li><a href="../codegen/features/db/controller.html#play-routes-files" class="header">Play routes files</a></li>
+    <li><a href="../codegen/features/db/controller.html#twirl-templates" class="header">Twirl templates</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/thrift.html" class="page">Thrift</a>
+  <ul>
+    <li><a href="../codegen/features/db/thrift.html#thrift-idl-files" class="header">Thrift IDL files</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/openapi.html" class="page">OpenAPI</a>
+  <ul>
+    <li><a href="../codegen/features/db/openapi.html#swagger-openapi-endpoints" class="header">Swagger/OpenAPI endpoints</a></li>
+  </ul></li>
+  <li><a href="../codegen/features/db/wiki.html" class="page">Wiki</a>
+  <ul>
+    <li><a href="../codegen/features/db/wiki.html#github-project-wiki" class="header">Github project wiki</a></li>
+  </ul></li>
+</ul>
+</div>
 </div>
 <div>
 <a href="https://github.com/KyleU/projectile/tree/v1.3.1/doc/src/codegen/database.md" title="Edit this page" class="md-source-file md-edit">
@@ -222,13 +303,13 @@ Code Generation
 </span>
 </div>
 </a>
-<a href="../codegen/thrift.html" title="Thrift" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../codegen/features/db/core.html" title="Core" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Thrift
+Core
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
