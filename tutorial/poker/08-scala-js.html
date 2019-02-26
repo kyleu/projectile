@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Basic Codegen · Projectile</title>
+<title>Scala.js · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Basic Codegen
+Scala.js
 </span>
 </div>
 </div>
@@ -181,15 +181,13 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/04-basic-codegen.html#basic-codegen" class="header">Basic Codegen</a>
+  <li><a href="../../tutorial/poker/08-scala-js.html#scala-js" class="header">Scala.js</a>
   <ul>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#schema" class="header">Schema</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#enums" class="header">Enums</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#models" class="header">Models</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#organizing-the-output" class="header">Organizing the output</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#explore-the-code" class="header">Explore the code</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#next-steps" class="header">Next steps</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#shared-project-structure" class="header">Shared project structure</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#moving-generated-files" class="header">Moving generated files</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -211,15 +209,13 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/04-basic-codegen.html#basic-codegen" class="header">Basic Codegen</a>
+  <li><a href="../../tutorial/poker/08-scala-js.html#scala-js" class="header">Scala.js</a>
   <ul>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#schema" class="header">Schema</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#enums" class="header">Enums</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#models" class="header">Models</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#organizing-the-output" class="header">Organizing the output</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#explore-the-code" class="header">Explore the code</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#next-steps" class="header">Next steps</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#shared-project-structure" class="header">Shared project structure</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#moving-generated-files" class="header">Moving generated files</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/08-scala-js.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -230,123 +226,64 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#basic-codegen" name="basic-codegen" class="anchor"><span class="anchor-link"></span></a>Basic Codegen</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
-<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>03-configuring-projectile</code> branch</p></div>
-<p>Now that you&rsquo;ve got Projectile configured, go ahead either run &ldquo;projectile export&rdquo; from SBT, or click the big &ldquo;Export&rdquo; button in the UI. </p>
-<p>With luck, you&rsquo;ll see a screen showing the code that was generated. Return to sbt and compile, it should pick up a few dozen new files. </p>
-<h2><a href="#schema" name="schema" class="anchor"><span class="anchor-link"></span></a>Schema</h2>
-<p>As a reminder, this is the schema we&rsquo;re working with</p>
-<p><img src="img/02-01-ddl.png" alt="db schema" /></p>
-<p>Let&rsquo;s look at what was generated.</p>
-<h2><a href="#enums" name="enums" class="anchor"><span class="anchor-link"></span></a>Enums</h2>
-<p>For each Postgres type, an <a href="https://github.com/lloydmeta/enumeratum">Enumeratum</a> StringEnum is generated, mixing in Circe classes for json serialization</p>
-<p><code>src/main/scala/models/SessionStatusType.scala</code></p>
-<pre class="prettyprint"><code class="language-scala">/* Generated File */
-package models
+<h1><a href="#scala-js" name="scala-js" class="anchor"><span class="anchor-link"></span></a>Scala.js</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
+<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>07-admin-site</code> branch</p></div>
+<p>It sure would be nice if we could use the same models from our database in the client. Luckily, <a href="https://www.scala-js.org/">Scala.js</a> was built to solve this exact problem! We&rsquo;ll be adding a <code>client</code> project, as well as a <code>shared</code> project for, well, shared code.</p>
+<h2><a href="#shared-project-structure" name="shared-project-structure" class="anchor"><span class="anchor-link"></span></a>Shared project structure</h2>
+<p>To start, let&rsquo;s add the following two files to <code>/project</code>:</p>
+<p><code>project/Shared.scala</code> </p>
+<pre class="prettyprint"><code class="language-scala">object Shared {
+  lazy val shared = (crossProject(JSPlatform, JVMPlatform).withoutSuffixFor(JVMPlatform).crossType(CrossType.Pure) in file(&quot;shared&quot;)).settings(
+    libraryDependencies += &quot;com.kyleu&quot; %%% &quot;projectile-lib-core&quot; % Dependencies.Projectile.version,
+    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
+  ).settings(Common.commonSettings: _*)
 
-import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
-
-sealed abstract class SessionStatusType(override val value: String) extends StringEnumEntry {
-  override def toString = value
-}
-
-object SessionStatusType extends StringEnum[SessionStatusType] with StringCirceEnum[SessionStatusType] {
-  case object Creating extends SessionStatusType(&quot;Creating&quot;)
-  case object Active extends SessionStatusType(&quot;Active&quot;)
-  case object Complete extends SessionStatusType(&quot;Complete&quot;)
-
-  override val values = findValues
+  lazy val sharedJs = shared.js
+  lazy val sharedJvm = shared.jvm
 }
 </code></pre>
-<h2><a href="#models" name="models" class="anchor"><span class="anchor-link"></span></a>Models</h2>
-<p>For each Postgres table and view, a Scala case class is generated, with a companion object containing Circe json serialization and a helper factory method</p>
-<p>Note that the field <code>status</code> is correctly typed to an enum, and Java uuids and dates are correctly handled. This is accomplished with a few classes from <a href="../../libraries/core.html">projectile-lib-core</a>, which is cross-compiled to the JVM and JavaScript (we&rsquo;ll see why later)</p>
-<p><code>src/main/scala/models/SessionRow.scala</code></p>
-<pre class="prettyprint"><code class="language-scala">/* Generated File */
-package models
+<p><code>project/Client.scala</code> </p>
+<pre class="prettyprint"><code class="language-scala">object Client {
+  private[this] val clientSettings = Common.commonSettings ++ Seq(
+    libraryDependencies ++= Seq(&quot;com.kyleu&quot; %%% &quot;projectile-lib-scalajs&quot; % Dependencies.Projectile.version)
+  )
 
-import com.kyleu.projectile.util.DateUtils
-import com.kyleu.projectile.util.JsonSerializers._
-import io.circe.Json
-import java.time.LocalDateTime
-import java.util.UUID
-
-object SessionRow {
-  implicit val jsonEncoder: Encoder[SessionRow] = deriveEncoder
-  implicit val jsonDecoder: Decoder[SessionRow] = deriveDecoder
-
-  def empty(
-    id: UUID = UUID.randomUUID,
-    title: String = &quot;&quot;,
-    slug: String = &quot;&quot;,
-    choices: List[String] = List.empty,
-    options: Json = Json.obj(),
-    status: SessionStatusType = SessionStatusType.Creating,
-    created: LocalDateTime = DateUtils.now,
-    completed: Option[LocalDateTime] = None
-  ) = {
-    SessionRow(id, title, slug, choices, options, status, created, completed)
-  }
+  lazy val client = (project in file(&quot;client&quot;)).settings(clientSettings: _*).enablePlugins(ScalaJSPlugin, ScalaJSWeb).dependsOn(Shared.sharedJs)
 }
-
-final case class SessionRow(
-    id: UUID,
-    title: String,
-    slug: String,
-    choices: List[String],
-    options: Json,
-    status: SessionStatusType,
-    created: LocalDateTime,
-    completed: Option[LocalDateTime]
-)
 </code></pre>
+<p>We&rsquo;ll need to change the definition of <code>Server</code> to include our new <code>client</code> project:</p>
+<p><code>project/Server.scala</code></p>
+<pre class="prettyprint"><code class="language-scala">    ...
+    // Scala.js
+    scalaJSProjects := Seq(Client.client),
+
+    // Sbt-Web
+    JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+    pipelineStages ++= Seq(gzip),
+    ...
+
+</code></pre>
+<p>And, since we&rsquo;ve got two new projects (three, if you count sharedJs and sharedJvm separately), add them to <code>build.sbt</code>:</p>
+<pre class="prettyprint"><code class="language-scala">lazy val sharedJvm = Shared.sharedJvm
+lazy val sharedJs = Shared.sharedJs
+lazy val client = Client.client
+lazy val `estimate-poker` = Server.`estimate-poker`
+</code></pre>
+<h2><a href="#moving-generated-files" name="moving-generated-files" class="anchor"><span class="anchor-link"></span></a>Moving generated files</h2>
+<p>The generated models are still in the <code>server</code> project, so we&rsquo;ll need to move them to <code>shared</code>. Projectile has support for this, just edit your project (the &ldquo;Edit Summary&rdquo; link on the detail page), and change the template from &ldquo;Play Framework&rdquo; to &ldquo;Scala.js&rdquo;.</p>
+<p>Export your project again, and it will store the generated models in <code>shared/src/main/scala</code>. To remove the now-unreferenced files from the server project, simply &ldquo;Audit&rdquo; your project, and &ldquo;fix all&rdquo; the orphaned files</p>
 <h2><a href="#use-what-youve-built" name="use-what-youve-built" class="anchor"><span class="anchor-link"></span></a>Use what you&rsquo;ve built</h2>
-<p>Let&rsquo;s modify Entrypoint to create a new session and serialize it to json, just because we can</p>
-<pre class="prettyprint"><code class="language-scala">import com.kyleu.projectile.util.JsonSerializers._
-import models.SessionRow
-
-object Entrypoint {
-  def main(args: Array[String]): Unit = {
-    val session = SessionRow.empty(title = &quot;Hello!&quot;)
-    println(session.asJson.spaces2)
-  }
-}
-</code></pre>
-<p>Yep, that worked</p>
-<pre><code>sbt:estimate.poker&gt; run
-[info] Running Entrypoint
-{
-  &quot;id&quot; : &quot;baab15da-a971-425d-b25b-4fd02746798c&quot;,
-  &quot;title&quot; : &quot;Hello!&quot;,
-  &quot;slug&quot; : &quot;&quot;,
-  &quot;choices&quot; : [
-  ],
-  &quot;options&quot; : {
-
-  },
-  &quot;status&quot; : &quot;Creating&quot;,
-  &quot;created&quot; : &quot;2019-02-22T17:52:43.154545&quot;,
-  &quot;completed&quot; : null
-}
-[success] Total time: 1s
-</code></pre>
-<h2><a href="#organizing-the-output" name="organizing-the-output" class="anchor"><span class="anchor-link"></span></a>Organizing the output</h2><div class="callout warning "><div class="callout-title">Disclaimer</div>
-<p>This next part is very boring. We&rsquo;re going to be entering package names for each of the enums and models.</p>
-<p>Feel free to reset your repo and switch to the <a href="https://github.com/KyleU/estimate/tree/04-basic-codegen">04-basic-codegen</a> branch, where this is already done, then move on to the <a href="05-more-features.html">next step</a></p></div>
-<p>Currently, all of our classes are being generated in a single package. This is probably fine for our tiny application, but we can clean it up by assigning packages to the exported models and enums. Head back to the project detail page</p>
-<p><img src="img/04-01-project-detail.png" alt="project detail" /></p>
-<p>Click the &ldquo;Bulk Edit&rdquo; link at the top of the enums. You&rsquo;ll need to add package names, making it look like <a href="img/04-02-bulk-edit-enums.png">this</a></p>
-<p>Then head back click the &ldquo;Bulk Edit&rdquo; link at the top of the models. More package names, make it look like <a href="img/04-03-bulk-edit-models.png">this</a></p>
-<p>Click &ldquo;Export&rdquo; again, and it will create the same case classes, but all organized now. However, it left the old files behind, so select &ldquo;Audit&rdquo; to detect the orphaned files, then &ldquo;Fix All&rdquo;.</p>
+<p>Restart sbt, and your admin site should now include JavaScript enhancements like form editors and autocomnplete. See the docs on <a href="../../libraries/core.html">projectile-lib-core</a> and <a href="../../libraries/scalajs.html">projectile-lib-scalajs</a> for more details on the new libraries we&rsquo;re using.</p>
 <h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
-<p><a href="https://github.com/KyleU/estimate/tree/04-basic-codegen">https://github.com/KyleU/estimate/tree/04-basic-codegen</a> </p>
-<p>See this branch&rsquo;s Pull Request for detailed comments on the generated files</p>
-<p><a href="https://github.com/KyleU/estimate/pull/4">https://github.com/KyleU/estimate/pull/4</a></p>
+<p><a href="https://github.com/KyleU/estimate/tree/08-scala-js">https://github.com/KyleU/estimate/tree/08-scala-js</a></p>
+<p>See this branch&rsquo;s Pull Request for detailed comments on the modified files</p>
+<p><a href="https://github.com/KyleU/estimate/pull/8">https://github.com/KyleU/estimate/pull/8</a></p>
 <h2><a href="#next-steps" name="next-steps" class="anchor"><span class="anchor-link"></span></a>Next steps</h2>
-<p>Case classes are cool and all, but we&rsquo;re here to interact with a database, so let&rsquo;s <a href="05-more-features.html">add more features</a>!</p>
+<p>Now that we&rsquo;ve (finally) got a full-featured web application using classes shared between the JVM and JavaScript, it&rsquo;s time to build a real planning poker application! <a href="09-websocket.html">Come on, let&rsquo;s go</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/04-basic-codegen.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/08-scala-js.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -362,7 +299,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../../tutorial/poker/03-configuring-projectile.html" title="Configuring Projectile" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../../tutorial/poker/07-admin-site.html" title="Admin Site" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -371,17 +308,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Configuring Projectile
+Admin Site
 </span>
 </div>
 </a>
-<a href="../../tutorial/poker/05-more-features.html" title="More Features" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../../tutorial/poker/09-websocket.html" title="Planning Poker" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-More Features
+Planning Poker
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

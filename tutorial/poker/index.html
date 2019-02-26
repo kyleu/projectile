@@ -148,6 +148,8 @@ KyleU/projectile
   <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
   <ul>
     <li><a href="../../tutorial/poker/index.html" class="active page">estimate.poker</a></li>
+    <li><a href="../../tutorial/starwars/index.html" class="page">starwars</a></li>
+    <li><a href="../../tutorial/thrifty/index.html" class="page">thrifty</a></li>
   </ul></li>
   <li><a href="../../codegen/index.html" class="page">Code Generation</a>
   <ul>
@@ -183,8 +185,8 @@ KyleU/projectile
   <ul>
     <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo site</a></li>
     <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source code</a></li>
-    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
     <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -193,7 +195,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.3.1
+<i class="md-icon" title="Version">label_outline</i> 1.3.5
 </label>
 </li>
 </ul>
@@ -210,8 +212,8 @@ KyleU/projectile
   <ul>
     <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo site</a></li>
     <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source code</a></li>
-    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
     <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
+    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -234,9 +236,6 @@ KyleU/projectile
 <p>You can see the end result of this tutorial at <a href="https://estimate.poker">https://estimate.poker</a></p>
 <h2><a href="#source-code" name="source-code" class="anchor"><span class="anchor-link"></span></a>Source code</h2>
 <p>The source code for this project is available at <a href="https://github.com/KyleU/estimate">https://github.com/KyleU/estimate</a></p>
-<h2><a href="#database-schema" name="database-schema" class="anchor"><span class="anchor-link"></span></a>Database schema</h2>
-<p>The schema is created by a flyway migration, available <a href="https://github.com/KyleU/estimate/blob/master/conf/db/migration/V1__InitialSchema.sql">here</a></p>
-<p><img src="img/02-01-ddl.png" alt="db schema" /></p>
 <h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
 <ul>
   <li><a href="01-hello-world.html">Hello World</a> will help you clone and build an initial Scala sbt project</li>
@@ -245,18 +244,24 @@ KyleU/projectile
   <li><a href="04-basic-codegen.html">Basic Codegen</a> will create our first generated classes using Projectile</li>
   <li><a href="05-more-features.html">More Features</a> adds database queries, services, a GraphQL endpoint</li>
   <li><a href="06-web-application.html">Web Application</a> will turn our console-based duckling into a beautiful web swan</li>
-  <li><a href="07-admin-site.html">Admin Site</a> Generates a full-feature admin site and GraphQL API</li>
-  <li><a href="08-coming-soon.html">Coming Soon</a> TODO</li>
+  <li><a href="07-admin-site.html">Admin Site</a> generates a full-feature admin site and GraphQL API</li>
+  <li><a href="08-scala-js.html">Scala.js</a> creates a Scala.js project and shared code cross-compiled to Scala.js</li>
+  <li><a href="09-websocket.html">Websocket</a> builds a websocket transport for shared messages, Scala.js logic, and a few simple views</li>
+  <li><a href="10-planning-poker.html">Planning Poker</a> finally builds on what we&rsquo;ve created to make a real planning poker app</li>
+  <li><a href="11-wrapping-up.html">Wrapping Up</a> TODO</li>
 </ul>
+<h2><a href="#database-schema" name="database-schema" class="anchor"><span class="anchor-link"></span></a>Database schema</h2>
+<p>The schema is created by a flyway migration, available <a href="https://github.com/KyleU/estimate/blob/master/conf/db/migration/V1__InitialSchema.sql">here</a></p>
+<p><img src="img/02-01-ddl.png" alt="db schema" /></p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.1/doc/src/tutorial/poker/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/index.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.3.1
+1.3.5
 </span>
 </div>
 </article>

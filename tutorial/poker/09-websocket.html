@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Basic Codegen · Projectile</title>
+<title>Planning Poker · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Basic Codegen
+Planning Poker
 </span>
 </div>
 </div>
@@ -181,15 +181,12 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/04-basic-codegen.html#basic-codegen" class="header">Basic Codegen</a>
+  <li><a href="../../tutorial/poker/09-websocket.html#planning-poker" class="header">Planning Poker</a>
   <ul>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#schema" class="header">Schema</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#enums" class="header">Enums</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#models" class="header">Models</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#organizing-the-output" class="header">Organizing the output</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#explore-the-code" class="header">Explore the code</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#next-steps" class="header">Next steps</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#network-messages" class="header">Network messages</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#controllers-routes-and-views" class="header">Controllers, routes, and views</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -211,15 +208,12 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/04-basic-codegen.html#basic-codegen" class="header">Basic Codegen</a>
+  <li><a href="../../tutorial/poker/09-websocket.html#planning-poker" class="header">Planning Poker</a>
   <ul>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#schema" class="header">Schema</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#enums" class="header">Enums</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#models" class="header">Models</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#use-what-youve-built" class="header">Use what you&rsquo;ve built</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#organizing-the-output" class="header">Organizing the output</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#explore-the-code" class="header">Explore the code</a></li>
-    <li><a href="../../tutorial/poker/04-basic-codegen.html#next-steps" class="header">Next steps</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#network-messages" class="header">Network messages</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#controllers-routes-and-views" class="header">Controllers, routes, and views</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#explore-the-code" class="header">Explore the code</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -230,123 +224,90 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#basic-codegen" name="basic-codegen" class="anchor"><span class="anchor-link"></span></a>Basic Codegen</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
-<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>03-configuring-projectile</code> branch</p></div>
-<p>Now that you&rsquo;ve got Projectile configured, go ahead either run &ldquo;projectile export&rdquo; from SBT, or click the big &ldquo;Export&rdquo; button in the UI. </p>
-<p>With luck, you&rsquo;ll see a screen showing the code that was generated. Return to sbt and compile, it should pick up a few dozen new files. </p>
-<h2><a href="#schema" name="schema" class="anchor"><span class="anchor-link"></span></a>Schema</h2>
-<p>As a reminder, this is the schema we&rsquo;re working with</p>
-<p><img src="img/02-01-ddl.png" alt="db schema" /></p>
-<p>Let&rsquo;s look at what was generated.</p>
-<h2><a href="#enums" name="enums" class="anchor"><span class="anchor-link"></span></a>Enums</h2>
-<p>For each Postgres type, an <a href="https://github.com/lloydmeta/enumeratum">Enumeratum</a> StringEnum is generated, mixing in Circe classes for json serialization</p>
-<p><code>src/main/scala/models/SessionStatusType.scala</code></p>
-<pre class="prettyprint"><code class="language-scala">/* Generated File */
-package models
+<h1><a href="#planning-poker" name="planning-poker" class="anchor"><span class="anchor-link"></span></a>Planning Poker</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
+<p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>08-scala-js</code> branch</p></div>
+<p>TODO: Websocket</p>
+<h2><a href="#network-messages" name="network-messages" class="anchor"><span class="anchor-link"></span></a>Network messages</h2>
+<p>Like all real-time web applications, we&rsquo;ll be using a websocket, passing JSON or binary serialized data bi-directionally. There are eight different client messages, and ten different server messages:</p>
+<p><code>shared/src/main/scala/models/message/ClientMessage.scala</code></p>
+<pre class="prettyprint"><code class="language-scala">package models.message
 
-import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
-
-sealed abstract class SessionStatusType(override val value: String) extends StringEnumEntry {
-  override def toString = value
-}
-
-object SessionStatusType extends StringEnum[SessionStatusType] with StringCirceEnum[SessionStatusType] {
-  case object Creating extends SessionStatusType(&quot;Creating&quot;)
-  case object Active extends SessionStatusType(&quot;Active&quot;)
-  case object Complete extends SessionStatusType(&quot;Complete&quot;)
-
-  override val values = findValues
-}
-</code></pre>
-<h2><a href="#models" name="models" class="anchor"><span class="anchor-link"></span></a>Models</h2>
-<p>For each Postgres table and view, a Scala case class is generated, with a companion object containing Circe json serialization and a helper factory method</p>
-<p>Note that the field <code>status</code> is correctly typed to an enum, and Java uuids and dates are correctly handled. This is accomplished with a few classes from <a href="../../libraries/core.html">projectile-lib-core</a>, which is cross-compiled to the JVM and JavaScript (we&rsquo;ll see why later)</p>
-<p><code>src/main/scala/models/SessionRow.scala</code></p>
-<pre class="prettyprint"><code class="language-scala">/* Generated File */
-package models
-
-import com.kyleu.projectile.util.DateUtils
-import com.kyleu.projectile.util.JsonSerializers._
-import io.circe.Json
-import java.time.LocalDateTime
 import java.util.UUID
 
-object SessionRow {
-  implicit val jsonEncoder: Encoder[SessionRow] = deriveEncoder
-  implicit val jsonDecoder: Decoder[SessionRow] = deriveDecoder
+import com.kyleu.projectile.util.BinarySerializers._
+import com.kyleu.projectile.util.JsonSerializers._
+import models.poll.PollStatusType
 
-  def empty(
-    id: UUID = UUID.randomUUID,
-    title: String = &quot;&quot;,
-    slug: String = &quot;&quot;,
-    choices: List[String] = List.empty,
-    options: Json = Json.obj(),
-    status: SessionStatusType = SessionStatusType.Creating,
-    created: LocalDateTime = DateUtils.now,
-    completed: Option[LocalDateTime] = None
-  ) = {
-    SessionRow(id, title, slug, choices, options, status, created, completed)
-  }
-}
+sealed trait ClientMessage
 
-final case class SessionRow(
-    id: UUID,
-    title: String,
-    slug: String,
-    choices: List[String],
-    options: Json,
-    status: SessionStatusType,
-    created: LocalDateTime,
-    completed: Option[LocalDateTime]
-)
-</code></pre>
-<h2><a href="#use-what-youve-built" name="use-what-youve-built" class="anchor"><span class="anchor-link"></span></a>Use what you&rsquo;ve built</h2>
-<p>Let&rsquo;s modify Entrypoint to create a new session and serialize it to json, just because we can</p>
-<pre class="prettyprint"><code class="language-scala">import com.kyleu.projectile.util.JsonSerializers._
-import models.SessionRow
+object ClientMessage {
+  implicit val jsonEncoder: Encoder[ClientMessage] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ClientMessage] = deriveDecoder
+  implicit val pickler: Pickler[ClientMessage] = generatePickler
 
-object Entrypoint {
-  def main(args: Array[String]): Unit = {
-    val session = SessionRow.empty(title = &quot;Hello!&quot;)
-    println(session.asJson.spaces2)
-  }
+  final case class Ping(ts: Long) extends ClientMessage
+
+  final case class JoinSession(id: UUID) extends ClientMessage
+
+  sealed trait SessionRequest
+
+  final case class UpdateSession(name: String, choices: Seq[String]) extends ClientMessage with SessionRequest
+  final case class UpdateProfile(name: String) extends ClientMessage with SessionRequest
+  final case class AddPoll(str: String) extends ClientMessage with SessionRequest
+  final case class UpdatePoll(poll: UUID, title: Option[String]) extends ClientMessage with SessionRequest
+  final case class SetPollStatus(poll: UUID, status: PollStatusType) extends ClientMessage with SessionRequest
+  final case class SubmitVote(poll: UUID, vote: String) extends ClientMessage with SessionRequest
 }
 </code></pre>
-<p>Yep, that worked</p>
-<pre><code>sbt:estimate.poker&gt; run
-[info] Running Entrypoint
-{
-  &quot;id&quot; : &quot;baab15da-a971-425d-b25b-4fd02746798c&quot;,
-  &quot;title&quot; : &quot;Hello!&quot;,
-  &quot;slug&quot; : &quot;&quot;,
-  &quot;choices&quot; : [
-  ],
-  &quot;options&quot; : {
+<p><code>shared/src/main/scala/models/message/ClientMessage.scala</code></p>
+<pre class="prettyprint"><code class="language-scala">package models.message
 
-  },
-  &quot;status&quot; : &quot;Creating&quot;,
-  &quot;created&quot; : &quot;2019-02-22T17:52:43.154545&quot;,
-  &quot;completed&quot; : null
+import java.util.UUID
+
+import com.kyleu.projectile.util.BinarySerializers._
+import com.kyleu.projectile.util.JsonSerializers._
+import models.poll.{PollRow, VoteRow}
+import models.session.{MemberRow, SessionRow}
+
+sealed trait ServerMessage
+
+object ServerMessage {
+  implicit val jsonEncoder: Encoder[ServerMessage] = deriveEncoder
+  implicit val jsonDecoder: Decoder[ServerMessage] = deriveDecoder
+  implicit val pickler: Pickler[ServerMessage] = generatePickler
+
+  // System
+  final case class VersionResponse(version: String) extends ServerMessage
+  final case class Pong(ts: Long, serverTime: Long) extends ServerMessage
+  final case class Disconnected(reason: String) extends ServerMessage
+
+  // Session
+  final case class SessionNotFound(id: UUID) extends ServerMessage
+  final case class SessionJoined(
+      session: SessionRow, members: Seq[MemberRow], connected: Seq[UUID], polls: Seq[PollRow], votes: Seq[VoteRow]
+  ) extends ServerMessage
+  final case class SessionUpdate(session: SessionRow) extends ServerMessage
+
+  // Members
+  final case class MemberStatusUpdate(participant: UUID, connected: Boolean) extends ServerMessage
+  final case class MemberUpdate(member: MemberRow) extends ServerMessage
+
+  // Polls
+  final case class PollUpdate(poll: PollRow) extends ServerMessage
+  final case class VoteUpdate(vote: VoteRow) extends ServerMessage
 }
-[success] Total time: 1s
 </code></pre>
-<h2><a href="#organizing-the-output" name="organizing-the-output" class="anchor"><span class="anchor-link"></span></a>Organizing the output</h2><div class="callout warning "><div class="callout-title">Disclaimer</div>
-<p>This next part is very boring. We&rsquo;re going to be entering package names for each of the enums and models.</p>
-<p>Feel free to reset your repo and switch to the <a href="https://github.com/KyleU/estimate/tree/04-basic-codegen">04-basic-codegen</a> branch, where this is already done, then move on to the <a href="05-more-features.html">next step</a></p></div>
-<p>Currently, all of our classes are being generated in a single package. This is probably fine for our tiny application, but we can clean it up by assigning packages to the exported models and enums. Head back to the project detail page</p>
-<p><img src="img/04-01-project-detail.png" alt="project detail" /></p>
-<p>Click the &ldquo;Bulk Edit&rdquo; link at the top of the enums. You&rsquo;ll need to add package names, making it look like <a href="img/04-02-bulk-edit-enums.png">this</a></p>
-<p>Then head back click the &ldquo;Bulk Edit&rdquo; link at the top of the models. More package names, make it look like <a href="img/04-03-bulk-edit-models.png">this</a></p>
-<p>Click &ldquo;Export&rdquo; again, and it will create the same case classes, but all organized now. However, it left the old files behind, so select &ldquo;Audit&rdquo; to detect the orphaned files, then &ldquo;Fix All&rdquo;.</p>
+<h2><a href="#controllers-routes-and-views" name="controllers-routes-and-views" class="anchor"><span class="anchor-link"></span></a>Controllers, routes, and views</h2>
+<p>TODO</p>
 <h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
-<p><a href="https://github.com/KyleU/estimate/tree/04-basic-codegen">https://github.com/KyleU/estimate/tree/04-basic-codegen</a> </p>
+<p><a href="https://github.com/KyleU/estimate/tree/09-websocket">https://github.com/KyleU/estimate/tree/09-websocket</a></p>
 <p>See this branch&rsquo;s Pull Request for detailed comments on the generated files</p>
-<p><a href="https://github.com/KyleU/estimate/pull/4">https://github.com/KyleU/estimate/pull/4</a></p>
+<p><a href="https://github.com/KyleU/estimate/pull/9">https://github.com/KyleU/estimate/pull/9</a></p>
 <h2><a href="#next-steps" name="next-steps" class="anchor"><span class="anchor-link"></span></a>Next steps</h2>
-<p>Case classes are cool and all, but we&rsquo;re here to interact with a database, so let&rsquo;s <a href="05-more-features.html">add more features</a>!</p>
+<p>Ok, we&rsquo;re all wired up - let&rsquo;s finish this thing and <a href="10-planning-poker.html">build a real app</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/04-basic-codegen.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/09-websocket.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
@@ -362,7 +323,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../../tutorial/poker/03-configuring-projectile.html" title="Configuring Projectile" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../../tutorial/poker/08-scala-js.html" title="Scala.js" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -371,17 +332,17 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Configuring Projectile
+Scala.js
 </span>
 </div>
 </a>
-<a href="../../tutorial/poker/05-more-features.html" title="More Features" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../../tutorial/poker/10-planning-poker.html" title="Planning Poker" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-More Features
+Planning Poker
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
