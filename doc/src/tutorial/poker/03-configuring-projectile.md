@@ -12,7 +12,7 @@ Now that we have a working project, let's get Projectile configured so we can st
 
 There's a semi-functional command-line interface, but it's poorly documented, so we'll use the UI provided by Projectile.
 
-Using one of the methods described in @ref[Getting Started](../../gettingStarted/index.md), launch the projectile server, and open http://localhost:20000
+Using one of the methods described in @ref[Installing Projectile](../../gettingStarted/installing.md), launch the projectile server, and open http://localhost:20000
 
 If all goes well, you should see a screen like this:
 

@@ -98,5 +98,5 @@ https://github.com/KyleU/estimate/pull/7
 
 ## Next steps
 
-Ok, we've got an admin site, user logins, a GraphQL API, and more. It's about time to build a real app. Let's @ref[make a Planning Poker app](08-coming-soon.md)!
+Ok, we've got an admin site, user logins, a GraphQL API, and more. To get a real-time application going, we need client support. Let's @ref[add Scala.js](08-scala-js.md)!
 

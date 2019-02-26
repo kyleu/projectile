@@ -14,6 +14,9 @@ Classes and utilities shared between Scala and Scala.js ([API Documentation](../
 
 @@@
 
+(Or, use "%%%" for Scala.js and cross-built projects)
+
+
 ### Classes
 
 #### [BaseResult](../api/core/com/kyleu/projectile/models/result/BaseResult.html)
