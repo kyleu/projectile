@@ -77,7 +77,7 @@ object CommandLineOutput extends Logging {
       if (msgs.isEmpty) {
         Nil
       } else {
-        s"[${msgs.size}] audit messages:" +: msgs.map(m => "  - " + m.toString)
+        s"[${msgs.size}] audit messages:" +: msgs.map(m => "  - " + m.t + "/" + m.tgt + ": " + m.message)
       }
     }
     result.updates ++ exportMessages ++ auditMessages

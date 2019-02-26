@@ -55,7 +55,24 @@ object Dependencies {
   }
 
   object Thrift {
-    val core = "com.twitter" %% "finagle-core" % "19.2.0"
+    object TwitterBijection {
+      val version = "0.9.6"
+      val core = "com.twitter" %% "bijection-core" % version
+      val util = "com.twitter" %% "bijection-util" % version
+      val all = Seq(core, util)
+    }
+
+    object Finagle {
+      val version = "18.12.0"
+
+      val core = "com.twitter" %% "finagle-core" % version
+      val thrift = "com.twitter" %% "finagle-thrift" % version
+      val thriftMux = "com.twitter" %% "finagle-thriftmux" % version
+
+      val all = Seq(core, thrift, thriftMux)
+    }
+
+    val all = TwitterBijection.all ++ Finagle.all
   }
 
   object Metrics {

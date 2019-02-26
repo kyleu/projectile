@@ -72,6 +72,7 @@ object GraphQLTypeParser {
     case "BigDecimal" => FieldType.BigDecimalType
     case "Date" => FieldType.DateType
     case "DateTime" => FieldType.TimestampZonedType
+    case "ID" => FieldType.StringType
     case "Int" => FieldType.IntegerType
     case "Float" => FieldType.DoubleType
     case "Long" => FieldType.LongType

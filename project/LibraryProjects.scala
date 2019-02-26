@@ -60,7 +60,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-thrift` = libraryProject(project in file("libraries/projectile-lib-thrift")).settings(
     description := "Common Thrift classes used by code generated from Projectile",
-    libraryDependencies += Thrift.core
+    libraryDependencies ++= Thrift.all
   ).dependsOn(`projectile-lib-tracing`)
 
   lazy val `projectile-lib-service` = libraryProject(project in file("libraries/projectile-lib-service")).settings(

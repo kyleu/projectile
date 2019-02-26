@@ -36,6 +36,8 @@ object FieldTypeAsScala {
     case SetType(typ) => s"Set[${asScala(config, typ)}]"
     case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"
 
+    case UnionType(key, _) => "Json" // TODO: key
+
     case JsonType => "Json"
     case CodeType => "String"
     case TagsType => "List[Tag]"

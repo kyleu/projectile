@@ -42,7 +42,6 @@ class InputService(val cfg: ConfigService) {
     val c = configFor(key)
     summ.template match {
       case InputTemplate.Postgres => PostgresInputService.loadPostgres(c, summ)
-      case InputTemplate.Filesystem => throw new IllegalStateException("Unable to load filesystem inputs (coming soon)")
       case InputTemplate.Thrift => ThriftInputService.loadThrift(c, summ)
       case InputTemplate.GraphQL => GraphQLInputService.loadGraphQL(c, summ)
     }
@@ -52,7 +51,6 @@ class InputService(val cfg: ConfigService) {
     val dir = SummaryInputService.saveSummary(cfg, is)
     is.template match {
       case InputTemplate.Postgres => PostgresInputService.savePostgresDefault(cfg, dir)
-      case InputTemplate.Filesystem => throw new IllegalStateException("Unable to add filesystem inputs (coming soon)")
       case InputTemplate.Thrift => ThriftInputService.saveThriftDefault(cfg, dir)
       case InputTemplate.GraphQL => GraphQLInputService.saveGraphQLDefault(cfg, dir)
     }

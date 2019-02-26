@@ -33,7 +33,10 @@ object GraphQLLoader {
   }
 
   def parseQueryFiles(s: GraphQLOptions.SchemaQueries, parsedContents: Map[String, String]) = {
-    val docs = s.fileClasses.map(f => QueryParser.parse(parsedContents(f._1)).getOrElse(throw new IllegalStateException()))
+    val docs = s.fileClasses.map { f =>
+      val result = QueryParser.parse(parsedContents(f._1))
+      result.getOrElse(throw new IllegalStateException(s"Unable to load query file from [${f._1}] from candidates [${parsedContents.keys.mkString(", ")}]"))
+    }
     s.schemaClass -> docs.foldLeft(Document.emptyStub)((d, f) => d.merge(f))
   }
 }

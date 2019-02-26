@@ -15,7 +15,7 @@ class RequestHandler @Inject() (
 ) extends DefaultHttpRequestHandler(router, errorHandler, configuration, filters) with Logging {
 
   override def routeRequest(request: RequestHeader) = {
-    if (!Option(request.path).exists(_.startsWith("/assets"))) {
+    if (!Option(request.path).exists(x => x.startsWith("/assets") || x.startsWith("/style"))) {
       log.info(s"Request from [${request.remoteAddress}]: ${request.toString()}")(TraceData.noop)
     }
     super.routeRequest(request)

@@ -19,6 +19,8 @@ object GraphQLOptions {
 
   implicit val jsonEncoder: Encoder[GraphQLOptions] = deriveEncoder
   implicit val jsonDecoder: Decoder[GraphQLOptions] = deriveDecoder
+
+  val empty = GraphQLOptions(schema = Seq(SchemaQueries("schema.graphql", Seq("queries.graphql"))))
 }
 
 case class GraphQLOptions(schema: Seq[GraphQLOptions.SchemaQueries] = Nil)

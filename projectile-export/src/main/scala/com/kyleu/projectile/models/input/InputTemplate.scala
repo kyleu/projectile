@@ -7,7 +7,7 @@ sealed abstract class InputTemplate(
     override val value: String,
     val title: String,
     val description: String,
-    val icon: String,
+    val icon: String
 ) extends StringEnumEntry {
   def supportsUnion = false
   def supportsService = false
@@ -39,13 +39,6 @@ object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[Inpu
   ) {
     override val supportsUnion = true
   }
-
-  case object Filesystem extends InputTemplate(
-    value = "filesystem",
-    title = "Filesystem",
-    description = "Loads csv and json files from the filesystem",
-    icon = Icons.file
-  )
 
   override val values = findValues
   val all = values.toSet
