@@ -1,6 +1,8 @@
 GET         /                       com.kyleu.projectile.web.controllers.input.InputController.formNew()
 POST        /                       com.kyleu.projectile.web.controllers.input.InputController.save()
 
+GET         /tstest                 com.kyleu.projectile.web.controllers.input.InputController.tstest()
+
 GET         /all/refresh            com.kyleu.projectile.web.controllers.input.InputController.refreshAll
 
 GET         /:key                   com.kyleu.projectile.web.controllers.input.InputController.detail(key)

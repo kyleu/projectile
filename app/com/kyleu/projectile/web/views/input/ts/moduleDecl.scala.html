@@ -1,0 +1,6 @@
+@(node: com.kyleu.projectile.models.typescript.TypeScriptNode.ModuleDecl, depth: Int)
+@com.kyleu.projectile.web.views.html.input.ts.nodeComponent(node, Html(node.name), depth)
+
+@node.statements.map { s =>
+  @com.kyleu.projectile.web.controllers.input.TypeScriptNodeView.view(s, depth + 1)
+}

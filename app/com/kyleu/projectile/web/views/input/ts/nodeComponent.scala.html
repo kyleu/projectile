@@ -1,0 +1,12 @@
+@(node: com.kyleu.projectile.models.typescript.TypeScriptNode, right: Html, depth: Int)<li>
+  <div class="collapsible-header">
+    <div style="width: 100%;" class="node-type">
+      <div class="right">@right</div>
+      @{ Html((0 until depth).map(_ => """<i style="font-size: 90%; color #ddd;" class="fa fa-minus"></i>""").mkString) }
+      @node.getClass.getSimpleName
+    </div>
+  </div>
+  <div class="collapsible-body">
+    <pre>@com.kyleu.projectile.util.JsonSerializers.encoderOps(node).asJson.spaces2</pre>
+  </div>
+</li>

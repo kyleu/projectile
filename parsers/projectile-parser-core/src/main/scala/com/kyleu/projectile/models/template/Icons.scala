@@ -20,6 +20,7 @@ object Icons {
 
   val thrift = fa("tumblr")
   val database = fa("database")
+  val typeScript = fa("flag-o")
 
   val enum = fa("tag")
 
