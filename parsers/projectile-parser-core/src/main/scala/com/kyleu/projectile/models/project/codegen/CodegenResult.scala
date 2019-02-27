@@ -1,8 +1,8 @@
 package com.kyleu.projectile.models.project.codegen
 
+import com.kyleu.projectile.models.output.OutputWriteResult
 import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.models.project.audit.AuditResult
-import com.kyleu.projectile.services.output.OutputService
 import com.kyleu.projectile.util.JsonSerializers._
 
 object CodegenResult {
@@ -12,7 +12,7 @@ object CodegenResult {
 
 case class CodegenResult(
     updates: Seq[String],
-    exportResults: Seq[(ProjectOutput, Seq[OutputService.WriteResult])],
+    exportResults: Seq[(ProjectOutput, Seq[OutputWriteResult])],
     auditResults: Option[AuditResult],
     durationMs: Int
 )

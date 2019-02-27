@@ -12,7 +12,7 @@ import _root_.io.github.jonas.paradox.material.theme.ParadoxMaterialThemePlugin
 import com.typesafe.sbt.site.SitePreviewPlugin.autoImport.previewLaunchBrowser
 
 object Documentation {
-  private[this] lazy val docProjects = LibraryProjects.all ++ Seq(ProjectExport.`projectile-export`, SbtExportPlugin.`projectile-sbt`)
+  private[this] lazy val docProjects = ParserProjects.all ++ LibraryProjects.all ++ Seq(ProjectileExport.`projectile-export`, SbtExportPlugin.`projectile-sbt`)
 
   lazy val doc = Project(id = "doc", base = file("./doc")).settings(Common.settings: _*).settings(docProjects.flatMap(forProject): _*).enablePlugins(
     ParadoxPlugin, ParadoxSitePlugin, SiteScaladocPlugin, GhpagesPlugin, ParadoxMaterialThemePlugin

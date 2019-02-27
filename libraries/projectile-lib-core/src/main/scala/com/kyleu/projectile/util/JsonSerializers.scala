@@ -2,6 +2,7 @@ package com.kyleu.projectile.util
 
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
+import io.circe.JsonObject
 import io.circe.java8.time._
 import shapeless.Lazy
 
@@ -37,4 +38,13 @@ object JsonSerializers {
   def parseJson(s: String) = io.circe.parser.parse(s)
   def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
   def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
+
+  def extract[T: Decoder](json: Json) = json.as[T] match {
+    case Right(x) => x
+    case Left(x) => throw x
+  }
+
+  def extractObj[T: Decoder](obj: JsonObject, key: String) = {
+    obj.apply(key).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
+  }
 }

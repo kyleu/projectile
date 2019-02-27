@@ -3,10 +3,10 @@ package com.kyleu.projectile.models.cli
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.input.{Input, InputSummary}
+import com.kyleu.projectile.models.output.OutputWriteResult
 import com.kyleu.projectile.models.project.audit.AuditResult
 import com.kyleu.projectile.models.project.codegen.CodegenResult
 import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSummary}
-import com.kyleu.projectile.services.output.OutputService
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.JacksonUtils.printJackson
 import com.kyleu.projectile.util.tracing.TraceData
@@ -39,7 +39,7 @@ object CommandLineOutput extends Logging {
   private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.template.title}"
   private[this] def logForProject(project: Project) = s"[${project.key}]: $project"
 
-  def logForExportResult(output: ProjectOutput, files: Seq[OutputService.WriteResult]) = {
+  def logForExportResult(output: ProjectOutput, files: Seq[OutputWriteResult]) = {
     val filesFiltered = files.filter(_.logs.nonEmpty)
     val fileMessages = if (filesFiltered.isEmpty) {
       Seq(" - No changes required")

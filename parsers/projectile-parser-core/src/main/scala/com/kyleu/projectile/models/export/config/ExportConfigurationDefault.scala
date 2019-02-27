@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.export.config
 
-import com.kyleu.projectile.models.database.schema._
+import com.kyleu.projectile.models.database.schema.Column
 import com.kyleu.projectile.models.export.{ExportEnum, ExportField}
 import com.kyleu.projectile.models.output.ExportHelper.{toDefaultTitle, toIdentifier}
 

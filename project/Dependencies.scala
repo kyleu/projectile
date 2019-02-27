@@ -3,13 +3,12 @@
 object Dependencies {
   object Play {
     private[this] val version = "2.6.21"
-    val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
-    val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
     val json = "com.typesafe.play" %% "play-json" % "2.7.1"
-    val test = "com.typesafe.play" %% "play-test" % version % "test"
+    
+    val all = Seq(filters, guice, cache, json)
   }
 
   object Database {
