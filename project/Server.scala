@@ -76,5 +76,5 @@ object Server {
     Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, play.sbt.PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     SbtExportPlugin.`projectile-sbt`,
     ProjectileExport.`projectile-export`
-  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(LibraryProjects.allReferences: _*)
+  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*)
 }

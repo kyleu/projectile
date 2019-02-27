@@ -34,4 +34,5 @@ object ParserProjects {
   lazy val all = Seq(
     `projectile-parser-core`, `projectile-parser-database`, `projectile-parser-graphql`, `projectile-parser-thrift`, `projectile-parser-typescript`
   )
+  lazy val allReferences = all.map(_.project)
 }

@@ -36,6 +36,9 @@ class SocialAuthController @javax.inject.Inject() (
             val userF = userSearchService.getByLoginInfo(li).flatMap {
               case Some(u) => userService.updateUser(UserCredentials(u, request.remoteAddress), u)
               case None =>
+                if (app.config.authWhitelistDomain.exists(x => !profile.email.exists(_.endsWith(x)))) {
+                  throw new IllegalStateException(s"Email [${profile.email.getOrElse("-not provided-")}] must end with a whitelisted domain")
+                }
                 val username = profile.fullName.orElse(profile.firstName).orElse(profile.email).getOrElse(profile.loginInfo.providerKey)
                 userService.getByUsername(UserCredentials.system, username).flatMap { existing =>
                   val newUser = SystemUser(

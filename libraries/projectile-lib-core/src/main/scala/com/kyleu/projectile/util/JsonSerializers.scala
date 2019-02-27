@@ -44,7 +44,13 @@ object JsonSerializers {
     case Left(x) => throw x
   }
 
-  def extractObj[T: Decoder](obj: JsonObject, key: String) = {
-    obj.apply(key).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
+  def extractObj[T: Decoder](obj: JsonObject, key: String): T = key.split('.').toList match {
+    case h :: Nil => obj.apply(key).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
+    case h :: x =>
+      val next = obj.apply(h).map(extract[JsonObject]).getOrElse {
+        throw new IllegalStateException(s"No [$key] path among candidates [${obj.keys.mkString(", ")}]")
+      }
+      extractObj[T](next, x.mkString("."))
+    case Nil => throw new IllegalStateException("No contents")
   }
 }
