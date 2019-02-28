@@ -23,11 +23,11 @@ object GraphQLObjectHelper {
 
   def addObjectFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ObjectField]) = {
     fields.foreach { f =>
-      FieldTypeImports.imports(config, f.v).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
+      FieldTypeImports.imports(config, f.t).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
       val t = if (f.req) {
-        FieldTypeAsScala.asScala(config, f.v)
+        FieldTypeAsScala.asScala(config, f.t)
       } else {
-        s"Option[${FieldTypeAsScala.asScala(config, f.v)}]"
+        s"Option[${FieldTypeAsScala.asScala(config, f.t)}]"
       }
       val param = s"${f.k}: $t"
       val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
@@ -61,7 +61,7 @@ object GraphQLObjectHelper {
     }
 
     def getObjects(o: FieldType.ObjectType): Seq[(String, FieldType.ObjectType)] = {
-      (o.key -> o) +: o.fields.map(_.v).flatMap {
+      (o.key -> o) +: o.fields.map(_.t).flatMap {
         case o: FieldType.ObjectType => getObjects(o)
         case FieldType.ListType(t) => forObj(t)
         case FieldType.SetType(t) => forObj(t)

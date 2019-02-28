@@ -40,6 +40,8 @@ object FieldType extends StringEnum[FieldType] {
   case class UnionType(key: String, types: Seq[String]) extends FieldType("union")
   case class ObjectType(key: String, fields: Seq[ObjectField]) extends FieldType("object")
 
+  case class MethodType(params: Seq[ObjectField], ret: FieldType) extends FieldType("method")
+
   case class ListType(typ: FieldType) extends FieldType("list")
   case class SetType(typ: FieldType) extends FieldType("set")
   case class MapType(k: FieldType, v: FieldType) extends FieldType("set")

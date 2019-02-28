@@ -34,6 +34,7 @@ object ExportFieldGraphQL {
       case Some(_) => throw new IllegalStateException("TODO: Struct types")
       case None => "StringType"
     }
+    case MethodType(_, _) => throw new IllegalStateException("TODO: Methods")
 
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"

@@ -1,7 +1,8 @@
 package com.kyleu.projectile.services.typescript
 
 import com.kyleu.projectile.models.typescript.TypeScriptNode._
-import com.kyleu.projectile.models.typescript.{NodeContext, SyntaxKind, TypeScriptNode}
+import com.kyleu.projectile.models.typescript._
+import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
@@ -15,21 +16,25 @@ object TypeScriptNodeService {
   }
 
   private[this] def parseNode(ctx: NodeContext, obj: JsonObject, depth: Int): TypeScriptNode = {
-    def ext[T: Decoder](k: String) = extractObj[T](obj = obj, key = k)
-    def kids(k: String) = ext[Seq[Json]](k).map(x => parseJson(x, depth + 1))
-    def name() = {
-      val n = ext[JsonObject]("name")
-      n.apply("escapedText").orElse(n.apply("text")).map(_.as[String].right.get).getOrElse(throw new IllegalStateException(s"No name in json [$n]"))
-    }
+    def kids(k: String) = obj.ext[Seq[Json]](k).map(x => parseJson(x, depth + 1))
 
     ctx.kind match {
-      case SyntaxKind.SourceFile => SourceFile(filename = ext[String]("fileName"), statements = kids("statements"), ctx = ctx)
-      case SyntaxKind.InterfaceDeclaration => InterfaceDecl(name = name(), members = kids("members"), ctx = ctx)
-      case SyntaxKind.ModuleDeclaration => ModuleDecl(name = name(), statements = kids("body.statements"), ctx = ctx)
-      case SyntaxKind.ClassDeclaration => ClassDecl(name = name(), ctx = ctx)
-      case SyntaxKind.PropertySignature => PropertySig(name = name(), ctx = ctx)
-      case SyntaxKind.MethodSignature => MethodSig(name = name(), ctx = ctx)
-      case SyntaxKind.VariableStatement => VariableStatement(declarations = kids("declarationList.declarations"), ctx = ctx)
+      case SyntaxKind.SourceFile => SourceFile(filename = obj.ext[String]("fileName"), statements = kids("statements"), ctx = ctx)
+
+      // case SyntaxKind.Comment => Comment(commment, ctx = ctx)
+
+      case SyntaxKind.InterfaceDeclaration => InterfaceDecl(name = obj.name(), members = kids("members"), ctx = ctx)
+      case SyntaxKind.ModuleDeclaration => ModuleDecl(name = obj.name(), statements = kids("body.statements"), ctx = ctx)
+      case SyntaxKind.ClassDeclaration => ClassDecl(name = obj.name(), members = kids("members"), ctx = ctx)
+      case SyntaxKind.MethodDeclaration => MethodDecl(name = obj.name(), params = obj.params(), ret = obj.typ(), ctx = ctx)
+
+      case SyntaxKind.Constructor => Constructor(params = obj.params(), ctx = ctx)
+      case SyntaxKind.PropertySignature => PropertySig(name = obj.name(), typ = obj.typ(), ctx = ctx)
+      case SyntaxKind.MethodSignature => MethodSig(name = obj.name(), ctx = ctx)
+
+      case SyntaxKind.ExportAssignment => ExportAssignment(ctx = ctx)
+      case SyntaxKind.VariableStatement => VariableStmt(declarations = kids("declarationList.declarations"), ctx = ctx)
+
       case _ => Unknown(kind = ctx.kind.toString, ctx = ctx)
     }
   }
@@ -41,19 +46,18 @@ object TypeScriptNodeService {
     }
     def ext[T: Decoder](k: String) = extractObj[T](obj = obj, key = k)
 
+    val kind = SyntaxKind.withValue(ext[Int]("kind"))
     val jsDoc = obj("jsDoc").toSeq.flatMap(x => extract[Seq[JsonObject]](x)).flatMap(_.apply("comment").map(_.as[String].right.get))
+    val flags = NodeFlag.matching(ext[Int]("flags")).toSeq.sortBy(_.v)
     val filteredKeys = obj.keys.filterNot(commonKeys.apply).toList
-    val ctx = NodeContext(pos = ext[Int]("pos"), end = ext[Int]("end"), kind = SyntaxKind.withValue(ext[Int]("kind")), jsDoc = jsDoc, keys = filteredKeys)
+    val ctx = NodeContext(pos = ext[Int]("pos"), end = ext[Int]("end"), kind = kind, jsDoc = jsDoc, flags = flags, keys = filteredKeys)
 
     try {
       parseNode(ctx = ctx, obj = obj, depth = depth)
     } catch {
       case NonFatal(x) =>
-        val jsonStr = json.spaces2 match {
-          case s if s.length > 1000 => s.take(1000).mkString + "..."
-          case s => s
-        }
-        Error(kind = ctx.kind.toString, cls = x.getClass.getSimpleName, msg = x.toString, json = jsonStr, ctx = ctx)
+        x.printStackTrace()
+        Error(kind = ctx.kind.toString, cls = x.getClass.getSimpleName, msg = x.toString, json = json, ctx = ctx)
     }
   }
 }

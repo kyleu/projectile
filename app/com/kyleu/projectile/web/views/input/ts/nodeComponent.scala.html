@@ -1,9 +1,9 @@
-@(node: com.kyleu.projectile.models.typescript.TypeScriptNode, right: Html, depth: Int)<li>
+@(node: com.kyleu.projectile.models.typescript.TypeScriptNode, content: Html, depth: Int)<li>
   <div class="collapsible-header">
     <div style="width: 100%;" class="node-type">
-      <div class="right">@right</div>
-      @{ Html((0 until depth).map(_ => """<i style="font-size: 90%; color #ddd;" class="fa fa-minus"></i>""").mkString) }
-      @node.getClass.getSimpleName
+      <div class="right">@node.getClass.getSimpleName</div>
+      @{ Html((0 until (depth)).map(_ => """&nbsp;&nbsp;&nbsp;""").mkString) }
+      @content
     </div>
   </div>
   <div class="collapsible-body">

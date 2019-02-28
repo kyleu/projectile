@@ -67,7 +67,7 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     var title = opt[Option[String]](description = "Optional title for this project")
     var desc = opt[Option[String]](description = "Optional description for this project")
     var template = opt[Option[String]](description = s"Template to use for for this project, one of [${ProjectTemplate.values.mkString(", ")}]")
-    val t = template.flatMap(ProjectTemplate.withValueOpt).getOrElse(ProjectTemplate.Custom)
+    def t = template.flatMap(ProjectTemplate.withValueOpt).getOrElse(ProjectTemplate.Custom)
     override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary.newObj(key = key).copy(template = t, input = input, description = desc.getOrElse("")))
   }
 

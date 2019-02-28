@@ -41,16 +41,17 @@ object AstExportService {
     }
   }
 
-  def main(args: Array[String]): Unit = args.toList match {
-    case Nil => log(compileTypeScript())
-    case h :: Nil =>
-      val json = parseAst(h)
-      log("JSON Size: " + json.spaces2.length.toString)
+  def main(args: Array[String]): Unit = {
+    def log(s: String) = println(s)
+    args.toList match {
+      case Nil => log(compileTypeScript())
+      case h :: Nil =>
+        val json = parseAst(h)
+        log("JSON Size: " + json.spaces2.length.toString)
 
-      val node = TypeScriptNodeService.fromJson(json)
-      log("Result: " + node.asJson.spaces2)
-    case _ => throw new IllegalStateException("Zero or one argument only, please")
+        val node = TypeScriptNodeService.fromJson(json)
+        log("Result: " + node.asJson.spaces2)
+      case _ => throw new IllegalStateException("Zero or one argument only, please")
+    }
   }
-
-  private[this] def log(s: String) = println(s)
 }

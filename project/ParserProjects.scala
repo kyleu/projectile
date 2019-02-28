@@ -9,7 +9,7 @@ object ParserProjects {
       Serialization.jackson, Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang,
       Utils.enumeratum, Utils.guava, Utils.logging, Utils.thriftParser
     )
-  ).dependsOn(LibraryProjects.`projectile-lib-scala`)
+  ).disablePlugins(AssemblyPlugin).dependsOn(LibraryProjects.`projectile-lib-scala`)
 
   lazy val `projectile-parser-database` = (project in file("parsers/projectile-parser-database")).settings(Common.settings: _*).settings(
     description := "Loads schema information from a Postgres database",

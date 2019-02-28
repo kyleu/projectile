@@ -78,7 +78,7 @@ object GraphQLDocumentParser extends Logging {
       case FieldType.ListType(typ) => forType(typ, isInput)
       case FieldType.SetType(typ) => forType(typ, isInput)
       case FieldType.MapType(k, v) => forType(k, isInput) ++ forType(v, isInput)
-      case FieldType.ObjectType(_, fields) => fields.flatMap(f => forType(f.v, isInput))
+      case FieldType.ObjectType(_, fields) => fields.flatMap(f => forType(f.t, isInput))
       case _ => Nil
     }
 
