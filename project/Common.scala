@@ -7,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.2.0-SNAPSHOT"
+    val app = "1.4.1"
     val scala = "2.12.8"
   }
 
@@ -35,15 +35,8 @@ object Common {
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false).withWarnDirectEvictions(false),
-
     publishMavenStyle := true,
 
     publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
-    // publishTo := Some("releases" at "http://nexus-1.fevo.com:8081/nexus/content/repositories/releases"),
-  ) ++ (if(profilingEnabled) {
-    Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0"))
-  } else {
-    Nil
-  })
+  ) ++ (if(profilingEnabled) { Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0")) } else { Nil })
 }

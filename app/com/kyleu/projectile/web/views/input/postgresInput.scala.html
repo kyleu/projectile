@@ -18,7 +18,10 @@
 
   <div id="input-detail">
     <div class="collection">
-      <div class="collection-item">@input.url</div>
+      <div class="collection-item">
+        <div class="right"><a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")">Connection Settings</a></div>
+        @input.url
+      </div>
       <div class="collection-item">Username: @input.username</div>
       <div class="collection-item">
         <a class="btn theme" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.refresh(input.key)">Refresh</a>

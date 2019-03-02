@@ -3,10 +3,10 @@ package com.kyleu.projectile.models.command
 import enumeratum.{Enum, EnumEntry}
 import io.circe.Json
 import com.kyleu.projectile.models.input.{Input, InputSummary}
+import com.kyleu.projectile.models.output.OutputWriteResult
 import com.kyleu.projectile.models.project.audit.AuditResult
 import com.kyleu.projectile.models.project.codegen.CodegenResult
 import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSummary}
-import com.kyleu.projectile.services.output.OutputService
 
 sealed trait ProjectileResponse extends EnumEntry
 
@@ -23,7 +23,7 @@ object ProjectileResponse extends Enum[ProjectileResponse] {
   case class ProjectDetail(project: Project) extends ProjectileResponse
 
   case class ProjectUpdateResult(key: String, log: Seq[String]) extends ProjectileResponse
-  case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputService.WriteResult]) extends ProjectileResponse
+  case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputWriteResult]) extends ProjectileResponse
   case class ProjectAuditResult(result: AuditResult) extends ProjectileResponse
   case class ProjectCodegenResult(result: CodegenResult) extends ProjectileResponse
 

@@ -2,12 +2,13 @@ package com.kyleu.projectile.util
 
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
+import io.circe.JsonObject
 import io.circe.java8.time._
 import shapeless.Lazy
 
 import scala.language.implicitConversions
 
-/** Provides all the imports and utility methods you need to work with Circe using dates, uuids, enums and sealed traits */
+/** Provides all the imports and utility methods you need to work with Circe using dates, uuids, enums, case classes, and sealed traits */
 object JsonSerializers {
   type Decoder[A] = io.circe.Decoder[A]
   type Encoder[A] = io.circe.Encoder[A]
@@ -37,4 +38,19 @@ object JsonSerializers {
   def parseJson(s: String) = io.circe.parser.parse(s)
   def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
   def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
+
+  def extract[T: Decoder](json: Json) = json.as[T] match {
+    case Right(x) => x
+    case Left(x) => throw x
+  }
+
+  def extractObj[T: Decoder](obj: JsonObject, key: String): T = key.split('.').toList match {
+    case h :: Nil => obj.apply(key).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
+    case h :: x =>
+      val next = obj.apply(h).map(extract[JsonObject]).getOrElse {
+        throw new IllegalStateException(s"No [$key] path among candidates [${obj.keys.mkString(", ")}]")
+      }
+      extractObj[T](next, x.mkString("."))
+    case Nil => throw new IllegalStateException("No contents")
+  }
 }

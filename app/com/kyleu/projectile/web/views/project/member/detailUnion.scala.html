@@ -1,0 +1,55 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, key: String, p: com.kyleu.projectile.models.project.ProjectSummary, m: com.kyleu.projectile.models.project.member.UnionMember, e: com.kyleu.projectile.models.export.ExportUnion)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, e.className + " Union") {
+  <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.save(p.key, e.key)">
+    <div class="collection with-header">
+      <div class="collection-header">
+        <div class="right">
+          <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"project/$key/union/${e.key}.json")">Edit Json</a>
+          <input class="theme btn" type="submit" value="Save" />
+        </div>
+        <h5><i class=" @com.kyleu.projectile.models.template.Icons.union"></i> @e.className</h5>
+        <em><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(p.key)">@p.key</a> Union</em>
+        (<a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.remove(p.key, m.key)">Remove</a>)
+      </div>
+      <div class="collection-item">
+        <label for="package">Package</label>
+        <input id="package" name="package" value="@e.pkg.mkString(".")" />
+      </div>
+      <div class="collection-item">
+        <label for="propertyName">Property Name</label>
+        <input id="propertyName" name="propertyName" value="@e.propertyName" />
+      </div>
+      <div class="collection-item">
+        <label for="className">Class Name</label>
+        <input id="className" name="className" value="@e.className" />
+      </div>
+      <div class="collection-item">
+        <h6>Values</h6>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Ignored</th>
+            </tr>
+          </thead>
+          <tbody>
+          @e.types.map { v =>
+            <tr>
+              <td>@v.key</td>
+              <td>@v.t</td>
+              <td>
+                <label>
+                  <input name="ignored" value="@v" type="checkbox" @if(m.ignored(v.key)) { checked="checked" } />
+                  <span></span>
+                </label>
+              </td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+}

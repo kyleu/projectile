@@ -29,19 +29,24 @@ object ExportFieldThrift {
     case XmlType => "string"
     case UuidType => "common.UUID"
 
-    case ObjectType(_, _) => throw new IllegalStateException("Object types are not supported in Thrift")
-    case StructType(key) => config.getModelOpt(key) match {
-      case Some(m) => m.className
-      case None => "string"
-    }
-
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(e) => e.className
       case None => "string"
     }
+    case StructType(key) => config.getModelOpt(key) match {
+      case Some(m) => m.className
+      case None => "string"
+    }
+    case ObjectType(_, _) => throw new IllegalStateException("Object types are not supported in Thrift")
+    case MethodType(_, _) => throw new IllegalStateException("Method types are not supported in Thrift")
+
     case ListType(typ) => s"list<${thriftType(typ, config)}>"
     case SetType(typ) => s"set<${thriftType(typ, config)}>"
     case MapType(k, v) => s"map<${thriftType(k, config)}, ${thriftType(v, config)}>"
+    case UnionType(k, _) => config.getUnionOpt(k) match {
+      case Some(u) => u.className
+      case None => "string"
+    }
 
     case JsonType => "string"
     case CodeType => "string"

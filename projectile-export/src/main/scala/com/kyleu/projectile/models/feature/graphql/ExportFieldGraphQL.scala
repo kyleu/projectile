@@ -34,6 +34,7 @@ object ExportFieldGraphQL {
       case Some(_) => throw new IllegalStateException("TODO: Struct types")
       case None => "StringType"
     }
+    case MethodType(_, _) => throw new IllegalStateException("TODO: Methods")
 
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"
@@ -42,6 +43,7 @@ object ExportFieldGraphQL {
     case ListType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
     case SetType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
     case MapType(_, _) => throw new IllegalStateException("Maps are not supported in GraphQL")
+    case UnionType(_, _) => throw new IllegalStateException("Unions are not currently supported in GraphQL")
 
     case JsonType => "jsonType"
     case CodeType => "StringType"

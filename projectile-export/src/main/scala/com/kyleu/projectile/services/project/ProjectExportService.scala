@@ -2,7 +2,7 @@ package com.kyleu.projectile.services.project
 
 import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.feature.{FeatureOutput, ProjectFeature}
+import com.kyleu.projectile.models.feature.{FeatureOutput, FeatureService, ProjectFeature}
 import com.kyleu.projectile.models.output.OutputLog
 import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.services.ProjectileService
@@ -20,7 +20,7 @@ class ProjectExportService(val projectile: ProjectileService) {
     }
 
     val featureOutputs = ProjectFeature.values.flatMap {
-      case feature if config.project.features(feature) => Seq(feature.export(projectRoot, config, verbose))
+      case feature if config.project.features(feature) => Seq(FeatureService.export(feature, projectRoot, config, verbose))
       case feature if verbose => Seq(FeatureOutput(feature, Nil, Nil, Seq(OutputLog(s"Skipping disabled feature [${feature.value}]", 0L)), 0L))
       case _ => Nil
     }

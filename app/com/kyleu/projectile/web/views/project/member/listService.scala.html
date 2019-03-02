@@ -1,0 +1,23 @@
+@(inputType: com.kyleu.projectile.models.input.InputTemplate, project: com.kyleu.projectile.models.project.Project)@if(inputType.supportsService) {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formFeatures(project.key)">Default Features</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.BulkProjectController.serviceBulkEditForm(project.key)">Bulk Edit</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.formNew(project.key)">Add</a>
+      </div>
+      <h6><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @project.services.size Services</h6>
+    </div>
+    @if(project.services.isEmpty) {
+      <div class="collection-item">No project services.</div>
+    }
+    @project.services.sortBy(_.key).map { svc =>
+      <div class="collection-item">
+        <div class="right">@svc.pkg.mkString(".")</div>
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.detail(project.key, svc.key)">
+          <i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @svc.key
+        </a>
+      </div>
+    }
+  </div>
+}

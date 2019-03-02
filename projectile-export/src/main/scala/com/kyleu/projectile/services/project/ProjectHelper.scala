@@ -4,7 +4,7 @@ import better.files.File
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
+import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.output.OutputService
@@ -17,6 +17,7 @@ trait ProjectHelper { this: ProjectileService =>
 
   private[this] lazy val enumSvc = new EnumMemberService(this)
   private[this] lazy val modelSvc = new ModelMemberService(this)
+  private[this] lazy val unionSvc = new UnionMemberService(this)
   private[this] lazy val serviceSvc = new ServiceMemberService(this)
 
   private[this] lazy val exportSvc = new ProjectExportService(this)
@@ -42,6 +43,10 @@ trait ProjectHelper { this: ProjectileService =>
   def saveModelMember(key: String, member: ModelMember) = saveModelMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())
   def removeModelMember(key: String, member: String) = modelSvc.removeModel(key, member)
 
+  def saveUnionMembers(key: String, members: Seq[UnionMember]) = unionSvc.saveUnions(key, members)
+  def saveUnionMember(key: String, member: UnionMember) = saveUnionMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())
+  def removeUnionMember(key: String, member: String) = unionSvc.removeUnion(key, member)
+
   def saveServiceMembers(key: String, members: Seq[ServiceMember]) = serviceSvc.saveServices(key, members)
   def saveServiceMember(key: String, member: ServiceMember) = {
     saveServiceMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())
@@ -60,9 +65,10 @@ trait ProjectHelper { this: ProjectileService =>
 
     val exportEnums = p.enums.map(e => input.exportEnum(e.key).apply(e))
     val exportModels = p.models.map(e => input.exportModel(e.key).apply(e))
+    val exportUnions = p.unions.map(u => input.exportUnion(u.key).apply(u))
     val exportServices = p.services.map(e => input.exportService(e.key).apply(e))
 
-    ExportConfiguration(project = p, enums = exportEnums, models = exportModels, services = exportServices)
+    ExportConfiguration(project = p, enums = exportEnums, models = exportModels, unions = exportUnions, services = exportServices)
   }
 
   private[this] def removeProjectFiles(key: String) = {
@@ -75,6 +81,7 @@ trait ProjectHelper { this: ProjectileService =>
     .into[Project]
     .withFieldComputed(_.enums, _ => loadDir[EnumMember](dir, s"$key/enum"))
     .withFieldComputed(_.models, _ => loadDir[ModelMember](dir, s"$key/model"))
+    .withFieldComputed(_.unions, _ => loadDir[UnionMember](dir, s"$key/union"))
     .withFieldComputed(_.services, _ => loadDir[ServiceMember](dir, s"$key/service"))
     .transform
 

@@ -62,12 +62,13 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     override def toCommand = ProjectileCommand.Projects(key)
   }
   object ProjectAdd extends Command(name = "project-add", description = "Adds a project to the system") with CommandLineAction {
-    var key = arg[String]()
+    var key = arg[String](description = "Project key for the newly-created project")
+    var input = arg[String](description = "Input key to use for this project")
     var title = opt[Option[String]](description = "Optional title for this project")
     var desc = opt[Option[String]](description = "Optional description for this project")
     var template = opt[Option[String]](description = s"Template to use for for this project, one of [${ProjectTemplate.values.mkString(", ")}]")
-    val t = ProjectTemplate.Custom
-    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary(template = t, key = key, input = "", description = desc.getOrElse("")))
+    def t = template.flatMap(ProjectTemplate.withValueOpt).getOrElse(ProjectTemplate.Custom)
+    override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary.newObj(key = key).copy(template = t, input = input, description = desc.getOrElse("")))
   }
 
   object Server extends Command(name = "server", description = "Starts the web application") with CommandLineAction {

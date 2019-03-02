@@ -3,7 +3,7 @@ package com.kyleu.projectile.services.project
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.Input
 import com.kyleu.projectile.models.project.Project
-import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember}
+import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
 import com.kyleu.projectile.services.ProjectileService
 
 object ProjectUpdateService {
@@ -14,9 +14,10 @@ object ProjectUpdateService {
   def updateInput(svc: ProjectileService, p: Project, i: Input) = {
     val enumResults = processEnums(svc, p, i)
     val modelResults = processModels(svc, p, i)
+    val unionResults = processUnions(svc, p, i)
     val serviceResults = processServices(svc, p, i)
 
-    val results = enumResults ++ modelResults ++ serviceResults
+    val results = enumResults ++ modelResults ++ unionResults ++ serviceResults
 
     val hash = svc.getInput(i.key).hash
     svc.setProjectHash(p.key, hash)
@@ -57,6 +58,21 @@ object ProjectUpdateService {
     } ++ modelsToRemove.map { m =>
       svc.removeModelMember(p.key, m.key)
       s"Removed model [${m.key}]"
+    }
+  }
+
+  private[this] def processUnions(svc: ProjectileService, p: Project, i: Input) = {
+    val (unchanged, unionsToAdd) = i.exportUnions.partition(ek => p.unions.exists(_.key == ek.key))
+    val unionsToRemove = p.unions.filterNot(uk => i.exportUnions.exists(_.key == uk.key))
+
+    if (saveUnchanged) { unchanged.map(m => svc.saveUnionMember(p.key, p.getUnion(m.key))) }
+
+    unionsToAdd.map { u =>
+      svc.saveUnionMember(p.key, UnionMember(pkg = u.pkg, key = u.key))
+      s"Added union [${u.key}]"
+    } ++ unionsToRemove.map { u =>
+      svc.removeUnionMember(p.key, u.key)
+      s"Removed union [${u.key}]"
     }
   }
 

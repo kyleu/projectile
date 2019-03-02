@@ -15,17 +15,21 @@
     <li class="tab"><a href="#input-int-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.intEnums.size Int Enums</a></li>
     <li class="tab"><a href="#input-string-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.stringEnums.size String Enums</a></li>
     <li class="tab"><a href="#input-structs"><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @input.structs.size Structs</a></li>
+    <li class="tab"><a href="#input-unions"><i class=" @com.kyleu.projectile.models.template.Icons.union"></i> @input.unions.size Unions</a></li>
     <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
   </ul>
 
   <div id="input-detail">
     <div class="collection">
-      @if(input.files.isEmpty) {
-        <div class="collection-item">No Thrift IDL files</div>
-      }
-      @input.files.map { f =>
-        <div class="collection-item">@f</div>
-      }
+      <div class="collection-item">
+        <div class="right"><a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/thrift-files.json")">Change Files</a></div>
+        @if(input.files.isEmpty) {
+          <div>No Thrift IDL files</div>
+        }
+        @input.files.map { f =>
+          <div>@f</div>
+        }
+      </div>
       <div class="collection-item">
         <a class="btn theme" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
       </div>
@@ -80,6 +84,20 @@
         <div class="collection-item">
           <div class="right">@s.fields.size fields</div>
           <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.modelDetail(input.key, s.key)">@s.key</a>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div id="input-unions">
+    <div class="collection">
+      @if(input.unions.isEmpty) {
+        <div class="collection-item">No unions</div>
+      }
+      @input.unions.sortBy(_.key).map { u =>
+        <div class="collection-item">
+          <div class="right">@u.types.size types</div>
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.unionDetail(input.key, u.key)">@u.key</a>
         </div>
       }
     </div>

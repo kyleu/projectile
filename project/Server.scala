@@ -12,21 +12,11 @@ import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
 
 object Server {
-  private[this] val dependencies = {
-    import Dependencies._
-    Seq(
-      Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
-      GraphQL.sangria, GraphQL.playJson, GraphQL.circe,
-      Utils.scalaGuice, Utils.clistMacros,
-      WebJars.jquery, WebJars.fontAwesome, WebJars.materialize
-    )
-  }
-
   private[this] lazy val serverSettings = Common.settings ++ Seq(
     name := Common.projectId,
     description := Common.projectName,
 
-    libraryDependencies ++= dependencies,
+    libraryDependencies ++= Dependencies.Play.all,
 
     // Play
     RoutesKeys.routesGenerator := InjectedRoutesGenerator,
@@ -85,6 +75,6 @@ object Server {
   lazy val `projectile-server` = withProjects(
     Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, play.sbt.PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     SbtExportPlugin.`projectile-sbt`,
-    ProjectExport.`projectile-export`
-  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(LibraryProjects.allReferences: _*)
+    ProjectileExport.`projectile-export`
+  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*)
 }

@@ -1,10 +1,12 @@
+import Dependencies._
+import com.typesafe.sbt.less.Import.LessKeys
+import com.typesafe.sbt.web.SbtWeb.autoImport.Assets
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys._
 import sbt._
-import Dependencies._
+import sbtassembly.AssemblyPlugin
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-import sbtassembly.AssemblyPlugin
 
 object LibraryProjects {
   private[this] def libraryProject[T <: Project](p: T) = {
@@ -18,7 +20,8 @@ object LibraryProjects {
     libraryDependencies ++= {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
       // val magnolia = "io.circe" %%% "circe-magnolia-derivation" % "0.4.0"
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum // :+ magnolia
+      val boopickle = "me.chrons" %%% "boopickle" % Utils.booPickleVersion
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum /* :+ magnolia */ :+ boopickle
     },
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
   ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13").disablePlugins(AssemblyPlugin)
@@ -57,7 +60,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-thrift` = libraryProject(project in file("libraries/projectile-lib-thrift")).settings(
     description := "Common Thrift classes used by code generated from Projectile",
-    libraryDependencies += Thrift.core
+    libraryDependencies ++= Thrift.all
   ).dependsOn(`projectile-lib-tracing`)
 
   lazy val `projectile-lib-service` = libraryProject(project in file("libraries/projectile-lib-service")).settings(
@@ -76,7 +79,7 @@ object LibraryProjects {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
       val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
-      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.2"
+      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.6"
       Seq(jQuery, javaTime, jsDom)
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
@@ -88,7 +91,8 @@ object LibraryProjects {
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache,
+    includeFilter in (Assets, LessKeys.less) := "projectile.less"
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val `projectile-lib-auth-graphql` = libraryProject(project in file("libraries/projectile-lib-auth-graphql")).settings(

@@ -3,13 +3,12 @@
 object Dependencies {
   object Play {
     private[this] val version = "2.6.21"
-    val lib = "com.typesafe.play" %% "play" % version
     val filters = play.sbt.PlayImport.filters
-    val ws = play.sbt.PlayImport.ws
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
     val json = "com.typesafe.play" %% "play-json" % "2.7.1"
-    val test = "com.typesafe.play" %% "play-test" % version % "test"
+    
+    val all = Seq(filters, guice, cache, json)
   }
 
   object Database {
@@ -19,7 +18,7 @@ object Dependencies {
 
     object Slick {
       val version = "3.3.0"
-      val pgVersion = "0.17.1"
+      val pgVersion = "0.17.2"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
@@ -55,12 +54,28 @@ object Dependencies {
   }
 
   object Thrift {
-    val version = "19.1.0"
-    val core = "com.twitter" %% "finagle-core" % version
+    object TwitterBijection {
+      val version = "0.9.6"
+      val core = "com.twitter" %% "bijection-core" % version
+      val util = "com.twitter" %% "bijection-util" % version
+      val all = Seq(core, util)
+    }
+
+    object Finagle {
+      val version = "18.12.0"
+
+      val core = "com.twitter" %% "finagle-core" % version
+      val thrift = "com.twitter" %% "finagle-thrift" % version
+      val thriftMux = "com.twitter" %% "finagle-thriftmux" % version
+
+      val all = Seq(core, thrift, thriftMux)
+    }
+
+    val all = TwitterBijection.all ++ Finagle.all
   }
 
   object Metrics {
-    val version = "1.1.2"
+    val version = "1.1.3"
     val micrometerCore = "io.micrometer" % "micrometer-core" % version
     val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
     val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
@@ -71,7 +86,7 @@ object Dependencies {
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.22.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.24.0"
   }
 
   object Authentication {
@@ -89,19 +104,20 @@ object Dependencies {
     val fontAwesome = "org.webjars" % "font-awesome" % "4.7.0" intransitive()
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.3" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.8" intransitive()
 
     val all = Seq(autocomplete, fontAwesome, jquery, materialize, swaggerUi)
   }
 
   object Utils {
-    val enumeratumCirceVersion = "1.5.19"
+    val enumeratumCirceVersion = "1.5.20"
+    val booPickleVersion = "1.2.5"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
     val chimney = "io.scalaland" %% "chimney" % "0.3.0"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
-    val commonsCodec = "commons-codec" % "commons-codec" % "1.11"
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.12"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
@@ -112,7 +128,7 @@ object Dependencies {
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
     val reftree = "io.github.stanch" %% "reftree" % "1.3.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
-    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.25"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.3"
   }

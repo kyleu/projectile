@@ -12,7 +12,7 @@ object GraphQLInputService {
   private[this] val fn = "graphql-files.json"
 
   def saveGraphQLDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
-    (dir / fn).overwrite(JacksonUtils.printJackson(GraphQLOptions().asJson))
+    (dir / fn).overwrite(JacksonUtils.printJackson(GraphQLOptions.empty.asJson))
   }
 
   def saveGraphQL(cfg: ConfigService, gi: GraphQLInput) = {

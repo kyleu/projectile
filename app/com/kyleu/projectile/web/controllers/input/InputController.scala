@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.database.input.PostgresInput
 import com.kyleu.projectile.models.graphql.input.GraphQLInput
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.ThriftInput
+import com.kyleu.projectile.services.typescript.{AstExportService, TypeScriptNodeService}
 import com.kyleu.projectile.web.util.ControllerUtils
 
 import scala.concurrent.Future
@@ -67,7 +68,19 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Ok(com.kyleu.projectile.web.views.html.input.detailModel(projectile, projectile.getInput(key).getModel(model))))
   }
 
+  def unionDetail(key: String, model: String) = Action.async { implicit request =>
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.input.detailUnion(projectile, projectile.getInput(key).getUnion(model))))
+  }
+
   def serviceDetail(key: String, service: String) = Action.async { implicit request =>
     Future.successful(Ok(com.kyleu.projectile.web.views.html.input.detailService(projectile, projectile.getInput(key).getService(service))))
+  }
+
+  def tstest() = Action.async { implicit request =>
+    val f = better.files.File("tmp/typescript/less.ts")
+    val json = AstExportService.parseAst(f.pathAsString)
+    val node = TypeScriptNodeService.fromJson(json)
+
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.input.tstest(projectile, json, node)))
   }
 }

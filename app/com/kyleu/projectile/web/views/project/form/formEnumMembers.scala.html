@@ -23,7 +23,7 @@
               <th>Class Override</th>
               @project.enumFeatures.map { f =>
                 <th style="width: 120px;">
-                  @f.title
+                  <div title="@f.description">@f.title</div>
                   <div>
                     <a href="" onclick="checkAll('@f.value'); return false;">All</a> /
                     <a href="" onclick="uncheckAll('@f.value'); return false;">@com.kyleu.projectile.util.NullUtils.str</a>

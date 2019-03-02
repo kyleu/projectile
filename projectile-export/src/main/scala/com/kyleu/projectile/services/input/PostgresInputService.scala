@@ -49,7 +49,6 @@ object PostgresInputService {
   def toPostgresInput(summ: InputSummary, pc: PostgresConnection, enums: Seq[EnumType] = Nil, tables: Seq[Table] = Nil, views: Seq[View] = Nil) = {
     summ.into[PostgresInput]
       .withFieldComputed(_.url, _ => pc.url).withFieldComputed(_.username, _ => pc.username).withFieldComputed(_.password, _ => pc.password)
-      .withFieldComputed(_.db, _ => pc.db).withFieldComputed(_.catalog, _ => pc.catalog)
       .withFieldComputed(_.enums, _ => enums).withFieldComputed(_.tables, _ => tables).withFieldComputed(_.views, _ => views)
       .transform
   }

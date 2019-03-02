@@ -47,8 +47,14 @@ object ModelHelper {
         " = None"
       }
       s"${field.propertyName}: $propType$propDefault"
-    }.mkString(", ")
-    file.add(s"def empty($fieldStrings) = {", 1)
+    }
+    file.add(s"def empty(", 1)
+    fieldStrings.foreach {
+      case x if fieldStrings.lastOption.contains(x) => file.add(x)
+      case x => file.add(x + ",")
+    }
+    file.add(s") = {", -1)
+    file.indent(1)
     file.add(s"${model.className}(${model.fields.map(_.propertyName).mkString(", ")})")
     file.add("}", -1)
   }

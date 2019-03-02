@@ -4,5 +4,5 @@ import sbt.Keys._
 object SbtExportPlugin {
   lazy val `projectile-sbt` = (project in file("projectile-sbt")).settings(Common.settings: _*).settings(
     sbtPlugin := true
-  ).dependsOn(ProjectExport.`projectile-export`).disablePlugins(sbtassembly.AssemblyPlugin)
+  ).dependsOn(ProjectileExport.`projectile-export`).disablePlugins(sbtassembly.AssemblyPlugin)
 }
