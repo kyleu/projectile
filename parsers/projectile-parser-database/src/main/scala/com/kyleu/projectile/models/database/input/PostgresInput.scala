@@ -25,39 +25,24 @@ case class PostgresInput(
     password: String = "",
     ssl: Boolean = false,
     catalog: Option[String] = None,
-    enums: Seq[EnumType] = Nil,
+    enumTypes: Seq[EnumType] = Nil,
     tables: Seq[Table] = Nil,
     views: Seq[View] = Nil
 ) extends Input {
   override def template = InputTemplate.Postgres
 
-  override def exportEnum(key: String) = {
-    val e = getPostgresEnum(key)
-    ExportEnum(
-      inputType = InputType.Enum.PostgresEnum,
-      key = e.key,
-      className = PostgresInput.typeName(ExportHelper.toClassName(ExportHelper.toIdentifier(e.key))),
-      values = e.values
-    )
+  override lazy val enums = enumTypes.map(e => ExportEnum(
+    inputType = InputType.Enum.PostgresEnum,
+    key = e.key,
+    className = PostgresInput.typeName(ExportHelper.toClassName(ExportHelper.toIdentifier(e.key))),
+    values = e.values.map(v => ExportEnum.EnumVal(k = v, s = Some(v)))
+  ))
+
+  override lazy val models = {
+    val t = tables.map(table => TableExportModel.loadTableModel(table, tables, enums))
+    val v = Nil // ViewExportModel.loadViewModel(view, exportEnums)
+    t ++ v
   }
-  override lazy val exportEnums = enums.map(e => exportEnum(e.key))
-
-  override def exportModel(k: String) = {
-    tables.find(_.name == k) match {
-      case Some(table) => TableExportModel.loadTableModel(table, tables, exportEnums)
-      case None => views.find(_.name == k) match {
-        case Some(view) => ViewExportModel.loadViewModel(view, exportEnums)
-        case None => throw new IllegalStateException(s"Cannot find view or table [$k] in input [$key]")
-      }
-    }
-  }
-  override lazy val exportModels = tables.map(e => exportModel(e.name))
-
-  override def exportUnion(k: String) = throw new IllegalStateException("What does a union even mean for postgres?")
-  override lazy val exportUnions = Nil
-
-  override def exportService(k: String) = throw new IllegalStateException("Services not supported for Postgres inputs")
-  override def exportServices = Nil
 
   def newConnection() = {
     Class.forName("org.postgresql.Driver")
@@ -66,9 +51,5 @@ case class PostgresInput(
     props.setProperty("password", password)
     props.setProperty("ssl", ssl.toString)
     DriverManager.getConnection(url, props)
-  }
-
-  private[this] def getPostgresEnum(k: String) = enums.find(_.key == k).getOrElse {
-    throw new IllegalStateException(s"Cannot find enum [$k] in input [$key] among candidates [${enums.map(_.key).mkString(", ")}]")
   }
 }

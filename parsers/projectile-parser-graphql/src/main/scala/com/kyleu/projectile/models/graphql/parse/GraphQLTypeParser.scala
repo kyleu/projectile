@@ -26,7 +26,7 @@ object GraphQLTypeParser {
     case named: NamedType => false -> schema.allTypes.get(named.name).map {
       case e: EnumType[_] => FieldType.EnumType(e.name)
       case i: InputObjectType[_] => FieldType.StructType(i.name)
-      case u: UnionType[_] => FieldType.UnionType(u.name, u.types.map(_.name))
+      case u: UnionType[_] => FieldType.UnionType(u.name, u.types.map(t => getOutputType(ctx, schema, doc, t, Nil)).map(_._2))
       case s: ScalarType[_] => getScalarType(s.name)
       case x => throw new IllegalStateException(s"Unhandled GraphQL type [$x] for type [$ctx]")
     }.orElse {
@@ -60,7 +60,7 @@ object GraphQLTypeParser {
     }
 
     case _: InterfaceType[_, _] => true -> FieldType.JsonType
-    case u: UnionType[_] => true -> FieldType.UnionType(u.name, u.types.map(_.name))
+    case u: UnionType[_] => true -> FieldType.UnionType(u.name, u.types.map(t => getOutputType(ctx, schema, doc, t, Nil)).map(_._2))
 
     case e: EnumType[_] => true -> FieldType.EnumType(e.name)
     case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)

@@ -1,64 +1,57 @@
 package com.kyleu.projectile.services.typescript
 
-import com.kyleu.projectile.models.typescript.TypeScriptNode._
-import com.kyleu.projectile.models.typescript._
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
+import com.kyleu.projectile.models.typescript.node.TypeScriptNode._
+import com.kyleu.projectile.models.typescript.node.{NodeContext, SourceFileHelper, SyntaxKind, TypeScriptNode}
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
-import scala.util.control.NonFatal
-
 object TypeScriptNodeService {
-  private[this] val commonKeys = Set("pos", "end", "flags", "kind", "jsDoc", "parent")
+  def parseNode(ctx: NodeContext, o: JsonObject, params: TypeScriptServiceParams): (Seq[String], TypeScriptNode) = {
+    var messages = params.messages
+    def addMessages(x: (Seq[String], TypeScriptNode)) = { messages = messages ++ x._1; x._2 }
+    def kids(k: String = "members") = {
+      o.kids(k).map(x => TypeScriptJsonService.parseJson(x.asJson, params.copy(depth = params.depth + 1))).map(addMessages)
+    }
+    def body(ob: JsonObject = o) = ob.apply("statements").map(_ => kids("statements")).getOrElse(ob.apply("body") match {
+      case Some(body) => Seq(TypeScriptJsonService.parseJson(body, params.copy(depth = params.depth + 1))._2)
+      case None => throw new IllegalStateException(s"Cannot extract statements or body from [${ob.keys.mkString(", ")}]")
+    })
 
-  def fromJson(json: Json) = {
-    parseJson(json = json, depth = 0)
-  }
+    val node = ctx.kind match {
+      case SyntaxKind.SourceFile => addMessages(SourceFileHelper.parseSourceFile(ctx = ctx, obj = o, getKids = kids("statements"), params = params))
 
-  private[this] def parseNode(ctx: NodeContext, obj: JsonObject, depth: Int): TypeScriptNode = {
-    def kids(k: String) = obj.ext[Seq[Json]](k).map(x => parseJson(x, depth + 1))
+      case SyntaxKind.ImportDeclaration => ImportDecl(ctx = ctx)
+      case SyntaxKind.ImportEqualsDeclaration => ImportDecl(ctx = ctx)
+      case SyntaxKind.ExportDeclaration => ExportDecl(ctx = ctx)
+      case SyntaxKind.NamespaceExportDeclaration => ExportNamespaceDecl(name = o.name(), ctx = ctx)
+      case SyntaxKind.InterfaceDeclaration => InterfaceDecl(name = o.name(), members = kids(), ctx = ctx)
+      case SyntaxKind.ModuleDeclaration => ModuleDecl(name = o.name(), statements = body(), modifiers = o.modifiers(), ctx = ctx)
+      case SyntaxKind.ClassDeclaration => ClassDecl(name = o.name(), members = kids(), modifiers = o.modifiers(), ctx = ctx)
+      case SyntaxKind.MethodDeclaration => MethodDecl(name = o.name(), params = o.params(), ret = o.typOrAny(), modifiers = o.modifiers(), ctx = ctx)
+      case SyntaxKind.FunctionDeclaration => MethodDecl(name = o.nameOrDefault(), params = o.params(), ret = o.typOrAny(), modifiers = o.modifiers(), ctx = ctx)
+      case SyntaxKind.VariableDeclaration => VariableDecl(name = o.name(), typ = o.typOrAny(), ctx = ctx)
+      case SyntaxKind.TypeAliasDeclaration => TypeAliasDecl(name = o.name(), typ = o.typ(), ctx = ctx)
+      case SyntaxKind.PropertyDeclaration => PropertyDecl(name = o.name(), typ = o.typOrAny(), modifiers = o.modifiers(), ctx = ctx)
 
-    ctx.kind match {
-      case SyntaxKind.SourceFile => SourceFile(filename = obj.ext[String]("fileName"), statements = kids("statements"), ctx = ctx)
+      case SyntaxKind.EnumDeclaration => EnumDecl(name = o.name(), members = kids(), ctx = ctx)
+      case SyntaxKind.EnumMember => EnumMember(name = o.name(), initial = o.literal("initializer"), ctx = ctx)
 
-      // case SyntaxKind.Comment => Comment(commment, ctx = ctx)
+      case SyntaxKind.ModuleBlock => ModuleBlock(statements = body(), ctx = ctx)
 
-      case SyntaxKind.InterfaceDeclaration => InterfaceDecl(name = obj.name(), members = kids("members"), ctx = ctx)
-      case SyntaxKind.ModuleDeclaration => ModuleDecl(name = obj.name(), statements = kids("body.statements"), ctx = ctx)
-      case SyntaxKind.ClassDeclaration => ClassDecl(name = obj.name(), members = kids("members"), ctx = ctx)
-      case SyntaxKind.MethodDeclaration => MethodDecl(name = obj.name(), params = obj.params(), ret = obj.typ(), ctx = ctx)
-
-      case SyntaxKind.Constructor => Constructor(params = obj.params(), ctx = ctx)
-      case SyntaxKind.PropertySignature => PropertySig(name = obj.name(), typ = obj.typ(), ctx = ctx)
-      case SyntaxKind.MethodSignature => MethodSig(name = obj.name(), ctx = ctx)
+      case SyntaxKind.Constructor => Constructor(params = o.params(), modifiers = o.modifiers(), ctx = ctx)
+      case SyntaxKind.ConstructSignature => ConstructSig(typ = o.typ(), params = o.params(), ctx = ctx)
+      case SyntaxKind.IndexSignature => IndexSig(typ = o.typ(), params = o.params(), ctx = ctx)
+      case SyntaxKind.PropertySignature => PropertySig(name = o.name(), typ = o.typOrAny(), ctx = ctx)
+      case SyntaxKind.CallSignature => CallSig(params = o.params(), ret = o.typOrAny(), ctx = ctx)
+      case SyntaxKind.MethodSignature => MethodSig(name = o.name(), params = o.params(), ret = o.typOrAny(), ctx = ctx)
 
       case SyntaxKind.ExportAssignment => ExportAssignment(ctx = ctx)
-      case SyntaxKind.VariableStatement => VariableStmt(declarations = kids("declarationList.declarations"), ctx = ctx)
+      case SyntaxKind.VariableStatement => VariableStmt(declarations = kids("declarationList.declarations"), modifiers = o.modifiers(), ctx = ctx)
 
-      case _ => Unknown(kind = ctx.kind.toString, ctx = ctx)
+      case _ => Unknown(kind = ctx.kind.toString, json = o.asJson, ctx = ctx)
     }
-  }
-
-  private[this] def parseJson(json: Json, depth: Int): TypeScriptNode = {
-    val obj = json match {
-      case _ if json.isObject => json.asObject.get
-      case _ => throw new IllegalStateException(s"Json [${json.noSpaces}] is not an object")
-    }
-    def ext[T: Decoder](k: String) = extractObj[T](obj = obj, key = k)
-
-    val kind = SyntaxKind.withValue(ext[Int]("kind"))
-    val jsDoc = obj("jsDoc").toSeq.flatMap(x => extract[Seq[JsonObject]](x)).flatMap(_.apply("comment").map(_.as[String].right.get))
-    val flags = NodeFlag.matching(ext[Int]("flags")).toSeq.sortBy(_.v)
-    val filteredKeys = obj.keys.filterNot(commonKeys.apply).toList
-    val ctx = NodeContext(pos = ext[Int]("pos"), end = ext[Int]("end"), kind = kind, jsDoc = jsDoc, flags = flags, keys = filteredKeys)
-
-    try {
-      parseNode(ctx = ctx, obj = obj, depth = depth)
-    } catch {
-      case NonFatal(x) =>
-        x.printStackTrace()
-        Error(kind = ctx.kind.toString, cls = x.getClass.getSimpleName, msg = x.toString, json = json, ctx = ctx)
-    }
+    messages -> node
   }
 }
 

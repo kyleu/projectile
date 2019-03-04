@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.project
 import io.scalaland.chimney.dsl._
 import com.kyleu.projectile.models.output.{OutputPackage, OutputPath}
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature, ServiceFeature}
-import com.kyleu.projectile.models.input.InputTemplate
+import com.kyleu.projectile.models.input.{Input, InputTemplate}
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
 import com.kyleu.projectile.util.JsonSerializers._
 
@@ -32,6 +32,10 @@ case class Project(
   private[this] def notFound(t: String, k: String, candidates: => Seq[String]) = {
     throw new IllegalStateException(s"No $t in project [$key] with key [$k] among candidates [${candidates.mkString(", ")}]")
   }
+
+  private[this] var inputOpt: Option[Input] = None
+  def getInput = inputOpt.getOrElse(throw new IllegalStateException("No input currently set"))
+  def setInput(i: Input) = inputOpt = Some(i)
 
   def availableFeatures(inputTemplate: InputTemplate) = ProjectFeature.values.filter(_.appliesTo(inputTemplate))
 

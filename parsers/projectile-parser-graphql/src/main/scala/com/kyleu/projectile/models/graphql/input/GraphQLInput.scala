@@ -1,7 +1,6 @@
 package com.kyleu.projectile.models.graphql.input
 
 import better.files.File
-import com.kyleu.projectile.models.export.ExportService
 import com.kyleu.projectile.models.graphql.input.GraphQLOptions.SchemaQueries
 import com.kyleu.projectile.models.graphql.parse.GraphQLDocumentParser
 import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
@@ -36,19 +35,7 @@ case class GraphQLInput(
     case (k, doc) => GraphQLDocumentParser.parse(Seq(k), parsedSchema(k), doc)
   }.toSeq.distinct
 
-  override lazy val exportEnums = parsedObjects.collect { case Left(x) => x }
-  override def exportEnum(k: String) = exportEnums.find(_.key == k).getOrElse {
-    throw new IllegalStateException(s"No input enum defined with key [$k] among candidates [${exportEnums.map(_.key).sorted.mkString(", ")}]")
-  }
+  override lazy val enums = parsedObjects.collect { case Left(x) => x }
 
-  override def exportUnion(k: String) = throw new IllegalStateException("Currently unable to support GraphQL unions")
-  override lazy val exportUnions = Nil
-
-  override lazy val exportModels = parsedObjects.collect { case Right(x) => x }
-  override def exportModel(k: String) = exportModels.find(_.key == k).getOrElse {
-    throw new IllegalStateException(s"No input model defined with key [$k] among candidates [${exportModels.map(_.key).sorted.mkString(", ")}]")
-  }
-
-  override def exportServices = Seq.empty[ExportService]
-  override def exportService(k: String) = exportServices.find(_.key == k).getOrElse(throw new IllegalStateException(s"No service defined with key [$k]"))
+  override lazy val models = parsedObjects.collect { case Right(x) => x }
 }

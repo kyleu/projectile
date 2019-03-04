@@ -62,7 +62,7 @@ object GraphQLDocumentHelper {
           pkg = pkg.toList ++ List("graphql", "enums"),
           key = name,
           className = toClassName(name),
-          values = values.map(_.name)
+          values = values.map(v => ExportEnum.EnumVal(k = v.name, s = Some(v.name)))
         )))
         case _ => throw new IllegalStateException(s"Invalid enum type [$t]")
       }

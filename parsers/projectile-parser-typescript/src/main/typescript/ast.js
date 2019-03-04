@@ -2,13 +2,8 @@
 exports.__esModule = true;
 var fs_1 = require("fs");
 var ts = require("typescript");
-function ast(filename) {
-    var sourceFile = ts.createSourceFile(filename, fs_1.readFileSync(filename).toString(), ts.ScriptTarget.ES2015, true);
-    switch (sourceFile.kind) {
-        case ts.SyntaxKind.SourceFile:
-            console.info(ts.SyntaxKind.SourceFile.toString());
-            break;
-    }
+function ast(src, tgt) {
+    var sourceFile = ts.createSourceFile(src, fs_1.readFileSync(src).toString(), ts.ScriptTarget.ES2015, true);
     var json = JSON.stringify(sourceFile, function (key, value) {
         switch (key) {
             case 'parent':
@@ -19,7 +14,8 @@ function ast(filename) {
                 return value;
         }
     }, 2);
-    fs_1.writeFileSync(filename.replace(".ts", ".json"), json);
+    var t = tgt === undefined ? src.replace(".ts", ".json") : tgt;
+    fs_1.writeFileSync(t, json);
     process.exit(0);
 }
-ast(process.argv[2]);
+ast(process.argv[2], process.argv[3]);

@@ -1,13 +1,8 @@
 import {readFileSync, writeFileSync} from "fs";
 import * as ts from "typescript";
 
-function ast(filename: string): void {
-  let sourceFile = ts.createSourceFile(filename, readFileSync(filename).toString(), ts.ScriptTarget.ES2015, true);
-  switch (sourceFile.kind) {
-    case ts.SyntaxKind.SourceFile:
-      console.info(ts.SyntaxKind.SourceFile.toString());
-      break
-  }
+function ast(src: string, tgt: string): void {
+  let sourceFile = ts.createSourceFile(src, readFileSync(src).toString(), ts.ScriptTarget.ES2015, true);
   let json = JSON.stringify(sourceFile, (key, value) => {
     switch(key) {
       case 'parent':
@@ -18,9 +13,9 @@ function ast(filename: string): void {
         return value;
     }
   }, 2);
-  writeFileSync(filename.replace(".ts", ".json"), json);
+  let t = tgt === undefined ? src.replace(".ts", ".json") : tgt;
+  writeFileSync(t, json);
   process.exit(0);
 }
 
-ast(process.argv[2]);
-
+ast(process.argv[2], process.argv[3]);

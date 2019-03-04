@@ -4,10 +4,11 @@
   "description": "TypeScript AST exporter",
   "main": "ast.js",
   "dependencies": {
-    "@types/node": "^11.9.5",
+    "@types/node": "^11.9.5"
+  },
+  "devDependencies": {
     "typescript": "^3.3.3333"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

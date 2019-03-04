@@ -40,6 +40,16 @@ object InputTemplate extends StringEnum[InputTemplate] with StringCirceEnum[Inpu
     override val supportsUnion = true
   }
 
+  case object TypeScript extends InputTemplate(
+    value = "typescript",
+    title = "TypeScript Definitions",
+    description = "Scala.js classes from a directory containing TypeScript definition",
+    icon = Icons.typeScript
+  ) {
+    override val supportsUnion = true
+    override val supportsService = true
+  }
+
   override val values = findValues
   val all = values.toSet
 }

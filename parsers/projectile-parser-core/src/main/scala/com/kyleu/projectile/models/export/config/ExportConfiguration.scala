@@ -1,22 +1,17 @@
 package com.kyleu.projectile.models.export.config
 
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportService, ExportUnion}
-import com.kyleu.projectile.models.output.file.ScalaFile
+import com.kyleu.projectile.models.output.file.{OutputFile, ScalaFile}
 import com.kyleu.projectile.models.output.{CommonImportHelper, OutputPackage}
 import com.kyleu.projectile.models.project.Project
-import com.kyleu.projectile.util.JsonSerializers._
-
-object ExportConfiguration {
-  implicit val jsonEncoder: Encoder[ExportConfiguration] = deriveEncoder
-  implicit val jsonDecoder: Decoder[ExportConfiguration] = deriveDecoder
-}
 
 case class ExportConfiguration(
     project: Project,
     enums: Seq[ExportEnum],
     models: Seq[ExportModel],
     unions: Seq[ExportUnion],
-    services: Seq[ExportService]
+    services: Seq[ExportService],
+    additional: Seq[OutputFile]
 ) {
   val applicationPackage = project.getPackage(OutputPackage.Application)
   val systemPackage = project.getPackage(OutputPackage.System)

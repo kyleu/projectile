@@ -1,4 +1,4 @@
-package com.kyleu.projectile.models.typescript
+package com.kyleu.projectile.models.typescript.node
 
 import enumeratum.{CirceEnum, Enum, EnumEntry}
 
