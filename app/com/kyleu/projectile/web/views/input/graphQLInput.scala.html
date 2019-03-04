@@ -11,9 +11,9 @@
 
   <ul class="tabs">
     <li class="tab"><a href="#input-detail"><i class=" @com.kyleu.projectile.models.template.Icons.graphql"></i> Summary</a></li>
-    <li class="tab"><a href="#input-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.exportEnums.size Enums</a></li>
-    <li class="tab"><a href="#input-models"><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @input.exportModels.size Models</a></li>
-    <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.exportServices.size Services</a></li>
+    <li class="tab"><a href="#input-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
+    <li class="tab"><a href="#input-models"><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @input.models.size Models</a></li>
+    <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
     @input.schema.map { q =>
       <li class="tab"><a href="#input-@q.schemaClass"><i class=" @com.kyleu.projectile.models.template.Icons.logs"></i> @q.schemaClass</a></li>
     }
@@ -42,10 +42,10 @@
 
   <div id="input-enums">
     <div class="collection">
-      @if(input.exportEnums.isEmpty) {
+      @if(input.enums.isEmpty) {
         <div class="collection-item">No referenced enums</div>
       }
-      @input.exportEnums.sortBy(_.key).map { e =>
+      @input.enums.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.inputType</div>
           <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.enumDetail(input.key, e.key)">@e.key</a>
@@ -56,10 +56,10 @@
 
   <div id="input-models">
     <div class="collection">
-      @if(input.exportModels.isEmpty) {
+      @if(input.models.isEmpty) {
         <div class="collection-item">No referenced models</div>
       }
-      @input.exportModels.sortBy(_.key).map { m =>
+      @input.models.sortBy(_.key).map { m =>
         <div class="collection-item">
           <div class="right">@m.inputType</div>
           <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.modelDetail(input.key, m.key)">@m.key</a>
@@ -70,10 +70,10 @@
 
   <div id="input-services">
     <div class="collection">
-      @if(input.exportServices.isEmpty) {
+      @if(input.services.isEmpty) {
         <div class="collection-item">No referenced services</div>
       }
-      @input.exportServices.sortBy(_.key).map { s =>
+      @input.services.sortBy(_.key).map { s =>
         <div class="collection-item">
           <div class="right">@s.inputType</div>
           <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.serviceDetail(input.key, s.key)">@s.key</a>

@@ -1,0 +1,26 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, k: String, status: String, results: Seq[(String, Either[Throwable, com.kyleu.projectile.models.project.ProjectOutput])])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Batch Export", mainDivClass = "margined") {
+  <ul class="collection with-header">
+    <li class="collection-header">
+      <h4><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> TypeScript Batch Export</h4>
+      <em>@status</em>
+    </li>
+    @results.map { r =>
+      <li class="collection-header">
+        <h6><a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.export(k, r._1)">@r._1</a></h6>
+        @r._2.toOption.map { o =>
+          @defining(o.rootLogs ++ o.featureOutput.flatMap(_.logs)) { logs =>
+            @if(logs.nonEmpty) {
+              <ul>
+                @logs.map { log =>
+                  <li>@log.content</li>
+                }
+              </ul>
+            }
+          }
+        }.getOrElse(Html(r._2.left.get.toString))
+      </li>
+    }
+  </ul>
+}

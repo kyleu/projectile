@@ -15,8 +15,8 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
     val p = projectile.getProject(key)
     val m = p.getEnum(enum)
 
-    val i = projectile.getInput(p.input)
-    val ee = i.exportEnum(enum)
+    val i = p.getInput
+    val ee = i.enum(enum)
     val fin = ee.apply(m).copy(values = ee.values)
 
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.detailEnum(projectile, key, p.toSummary, m, fin)))
@@ -24,18 +24,18 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
-    val inputEnums = i.exportEnums.map(e => (e.key, p.enums.exists(x => x.key == e.key)))
+    val inputEnums = i.enums.map(e => (e.key, p.enums.exists(x => x.key == e.key)))
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewEnum(projectile, key, inputEnums)))
   }
 
   def add(key: String, enumKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
     enumKey match {
       case "all" =>
-        val toSave = i.exportEnums.flatMap {
+        val toSave = i.enums.flatMap {
           case e if p.getEnumOpt(e.key).isDefined => None
           case e => Some(member.EnumMember(pkg = e.pkg, key = e.key, features = p.defaultEnumFeatures.map(EnumFeature.withValue)))
         }
@@ -43,7 +43,7 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
         val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} enums"))
       case _ =>
-        val orig = i.exportEnum(enumKey)
+        val orig = i.enum(enumKey)
         val m = EnumMember(pkg = orig.pkg, key = enumKey, features = p.defaultEnumFeatures.map(EnumFeature.withValue))
         projectile.saveEnumMember(key, m)
         val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.detail(key, m.key))
@@ -53,10 +53,10 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
 
   def save(key: String, enumKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
     val m = p.getEnum(enumKey)
-    val e = i.exportEnum(m.key)
+    val e = i.enum(m.key)
 
     val form = ControllerUtils.getForm(request.body)
     val newMember = m.copy(
@@ -82,7 +82,9 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
 
   def remove(key: String, member: String) = Action.async { implicit request =>
     projectile.removeEnumMember(key, member)
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed enum [$member]"))
+    Future.successful(Redirect(
+      com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)
+    ).flashing("success" -> s"Removed enum [$member]"))
   }
 
   def formFeatures(key: String) = Action.async { implicit request =>

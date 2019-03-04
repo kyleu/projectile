@@ -1,0 +1,20 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, k: String, files: Seq[String])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parseAll(k)">Parse All</a>
+        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.exportAll(k)">Export All</a>
+      </div>
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> @k</h5>
+    </div>
+    @files.map { f =>
+      <div class="collection-item">
+        <h5>@f</h5>
+        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, f)">AST</a> /
+        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.export(k, f)">Project</a>
+      </div>
+    }
+  </div>
+}

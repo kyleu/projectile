@@ -3,6 +3,7 @@ package com.kyleu.projectile.util
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
 import io.circe.JsonObject
+import io.circe.generic.extras
 import io.circe.java8.time._
 import shapeless.Lazy
 
@@ -25,9 +26,9 @@ object JsonSerializers {
   implicit def decodeLocalDate: Decoder[LocalDate] = io.circe.java8.time.decodeLocalDate
   implicit def decodeLocalTime: Decoder[LocalTime] = io.circe.java8.time.decodeLocalTime
 
-  implicit val circeConfiguration: io.circe.generic.extras.Configuration = io.circe.generic.extras.Configuration.default.withDefaults
-  def deriveDecoder[A](implicit decode: Lazy[io.circe.generic.extras.decoding.ConfiguredDecoder[A]]) = io.circe.generic.extras.semiauto.deriveDecoder[A]
-  def deriveEncoder[A](implicit encode: Lazy[io.circe.generic.extras.encoding.ConfiguredObjectEncoder[A]]) = io.circe.generic.extras.semiauto.deriveEncoder[A]
+  implicit val circeConfiguration: extras.Configuration = extras.Configuration.default.withDefaults
+  def deriveDecoder[A](implicit decode: Lazy[extras.decoding.ConfiguredDecoder[A]]) = extras.semiauto.deriveDecoder[A]
+  def deriveEncoder[A](implicit encode: Lazy[extras.encoding.ConfiguredObjectEncoder[A]]) = extras.semiauto.deriveEncoder[A]
 
   // implicit val magnoliaConfiguration: io.circe.magnolia.configured.Configuration = io.circe.magnolia.configured.Configuration.default.withDefaults
   // def deriveDecoder[A] = io.circe.magnolia.configured.decoder.semiauto.deriveConfiguredMagnoliaDecoder[A]
@@ -45,7 +46,7 @@ object JsonSerializers {
   }
 
   def extractObj[T: Decoder](obj: JsonObject, key: String): T = key.split('.').toList match {
-    case h :: Nil => obj.apply(key).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
+    case h :: Nil => obj.apply(h).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
     case h :: x =>
       val next = obj.apply(h).map(extract[JsonObject]).getOrElse {
         throw new IllegalStateException(s"No [$key] path among candidates [${obj.keys.mkString(", ")}]")

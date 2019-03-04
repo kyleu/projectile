@@ -1,0 +1,106 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, k: String, path: String, input: com.kyleu.projectile.models.typescript.input.TypeScriptInput, forceCompile: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Test", mainDivClass = "margined") {
+  <ul class="collection with-header">
+    <li class="collection-header">
+      <div class="right">@if(forceCompile) {
+        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, path, !forceCompile)">No Compile</a>
+      } else {
+        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, path, !forceCompile)">Compile</a>
+      }</div>
+      <h4>Parse Result</h4>
+      @input.logs.map { s =>
+        <div><em>@s</em></div>
+      }
+    </li>
+    @defining(input.nodes.flatMap(com.kyleu.projectile.models.typescript.node.NodeHelper.getErrorNodes)) { errs =>
+      @if(errs.nonEmpty) {
+        <li class="collection-item">
+          <h5>Errors</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Kind</th>
+                <th>Class</th>
+                <th>Message</th>
+                <th>Json</th>
+                <th>Context</th>
+              </tr>
+            </thead>
+            <tbody>
+              @errs.map { err =>
+                <tr>
+                  <td>@err.kind</td>
+                  <td>@err.cls</td>
+                  <td>@err.msg</td>
+                  <td>
+                    <a href="" onclick="$('pre', $(this).parent()).toggle();return false;">Click to view</a>
+                    <pre style="display: none;">@com.kyleu.projectile.util.JacksonUtils.printJackson(err.json)</pre>
+                  </td>
+                  <td>
+                    <a href="" onclick="$('pre', $(this).parent()).toggle();return false;">Click to view</a>
+                    <pre style="display: none;">@com.kyleu.projectile.util.JacksonUtils.printJackson(com.kyleu.projectile.util.JsonSerializers.encoderOps(err.ctx).asJson)</pre>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </li>
+      }
+    }
+    @defining(input.nodes.flatMap(com.kyleu.projectile.models.typescript.node.NodeHelper.getUnknownNodes)) { unknowns =>
+      @if(unknowns.nonEmpty) {
+        <li class="collection-item">
+          <h5>Unknowns</h5>
+          <ul>
+            @unknowns.map(_.kind).distinct.map { u =>
+              <li>@u</li>
+            }
+          </ul>
+        </li>
+      }
+    }
+
+    @if(input.enums.nonEmpty) {
+      <li class="collection-item">
+        <h5>Enums</h5>
+        <ul>@input.enums.map { e =>
+          <li><pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(com.kyleu.projectile.util.JsonSerializers.encoderOps(e).asJson)</pre></li>
+        }</ul>
+      </li>
+    }
+    @if(input.models.nonEmpty) {
+      <li class="collection-item">
+        <h5>Models</h5>
+        <ul>@input.models.map { m =>
+          <li><pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(com.kyleu.projectile.util.JsonSerializers.encoderOps(m).asJson)</pre></li>
+        }</ul>
+      </li>
+    }
+    @if(input.unions.nonEmpty) {
+      <li class="collection-item">
+        <h5>Unions</h5>
+        <ul>@input.unions.map { u =>
+          <li><pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(com.kyleu.projectile.util.JsonSerializers.encoderOps(u).asJson)</pre></li>
+        }</ul>
+      </li>
+    }
+    @if(input.services.nonEmpty) {
+      <li class="collection-item">
+        <h5>Services</h5>
+        <ul>@input.services.map { s =>
+          <li><pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(com.kyleu.projectile.util.JsonSerializers.encoderOps(s).asJson)</pre></li>
+        }</ul>
+      </li>
+    }
+
+    <li class="collection-item">
+      <h5>AST</h5>
+      <ul class="tsList">
+      @input.nodes.map { node =>
+        @com.kyleu.projectile.web.controllers.input.TypeScriptController.viewNode(node, 0)
+      }
+      </ul>
+    </li>
+  </ul>
+}

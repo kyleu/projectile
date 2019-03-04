@@ -1,0 +1,55 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.typescript.input.TypeScriptInput)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+) @com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Detail") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <h5><i class="@input.template.icon"></i> @input.key</h5>
+      @input.description (@input.hash)
+    </div>
+  </div>
+
+  <ul class="tabs">
+    <li class="tab"><a href="#input-detail"><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> Summary</a></li>
+    <li class="tab"><a href="#input-nodes"><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> @input.nodes.size Nodes</a></li>
+  </ul>
+
+  <div id="input-detail">
+    <div class="collection">
+      <div class="collection-item">
+        <div class="right"><a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/typescript-files.json")">Change Files</a></div>
+        @if(input.files.isEmpty) {
+          <div>No TypeScript files</div>
+        }
+        @input.files.map { f =>
+          <div>@f</div>
+        }
+      </div>
+      <div class="collection-item">
+        <a class="btn theme" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.refresh(input.key)">Refresh</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="input-nodes">
+    <div class="collection">
+      @if(input.nodes.isEmpty) {
+        <div class="collection-item">No nodes</div>
+      } else {
+        <div class="collection-item">
+          <ul class="tsList">
+            @input.nodes.map { n =>
+              @com.kyleu.projectile.web.controllers.input.TypeScriptController.viewNode(n, 0)
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('.tabs').tabs();
+    });
+  </script>
+}
