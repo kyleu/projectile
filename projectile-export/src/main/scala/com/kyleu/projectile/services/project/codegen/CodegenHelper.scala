@@ -33,7 +33,7 @@ trait CodegenHelper { this: ProjectileService =>
 
     val ret = workingSet.flatMap {
       case (_, h, i) if h == i.hash => None
-      case (p, _, i) => Some(exportProject(key = p.key, verbose = verbose))
+      case (p, _, _) => Some(exportProject(key = p.key, verbose = verbose))
     }
 
     val aud = if (ret.isEmpty) {

@@ -1,16 +1,13 @@
 package com.kyleu.projectile.services.project
 
-import better.files.File
 import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.input.Input
+import com.kyleu.projectile.models.project.ProjectSummary
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
-import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
-import com.kyleu.projectile.services.output.OutputService
-import com.kyleu.projectile.util.JsonFileLoader
-import com.kyleu.projectile.util.JsonSerializers._
-import io.scalaland.chimney.dsl._
+import com.kyleu.projectile.services.config.ConfigService
 
 trait ProjectHelper { this: ProjectileService =>
   private[this] lazy val summarySvc = new ProjectSummaryService(rootCfg)
@@ -20,16 +17,17 @@ trait ProjectHelper { this: ProjectileService =>
   private[this] lazy val unionSvc = new UnionMemberService(this)
   private[this] lazy val serviceSvc = new ServiceMemberService(this)
 
+  private[this] lazy val loadSvc = new ProjectLoadService(this)
   private[this] lazy val exportSvc = new ProjectExportService(this)
   private[this] lazy val outputSvc = new OutputService(this)
 
   def listProjects() = summarySvc.list()
 
-  def getProject(key: String) = load(configForProject(key).projectDirectory, key)
+  def getProject(key: String) = loadSvc.load(configForProject(key), key)
   def getProjectSummaryOpt(key: String) = summarySvc.getSummary(key)
   def getProjectSummary(key: String) = getProjectSummaryOpt(key).getOrElse(throw new IllegalStateException(s"No project with key [$key]"))
 
-  def updateProject(key: String) = ProjectUpdateService.update(this, load(configForProject(key).projectDirectory, key))
+  def updateProject(key: String) = ProjectUpdateService.update(this, loadSvc.load(configForProject(key), key))
   def updateAll() = listProjects().flatMap(project => updateProject(key = project.key))
 
   def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
@@ -55,43 +53,36 @@ trait ProjectHelper { this: ProjectileService =>
 
   def exportProject(key: String, verbose: Boolean) = {
     val o = exportSvc.getOutput(projectRoot = configForProject(key).workingDirectory, key = key, verbose = verbose)
-    o -> outputSvc.persist(o = o, verbose = verbose)
+    o -> outputSvc.persist(o = o, verbose = verbose, cfg = configForProject(o.project.key))
+  }
+  def exportProjectFromInput(p: ProjectSummary, i: Input, cfg: ConfigService, verbose: Boolean) = {
+    val projectRoot = better.files.File.temp
+    val project = loadSvc.transform(projectRoot, p, i)
+    val exportCfg = {
+      ExportConfiguration(project = project, enums = i.enums, models = i.models, unions = i.unions, services = i.services, additional = i.additional)
+    }
+    val o = exportSvc.runExport(projectRoot = projectRoot, config = exportCfg, verbose = verbose)
+    val res = outputSvc.persist(o, verbose = verbose, cfg = cfg)
+    o -> res
   }
   def exportAll() = listProjects().map(project => exportProject(key = project.key, verbose = false))
 
   def loadConfig(key: String) = {
     val p = getProject(key)
-    val input = getInput(p.input)
+    val input = p.getInput
 
-    val exportEnums = p.enums.map(e => input.exportEnum(e.key).apply(e))
-    val exportModels = p.models.map(e => input.exportModel(e.key).apply(e))
-    val exportUnions = p.unions.map(u => input.exportUnion(u.key).apply(u))
-    val exportServices = p.services.map(e => input.exportService(e.key).apply(e))
+    val exportEnums = p.enums.map(e => input.enum(e.key).apply(e))
+    val exportModels = p.models.map(e => input.model(e.key).apply(e))
+    val exportUnions = p.unions.map(u => input.union(u.key).apply(u))
+    val exportServices = p.services.map(e => input.service(e.key).apply(e))
+    val additional = input.additional
 
-    ExportConfiguration(project = p, enums = exportEnums, models = exportModels, unions = exportUnions, services = exportServices)
+    ExportConfiguration(project = p, enums = exportEnums, models = exportModels, unions = exportUnions, services = exportServices, additional = additional)
   }
 
   private[this] def removeProjectFiles(key: String) = {
     (configForProject(key).projectDirectory / key).delete(swallowIOExceptions = true)
     ProjectileResponse.OK
-  }
-
-  private[this] def load(dir: File, key: String) = summarySvc.getSummary(key)
-    .getOrElse(throw new IllegalStateException(s"No project found with key [$key]"))
-    .into[Project]
-    .withFieldComputed(_.enums, _ => loadDir[EnumMember](dir, s"$key/enum"))
-    .withFieldComputed(_.models, _ => loadDir[ModelMember](dir, s"$key/model"))
-    .withFieldComputed(_.unions, _ => loadDir[UnionMember](dir, s"$key/union"))
-    .withFieldComputed(_.services, _ => loadDir[ServiceMember](dir, s"$key/service"))
-    .transform
-
-  private[this] def loadDir[A: Decoder](dir: File, k: String) = {
-    val d = dir / k
-    if (d.exists && d.isDirectory && d.isReadable) {
-      d.children.filter(f => f.isRegularFile && f.name.endsWith(".json")).map(f => JsonFileLoader.loadFile[A](f, k)).toList
-    } else {
-      Nil
-    }
   }
 
   protected[this] def projectResults(k: String) = {

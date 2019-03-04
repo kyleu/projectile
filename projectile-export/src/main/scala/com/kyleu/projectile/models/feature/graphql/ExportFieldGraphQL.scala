@@ -29,12 +29,10 @@ object ExportFieldGraphQL {
     case XmlType => "StringType"
     case UuidType => "uuidType"
 
-    case ObjectType(_, _) => throw new IllegalStateException("TODO: Objects")
     case StructType(key) => config.getModelOpt(key) match {
       case Some(_) => throw new IllegalStateException("TODO: Struct types")
       case None => "StringType"
     }
-    case MethodType(_, _) => throw new IllegalStateException("TODO: Methods")
 
     case EnumType(key) => config.getEnumOpt(key) match {
       case Some(enum) => enum.propertyName + "EnumType"
@@ -42,13 +40,13 @@ object ExportFieldGraphQL {
     }
     case ListType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
     case SetType(typ) => s"ListInputType(${graphQLType(config, name, typ)})"
-    case MapType(_, _) => throw new IllegalStateException("Maps are not supported in GraphQL")
-    case UnionType(_, _) => throw new IllegalStateException("Unions are not currently supported in GraphQL")
 
     case JsonType => "jsonType"
     case CodeType => "StringType"
     case TagsType => "StringType"
     case ByteArrayType => "ArrayType(StringType)"
+
+    case typ => throw new IllegalStateException(s"[$typ] is not currently supported in GraphQL")
   }
 
   def argType(config: ExportConfiguration, name: String, t: FieldType, required: Boolean) = graphQLType(config, name, t)

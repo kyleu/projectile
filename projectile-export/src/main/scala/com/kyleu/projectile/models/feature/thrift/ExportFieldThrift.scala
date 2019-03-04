@@ -53,5 +53,7 @@ object ExportFieldThrift {
     case TagsType => "list<common.Tag>"
 
     case ByteArrayType => "binary"
+
+    case typ => throw new IllegalStateException(s"[$typ] is not currently supported in Thrift")
   }
 }

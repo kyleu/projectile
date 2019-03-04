@@ -44,6 +44,8 @@ object ThriftSchemaInputHelper {
     case CodeType => "StringType"
     case TagsType => "TagsType"
     case ByteArrayType => "ArrayType(StringType)"
+
+    case typ => throw new IllegalStateException(s"[$typ] is not currently supported in Thrift")
   }
 
   def addImports(pkg: Seq[String], types: Seq[FieldType], config: ExportConfiguration, file: ScalaFile) = {

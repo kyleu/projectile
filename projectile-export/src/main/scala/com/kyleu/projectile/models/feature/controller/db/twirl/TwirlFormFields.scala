@@ -26,7 +26,7 @@ object TwirlFormFields {
 
       case FieldType.EnumType(key) =>
         val enum = config.getEnumOpt(key).getOrElse(throw new IllegalStateException(s"Cannot find enum with name [$key]"))
-        val opts = "Seq(" + enum.values.map(v => s""""$v" -> "$v"""").mkString(", ") + ")"
+        val opts = "Seq(" + enum.values.map(v => s""""${v.k}" -> "${v.v}"""").mkString(", ") + ")"
         val extra = s"""options = $opts, dataType = "${enum.key}""""
         file.add(s"@$formPkg.selectField($argsString, $extra)")
 

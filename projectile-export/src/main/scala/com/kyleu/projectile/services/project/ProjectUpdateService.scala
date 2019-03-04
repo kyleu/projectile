@@ -9,7 +9,7 @@ import com.kyleu.projectile.services.ProjectileService
 object ProjectUpdateService {
   private[this] val saveUnchanged = false
 
-  def update(svc: ProjectileService, p: Project) = updateInput(svc, p, svc.getInput(p.input))
+  def update(svc: ProjectileService, p: Project) = updateInput(svc, p, p.getInput)
 
   def updateInput(svc: ProjectileService, p: Project, i: Input) = {
     val enumResults = processEnums(svc, p, i)
@@ -30,8 +30,8 @@ object ProjectUpdateService {
   }
 
   private[this] def processEnums(svc: ProjectileService, p: Project, i: Input) = {
-    val (unchanged, enumsToAdd) = i.exportEnums.partition(ek => p.enums.exists(_.key == ek.key))
-    val enumsToRemove = p.enums.filterNot(ek => i.exportEnums.exists(_.key == ek.key))
+    val (unchanged, enumsToAdd) = i.enums.partition(ek => p.enums.exists(_.key == ek.key))
+    val enumsToRemove = p.enums.filterNot(ek => i.enums.exists(_.key == ek.key))
     val ef = p.defaultEnumFeatures.map(EnumFeature.withValue)
 
     if (saveUnchanged) { unchanged.map(e => svc.saveEnumMember(p.key, p.getEnum(e.key))) }
@@ -46,8 +46,8 @@ object ProjectUpdateService {
   }
 
   private[this] def processModels(svc: ProjectileService, p: Project, i: Input) = {
-    val (unchanged, modelsToAdd) = i.exportModels.partition(ek => p.models.exists(_.key == ek.key))
-    val modelsToRemove = p.models.filterNot(mk => i.exportModels.exists(_.key == mk.key))
+    val (unchanged, modelsToAdd) = i.models.partition(ek => p.models.exists(_.key == ek.key))
+    val modelsToRemove = p.models.filterNot(mk => i.models.exists(_.key == mk.key))
     val mf = p.defaultModelFeatures.map(ModelFeature.withValue)
 
     if (saveUnchanged) { unchanged.map(m => svc.saveModelMember(p.key, p.getModel(m.key))) }
@@ -62,8 +62,8 @@ object ProjectUpdateService {
   }
 
   private[this] def processUnions(svc: ProjectileService, p: Project, i: Input) = {
-    val (unchanged, unionsToAdd) = i.exportUnions.partition(ek => p.unions.exists(_.key == ek.key))
-    val unionsToRemove = p.unions.filterNot(uk => i.exportUnions.exists(_.key == uk.key))
+    val (unchanged, unionsToAdd) = i.unions.partition(ek => p.unions.exists(_.key == ek.key))
+    val unionsToRemove = p.unions.filterNot(uk => i.unions.exists(_.key == uk.key))
 
     if (saveUnchanged) { unchanged.map(m => svc.saveUnionMember(p.key, p.getUnion(m.key))) }
 
@@ -77,8 +77,8 @@ object ProjectUpdateService {
   }
 
   private[this] def processServices(svc: ProjectileService, p: Project, i: Input) = {
-    val (unchanged, servicesToAdd) = i.exportServices.partition(sk => p.services.exists(_.key == sk.key))
-    val servicesToRemove = p.services.filterNot(sk => i.exportServices.exists(_.key == sk.key))
+    val (unchanged, servicesToAdd) = i.services.partition(sk => p.services.exists(_.key == sk.key))
+    val servicesToRemove = p.services.filterNot(sk => i.services.exists(_.key == sk.key))
     val sf = p.defaultServiceFeatures.map(ServiceFeature.withValue)
 
     if (saveUnchanged) { unchanged.map(s => svc.saveServiceMember(p.key, p.getService(s.key))) }

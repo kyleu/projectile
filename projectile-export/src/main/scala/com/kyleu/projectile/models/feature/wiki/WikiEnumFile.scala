@@ -9,7 +9,7 @@ object WikiEnumFile {
   def export(config: ExportConfiguration, e: ExportEnum) = {
     val file = MarkdownFile(OutputPath.WikiMarkdown, "database" +: e.pkg, "DatabaseEnum" + e.className)
     file.addHeader(e.key)
-    e.values.foreach(v => file.add(s" - $v"))
+    e.values.foreach(v => file.add(s" - ${v.s}: ${v.v}"))
     file
   }
 }

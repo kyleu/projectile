@@ -23,11 +23,14 @@ class ModelMemberService(val svc: ProjectileService) {
   private[this] def fileFor(dir: File, k: String) = dir / "model" / (k + ".json")
 
   private[this] def saveMember(p: String, i: Input, member: ModelMember) = {
-    val m = i.exportModel(member.key).apply(member)
-    val dir = svc.configForProject(p).projectDir(p)
-    val f = fileFor(dir, member.key)
-    f.createFileIfNotExists(createParents = true)
-    f.overwrite(JacksonUtils.printJackson(member.asJson))
+    val o = i.model(member.key)
+    val m = o.apply(member)
+    if (o != m) {
+      val dir = svc.configForProject(p).projectDir(p)
+      val f = fileFor(dir, member.key)
+      f.createFileIfNotExists(createParents = true)
+      f.overwrite(JacksonUtils.printJackson(member.asJson))
+    }
     m
   }
 }

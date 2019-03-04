@@ -1,17 +1,15 @@
-package com.kyleu.projectile.services.output
+package com.kyleu.projectile.services.project
 
 import better.files.File
 import com.kyleu.projectile.models.output.OutputWriteResult
-import com.kyleu.projectile.util.NumberUtils
 import com.kyleu.projectile.models.output.file.OutputFile
 import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
-import com.kyleu.projectile.util.JsonSerializers._
+import com.kyleu.projectile.util.NumberUtils
 
 class OutputService(svc: ProjectileService) {
-  def persist(o: ProjectOutput, verbose: Boolean) = {
-    val cfg = svc.configForProject(o.project.key)
+  def persist(o: ProjectOutput, verbose: Boolean, cfg: ConfigService) = {
     o.featureOutput.flatMap { fo =>
       fo.files.map { f =>
         val result = write(cfg, f, o.getDirectory(cfg.workingDirectory, f.path), verbose)
