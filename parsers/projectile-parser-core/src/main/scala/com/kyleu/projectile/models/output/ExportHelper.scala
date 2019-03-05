@@ -28,4 +28,7 @@ object ExportHelper {
 
   val getAllArgs = "orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
+
+  private[this] val needsEscaping = Set("abstract", "then")
+  def escapeKeyword(s: String) = if (needsEscaping(s)) { "`" + s + "`" } else { s }
 }

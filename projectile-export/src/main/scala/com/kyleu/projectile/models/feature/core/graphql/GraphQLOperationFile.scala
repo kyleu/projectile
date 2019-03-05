@@ -15,7 +15,6 @@ object GraphQLOperationFile {
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.pkg, key = model.className)
 
     config.addCommonImport(file, "JsonSerializers", "_")
-    config.addCommonImport(file, "GraphQLQuery")
 
     file.add(s"object ${model.className} {", 1)
 
@@ -29,24 +28,19 @@ object GraphQLOperationFile {
     file.add("case class Data(", 2)
     GraphQLObjectHelper.addFields(config, file, model.fields)
     file.add(")", -2)
-
     file.add()
-    model.source match {
-      case None => file.add(s"""val query: GraphQLQuery[Data] = new GraphQLQuery[Data]("${model.className}")""")
-      case Some(src) =>
-        file.add(s"""val query: GraphQLQuery[Data] = new GraphQLQuery[Data]("${model.className}") {""", 1)
-        addContent(file, src)
-        file.add("}", -1)
-    }
-
+    file.add(s"""val name = "${model.className}"""")
+    file.add()
+    file.add("""def getData(json: Json): Option[Data] = if (json.isNull) { None } else { Some(extract[Data](json)) }""")
+    model.source.foreach(src => addContent(file, src))
     file.add("}", -1)
-    file.add()
 
     file
   }
 
   private[this] def addContent(file: ScalaFile, src: String) = {
-    file.add("override val content = \"\"\"", 1)
+    file.add()
+    file.add("val content = \"\"\"", 1)
     StringUtils.lines(src).foreach(l => file.add("|" + l))
     file.add("\"\"\".stripMargin.trim", -1)
   }

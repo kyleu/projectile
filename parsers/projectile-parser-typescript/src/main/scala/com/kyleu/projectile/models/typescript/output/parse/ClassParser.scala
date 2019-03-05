@@ -2,7 +2,6 @@ package com.kyleu.projectile.models.typescript.output.parse
 
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
-import com.kyleu.projectile.models.typescript.node.TypeScriptNode
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.ClassDecl
 import com.kyleu.projectile.models.typescript.output.{OutputHelper, TypeScriptOutput}
 
@@ -14,18 +13,16 @@ object ClassParser {
 
     file.addImport(Seq("scala", "scalajs"), "js")
 
-    OutputHelper.printJsDoc(file, node.ctx)
+    OutputHelper.printContext(file, node.ctx)
     file.add("@js.native")
-    val prefix = node.modifiers.filter(_.scalaKeyword).map(_ + " ").mkString
+    file.add("@js.annotation.JSGlobal")
+    val prefix = OutputHelper.keywords(node.ctx.modifiers)
     file.add(s"${prefix}class $cn extends js.Object {", 1)
-    node.members.foreach(m => printMember(file, m))
+
+    node.members.foreach(m => MemberParser.print(ctx = ctx, out = out, tsn = m, file = file, last = node.members.lastOption.contains(m)))
+
     file.add("}", -1)
 
     ctx -> out.withAdditional(file)
-  }
-
-  def printMember(file: ScalaFile, m: TypeScriptNode) = {
-    OutputHelper.printJsDoc(file, m.ctx)
-    file.add(s"// $m")
   }
 }

@@ -29,6 +29,8 @@ object ModifierFlag extends StringEnum[ModifierFlag] with StringCirceEnum[Modifi
   }
   case object Static extends ModifierFlag("static", StaticKeyword)
 
+  case object Optional extends ModifierFlag("opt", DeclareKeyword)
+
   override val values = findValues
 
   val byKind = values.flatMap(v => v.kinds.map(_ -> v)).toMap

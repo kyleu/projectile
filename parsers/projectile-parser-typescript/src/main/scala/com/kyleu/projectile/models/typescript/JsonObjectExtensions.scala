@@ -26,7 +26,9 @@ object JsonObjectExtensions {
     def kids(k: String = "children") = o.ext[Seq[JsonObject]](k)
     def params(k: String = "parameters") = ext[Seq[JsonObject]](k).map(TypeScriptMethodHelper.getParam)
     def modifiers(k: String = "modifiers") = {
-      o.apply(k).map(extract[Seq[JsonObject]]).map(_.map(o => ModifierFlag.byKind(o.kind()))).getOrElse(Nil).distinct.sortBy(_.toString)
+      val mods = o.apply(k).map(extract[Seq[JsonObject]]).map(_.map(o => ModifierFlag.byKind(o.kind()))).getOrElse(Nil)
+      val opt = o.apply("questionToken").map(_ => Seq(ModifierFlag.Optional)).getOrElse(Nil)
+      (mods ++ opt).distinct.sortBy(_.toString)
     }
 
     private[this] def crash(msg: String) = throw new IllegalStateException(msg + s" among candidates [${o.keys.mkString(", ")}]")

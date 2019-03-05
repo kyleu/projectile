@@ -20,17 +20,17 @@ object TypeScriptNode {
   case class ExportDecl(ctx: NodeContext) extends TypeScriptNode
   case class ExportNamespaceDecl(name: String, ctx: NodeContext) extends TypeScriptNode
   case class InterfaceDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
-  case class ModuleDecl(name: String, statements: Seq[TypeScriptNode], modifiers: Seq[ModifierFlag], ctx: NodeContext) extends TypeScriptNode(statements)
-  case class ClassDecl(name: String, members: Seq[TypeScriptNode], modifiers: Seq[ModifierFlag], ctx: NodeContext) extends TypeScriptNode(members)
-  case class MethodDecl(name: String, params: Seq[ObjectField], ret: FieldType, modifiers: Seq[ModifierFlag], ctx: NodeContext) extends TypeScriptNode
+  case class ModuleDecl(name: String, statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(statements)
+  case class ClassDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
+  case class MethodDecl(name: String, params: Seq[ObjectField], ret: FieldType, ctx: NodeContext) extends TypeScriptNode
   case class VariableDecl(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode
   case class TypeAliasDecl(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode
-  case class PropertyDecl(name: String, typ: FieldType, modifiers: Seq[ModifierFlag], ctx: NodeContext) extends TypeScriptNode
+  case class PropertyDecl(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode
   case class EnumDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
 
   case class ModuleBlock(statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(statements)
 
-  case class Constructor(params: Seq[ObjectField], modifiers: Seq[ModifierFlag], ctx: NodeContext) extends TypeScriptNode
+  case class Constructor(params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode
   case class ConstructSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode
   case class IndexSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode
   case class PropertySig(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode
@@ -38,7 +38,7 @@ object TypeScriptNode {
   case class MethodSig(name: String, params: Seq[ObjectField], ret: FieldType, ctx: NodeContext) extends TypeScriptNode
 
   case class ExportAssignment(ctx: NodeContext) extends TypeScriptNode
-  case class VariableStmt(declarations: Seq[TypeScriptNode], modifiers: Seq[ModifierFlag], ctx: NodeContext) extends TypeScriptNode(declarations)
+  case class VariableStmt(declarations: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(declarations)
 
   case class EnumMember(name: String, initial: Option[Json], ctx: NodeContext) extends TypeScriptNode
 

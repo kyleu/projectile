@@ -90,7 +90,7 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
   private[this] def exportProject(k: String, f: String, v: Boolean) = {
     val in = getInput(k, f)
     val psumm = ProjectSummary(key = in.key + "-generated", template = ProjectTemplate.ScalaLibrary, input = in.key)
-    val cfg = new ConfigService("./examples/tstemp")
+    val cfg = new ConfigService("./examples/test-typescript")
     projectile.exportProjectFromInput(p = psumm, i = in, cfg = cfg, v: Boolean)
   }
 

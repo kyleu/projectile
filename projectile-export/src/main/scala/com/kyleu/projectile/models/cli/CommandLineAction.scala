@@ -4,6 +4,7 @@ import enumeratum.{CirceEnum, Enum, EnumEntry}
 import com.kyleu.projectile.models.command.ProjectileCommand
 import com.kyleu.projectile.models.input.InputSummary
 import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
+import com.kyleu.projectile.services.project.ProjectExampleService
 import com.kyleu.projectile.util.{StringUtils, Version}
 import org.backuity.clist.{Command, arg, opt}
 
@@ -15,6 +16,8 @@ sealed trait CommandLineAction extends EnumEntry { this: Command =>
 }
 
 object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandLineAction] {
+  private[this] def keys = ProjectExampleService.projects.map(_.key).sorted.mkString(", ")
+
   object Doctor extends Command(name = "doctor", description = "Validates the app configuration, if present") with CommandLineAction {
     override def toCommand = ProjectileCommand.Doctor
   }
@@ -56,6 +59,13 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     override def toCommand = ProjectileCommand.InputAdd(InputSummary(key = key, description = desc.getOrElse("")))
   }
 
+  // Examples
+  object ExampleCreate extends Command(name = "example-create", description = s"Creates a new project from one of [$keys]") with CommandLineAction {
+    var key = arg[String]()
+    var outdir = arg[String]()
+    override def toCommand = ProjectileCommand.CreateExample(key, outdir)
+  }
+
   // Projects
   object ProjectList extends Command(name = "project", description = "Lists summaries of Projectile projects, or details of key") with CommandLineAction {
     var key = arg[Option[String]](required = false)
@@ -69,6 +79,12 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
     var template = opt[Option[String]](description = s"Template to use for for this project, one of [${ProjectTemplate.values.mkString(", ")}]")
     def t = template.flatMap(ProjectTemplate.withValueOpt).getOrElse(ProjectTemplate.Custom)
     override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary.newObj(key = key).copy(template = t, input = input, description = desc.getOrElse("")))
+  }
+  object PackageSet extends Command(name = "package-set", description = s"Sets the export package for the provided item") with CommandLineAction {
+    var project = arg[String](description = "Project key for the newly-created project")
+    var item = arg[String]()
+    var pkg = arg[String]()
+    override def toCommand = ProjectileCommand.SetPackage(project, item, pkg)
   }
 
   object Server extends Command(name = "server", description = "Starts the web application") with CommandLineAction {

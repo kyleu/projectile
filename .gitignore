@@ -1,9 +1,9 @@
-/examples/tstemp
-/logs
-/tmp
 /.projectile
 /.idea
 
+/tmp
+/logs
+/examples/test*
+
 target
 node_modules
-package-lock.json

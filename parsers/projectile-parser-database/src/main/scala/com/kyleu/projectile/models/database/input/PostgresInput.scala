@@ -33,6 +33,7 @@ case class PostgresInput(
 
   override lazy val enums = enumTypes.map(e => ExportEnum(
     inputType = InputType.Enum.PostgresEnum,
+    pkg = Nil,
     key = e.key,
     className = PostgresInput.typeName(ExportHelper.toClassName(ExportHelper.toIdentifier(e.key))),
     values = e.values.map(v => ExportEnum.EnumVal(k = v, s = Some(v)))

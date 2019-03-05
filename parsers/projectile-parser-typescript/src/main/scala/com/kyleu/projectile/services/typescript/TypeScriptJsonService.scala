@@ -23,6 +23,7 @@ object TypeScriptJsonService {
     val kind = obj.kind()
     val jsDoc = obj("jsDoc").toSeq.flatMap(x => extract[Seq[JsonObject]](x)).map(JsDocHelper.parseJsDoc)
     val flags = NodeFlag.matching(ext[Int]("flags")).toSeq.sortBy(_.v)
+    val mods = obj.modifiers().toSet
     val filteredKeys = obj.keys.filterNot(commonKeys.apply).toList
     var src = if (pos < 0 || pos > params.sourcecode.length || end < 0 || end > params.sourcecode.length) {
       Seq(s"Index [$pos:$end] out of range for file size [${params.sourcecode.length}]")
@@ -36,7 +37,7 @@ object TypeScriptJsonService {
     }
     src = src.dropWhile(_.isEmpty).reverse.dropWhile(_.isEmpty).reverse
     val finalJson = if (NodeContext.shouldIncludeJson(kind)) { json } else { Json.Null }
-    val ctx = NodeContext(pos = pos, end = end, kind = kind, jsDoc = jsDoc, flags = flags, keys = filteredKeys, src = src, json = finalJson)
+    val ctx = NodeContext(pos = pos, end = end, kind = kind, jsDoc = jsDoc, flags = flags, modifiers = mods, keys = filteredKeys, src = src, json = finalJson)
 
     try {
       TypeScriptNodeService.parseNode(ctx = ctx, o = obj, params = params)

@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.typescript.node
 
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode._
+import com.kyleu.projectile.models.typescript.output.OutputHelper._
 
 object NodeHelper {
   def asString(n: TypeScriptNode): String = n match {
@@ -13,10 +14,10 @@ object NodeHelper {
     case node: InterfaceDecl => "interface " + node.name
     case node: ModuleDecl => "module " + node.name
     case node: ClassDecl => "class " + node.name
-    case node: MethodDecl => s"${node.name}(${node.params.map(p => p.k + ": " + p.t).mkString(", ")}): ${node.ret}"
+    case node: MethodDecl => s"${keywords(node.ctx.modifiers)}${node.name}(${node.params.map(p => p.k + ": " + p.t).mkString(", ")}): ${node.ret}"
     case node: VariableDecl => "var " + node.name + ": " + node.typ
     case node: TypeAliasDecl => "alias " + node.name + " = " + node.typ
-    case node: PropertyDecl => node.name + ": " + node.typ
+    case node: PropertyDecl => keywords(node.ctx.modifiers) + node.name + ": " + node.typ
     case node: EnumDecl => "enum " + node.name
 
     case _: ModuleBlock => "-module block-"

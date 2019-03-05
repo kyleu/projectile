@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.ThriftInput
 import com.kyleu.projectile.models.typescript.input.TypeScriptInput
 import com.kyleu.projectile.web.controllers.ProjectileController
-import com.kyleu.projectile.web.util.ControllerUtils
+import com.kyleu.projectile.web.util.{ControllerUtils, ExampleProjectHelper}
 
 import scala.concurrent.Future
 

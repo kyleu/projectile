@@ -4,7 +4,7 @@
 ![](https://img.shields.io/github/license/KyleU/projectile.svg)
 ![](https://img.shields.io/travis/KyleU/projectile.svg)
 
-Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, and Thrift definitions
+Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, TypeScript definitions, or Thrift IDL.
 
 https://github.com/KyleU/projectile
 

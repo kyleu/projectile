@@ -15,6 +15,7 @@ object CoreLogic extends FeatureLogic {
         case Enum.ThriftIntEnum => Seq(IntEnumFile.export(config, enum).rendered)
         case Enum.ThriftStringEnum => Seq(StringEnumFile.export(config, enum).rendered)
         case Enum.GraphQLEnum => Seq(GraphQLEnumFile.export(config, enum).rendered)
+        case Enum.TypeScriptEnum => Nil
       }
     }
     val models = config.models.filter(_.features(ModelFeature.Core)).flatMap { model =>

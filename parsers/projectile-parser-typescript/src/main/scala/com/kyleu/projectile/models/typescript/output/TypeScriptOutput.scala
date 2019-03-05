@@ -7,26 +7,33 @@ import com.kyleu.projectile.models.typescript.output.parse._
 
 object TypeScriptOutput {
   def forNodes(nodes: Seq[TypeScriptNode], ctx: ParseContext, out: TypeScriptOutput = TypeScriptOutput()): TypeScriptOutput = {
-    nodes.foldLeft(out)((o, node) => forNode(ctx, o, node))
+    val loaded = nodes.foldLeft(out)((o, node) => loadNode(ctx, o, node)._2)
+    nodes.foldLeft(loaded)((o, node) => parseNode(ctx, o, node)._2)
   }
 
-  private[this] def forNode(ctx: ParseContext, out: TypeScriptOutput, node: TypeScriptNode): TypeScriptOutput = {
-    val beforeParserResult = node match {
-      case node: TypeScriptNode.ModuleDecl => ctx.plusPackage(node.name) -> out
-      case _ => ctx -> out
-    }
-    val (parseCtx, parseOut) = beforeParserResult
-    val parserResult = node match {
-      case node: TypeScriptNode.ClassDecl => ClassParser.parse(parseCtx, parseOut, node)
-      case node: TypeScriptNode.EnumDecl => EnumParser.parse(parseCtx, parseOut, node)
-      case node: TypeScriptNode.InterfaceDecl => InterfaceParser.parse(parseCtx, parseOut, node)
-      case _ => beforeParserResult
-    }
-    val childrenResult = parserResult._1 -> forNodes(nodes = node.children, ctx = parserResult._1, out = parserResult._2)
-    val afterChildrenResult = childrenResult
-    val finalResult = afterChildrenResult
+  private[this] def newCtx(ctx: ParseContext, node: TypeScriptNode): ParseContext = node match {
+    case node: TypeScriptNode.ModuleDecl => ctx.plusPackage(node.name)
+    case _ => ctx
+  }
 
-    finalResult._2
+  private[this] def loadNode(ctx: ParseContext, out: TypeScriptOutput, node: TypeScriptNode): (ParseContext, TypeScriptOutput) = {
+    val c = newCtx(ctx, node)
+    val loadResult = node match {
+      case node: TypeScriptNode.EnumDecl => EnumParser.load(c, out, node)
+      case _ => c -> out
+    }
+    node.children.foldLeft(loadResult)((o, node) => loadNode(ctx, o._2, node))
+  }
+
+  private[this] def parseNode(ctx: ParseContext, out: TypeScriptOutput, node: TypeScriptNode): (ParseContext, TypeScriptOutput) = {
+    val c = newCtx(ctx, node)
+    val parserResult = node match {
+      case node: TypeScriptNode.ClassDecl => ClassParser.parse(c, out, node)
+      case node: TypeScriptNode.EnumDecl => EnumParser.parse(c, out, node)
+      case node: TypeScriptNode.InterfaceDecl => InterfaceParser.parse(c, out, node)
+      case _ => c -> out
+    }
+    node.children.foldLeft(parserResult)((o, node) => parseNode(ctx, o._2, node))
   }
 }
 

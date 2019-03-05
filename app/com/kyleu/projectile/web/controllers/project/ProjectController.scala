@@ -1,11 +1,15 @@
 package com.kyleu.projectile.web.controllers.project
 
+import com.kyleu.projectile.services.project.ProjectExampleService
 import com.kyleu.projectile.web.controllers.ProjectileController
+import com.kyleu.projectile.web.util.ExampleProjectHelper
 
 import scala.concurrent.Future
 
 @javax.inject.Singleton
 class ProjectController @javax.inject.Inject() () extends ProjectileController {
+  private[this] val root = better.files.File(s"tmp/examples")
+
   def detail(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = projectile.getInputSummary(p.input)
@@ -32,5 +36,17 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.exportProject(key, verbose)
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile, Seq(result._1), result._2, verbose)))
+  }
+
+  def exampleList() = Action.async { implicit request =>
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.examples(projectile, ExampleProjectHelper.listFiles())))
+  }
+
+  def exampleCompile() = Action.async { implicit request =>
+    Future.successful(Ok(ExampleProjectHelper.compileAll().map(x => x._1 + ": " + x._2).mkString("\n")))
+  }
+
+  def exampleExtract(k: String) = Action.async { implicit request =>
+    Future.successful(Ok(ProjectExampleService.extract(k, root / k).map(x => x._1 + ": " + x._2).mkString("\n")))
   }
 }

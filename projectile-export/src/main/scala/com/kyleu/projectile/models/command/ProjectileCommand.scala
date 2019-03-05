@@ -33,6 +33,9 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   // Audit
   case object Audit extends ProjectileCommand
 
+  // Examples
+  case class CreateExample(key: String, out: String) extends ProjectileCommand
+
   // Projects
   case class Projects(key: Option[String]) extends ProjectileCommand
 
@@ -44,6 +47,8 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class ProjectAdd(project: ProjectSummary) extends ProjectileCommand
   case class ProjectSave(project: Project) extends ProjectileCommand
   case class ProjectRemove(key: String) extends ProjectileCommand
+
+  case class SetPackage(project: String, item: String, pkg: String) extends ProjectileCommand
 
   case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
   case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand

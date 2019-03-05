@@ -15,7 +15,7 @@ object ExportEnum {
 
   case class EnumVal(k: String, i: Option[Int] = None, s: Option[String] = None) {
     def className = ExportHelper.toClassName(k)
-    def v = i.map(_.toString).orElse(s).getOrElse(k)
+    def v = s.orElse(i.map(_.toString)).getOrElse(k)
     override val toString = k + i.map(":" + _).getOrElse("") + s.map(":" + _).getOrElse("")
   }
 
@@ -25,7 +25,7 @@ object ExportEnum {
 
 case class ExportEnum(
     inputType: InputType.Enum,
-    pkg: List[String] = Nil,
+    pkg: List[String],
     key: String,
     className: String,
     values: Seq[ExportEnum.EnumVal],
