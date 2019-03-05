@@ -11,7 +11,7 @@
 
 @@@
 
-Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, or Thrift definitions.
+Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, TypeScript definitions, or Thrift IDL.
 
 https://kyleu.com/projectile
 
