@@ -10,6 +10,10 @@ GET         /all/export                    com.kyleu.projectile.web.controllers.
 GET         /all/update                    com.kyleu.projectile.web.controllers.project.BulkProjectController.updateAll
 GET         /codegen                       com.kyleu.projectile.web.controllers.project.BulkProjectController.codegen(verbose: Boolean ?= false)
 
+GET         /examples                      com.kyleu.projectile.web.controllers.project.ProjectController.exampleList()
+GET         /examples/compile              com.kyleu.projectile.web.controllers.project.ProjectController.exampleCompile()
+GET         /examples/:k                   com.kyleu.projectile.web.controllers.project.ProjectController.exampleExtract(k)
+
 GET         /:key                          com.kyleu.projectile.web.controllers.project.ProjectController.detail(key)
 GET         /:key/remove                   com.kyleu.projectile.web.controllers.project.ProjectController.remove(key)
 
