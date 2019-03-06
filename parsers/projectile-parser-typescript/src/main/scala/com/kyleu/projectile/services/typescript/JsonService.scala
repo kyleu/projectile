@@ -9,10 +9,10 @@ import io.circe.{Json, JsonObject}
 
 import scala.util.control.NonFatal
 
-object TypeScriptJsonService {
+object JsonService {
   private[this] val commonKeys = Set("pos", "end", "flags", "kind", "jsDoc", "parent")
 
-  def parseJson(json: Json, params: TypeScriptServiceParams): (Seq[String], TypeScriptNode) = {
+  def parseJson(json: Json, params: ServiceParams): (Seq[String], TypeScriptNode) = {
     val obj = json match {
       case _ if json.isObject => json.asObject.get
       case _ => throw new IllegalStateException(s"Json [${json.noSpaces}] is not an object")
@@ -40,7 +40,7 @@ object TypeScriptJsonService {
     val ctx = NodeContext(pos = pos, end = end, kind = kind, jsDoc = jsDoc, flags = flags, modifiers = mods, keys = filteredKeys, src = src, json = finalJson)
 
     try {
-      TypeScriptNodeService.parseNode(ctx = ctx, o = obj, params = params)
+      NodeService.parseNode(ctx = ctx, o = obj, params = params)
     } catch {
       case NonFatal(x) => Nil -> Error(kind = ctx.kind.toString, cls = x.getClass.getSimpleName, msg = x.toString, json = json, ctx = ctx)
     }

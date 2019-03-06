@@ -2,12 +2,11 @@ package com.kyleu.projectile.models.typescript
 
 import com.kyleu.projectile.models.export.typ.{FieldType, ObjectField}
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
-import com.kyleu.projectile.models.typescript.node.{ModifierFlag, SyntaxKind}
 import com.kyleu.projectile.models.typescript.node.SyntaxKind._
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
-object TypeScriptMethodHelper {
+object MethodHelper {
   def getLiteral(o: JsonObject): Json = {
     val textOpt = o.apply("escapedText").orElse(o.apply("text")).map(extract[String])
     def text = textOpt.getOrElse(throw new IllegalStateException(s"No [text] available among candidates [${o.keys.mkString(", ")}]"))
@@ -18,10 +17,10 @@ object TypeScriptMethodHelper {
       case BigIntLiteral => BigInt(text.trim).asJson
       case StringLiteral => text.trim.asJson
       case PrefixUnaryExpression =>
-        (TypeScriptTokenHelper.getToken(withValue(o.ext[Int]("operator"))) + extractObj[String](objMember("operand"), "text")).asJson
+        (TokenHelper.getToken(withValue(o.ext[Int]("operator"))) + extractObj[String](objMember("operand"), "text")).asJson
       case BinaryExpression =>
         val l = o.apply("left").map(asObj).map(getLiteral)
-        val op = TypeScriptTokenHelper.getToken(extractObj[JsonObject](o, "operatorToken").kind())
+        val op = TokenHelper.getToken(extractObj[JsonObject](o, "operatorToken").kind())
         val r = o.apply("right").map(asObj).map(getLiteral)
         JsonObject("left" -> l.asJson, "op" -> op.asJson, "right" -> r.asJson).asJson
       case ParenthesizedExpression => "(todo)".asJson
@@ -47,7 +46,8 @@ object TypeScriptMethodHelper {
 
   def getParam(o: JsonObject) = ObjectField(
     k = getName(extractObj[JsonObject](o, "name")),
-    t = o.apply("type").map(extract[JsonObject]).map(TypeScriptTypeHelper.forNode).getOrElse(FieldType.AnyType)
+    t = o.apply("type").map(extract[JsonObject]).map(TypeHelper.forNode).getOrElse(FieldType.AnyType),
+    req = o.apply("questionToken").isEmpty
   )
 
   private[this] def asObj(j: Json) = j.as[JsonObject] match {

@@ -8,28 +8,28 @@ object NodeHelper {
     case node: SourceFile => node.path
     case node: SourceFileReference => "ref(" + node.filename + ")"
 
-    case _: ImportDecl => "-import-"
-    case _: ExportDecl => "-export-"
+    case _: ImportDecl => "import ???"
+    case _: ExportDecl => "export ???"
     case node: ExportNamespaceDecl => "export as namespace " + node.name
     case node: InterfaceDecl => "interface " + node.name
     case node: ModuleDecl => "module " + node.name
     case node: ClassDecl => "class " + node.name
-    case node: MethodDecl => s"${keywords(node.ctx.modifiers)}${node.name}(${node.params.map(p => p.k + ": " + p.t).mkString(", ")}): ${node.ret}"
+    case node: MethodDecl => s"${keywords(node)}${node.name}(${node.params.mkString(", ")}): ${node.ret}"
     case node: VariableDecl => "var " + node.name + ": " + node.typ
     case node: TypeAliasDecl => "alias " + node.name + " = " + node.typ
-    case node: PropertyDecl => keywords(node.ctx.modifiers) + node.name + ": " + node.typ
+    case node: PropertyDecl => keywords(node) + node.name + ": " + node.typ
     case node: EnumDecl => "enum " + node.name
 
     case _: ModuleBlock => "-module block-"
 
-    case node: Constructor => s"constructor(${node.params.map(p => p.k + ": " + p.t).mkString(", ")})"
-    case node: ConstructSig => s"constructor(${node.params.map(p => p.k + ": " + p.t).mkString(", ")}): ${node.typ}"
-    case node: IndexSig => s"[${node.params.map(p => p.k + ": " + p.t).mkString(", ")}]: ${node.typ}"
+    case node: Constructor => s"constructor(${node.params.mkString(", ")})"
+    case node: ConstructSig => s"constructor(${node.params.mkString(", ")}): ${node.typ}"
+    case node: IndexSig => s"[${node.params.mkString(", ")}]: ${node.typ}"
     case node: PropertySig => node.name + ": " + node.typ
-    case node: CallSig => s"(${node.params.map(p => p.k + ": " + p.t).mkString(", ")}): ${node.ret}"
-    case node: MethodSig => s"${node.name}(${node.params.map(p => p.k + ": " + p.t).mkString(", ")}): ${node.ret}"
+    case node: CallSig => s"(${node.params.mkString(", ")}): ${node.ret}"
+    case node: MethodSig => s"${node.name}(${node.params.mkString(", ")}): ${node.ret}"
 
-    case _: ExportAssignment => "-export-"
+    case node: ExportAssignment => s"export = " + node.exp
     case _: VariableStmt => "-variable-"
 
     case node: EnumMember => node.name + node.initial.map(" = " + _).getOrElse("")

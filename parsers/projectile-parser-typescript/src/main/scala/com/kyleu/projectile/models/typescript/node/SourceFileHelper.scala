@@ -2,17 +2,18 @@ package com.kyleu.projectile.models.typescript.node
 
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.{Error, SourceFile, Unknown}
-import com.kyleu.projectile.services.typescript.TypeScriptFileService.parseFile
-import com.kyleu.projectile.services.typescript.TypeScriptServiceParams
+import com.kyleu.projectile.services.typescript.FileService.parseFile
+import com.kyleu.projectile.services.typescript.ServiceParams
 import io.circe.{Json, JsonObject}
 
 object SourceFileHelper {
   private[this] val commentTokens = Set("//", "/*", "*/") // TODO Support multiline comments for real
+  private[this] val authorKey = "Definitions by: "
 
-  def parseSourceFile(ctx: NodeContext, obj: JsonObject, getKids: => Seq[TypeScriptNode], params: TypeScriptServiceParams): (Seq[String], TypeScriptNode) = {
-    val (header, refs) = parseHeader(ctx.src)
+  def parseSourceFile(ctx: NodeContext, obj: JsonObject, getKids: => Seq[TypeScriptNode], params: ServiceParams): (Seq[String], TypeScriptNode) = {
+    val header = parseHeader(src = ctx.src)
     val includePaths = if (params.parseRefs) {
-      refs.filter(_.startsWith("path:")).map(_.stripPrefix("path:").trim.dropWhile(c => c == '/' || c == '.'))
+      header.refs.filter(_.startsWith("path:")).map(_.stripPrefix("path:").trim.dropWhile(c => c == '/' || c == '.'))
     } else {
       Nil
     }
@@ -34,20 +35,13 @@ object SourceFileHelper {
       case f => Nil -> Error(kind = "reference", cls = f._1, msg = "File not found", json = Json.fromString(f._2.pathAsString), ctx = ctx)
     }
     val msgs = includes.flatMap(_._1)
-    msgs -> SourceFile(path = obj.ext[String]("fileName"), header = header, refs = refs, statements = includes.map(_._2) ++ getKids, ctx = ctx)
+    msgs -> SourceFile(path = obj.ext[String]("fileName"), header = header, statements = includes.map(_._2) ++ getKids, ctx = ctx)
   }
 
-  def parseHeader(src: Seq[String]) = {
+  private[this] def parseHeader(src: Seq[String]) = {
     val (referenceLines, headerLines) = src.takeWhile(line => commentTokens.exists(line.contains) || line.trim.isEmpty).partition(_.contains("<reference"))
-    val header = headerLines.dropWhile(_.trim.isEmpty).reverse.dropWhile(_.trim.isEmpty).reverse
-    def quoteIndex(s: String, startIdx: Int = 0) = s.indexOf('\'', startIdx) match {
-      case -1 => s.indexOf('\"', startIdx) match {
-        case -1 => throw new IllegalStateException(s"Cannot find quote after index [$startIdx] for string [$s]")
-        case idx => idx
-      }
-      case idx => idx
-    }
-    def removeQuotes(s: String) = s.trim.dropWhile(c => c == '\"' || c == '\'').reverse.dropWhile(c => c == '\"' || c == '\'').reverse.trim
+    val headerContent = headerLines.filterNot(_.contains(" tslint:")).dropWhile(_.trim.isEmpty).reverse.dropWhile(_.trim.isEmpty).reverse
+
     val references = referenceLines.collect {
       case x if x.contains(" types") =>
         val qIdx = quoteIndex(x, x.indexOf(" types"))
@@ -57,6 +51,34 @@ object SourceFileHelper {
         "path:" + removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1)))
       case x => x
     }
-    header -> references
+    val projectName = findLine("Type definitions for ", headerContent)
+    val projectUrl = findLine("Project: ", headerContent).map(_.stripSuffix("/"))
+    val definitionsUrl = findLine("Definitions: ", headerContent)
+    val authors = findLine(authorKey, headerContent).toSeq.flatMap { _ =>
+      headerContent.dropWhile(!_.contains(authorKey)).reverse.dropWhile(!_.contains("          ")).reverse.map { l =>
+        l.trim.stripPrefix("//").trim.stripPrefix(authorKey).trim
+      }
+    }
+    val header = SourceFileHeader(
+      projectName = projectName,
+      projectUrl = projectUrl,
+      authors = authors,
+      definitionsUrl = definitionsUrl,
+      refs = references,
+      content = headerContent
+    )
+    header
+  }
+
+  private[this] def findLine(k: String, lines: Seq[String]) = lines.find(_.contains(k)).map { line =>
+    line.substring(line.indexOf(k) + k.length).trim
+  }
+  private[this] def removeQuotes(s: String) = s.trim.dropWhile(c => c == '\"' || c == '\'').reverse.dropWhile(c => c == '\"' || c == '\'').reverse.trim
+  private[this] def quoteIndex(s: String, startIdx: Int = 0) = s.indexOf('\'', startIdx) match {
+    case -1 => s.indexOf('\"', startIdx) match {
+      case -1 => throw new IllegalStateException(s"Cannot find quote after index [$startIdx] for string [$s]")
+      case idx => idx
+    }
+    case idx => idx
   }
 }

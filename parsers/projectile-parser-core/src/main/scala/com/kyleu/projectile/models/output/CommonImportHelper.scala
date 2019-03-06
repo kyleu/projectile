@@ -53,6 +53,7 @@ object CommonImportHelper {
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")
       case "SystemUser" => c.systemPackage ++ Seq("models", "user")
       case "Tag" => c.tagsPackage
+      case "TextQuery" => c.resultsPackage
       case "ThriftFutureUtils" => c.utilitiesPackage :+ "thrift"
       case "ThriftService" => c.utilitiesPackage :+ "thrift"
       case "ThriftServiceHelper" => c.utilitiesPackage :+ "thrift"

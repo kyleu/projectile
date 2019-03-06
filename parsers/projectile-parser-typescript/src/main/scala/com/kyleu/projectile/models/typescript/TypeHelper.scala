@@ -10,7 +10,7 @@ import io.circe.JsonObject
 
 import scala.util.control.NonFatal
 
-object TypeScriptTypeHelper {
+object TypeHelper {
   def forNode(o: JsonObject): FieldType = forNodeInternal(o)
 
   private[this] def forNodeInternal(o: JsonObject): FieldType = try {
@@ -44,7 +44,7 @@ object TypeScriptTypeHelper {
       case SyntaxKind.ThisType => FieldType.ExoticType("this")
 
       case SyntaxKind.TypeLiteral => FieldType.ObjectType(key = "-literal-", fields = Seq(ObjectField("TODO", FieldType.StringType)))
-      case SyntaxKind.TypeReference => FieldType.StructType(key = TypeScriptMethodHelper.getName(extractObj[JsonObject](o, "typeName")))
+      case SyntaxKind.TypeReference => FieldType.StructType(key = MethodHelper.getName(extractObj[JsonObject](o, "typeName")))
       case SyntaxKind.TypeQuery => FieldType.ExoticType("TypeQuery")
       case SyntaxKind.TypeOperator => FieldType.ExoticType("TypeOperator")
       case SyntaxKind.TypePredicate => FieldType.ExoticType("TypePredicate")

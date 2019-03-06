@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.typescript.output
 
 import com.kyleu.projectile.models.output.file.ScalaFile
-import com.kyleu.projectile.models.typescript.node.{ModifierFlag, NodeContext}
+import com.kyleu.projectile.models.typescript.node.{ModifierFlag, NodeContext, TypeScriptNode}
 
 object OutputHelper {
   def printContext(file: ScalaFile, ctx: NodeContext) = ctx.jsDoc.flatMap(_.commentSeq).toList match {
@@ -15,5 +15,5 @@ object OutputHelper {
 
   def jsPkg(pkg: Seq[String]) = pkg.drop(1)
 
-  def keywords(modifiers: Set[ModifierFlag]) = modifiers.filter(_.scalaKeyword).map(_ + " ").mkString
+  def keywords(node: TypeScriptNode) = node.ctx.modifiers.filter(_.scalaKeyword).map(_ + " ").mkString
 }

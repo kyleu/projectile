@@ -1,12 +1,11 @@
 package com.kyleu.projectile.web.controllers.input
 
 import better.files.File
-import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
 import com.kyleu.projectile.models.typescript.node.NodeHelper.asString
 import com.kyleu.projectile.models.typescript.node.{NodeHelper, TypeScriptNode}
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.input.TypeScriptInputService
-import com.kyleu.projectile.services.typescript.TypeScriptFileService
+import com.kyleu.projectile.services.typescript.FileService
 import com.kyleu.projectile.util.{Logging, NumberUtils}
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.CollectionUtils
@@ -40,7 +39,7 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
     Future.successful(Ok(tsRoot(projectile, (root / dir).children.filter(_.isDirectory).map(_.name).toList.sorted)))
   }
   def list(k: String) = Action.async { implicit request =>
-    Future.successful(Ok(tsList(projectile, k, TypeScriptFileService.kids(root, root / dir / k).map(_._1))))
+    Future.successful(Ok(tsList(projectile, k, FileService.kids(root, root / dir / k).map(_._1))))
   }
 
   def parse(k: String, f: String, compile: Boolean) = Action.async { implicit request =>
@@ -48,14 +47,14 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
   }
   def parseAll(k: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val candidates = TypeScriptFileService.kids(root, root / dir / k)
+    val candidates = FileService.kids(root, root / dir / k)
     log.info(s"Parsing [${candidates.size}] projects...")
     def statusLog(i: Int, inProgress: Set[(String, String, File)]) = if (i % 100 == 0) {
       val progress = if (inProgress.isEmpty) { "" } else { s". In progress: [${inProgress.map(x => x._1).toSeq.sorted.mkString(", ")}]" }
       log.info(s"Completed parsing [$i / ${candidates.size}] projects" + progress)
     }
     def iter(x: (String, String, File)) = {
-      val n = TypeScriptFileService.parseFile(root = root, cache = cache, path = x._2)
+      val n = FileService.parseFile(root = root, cache = cache, path = x._2)
       result(k = x._1, msgs = n._1, node = n._2)
     }
     val files = CollectionUtils.parLoop(candidates, iter, statusLog, Some((f: (String, String, File), ex: Throwable) => {
@@ -72,7 +71,7 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
   }
   def exportAll(k: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
-    val candidates = TypeScriptFileService.kids(root, root / dir / k)
+    val candidates = FileService.kids(root, root / dir / k)
     log.info(s"Exporting [${candidates.size}] projects...")
     def statusLog(i: Int, inProgress: Set[(String, String, File)]) = if (i % 10 == 0) {
       val progress = if (inProgress.isEmpty) { "" } else { s". In progress: [${inProgress.map(x => x._1).toSeq.sorted.mkString(", ")}]" }
@@ -89,9 +88,8 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
 
   private[this] def exportProject(k: String, f: String, v: Boolean) = {
     val in = getInput(k, f)
-    val psumm = ProjectSummary(key = in.key + "-generated", template = ProjectTemplate.ScalaLibrary, input = in.key)
     val cfg = new ConfigService("./examples/test-typescript")
-    projectile.exportProjectFromInput(p = psumm, i = in, cfg = cfg, v: Boolean)
+    projectile.exportProjectFromInput(p = in.fakeSummary(), i = in, cfg = cfg, v: Boolean)
   }
 
   private[this] def getInput(k: String, f: String) = {

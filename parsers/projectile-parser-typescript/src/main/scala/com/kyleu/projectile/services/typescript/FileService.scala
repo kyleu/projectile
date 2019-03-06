@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.typescript.input.TypeScriptInput
 import com.kyleu.projectile.models.typescript.node._
 import com.kyleu.projectile.util.NumberUtils
 
-object TypeScriptFileService {
+object FileService {
   def normalize(root: File, f: File) = {
     val file = f match {
       case _ if f.isRegularFile && f.name.endsWith(".ts") => Some(f)
@@ -42,10 +42,10 @@ object TypeScriptFileService {
 
     val sourcecode = file.contentAsString
     val startMs = System.currentTimeMillis
-    val params = TypeScriptServiceParams(
+    val params = ServiceParams(
       root = root, cache = cache, path = path, sourcecode = sourcecode, depth = 0, parseRefs = true, encountered = encountered + path, messages = Nil
     )
-    val result = TypeScriptJsonService.parseJson(json = json, params = params)
+    val result = JsonService.parseJson(json = json, params = params)
     val msgs = (parseStatus.toSeq :+ s"Parsed [$path] in [${NumberUtils.withCommas(System.currentTimeMillis - startMs)}ms]") ++ result._1
     msgs -> result._2
   }

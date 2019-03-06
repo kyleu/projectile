@@ -4,7 +4,7 @@ import better.files.File
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
 import com.kyleu.projectile.models.typescript.input.{TypeScriptInput, TypeScriptOptions}
 import com.kyleu.projectile.services.config.ConfigService
-import com.kyleu.projectile.services.typescript.TypeScriptFileService
+import com.kyleu.projectile.services.typescript.FileService
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.{JacksonUtils, JsonFileLoader}
 import io.scalaland.chimney.dsl._
@@ -32,7 +32,7 @@ object TypeScriptInputService {
     inputFor(cfg = cfg, key = summ.key, desc = summ.description, files = opts.files)
   }
 
-  def inputFor(cfg: ConfigService, key: String, desc: String, files: Seq[String]) = TypeScriptFileService.loadTypeScriptInput(
+  def inputFor(cfg: ConfigService, key: String, desc: String, files: Seq[String]) = FileService.loadTypeScriptInput(
     root = cfg.workingDirectory,
     cache = cfg.configDirectory / ".cache" / "typescript",
     files = files,

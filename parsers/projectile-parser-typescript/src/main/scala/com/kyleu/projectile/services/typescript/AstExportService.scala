@@ -59,7 +59,7 @@ object AstExportService {
     args.toList match {
       case Nil => log(compileTypeScript())
       case in :: Nil =>
-        val node = TypeScriptFileService.parseFile(root = File("."), cache = File("./.projectile/.cache/typescript"), path = in)
+        val node = FileService.parseFile(root = File("."), cache = File("./.projectile/.cache/typescript"), path = in)
         log("Result: " + printJackson(node.asJson))
       case _ => throw new IllegalStateException("Zero or one argument only, please")
     }

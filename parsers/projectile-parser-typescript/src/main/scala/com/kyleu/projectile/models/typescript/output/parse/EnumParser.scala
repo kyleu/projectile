@@ -1,22 +1,23 @@
 package com.kyleu.projectile.models.typescript.output.parse
 
 import com.kyleu.projectile.models.export.ExportEnum
+import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.input.InputType.Enum.TypeScriptEnum
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.EnumDecl
-import com.kyleu.projectile.models.typescript.output.{OutputHelper, TypeScriptOutput}
+import com.kyleu.projectile.models.typescript.output.OutputHelper
 
 object EnumParser {
-  def load(ctx: ParseContext, out: TypeScriptOutput, node: EnumDecl) = {
+  def load(ctx: ParseContext, out: ExportConfiguration, node: EnumDecl) = {
     val members = node.members.collect { case e: TypeScriptNode.EnumMember => e }
     val enumVals = members.map(m => ExportEnum.EnumVal(k = m.name, i = m.initial.flatMap(_.asNumber.flatMap(_.toInt)), s = m.initial.flatMap(_.asString)))
     val enum = ExportEnum(inputType = TypeScriptEnum, pkg = ctx.pkg, key = node.name, className = ExportHelper.toClassName(node.name), values = enumVals)
     ctx -> out.withEnums(enum)
   }
 
-  def parse(ctx: ParseContext, out: TypeScriptOutput, node: EnumDecl) = {
+  def parse(ctx: ParseContext, out: ExportConfiguration, node: EnumDecl) = {
     val cn = ExportHelper.toClassName(node.name)
 
     val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = ExportHelper.toClassName(node.name))

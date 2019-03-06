@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.typescript
 import com.kyleu.projectile.models.typescript.node.SyntaxKind._
 import com.kyleu.projectile.models.typescript.node.SyntaxKind
 
-object TypeScriptTokenHelper {
+object TokenHelper {
   def getToken(kind: SyntaxKind) = kind match {
     case OpenBraceToken => "{"
     case CloseBraceToken => "}"

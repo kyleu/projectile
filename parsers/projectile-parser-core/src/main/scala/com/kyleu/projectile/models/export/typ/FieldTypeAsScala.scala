@@ -29,9 +29,9 @@ object FieldTypeAsScala {
     case UuidType => "UUID"
 
     case ObjectType(k, _) => k
-    case StructType(key) => config.getModel(key, "asScala").className
+    case StructType(key) => config.getModelOpt(key).map(_.className).getOrElse(key)
 
-    case EnumType(key) => config.getEnum(key, "asScala").className
+    case EnumType(key) => config.getEnumOpt(key).map(_.className).getOrElse(key)
     case ListType(typ) => s"List[${asScala(config, typ)}]"
     case SetType(typ) => s"Set[${asScala(config, typ)}]"
     case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"
@@ -43,6 +43,12 @@ object FieldTypeAsScala {
     case TagsType => "List[Tag]"
 
     case ByteArrayType => "Array[Byte]"
+
+    // Scala.js
+    case AnyType => "js.Dynamic"
+    case ExoticType(key) => key match {
+      case _ => s"js.Any /* exotic($key) */"
+    }
 
     case _ => throw new IllegalStateException(s"Unhandled type [$t]")
 
