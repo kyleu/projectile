@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.typescript.node
 
-import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeRequired, ObjectField}
+import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeRequired, ObjectField, TypeParam}
 import com.kyleu.projectile.util.JsonSerializers._
 
 sealed abstract class TypeScriptNode(val children: Seq[TypeScriptNode] = Nil) {
@@ -17,10 +17,10 @@ object TypeScriptNode {
   case class ImportDecl(ctx: NodeContext) extends TypeScriptNode
   case class ExportDecl(ctx: NodeContext) extends TypeScriptNode
   case class ExportNamespaceDecl(name: String, ctx: NodeContext) extends TypeScriptNode
-  case class InterfaceDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
+  case class InterfaceDecl(name: String, tParams: Seq[TypeParam], members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
   case class ModuleDecl(name: String, statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(statements)
-  case class ClassDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
-  case class MethodDecl(name: String, tParams: Seq[Json], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
+  case class ClassDecl(name: String, tParams: Seq[TypeParam], members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(members)
+  case class MethodDecl(name: String, tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
   case class VariableDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
   case class TypeAliasDecl(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode
   case class PropertyDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
@@ -33,7 +33,7 @@ object TypeScriptNode {
   case class IndexSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode
   case class PropertySig(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
   case class CallSig(params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
-  case class MethodSig(name: String, tParams: Seq[Json], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
+  case class MethodSig(name: String, tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode
 
   case class ExportAssignment(exp: String, ctx: NodeContext) extends TypeScriptNode
   case class VariableStmt(declarations: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(declarations)

@@ -37,8 +37,8 @@ object FieldType extends StringEnum[FieldType] {
   case object UuidType extends FieldType("uuid")
 
   case class EnumType(key: String) extends FieldType("enum")
-  case class StructType(key: String) extends FieldType("struct")
-  case class ObjectType(key: String, fields: Seq[ObjectField]) extends FieldType("object")
+  case class StructType(key: String, tParams: Seq[TypeParam] = Nil) extends FieldType("struct")
+  case class ObjectType(key: String, fields: Seq[ObjectField], tParams: Seq[TypeParam] = Nil) extends FieldType("object")
   case class UnionType(key: String, types: Seq[FieldType]) extends FieldType("union")
 
   case class MethodType(params: Seq[ObjectField], ret: FieldType) extends FieldType("method")

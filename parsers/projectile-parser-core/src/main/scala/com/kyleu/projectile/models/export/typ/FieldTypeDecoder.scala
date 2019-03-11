@@ -15,14 +15,18 @@ object FieldTypeDecoder {
 
   private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(key = extract(c.downField("key").as[String])))
 
-  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(key = extract(c.downField("key").as[String])))
+  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(
+    key = extract(c.downField("key").as[String]),
+    tParams = extract(c.downField("fields").as[Seq[TypeParam]])
+  ))
 
   private[this] val unionTypeDecoder: Decoder[UnionType] = (c: HCursor) => Right(UnionType(
     key = extract(c.downField("key").as[String]), types = extract(c.downField("types").as[Seq[FieldType]])
   ))
   private[this] val objectTypeDecoder: Decoder[ObjectType] = (c: HCursor) => Right(ObjectType(
     key = extract(c.downField("key").as[String]),
-    fields = extract(c.downField("fields").as[Seq[ObjectField]])
+    fields = extract(c.downField("fields").as[Seq[ObjectField]]),
+    tParams = extract(c.downField("fields").as[Seq[TypeParam]])
   ))
 
   private[this] val methodTypeDecoder: Decoder[MethodType] = (c: HCursor) => {

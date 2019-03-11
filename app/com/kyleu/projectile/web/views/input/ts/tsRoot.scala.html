@@ -3,6 +3,7 @@
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript") {
   <div class="collection with-header">
     <div class="collection-header">
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.sync()">Sync Projects</a></div>
       <h5><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> TypeScript</h5>
     </div>
     @files.map { f =>

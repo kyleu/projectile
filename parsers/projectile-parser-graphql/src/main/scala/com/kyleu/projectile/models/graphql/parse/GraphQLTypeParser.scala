@@ -53,7 +53,7 @@ object GraphQLTypeParser {
     case l: sangria.schema.ListType[_] => true -> FieldType.ListType(getOutputType(ctx + "." + l.ofType, schema, doc, l.ofType, selections)._2)
 
     case o: ObjectType[_, _] => GraphQLSelectionParser.fieldsForSelections(ctx, schema, doc, o, selections) match {
-      case Left(name) => true -> FieldType.StructType(key = name)
+      case Left(name) => true -> FieldType.StructType(key = name, Nil)
       case Right(fields) => true -> FieldType.ObjectType(
         key = o.name + "Wrapper", fields = fields.map(f => com.kyleu.projectile.models.export.typ.ObjectField(k = f.key, t = f.t, req = f.required))
       )

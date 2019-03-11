@@ -24,8 +24,8 @@ object ProjectExampleService {
     ExampleProject("scalajs", "Scala.js application", "")
   )
 
-  def extract(k: String, to: File) = {
-    val is = Resource.getAsStream(s"$dir/$k.zip")
+  def extract(project: String, to: File, name: String) = {
+    val is = Resource.getAsStream(s"$dir/$project.zip")
     val zis = new java.util.zip.ZipInputStream(is)
 
     var ret = Seq.empty[(String, Int)]
@@ -38,6 +38,18 @@ object ProjectExampleService {
         ret = ret :+ (file.getName -> fOut.size.toInt)
       }
     }
+    val replacements = Map("project" -> name)
+    def replaceToken(f: File): Unit = if (f.isDirectory) {
+      f.name match {
+        case "target" => // noop
+        case _ => f.children.foreach(replaceToken)
+      }
+    } else {
+      val orig = f.contentAsString
+      val n = replacements.foldLeft(orig)((l, r) => l.replaceAllLiterally("{{" + r._1 + "}}", r._2))
+      if (orig != n) { f.overwrite(n) }
+    }
+    replaceToken(to)
     ret.sortBy(_._1)
   }
 }

@@ -30,7 +30,7 @@ object SourceFileHelper {
         if (params.encountered(p)) {
           throw new IllegalStateException("!!!")
         } else {
-          parseFile(root = params.root, cache = params.cache, path = p, encountered = params.encountered + p)
+          parseFile(root = params.root, cache = params.cache, path = p, encountered = params.encountered + p, forceCompile = params.forceCompile)
         }
       case f => Nil -> Error(kind = "reference", cls = f._1, msg = "File not found", json = Json.fromString(f._2.pathAsString), ctx = ctx)
     }

@@ -8,7 +8,7 @@
     </li>
     @results.map { r =>
       <li class="collection-header">
-        <h6><a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.export(k, r._1)">@r._1</a></h6>
+        <h6><a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.export(k, r._1)">@r._1</a></h6>
         @r._2.toOption.map { o =>
           @defining(o.rootLogs ++ o.featureOutput.flatMap(_.logs)) { logs =>
             @if(logs.nonEmpty) {

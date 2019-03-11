@@ -28,15 +28,16 @@ object FieldTypeAsScala {
     case XmlType => "String"
     case UuidType => "UUID"
 
-    case ObjectType(k, _) => k
-    case StructType(key) => config.getModelOpt(key).map(_.className).getOrElse(key)
+    case ObjectType(k, _, tp) => k + typeParamsString(config, tp)
+    case StructType(key, tp) => config.getModelOpt(key).map(_.className).getOrElse(key) + typeParamsString(config, tp)
 
     case EnumType(key) => config.getEnumOpt(key).map(_.className).getOrElse(key)
     case ListType(typ) => s"List[${asScala(config, typ)}]"
     case SetType(typ) => s"Set[${asScala(config, typ)}]"
     case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"
 
-    case UnionType(key, _) => "Json" // TODO: key
+    case UnionType(_, _) => "Json" // TODO: key
+    case MethodType(params, ret) => s"(${params.map(p => asScala(config, p.t)).mkString(", ")}): ${asScala(config, ret)}"
 
     case JsonType => "Json"
     case CodeType => "String"
@@ -45,12 +46,18 @@ object FieldTypeAsScala {
     case ByteArrayType => "Array[Byte]"
 
     // Scala.js
-    case AnyType => "js.Dynamic"
+    case AnyType => "js.Any"
     case ExoticType(key) => key match {
       case _ => s"js.Any /* exotic($key) */"
     }
 
     case _ => throw new IllegalStateException(s"Unhandled type [$t]")
+  }
 
+  private[this] def typeParamsString(config: ExportConfiguration, tp: Seq[TypeParam]) = tp.toList match {
+    case Nil => ""
+    case _ => "[" + tp.map { p =>
+      p.name + p.constraint.map(c => s" <: " + asScala(config, c)).getOrElse("") + p.default.map(" = " + _).getOrElse("")
+    }.mkString(", ") + "]"
   }
 }

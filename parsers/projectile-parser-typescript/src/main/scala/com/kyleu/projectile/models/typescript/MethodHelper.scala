@@ -1,10 +1,12 @@
 package com.kyleu.projectile.models.typescript
 
-import com.kyleu.projectile.models.export.typ.{FieldType, ObjectField}
+import com.kyleu.projectile.models.export.typ.{FieldType, ObjectField, TypeParam}
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
 import com.kyleu.projectile.models.typescript.node.SyntaxKind._
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
+
+import scala.util.control.NonFatal
 
 object MethodHelper {
   def getLiteral(o: JsonObject): Json = {
@@ -45,9 +47,22 @@ object MethodHelper {
   }
 
   def getParam(o: JsonObject) = ObjectField(
-    k = getName(extractObj[JsonObject](o, "name")),
+    k = try { getName(extractObj[JsonObject](o, "name")) } catch { case NonFatal(x) => "_default" },
     t = o.apply("type").map(extract[JsonObject]).map(TypeHelper.forNode).getOrElse(FieldType.AnyType),
-    req = o.apply("questionToken").isEmpty
+    req = o.apply("questionToken").isEmpty,
+    readonly = true
+  )
+
+  def getTParam(o: JsonObject) = TypeParam(
+    name = if (o.contains("name")) {
+      getName(extractObj[JsonObject](o, "name"))
+    } else if (o.contains("typeName")) {
+      getName(extractObj[JsonObject](o, "typeName"))
+    } else {
+      "_"
+    },
+    constraint = o.apply("constraint").map(extract[JsonObject]).map(TypeHelper.forNode),
+    default = o.apply("default").map(extract[JsonObject]).map(TypeHelper.forNode)
   )
 
   private[this] def asObj(j: Json) = j.as[JsonObject] match {

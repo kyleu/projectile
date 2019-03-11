@@ -19,7 +19,7 @@ object ThriftMethodHelper {
       case r => s".map(_.map($r).toSet)"
     }
     case FieldType.EnumType(key) => s".map($key.fromThrift)"
-    case FieldType.StructType(key) => s".map($key.fromThrift)"
+    case FieldType.StructType(key, _) => s".map($key.fromThrift)"
     case FieldType.UnitType => ""
     case _ => throw new IllegalStateException(s"Unhandled return type [${t.toString}")
   }
@@ -41,7 +41,7 @@ object ThriftMethodHelper {
       case r => s"_.map($r).toSet"
     }
     case FieldType.EnumType(key) => s"$key.fromThrift"
-    case FieldType.StructType(key) => s"$key.fromThrift"
+    case FieldType.StructType(key, _) => s"$key.fromThrift"
     case _ => throw new IllegalStateException(s"Unhandled nested type [${t.toString}")
   }
 

@@ -42,7 +42,9 @@ object JsonService {
     try {
       NodeService.parseNode(ctx = ctx, o = obj, params = params)
     } catch {
-      case NonFatal(x) => Nil -> Error(kind = ctx.kind.toString, cls = x.getClass.getSimpleName, msg = x.toString, json = json, ctx = ctx)
+      case NonFatal(x) =>
+        x.printStackTrace()
+        Nil -> Error(kind = ctx.kind.toString, cls = x.getClass.getSimpleName, msg = x.toString, json = json, ctx = ctx)
     }
   }
 }

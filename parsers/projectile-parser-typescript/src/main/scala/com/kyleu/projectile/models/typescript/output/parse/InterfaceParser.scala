@@ -10,17 +10,21 @@ object InterfaceParser {
   def parse(ctx: ParseContext, config: ExportConfiguration, node: InterfaceDecl) = {
     val cn = ExportHelper.toClassName(node.name)
 
-    val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = ExportHelper.toClassName(node.name))
+    val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
 
     file.addImport(Seq("scala", "scalajs"), "js")
 
     OutputHelper.printContext(file, node.ctx)
     file.add("@js.native")
-    file.add(s"trait $cn extends js.Object {", 1)
-
-    node.members.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = node.members.lastOption.contains(m)))
-
-    file.add("}", -1)
+    val tp = OutputHelper.tParams(node.tParams)
+    if (node.members.isEmpty) {
+      file.add(s"trait $cn$tp extends js.Object", 1)
+    } else {
+      file.add(s"trait $cn$tp extends js.Object {", 1)
+      val members = node.members.filterNot(_.ctx.isPrivate)
+      members.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = members.lastOption.contains(m)))
+      file.add("}", -1)
+    }
 
     ctx -> config.withAdditional(file)
   }

@@ -5,8 +5,6 @@ GET         /typescript                      com.kyleu.projectile.web.controller
 GET         /typescript/:k                   com.kyleu.projectile.web.controllers.input.TypeScriptController.list(k)
 GET         /typescript/:k/all/parse         com.kyleu.projectile.web.controllers.input.TypeScriptController.parseAll(k)
 GET         /typescript/:k/:f/parse          com.kyleu.projectile.web.controllers.input.TypeScriptController.parse(k, f, compile: Boolean ?= false)
-GET         /typescript/:k/all/export        com.kyleu.projectile.web.controllers.input.TypeScriptController.exportAll(k)
-GET         /typescript/:k/:f/export         com.kyleu.projectile.web.controllers.input.TypeScriptController.export(k, f)
 
 GET         /all/refresh                     com.kyleu.projectile.web.controllers.input.InputController.refreshAll
 

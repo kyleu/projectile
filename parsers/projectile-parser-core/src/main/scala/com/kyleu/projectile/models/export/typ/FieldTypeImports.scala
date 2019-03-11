@@ -13,8 +13,9 @@ object FieldTypeImports {
       val ret = CommonImportHelper.get(config, "Tag")
       Seq(ret._1 :+ ret._2)
     case EnumType(key) => config.getEnumOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t)).toSeq
-    case StructType(key) => config.getModelOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t)).toSeq
-
+    case StructType(key, tp) => config.getModelOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t)).toSeq ++ tp.flatMap { x =>
+      x.constraint.toSeq.flatMap(x => imports(config, x))
+    }
     case ListType(typ) => imports(config, typ)
     case SetType(typ) => imports(config, typ)
     case MapType(k, v) => imports(config, k) ++ imports(config, v)

@@ -74,11 +74,11 @@ object GraphQLDocumentParser extends Logging {
   private[this] def getExtras(pkg: Seq[String], schema: Schema[_, _], current: Set[String], s: Seq[Either[ExportEnum, ExportModel]]) = {
     def forType(t: FieldType, isInput: Boolean): Seq[Either[ExportEnum, ExportModel]] = t match {
       case FieldType.EnumType(key) if !current.apply(key) => GraphQLDocumentHelper.enumFromSchema(pkg, schema, key)
-      case FieldType.StructType(key) if !current.apply(key) => GraphQLDocumentHelper.modelFromSchema(pkg, schema, key, isInput)
+      case FieldType.StructType(key, _) if !current.apply(key) => GraphQLDocumentHelper.modelFromSchema(pkg, schema, key, isInput)
       case FieldType.ListType(typ) => forType(typ, isInput)
       case FieldType.SetType(typ) => forType(typ, isInput)
       case FieldType.MapType(k, v) => forType(k, isInput) ++ forType(v, isInput)
-      case FieldType.ObjectType(_, fields) => fields.flatMap(f => forType(f.t, isInput))
+      case FieldType.ObjectType(_, fields, _) => fields.flatMap(f => forType(f.t, isInput))
       case _ => Nil
     }
 

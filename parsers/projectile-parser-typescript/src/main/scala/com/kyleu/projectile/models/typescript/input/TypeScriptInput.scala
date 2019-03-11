@@ -10,6 +10,7 @@ import com.kyleu.projectile.models.typescript.output.parse.{ParseContext, Source
 
 object TypeScriptInput {
   def fromSummary(is: InputSummary, files: Seq[String]) = TypeScriptInput(key = is.key, description = is.description, files = files)
+  def stripName(n: String) = n.stripSuffix(".ts").stripSuffix(".d")
 }
 
 case class TypeScriptInput(
@@ -24,11 +25,11 @@ case class TypeScriptInput(
   override val template = InputTemplate.TypeScript
 
   lazy val output = {
-    val k = key.stripSuffix(".ts").stripSuffix(".d")
+    val k = TypeScriptInput.stripName(key)
     val ctx = ParseContext(key = k, pkg = List(k), root = File("."))
     val indexFile = SourceFileParser.forSourceFiles(ctx, nodes.flatMap(NodeHelper.getSourceFileNodes))
     val p = Project(template = ProjectTemplate.Custom, key + "-generated", key)
-    TypeScriptOutput.forNodes(nodes = nodes, ctx = ctx, out = ExportConfiguration(project = p)).withAdditional(indexFile)
+    TypeScriptOutput.forNodes(nodes = nodes, ctx = ctx, out = ExportConfiguration(project = p).withAdditional(indexFile))
   }
 
   override lazy val enums = output.enums

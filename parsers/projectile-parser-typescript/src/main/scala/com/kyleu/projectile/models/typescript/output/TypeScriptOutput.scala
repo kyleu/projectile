@@ -11,7 +11,7 @@ object TypeScriptOutput {
   }
 
   private[this] def newCtx(ctx: ParseContext, node: TypeScriptNode): ParseContext = node match {
-    case node: TypeScriptNode.ModuleDecl => ctx.plusPackage(node.name)
+    case node: TypeScriptNode.ModuleDecl if !ctx.pkg.lastOption.contains(node.name) => ctx.plusPackage(node.name)
     case _ => ctx
   }
 
@@ -27,7 +27,9 @@ object TypeScriptOutput {
   private[this] def parseNode(ctx: ParseContext, out: ExportConfiguration, node: TypeScriptNode): (ParseContext, ExportConfiguration) = {
     val c = newCtx(ctx, node)
     val parserResult = node match {
-      case node: TypeScriptNode.ClassDecl => ClassParser.parse(c, out, node)
+      case node: TypeScriptNode.SourceFile => SourceFileParser.parse(c, out, node)
+      case node: TypeScriptNode.ModuleDecl => ModuleParser.parse(c, out, node)
+      case node: TypeScriptNode.ClassDecl => ClassParser.parseClass(c, out, node)
       case node: TypeScriptNode.EnumDecl => EnumParser.parse(c, out, node)
       case node: TypeScriptNode.InterfaceDecl => InterfaceParser.parse(c, out, node)
       case _ => c -> out

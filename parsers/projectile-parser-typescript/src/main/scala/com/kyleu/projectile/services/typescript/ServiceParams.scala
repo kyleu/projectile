@@ -9,6 +9,7 @@ case class ServiceParams(
     sourcecode: String,
     depth: Int,
     parseRefs: Boolean,
+    forceCompile: Boolean,
     encountered: Set[String],
     messages: Seq[String]
 ) {

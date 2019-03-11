@@ -43,7 +43,8 @@ object FileService {
     val sourcecode = file.contentAsString
     val startMs = System.currentTimeMillis
     val params = ServiceParams(
-      root = root, cache = cache, path = path, sourcecode = sourcecode, depth = 0, parseRefs = true, encountered = encountered + path, messages = Nil
+      root = root, cache = cache, path = path, sourcecode = sourcecode, depth = 0,
+      parseRefs = true, forceCompile = forceCompile, encountered = encountered + path, messages = Nil
     )
     val result = JsonService.parseJson(json = json, params = params)
     val msgs = (parseStatus.toSeq :+ s"Parsed [$path] in [${NumberUtils.withCommas(System.currentTimeMillis - startMs)}ms]") ++ result._1

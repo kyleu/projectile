@@ -13,19 +13,26 @@ object NodeContext {
   implicit val jsonEncoder: Encoder[NodeContext] = deriveEncoder
   implicit val jsonDecoder: Decoder[NodeContext] = deriveDecoder
 
-  val empty = NodeContext(0, 0, SyntaxKind.Unknown, Nil, Nil, Set.empty, Nil, Seq("-Empty NodeContext-"), Json.fromInt(0))
+  val empty = NodeContext()
 }
 
 case class NodeContext(
-    pos: Int,
-    end: Int,
-    kind: SyntaxKind,
-    jsDoc: Seq[JsDocNode],
-    flags: Seq[NodeFlag],
-    modifiers: Set[ModifierFlag],
-    keys: Seq[String],
-    src: Seq[String],
-    json: Json
+    pos: Int = 0,
+    end: Int = 0,
+    kind: SyntaxKind = SyntaxKind.Unknown,
+    jsDoc: Seq[JsDocNode] = Nil,
+    flags: Seq[NodeFlag] = Nil,
+    modifiers: Set[ModifierFlag] = Set.empty,
+    keys: Seq[String] = Nil,
+    src: Seq[String] = Seq("-Empty NodeContext-"),
+    json: Json = Json.fromInt(0)
 ) {
+  def isAbstract = modifiers(ModifierFlag.Abstract)
+  def isConst = modifiers(ModifierFlag.Const) || modifiers(ModifierFlag.Readonly) || flags.contains(NodeFlag.Let) || flags.contains(NodeFlag.Const)
+  def isPublic = modifiers.forall(x => x != ModifierFlag.Protected && x != ModifierFlag.Private)
+  def isPrivate = modifiers(ModifierFlag.Private)
+
   override def toString = s"[$pos-$end]: $kind [${keys.mkString(", ")}]"
+
+  def plusFlags(ctx: NodeContext) = copy(flags = flags ++ ctx.flags, modifiers = modifiers ++ ctx.modifiers)
 }

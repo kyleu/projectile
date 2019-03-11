@@ -29,11 +29,11 @@ object NodeFlag extends Enum[NodeFlag] with CirceEnum[NodeFlag] {
   // case object PossiblyContainsDynamicImport extends NodeFlag(1 << 19)
   // case object PossiblyContainsImportMeta extends NodeFlag(1 << 20)
   case object JSDoc extends NodeFlag(1 << 21) // If node was parsed inside jsdoc
-  // case object Ambient extends NodeFlag(1 << 22) // If node was inside an ambient context -- a declaration file, or inside something with the `declare` modifier.
+  // case object Ambient extends NodeFlag(1 << 22) // If node was inside an ambient context -- a declaration file, or `declare` modifier.
   // case object InWithStatement extends NodeFlag(1 << 23) // If any ancestor of node was the `statement` of a WithStatement (not the `expression`)
   case object JsonFile extends NodeFlag(1 << 24) // If node was parsed in a Json
 
   override val values = findValues
 
-  def matching(i: Int): Set[NodeFlag] = values.filter(v => (i & v.v) != 0).filterNot(_ == None).toSet
+  def matching(i: Int): Set[NodeFlag] = values.filter(v => (i & v.v) != 0).toSet
 }
