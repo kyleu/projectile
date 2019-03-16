@@ -8,9 +8,11 @@ Projectile creates beautiful Scala code from your Postgres database, GraphQL que
 
 https://github.com/KyleU/projectile
 
+
 ## Documentation
 
 https://kyleu.com/projectile
+
 
 ## License
 

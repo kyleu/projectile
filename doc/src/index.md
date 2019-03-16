@@ -3,11 +3,11 @@
 @@@ index
 
 * [Getting Started](gettingStarted/index.md)
-* [Tutorials](tutorial/index.md)
 * [Code Generation](codegen/index.md)
 * [Libraries](libraries/index.md)
+* [Tutorials](tutorial/index.md)
+* [Cookbook](cookbook/index.md)
 * [Technology](technology.md)
-* [Troubleshooting](troubleshooting.md)
 
 @@@
 
