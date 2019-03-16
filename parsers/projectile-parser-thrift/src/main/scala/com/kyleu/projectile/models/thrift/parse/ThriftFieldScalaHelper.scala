@@ -44,14 +44,14 @@ object ThriftFieldScalaHelper {
         s"$root.$name.map(x => x$mapped.toSet)"
       }
 
-    case FieldType.UnionType(typ, _) => s"$root.$name"
+    case FieldType.UnionType(_, _) => s"$root.$name"
     case _ if FieldType.scalars.apply(t) => s"$root.$name"
 
     case FieldType.EnumType(key) if required => s"$key.fromThrift($root.$name)"
     case FieldType.EnumType(key) => s"$root.$name.map($key.fromThrift)"
 
-    case FieldType.StructType(key) if required => s"$key.fromThrift($root.$name)"
-    case FieldType.StructType(key) => s"$root.$name.map($key.fromThrift)"
+    case FieldType.StructType(key, _) if required => s"$key.fromThrift($root.$name)"
+    case FieldType.StructType(key, _) => s"$root.$name.map($key.fromThrift)"
 
     case _ => throw new IllegalStateException(s"Unhandled type [${t.toString}")
   }
@@ -72,7 +72,7 @@ object ThriftFieldScalaHelper {
     case FieldType.UnionType(_, _) => ""
     case _ if FieldType.scalars.apply(t) => ""
     case FieldType.EnumType(k) => s".$key($k.fromThrift)"
-    case FieldType.StructType(k) => s".$key($k.fromThrift)"
+    case FieldType.StructType(k, _) => s".$key($k.fromThrift)"
     case _ => throw new IllegalStateException(s"Unhandled nested type [${t.toString}")
   }
 }

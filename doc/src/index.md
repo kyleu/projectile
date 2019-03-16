@@ -3,15 +3,15 @@
 @@@ index
 
 * [Getting Started](gettingStarted/index.md)
-* [Tutorials](tutorial/index.md)
 * [Code Generation](codegen/index.md)
 * [Libraries](libraries/index.md)
+* [Tutorials](tutorial/index.md)
+* [Cookbook](cookbook/index.md)
 * [Technology](technology.md)
-* [Troubleshooting](troubleshooting.md)
 
 @@@
 
-Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, or Thrift definitions.
+Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, TypeScript definitions, or Thrift IDL.
 
 https://kyleu.com/projectile
 

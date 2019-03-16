@@ -1,0 +1,26 @@
+@(node: com.kyleu.projectile.models.typescript.node.TypeScriptNode, content: Html, depth: Int)
+<li>
+  <div class="right">@node.getClass.getSimpleName</div>
+  <div onclick="$('> .details', $(this).parent()).toggle();return false;">@content</div>
+  <div class="details">
+    @defining(com.kyleu.projectile.web.controllers.input.TypeScriptController.nodeDetails(node)) { ret =>
+      <h5>Source</h5>
+      <pre>@node.ctx.src.mkString("\n")</pre>
+      <h5>Node</h5>
+      <pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(ret._1)</pre>
+      <h5>Context</h5>
+      <pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(ret._2)</pre>
+      @ret._3.map { ast =>
+        <h5>AST</h5>
+        <pre>@com.kyleu.projectile.util.JacksonUtils.printJackson(ast)</pre>
+      }
+    }
+  </div>
+  @if(node.children.nonEmpty) {
+    <ul>
+      @node.children.map { child =>
+        @com.kyleu.projectile.web.controllers.input.TypeScriptController.viewNode(child, depth + 1)
+      }
+    </ul>
+  }
+</li>

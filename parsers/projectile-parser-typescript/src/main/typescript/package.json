@@ -1,0 +1,19 @@
+{
+  "name": "ts-ast",
+  "version": "1.0.0",
+  "description": "TypeScript AST exporter",
+  "main": "ast.js",
+  "dependencies": {
+    "@types/node": "^11.9.5",
+    "typescript": "^3.3.3333"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KyleU/projectile.git"
+  },
+  "author": "@KyleU",
+  "license": "CC0-1.0"
+}

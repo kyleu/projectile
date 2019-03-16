@@ -26,7 +26,7 @@ object GraphQLTypeParser {
     case named: NamedType => false -> schema.allTypes.get(named.name).map {
       case e: EnumType[_] => FieldType.EnumType(e.name)
       case i: InputObjectType[_] => FieldType.StructType(i.name)
-      case u: UnionType[_] => FieldType.UnionType(u.name, u.types.map(_.name))
+      case u: UnionType[_] => FieldType.UnionType(u.name, u.types.map(t => getOutputType(ctx, schema, doc, t, Nil)).map(_._2))
       case s: ScalarType[_] => getScalarType(s.name)
       case x => throw new IllegalStateException(s"Unhandled GraphQL type [$x] for type [$ctx]")
     }.orElse {
@@ -53,14 +53,14 @@ object GraphQLTypeParser {
     case l: sangria.schema.ListType[_] => true -> FieldType.ListType(getOutputType(ctx + "." + l.ofType, schema, doc, l.ofType, selections)._2)
 
     case o: ObjectType[_, _] => GraphQLSelectionParser.fieldsForSelections(ctx, schema, doc, o, selections) match {
-      case Left(name) => true -> FieldType.StructType(key = name)
+      case Left(name) => true -> FieldType.StructType(key = name, Nil)
       case Right(fields) => true -> FieldType.ObjectType(
         key = o.name + "Wrapper", fields = fields.map(f => com.kyleu.projectile.models.export.typ.ObjectField(k = f.key, t = f.t, req = f.required))
       )
     }
 
     case _: InterfaceType[_, _] => true -> FieldType.JsonType
-    case u: UnionType[_] => true -> FieldType.UnionType(u.name, u.types.map(_.name))
+    case u: UnionType[_] => true -> FieldType.UnionType(u.name, u.types.map(t => getOutputType(ctx, schema, doc, t, Nil)).map(_._2))
 
     case e: EnumType[_] => true -> FieldType.EnumType(e.name)
     case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)

@@ -1,0 +1,58 @@
+@* Generated File *@
+@(user: com.kyleu.projectile.models.user.SystemUser, authActions: com.kyleu.projectile.models.auth.AuthActions, model: models.auth.SystemUserRow, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.views.html.admin.layout.page(user, authActions, "explore", s"System User [${model.id}]") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a class="theme-text" href="@controllers.admin.auth.routes.SystemUserRowController.editForm(model.id)">Edit</a></div>
+      <div class="right"><a class="theme-text remove-link" onclick="return confirm('Are you sure you want to remove this System User?')" href="@controllers.admin.auth.routes.SystemUserRowController.remove(model.id)">Remove</a></div>
+      <h5>
+        <a class="theme-text" href="@controllers.admin.auth.routes.SystemUserRowController.list()"><i class="fa @models.template.Icons.systemUserRow"></i></a>
+        System User [@model.id]
+      </h5>
+    </div>
+    <div class="collection-item">
+      <table class="highlight">
+        <tbody>
+          <tr>
+            <th>Id</th>
+            <td>@model.id</td>
+          </tr>
+          <tr>
+            <th>Username</th>
+            <td>@model.username.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+          </tr>
+          <tr>
+            <th>Provider</th>
+            <td>@model.provider</td>
+          </tr>
+          <tr>
+            <th>Key</th>
+            <td>@model.key</td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td>@model.role</td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td>@model.created</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    @views.html.admin.note.notes(notes, "systemUserRow", "System User", model.id)
+  </div>
+
+  <ul id="model-relations" class="collapsible" data-collapsible="expandable">
+    <li id="relation-noteRow-author" data-table="noteRow" data-field="author" data-singular="Note" data-plural="Notes" data-url="@controllers.admin.note.routes.NoteRowController.byAuthor(model.id, limit = Some(5))">
+      <div class="collapsible-header">
+        <i class="fa @models.template.Icons.noteRow"></i>
+        <span class="title">Notes</span>&nbsp;by Author
+      </div>
+      <div class="collapsible-body"><span>Loading...</span></div>
+    </li>
+  </ul>
+  @views.html.components.includeScalaJs(debug)
+  <script>$(function() { new RelationService('@controllers.admin.auth.routes.SystemUserRowController.relationCounts(model.id)') });</script>
+}

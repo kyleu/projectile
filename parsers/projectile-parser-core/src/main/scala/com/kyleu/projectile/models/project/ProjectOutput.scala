@@ -1,8 +1,8 @@
 package com.kyleu.projectile.models.project
 
 import better.files._
-import com.kyleu.projectile.models.output.{OutputLog, OutputPath}
 import com.kyleu.projectile.models.feature.FeatureOutput
+import com.kyleu.projectile.models.output.{OutputLog, OutputPath}
 import com.kyleu.projectile.util.JsonSerializers._
 
 object ProjectOutput {
@@ -12,9 +12,9 @@ object ProjectOutput {
 
 case class ProjectOutput(
     project: ProjectSummary,
-    rootLogs: Seq[OutputLog],
-    featureOutput: Seq[FeatureOutput],
-    duration: Long
+    rootLogs: Seq[OutputLog] = Nil,
+    featureOutput: Seq[FeatureOutput] = Nil,
+    duration: Long = 0L
 ) {
   def getDirectory(projectRoot: File, path: OutputPath): File = path match {
     case OutputPath.Root => projectRoot / project.paths.getOrElse(path, project.template.path(path))

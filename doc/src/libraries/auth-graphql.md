@@ -1,4 +1,4 @@
-# AuthGraphQL
+# Auth/GraphQL
 
 Secure GraphQL controllers and views, including GraphiQL and GraphQL Voyager ([API Documentation](../api/projectile-lib-auth-graphql/com/kyleu/projectile/index.html))
 

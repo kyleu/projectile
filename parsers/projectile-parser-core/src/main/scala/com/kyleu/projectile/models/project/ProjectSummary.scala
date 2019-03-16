@@ -16,7 +16,7 @@ case class ProjectSummary(
     template: ProjectTemplate = ProjectTemplate.Custom,
     input: String = "invalid",
     description: String = "...",
-    features: Set[ProjectFeature] = Set.empty,
+    features: Set[ProjectFeature] = Set(ProjectFeature.Core),
     paths: Map[OutputPath, String] = Map.empty,
     packages: Map[OutputPackage, Seq[String]] = Map.empty,
     classOverrides: Map[String, String] = Map.empty,

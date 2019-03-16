@@ -13,27 +13,38 @@ object FieldTypeDecoder {
     case Right(x) => x
   }
 
+  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(key = extract(c.downField("key").as[String])))
+
+  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(
+    key = extract(c.downField("key").as[String]),
+    tParams = extract(c.downField("fields").as[Seq[TypeParam]])
+  ))
+
+  private[this] val unionTypeDecoder: Decoder[UnionType] = (c: HCursor) => Right(UnionType(
+    key = extract(c.downField("key").as[String]), types = extract(c.downField("types").as[Seq[FieldType]])
+  ))
+  private[this] val objectTypeDecoder: Decoder[ObjectType] = (c: HCursor) => Right(ObjectType(
+    key = extract(c.downField("key").as[String]),
+    fields = extract(c.downField("fields").as[Seq[ObjectField]]),
+    tParams = extract(c.downField("fields").as[Seq[TypeParam]])
+  ))
+
+  private[this] val methodTypeDecoder: Decoder[MethodType] = (c: HCursor) => {
+    Right(MethodType(params = extract(c.downField("params").as[Seq[ObjectField]]), ret = extract(c.downField("ret").as[FieldType])))
+  }
+
   private[this] val listTypeDecoder: Decoder[ListType] = (c: HCursor) => Right(ListType(
     typ = extract(decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]))
   ))
-
   private[this] val setTypeDecoder: Decoder[SetType] = (c: HCursor) => Right(SetType(
     typ = extract(decodeFieldType.apply(c.downField("typ").asInstanceOf[HCursor]))
   ))
-
   private[this] val mapTypeDecoder: Decoder[MapType] = (c: HCursor) => Right(MapType(
     k = extract(decodeFieldType.apply(c.downField("k").asInstanceOf[HCursor])),
     v = extract(decodeFieldType.apply(c.downField("v").asInstanceOf[HCursor]))
   ))
 
-  private[this] val enumTypeDecoder: Decoder[EnumType] = (c: HCursor) => Right(EnumType(key = extract(c.downField("key").as[String])))
-
-  private[this] val structTypeDecoder: Decoder[StructType] = (c: HCursor) => Right(StructType(key = extract(c.downField("key").as[String])))
-
-  private[this] val objectTypeDecoder: Decoder[ObjectType] = (c: HCursor) => Right(ObjectType(
-    key = extract(c.downField("key").as[String]),
-    fields = extract(c.downField("fields").as[Seq[ObjectField]])
-  ))
+  private[this] val exoticTypeDecoder: Decoder[ExoticType] = (c: HCursor) => Right(ExoticType(key = extract(c.downField("key").as[String])))
 
   implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => try {
     val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute")))
@@ -59,13 +70,18 @@ object FieldTypeDecoder {
       case XmlType.value => Right(XmlType)
       case UuidType.value => Right(UuidType)
 
-      case "object" => objectTypeDecoder.apply(c)
-      case "struct" => structTypeDecoder.apply(c)
-
       case "enum" => enumTypeDecoder.apply(c)
+      case "struct" => structTypeDecoder.apply(c)
+      case "object" => objectTypeDecoder.apply(c)
+      case "union" => unionTypeDecoder.apply(c)
+
+      case "method" => methodTypeDecoder.apply(c)
+
       case "list" => listTypeDecoder.apply(c)
       case "set" => setTypeDecoder.apply(c)
       case "map" => mapTypeDecoder.apply(c)
+
+      case "exotic" => exoticTypeDecoder.apply(c)
 
       case JsonType.value => Right(JsonType)
       case CodeType.value => Right(CodeType)

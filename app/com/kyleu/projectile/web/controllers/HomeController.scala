@@ -1,6 +1,5 @@
 package com.kyleu.projectile.web.controllers
 
-import com.kyleu.projectile.util.JsonSerializers.printJson
 import better.files._
 import play.api.mvc.Cookie
 import com.kyleu.projectile.web.util.PlayServerHelper

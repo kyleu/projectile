@@ -11,10 +11,10 @@ import scala.concurrent.Future
 class ProjectUnionController @javax.inject.Inject() () extends ProjectileController {
   def detail(key: String, union: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
     val s = p.getUnion(union)
-    val em = i.exportUnion(union)
+    val em = i.union(union)
     val updated = em.apply(s)
 
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.detailUnion(projectile, key, p.toSummary, s, updated)))
@@ -22,18 +22,18 @@ class ProjectUnionController @javax.inject.Inject() () extends ProjectileControl
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
-    val inputUnions = i.exportUnions.map(s => (s.key, p.unions.exists(x => x.key == s.key)))
+    val inputUnions = i.unions.map(s => (s.key, p.unions.exists(x => x.key == s.key)))
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewUnion(projectile, key, inputUnions)))
   }
 
   def add(key: String, unionKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
     unionKey match {
       case "all" =>
-        val toSave = i.exportUnions.flatMap {
+        val toSave = i.unions.flatMap {
           case m if p.getUnionOpt(m.key).isDefined => None
           case m => Some(UnionMember(pkg = m.pkg, key = m.key))
         }
@@ -41,7 +41,7 @@ class ProjectUnionController @javax.inject.Inject() () extends ProjectileControl
         val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} unions"))
       case _ =>
-        val orig = i.exportUnions.find(_.key == unionKey).getOrElse(throw new IllegalStateException(s"Cannot find union [$unionKey]"))
+        val orig = i.unions.find(_.key == unionKey).getOrElse(throw new IllegalStateException(s"Cannot find union [$unionKey]"))
         val m = UnionMember(pkg = orig.pkg, key = unionKey)
         projectile.saveUnionMember(key, m)
         val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectUnionController.detail(key, m.key))
@@ -51,10 +51,10 @@ class ProjectUnionController @javax.inject.Inject() () extends ProjectileControl
 
   def save(key: String, unionKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
     val m = p.getUnion(unionKey)
-    val u = i.exportUnion(m.key)
+    val u = i.union(m.key)
 
     val form = ControllerUtils.getForm(request.body)
     val newMember = m.copy(
@@ -79,6 +79,8 @@ class ProjectUnionController @javax.inject.Inject() () extends ProjectileControl
 
   def remove(key: String, member: String) = Action.async { implicit request =>
     projectile.removeUnionMember(key, member)
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed union [$member]"))
+    Future.successful(Redirect(
+      com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)
+    ).flashing("success" -> s"Removed union [$member]"))
   }
 }

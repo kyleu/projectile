@@ -51,8 +51,8 @@ object ThriftFieldThriftHelper {
   private[this] def parseMapped(t: FieldType, ctx: String, key: String = "map"): String = t match {
     case FieldType.MapType(_, _) => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
     case FieldType.ListType(typ) => typ match {
-      case FieldType.StructType(k) => s".$key(_${parseMapped(typ, ctx)})"
-      case FieldType.EnumType(k) => s".$key(_${parseMapped(typ, ctx)})"
+      case FieldType.StructType(_, _) => s".$key(_${parseMapped(typ, ctx)})"
+      case FieldType.EnumType(_) => s".$key(_${parseMapped(typ, ctx)})"
       case _ => ""
     }
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")

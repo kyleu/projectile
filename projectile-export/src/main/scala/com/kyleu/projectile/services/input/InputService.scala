@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresI
 import com.kyleu.projectile.models.graphql.input.GraphQLInput
 import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
+import com.kyleu.projectile.models.typescript.input.TypeScriptInput
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.database.schema.SchemaHelper
 import com.kyleu.projectile.util.JsonFileLoader
@@ -44,6 +45,7 @@ class InputService(val cfg: ConfigService) {
       case InputTemplate.Postgres => PostgresInputService.loadPostgres(c, summ)
       case InputTemplate.Thrift => ThriftInputService.loadThrift(c, summ)
       case InputTemplate.GraphQL => GraphQLInputService.loadGraphQL(c, summ)
+      case InputTemplate.TypeScript => TypeScriptInputService.loadTypeScript(c, summ)
     }
   }
 
@@ -53,6 +55,7 @@ class InputService(val cfg: ConfigService) {
       case InputTemplate.Postgres => PostgresInputService.savePostgresDefault(cfg, dir)
       case InputTemplate.Thrift => ThriftInputService.saveThriftDefault(cfg, dir)
       case InputTemplate.GraphQL => GraphQLInputService.saveGraphQLDefault(cfg, dir)
+      case InputTemplate.TypeScript => TypeScriptInputService.saveTypeScriptDefault(cfg, dir)
     }
     load(is.key)
   }
@@ -77,11 +80,12 @@ class InputService(val cfg: ConfigService) {
       val conn = pg.newConnection()
       val s = SchemaHelper.calculateSchema(conn)
       conn.close()
-      val pgi = pg.copy(enums = s.enums, tables = s.tables, views = s.views)
+      val pgi = pg.copy(enumTypes = s.enums, tables = s.tables, views = s.views)
       PostgresInputService.savePostgres(cfg, pgi)
       pgi
     case t: ThriftInput => ThriftInputService.saveThrift(cfg, t)
     case g: GraphQLInput => GraphQLInputService.saveGraphQL(cfg, g)
+    case t: TypeScriptInput => TypeScriptInputService.saveTypeScript(cfg, t)
     case x => throw new IllegalStateException(s"Unable to process [$x]")
   }
 

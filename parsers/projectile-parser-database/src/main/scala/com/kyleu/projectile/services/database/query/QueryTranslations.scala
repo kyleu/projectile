@@ -34,7 +34,7 @@ object QueryTranslations extends Logging {
     case OTHER => matchOther(n)
 
     case NULL => UnitType
-    case STRUCT => StructType(n)
+    case STRUCT => StructType(n, Nil)
     case ARRAY => n match {
       case _ if n.startsWith("_int4") => ListType(IntegerType)
       case _ if n.startsWith("_int") => ListType(LongType)

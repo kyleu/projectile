@@ -23,11 +23,14 @@ class UnionMemberService(val svc: ProjectileService) {
   private[this] def fileFor(dir: File, k: String) = dir / "union" / (k + ".json")
 
   private[this] def saveMember(p: String, i: Input, member: UnionMember) = {
-    val m = i.exportUnion(member.key).apply(member)
-    val dir = svc.configForProject(p).projectDir(p)
-    val f = fileFor(dir, member.key)
-    f.createFileIfNotExists(createParents = true)
-    f.overwrite(JacksonUtils.printJackson(member.asJson))
+    val o = i.union(member.key)
+    val m = o.apply(member)
+    if (o != m) {
+      val dir = svc.configForProject(p).projectDir(p)
+      val f = fileFor(dir, member.key)
+      f.createFileIfNotExists(createParents = true)
+      f.overwrite(JacksonUtils.printJackson(member.asJson))
+    }
     m
   }
 }

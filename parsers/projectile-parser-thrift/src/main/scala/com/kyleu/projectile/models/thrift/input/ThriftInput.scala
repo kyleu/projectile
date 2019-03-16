@@ -17,51 +17,36 @@ case class ThriftInput(
     intEnums: Seq[ThriftIntEnum] = Nil,
     stringEnums: Seq[ThriftStringEnum] = Nil,
     structs: Seq[ThriftStruct] = Nil,
-    unions: Seq[ThriftUnion] = Nil,
-    services: Seq[ThriftService] = Nil
+    thriftUnions: Seq[ThriftUnion] = Nil,
+    thriftServices: Seq[ThriftService] = Nil
 ) extends Input {
   override def template = InputTemplate.Thrift
 
-  override def exportEnum(key: String) = {
+  override def enum(key: String) = {
     getThriftEnum(key) match {
       case Left(ie) => ExportEnum(
         inputType = InputType.Enum.ThriftIntEnum,
         pkg = ie.pkg.toList :+ "models",
         key = ie.key,
         className = ExportHelper.toClassName(ExportHelper.toIdentifier(ie.key)),
-        values = ie.values.map(v => v._2 + ":" + v._1)
+        values = ie.values.map(v => ExportEnum.EnumVal(k = v._1, i = Some(v._2)))
       )
       case Right(se) => ExportEnum(
         inputType = InputType.Enum.ThriftStringEnum,
         pkg = se.pkg.toList :+ "models",
         key = se.key,
         className = ExportHelper.toClassName(ExportHelper.toIdentifier(se.key)),
-        values = se.values
+        values = se.values.map(v => ExportEnum.EnumVal(v, s = Some(v)))
       )
     }
   }
 
-  override lazy val exportEnums = stringEnums.map(e => exportEnum(e.key)) ++ intEnums.map(e => exportEnum(e.key))
+  override lazy val enums = stringEnums.map(e => enum(e.key)) ++ intEnums.map(e => enum(e.key))
+  override lazy val models = structs.map(s => ThriftExportModel.loadStructModel(s, this))
+  override lazy val unions = thriftUnions.map(u => ThriftExportUnion.loadUnion(u, this))
+  override lazy val services = thriftServices.map(s => ThriftExportService.loadService(s, this))
+
   lazy val exportModelNames = structs.map(_.key).toSet
-
-  override def exportModel(k: String) = structs.find(_.key == k) match {
-    case Some(struct) => ThriftExportModel.loadStructModel(struct, this)
-    case None => throw new IllegalStateException(s"Cannot find struct [$k] in input [$key]")
-  }
-  override lazy val exportModels = structs.map(e => exportModel(e.key))
-
-  override def exportUnion(k: String) = unions.find(_.key == k) match {
-    case Some(union) => ThriftExportUnion.loadUnion(union, this)
-    case None => throw new IllegalStateException(s"Cannot find union [$k] in input [$key]")
-  }
-  override lazy val exportUnions = unions.map(u => exportUnion(u.key))
-
-  override def exportService(k: String) = services.find(_.key == k) match {
-    case Some(svc) => ThriftExportService.loadService(svc, this)
-    case None => throw new IllegalStateException(s"Cannot find service [$k] in input [$key]")
-  }
-
-  override def exportServices = services.map(s => exportService(s.key))
 
   private[this] def getThriftEnum(k: String) = {
     intEnums.find(_.key == k).map(Left.apply).orElse(stringEnums.find(_.key == k).map(Right.apply)).getOrElse {

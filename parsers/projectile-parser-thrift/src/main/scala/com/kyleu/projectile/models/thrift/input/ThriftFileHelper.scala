@@ -5,7 +5,6 @@ import com.kyleu.projectile.models.export.ExportField
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.StructType
 import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala}
-import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.util.StringUtils
 
 object ThriftFileHelper {
@@ -49,13 +48,10 @@ object ThriftFileHelper {
     case FieldType.LongType => "0L"
     case FieldType.FloatType | FieldType.DoubleType => "0.0"
     case FieldType.EnumType(k) => config.getEnumOpt(k) match {
-      case Some(e) => e.className + "." + ExportHelper.toClassName(e.values.headOption.getOrElse(throw new IllegalStateException()).indexOf(':') match {
-        case -1 => e.values.headOption.getOrElse(throw new IllegalStateException())
-        case v => e.values.headOption.getOrElse(throw new IllegalStateException()).substring(v + 1)
-      })
+      case Some(e) => e.className + "." + e.firstVal.className
       case None => throw new IllegalStateException(s"No enum with key [$k]")
     }
-    case FieldType.StructType(k) => config.getModelOpt(k) match {
+    case FieldType.StructType(k, _) => config.getModelOpt(k) match {
       case Some(m) => m.className + "()"
       case None => throw new IllegalStateException(s"No model with key [$k]")
     }
@@ -65,7 +61,7 @@ object ThriftFileHelper {
   private[this] def propDefault(config: ExportConfiguration, colType: FieldType, required: Boolean, value: Option[String]) = value match {
     case Some(v) if required => colType match {
       case FieldType.EnumType(_) => " = " + defaultForType(config, colType, required)
-      case FieldType.StructType(_) => " = " + defaultForType(config, colType, required)
+      case FieldType.StructType(_, _) => " = " + defaultForType(config, colType, required)
       case _ => " = " + v
     }
     case Some(v) => colType match {
@@ -75,8 +71,8 @@ object ThriftFileHelper {
     case None => " = " + defaultForType(config, colType, required)
   }
 
-  private[this] def typeForClass(cls: String, input: ThriftInput): FieldType = input.getEnumOpt(cls).map(e => FieldType.EnumType(e.key)).orElse {
-    if (input.exportModelNames.contains(cls)) { Some(StructType(cls)) } else { None }
+  private[this] def typeForClass(cls: String, input: ThriftInput): FieldType = input.enumOpt(cls).map(e => FieldType.EnumType(e.key)).orElse {
+    if (input.exportModelNames.contains(cls)) { Some(StructType(cls, Nil)) } else { None }
   }.orElse {
     input.typedefs.get(cls).map(colTypeForIdentifier(_, input))
   }.getOrElse {

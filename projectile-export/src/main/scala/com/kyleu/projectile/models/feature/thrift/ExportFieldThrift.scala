@@ -33,11 +33,11 @@ object ExportFieldThrift {
       case Some(e) => e.className
       case None => "string"
     }
-    case StructType(key) => config.getModelOpt(key) match {
+    case StructType(key, _) => config.getModelOpt(key) match {
       case Some(m) => m.className
       case None => "string"
     }
-    case ObjectType(_, _) => throw new IllegalStateException("Object types are not supported in Thrift")
+    case ObjectType(_, _, _) => throw new IllegalStateException("Object types are not supported in Thrift")
     case MethodType(_, _) => throw new IllegalStateException("Method types are not supported in Thrift")
 
     case ListType(typ) => s"list<${thriftType(typ, config)}>"
@@ -53,5 +53,7 @@ object ExportFieldThrift {
     case TagsType => "list<common.Tag>"
 
     case ByteArrayType => "binary"
+
+    case typ => throw new IllegalStateException(s"[$typ] is not currently supported in Thrift")
   }
 }

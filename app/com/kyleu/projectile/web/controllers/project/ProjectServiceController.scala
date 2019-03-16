@@ -12,10 +12,10 @@ import scala.concurrent.Future
 class ProjectServiceController @javax.inject.Inject() () extends ProjectileController {
   def detail(key: String, service: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
     val s = p.getService(service)
-    val em = i.exportService(service)
+    val em = i.service(service)
     val updated = em.apply(s)
     val fin = updated.copy(methods = em.methods.map(m => updated.getMethodOpt(m.key).getOrElse(m)))
 
@@ -24,18 +24,18 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
-    val inputServices = i.exportServices.map(s => (s.key, p.services.exists(x => x.key == s.key)))
+    val inputServices = i.services.map(s => (s.key, p.services.exists(x => x.key == s.key)))
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewService(projectile, key, inputServices)))
   }
 
   def add(key: String, serviceKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
     serviceKey match {
       case "all" =>
-        val toSave = i.exportServices.flatMap {
+        val toSave = i.services.flatMap {
           case m if p.getServiceOpt(m.key).isDefined => None
           case m => Some(ServiceMember(pkg = m.pkg, key = m.key, features = p.defaultServiceFeatures.map(ServiceFeature.withValue)))
         }
@@ -43,7 +43,7 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
         val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key))
         Future.successful(redir.flashing("success" -> s"Added ${saved.size} services"))
       case _ =>
-        val orig = i.exportServices.find(_.key == serviceKey).getOrElse(throw new IllegalStateException(s"Cannot find service [$serviceKey]"))
+        val orig = i.services.find(_.key == serviceKey).getOrElse(throw new IllegalStateException(s"Cannot find service [$serviceKey]"))
         val m = ServiceMember(pkg = orig.pkg, key = serviceKey, features = p.defaultServiceFeatures.map(ServiceFeature.withValue))
         projectile.saveServiceMember(key, m)
         val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.detail(key, m.key))
@@ -53,10 +53,10 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
 
   def save(key: String, serviceKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
-    val i = projectile.getInput(p.input)
+    val i = p.getInput
 
     val m = p.getService(serviceKey)
-    val svc = i.exportService(m.key)
+    val svc = i.service(m.key)
 
     val form = ControllerUtils.getForm(request.body)
 
@@ -89,7 +89,9 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
 
   def remove(key: String, member: String) = Action.async { implicit request =>
     projectile.removeServiceMember(key, member)
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> s"Removed service [$member]"))
+    Future.successful(Redirect(
+      com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)
+    ).flashing("success" -> s"Removed service [$member]"))
   }
 
   def formFeatures(key: String) = Action.async { implicit request =>

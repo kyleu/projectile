@@ -23,13 +23,14 @@ class EnumMemberService(val svc: ProjectileService) {
   private[this] def fileFor(dir: File, k: String) = dir / "enum" / (k + ".json")
 
   private[this] def saveMember(p: String, i: Input, member: EnumMember) = {
-    val o = i.exportEnum(member.key)
+    val o = i.enum(member.key)
     val m = o.apply(member)
-    val dir = svc.configForProject(p).projectDir(p)
-    val f = fileFor(dir, member.key)
-    f.createFileIfNotExists(createParents = true)
-    val content = JacksonUtils.printJackson(member.asJson)
-    f.overwrite(content)
+    if (o != m) {
+      val dir = svc.configForProject(p).projectDir(p)
+      val f = fileFor(dir, member.key)
+      f.createFileIfNotExists(createParents = true)
+      f.overwrite(JacksonUtils.printJackson(member.asJson))
+    }
     m
   }
 }

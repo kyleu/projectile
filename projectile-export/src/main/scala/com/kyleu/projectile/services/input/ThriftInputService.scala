@@ -12,6 +12,7 @@ import io.scalaland.chimney.dsl._
 object ThriftInputService {
   private[this] val fn = "thrift-files.json"
   private[this] val refKey = "reference:"
+
   def saveThriftDefault(cfg: ConfigService, dir: File) = if (!(dir / fn).exists) {
     (dir / fn).overwrite(JacksonUtils.printJackson(ThriftOptions().asJson))
   }

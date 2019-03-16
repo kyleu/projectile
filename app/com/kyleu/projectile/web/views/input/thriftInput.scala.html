@@ -4,8 +4,8 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
-      <h5><i class="@input.template.icon"></i> @input.key</h5>
-      @input.description (@input.hash)
+      <h5 title="Hash: @input.hash"><i class="@input.template.icon"></i> @input.key</h5>
+      @input.description
     </div>
   </div>
 
@@ -15,8 +15,8 @@
     <li class="tab"><a href="#input-int-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.intEnums.size Int Enums</a></li>
     <li class="tab"><a href="#input-string-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.stringEnums.size String Enums</a></li>
     <li class="tab"><a href="#input-structs"><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @input.structs.size Structs</a></li>
-    <li class="tab"><a href="#input-unions"><i class=" @com.kyleu.projectile.models.template.Icons.union"></i> @input.unions.size Unions</a></li>
-    <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.services.size Services</a></li>
+    <li class="tab"><a href="#input-unions"><i class=" @com.kyleu.projectile.models.template.Icons.union"></i> @input.thriftUnions.size Unions</a></li>
+    <li class="tab"><a href="#input-services"><i class=" @com.kyleu.projectile.models.template.Icons.service"></i> @input.thriftServices.size Services</a></li>
   </ul>
 
   <div id="input-detail">
@@ -91,10 +91,10 @@
 
   <div id="input-unions">
     <div class="collection">
-      @if(input.unions.isEmpty) {
+      @if(input.thriftUnions.isEmpty) {
         <div class="collection-item">No unions</div>
       }
-      @input.unions.sortBy(_.key).map { u =>
+      @input.thriftUnions.sortBy(_.key).map { u =>
         <div class="collection-item">
           <div class="right">@u.types.size types</div>
           <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.unionDetail(input.key, u.key)">@u.key</a>
@@ -105,10 +105,10 @@
 
   <div id="input-services">
     <div class="collection">
-      @if(input.services.isEmpty) {
+      @if(input.thriftServices.isEmpty) {
         <div class="collection-item">No services.</div>
       }
-      @input.services.sortBy(_.key).map { s =>
+      @input.thriftServices.sortBy(_.key).map { s =>
         <div class="collection-item">
           <div class="right">@s.methods.size methods</div>
           <a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.serviceDetail(input.key, s.key)">@s.key</a>

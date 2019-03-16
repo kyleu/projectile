@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.feature.core.thrift
 import com.kyleu.projectile.models.export.ExportEnum
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.EnumFeature
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object IntEnumFile {
@@ -37,11 +37,8 @@ object IntEnumFile {
     file
   }
 
-  private[this] def addFields(enum: ExportEnum, file: ScalaFile) = enum.valuesWithClassNames.foreach { v =>
-    val (i, s) = v._1.indexOf(':') match {
-      case -1 => 0 -> v._1
-      case x => v._1.substring(0, x).toInt -> v._1.substring(x + 1)
-    }
-    file.add(s"""case object ${ExportHelper.toClassName(v._2)} extends ${enum.className}($i, "$s")""")
+  private[this] def addFields(enum: ExportEnum, file: ScalaFile) = enum.values.foreach { v =>
+    val i = v.i.getOrElse(throw new IllegalStateException(s"No int value for enum value [$v]"))
+    file.add(s"""case object ${v.className} extends ${enum.className}($i, "${v.k}")""")
   }
 }

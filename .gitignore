@@ -1,6 +1,9 @@
-/logs
-target
-node_modules
-/tmp
 /.projectile
 /.idea
+
+/out
+/tmp
+/logs
+
+target
+node_modules

@@ -1,0 +1,31 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, results: Seq[com.kyleu.projectile.web.util.AuditUtils.AuditResult], duration: Int)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "Audit Results") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h5>Audit Result</h5>
+      <em>
+        @com.kyleu.projectile.util.NumberUtils.withCommas(results.size) results in @{com.kyleu.projectile.util.NumberUtils.withCommas(duration)}ms
+      </em>
+    </div>
+
+    @results.map { r =>
+      <div class="collection-item">
+        <h6><a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.export(r.k, r.f)">@r.k/@r.f</a></h6>
+        @if(r.r.isEmpty) {
+          <em>No changes detected</em>
+        } else {
+          <ul>
+          @r.r.map { x =>
+            <li>
+              <h6>@x.fn:@x.l</h6>
+              <pre>@x.o</pre>
+              <pre>@x.n</pre>
+            </li>
+          }
+          </ul>
+        }
+      </div>
+    }
+  </div>
+}

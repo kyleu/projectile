@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.output.file
 
-import com.kyleu.projectile.models.output.OutputPath
+import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.template.Icons
 
 case class ScalaFile(
@@ -14,7 +14,7 @@ case class ScalaFile(
   }
 
   override def prefix = {
-    val pkgString = if (dir.isEmpty) { "" } else { s"\npackage ${dir.mkString(".")}\n" }
+    val pkgString = if (dir.isEmpty) { "" } else { s"\npackage ${dir.map(ExportHelper.escapeKeyword).mkString(".")}\n" }
 
     val importString = if (imports.isEmpty) {
       ""

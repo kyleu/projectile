@@ -8,14 +8,18 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.util.StringUtils
 
 object GraphQLOperationFile {
-  val includeDefaults = false
-
   def export(config: ExportConfiguration, model: ExportModel) = {
+    exportOp(config = config, model = model, useQuery = true)
+  }
+
+  def exportOp(config: ExportConfiguration, model: ExportModel, useQuery: Boolean) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = config.applicationPackage ++ model.pkg, key = model.className)
 
     config.addCommonImport(file, "JsonSerializers", "_")
-    config.addCommonImport(file, "GraphQLQuery")
+    if (useQuery) {
+      config.addCommonImport(file, "TextQuery")
+    }
 
     file.add(s"object ${model.className} {", 1)
 
@@ -29,14 +33,19 @@ object GraphQLOperationFile {
     file.add("case class Data(", 2)
     GraphQLObjectHelper.addFields(config, file, model.fields)
     file.add(")", -2)
-
     file.add()
-    model.source match {
-      case None => file.add(s"""val query: GraphQLQuery[Data] = new GraphQLQuery[Data]("${model.className}")""")
-      case Some(src) =>
-        file.add(s"""val query: GraphQLQuery[Data] = new GraphQLQuery[Data]("${model.className}") {""", 1)
-        addContent(file, src)
-        file.add("}", -1)
+    if (useQuery) {
+      model.source match {
+        case None => file.add(s"""val query: TextQuery[Data] = new TextQuery[Data]("${model.className}")""")
+        case Some(src) =>
+          file.add(s"""val query: TextQuery[Data] = new TextQuery[Data]("${model.className}") {""", 1)
+          addContent(file, src)
+          file.add("}", -1)
+      }
+    } else {
+      file.add(s"""val name = "${model.className}"""")
+      file.add("""def getData(json: Json): Option[Data] = if (json.isNull) { None } else { Some(extract[Data](json)) }""")
+      model.source.foreach(src => addContent(file, src))
     }
 
     file.add("}", -1)

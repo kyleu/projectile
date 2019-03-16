@@ -48,10 +48,7 @@ class ErrorHandler @Inject() (
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
     render.async {
       case Accepts.Json() => jsonError(request, ex)
-      case _ => Future.successful {
-        val result = actions.serverError(request.path, Some(ex))(request.session, request.flash, td)
-        Results.InternalServerError(result)
-      }
+      case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.session, request.flash, td)))
     }(request)
   }
 
@@ -60,18 +57,17 @@ class ErrorHandler @Inject() (
     td.tag("error.message", message)
     render.async {
       case Accepts.Json() => jsonNotFound(request, statusCode, message)
-      case _ => Future.successful {
-        val result = actions.notFound(request.path)(request.session, request.flash, td)
-        Results.NotFound(result)
-      }
+      case _ => Future.successful(Results.NotFound(actions.notFound(request.path)(request.session, request.flash, td)))
     }(request)
   }
 
   override protected def onBadRequest(request: RequestHeader, error: String) = tracing.topLevelTrace("not.found") { td =>
     td.tag("error.type", "bad.request")
     td.tag("error.message", error)
-    val result = actions.badRequest(request.path, error)(request.session, request.flash, td)
-    Future.successful(Results.BadRequest(result))
+    render.async {
+      case Accepts.Json() => jsonBadRequest(request, error)
+      case _ => Future.successful(Results.BadRequest(actions.badRequest(request.path, error)(request.session, request.flash, td)))
+    }(request)
   }
 
   private[this] def jsonError(request: RequestHeader, ex: UsefulException) = Future.successful(Results.InternalServerError(Json.obj(
@@ -84,5 +80,9 @@ class ErrorHandler @Inject() (
   private[this] def jsonNotFound(request: RequestHeader, statusCode: Int, message: String) = Future.successful(Results.NotFound(Json.obj(
     "status" -> Json.fromInt(statusCode),
     "message" -> Json.fromString(message)
+  ).spaces2).as(MimeTypes.JSON))
+
+  private[this] def jsonBadRequest(request: RequestHeader, error: String) = Future.successful(Results.BadRequest(Json.obj(
+    "error" -> Json.fromString(error)
   ).spaces2).as(MimeTypes.JSON))
 }

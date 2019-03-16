@@ -1,0 +1,16 @@
+# Generated File
+# Creates a new Oauth2InfoRow entity
+mutation Oauth2InfoRowCreate {
+  oauth2InfoRow {
+    create(fields: [{k: "", v: ""}]) {
+      provider
+      key
+      accessToken
+      tokenType
+      expiresIn
+      refreshToken
+      params
+      created
+    }
+  }
+}

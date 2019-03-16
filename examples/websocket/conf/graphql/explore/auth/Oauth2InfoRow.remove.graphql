@@ -1,0 +1,16 @@
+# Generated File
+# Remove a single Oauth2InfoRow entity from the system
+mutation Oauth2InfoRowRemove {
+  oauth2InfoRow {
+    remove(provider: "", key: "") {
+      provider
+      key
+      accessToken
+      tokenType
+      expiresIn
+      refreshToken
+      params
+      created
+    }
+  }
+}

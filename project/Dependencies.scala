@@ -7,7 +7,7 @@ object Dependencies {
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
     val json = "com.typesafe.play" %% "play-json" % "2.7.1"
-    
+
     val all = Seq(filters, guice, cache, json)
   }
 

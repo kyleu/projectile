@@ -1,0 +1,14 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, examples: Seq[String])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "Example Projects") {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.exampleCompile()">Compile All</a></div>
+      <h5>Example Projects</h5>
+    </div>
+
+    @examples.map { e =>
+      <a class="collection-item" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.exampleExtract(e)">@e</a>
+    }
+  </div>
+}

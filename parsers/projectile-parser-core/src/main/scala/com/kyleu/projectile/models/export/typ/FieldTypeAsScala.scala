@@ -4,7 +4,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType._
 
 object FieldTypeAsScala {
-  def asScala(config: ExportConfiguration, t: FieldType): String = t match {
+  def asScala(config: ExportConfiguration, t: FieldType, isJs: Boolean = false): String = t match {
     case UnitType => "Unit"
 
     case StringType => "String"
@@ -28,15 +28,19 @@ object FieldTypeAsScala {
     case XmlType => "String"
     case UuidType => "UUID"
 
-    case ObjectType(k, _) => k
-    case StructType(key) => config.getModel(key, "asScala").className
+    case ObjectType(k, _, tp) => k + typeParamsString(config, tp)
+    case StructType(key, tp) => config.getModelOpt(key).map(_.className).getOrElse(key) + typeParamsString(config, tp)
 
-    case EnumType(key) => config.getEnum(key, "asScala").className
+    case EnumType(key) => config.getEnumOpt(key).map(_.className).getOrElse(key)
+    case ListType(typ) if isJs => s"js.Array[${asScala(config, typ)}]"
     case ListType(typ) => s"List[${asScala(config, typ)}]"
     case SetType(typ) => s"Set[${asScala(config, typ)}]"
     case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"
 
-    case UnionType(key, _) => "Json" // TODO: key
+    case UnionType(k, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" | ")
+    case UnionType(_, _) => "Json" // TODO: key
+
+    case MethodType(params, ret) => s"(${params.map(p => asScala(config, p.t)).mkString(", ")}): ${asScala(config, ret)}"
 
     case JsonType => "Json"
     case CodeType => "String"
@@ -44,7 +48,22 @@ object FieldTypeAsScala {
 
     case ByteArrayType => "Array[Byte]"
 
-    case _ => throw new IllegalStateException(s"Unhandled type [$t]")
+    case NothingType => "Nothing"
 
+    case AnyType if isJs => "js.Any"
+    case AnyType => "Any"
+
+    case ExoticType(key) => key match {
+      case _ => s"js.Any /* exotic($key) */"
+    }
+
+    case _ => throw new IllegalStateException(s"Unhandled type [$t]")
+  }
+
+  private[this] def typeParamsString(config: ExportConfiguration, tp: Seq[TypeParam]) = tp.toList match {
+    case Nil => ""
+    case _ => "[" + tp.map { p =>
+      p.name + p.constraint.map(c => s" <: " + asScala(config, c)).getOrElse("") + p.default.map(" = " + _).getOrElse("")
+    }.mkString(", ") + "]"
   }
 }

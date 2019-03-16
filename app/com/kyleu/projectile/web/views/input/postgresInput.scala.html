@@ -4,14 +4,14 @@
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
-      <h5><i class="@input.template.icon"></i> @input.key</h5>
-      @input.description (@input.hash)
+      <h5 title="Hash: @input.hash"><i class="@input.template.icon"></i> @input.key</h5>
+      @input.description
     </div>
   </div>
 
   <ul class="tabs">
     <li class="tab"><a href="#input-detail"><i class=" @com.kyleu.projectile.models.template.Icons.database"></i> Summary</a></li>
-    <li class="tab"><a href="#input-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.enums.size Enums</a></li>
+    <li class="tab"><a href="#input-enums"><i class=" @com.kyleu.projectile.models.template.Icons.enum"></i> @input.enumTypes.size Enums</a></li>
     <li class="tab"><a href="#input-tables"><i class=" @com.kyleu.projectile.models.template.Icons.table"></i> @input.tables.size Tables</a></li>
     <li class="tab"><a href="#input-views"><i class=" @com.kyleu.projectile.models.template.Icons.view"></i> @input.views.size Views</a></li>
   </ul>
@@ -31,10 +31,10 @@
 
   <div id="input-enums">
     <div class="collection">
-      @if(input.enums.isEmpty) {
+      @if(input.enumTypes.isEmpty) {
         <div class="collection-item">No database enumerations.</div>
       }
-      @input.enums.sortBy(_.key).map { e =>
+      @input.enumTypes.sortBy(_.key).map { e =>
         <div class="collection-item">
           <div class="right">@e.values.size values</div>
           <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/enum/${e.key}.json")">@e.key</a>

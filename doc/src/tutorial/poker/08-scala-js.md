@@ -94,4 +94,4 @@ https://github.com/KyleU/estimate/pull/8
 
 ## Next steps
 
-Now that we've (finally) got a full-featured web application using classes shared between the JVM and JavaScript, it's time to build a real planning poker application! @ref[Come on, let's go](09-websocket.md)!
+Now that we've (finally) got a full-featured web application using classes shared between the JVM and JavaScript, it's time to wire up websocket communitation! @ref[Come on, let's go](09-websocket.md)!

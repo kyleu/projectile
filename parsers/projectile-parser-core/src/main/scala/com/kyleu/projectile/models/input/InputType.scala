@@ -17,6 +17,7 @@ object InputType {
     case object ThriftIntEnum extends Enum(value = "thrift-int-enum", isThrift = true)
     case object ThriftStringEnum extends Enum(value = "thrift-string-enum", isThrift = true)
     case object GraphQLEnum extends Enum(value = "graphql-enum", isGraphQL = true)
+    case object TypeScriptEnum extends Enum(value = "typescript-enum")
 
     override val values = findValues
   }

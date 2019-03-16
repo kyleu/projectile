@@ -20,5 +20,9 @@ It creates only what you ask for, from basic case classes to a full admin site w
 If you've already @ref[installed Projectile](../gettingStarted/installing.md), started the server, and @ref[created your project](../gettingStarted/project.md),
 you can edit the installed features, export your project, and end up with a pleasantly-designed Scala application.  
 
+@ref[Tutorial](../tutorial/poker/index.md)
+
+[API Documentation](../api/projectile-parser-database/com/kyleu/projectile/index.html)
+
 ## Features 
 @@toc { depth=2 }

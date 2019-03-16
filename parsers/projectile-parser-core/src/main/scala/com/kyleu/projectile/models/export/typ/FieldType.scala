@@ -17,6 +17,8 @@ object FieldType extends StringEnum[FieldType] {
   case object StringType extends FieldType("string")
   case object EncryptedStringType extends FieldType("encrypted")
 
+  case object NothingType extends FieldType("nothing")
+  case object AnyType extends FieldType("any")
   case object BooleanType extends FieldType("boolean")
   case object ByteType extends FieldType("byte")
   case object ShortType extends FieldType("short")
@@ -36,15 +38,17 @@ object FieldType extends StringEnum[FieldType] {
   case object UuidType extends FieldType("uuid")
 
   case class EnumType(key: String) extends FieldType("enum")
-  case class StructType(key: String) extends FieldType("struct")
-  case class UnionType(key: String, types: Seq[String]) extends FieldType("union")
-  case class ObjectType(key: String, fields: Seq[ObjectField]) extends FieldType("object")
+  case class StructType(key: String, tParams: Seq[TypeParam] = Nil) extends FieldType("struct")
+  case class ObjectType(key: String, fields: Seq[ObjectField], tParams: Seq[TypeParam] = Nil) extends FieldType("object")
+  case class UnionType(key: String, types: Seq[FieldType]) extends FieldType("union")
 
   case class MethodType(params: Seq[ObjectField], ret: FieldType) extends FieldType("method")
 
   case class ListType(typ: FieldType) extends FieldType("list")
   case class SetType(typ: FieldType) extends FieldType("set")
   case class MapType(k: FieldType, v: FieldType) extends FieldType("set")
+
+  case class ExoticType(key: String) extends FieldType("exotic")
 
   case object JsonType extends FieldType("json")
   case object CodeType extends FieldType("code")

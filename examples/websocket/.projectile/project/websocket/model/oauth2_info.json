@@ -1,0 +1,7 @@
+{
+  "key" : "oauth2_info",
+  "pkg" : [ "auth" ],
+  "features" : [ "datamodel", "auth", "graphql", "service", "slick", "controller", "notes", "json", "core" ],
+  "ignored" : [ ],
+  "overrides" : [ ]
+}

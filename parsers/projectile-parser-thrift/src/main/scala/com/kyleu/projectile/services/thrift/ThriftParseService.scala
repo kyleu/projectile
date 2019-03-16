@@ -14,8 +14,8 @@ object ThriftParseService {
       intEnums = clean(results.flatMap(_.allIntEnums).map(e => e.key -> e)),
       stringEnums = clean(results.flatMap(_.allStringEnums).map(e => e.key -> e)),
       structs = clean(results.flatMap(_.allStructs).map(e => e.key -> e)),
-      unions = clean(results.flatMap(_.allUnions).map(e => e.key -> e)),
-      services = clean(results.flatMap(_.allServices).map(e => e.key -> e))
+      thriftUnions = clean(results.flatMap(_.allUnions).map(e => e.key -> e)),
+      thriftServices = clean(results.flatMap(_.allServices).map(e => e.key -> e))
     )
   }
 

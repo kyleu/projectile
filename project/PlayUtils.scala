@@ -11,12 +11,13 @@ object PlayUtils {
       def log(level: Level.Value, message: => String): Unit = ()
     }
 
-    private var runningServers: Set[Closeable] = scala.collection.immutable.HashSet.empty
+    private[this] var runningServers: Set[Closeable] = scala.collection.immutable.HashSet.empty
+    private[this] def log(s: String) = println(s)
 
     override def start(server: => Closeable): Unit = synchronized {
       val theServer = server
       if (runningServers(theServer)) {
-        println("Noop: This server was already started")
+        log("Noop: This server was already started")
       } else {
         runningServers += theServer
       }
@@ -24,11 +25,11 @@ object PlayUtils {
 
     override def stop(): Unit = synchronized {
       if (runningServers.size > 1) {
-        println("Stopping all servers")
+        log("Stopping all servers")
       } else if (runningServers.size == 1) {
-        println("Stopping server")
+        log("Stopping server")
       } else {
-        println("No running server to stop")
+        log("No running server to stop")
       }
       runningServers.foreach(_.close())
       runningServers = scala.collection.immutable.HashSet.empty
