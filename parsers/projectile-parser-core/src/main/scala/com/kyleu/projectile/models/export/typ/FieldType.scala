@@ -17,6 +17,7 @@ object FieldType extends StringEnum[FieldType] {
   case object StringType extends FieldType("string")
   case object EncryptedStringType extends FieldType("encrypted")
 
+  case object NothingType extends FieldType("nothing")
   case object AnyType extends FieldType("any")
   case object BooleanType extends FieldType("boolean")
   case object ByteType extends FieldType("byte")

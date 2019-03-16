@@ -20,7 +20,8 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
     val result = projectile.exportAll()
     val o = result.map(_._1)
     val f = result.flatMap(_._2)
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile = projectile, outputs = o, files = f, verbose = false)))
+    def header = com.kyleu.projectile.web.views.html.project.outputHeader.apply _
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile, header, o, f, verbose = false)))
   }
 
   def auditAll() = Action.async { implicit request =>

@@ -1,13 +1,16 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, k: String, path: String, input: com.kyleu.projectile.models.typescript.input.TypeScriptInput, forceCompile: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
-)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Test", mainDivClass = "margined") {
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, path, mainDivClass = "margined") {
   <ul class="collection with-header">
     <li class="collection-header">
-      <div class="right">@if(forceCompile) {
-        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, path, !forceCompile)">No Compile</a>
-      } else {
-        <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, path, !forceCompile)">Compile</a>
-      }</div>
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.export(k, path)">Export</a> /
+        @if(forceCompile) {
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, path, !forceCompile)">No Compile</a>
+        } else {
+          <a href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.parse(k, path, !forceCompile)">Compile</a>
+        }
+      </div>
       <h4>Parse Result</h4>
       @input.logs.map { s =>
         <div><em>@s</em></div>

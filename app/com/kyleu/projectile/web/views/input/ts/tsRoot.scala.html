@@ -1,10 +1,13 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, files: Seq[String])(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
-)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript") {
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Root") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.sync()">Sync Projects</a></div>
-      <h5><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> TypeScript</h5>
+      <div class="right">
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.audit()">Audit</a> /
+        <a href="@com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.sync()">Sync</a>
+      </div>
+      <h5><i class=" @com.kyleu.projectile.models.template.Icons.typeScript"></i> TypeScript Root</h5>
     </div>
     @files.map { f =>
       <a class="collection-item" href="@com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.list(f)">@f</a>

@@ -35,7 +35,8 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>
     val result = projectile.exportProject(key, verbose)
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile, Seq(result._1), result._2, verbose)))
+    def header = com.kyleu.projectile.web.views.html.project.outputHeader.apply _
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile, header, Seq(result._1), result._2, verbose)))
   }
 
   def exampleList() = Action.async { implicit request =>

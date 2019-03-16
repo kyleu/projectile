@@ -6,8 +6,8 @@ import com.kyleu.projectile.models.typescript.output.OutputHelper._
 
 object NodeHelper {
   def asString(n: TypeScriptNode): String = n match {
-    case node: SourceFile => node.path
-    case node: SourceFileReference => "ref(" + node.filename + ")"
+    case node: SourceFile => "src:" + node.path
+    case node: SourceFileReference => "ref:" + node.path
 
     case _: ImportDecl => "import ???"
     case _: ExportDecl => "export ???"
@@ -40,6 +40,9 @@ object NodeHelper {
     case node: Error => s"error(${node.kind}: ${node.msg})"
   }
 
+  def getSourceFileReferenceNodes(n: TypeScriptNode): Seq[SourceFileReference] = {
+    Seq(n).collect { case s: SourceFileReference => s } ++ n.children.flatMap(getSourceFileReferenceNodes)
+  }
   def getSourceFileNodes(n: TypeScriptNode): Seq[SourceFile] = Seq(n).collect { case s: SourceFile => s } ++ n.children.flatMap(getSourceFileNodes)
   def getUnknownNodes(n: TypeScriptNode): Seq[Unknown] = Seq(n).collect { case u: Unknown => u } ++ n.children.flatMap(getUnknownNodes)
   def getErrorNodes(n: TypeScriptNode): Seq[Error] = Seq(n).collect { case e: Error => e } ++ n.children.flatMap(getErrorNodes)

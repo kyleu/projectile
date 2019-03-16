@@ -21,7 +21,7 @@ object ClassParser {
     nodeCtx: NodeContext,
     members: Seq[TypeScriptNode]
   ) = {
-    val cn = ExportHelper.toClassName(name)
+    val cn = ExportHelper.escapeKeyword(ExportHelper.toClassName(name))
 
     val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
 

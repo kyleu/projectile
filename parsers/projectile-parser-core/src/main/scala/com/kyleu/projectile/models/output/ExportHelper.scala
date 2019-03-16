@@ -30,5 +30,13 @@ object ExportHelper {
   val searchArgs = "q: Option[String], orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None"
 
   private[this] val needsEscaping = Set("abstract", "then")
-  def escapeKeyword(s: String) = if (needsEscaping(s)) { "`" + s + "`" } else { s }
+
+  private[this] def invalidToken(s: String) = s match {
+    case _ if s.contains('.') => true
+    case _ if s.contains('-') => true
+    case _ if s.matches("^[0-9]") => true
+    case _ => false
+  }
+
+  def escapeKeyword(s: String) = if (needsEscaping(s) || invalidToken(s)) { "`" + s + "`" } else { s }
 }

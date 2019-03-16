@@ -26,10 +26,11 @@ case class TypeScriptInput(
 
   lazy val output = {
     val k = TypeScriptInput.stripName(key)
-    val ctx = ParseContext(key = k, pkg = List(k), root = File("."))
+    val ctx = ParseContext(key = k, pkg = Nil, root = File("."))
     val indexFile = SourceFileParser.forSourceFiles(ctx, nodes.flatMap(NodeHelper.getSourceFileNodes))
     val p = Project(template = ProjectTemplate.Custom, key + "-generated", key)
-    TypeScriptOutput.forNodes(nodes = nodes, ctx = ctx, out = ExportConfiguration(project = p).withAdditional(indexFile))
+    val ec = ExportConfiguration(project = p).withAdditional(indexFile)
+    TypeScriptOutput.forNodes(nodes = nodes, ctx = ctx, out = ec)
   }
 
   override lazy val enums = output.enums

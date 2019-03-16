@@ -1,9 +1,9 @@
 /.projectile
 /.idea
 
+/out
 /tmp
 /logs
-/examples/test*
 
 target
 node_modules

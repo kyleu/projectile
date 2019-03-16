@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.typescript.output.OutputHelper
 
 object InterfaceParser {
   def parse(ctx: ParseContext, config: ExportConfiguration, node: InterfaceDecl) = {
-    val cn = ExportHelper.toClassName(node.name)
+    val cn = ExportHelper.escapeKeyword(ExportHelper.toClassName(node.name))
 
     val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
 
@@ -21,7 +21,8 @@ object InterfaceParser {
       file.add(s"trait $cn$tp extends js.Object", 1)
     } else {
       file.add(s"trait $cn$tp extends js.Object {", 1)
-      val members = node.members.filterNot(_.ctx.isPrivate)
+      val (members, extraClasses) = MemberParser.filter(node.members)
+
       members.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = members.lastOption.contains(m)))
       file.add("}", -1)
     }

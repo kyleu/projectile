@@ -3,11 +3,11 @@ package com.kyleu.projectile.models.typescript.output.parse
 import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
-import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.{MarkdownFile, ScalaFile}
+import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.typescript.input.TypeScriptInput
+import com.kyleu.projectile.models.typescript.node.{NodeContext, SourceFileHeader, TypeScriptNode}
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.SourceFile
-import com.kyleu.projectile.models.typescript.node.{SourceFileHeader, TypeScriptNode}
 import com.kyleu.projectile.models.typescript.output.OutputHelper
 import com.kyleu.projectile.models.typescript.output.parse.ModuleParser.filter
 
@@ -54,34 +54,29 @@ object SourceFileParser {
   }
 
   def parse(ctx: ParseContext, config: ExportConfiguration, node: SourceFile) = {
-    val fn = TypeScriptInput.stripName(node.path.lastIndexOf("/") match {
-      case -1 => node.path
-      case idx => node.path.substring(idx + 1)
-    })
-    val members = node.statements.filterNot(_.ctx.isPrivate)
-    val filtered = filter(members)
+    val path = node.path.split('/').reverse.dropWhile(x => x == "index" || x == "index.ts" || x == "index.d.ts").reverse.toList
+    val fn = ExportHelper.escapeKeyword(TypeScriptInput.stripName(path.last))
+    val cn = ExportHelper.toClassName(fn)
 
-    val extraClasses = members.collect { case x: TypeScriptNode.VariableDecl if x.typ.t.isInstanceOf[FieldType.ObjectType] => x }
+    val (members, extraClasses) = MemberParser.filter(filter(node.statements))
 
-    val moduleFile = if (filtered.isEmpty) {
+    val objFile = if (members.isEmpty) {
       Nil
     } else {
-      val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = "package")
+      val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
 
       file.addImport(Seq("scala", "scalajs"), "js")
-
       OutputHelper.printContext(file, node.ctx)
-
       file.add("@js.native")
       file.add(s"""@js.annotation.JSGlobal("${ctx.pkg.mkString(".")}")""")
-      file.add(s"object $fn extends js.Object {", 1)
-      filtered.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = filtered.lastOption.contains(m)))
+      file.add(s"object $cn extends js.Object {", 1)
+      members.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = members.lastOption.contains(m)))
       file.add("}", -1)
       file.add()
       Seq(file)
     }
 
-    extraClasses.foldLeft(ctx -> config.withAdditional(moduleFile: _*)) { (carry, decl) =>
+    extraClasses.foldLeft(ctx -> config.withAdditional(objFile: _*)) { (carry, decl) =>
       ObjectTypeParser.parseLiteral(carry._1, carry._2, decl.name, decl.typ.t.asInstanceOf[FieldType.ObjectType], decl.typ.r, decl.ctx)
     }
   }

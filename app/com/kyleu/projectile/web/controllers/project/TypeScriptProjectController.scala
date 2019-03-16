@@ -1,8 +1,6 @@
 package com.kyleu.projectile.web.controllers.project
 
 import better.files.File
-import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.typescript.input.TypeScriptInput
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.input.TypeScriptInputService
@@ -10,7 +8,7 @@ import com.kyleu.projectile.services.project.ProjectExampleService
 import com.kyleu.projectile.services.typescript.{AstExportService, FileService}
 import com.kyleu.projectile.util.{Logging, NumberUtils}
 import com.kyleu.projectile.web.controllers.ProjectileController
-import com.kyleu.projectile.web.util.CollectionUtils
+import com.kyleu.projectile.web.util.{AuditUtils, CollectionUtils, FilesystemUtils}
 import com.kyleu.projectile.web.views.html.input.ts._
 
 import scala.concurrent.Future
@@ -19,51 +17,34 @@ import scala.concurrent.Future
 class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileController with Logging {
   private[this] def root = projectile.rootCfg.workingDirectory
   private[this] val srcDir = "tmp/typescript"
-  private[this] val tgtDir = "examples/test-typescript-projects"
   private[this] def cache = projectile.rootCfg.configDirectory / ".cache" / "typescript"
 
   def kids(d: File) = d.children.filter(_.isDirectory).map(c => c.name).filterNot(x => x == "target" || x == "project").toList.sorted
 
   def sync() = Action.async { implicit request =>
-    val root = File(tgtDir)
-    val rootKids = kids(root)
-
-    val rootFile = root / "build.sbt"
-    val rootContent = Seq("import sbt._", "") ++ rootKids.map(k => s"""lazy val `$k` = project.in(file("$k"))""") ++ Seq(
-      "",
-      s"lazy val all = Seq(${rootKids.map(x => s"`$x`").mkString(", ")})",
-      "",
-      "lazy val `aggregate` = {",
-      "  val `aggregate` = project.in(file(\".\"))",
-      "  all.foldLeft(`aggregate`)((l, r) => l.dependsOn(r).aggregate(r))",
-      "}"
-    )
-    rootFile.overwrite(rootContent.mkString("\n"))
-
-    rootKids.foreach { cat =>
-      val catKids = kids(root / cat)
-      val catFile = root / cat / "build.sbt"
-
-      val catContent = Seq("import sbt._", "") ++ catKids.map(k => s"""lazy val `$k` = project.in(file("$k"))""") ++ Seq(
-        "",
-        s"lazy val all = Seq(${catKids.map(x => s"`$x`").mkString(", ")})",
-        "",
-        s"lazy val `$cat` = {",
-        s"""  val `$cat` = project.in(file("."))""",
-        s"  all.foldLeft(`$cat`)((l, r) => l.dependsOn(r).aggregate(r))",
-        "}"
-      )
-
-      catFile.overwrite(catContent.mkString("\n"))
-    }
-
+    FilesystemUtils.syncBuildFiles()
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.listRoot()).flashing("success" -> "Synced!"))
+  }
+  def saveAudit(k: String, f: String) = Action.async { implicit request =>
+    AuditUtils.saveAudit(k, TypeScriptInput.stripName(f))
+    val msg = "success" -> "Saved!"
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.export(k, f)).flashing(msg))
+  }
+  def audit() = Action.async { implicit request =>
+    val startMs = System.currentTimeMillis
+    val results = AuditUtils.auditAll()
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.auditResults(projectile, results, (System.currentTimeMillis - startMs).toInt)))
   }
 
   def export(k: String, f: String) = Action.async { implicit request =>
     val (out, logs) = exportProject(k = k, f = f, v = true)
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile, Seq(out), logs, verbose = true)))
+    val header = (key: String) => {
+      val url = com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.saveAudit(k, f).url
+      play.twirl.api.Html(s"""<div class="right"><a href="$url">Save Audit</a></div>""")
+    }
+    Future.successful(Ok(com.kyleu.projectile.web.views.html.project.outputResults(projectile, header, Seq(out), logs, verbose = true)))
   }
+
   def exportAll(k: String) = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     val candidates = FileService.kids(root, root / srcDir / k)
@@ -83,7 +64,7 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
 
   private[this] def exportProject(k: String, f: String, v: Boolean) = {
     val in = getInput(k, f)
-    val path = TypeScriptInput.stripName(s"$tgtDir/$k/$f")
+    val path = TypeScriptInput.stripName(s"${FilesystemUtils.tgtDir}/$k/$f")
     val name = TypeScriptInput.stripName(s"typescript-$k-$f")
     val projectDir = File(path)
     if (!projectDir.exists) {
@@ -97,7 +78,7 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
   private[this] def getInput(k: String, f: String, compile: Boolean = false) = {
     val tmpKey = srcDir + "/" + k + "/" + f
     val tmp = root / tmpKey
-    val key = if (tmp.isDirectory) { tmpKey + "/index.d.ts" } else { tmpKey }
+    val key = if (tmp.isDirectory) { tmpKey + "/index.d.ts" } else if (tmp.exists) { tmpKey } else { tmpKey + ".d.ts" }
     val file = root / key
 
     if (file.exists && file.isRegularFile && file.isReadable) {

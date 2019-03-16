@@ -11,7 +11,7 @@ object TypeScriptOutput {
   }
 
   private[this] def newCtx(ctx: ParseContext, node: TypeScriptNode): ParseContext = node match {
-    case node: TypeScriptNode.ModuleDecl if !ctx.pkg.lastOption.contains(node.name) => ctx.plusPackage(node.name)
+    case node: TypeScriptNode.ModuleDecl => ctx.plusPackage(node.name)
     case _ => ctx
   }
 
@@ -34,6 +34,6 @@ object TypeScriptOutput {
       case node: TypeScriptNode.InterfaceDecl => InterfaceParser.parse(c, out, node)
       case _ => c -> out
     }
-    node.children.foldLeft(parserResult)((o, node) => parseNode(ctx, o._2, node))
+    node.children.foldLeft(parserResult)((o, node) => parseNode(c, o._2, node))
   }
 }

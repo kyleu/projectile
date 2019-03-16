@@ -15,8 +15,10 @@ GET         /examples/compile                com.kyleu.projectile.web.controller
 GET         /examples/:k                     com.kyleu.projectile.web.controllers.project.ProjectController.exampleExtract(k)
 
 GET         /typescript/sync                 com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.sync()
+GET         /typescript/audit                com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.audit()
 GET         /typescript/:k/all/export        com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.exportAll(k)
 GET         /typescript/:k/:f/export         com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.export(k, f)
+GET         /typescript/:k/:f/save           com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.saveAudit(k, f)
 
 GET         /:key                            com.kyleu.projectile.web.controllers.project.ProjectController.detail(key)
 GET         /:key/remove                     com.kyleu.projectile.web.controllers.project.ProjectController.remove(key)

@@ -53,17 +53,24 @@ object MethodHelper {
     readonly = true
   )
 
-  def getTParam(o: JsonObject) = TypeParam(
-    name = if (o.contains("name")) {
+  def getTParam(o: JsonObject) = {
+    val name = if (o.contains("name")) {
       getName(extractObj[JsonObject](o, "name"))
     } else if (o.contains("typeName")) {
       getName(extractObj[JsonObject](o, "typeName"))
     } else {
       "_"
-    },
-    constraint = o.apply("constraint").map(extract[JsonObject]).map(TypeHelper.forNode),
-    default = o.apply("default").map(extract[JsonObject]).map(TypeHelper.forNode)
-  )
+    }
+    val constraint = name match {
+      case "_" => Some(TypeHelper.forNode(o))
+      case _ => o.apply("constraint").map(extract[JsonObject]).map(TypeHelper.forNode)
+    }
+    TypeParam(
+      name = name,
+      constraint = constraint,
+      default = o.apply("default").map(extract[JsonObject]).map(TypeHelper.forNode)
+    )
+  }
 
   private[this] def asObj(j: Json) = j.as[JsonObject] match {
     case Right(o) => o

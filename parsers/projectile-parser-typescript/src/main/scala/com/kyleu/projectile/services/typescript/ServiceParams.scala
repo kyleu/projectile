@@ -10,8 +10,8 @@ case class ServiceParams(
     depth: Int,
     parseRefs: Boolean,
     forceCompile: Boolean,
-    encountered: Set[String],
     messages: Seq[String]
 ) {
+  def plus(i: Int = 1) = copy(depth = depth + i)
   val file = root / path
 }

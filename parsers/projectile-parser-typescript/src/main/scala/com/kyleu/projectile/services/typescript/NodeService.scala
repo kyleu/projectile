@@ -7,20 +7,23 @@ import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
 object NodeService {
+  def parseFile(ctx: NodeContext, o: JsonObject, params: ServiceParams) = {
+    def kids(k: String) = o.kids(k).map(x => JsonService.parseJson(x.asJson, params.plus()))
+    SourceFileHelper.parseSourceFile(ctx = ctx, obj = o, getKids = kids("statements").map(_._2), params = params)
+  }
 
   def parseNode(ctx: NodeContext, o: JsonObject, params: ServiceParams): (Seq[String], TypeScriptNode) = {
-    lazy val paramsPlusOne = params.copy(depth = params.depth + 1)
     var messages = params.messages
     def addMessages(x: (Seq[String], TypeScriptNode)) = { messages = messages ++ x._1; x._2 }
-    def kid(k: String) = addMessages(JsonService.parseJson(extractObj[Json](o, k), paramsPlusOne))
-    def kids(k: String = "members") = o.kids(k).map(x => JsonService.parseJson(x.asJson, paramsPlusOne)).map(addMessages)
+    def kid(k: String) = addMessages(JsonService.parseJson(extractObj[Json](o, k), params.plus()))
+    def kids(k: String = "members") = o.kids(k).map(x => JsonService.parseJson(x.asJson, params.plus())).map(addMessages)
     def singleKidOr(k: String, onMultiple: Seq[TypeScriptNode] => TypeScriptNode) = kids(k).toList match {
       case single :: Nil => single
       case children => onMultiple(children)
     }
     def body(ob: JsonObject = o) = {
       val seq = ob.apply("statements").map(_ => kids("statements")).getOrElse(ob.apply("body") match {
-        case Some(body) => Seq(JsonService.parseJson(body, params.copy(depth = params.depth + 1))._2)
+        case Some(body) => Seq(JsonService.parseJson(body, params.plus())._2)
         case None => throw new IllegalStateException(s"Cannot extract statements or body from [${ob.keys.mkString(", ")}]")
       })
       seq.toList match {
@@ -33,7 +36,9 @@ object NodeService {
     }
 
     val node = ctx.kind match {
-      case SyntaxKind.SourceFile => addMessages(SourceFileHelper.parseSourceFile(ctx = ctx, obj = o, getKids = kids("statements"), params = params))
+      // TODO
+      case SyntaxKind.SourceFile => SourceFileHelper.parseSourceReference(obj = o, params = params)
+      // case SyntaxKind.SourceFile => addMessages(SourceFileHelper.parseSourceFile(ctx = ctx, obj = o, getKids = kids("statements"), params = params))
 
       case SyntaxKind.ImportDeclaration => ImportDecl(ctx = ctx)
       case SyntaxKind.ImportEqualsDeclaration => ImportDecl(ctx = ctx)

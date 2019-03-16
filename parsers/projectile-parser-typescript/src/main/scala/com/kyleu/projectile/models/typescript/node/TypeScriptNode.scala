@@ -12,7 +12,7 @@ object TypeScriptNode {
   implicit val jsonDecoder: Decoder[TypeScriptNode] = deriveDecoder
 
   case class SourceFile(path: String, header: SourceFileHeader, statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(statements)
-  case class SourceFileReference(filename: String, status: String, statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(statements)
+  case class SourceFileReference(path: String, ctx: NodeContext) extends TypeScriptNode
 
   case class ImportDecl(ctx: NodeContext) extends TypeScriptNode
   case class ExportDecl(ctx: NodeContext) extends TypeScriptNode

@@ -20,7 +20,7 @@ case class NodeContext(
     pos: Int = 0,
     end: Int = 0,
     kind: SyntaxKind = SyntaxKind.Unknown,
-    jsDoc: Seq[JsDocNode] = Nil,
+    jsDoc: Option[JsDocNode] = None,
     flags: Seq[NodeFlag] = Nil,
     modifiers: Set[ModifierFlag] = Set.empty,
     keys: Seq[String] = Nil,

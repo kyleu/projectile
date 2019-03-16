@@ -20,7 +20,7 @@ object TypeHelper {
   private[this] def forNodeInternal(o: JsonObject): FieldType = o.kind() match {
     case SyntaxKind.NullKeyword => FieldType.ExoticType("null")
     case SyntaxKind.UndefinedKeyword => FieldType.ExoticType("undefined")
-    case SyntaxKind.NeverKeyword => FieldType.ExoticType("never")
+    case SyntaxKind.NeverKeyword => FieldType.NothingType
 
     case SyntaxKind.AnyKeyword => FieldType.AnyType
     case SyntaxKind.VoidKeyword => FieldType.UnitType
@@ -47,9 +47,11 @@ object TypeHelper {
     case SyntaxKind.ThisType => FieldType.ExoticType("this")
 
     case SyntaxKind.TypeLiteral => FieldType.ObjectType(key = "_typeliteral", fields = o.memberFields())
-    case SyntaxKind.TypeReference => o.apply("typeName") match {
-      case Some(_) => FieldType.StructType(key = MethodHelper.getName(extractObj[JsonObject](o, "typeName")), tParams = o.tParams("typeArguments"))
-      case None => FieldType.StructType(key = MethodHelper.getName(extractObj[JsonObject](o, "typeName")), tParams = o.tParams("typeArguments"))
+    case SyntaxKind.TypeReference => MethodHelper.getName(extractObj[JsonObject](o, "typeName")) match {
+      case "Array" =>
+        val tArgs = o.tParams("typeArguments").headOption.getOrElse(throw new IllegalStateException("No type args"))
+        FieldType.ListType(typ = tArgs.constraint.getOrElse(FieldType.AnyType))
+      case name => FieldType.StructType(key = name, tParams = o.tParams("typeArguments"))
     }
     case SyntaxKind.TypeQuery => FieldType.ExoticType("TypeQuery")
     case SyntaxKind.TypeOperator => FieldType.ExoticType("TypeOperator")
