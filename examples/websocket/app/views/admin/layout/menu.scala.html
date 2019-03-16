@@ -1,0 +1,43 @@
+@(user: com.kyleu.projectile.models.user.SystemUser, activeSection: String, authActions: com.kyleu.projectile.models.auth.AuthActions)
+@com.kyleu.projectile.views.html.components.userDropdown(Some(user))
+
+<header>
+  <nav id="topnav" class="theme">
+    <a href="@controllers.routes.HomeController.home()" class="brand-logo center">@util.Config.projectName</a>
+
+    <ul class="left hide-on-small-only">
+      @if(activeSection == "explore") {
+        <li class="active"><a class="dropdown-trigger" href="@controllers.admin.system.routes.AdminController.explore()" data-target="dropdown-explore">Explore</a></li>
+      } else {
+        <li><a class="dropdown-trigger" href="@controllers.admin.system.routes.AdminController.explore()" data-target="dropdown-explore">Explore</a></li>
+      }
+      @if(activeSection == "graphql") {
+        <li class="active"><a href="@com.kyleu.projectile.controllers.graphql.routes.GraphQLController.graphql()">GraphQL</a></li>
+      } else {
+        <li><a href="@com.kyleu.projectile.controllers.graphql.routes.GraphQLController.graphql()">GraphQL</a></li>
+      }
+    </ul>
+
+    <ul class="right hide-on-small-only nav-name">
+      <li><a class="dropdown-trigger" href="@com.kyleu.projectile.controllers.auth.routes.ProfileController.view()" data-target="dropdown-user">
+        @user.username <i id="user-dropdown-toggle" class="fa fa-angle-down right"></i>
+      </a></li>
+    </ul>
+  </nav>
+</header>
+
+<ul id="dropdown-explore" class="dropdown-content">
+  <!-- Start model list routes -->
+  <!-- Projectile export section [websocket] -->
+  <li><a href="@controllers.admin.note.routes.NoteRowController.list()"><i class="fa @models.template.Icons.noteRow"></i> Note</a></li>
+  <li><a href="@controllers.admin.auth.routes.Oauth2InfoRowController.list()"><i class="fa @models.template.Icons.oauth2InfoRow"></i> Oauth2 Info</a></li>
+  <li><a href="@controllers.admin.auth.routes.PasswordInfoRowController.list()"><i class="fa @models.template.Icons.passwordInfoRow"></i> Password Info</a></li>
+  <li><a href="@controllers.admin.auth.routes.SystemUserRowController.list()"><i class="fa @models.template.Icons.systemUserRow"></i> System User</a></li>
+  <!-- End model list routes -->
+</ul>
+
+<script>
+  $(function() {
+    $(".dropdown-trigger").dropdown();
+  });
+</script>

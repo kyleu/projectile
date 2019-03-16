@@ -1,0 +1,5 @@
+{
+  "template" : "postgres",
+  "key" : "websocket-db",
+  "description" : ""
+}

@@ -1,0 +1,13 @@
+{
+  "key" : "websocket",
+  "template" : "scalajs",
+  "input" : "websocket-db",
+  "description" : "websocket",
+  "features" : [ "datamodel", "graphql", "service", "slick", "controller", "scalajs", "notes", "core" ],
+  "paths" : { },
+  "packages" : { },
+  "classOverrides" : { },
+  "defaultEnumFeatures" : [ "auth", "slick", "controller", "core", "graphql" ],
+  "defaultModelFeatures" : [ "auth", "slick", "json", "datamodel", "service", "controller", "notes", "core", "graphql" ],
+  "defaultServiceFeatures" : [ "core", "graphql", "controller", "auth" ]
+}
