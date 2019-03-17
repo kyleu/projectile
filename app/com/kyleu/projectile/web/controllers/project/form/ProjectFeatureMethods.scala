@@ -36,9 +36,9 @@ trait ProjectFeatureMethods { this: ProjectFormController =>
 
     if (ef.nonEmpty || efr.nonEmpty || mf.nonEmpty || mfr.nonEmpty || sf.nonEmpty || sfr.nonEmpty) {
       val p = projectile.getProject(summary.key)
-      if (ef.nonEmpty || efr.nonEmpty) { projectile.saveEnumMembers(p.key, p.enums.map(e => e.copy(features = e.features ++ ef -- efr))) }
-      if (mf.nonEmpty || mfr.nonEmpty) { projectile.saveModelMembers(p.key, p.models.map(m => m.copy(features = m.features ++ mf -- mfr))) }
-      if (sf.nonEmpty || sfr.nonEmpty) { projectile.saveServiceMembers(p.key, p.services.map(s => s.copy(features = s.features ++ sf -- sfr))) }
+      if (ef.nonEmpty || efr.nonEmpty) { projectile.saveEnumMembers(p.key, p.enums.map(e => e.copy(features = if (e.features.isEmpty) { Set.empty } else { e.features ++ ef -- efr }))) }
+      if (mf.nonEmpty || mfr.nonEmpty) { projectile.saveModelMembers(p.key, p.models.map(m => m.copy(features = if (m.features.isEmpty) { Set.empty } else { m.features ++ mf -- mfr }))) }
+      if (sf.nonEmpty || sfr.nonEmpty) { projectile.saveServiceMembers(p.key, p.services.map(s => s.copy(features = if (s.features.isEmpty) { Set.empty } else { s.features ++ sf -- sfr }))) }
     }
 
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)).flashing("success" -> s"Saved project [${project.key}]"))

@@ -39,6 +39,7 @@ object MemberParser {
       case node: TypeScriptNode.PropertySig => h.forDecl(node.name, node.typ, node.ctx)
       case node: TypeScriptNode.MethodDecl => h.forMethod(name = node.name, tParams = node.tParams, params = node.params, ret = node.ret, ctx = node.ctx)
       case node: TypeScriptNode.MethodSig => h.forMethod(name = node.name, tParams = node.tParams, params = node.params, ret = node.ret, ctx = node.ctx)
+      case node: TypeScriptNode.TypeAliasDecl => file.add(s"type ${node.name} = ${FieldTypeAsScala.asScala(config = config, t = node.typ, isJs = true)}")
       case node: TypeScriptNode.IndexSig =>
         h.addImport(node.typ)
         val paramsString = node.params.map(h.forObj).mkString(", ")

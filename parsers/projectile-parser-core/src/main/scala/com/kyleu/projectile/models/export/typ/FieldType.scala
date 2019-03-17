@@ -19,6 +19,8 @@ object FieldType extends StringEnum[FieldType] {
 
   case object NothingType extends FieldType("nothing")
   case object AnyType extends FieldType("any")
+  case object ThisType extends FieldType("this")
+
   case object BooleanType extends FieldType("boolean")
   case object ByteType extends FieldType("byte")
   case object ShortType extends FieldType("short")
@@ -40,6 +42,8 @@ object FieldType extends StringEnum[FieldType] {
   case class EnumType(key: String) extends FieldType("enum")
   case class StructType(key: String, tParams: Seq[TypeParam] = Nil) extends FieldType("struct")
   case class ObjectType(key: String, fields: Seq[ObjectField], tParams: Seq[TypeParam] = Nil) extends FieldType("object")
+
+  case class IntersectionType(key: String, types: Seq[FieldType]) extends FieldType("intersection")
   case class UnionType(key: String, types: Seq[FieldType]) extends FieldType("union")
 
   case class MethodType(params: Seq[ObjectField], ret: FieldType) extends FieldType("method")

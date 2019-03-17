@@ -19,14 +19,17 @@ object FieldTypeDecoder {
     key = extract(c.downField("key").as[String]),
     tParams = extract(c.downField("fields").as[Seq[TypeParam]])
   ))
-
-  private[this] val unionTypeDecoder: Decoder[UnionType] = (c: HCursor) => Right(UnionType(
-    key = extract(c.downField("key").as[String]), types = extract(c.downField("types").as[Seq[FieldType]])
-  ))
   private[this] val objectTypeDecoder: Decoder[ObjectType] = (c: HCursor) => Right(ObjectType(
     key = extract(c.downField("key").as[String]),
     fields = extract(c.downField("fields").as[Seq[ObjectField]]),
     tParams = extract(c.downField("fields").as[Seq[TypeParam]])
+  ))
+
+  private[this] val intersectionTypeDecoder: Decoder[IntersectionType] = (c: HCursor) => Right(IntersectionType(
+    key = extract(c.downField("key").as[String]), types = extract(c.downField("types").as[Seq[FieldType]])
+  ))
+  private[this] val unionTypeDecoder: Decoder[UnionType] = (c: HCursor) => Right(UnionType(
+    key = extract(c.downField("key").as[String]), types = extract(c.downField("types").as[Seq[FieldType]])
   ))
 
   private[this] val methodTypeDecoder: Decoder[MethodType] = (c: HCursor) => {
@@ -49,8 +52,14 @@ object FieldTypeDecoder {
   implicit def decodeFieldType: Decoder[FieldType] = (c: HCursor) => try {
     val t = c.downField("t").as[String].getOrElse(c.as[String].getOrElse(throw new IllegalStateException("Encountered field type without \"t\" attribute")))
     t match {
+      case UnitType.value => Right(UnitType)
+
       case StringType.value => Right(StringType)
       case EncryptedStringType.value => Right(EncryptedStringType)
+
+      case NothingType.value => Right(NothingType)
+      case AnyType.value => Right(AnyType)
+      case ThisType.value => Right(ThisType)
 
       case BooleanType.value => Right(BooleanType)
       case ByteType.value => Right(ByteType)
@@ -74,6 +83,7 @@ object FieldTypeDecoder {
       case "struct" => structTypeDecoder.apply(c)
       case "object" => objectTypeDecoder.apply(c)
       case "union" => unionTypeDecoder.apply(c)
+      case "intersection" => intersectionTypeDecoder.apply(c)
 
       case "method" => methodTypeDecoder.apply(c)
 

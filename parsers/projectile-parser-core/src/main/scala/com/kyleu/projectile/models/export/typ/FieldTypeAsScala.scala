@@ -40,6 +40,9 @@ object FieldTypeAsScala {
     case UnionType(k, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" | ")
     case UnionType(_, _) => "Json" // TODO: key
 
+    case IntersectionType(k, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" with ")
+    case IntersectionType(_, _) => "Json" // TODO: key
+
     case MethodType(params, ret) => s"(${params.map(p => asScala(config, p.t)).mkString(", ")}): ${asScala(config, ret)}"
 
     case JsonType => "Json"
@@ -53,11 +56,11 @@ object FieldTypeAsScala {
     case AnyType if isJs => "js.Any"
     case AnyType => "Any"
 
+    case ThisType => "this.type"
+
     case ExoticType(key) => key match {
       case _ => s"js.Any /* exotic($key) */"
     }
-
-    case _ => throw new IllegalStateException(s"Unhandled type [$t]")
   }
 
   private[this] def typeParamsString(config: ExportConfiguration, tp: Seq[TypeParam]) = tp.toList match {

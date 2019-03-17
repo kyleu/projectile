@@ -24,33 +24,51 @@ object TypeHelper {
 
     case SyntaxKind.AnyKeyword => FieldType.AnyType
     case SyntaxKind.VoidKeyword => FieldType.UnitType
+
     case SyntaxKind.BooleanKeyword => FieldType.BooleanType
+    case SyntaxKind.TrueKeyword => FieldType.BooleanType
+    case SyntaxKind.FalseKeyword => FieldType.BooleanType
+
     case SyntaxKind.NumberKeyword => FieldType.DoubleType
+    case SyntaxKind.NumericLiteral => try {
+      extractObj[String](o, "text").toInt
+      FieldType.IntegerType
+    } catch {
+      case _: NumberFormatException => FieldType.DoubleType
+    }
+
+    case SyntaxKind.StringLiteral => FieldType.StringType
     case SyntaxKind.StringKeyword => FieldType.StringType
+
     case SyntaxKind.SymbolKeyword => FieldType.ExoticType("SymbolKeyword")
     case SyntaxKind.ObjectKeyword => FieldType.StructType(key = "js.Object", tParams = o.tParams())
 
-    case SyntaxKind.ArrayType => FieldType.ListType(FieldType.StringType)
-    case SyntaxKind.UnionType => FieldType.UnionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode))
+    case SyntaxKind.ArrayType => FieldType.ListType(o.typ("elementType"))
+    case SyntaxKind.UnionType => FieldType.UnionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode).distinct)
     case SyntaxKind.TupleType => FieldType.ExoticType("TupleType")
     case SyntaxKind.ImportType => FieldType.ExoticType("Import")
 
     case SyntaxKind.ConstructorType => FieldType.MethodType(params = o.params(), ret = ExoticType("this"))
     case SyntaxKind.FunctionType => FieldType.MethodType(params = o.params(), ret = o.typ())
     case SyntaxKind.ParenthesizedType => FieldType.ExoticType("ParenthesizedType")
-    case SyntaxKind.LiteralType => FieldType.ExoticType("LiteralType")
+    case SyntaxKind.LiteralType => o.typ("literal")
     case SyntaxKind.ConditionalType => FieldType.ExoticType("ConditionalType")
-    case SyntaxKind.IntersectionType => FieldType.ExoticType("IntersectionType")
+    case SyntaxKind.IntersectionType => FieldType.IntersectionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode).distinct)
     case SyntaxKind.IndexedAccessType => FieldType.ExoticType("IndexedAccessType")
     case SyntaxKind.MappedType => FieldType.ExoticType("MappedType")
 
-    case SyntaxKind.ThisType => FieldType.ExoticType("this")
+    case SyntaxKind.ThisType => FieldType.ThisType
 
     case SyntaxKind.TypeLiteral => FieldType.ObjectType(key = "_typeliteral", fields = o.memberFields())
     case SyntaxKind.TypeReference => MethodHelper.getName(extractObj[JsonObject](o, "typeName")) match {
-      case "Array" =>
-        val tArgs = o.tParams("typeArguments").headOption.getOrElse(throw new IllegalStateException("No type args"))
-        FieldType.ListType(typ = tArgs.constraint.getOrElse(FieldType.AnyType))
+      case "Array" => o.tParams("typeArguments").toList match {
+        case arg :: Nil => FieldType.ListType(typ = arg.constraint match {
+          case Some(c) => c
+          case None => FieldType.StructType(arg.name)
+        })
+        case Nil => FieldType.ListType(typ = FieldType.AnyType)
+        case _ => throw new IllegalStateException("Cannot handle multiple array type args")
+      }
       case name => FieldType.StructType(key = name, tParams = o.tParams("typeArguments"))
     }
     case SyntaxKind.TypeQuery => FieldType.ExoticType("TypeQuery")

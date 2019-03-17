@@ -68,7 +68,11 @@ object SourceFileParser {
       file.addImport(Seq("scala", "scalajs"), "js")
       OutputHelper.printContext(file, node.ctx)
       file.add("@js.native")
-      file.add(s"""@js.annotation.JSGlobal("${ctx.pkg.mkString(".")}")""")
+      if (ctx.pkg.isEmpty) {
+        file.add(s"""@js.annotation.JSGlobalScope""")
+      } else {
+        file.add(s"""@js.annotation.JSGlobal("${ctx.pkg.mkString(".")}")""")
+      }
       file.add(s"object $cn extends js.Object {", 1)
       members.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = members.lastOption.contains(m)))
       file.add("}", -1)

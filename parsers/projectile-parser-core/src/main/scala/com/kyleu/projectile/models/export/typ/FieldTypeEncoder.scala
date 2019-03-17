@@ -6,8 +6,11 @@ import io.circe.JsonObject
 
 object FieldTypeEncoder {
   private[this] implicit val enumTypeEncoder: Encoder[EnumType] = deriveEncoder
+
   private[this] implicit val structTypeEncoder: Encoder[StructType] = deriveEncoder
   private[this] implicit val objectTypeEncoder: Encoder[ObjectType] = deriveEncoder
+
+  private[this] implicit val intersectionTypeEncoder: Encoder[IntersectionType] = deriveEncoder
   private[this] implicit val unionTypeEncoder: Encoder[UnionType] = deriveEncoder
 
   private[this] implicit val methodTypeEncoder: Encoder[MethodType] = deriveEncoder
@@ -23,6 +26,8 @@ object FieldTypeEncoder {
       case e: EnumType => e.asJson.asObject.getOrElse(throw new IllegalStateException("Cannot encode enum"))
       case s: StructType => s.asJson.asObject.getOrElse(throw new IllegalStateException("Cannot encode struct"))
       case o: ObjectType => o.asJson.asObject.getOrElse(throw new IllegalStateException("Cannot encode object"))
+
+      case i: IntersectionType => i.asJson.asObject.getOrElse(throw new IllegalStateException("Cannot encode intersection"))
       case u: UnionType => u.asJson.asObject.getOrElse(throw new IllegalStateException("Cannot encode union"))
 
       case m: MethodType => m.asJson.asObject.getOrElse(throw new IllegalStateException(s"Cannot encode method(${m.params.mkString(". ")}): ${m.ret}"))

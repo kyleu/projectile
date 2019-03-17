@@ -2,7 +2,7 @@ package com.kyleu.projectile.services.typescript
 
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode._
-import com.kyleu.projectile.models.typescript.node.{NodeContext, SourceFileHelper, SyntaxKind, TypeScriptNode}
+import com.kyleu.projectile.models.typescript.node._
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
@@ -16,7 +16,7 @@ object NodeService {
     var messages = params.messages
     def addMessages(x: (Seq[String], TypeScriptNode)) = { messages = messages ++ x._1; x._2 }
     def kid(k: String) = addMessages(JsonService.parseJson(extractObj[Json](o, k), params.plus()))
-    def kids(k: String = "members") = o.kids(k).map(x => JsonService.parseJson(x.asJson, params.plus())).map(addMessages)
+    def kids(k: String = "members") = filterDupes(o.kids(k).map(x => JsonService.parseJson(x.asJson, params.plus())).map(addMessages))
     def singleKidOr(k: String, onMultiple: Seq[TypeScriptNode] => TypeScriptNode) = kids(k).toList match {
       case single :: Nil => single
       case children => onMultiple(children)
@@ -75,6 +75,22 @@ object NodeService {
       case _ => Unknown(kind = ctx.kind.toString, json = o.asJson, ctx = ctx)
     }
     messages -> node
+  }
+
+  private[this] def filterDupes(nodes: Seq[TypeScriptNode]) = {
+    var encountered = Set.empty[String]
+    nodes.flatMap {
+      case node if node.isInstanceOf[MethodDecl] || node.isInstanceOf[MethodSig] =>
+        val str = NodeHelper.asString(node)
+        if (encountered(str)) {
+          println(s"Duplicate: $str")
+          None
+        } else {
+          encountered = encountered + str.toString
+          Some(node)
+        }
+      case x => Some(x)
+    }
   }
 }
 

@@ -25,8 +25,7 @@ case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: Sc
 
   def forType(typ: FieldTypeRequired) = {
     addImport(typ.t)
-    val r = MemberHelper.jsType(config, typ.t)
-    if (typ.r) { r } else { s"Option[$r]" }
+    MemberHelper.jsType(config, typ.t)
   }
 
   def forTParam(t: TypeParam) = t.constraint match {
@@ -43,11 +42,15 @@ case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: Sc
   }
 
   def forMethod(name: String, tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) = {
+    val ov = name match {
+      case "toString" | "clone" => "override "
+      case _ => ""
+    }
     val paramsString = params.map(forObj).mkString(", ")
     val tParamsString = if (tParams.isEmpty) { "" } else { "[" + tParams.map(forTParam).mkString(", ") + "]" }
     val abst = ctx.modifiers(ModifierFlag.Abstract)
     val decl = if (abst) { "" } else { " = js.native" }
-    file.add(s"def ${ExportHelper.escapeKeyword(name)}$tParamsString($paramsString): ${forType(ret)}$decl")
+    file.add(s"${ov}def ${ExportHelper.escapeKeyword(name)}$tParamsString($paramsString): ${forType(ret)}$decl")
   }
 
   def forDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) = {
