@@ -15,6 +15,7 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
     DatabaseField(title = "Provider", prop = "provider", col = "provider", typ = StringType),
     DatabaseField(title = "Key", prop = "key", col = "key", typ = StringType),
     DatabaseField(title = "Role", prop = "role", col = "role", typ = EnumType(Role)),
+    DatabaseField(title = "Settings", prop = "settings", col = "settings", typ = JsonType),
     DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType)
   )
   override protected val pkColumns = Seq("id")
@@ -52,8 +53,9 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
     val username = StringType(row, "username")
     val profile = LoginInfo(StringType(row, "provider"), StringType(row, "key"))
     val role = Role.withValue(StringType(row, "role").trim)
+    val settings = JsonType(row, "settings")
     val created = TimestampType(row, "created")
-    SystemUser(id, username, profile, role, created)
+    SystemUser(id, username, profile, role, settings, created)
   }
 
   override protected def toDataSeq(u: SystemUser) = Seq[Any](

@@ -1,8 +1,9 @@
 GET         /                                        com.kyleu.projectile.web.controllers.HomeController.index
-GET         /testbed                                 com.kyleu.projectile.web.controllers.HomeController.testbed
 GET         /dir                                     com.kyleu.projectile.web.controllers.HomeController.changeDir(dir: Option[String] ?= None)
 GET         /dir/init                                com.kyleu.projectile.web.controllers.HomeController.initialize(d)
 
+GET         /test                                    com.kyleu.projectile.web.controllers.TestController.list()
+GET         /test/:key                               com.kyleu.projectile.web.controllers.TestController.test(key, theme ?= "default")
 
 # Files
 GET         /file/view/*path                         com.kyleu.projectile.web.controllers.FileController.viewFile(path)
@@ -17,6 +18,8 @@ GET         /file/delete/*path                       com.kyleu.projectile.web.co
 
 # Assets
 GET         /style/assets/stylesheets/projectile.css controllers.Assets.at(file = "projectile.css")
+
+->          /components                              components.Routes
 
 GET         /android-chrome-192x192.png              controllers.Assets.at(file = "images/ui/favicon/android-chrome-192x192.png")
 GET         /android-chrome-512x512.png              controllers.Assets.at(file = "images/ui/favicon/android-chrome-512x512.png")

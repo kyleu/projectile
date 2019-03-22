@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, results: Seq[com.kyleu.projectile.web.util.AuditUtils.AuditResult], duration: Int)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+    implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "Audit Results") {
   <div class="collection with-header">
     <div class="collection-header">

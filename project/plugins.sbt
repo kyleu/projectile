@@ -5,6 +5,7 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.21")
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.4")
 addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.1.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
+addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.12")
 
 // Scala.js
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.5.0")

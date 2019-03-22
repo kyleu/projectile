@@ -17,7 +17,7 @@ object ExportHelper {
   def toClassName(s: String): String = if (s.nonEmpty && s == s.toUpperCase) {
     toClassName(s.toLowerCase)
   } else {
-    converterFor(getSource(s), CaseFormat.UPPER_CAMEL).convert(s.replaceAllLiterally(" ", ""))
+    converterFor(getSource(s), CaseFormat.UPPER_CAMEL).convert(s.replaceAllLiterally(" ", "").replaceAllLiterally(".", ""))
   }
   def toDefaultTitle(s: String) = toClassName(s).flatMap(c => if (c.isUpper) { Seq(' ', c) } else { Seq(c) }).trim
 

@@ -11,8 +11,8 @@
     completed: Option[java.time.LocalDateTime] = None,
     debug: Boolean = false
 )(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: com.kyleu.projectile.util.tracing.TraceData
-)@traceData.logClass(getClass)@com.kyleu.projectile.views.html.admin.layout.page(user, authActions, "projects", title) {
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.admin.layout.page(user, authActions, "projects", title) {
   <div class="row">
     <div class="col s12">
       <div class="collection with-header">

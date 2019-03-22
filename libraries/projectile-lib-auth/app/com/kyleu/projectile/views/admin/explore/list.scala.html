@@ -16,8 +16,8 @@
     q: Option[String] = None,
     fullUI: Boolean = true
 )(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: com.kyleu.projectile.util.tracing.TraceData
-)@traceData.logClass(getClass)@if(fullUI) {
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@if(fullUI) {
   @com.kyleu.projectile.views.html.admin.layout.page(user, authActions, section, s"$model Management") {
     <div class="collection with-header">
       <div class="collection-header">

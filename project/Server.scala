@@ -10,6 +10,7 @@ import play.sbt.routes.RoutesKeys
 import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
+import LibraryProjects._
 
 object Server {
   private[this] lazy val serverSettings = Common.settings ++ Seq(
@@ -76,5 +77,5 @@ object Server {
     Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, play.sbt.PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     SbtExportPlugin.`projectile-sbt`,
     ProjectileExport.`projectile-export`
-  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*)
+  ).dependsOn(`projectile-lib-play`, `projectile-lib-web-components`).aggregate(ParserProjects.allReferences: _*).aggregate(allReferences: _*)
 }

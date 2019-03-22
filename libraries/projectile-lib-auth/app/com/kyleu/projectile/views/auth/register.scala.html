@@ -1,6 +1,6 @@
 @(user: Option[com.kyleu.projectile.models.user.SystemUser], form: Form[com.kyleu.projectile.models.auth.RegistrationData], actions: com.kyleu.projectile.models.auth.AuthActions)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: com.kyleu.projectile.util.tracing.TraceData
-)@traceData.logClass(getClass)@com.kyleu.projectile.views.html.layout.simple(user = user, title = "Register for " + actions.projectName) {
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.simple(user = user, title = "Register for " + actions.projectName) {
   <form method="post" action="@actions.registerUrl">
     <div class="row">
       <div class="col s12">

@@ -48,10 +48,6 @@ class HomeController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()))
   }
 
-  def testbed = Action.async { implicit request =>
-    Future.successful(Ok(com.kyleu.projectile.web.views.html.testbed(projectile)))
-  }
-
   def refreshAll = Action.async { implicit request =>
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing {
       "success" -> "Refreshed a bunch of stuff; you're welcome"

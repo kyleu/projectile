@@ -7,6 +7,7 @@ import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import com.kyleu.projectile.models.result.data.{DataField, DataFieldModel, DataSummary}
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
+import io.circe.JsonObject
 
 object SystemUser {
   private[this] implicit val jsonLoginInfoEncoder: Encoder[LoginInfo] = deriveEncoder
@@ -47,10 +48,11 @@ final case class SystemUser(
     username: String,
     profile: LoginInfo,
     role: Role = Role.User,
+    settings: Json = JsonObject.empty.asJson,
     created: LocalDateTime = DateUtils.now
 ) extends Identity with DataFieldModel {
 
-  def email = profile.providerID
+  def email = profile.providerKey
   def provider = profile.providerID
   def key = profile.providerKey
 

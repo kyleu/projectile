@@ -1,6 +1,6 @@
 @(user: com.kyleu.projectile.models.user.SystemUser, actions: com.kyleu.projectile.models.auth.AuthActions)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: com.kyleu.projectile.util.tracing.TraceData
-)@traceData.logClass(getClass)@com.kyleu.projectile.views.html.layout.simple(Some(user), actions.projectName) {
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.simple(Some(user), actions.projectName) {
   <form id="profile-form" action="" method="post">
     <div class="row">
       <div class="col s12">

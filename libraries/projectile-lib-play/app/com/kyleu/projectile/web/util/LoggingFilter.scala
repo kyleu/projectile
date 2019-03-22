@@ -24,7 +24,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
 
     nextFilter(request).transform(
       result => {
-        if (request.path.startsWith("/assets") || request.path.startsWith("/style")) {
+        if (request.path.startsWith("/assets") || request.path.startsWith("/style") || request.path.startsWith("/components")) {
           result
         } else {
           logCompleted(result)

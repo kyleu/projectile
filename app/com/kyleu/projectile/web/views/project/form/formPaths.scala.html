@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.Project)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+    implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Path Edit") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.savePaths()">
     <input id="key" name="key" type="hidden" value="@project.key" />

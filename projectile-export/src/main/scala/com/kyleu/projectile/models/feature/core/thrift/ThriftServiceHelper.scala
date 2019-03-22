@@ -18,10 +18,11 @@ object ThriftServiceHelper {
   }
 
   def addJavadoc(file: ScalaFile, svc: ExportService) = {
+    val classCanonicalName = (svc.pkg :+ svc.className).mkString(".")
     file.add("/***")
     file.add(" * {{{")
-    file.add(" * val svcPerEndpoint = $classCanonicalName.mkServicePerEndpoint(url)")
-    file.add(" * val myService = $classCanonicalName")
+    file.add(s" * val svcPerEndpoint = $classCanonicalName.mkServicePerEndpoint(url)")
+    file.add(s" * val myService = $classCanonicalName")
     file.add(" *   .from(svcPerEndpoint)")
     file.add(" *   .withTracingService(openTracingTracingService)")
     file.add(" *   .withThriftSpanNamePrefix(\"myThriftService\")")

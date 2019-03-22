@@ -1,0 +1,14 @@
+@(projectile: com.kyleu.projectile.services.ProjectileService, tests: Seq[String])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.simple(projectile, com.kyleu.projectile.util.Version.projectName) {
+  <div class="collection with-header">
+    <div class="collection-header">
+      <h4>Tests!</h4>
+    </div>
+    @tests.map { t =>
+      <div class="collection-item">
+        <a href="@com.kyleu.projectile.web.controllers.routes.TestController.test(t)">@t</a>
+      </div>
+    }
+  </div>
+}

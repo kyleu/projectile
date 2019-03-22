@@ -2,6 +2,7 @@ import Dependencies._
 import com.typesafe.sbt.less.Import.LessKeys
 import com.typesafe.sbt.web.SbtWeb.autoImport.Assets
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
+import play.sbt.routes.RoutesKeys
 import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin
@@ -104,12 +105,18 @@ object LibraryProjects {
     description := "Websocket controller and admin actions for actor-backed websocket connections"
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-auth-graphql`)
 
+  lazy val `projectile-lib-web-components` = libraryProject(project in file("libraries/projectile-lib-web-components")).settings(
+    description := "Twirl templates for common Material Design web components",
+    libraryDependencies += WebJars.materialIcons
+  ).enablePlugins(play.sbt.PlayScala)
+
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-play`, `projectile-lib-auth`, `projectile-lib-auth-graphql`, `projectile-lib-websocket`
+    `projectile-lib-play`, `projectile-lib-auth`, `projectile-lib-auth-graphql`,
+    `projectile-lib-websocket`, `projectile-lib-web-components`
   )
 
   lazy val allReferences = all.map(_.project)
