@@ -1,0 +1,34 @@
+@(title: String, cfg: com.kyleu.projectile.components.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.components.views.html.layout.core(
+  title = title,
+  scripts = Seq(
+    "/assets/lib/jquery/jquery.js",
+    cfg.asset("vendor/vendors.min.js"),
+    cfg.asset("vendor/plugins.min.js")
+  ) ++ scripts,
+  stylesheets = Seq(
+    "/assets/lib/material-design-icons/material-icons.css",
+    cfg.asset(s"vendor/theme/${cfg.user.theme.key}/materialize.css"),
+    cfg.asset(s"vendor/theme/${cfg.user.theme.key}/style.css"),
+    cfg.asset(s"stylesheets/components.css")
+  ) ++ stylesheets
+) {
+  <body class="@cfg.user.theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
+    @com.kyleu.projectile.components.views.html.layout.pageHeader(cfg)
+    @com.kyleu.projectile.components.views.html.layout.pageNav(cfg)
+    <div id="main">
+      <div class="row">
+        @cfg.user.theme.contentBefore.map { cb =>
+          <div class="content-wrapper-before @cb"></div>
+        }
+        @com.kyleu.projectile.components.views.html.layout.breadcrumbs(title, cfg)
+        <div class="col s12">
+          <div class="container">
+            @content
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+}

@@ -1,0 +1,35 @@
+html {
+  font-family: BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+// Nav bar
+.brand-sidebar .logo-wrapper a.brand-logo img {
+  padding: 0 7px;
+}
+
+#breadcrumbs-wrapper {
+  background: transparent;
+}
+
+// Splash page
+.splash-bg {
+  background-image: url('/components/images/flat-bg.jpg');
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
+
+#splash-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .card-panel.border-radius-6.splash-card {
+    margin-left: 0 !important;
+  }
+}
+
+#splash-content .card-panel.border-radius-6.splash-card {
+  margin-left: 0 !important;
+}
