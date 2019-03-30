@@ -23,7 +23,6 @@ class AuthenticationController @javax.inject.Inject() (
   val providers = if (app.config.authGoogleSettings.clientSecret.nonEmpty) { Seq("google") } else { Nil }
 
   def signInForm = withoutSession("form") { implicit request => implicit td =>
-    //val src = request.headers.get("Referer").filter(_.contains(request.host))
     val resp = Ok(actions.signin(request.identity, UserForms.signInForm, providers, actions.allowRegistration))
     Future.successful(resp)
   }
@@ -43,14 +42,20 @@ class AuthenticationController @javax.inject.Inject() (
               app.silhouette.env.eventBus.publish(LoginEvent(user, request))
               app.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
                 app.silhouette.env.authenticatorService.embed(v, result).map { x =>
+                  log.info(s"Successful sign in for [${credentials.identifier}]")
                   x
                 }
               }
             }
-            case None => Future.failed(new IdentityNotFoundException(s"Couldn't find user [${loginInfo.providerID}]"))
+            case None =>
+              log.warn(s"Couldn't find user matching [${credentials.identifier}]")
+              Future.failed(new IdentityNotFoundException(s"Couldn't find user [${loginInfo.providerID}]"))
           }
         }.recover {
-          case _: ProviderException => Redirect(actions.signinUrl).flashing("error" -> "Invalid credentials")
+          case _: ProviderException =>
+            val msg = "Invalid credentials"
+            log.warn(msg + " for [" + credentials.identifier + "]")
+            Redirect(actions.signinUrl).flashing("error" -> msg)
         }
       }
     )

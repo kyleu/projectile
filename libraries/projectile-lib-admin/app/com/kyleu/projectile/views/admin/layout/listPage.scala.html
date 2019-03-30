@@ -1,12 +1,14 @@
 @(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, title: String, section: String, vals: Seq[Html])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.page(title, cfg) {
-  <ul class="collection with-header">
-    <li class="collection-header">
-      <h5>@title</h5>
-    </li>
-    @vals.map { v =>
-    <li class="collection-item">@v</li>
-    }
-  </ul>
+  @com.kyleu.projectile.components.views.html.layout.card(None) {
+    <ul class="collection with-header">
+      <li class="collection-header">
+        <h5>@title</h5>
+      </li>
+      @vals.map { v =>
+        <li class="collection-item">@v</li>
+      }
+    </ul>
+  }
 }
