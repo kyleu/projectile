@@ -25,7 +25,7 @@ object InjectExploreHtml extends FeatureLogic.Inject(path = OutputPath.ServerSou
       val routesClass = TwirlHelper.routesClass(config, model)
       Seq(
         """<li class="collection-item">""",
-        s"""  <a class="theme-text" href="@$routesClass.list()">${TwirlHelper.iconHtml(config, model.propertyName)} ${model.plural}</a>""",
+        s"""  <a href="@$routesClass.list()">${TwirlHelper.faIconHtml(config, model.propertyName)} ${model.plural}</a>""",
         s"""  <div><em>Manage the ${model.plural.toLowerCase} of the system</em></div>""",
         """</li>"""
       )

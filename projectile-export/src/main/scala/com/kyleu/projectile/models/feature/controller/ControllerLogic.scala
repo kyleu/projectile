@@ -35,7 +35,9 @@ object ControllerLogic extends FeatureLogic {
     enums ++ models ++ services ++ routes
   }
 
-  override val injections = Seq(InjectBindables, InjectExploreHtml, InjectExploreMenu, InjectIcons, InjectRoutes, InjectSearch, InjectSystemRoutes)
+  override val injections = Seq(
+    InjectBindables, InjectExploreHtml, InjectComponentMenu, InjectExploreMenu, InjectIcons, InjectRoutes, InjectSearch, InjectSystemRoutes
+  )
 
   private[this] def dbModelFiles(config: ExportConfiguration, model: ExportModel) = Seq(
     ControllerFile.export(config, model).rendered,

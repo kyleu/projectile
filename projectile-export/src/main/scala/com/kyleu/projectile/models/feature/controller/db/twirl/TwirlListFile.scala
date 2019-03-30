@@ -13,14 +13,20 @@ object TwirlListFile {
     val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
 
     val su = CommonImportHelper.getString(config, "SystemUser")
-    val aa = CommonImportHelper.getString(config, "AuthActions")
-    listFile.add(s"@(user: $su, authActions: $aa, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
-    val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
-    listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
+
+    val finalArgs = s"user: $su, cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
+    listFile.add(s"@($finalArgs, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
+    if (config.isNewUi) {
+      listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash")
+    } else {
+      val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
+      listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
+    }
     listFile.add(")", -2)
+
     listFile.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
     listFile.add("user = user,")
-    listFile.add("authActions = authActions,")
+    listFile.add("cfg = cfg,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")
     listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")

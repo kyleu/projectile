@@ -12,15 +12,23 @@ object TwirlFormFile {
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.viewPackage :+ "html").mkString(".")
+
     val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
+    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
 
     val su = CommonImportHelper.getString(config, "SystemUser")
-    val aa = CommonImportHelper.getString(config, "AuthActions")
     val extraArgs = "title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false"
-    file.add(s"@(user: $su, authActions: $aa, model: ${model.fullClassPath(config)}, $extraArgs)(")
-    val td = config.utilitiesPackage.mkString(".") + ".tracing.TraceData"
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    file.add(s""")@$systemViewPkg.admin.layout.page(user, authActions, "explore", title) {""", 1)
+
+    val uc = CommonImportHelper.getString(config, "UiConfig")
+
+    file.add(s"@(user: $su, cfg: $uc, model: ${model.fullClassPath(config)}, $extraArgs)(")
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
+
+    if (config.isNewUi) {
+      file.add(s""")@$sharedViewPkg.layout.page(title, cfg) {""", 1)
+    } else {
+      file.add(s""")@$systemViewPkg.layout.page(user, cfg, "explore", title) {""", 1)
+    }
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     file.add("""<div class="collection with-header">""", 1)
@@ -28,7 +36,7 @@ object TwirlFormFile {
     file.add("<div class=\"collection-header\">", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add("""<div class="right"><a href="@cancel" class="theme-text cancel-link">Cancel</a></div>""")
-    file.add(s"""<h5>${TwirlHelper.iconHtml(config, model.propertyName)} @title</h5>""")
+    file.add(s"""<h5>${TwirlHelper.faIconHtml(config, model.propertyName)} @title</h5>""")
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)

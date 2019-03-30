@@ -13,31 +13,35 @@ object TwirlViewFile {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "View")
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
 
-    val su = CommonImportHelper.getString(config, "SystemUser")
+    val systemViewPkg = (config.systemViewPackage ++ Seq("html", "admin")).mkString(".")
+    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
+
     val nu = CommonImportHelper.getString(config, "NullUtils")
-    val aa = CommonImportHelper.getString(config, "AuthActions")
+    val su = CommonImportHelper.getString(config, "SystemUser")
+    val finalArgs = s"user: $su, cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
     val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
 
-    file.add(s"@(user: $su, authActions: $aa, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
-    val td = s"${(config.utilitiesPackage :+ "tracing").mkString(".")}.TraceData"
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
+    file.add(s"@($finalArgs, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
-    val viewPkg = (config.viewPackage ++ Seq("html", "admin")).mkString(".")
-    val systemViewPkg = (config.systemViewPackage ++ Seq("html", "admin")).mkString(".")
-    file.add(s""")@$systemViewPkg.layout.page(user, authActions, "explore", s"${model.title} [$toInterp]") {""", 1)
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
+    if (config.isNewUi) {
+      file.add(s""")@$sharedViewPkg.layout.page(s"${model.title} [$toInterp]", cfg) {""", 1)
+    } else {
+      file.add(s""")@$systemViewPkg.layout.page(user, cfg, "explore", s"${model.title} [$toInterp]") {""", 1)
+    }
 
     file.add("""<div class="collection with-header">""", 1)
     file.add("<div class=\"collection-header\">", 1)
     if (model.pkFields.nonEmpty) {
       val onClick = s"""onclick="return confirm('Are you sure you want to remove this ${model.title}?')""""
-      file.add(s"""<div class="right"><a class="theme-text" href="@${TwirlHelper.routesClass(config, model)}.editForm($args)">Edit</a></div>""")
+      file.add(s"""<div class="right"><a href="@${TwirlHelper.routesClass(config, model)}.editForm($args)">Edit</a></div>""")
       val rc = TwirlHelper.routesClass(config, model)
       file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@$rc.remove($args)">Remove</a></div>""")
     }
     file.add("<h5>", 1)
-    val modelIcon = TwirlHelper.iconHtml(config, model.propertyName)
-    file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, model)}.list()">""" + modelIcon + "</a>")
+    val modelIcon = TwirlHelper.faIconHtml(config, model.propertyName)
+    file.add(s"""<a href="@${TwirlHelper.routesClass(config, model)}.list()">""" + modelIcon + "</a>")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
     file.add(s"""${model.title} [$toTwirl]""")
     file.add("</h5>", -1)
@@ -51,6 +55,7 @@ object TwirlViewFile {
     file.add("</table>", -1)
     file.add("</div>", -1)
 
+    val viewPkg = (config.viewPackage ++ Seq("html", "admin")).mkString(".")
     if (model.pkFields.nonEmpty) {
       val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
       if (model.features(ModelFeature.Notes)) {
@@ -80,7 +85,7 @@ object TwirlViewFile {
       val relUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
-      file.add(TwirlHelper.iconHtml(config, src.propertyName))
+      file.add(TwirlHelper.faIconHtml(config, src.propertyName))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add("</div>", -1)
       file.add("""<div class="collapsible-body"><span>Loading...</span></div>""")
@@ -122,12 +127,12 @@ object TwirlViewFile {
         }
         file.add(forField(config, field))
         if (field.required) {
-          val icon = TwirlHelper.iconHtml(config, tgt.propertyName)
-          file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
+          val icon = TwirlHelper.faIconHtml(config, tgt.propertyName)
+          file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
         } else {
           file.add(s"@model.${field.propertyName}.map { v =>", 1)
           val rc = TwirlHelper.routesClass(config, tgt)
-          file.add(s"""<a class="theme-text" href="@$rc.view(v)">${TwirlHelper.iconHtml(config, tgt.propertyName)}</a>""")
+          file.add(s"""<a href="@$rc.view(v)">${TwirlHelper.faIconHtml(config, tgt.propertyName)}</a>""")
           file.add("}", -1)
         }
         file.add("</td>", -1)

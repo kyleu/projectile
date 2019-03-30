@@ -15,16 +15,12 @@ object ControllerFile {
 
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
-    config.addCommonImport(file, "AuthActions")
+
+    config.addCommonImport(file, "UiConfig")
 
     config.addCommonImport(file, "ServiceController")
-    if (model.features(ModelFeature.Auth)) {
-      config.addCommonImport(file, "ServiceAuthController")
-    }
-
-    if (model.features(ModelFeature.Audit)) {
-      config.addCommonImport(file, "AuditRecordRowService")
-    }
+    if (model.features(ModelFeature.Auth)) { config.addCommonImport(file, "ServiceAuthController") }
+    if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditRecordRowService") }
 
     config.addCommonImport(file, "OrderBy")
 
@@ -63,9 +59,9 @@ object ControllerFile {
     }
 
     ControllerReferences.refServiceArgs(config, model, file) match {
-      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, authActions: AuthActions, svc: ${model.className}Service$extraSvcs")
+      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs")
       case ref =>
-        file.add(s"override val app: Application, authActions: AuthActions, svc: ${model.className}Service$extraSvcs,")
+        file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs,")
         file.add(ref)
     }
     val controller = if (model.features(ModelFeature.Auth)) { "ServiceAuthController" } else { "ServiceController" }
@@ -96,7 +92,8 @@ object ControllerFile {
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}List(", 1)
-    file.add("request.identity, authActions, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
+    val cfgArg = s"app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)})"
+    file.add(s"request.identity, $cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
     file.add("))", -1)
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
     file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
@@ -113,7 +110,8 @@ object ControllerFile {
     file.add(s"val cancel = $routesClass.list()")
     file.add(s"val call = $routesClass.create()")
     file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    file.add(s"""request.identity, authActions, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
+    val cfgArg = s"app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)})"
+    file.add(s"""request.identity, $cfgArg, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
     file.add(")))", -1)
     file.add("}", -1)
     file.add()

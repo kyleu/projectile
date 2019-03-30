@@ -19,7 +19,7 @@ object TwirlDataRowFile {
       }
       file.add(s"<td>", 1)
       if (model.pkFields.exists(pkField => pkField.propertyName == field.propertyName)) {
-        file.add(s"""<a href="$href" class="theme-text">@model.${field.propertyName}</a>""")
+        file.add(s"""<a href="$href">@model.${field.propertyName}</a>""")
       } else {
         field.t match {
           case FieldType.CodeType => file.add(s"<pre>@model.${field.propertyName}</pre>")
@@ -34,13 +34,13 @@ object TwirlDataRowFile {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
           }
           if (field.required) {
-            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">""", 1)
-            file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
+            file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">""", 1)
+            file.add(TwirlHelper.faIconHtml(config, tgt.propertyName))
             file.add("</a>", -1)
           } else {
             file.add(s"@model.${field.propertyName}.map { v =>", 1)
-            file.add(s"""<a class="theme-text" href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">""", 1)
-            file.add(TwirlHelper.iconHtml(config, tgt.propertyName))
+            file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">""", 1)
+            file.add(TwirlHelper.faIconHtml(config, tgt.propertyName))
             file.add("</a>", -1)
             file.add("}", -1)
           }
