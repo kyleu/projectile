@@ -20,17 +20,30 @@
     </div>
 
     <div class="collection-item">
+      <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.formFlags(project.key)">Edit Flags</a></div>
+      <h6>Project Flags</h6>
+      <div>
+        @if(project.flags.isEmpty) {
+          <div>No flags</div>
+        }
+        @project.flags.toList.sorted.map { flag =>
+          <div>@flag</div>
+        }
+      </div>
+    </div>
+
+    <div class="collection-item">
       <div class="right"><a href="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.formPaths(project.key)">Edit Paths</a></div>
       <h6>Path Overrides</h6>
       <div>
-      @if(project.paths.isEmpty) {
-        <div>No path overrides</div>
-      }
-       @com.kyleu.projectile.models.output.OutputPath.values.map { p =>
-        @project.paths.get(p).map { path =>
-          <div>@p.value: @path</div>
+        @if(project.paths.isEmpty) {
+          <div>No path overrides</div>
         }
-      }
+        @com.kyleu.projectile.models.output.OutputPath.values.map { p =>
+          @project.paths.get(p).map { path =>
+            <div>@p.value: @path</div>
+          }
+        }
       </div>
     </div>
 

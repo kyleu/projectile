@@ -24,6 +24,6 @@ trait ProjectPackageMethods { this: ProjectFormController =>
         }
       }.toMap
     ))
-    Future.successful(redir(project.key).flashing("success" -> s"Saved project [${project.key}]"))
+    Future.successful(redir(project.key).flashing("success" -> s"Saved packages for project [${project.key}]"))
   }
 }

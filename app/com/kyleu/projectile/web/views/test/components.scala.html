@@ -1,4 +1,4 @@
-@(title: String, cfg: com.kyleu.projectile.components.models.config.UiConfig)(
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.page(title, cfg) {
   <div class="section">
@@ -7,6 +7,14 @@
         <p class="caption mb-0">
           Hello!
         </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <div class="card-content">
+        ...
       </div>
     </div>
   </div>

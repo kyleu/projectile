@@ -1,9 +1,4 @@
 GET         /                                com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formNew()
-POST        /summary                         com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveSummary()
-POST        /features                        com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveFeatures()
-POST        /packages                        com.kyleu.projectile.web.controllers.project.form.ProjectFormController.savePackages()
-POST        /paths                           com.kyleu.projectile.web.controllers.project.form.ProjectFormController.savePaths()
-POST        /overrides                       com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveClassOverrides()
 
 GET         /all/audit                       com.kyleu.projectile.web.controllers.project.BulkProjectController.auditAll
 GET         /all/export                      com.kyleu.projectile.web.controllers.project.BulkProjectController.exportAll
@@ -20,18 +15,30 @@ GET         /typescript/:k/all/export        com.kyleu.projectile.web.controller
 GET         /typescript/:k/:f/export         com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.export(k, f)
 GET         /typescript/:k/:f/save           com.kyleu.projectile.web.controllers.project.TypeScriptProjectController.saveAudit(k, f)
 
+GET         /:key/summary                    com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formSummary(key)
+POST        /summary                         com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveSummary()
+
+GET         /:key/flags                      com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formFlags(key)
+POST        /flags                           com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveFlags()
+
+GET         /:key/features                   com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formFeatures(key)
+POST        /features                        com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveFeatures()
+
+GET         /:key/packages                   com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formPackages(key)
+POST        /packages                        com.kyleu.projectile.web.controllers.project.form.ProjectFormController.savePackages()
+
+GET         /:key/paths                      com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formPaths(key)
+POST        /paths                           com.kyleu.projectile.web.controllers.project.form.ProjectFormController.savePaths()
+
+GET         /:key/overrides                  com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formClassOverrides(key)
+POST        /overrides                       com.kyleu.projectile.web.controllers.project.form.ProjectFormController.saveClassOverrides()
+
 GET         /:key                            com.kyleu.projectile.web.controllers.project.ProjectController.detail(key)
 GET         /:key/remove                     com.kyleu.projectile.web.controllers.project.ProjectController.remove(key)
 
 GET         /:key/export                     com.kyleu.projectile.web.controllers.project.ProjectController.export(key, verbose: Boolean ?= false)
 GET         /:key/update                     com.kyleu.projectile.web.controllers.project.ProjectController.update(key)
 GET         /:key/fix                        com.kyleu.projectile.web.controllers.project.ProjectController.fix(key, t, src, tgt)
-
-GET         /:key/summary                    com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formSummary(key)
-GET         /:key/features                   com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formFeatures(key)
-GET         /:key/packages                   com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formPackages(key)
-GET         /:key/paths                      com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formPaths(key)
-GET         /:key/overrides                  com.kyleu.projectile.web.controllers.project.form.ProjectFormController.formClassOverrides(key)
 
 # Enums
 GET         /:key/enums                      com.kyleu.projectile.web.controllers.project.BulkProjectController.enumBulkEditForm(key)

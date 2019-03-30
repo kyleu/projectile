@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class ProjectFormController @javax.inject.Inject() () extends ProjectileController
-  with ProjectFeatureMethods with ProjectPathMethods with ProjectPackageMethods {
+  with ProjectFlagMethods with ProjectFeatureMethods with ProjectPathMethods with ProjectPackageMethods {
 
   def formNew = Action.async { implicit request =>
     val inputs = projectile.listInputs().map(_.key).sorted
