@@ -13,7 +13,7 @@ object Dependencies {
 
   object Database {
     val postgres = "org.postgresql" % "postgresql" % "42.2.5"
-    val hikariCp = "com.zaxxer" % "HikariCP" % "3.2.0"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "3.3.1"
     val flyway = "org.flywaydb" % "flyway-core" % "5.2.4"
 
     object Slick {
@@ -24,7 +24,7 @@ object Dependencies {
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
       val pg = "com.github.tminglei" %% "slick-pg" % pgVersion
       val pgCirce = "com.github.tminglei" %% "slick-pg_circe-json" % pgVersion
-      val slickless = "io.underscore" %% "slickless" % "0.3.3"
+      val slickless = "io.underscore" %% "slickless" % "0.3.4"
 
       val all = Seq(core, hikariCp, pg, pgCirce, slickless)
     }
@@ -62,7 +62,7 @@ object Dependencies {
     }
 
     object Finagle {
-      val version = "18.12.0"
+      val version = "19.3.0"
 
       val core = "com.twitter" %% "finagle-core" % version
       val thrift = "com.twitter" %% "finagle-thrift" % version
@@ -82,11 +82,11 @@ object Dependencies {
   }
 
   object Tracing {
-    val version = "0.33.1"
+    val version = "0.34.0"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.24.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.26.1"
   }
 
   object Authentication {
@@ -103,20 +103,20 @@ object Dependencies {
     val autocomplete = "org.webjars.bower" % "EasyAutocomplete" % "1.3.3" intransitive()
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.8" intransitive()
-    
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.9" intransitive()
+
     val fontAwesome = "org.webjars" % "font-awesome" % "4.7.0" intransitive()
     val materialIcons = "org.webjars" % "material-design-icons" % "3.0.1"
-    
+
     val all = Seq(autocomplete, fontAwesome, jquery, materialize, swaggerUi)
   }
 
   object Utils {
-    val enumeratumCirceVersion = "1.5.20"
+    val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.2.5"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.0"
-    val chimney = "io.scalaland" %% "chimney" % "0.3.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1"
+    val chimney = "io.scalaland" %% "chimney" % "0.3.1"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
     val commonsCodec = "commons-codec" % "commons-codec" % "1.12"
@@ -124,7 +124,7 @@ object Dependencies {
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
-    val guava = "com.google.guava" % "guava" % "27.0.1-jre"
+    val guava = "com.google.guava" % "guava" % "27.1-jre"
     val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
@@ -136,6 +136,6 @@ object Dependencies {
   }
 
   object Testing {
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.7" % "test"
   }
 }

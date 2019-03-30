@@ -1,0 +1,3 @@
+# Rest/Swagger/OpenAPI
+GET        /                    com.kyleu.projectile.controllers.rest.OpenApiController.ui()
+GET        /openapi.json        com.kyleu.projectile.controllers.rest.OpenApiController.json()

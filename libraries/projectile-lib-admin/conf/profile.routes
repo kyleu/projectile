@@ -1,0 +1,13 @@
+# Profile
+GET         /                        com.kyleu.projectile.controllers.auth.ProfileController.view
+POST        /                        com.kyleu.projectile.controllers.auth.ProfileController.save
+GET         /password/change         com.kyleu.projectile.controllers.auth.ProfileController.changePasswordForm
+POST        /password/change         com.kyleu.projectile.controllers.auth.ProfileController.changePassword
+
+# Authentication
+GET         /signup                  com.kyleu.projectile.controllers.auth.RegistrationController.registrationForm(email: Option[String] ?= None)
+POST        /signup                  com.kyleu.projectile.controllers.auth.RegistrationController.register
+GET         /signin                  com.kyleu.projectile.controllers.auth.AuthenticationController.signInForm
+POST        /signin                  com.kyleu.projectile.controllers.auth.AuthenticationController.authenticateCredentials
+GET         /signin/:provider        com.kyleu.projectile.controllers.auth.SocialAuthController.authenticate(provider)
+GET         /signout                 com.kyleu.projectile.controllers.auth.AuthenticationController.signOut

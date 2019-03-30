@@ -1,0 +1,48 @@
+@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.components.views.html.layout.page("Settings", cfg) {
+  <form action="@cfg.urls.profile" method="post">
+  @com.kyleu.projectile.components.views.html.layout.card(title = None) {
+    <h5>Username</h5>
+    <div class="row">
+      <div class="input-field col s12">
+        <label for="username">Username</label>
+        <input name="username" type="text" value="@user.username" />
+      </div>
+    </div>
+
+    <h5>Theme</h5>
+    <div class="row">
+      <div class="input-field col s12">
+        <ul>
+        @com.kyleu.projectile.components.models.config.Theme.values.map { theme =>
+          <li>
+            <p>
+              <label>
+                @if(cfg.user.theme == theme.value) {
+                  <input name="theme" type="radio" value="@theme" checked="checked" />
+                } else {
+                  <input name="theme" type="radio" value="@theme" />
+                }
+              <span>@theme.title</span>
+              </label>
+            </p>
+          </li>
+        }
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field col s12">
+        <button class="btn waves-effect waves-light right" type="submit" name="action">Save</button>
+      </div>
+    </div>
+  }
+  </form>
+
+  @com.kyleu.projectile.components.views.html.layout.card(title = None) {
+    <h5>Debug</h5>
+    <pre>@com.kyleu.projectile.util.JsonSerializers.encoderOps(user).asJson.spaces2</pre>
+  }
+}

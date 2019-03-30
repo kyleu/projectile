@@ -18,10 +18,13 @@ case class ExportConfiguration(
 
   val viewPackage = applicationPackage ++ project.getPackage(OutputPackage.TwirlViews)
   val systemViewPackage = systemPackage ++ project.getPackage(OutputPackage.TwirlViews)
+  val componentViewPackage = systemPackage ++ Seq("components") ++ project.getPackage(OutputPackage.TwirlViews)
 
   val resultsPackage = systemPackage ++ project.getPackage(OutputPackage.Results)
   val tagsPackage = systemPackage ++ project.getPackage(OutputPackage.Tags)
   val utilitiesPackage = systemPackage ++ project.getPackage(OutputPackage.Utils)
+
+  val isNewUi = project.flags("components")
 
   def withEnums(e: ExportEnum*) = this.copy(enums = enums ++ e)
   def getEnumOpt(k: String) = enums.find(_.key == k)

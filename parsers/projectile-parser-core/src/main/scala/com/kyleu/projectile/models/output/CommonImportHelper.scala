@@ -11,7 +11,6 @@ object CommonImportHelper {
       case "ApplicationDatabase" => c.systemPackage ++ Seq("services", "database")
       case "AuditHelper" => c.systemPackage ++ Seq("services", "audit")
       case "AuditRecordRowService" => c.applicationPackage ++ Seq("services", "audit")
-      case "AuthActions" => c.systemPackage :+ "models" :+ "auth"
       case "AuthController" => c.systemPackage :+ "controllers"
       case "BaseController" => c.systemPackage :+ "controllers"
       case "BaseQueries" => c.systemPackage ++ Seq("models", "queries")
@@ -60,6 +59,7 @@ object CommonImportHelper {
       case "ThriftServiceRegistry" => (c.systemPackage ++ c.project.getPackage(OutputPackage.Utils)) :+ "thrift"
       case "TraceData" => c.utilitiesPackage :+ "tracing"
       case "TracingService" => c.utilitiesPackage :+ "tracing"
+      case "UiConfig" => c.systemPackage :+ "models" :+ "config"
       case _ => throw new IllegalStateException(s"No common import available with key [$s]")
     }) -> s
   }

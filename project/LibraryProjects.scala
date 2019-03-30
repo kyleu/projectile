@@ -90,6 +90,11 @@ object LibraryProjects {
     libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
 
+  lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
+    description := "A full-featured admin web app with a lovely UI",
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache,
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-web-components`)
+
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
     libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache,
@@ -98,7 +103,6 @@ object LibraryProjects {
 
   lazy val `projectile-lib-auth-graphql` = libraryProject(project in file("libraries/projectile-lib-auth-graphql")).settings(
     description := "Secure GraphQL controllers and views, including GraphiQL and GraphQL Voyager",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-auth`)
 
   lazy val `projectile-lib-websocket` = libraryProject(project in file("libraries/projectile-lib-websocket")).settings(
@@ -108,14 +112,14 @@ object LibraryProjects {
   lazy val `projectile-lib-web-components` = libraryProject(project in file("libraries/projectile-lib-web-components")).settings(
     description := "Twirl templates for common Material Design web components",
     libraryDependencies += WebJars.materialIcons
-  ).enablePlugins(play.sbt.PlayScala)
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-play`, `projectile-lib-auth`, `projectile-lib-auth-graphql`,
+    `projectile-lib-play`, `projectile-lib-admin`, `projectile-lib-auth`, `projectile-lib-auth-graphql`,
     `projectile-lib-websocket`, `projectile-lib-web-components`
   )
 

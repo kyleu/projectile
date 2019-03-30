@@ -1,0 +1,8 @@
+# GraphQL
+GET         /                     com.kyleu.projectile.controllers.graphql.GraphQLController.graphql(query: Option[String] ?= None, variables: Option[String] ?= None)
+POST        /                     com.kyleu.projectile.controllers.graphql.GraphQLController.graphqlBody
+
+GET         /schema               com.kyleu.projectile.controllers.graphql.SchemaController.renderSchema()
+GET         /voyager/:root        com.kyleu.projectile.controllers.graphql.SchemaController.voyager(root)
+
+GET         /assets/*file         com.kyleu.projectile.controllers.graphql.Assets.versioned(path = "/public/lib/projectile-lib-admin", file)
