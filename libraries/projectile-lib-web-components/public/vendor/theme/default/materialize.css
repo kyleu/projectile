@@ -6210,7 +6210,6 @@ small
        -moz-transition: color .3s ease;
          -o-transition: color .3s ease;
             transition: color .3s ease;
-    text-transform: uppercase;
 
     color: #3949ab;
 }
@@ -6401,7 +6400,6 @@ small
     padding: 0;
 
     text-align: center;
-    text-transform: uppercase;
 }
 .tabs .tab a
 {
@@ -6540,7 +6538,6 @@ small
     padding: 0 2rem;
 
     vertical-align: middle;
-    text-transform: uppercase;
 
     border: none;
     border-radius: 2px;

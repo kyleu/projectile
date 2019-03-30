@@ -4158,7 +4158,6 @@ h4.header
 
     margin: 1.14rem 0 .912rem 0;
 
-    text-transform: uppercase;
 }
 
 h4.header2
@@ -4166,7 +4165,6 @@ h4.header2
     font-size: 1.1rem;
     font-weight: 400;
 
-    text-transform: uppercase;
 }
 
 p.title
@@ -4179,7 +4177,6 @@ p.header
     font-size: 1rem;
     font-weight: 500;
 
-    text-transform: uppercase;
 }
 
 li.li-hover:hover
@@ -4214,7 +4211,6 @@ li.home:before
     padding: 5px 20px;
 
     letter-spacing: 1px;
-    text-transform: uppercase;
 }
 
 .valign-demo
@@ -8254,7 +8250,6 @@ nav.display-none.search-sm .nav-wrapper form .input-field input.search-box-sm:no
     margin-top: 10px;
     padding: 0 17px;
 
-    text-transform: uppercase;
 }
 .sidenav .navigation-header .navigation-header-icon
 {

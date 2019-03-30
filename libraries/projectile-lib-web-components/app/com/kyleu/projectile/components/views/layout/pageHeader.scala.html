@@ -1,20 +1,20 @@
-@(cfg: com.kyleu.projectile.components.models.config.UiConfig)
+@(cfg: com.kyleu.projectile.models.config.UiConfig, theme: com.kyleu.projectile.components.models.config.Theme)
 <header class="page-topbar" id="header">
   <div class="navbar navbar-fixed">
-    <nav class="navbar-main navbar-color nav-collapsible sideNav-lock @cfg.user.theme.navClass">
+    <nav class="navbar-main navbar-color nav-collapsible sideNav-lock @theme.navClass">
       <div class="nav-wrapper">
         <div class="header-search-wrapper hide-on-med-and-down"><i class="material-icons">search</i>
           <form action="@cfg.urls.search">
-            <input class="header-search-input z-depth-2" type="text" name="q" placeholder="Search">
+            <input class="header-search-input z-depth-2" type="text" name="q" placeholder="Search" />
           </form>
         </div>
-        @cfg.html.headerRightMenu
+        @cfg.html.menu
       </div>
       <nav class="display-none search-sm">
         <div class="nav-wrapper">
           <form action="@cfg.urls.search">
             <div class="input-field">
-              <input class="search-box-sm" type="search" name="q" required="">
+              <input class="search-box-sm" type="search" name="q" required="" />
               <label class="label-icon" for="search"><i class="material-icons search-sm-icon">search</i></label>
               <i class="material-icons search-sm-close">close</i>
             </div>

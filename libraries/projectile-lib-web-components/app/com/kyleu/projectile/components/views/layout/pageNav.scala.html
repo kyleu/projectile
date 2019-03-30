@@ -1,53 +1,16 @@
-@(cfg: com.kyleu.projectile.components.models.config.UiConfig)
-<aside class="sidenav-main nav-expanded nav-lock nav-collapsible @cfg.user.theme.asideClass">
+@(cfg: com.kyleu.projectile.models.config.UiConfig, theme: com.kyleu.projectile.components.models.config.Theme)
+<aside class="sidenav-main nav-expanded nav-lock nav-collapsible @theme.asideClass">
   <div class="brand-sidebar">
     <h1 class="logo-wrapper">
       <a class="brand-logo darken-1" href="@cfg.urls.home">
-        <img src="@cfg.user.theme.logo" alt="logo"/>
+        <img src="@theme.logo" alt="logo"/>
         <span class="logo-text hide-on-med-and-down">@cfg.projectName</span>
       </a>
       <a class="navbar-toggler" href="" onclick="return false;"><i class="material-icons">radio_button_checked</i></a></h1>
   </div>
 
   <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion">
-    @cfg.menu.map { i =>
-      @if(i.children.isEmpty) {
-        @if(i.url.isEmpty) {
-          <li id="nav-@i.key" class="navigation-header">
-            <a class="navigation-header-text">@i.title</a>
-            <i class="navigation-header-icon material-icons">more_horiz</i>
-          </li>
-        } else {
-          <li id="nav-@i.key" class="bold @if(cfg.breadcrumbs.headOption.contains(i.key)) { active}">
-            <a class="waves-effect waves-cyan" href="@i.url">
-              <i class="material-icons">@i.icon.getOrElse("radio_button_unchecked")</i>
-              <span class="menu-title">@i.title</span>
-            </a>
-          </li>
-        }
-      } else {
-        <li id="nav-@i.key" class="bold @if(cfg.breadcrumbs.headOption.contains(i.key)) { active}">
-          <a class="collapsible-header waves-effect waves-cyan" href="@i.url" onclick="return false;">
-            <i class="material-icons">@i.icon.getOrElse("radio_button_unchecked")</i>
-            <span class="menu-title" data-i18n="">@i.title</span>
-          </a>
-          <div class="collapsible-body">
-            <ul class="collapsible collapsible-sub" data-collapsible="accordion">
-            @i.children.map { child =>
-              @defining(cfg.breadcrumbs.headOption.contains(i.key) && cfg.breadcrumbs.tail.headOption.contains(child.key)) { active =>
-                <li id="nav-@i.key-@child.key" class="@if(active) {active}">
-                  <a class="collapsible-body@if(active) { active}" href="@child.url">
-                    <i class="material-icons">@child.icon.getOrElse("radio_button_unchecked")</i>
-                    <span>@child.title</span>
-                  </a>
-                </li>
-              }
-            }
-            </ul>
-          </div>
-        </li>
-      }
-    }
+    @cfg.menu.map(x => com.kyleu.projectile.components.views.html.layout.pageNavItem(x, cfg.breadcrumbs))
   </ul>
   <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="" onclick="return false;" data-target="slide-out"><i class="material-icons">menu</i></a>
 </aside>

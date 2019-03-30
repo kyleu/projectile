@@ -1,25 +1,46 @@
-@(title: String, cfg: com.kyleu.projectile.components.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.core(
   title = title,
   scripts = Seq(
-    "/assets/lib/jquery/jquery.js",
-    cfg.asset("vendor/vendors.min.js"),
-    cfg.asset("vendor/plugins.min.js")
+    com.kyleu.projectile.components.controllers.Assets.path("vendor/vendors.min.js"),
+    com.kyleu.projectile.components.controllers.Assets.path("vendor/plugins.min.js")
   ) ++ scripts,
   stylesheets = Seq(
     "/assets/lib/material-design-icons/material-icons.css",
-    cfg.asset(s"vendor/theme/${cfg.user.theme.key}/materialize.css"),
-    cfg.asset(s"vendor/theme/${cfg.user.theme.key}/style.css"),
-    cfg.asset(s"stylesheets/components.css")
+    com.kyleu.projectile.components.controllers.Assets.path(s"vendor/theme/${cfg.user.theme}/materialize.css"),
+    com.kyleu.projectile.components.controllers.Assets.path(s"vendor/theme/${cfg.user.theme}/style.css"),
+    com.kyleu.projectile.components.controllers.Assets.path(s"stylesheets/components.css")
   ) ++ stylesheets
 ) {
-  <body class="@cfg.user.theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
-    @com.kyleu.projectile.components.views.html.layout.pageHeader(cfg)
-    @com.kyleu.projectile.components.views.html.layout.pageNav(cfg)
+  @defining(com.kyleu.projectile.components.models.config.Theme.withValue(cfg.user.theme)) { theme =>
+  <body class="@theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
+    @com.kyleu.projectile.components.views.html.layout.pageHeader(cfg, theme)
+    @com.kyleu.projectile.components.views.html.layout.pageNav(cfg, theme)
     <div id="main">
+      @flash.get("error").map { err =>
+        <div class="card-alert card gradient-45deg-red-pink">
+          <div class="card-content white-text">
+            <p>
+              <i class="material-icons">error</i> @err</p>
+          </div>
+          <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      }
+      @flash.get("success").map { success =>
+        <div class="card-alert card gradient-45deg-green-teal">
+          <div class="card-content white-text">
+            <p><i class="material-icons">check</i> @success</p>
+          </div>
+          <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      }
       <div class="row">
-        @cfg.user.theme.contentBefore.map { cb =>
+        @theme.contentBefore.map { cb =>
           <div class="content-wrapper-before @cb"></div>
         }
         @com.kyleu.projectile.components.views.html.layout.breadcrumbs(title, cfg)
@@ -31,4 +52,5 @@
       </div>
     </div>
   </body>
+  }
 }

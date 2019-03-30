@@ -1,0 +1,8 @@
+@(title: Option[String], right: Option[Html] = None)(content: Html)
+<div class="card">
+  <div class="card-content">
+    @right.map { r => <div class="right">@r</div> }
+    @title.map { t => <span class="card-title">@t</span> }
+    @content
+  </div>
+</div>

@@ -1,4 +1,4 @@
-@(cfg: com.kyleu.projectile.components.models.config.UiConfig)(
+@(username: String, allowRegistration: Boolean, cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.splash("Sign in to " + cfg.projectName, cfg) {
   <div class="col s12 m6 l4 z-depth-4 card-panel border-radius-6 splash-card bg-opacity-8">
@@ -39,7 +39,9 @@
       </div>
       <div class="row">
         <div class="input-field col s6 m6 l6">
-          <p class="margin medium-small"><a href="@cfg.urls.signup">Sign up</a></p>
+          @if(allowRegistration) {
+            <p class="margin medium-small"><a href="@cfg.urls.signup">Sign up</a></p>
+          }
         </div>
         @cfg.urls.oauth.map { o =>
           <div class="input-field col s6 m6 l6">
