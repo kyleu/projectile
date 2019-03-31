@@ -28,12 +28,12 @@ object CommonImportHelper {
       case "DoobieQueries" => c.systemPackage ++ Seq("services", "database", "doobie")
       case "DoobieQueryService" => c.systemPackage ++ Seq("services", "database", "doobie")
       case "DoobieTestHelper" => c.systemPackage ++ Seq("services", "database", "doobie")
+      case "ExecutionContext" => Seq("scala", "concurrent")
       case "Filter" => c.resultsPackage :+ "filter"
       case "GraphQLContext" => c.systemPackage :+ "graphql"
       case "GraphQLQuery" => c.systemPackage :+ "graphql"
       case "GraphQLSchemaHelper" => c.systemPackage :+ "graphql"
       case "GraphQLUtils" => c.systemPackage :+ "graphql"
-      case "Implicits" => Seq("scala", "concurrent", "ExecutionContext")
       case "JsonSerializers" => c.utilitiesPackage
       case "ModelAuthServiceHelper" => c.systemPackage :+ "services"
       case "ModelServiceHelper" => c.systemPackage :+ "services"

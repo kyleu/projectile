@@ -16,7 +16,6 @@ object ThriftControllerFile {
     )
 
     config.addCommonImport(file, "Application")
-    config.addCommonImport(file, "UiConfig")
 
     val i = if (service.features(ServiceFeature.Auth)) {
       CommonImportHelper.get(config, "AuthController")
@@ -32,7 +31,7 @@ object ThriftControllerFile {
 
     config.addCommonImport(file, "ControllerUtils")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "Implicits", "_")
+    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ThriftServiceRegistry")
     config.addCommonImport(file, "TraceData")
@@ -41,15 +40,15 @@ object ThriftControllerFile {
     file.addImport(Seq("play", "api", "mvc"), "Call")
 
     file.add("@javax.inject.Singleton")
-    val inject = "@javax.inject.Inject() (override val app: Application, cfg: UiConfig)"
+    val inject = "@javax.inject.Inject() (override val app: Application)"
     val controller = if (service.features(ServiceFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${service.className}Controller $inject extends $controller("${service.className}") {""", 1)
     file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()
     file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    val params = "request.identity, cfg"
-    file.add(s"Future.successful(Ok(${(config.viewPackage :+ "html" :+ "admin" :+ "thrift").mkString(".")}.${service.propertyName}($params)))")
+    val cfg = s"""app.cfg(u = Some(request.identity), admin = ${service.features(ServiceFeature.Auth)}, "thrift", "${service.key}")"""
+    file.add(s"Future.successful(Ok(${(config.viewPackage :+ "html" :+ "admin" :+ "thrift").mkString(".")}.${service.propertyName}($cfg)))")
     file.add("}", -1)
 
     service.methods.foreach(m => addMethod(service, m, config, file))
@@ -62,10 +61,11 @@ object ThriftControllerFile {
   private[this] def addMethod(svc: ExportService, m: ExportMethod, config: ExportConfiguration, file: ScalaFile) = {
     file.add()
 
-    file.add(s"""def ${m.name} = getHelper(title = "${m.name}", act = rc.${m.name}(), args = ${ThriftControllerArgumentHelper.defaultArgs(m, config)})""")
+    val defArgs = ThriftControllerArgumentHelper.defaultArgs(m, config)
+    file.add(s"""def ${m.name} = getHelper(title = "${m.name}", act = rc.${m.name}(), args = $defArgs)""")
 
-    val argNames = m.args.map("\"" + _.key + "\"").mkString(", ")
-    val postCall = s"""def ${m.name}Call = postHelper(title = "${m.name}", act = rc.${m.name}(), argNames = Seq($argNames), result = (args, td) => svc.${m.name}("""
+    val argNames = "argNames = Seq(" + m.args.map("\"" + _.key + "\"").mkString(", ") + ")"
+    val postCall = s"""def ${m.name}Call = postHelper(title = "${m.name}", act = rc.${m.name}(), $argNames, result = (args, td) => svc.${m.name}("""
     if (argNames.isEmpty) {
       file.add(postCall + ")(td).map(_.asJson))")
     } else {
@@ -85,12 +85,13 @@ object ThriftControllerFile {
   private[this] def addHelpers(svc: ExportService, file: ScalaFile, config: ExportConfiguration) = {
     file.add()
     file.add(s"""private[this] val listCall = ("${svc.className}", rc.list())""")
+    val cfg = s"""app.cfg(u = Some(request.identity), admin = ${svc.features(ServiceFeature.Auth)}, "thrift", "${svc.key}")"""
 
     val args = "title: String, act: Call, args: Json"
     file.add(s"""private[this] def getHelper($args) = withSession(title, admin = true) { implicit request => implicit td =>""", 1)
     file.add("""Future.successful(render {""", 1)
     file.add(s"case Accepts.Html() => Ok(${config.systemViewPackage.mkString(".")}.html.admin.layout.methodCall(", 1)
-    file.add("user = request.identity, cfg = cfg, title = title, svc = listCall, args = args, act = act, debug = app.config.debug")
+    file.add(s"title = title, cfg = $cfg, svc = listCall, args = args, act = act, debug = app.config.debug")
     file.add("))", -1)
     file.add("""case Accepts.Json() => Ok(Json.obj("name" -> title.asJson, "arguments" -> args.asJson))""")
     file.add("})", -1)
@@ -103,7 +104,7 @@ object ThriftControllerFile {
     file.add("val args = ControllerUtils.jsonArguments(request.body, argNames: _*)")
     file.add("""def ren(res: Option[Json] = None, err: Option[(String, String)] = None) = render {""", 1)
     file.add(s"""case Accepts.Html() => Ok(${config.systemViewPackage.mkString(".")}.html.admin.layout.methodCall(""", 1)
-    file.add("""user = request.identity, cfg = cfg, title = title, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err,""")
+    file.add(s"""title = title, cfg = $cfg, svc = listCall, args = Json.obj(args.toSeq: _*), act = act, result = res, error = err,""")
     file.add("""started = Some(started), completed = Some(DateUtils.now), debug = app.config.debug""")
     file.add("""))""", -1)
     file.add(s"""case Accepts.Json() => Ok(res.getOrElse(Json.obj("status" -> s"Error: $${err.map(_._2).getOrElse("Unknown")}".asJson)))""")

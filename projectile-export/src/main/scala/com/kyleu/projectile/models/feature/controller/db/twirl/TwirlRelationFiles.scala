@@ -16,14 +16,12 @@ object TwirlRelationFiles {
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
 
-    val su = CommonImportHelper.getString(config, "SystemUser")
-    val finalArgs = s"user: $su, cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
+    val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     listFile.add(s"@($finalArgs, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
     listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash")
     listFile.add(")", -2)
 
     listFile.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
-    listFile.add("user = user,")
     listFile.add("cfg = cfg,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")

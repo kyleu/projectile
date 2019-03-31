@@ -42,6 +42,7 @@ case class ExportEnum(
   lazy val firstVal = values.headOption.getOrElse(throw new IllegalStateException(s"Enum [$key] has no values"))
 
   def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
+  val firstPackage = pkg.headOption.getOrElse("")
 
   def graphqlPackage(config: ExportConfiguration) = if (inputType.isThrift) {
     pkg

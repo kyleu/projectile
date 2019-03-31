@@ -17,18 +17,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @javax.inject.Singleton
 class ConnectionActivityController @javax.inject.Inject() (
     override val app: Application,
-    cfg: UiConfig,
     @javax.inject.Named("connection-supervisor") val connSupervisor: ActorRef
 ) extends AuthController("admin.activity") {
   def connectionList = withSession("activity.connection.list", admin = true) { implicit request => implicit td =>
     ask(connSupervisor, GetConnectionStatus)(20.seconds).mapTo[ConnectionStatus].map { status =>
-      Ok(com.kyleu.projectile.views.html.activity.connectionList(request.identity, cfg, status.connections))
+      Ok(com.kyleu.projectile.views.html.activity.connectionList(app.cfg(u = Some(request.identity), admin = true), status.connections))
     }
   }
 
   def connectionDetail(id: UUID) = withSession("activity.connection.detail", admin = true) { implicit request => implicit td =>
     ask(connSupervisor, ConnectionTraceRequest(id))(20.seconds).mapTo[ConnectionTraceResponse].map { c =>
-      Ok(com.kyleu.projectile.views.html.activity.connectionDetail(request.identity, cfg, c))
+      Ok(com.kyleu.projectile.views.html.activity.connectionDetail(app.cfg(u = Some(request.identity), admin = true), c))
     }
   }
 
@@ -39,9 +38,8 @@ class ConnectionActivityController @javax.inject.Inject() (
       case Some(message) =>
         connSupervisor ! ConnectionSupervisor.Broadcast(message)
         val status = s"Message [$message] broadcast successfully"
-        Future.successful(Redirect(
-          com.kyleu.projectile.controllers.connection.routes.ConnectionActivityController.connectionList()
-        ).flashing("success" -> status))
+        val call = com.kyleu.projectile.controllers.connection.routes.ConnectionActivityController.connectionList()
+        Future.successful(Redirect(call).flashing("success" -> status))
     }
   }
 }

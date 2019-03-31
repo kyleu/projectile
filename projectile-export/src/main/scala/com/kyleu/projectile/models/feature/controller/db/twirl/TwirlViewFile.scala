@@ -14,22 +14,16 @@ object TwirlViewFile {
     val modelPath = (config.applicationPackage :+ "models").mkString(".")
 
     val systemViewPkg = (config.systemViewPackage ++ Seq("html", "admin")).mkString(".")
-    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
+    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg }
 
-    val nu = CommonImportHelper.getString(config, "NullUtils")
-    val su = CommonImportHelper.getString(config, "SystemUser")
-    val finalArgs = s"user: $su, cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
+    val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.audit.AuditRecord]" } else { "" }
     val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
 
     file.add(s"@($finalArgs, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
     val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
-    if (config.isNewUi) {
-      file.add(s""")@$sharedViewPkg.layout.page(s"${model.title} [$toInterp]", cfg) {""", 1)
-    } else {
-      file.add(s""")@$systemViewPkg.layout.page(user, cfg, "explore", s"${model.title} [$toInterp]") {""", 1)
-    }
+    file.add(s""")@$sharedViewPkg.layout.page(s"${model.title} [$toInterp]", cfg) {""", 1)
 
     file.add("""<div class="collection with-header">""", 1)
     file.add("<div class=\"collection-header\">", 1)

@@ -1,14 +1,12 @@
 @(
-    user: com.kyleu.projectile.models.user.SystemUser,
-    authActions: com.kyleu.projectile.models.auth.AuthActions,
-    activeSection: String,
     title: String,
+    cfg: com.kyleu.projectile.models.config.UiConfig,
     scripts: Seq[String] = Nil,
     stylesheets: Seq[String] = Nil
 )(content: Html)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.materialize(title = title, scripts = scripts, stylesheets = stylesheets) {
-  @authActions.adminMenu(user, activeSection, authActions)
+  @cfg.html.menu
   <main>
     @flash.get("error").map { err =>
       <div class="flash-error z-depth-1">@err</div>

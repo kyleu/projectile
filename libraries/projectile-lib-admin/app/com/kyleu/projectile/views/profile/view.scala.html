@@ -1,4 +1,4 @@
-@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.page("Settings", cfg) {
   <form action="@cfg.urls.profile" method="post">
@@ -7,7 +7,7 @@
     <div class="row">
       <div class="input-field col s12">
         <label for="username">Username</label>
-        <input name="username" type="text" value="@user.username" />
+        <input name="username" type="text" value="@cfg.user.name" />
       </div>
     </div>
 
@@ -40,9 +40,4 @@
     </div>
   }
   </form>
-
-  @com.kyleu.projectile.components.views.html.layout.card(title = None) {
-    <h5>Debug</h5>
-    <pre>@com.kyleu.projectile.util.JsonSerializers.encoderOps(user).asJson.spaces2</pre>
-  }
 }

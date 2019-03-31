@@ -26,7 +26,7 @@ object ControllerFile {
 
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "Implicits", "_")
+    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
     config.addCommonImport(file, "ReftreeUtils", "_")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
@@ -92,8 +92,8 @@ object ControllerFile {
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}List(", 1)
-    val cfgArg = s"app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)})"
-    file.add(s"request.identity, $cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
+    val cfgArg = s"""app.cfg(u = Some(request.identity), admin = ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}")"""
+    file.add(s"$cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
     file.add("))", -1)
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
     file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
@@ -110,8 +110,8 @@ object ControllerFile {
     file.add(s"val cancel = $routesClass.list()")
     file.add(s"val call = $routesClass.create()")
     file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    val cfgArg = s"app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)})"
-    file.add(s"""request.identity, $cfgArg, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
+    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "Create")"""
+    file.add(s"""$cfgArg, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
     file.add(")))", -1)
     file.add("}", -1)
     file.add()

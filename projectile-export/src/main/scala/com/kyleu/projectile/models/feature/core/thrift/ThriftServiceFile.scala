@@ -28,24 +28,14 @@ object ThriftServiceFile {
 
   private[this] def addCompanionObject(svc: ExportService, file: ScalaFile) = {
     val thriftReqRepServicePerEndpointCanonicalName = getThriftReqRepServicePerEndpointCanonicalName(svc)
-    file.add(s"object ${svc.className} extends ThriftService(", 1)
-    file.add(s"""key = "${svc.key}",""")
-    file.add(s"""pkg = "${svc.pkg.mkString(".")}",""")
-    file.add(s"""route = "/admin/thrift/${svc.propertyName.stripSuffix("Service")}"""")
-    file.add(") {", -1)
-    file.indent()
+    val rt = s"""route = "/admin/thrift/${svc.propertyName.stripSuffix("Service")}""""
+    file.add(s"""object ${svc.className} extends ThriftService(key = "${svc.key}", pkg = "${svc.pkg.mkString(".")}", $rt) {""", 1)
     file.add(s"""def mkServicePerEndpoint(url: String): $thriftReqRepServicePerEndpointCanonicalName = {""", 1)
     file.add(s"""ThriftMux.client.servicePerEndpoint[$thriftReqRepServicePerEndpointCanonicalName](url, "${svc.className}")""")
     file.add("}", -1)
-    file.add(s"""def from(svc: $thriftReqRepServicePerEndpointCanonicalName): ${svc.className} = {""", 1)
-    file.add(s"""new ${svc.className}(svc)""")
-    file.add("}", -1)
-
-    file.add(s"""case class Options(""", 1)
-    file.add(s"""tracingService: Option[TracingService],""")
-    file.add(s"""traceDataSerializer: Option[TraceData => Map[String, String]],""")
-    file.add(s"""thriftSpanNamePrefix: String""")
-    file.add(s""")""", -1)
+    file.add(s"""def from(svc: $thriftReqRepServicePerEndpointCanonicalName) = new ${svc.className}(svc)""")
+    val tds = s"traceDataSerializer: Option[TraceData => Map[String, String]]"
+    file.add(s"""case class Options(tracingService: Option[TracingService], $tds, thriftSpanNamePrefix: String)""")
     file.add(s"""object Options {""", 1)
     file.add(s"""val default = Options(tracingService = None, traceDataSerializer = None, thriftSpanNamePrefix = s"thrift.${svc.className}.")""")
     file.add("}", -1)

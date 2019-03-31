@@ -18,7 +18,7 @@ object ServiceFile {
     file.addImport(Seq("scala", "concurrent"), "Future")
 
     config.addCommonImport(file, "ApplicationDatabase")
-    config.addCommonImport(file, "Implicits", "_")
+    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
     config.addCommonImport(file, "DataField")
 
     config.addCommonImport(file, "Credentials")

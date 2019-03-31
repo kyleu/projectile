@@ -30,11 +30,13 @@ class AuthActions(val projectName: String) {
 
   def adminIndexUrl = "/admin/system"
 
+  private[this] val uiConfig = UiConfig.empty.copy(projectName = projectName)
+
   def signin(
     user: Option[SystemUser], form: Form[Credentials], providers: scala.Seq[String], allowRegistration: Boolean
   )(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
     val username = form.apply("identifier").value.getOrElse("")
-    com.kyleu.projectile.components.views.html.auth.signin(username, allowRegistration, UiConfig.empty)
+    com.kyleu.projectile.components.views.html.auth.signin(username, allowRegistration, uiConfig)
   }
 
   def registerForm(
@@ -42,14 +44,14 @@ class AuthActions(val projectName: String) {
   )(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
     val username = f.apply("username").value.getOrElse("")
     val email = f.apply("email").value.getOrElse("")
-    com.kyleu.projectile.components.views.html.auth.signup(username, email, UiConfig.empty)
+    com.kyleu.projectile.components.views.html.auth.signup(username, email, uiConfig)
   }
 
   def profile(u: SystemUser, cfg: UiConfig)(implicit request: Request[AnyContent], session: Session, flash: Flash): HtmlFormat.Appendable = {
-    com.kyleu.projectile.views.html.profile.view(u, cfg)
+    com.kyleu.projectile.views.html.profile.view(cfg)
   }
 
   def changePasswordForm(u: SystemUser)(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
-    com.kyleu.projectile.components.views.html.auth.changePassword(UiConfig.empty)
+    com.kyleu.projectile.components.views.html.auth.changePassword(uiConfig)
   }
 }

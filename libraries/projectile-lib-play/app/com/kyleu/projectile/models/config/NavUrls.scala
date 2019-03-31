@@ -2,7 +2,9 @@ package com.kyleu.projectile.models.config
 
 case class NavUrls(
     home: String = "/",
-    search: String = "/s",
+
+    search: String = "/admin/system/search",
+
     profile: String = "/profile",
     signup: String = "/profile/signup",
     changePassword: String = "/profile/password",

@@ -64,6 +64,7 @@ case class ExportModel(
   )
 
   val fullClassName = (pkg :+ className).mkString(".")
+  val firstPackage = pkg.headOption.getOrElse("")
 
   def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
 

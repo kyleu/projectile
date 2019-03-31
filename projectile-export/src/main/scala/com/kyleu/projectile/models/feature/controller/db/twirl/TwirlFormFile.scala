@@ -10,25 +10,18 @@ object TwirlFormFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "Form")
 
-    val modelPkg = (config.applicationPackage :+ "models").mkString(".")
     val viewPkg = (config.viewPackage :+ "html").mkString(".")
 
     val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
     val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
 
-    val su = CommonImportHelper.getString(config, "SystemUser")
     val extraArgs = "title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false"
 
     val uc = CommonImportHelper.getString(config, "UiConfig")
-
-    file.add(s"@(user: $su, cfg: $uc, model: ${model.fullClassPath(config)}, $extraArgs)(")
+    file.add(s"@(cfg: $uc, model: ${model.fullClassPath(config)}, $extraArgs)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
 
-    if (config.isNewUi) {
-      file.add(s""")@$sharedViewPkg.layout.page(title, cfg) {""", 1)
-    } else {
-      file.add(s""")@$systemViewPkg.layout.page(user, cfg, "explore", title) {""", 1)
-    }
+    file.add(s""")@$sharedViewPkg.layout.page(title, cfg) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     file.add("""<div class="collection with-header">""", 1)
@@ -67,7 +60,7 @@ object TwirlFormFile {
       file.add(s"@$systemViewPkg.components.includeAutocomplete(debug)")
     }
 
-    var hasTagEditor = model.fields.exists(_.t match {
+    val hasTagEditor = model.fields.exists(_.t match {
       case FieldType.ListType(_) | FieldType.SetType(_) => true
       case FieldType.MapType(_, _) | FieldType.TagsType => true
       case _ => false

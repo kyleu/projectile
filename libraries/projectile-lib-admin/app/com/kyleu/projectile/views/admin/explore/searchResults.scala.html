@@ -1,14 +1,9 @@
-@(q: String, results: Seq[Html], user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig)(
+@(q: String, results: Seq[Html], cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.page("Search Results", cfg) {
-  @com.kyleu.projectile.components.views.html.layout.card(None) {
-    <ul class="collection with-header">
-      <li class="collection-header">
-        <h5>[@q] Search Results</h5>
-      </li>
-      @results.map { result =>
-        <li class="collection-item">@result</li>
-      }
-    </ul>
+  @com.kyleu.projectile.components.views.html.layout.card(Some(s"[$q] Search Results")) {
+    @results.map { result =>
+      <div>@result</div>
+    }
   }
 }

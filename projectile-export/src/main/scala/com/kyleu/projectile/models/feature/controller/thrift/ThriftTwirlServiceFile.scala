@@ -10,12 +10,12 @@ object ThriftTwirlServiceFile {
     val file = TwirlFile(config.viewPackage ++ Seq("admin", "thrift"), service.propertyName)
 
     val cfg = CommonImportHelper.getString(config, "UiConfig")
-    val td = CommonImportHelper.getString(config, "TraceData")
-    val su = CommonImportHelper.getString(config, "SystemUser")
 
-    file.add(s"@(user: $su, cfg: $cfg, debug: Boolean = false)(")
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: $td")
-    file.add(s""")@${config.systemViewPackage.mkString(".")}.html.admin.layout.page(user, cfg, "thrift", "${service.className}") {""", 1)
+    file.add(s"@(cfg: $cfg, debug: Boolean = false)(")
+    file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
+    val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
+    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
+    file.add(s""")@$sharedViewPkg.layout.page("${service.className}", cfg) {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)
     file.add("""<div class="collection with-header">""", 1)

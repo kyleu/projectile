@@ -13,15 +13,13 @@ object EnumControllerFile {
 
     config.addCommonImport(file, "Application")
 
-    config.addCommonImport(file, "UiConfig")
-
     if (enum.features(EnumFeature.Auth)) {
       config.addCommonImport(file, "AuthController")
     } else {
       config.addCommonImport(file, "BaseController")
     }
     config.addCommonImport(file, "JsonSerializers", "_")
-    config.addCommonImport(file, "Implicits", "_")
+    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
     config.addCommonImport(file, "ServiceController")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
@@ -33,12 +31,13 @@ object EnumControllerFile {
     val constructorArgs = "@javax.inject.Inject() (override val app: Application)"
     val controller = if (enum.features(EnumFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${enum.className}Controller $constructorArgs extends $controller("${enum.propertyName}") {""", 1)
-    file.add()
     file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    val listArgs = s"""request.identity, app.cfg(Some(request.identity), ${enum.features(EnumFeature.Auth)}), "${enum.className}", "explore""""
-
     file.add("Future.successful(render {", 1)
-    file.add(s"case Accepts.Html() => Ok(${prefix}views.html.admin.layout.listPage($listArgs, ${enum.className}.values.map(v => Html(v.toString))))")
+    file.add(s"case Accepts.Html() => Ok(${prefix}views.html.admin.layout.listPage(", 1)
+    file.add(s"""title = "${enum.className}",""")
+    file.add(s"""cfg = app.cfg(u = Some(request.identity), admin = ${enum.features(EnumFeature.Auth)}, "${enum.firstPackage}", "${enum.key}"),""")
+    file.add(s"vals = ${enum.className}.values.map(v => Html(v.toString))")
+    file.add("))", -1)
     file.add(s"""case Accepts.Json() => Ok(${enum.className}.values.asJson)""")
     file.add(s"""case ServiceController.acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")
     file.add("})", -1)

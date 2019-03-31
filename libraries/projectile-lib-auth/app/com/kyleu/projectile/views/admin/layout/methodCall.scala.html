@@ -1,7 +1,6 @@
 @(
-    user: com.kyleu.projectile.models.user.SystemUser,
-    authActions: com.kyleu.projectile.models.auth.AuthActions,
     title: String,
+    cfg: com.kyleu.projectile.models.config.UiConfig,
     svc: (String, Call),
     args: io.circe.Json,
     act: Call,
@@ -12,7 +11,7 @@
     debug: Boolean = false
 )(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.admin.layout.page(user, authActions, "projects", title) {
+)@com.kyleu.projectile.views.html.admin.layout.page(title, cfg) {
   <div class="row">
     <div class="col s12">
       <div class="collection with-header">

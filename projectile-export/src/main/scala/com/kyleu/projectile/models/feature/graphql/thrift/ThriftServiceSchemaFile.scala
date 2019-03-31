@@ -14,7 +14,7 @@ object ThriftServiceSchemaFile {
 
     config.addCommonImport(file, "GraphQLSchemaHelper")
     config.addCommonImport(file, "GraphQLContext")
-    config.addCommonImport(file, "Implicits", "_")
+    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
     file.addImport(Seq("sangria", "schema"), "_")
     file.addImport(Seq("sangria", "marshalling", "circe"), "_")
 

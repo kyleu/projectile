@@ -30,8 +30,8 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
 
   final case class UpdateUser(u: SystemUser) extends Statement {
     override val name = s"$key.update.user"
-    override val sql = updateSql(Seq("username", "provider", "key", "role"))
-    override val values = Seq[Any](u.username, u.profile.providerID, u.profile.providerKey, u.role.toString, u.id)
+    override val sql = updateSql(Seq("username", "provider", "key", "role", "settings"))
+    override val values = Seq[Any](u.username, u.profile.providerID, u.profile.providerKey, u.role.toString, u.settings, u.id)
   }
 
   final case class FindUserByUsername(username: String) extends FlatSingleRowQuery[SystemUser] {

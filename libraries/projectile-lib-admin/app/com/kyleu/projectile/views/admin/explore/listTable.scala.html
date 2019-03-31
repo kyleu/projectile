@@ -1,7 +1,7 @@
 @(
     cols: Seq[(String, String)], rows: Seq[Html], modelPlural: String,
     orderByUrl: Option[(Option[String], Boolean) => Call], orderBy: Option[String], orderAsc: Boolean
-)<table class="bordered">
+)<table class="bordered data-table">
   <thead>
     <tr>
       @cols.map { col =>

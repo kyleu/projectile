@@ -1,4 +1,4 @@
-@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, connections: Seq[com.kyleu.projectile.models.connection.ConnectionDescription])(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, connections: Seq[com.kyleu.projectile.models.connection.ConnectionDescription])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.components.views.html.layout.page("Active Connections", cfg) {
   <ul class="collection with-header">
