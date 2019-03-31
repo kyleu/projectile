@@ -35,7 +35,7 @@ object ControllerHelper {
 
     file.add(s"""$notesMap${audMap}modelF.map {""", 1)
     file.add("case Some(model) => renderChoice(t) {", 1)
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", model.toString)"""
+    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}")"""
     val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))")
     file.add("case MimeTypes.JSON => Ok(model.asJson)")
@@ -64,7 +64,7 @@ object ControllerHelper {
     file.add(s"svc.getByPrimaryKey(request, $getArgs).map {", 1)
     file.add("case Some(model) => Ok(", 1)
 
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", model.toString, "Edit")"""
+    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "Edit")"""
     val extraArgs = "cancel, call, debug = app.config.debug"
     file.add(s"""$viewPkg.${model.propertyName}Form($cfgArg, model, s"${model.title} [$logArgs]", $extraArgs)""")
     file.add(")", -1)
