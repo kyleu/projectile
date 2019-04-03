@@ -9,9 +9,12 @@ object TwirlSearchResultFile {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "SearchResult")
 
     file.add(s"""@(model: ${model.fullClassPath(config)}, hit: String)<div class="search-result">""", 1)
-    file.add(s"""<div class="right">${model.title}</div>""")
+
+    file.add(s"""<div class="right">""", 1)
+    file.add(TwirlHelper.iconHtml(config = config, propertyName = model.propertyName, style = Some("font-size: 1rem;")) + " " + model.title)
+    file.add(s"</div>", -1)
+
     file.add("<div>", 1)
-    file.add(TwirlHelper.faIconHtml(config, model.propertyName))
     if (model.pkFields.isEmpty) {
       file.add("@model")
     } else {
@@ -19,7 +22,18 @@ object TwirlSearchResultFile {
       file.add(s"""<a href="@${TwirlHelper.routesClass(config, model)}.view(${cs.mkString(", ")})">${cs.map("@" + _).mkString(", ")}</a>""")
     }
     file.add("</div>", -1)
+
     file.add("<em>@hit</em>")
+
+    val searches = model.searchFields.filterNot(model.pkFields.contains)
+    if (searches.nonEmpty) {
+      file.add("""<div style="margin-top: 12px;">""", 1)
+      searches.foreach { f =>
+        file.add(s"""<div class="chip">${f.title}: @model.${f.propertyName}</div>""")
+      }
+      file.add("</div>", -1)
+    }
+
     file.add("</div>", -1)
 
     file

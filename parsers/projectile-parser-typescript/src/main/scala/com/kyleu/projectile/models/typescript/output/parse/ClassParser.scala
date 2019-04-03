@@ -23,7 +23,7 @@ object ClassParser {
   ) = {
     val cn = ExportHelper.escapeKeyword(ExportHelper.toClassName(name))
 
-    val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
+    val file = ScalaFile(path = OutputPath.SharedSource, dir = config.applicationPackage ++ ctx.pkg, key = cn)
 
     file.addImport(Seq("scala", "scalajs"), "js")
 

@@ -30,17 +30,18 @@ object TwirlDataRowFile {
       model.foreignKeys.find(_.references.forall(_.source == field.key)).foreach {
         case fk if config.getModelOpt(fk.targetTable).isDefined =>
           val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
+          val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName, style = Some("font-size: 1rem;"))
           if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
           }
           if (field.required) {
             file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">""", 1)
-            file.add(TwirlHelper.faIconHtml(config, tgt.propertyName))
+            file.add(icon)
             file.add("</a>", -1)
           } else {
             file.add(s"@model.${field.propertyName}.map { v =>", 1)
             file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">""", 1)
-            file.add(TwirlHelper.faIconHtml(config, tgt.propertyName))
+            file.add(icon)
             file.add("</a>", -1)
             file.add("}", -1)
           }

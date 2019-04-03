@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -35,7 +36,13 @@ object ControllerHelper {
 
     file.add(s"""$notesMap${audMap}modelF.map {""", 1)
     file.add("case Some(model) => renderChoice(t) {", 1)
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}")"""
+    val keyString = model.pkFields match {
+      case head :: Nil if head.t == FieldType.StringType => ", model." + head.propertyName
+      case head :: Nil => ", model." + head.propertyName + ".toString"
+      case Nil => ", \"Detail\""
+      case _ => ", s\"" + model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ") + "\""
+    }
+    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}"$keyString)"""
     val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
     file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))")
     file.add("case MimeTypes.JSON => Ok(model.asJson)")
@@ -102,7 +109,7 @@ object ControllerHelper {
         file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
 
         file.add(s"case MimeTypes.HTML => Ok(${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls(", 1)
-        val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}")"""
+        val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "${col.title}")"""
         file.add(s"""$cfgArg, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
         file.add("))", -1)
         file.add("case MimeTypes.JSON => Ok(models.asJson)")

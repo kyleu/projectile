@@ -34,15 +34,15 @@ object TwirlViewFile {
       file.add(s"""<div class="right"><a class="theme-text remove-link" $onClick href="@$rc.remove($args)">Remove</a></div>""")
     }
     file.add("<h5>", 1)
-    val modelIcon = TwirlHelper.faIconHtml(config, model.propertyName)
-    file.add(s"""<a href="@${TwirlHelper.routesClass(config, model)}.list()">""" + modelIcon + "</a>")
+    val modelIcon = TwirlHelper.iconHtml(config = config, propertyName = model.propertyName, style = Some("font-size: 1rem;"))
+    file.add(s"""<a href="@${TwirlHelper.routesClass(config, model)}.list()">$modelIcon</a>""")
     val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
     file.add(s"""${model.title} [$toTwirl]""")
     file.add("</h5>", -1)
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)
-    file.add("<table class=\"highlight\">", 1)
+    file.add("<table class=\"highlight responsive-table\">", 1)
     file.add("<tbody>", 1)
     addFields(config, model, file)
     file.add("</tbody>", -1)
@@ -79,7 +79,7 @@ object TwirlViewFile {
       val relUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
-      file.add(TwirlHelper.faIconHtml(config, src.propertyName))
+      file.add(TwirlHelper.iconHtml(config = config, propertyName = src.propertyName, style = Some("font-size: 1rem;")))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add("</div>", -1)
       file.add("""<div class="collapsible-body"><span>Loading...</span></div>""")
@@ -120,13 +120,13 @@ object TwirlViewFile {
           throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
         }
         file.add(forField(config, field))
+        val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName, style = Some("font-size: 1rem;"))
         if (field.required) {
-          val icon = TwirlHelper.faIconHtml(config, tgt.propertyName)
           file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
         } else {
           file.add(s"@model.${field.propertyName}.map { v =>", 1)
           val rc = TwirlHelper.routesClass(config, tgt)
-          file.add(s"""<a href="@$rc.view(v)">${TwirlHelper.faIconHtml(config, tgt.propertyName)}</a>""")
+          file.add(s"""<a href="@$rc.view(v)">$icon</a>""")
           file.add("}", -1)
         }
         file.add("</td>", -1)

@@ -10,7 +10,7 @@ object InterfaceParser {
   def parse(ctx: ParseContext, config: ExportConfiguration, node: InterfaceDecl) = {
     val cn = ExportHelper.escapeKeyword(ExportHelper.toClassName(node.name))
 
-    val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
+    val file = ScalaFile(path = OutputPath.SharedSource, dir = config.applicationPackage ++ ctx.pkg, key = cn)
 
     file.addImport(Seq("scala", "scalajs"), "js")
 

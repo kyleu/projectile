@@ -63,7 +63,7 @@ object SourceFileParser {
     val objFile = if (members.isEmpty) {
       Nil
     } else {
-      val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = cn)
+      val file = ScalaFile(path = OutputPath.SharedSource, dir = config.applicationPackage ++ ctx.pkg, key = cn)
 
       file.addImport(Seq("scala", "scalajs"), "js")
       OutputHelper.printContext(file, node.ctx)

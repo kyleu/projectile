@@ -20,7 +20,7 @@ object EnumParser {
   def parse(ctx: ParseContext, out: ExportConfiguration, node: EnumDecl) = {
     val cn = ExportHelper.toClassName(node.name)
 
-    val file = ScalaFile(path = OutputPath.SharedSource, dir = ctx.pkg, key = ExportHelper.toClassName(node.name))
+    val file = ScalaFile(path = OutputPath.SharedSource, dir = out.applicationPackage ++ ctx.pkg, key = ExportHelper.toClassName(node.name))
 
     file.addImport(Seq("scala", "scalajs"), "js")
 

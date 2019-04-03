@@ -29,7 +29,7 @@ object TwirlFormFile {
     file.add("<div class=\"collection-header\">", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add("""<div class="right"><a href="@cancel" class="theme-text cancel-link">Cancel</a></div>""")
-    file.add(s"""<h5>${TwirlHelper.faIconHtml(config, model.propertyName)} @title</h5>""")
+    file.add(s"""<h5>${TwirlHelper.iconHtml(config = config, propertyName = model.propertyName, style = Some("font-size: 1rem;"))} @title</h5>""")
     file.add("</div>", -1)
 
     file.add("<div class=\"collection-item\">", 1)

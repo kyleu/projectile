@@ -22,7 +22,7 @@ object InjectExploreMenu extends FeatureLogic.Inject(path = OutputPath.ServerSou
     val (roots, pkgGroups) = modelsFor(config)
 
     val newLines = (roots ++ pkgGroups.flatMap(_._2)).sortBy(_.title).map { model =>
-      s"""<li><a href="@${TwirlHelper.routesClass(config, model)}.list()">${TwirlHelper.faIconHtml(config, model.propertyName)} ${model.title}</a></li>"""
+      s"""<li><a href="@${TwirlHelper.routesClass(config, model)}.list()">${TwirlHelper.iconHtml(config, model.propertyName)} ${model.title}</a></li>"""
     }
 
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Twirl, key = "model list routes")

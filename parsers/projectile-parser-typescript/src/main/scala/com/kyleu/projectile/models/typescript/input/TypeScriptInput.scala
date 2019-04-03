@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.typescript.input
 import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
+import com.kyleu.projectile.models.output.{ExportHelper, OutputPackage}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary, ProjectTemplate}
 import com.kyleu.projectile.models.typescript.node.{NodeHelper, TypeScriptNode}
 import com.kyleu.projectile.models.typescript.output.TypeScriptOutput
@@ -28,7 +29,9 @@ case class TypeScriptInput(
     val k = TypeScriptInput.stripName(key)
     val ctx = ParseContext(key = k, pkg = Nil, root = File("."))
     val indexFile = SourceFileParser.forSourceFiles(ctx, nodes.flatMap(NodeHelper.getSourceFileNodes))
-    val p = Project(template = ProjectTemplate.Custom, key + "-generated", key)
+    val p = Project(template = ProjectTemplate.Custom, key + "-generated", key).copy(packages = Map(
+      OutputPackage.Application -> Seq("com", "definitelyscala", ExportHelper.escapeKeyword(k))
+    ))
     val ec = ExportConfiguration(project = p).withAdditional(indexFile)
     TypeScriptOutput.forNodes(nodes = nodes, ctx = ctx, out = ec)
   }

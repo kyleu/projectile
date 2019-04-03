@@ -1,6 +1,7 @@
 package com.kyleu.projectile.web.controllers.project
 
 import better.files.File
+import com.kyleu.projectile.models.output.{ExportHelper, OutputPackage}
 import com.kyleu.projectile.models.typescript.input.TypeScriptInput
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.input.TypeScriptInputService
@@ -64,6 +65,8 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
 
   private[this] def exportProject(k: String, f: String, v: Boolean) = {
     val in = getInput(k, f)
+    val p = in.fakeSummary().copy(packages = Map(OutputPackage.Application -> Seq("com", "definitelyscala", ExportHelper.escapeKeyword(k))))
+
     val path = TypeScriptInput.stripName(s"${FilesystemUtils.tgtDir}/$k/$f")
     val name = TypeScriptInput.stripName(s"typescript-$k-$f")
     val projectDir = File(path)
@@ -72,7 +75,7 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
       ProjectExampleService.extract("scalajs", projectDir, name)
     }
     val cfg = new ConfigService(path)
-    projectile.exportProjectFromInput(p = in.fakeSummary(), i = in, cfg = cfg, v: Boolean)
+    projectile.exportProjectFromInput(p = p, i = in, cfg = cfg, v: Boolean)
   }
 
   private[this] def getInput(k: String, f: String, compile: Boolean = false) = {

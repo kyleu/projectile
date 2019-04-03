@@ -83,7 +83,6 @@ object NodeService {
       case node if node.isInstanceOf[MethodDecl] || node.isInstanceOf[MethodSig] =>
         val str = NodeHelper.asString(node)
         if (encountered(str)) {
-          println(s"Duplicate: $str")
           None
         } else {
           encountered = encountered + str.toString

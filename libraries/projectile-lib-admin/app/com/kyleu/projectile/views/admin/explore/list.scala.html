@@ -19,8 +19,8 @@
 )@if(fullUI) {
   @com.kyleu.projectile.components.views.html.layout.page(title = s"$model Management", cfg = cfg) {
     @com.kyleu.projectile.components.views.html.layout.card(None) {
-      <div class="collection with-header">
-        <div class="collection-header">
+      <div>
+        <div>
           @calls.search.map { search =>
             <div class="right">
               <form action="@search" method="get">
@@ -30,15 +30,7 @@
           }
           <h5>
             <i class="fa @icon" style="margin-right: 6px;"></i>
-            @totalCount.map { total =>
-              @com.kyleu.projectile.util.NumberUtils.withCommas(total)
-            }
-            @{modelPlural}
-            @q.map { query =>
-              @if(query.trim.nonEmpty) {
-                matching [@query]
-              }
-            }
+            @{totalCount.map(total => com.kyleu.projectile.util.NumberUtils.withCommas(total)).map(_ + " ").getOrElse("") + modelPlural + q.filter(_.trim.nonEmpty).map(q => s" matching [$q]").getOrElse("")}
           </h5>
           @if(offset > 0) {
             <em>Page @((offset / limit) + 1) </em>
@@ -47,10 +39,8 @@
             (<a href="@nu">add new</a>)
           }
         </div>
-        <div class="collection-item">
-          <div style="overflow: auto;">
-            @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc)
-          </div>
+        <div style="overflow: auto;">
+          @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc)
         </div>
       </div>
       <div>
