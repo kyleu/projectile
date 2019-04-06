@@ -23,7 +23,14 @@ object AuditUtils {
     kids(root / k).map(audit(k, _))
   }
 
-  def audit(k: String, f: String) = AuditResult(k = k, f = f, r = getResult(s = root / k / f, t = srcDir(k, f)))
+  def audit(k: String, f: String) = {
+    val t = srcDir(k, f)
+    if (t.exists) {
+      AuditResult(k = k, f = f, r = getResult(s = root / k / f, t = t))
+    } else {
+      AuditResult(k = k, f = f, r = Seq(FileResult(f, 0, "missing", "Missing target directory")))
+    }
+  }
 
   private[this] val badNames = Set(".DS_Store")
   private[this] def kids(d: File) = d.children.filter(_.isDirectory).map(c => c.name).filterNot(x => x == "target" || x == "project").toList.sorted

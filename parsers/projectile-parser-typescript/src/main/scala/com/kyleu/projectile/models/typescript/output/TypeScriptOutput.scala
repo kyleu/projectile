@@ -18,6 +18,7 @@ object TypeScriptOutput {
   private[this] def loadNode(ctx: ParseContext, out: ExportConfiguration, node: TypeScriptNode): (ParseContext, ExportConfiguration) = {
     val c = newCtx(ctx, node)
     val loadResult = node match {
+      case node: TypeScriptNode.ClassDecl => ClassParser.load(c, out, node)
       case node: TypeScriptNode.EnumDecl => EnumParser.load(c, out, node)
       case _ => c -> out
     }

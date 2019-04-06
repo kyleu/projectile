@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.typescript
 
-import com.kyleu.projectile.models.export.typ.FieldType.ExoticType
 import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.export.typ.FieldType._
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
 import com.kyleu.projectile.models.typescript.node.SyntaxKind
 import com.kyleu.projectile.util.JsonSerializers._
@@ -12,72 +12,82 @@ import scala.util.control.NonFatal
 
 object TypeHelper {
   def forNode(o: JsonObject): FieldType = try {
-    forNodeInternal(o)
+    forNodeInternal(o, None)
   } catch {
     case NonFatal(x) => throw new IllegalStateException(s"Error [${x.getMessage}] processing type [${o.kind()}] for node [${printJackson(o.asJson)}]", x)
   }
 
-  private[this] def forNodeInternal(o: JsonObject): FieldType = o.kind() match {
-    case SyntaxKind.NullKeyword => FieldType.ExoticType("null")
-    case SyntaxKind.UndefinedKeyword => FieldType.ExoticType("undefined")
-    case SyntaxKind.NeverKeyword => FieldType.NothingType
+  private[this] def forNodeInternal(o: JsonObject, nameHint: Option[String]): FieldType = o.kind() match {
+    case SyntaxKind.NullKeyword => ExoticType("null")
+    case SyntaxKind.UndefinedKeyword => ExoticType("undefined")
+    case SyntaxKind.NeverKeyword => NothingType
 
-    case SyntaxKind.AnyKeyword => FieldType.AnyType
-    case SyntaxKind.VoidKeyword => FieldType.UnitType
+    case SyntaxKind.AnyKeyword => AnyType
+    case SyntaxKind.VoidKeyword => UnitType
 
-    case SyntaxKind.BooleanKeyword => FieldType.BooleanType
-    case SyntaxKind.TrueKeyword => FieldType.BooleanType
-    case SyntaxKind.FalseKeyword => FieldType.BooleanType
+    case SyntaxKind.BooleanKeyword => BooleanType
+    case SyntaxKind.TrueKeyword => BooleanType
+    case SyntaxKind.FalseKeyword => BooleanType
 
-    case SyntaxKind.NumberKeyword => FieldType.DoubleType
+    case SyntaxKind.NumberKeyword => DoubleType
     case SyntaxKind.NumericLiteral => try {
       extractObj[String](o, "text").toInt
-      FieldType.IntegerType
+      IntegerType
     } catch {
-      case _: NumberFormatException => FieldType.DoubleType
+      case _: NumberFormatException => DoubleType
     }
 
-    case SyntaxKind.StringLiteral => FieldType.StringType
-    case SyntaxKind.StringKeyword => FieldType.StringType
+    case SyntaxKind.StringLiteral => StringType
+    case SyntaxKind.StringKeyword => StringType
 
-    case SyntaxKind.SymbolKeyword => FieldType.ExoticType("SymbolKeyword")
-    case SyntaxKind.ObjectKeyword => FieldType.StructType(key = "js.Object", tParams = o.tParams())
+    case SyntaxKind.NoSubstitutionTemplateLiteral => ExoticType("NoSubstitutionTemplateLiteral")
 
-    case SyntaxKind.ArrayType => FieldType.ListType(o.typ("elementType"))
-    case SyntaxKind.UnionType => FieldType.UnionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode).distinct)
-    case SyntaxKind.TupleType => FieldType.ExoticType("TupleType")
-    case SyntaxKind.ImportType => FieldType.ExoticType("Import")
+    case SyntaxKind.SymbolKeyword => ExoticType("SymbolKeyword")
+    case SyntaxKind.ObjectKeyword => StructType(key = "js.Object", tParams = o.tParams())
 
-    case SyntaxKind.ConstructorType => FieldType.MethodType(params = o.params(), ret = ExoticType("this"))
-    case SyntaxKind.FunctionType => FieldType.MethodType(params = o.params(), ret = o.typ())
-    case SyntaxKind.ParenthesizedType => FieldType.ExoticType("ParenthesizedType")
+    case SyntaxKind.ArrayType => ListType(o.typ("elementType"))
+    case SyntaxKind.UnionType => collapseUnion(UnionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode).distinct))
+
+    case SyntaxKind.TupleType => ExoticType("TupleType")
+    case SyntaxKind.ImportType => ExoticType("Import")
+
+    case SyntaxKind.ConstructorType => MethodType(params = o.params(), ret = ExoticType("this"))
+    case SyntaxKind.FunctionType => MethodType(params = o.params(), ret = o.typ())
+    case SyntaxKind.ParenthesizedType => o.typ()
     case SyntaxKind.LiteralType => o.typ("literal")
-    case SyntaxKind.ConditionalType => FieldType.ExoticType("ConditionalType")
-    case SyntaxKind.IntersectionType => FieldType.IntersectionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode).distinct)
-    case SyntaxKind.IndexedAccessType => FieldType.ExoticType("IndexedAccessType")
-    case SyntaxKind.MappedType => FieldType.ExoticType("MappedType")
+    case SyntaxKind.ConditionalType => ExoticType("ConditionalType")
+    case SyntaxKind.IntersectionType => IntersectionType(key = o.nameOpt().getOrElse("-anon-"), types = o.kids("types").map(forNode).distinct)
+    case SyntaxKind.IndexedAccessType => ExoticType("IndexedAccessType")
+    case SyntaxKind.MappedType => ExoticType("MappedType")
 
-    case SyntaxKind.ThisType => FieldType.ThisType
+    case SyntaxKind.ThisType => ThisType
 
-    case SyntaxKind.TypeLiteral => FieldType.ObjectType(key = "_typeliteral", fields = o.memberFields())
+    case SyntaxKind.TypeLiteral => ObjectType(key = nameHint.getOrElse("_typeliteral"), fields = o.memberFields())
     case SyntaxKind.TypeReference => MethodHelper.getName(extractObj[JsonObject](o, "typeName")) match {
       case "Array" => o.tParams("typeArguments").toList match {
-        case arg :: Nil => FieldType.ListType(typ = arg.constraint match {
+        case arg :: Nil => ListType(typ = arg.constraint match {
           case Some(c) => c
-          case None => FieldType.StructType(arg.name)
+          case None => StructType(arg.name)
         })
-        case Nil => FieldType.ListType(typ = FieldType.AnyType)
+        case Nil => ListType(typ = AnyType)
         case _ => throw new IllegalStateException("Cannot handle multiple array type args")
       }
-      case name => FieldType.StructType(key = name, tParams = o.tParams("typeArguments"))
+      case name => StructType(key = name, tParams = o.tParams("typeArguments"))
     }
-    case SyntaxKind.TypeQuery => FieldType.ExoticType("TypeQuery")
-    case SyntaxKind.TypeOperator => FieldType.ExoticType("TypeOperator")
-    case SyntaxKind.TypePredicate => FieldType.ExoticType("TypePredicate")
-    case SyntaxKind.TypeParameter => FieldType.StructType(o.name())
+    case SyntaxKind.TypeQuery => ExoticType("TypeQuery")
+    case SyntaxKind.TypeOperator => ExoticType("TypeOperator")
+    case SyntaxKind.TypePredicate => ExoticType("TypePredicate")
+    case SyntaxKind.TypeParameter => StructType(o.name())
+    case SyntaxKind.PrefixUnaryExpression => ExoticType("PrefixUnaryExpression")
 
-    case SyntaxKind.UnknownKeyword => FieldType.ExoticType("Unknown")
+    case SyntaxKind.UnknownKeyword => ExoticType("Unknown")
 
     case _ => throw new IllegalStateException(s"Cannot determine field type for kind [${o.kind()}]")
+  }
+
+  private[this] def collapseUnion(u: UnionType): FieldType = u.types.toList match {
+    case h :: Nil => h
+    case kids if kids.contains(IntegerType) && kids.contains(DoubleType) => collapseUnion(u.copy(types = u.types.filterNot(_ == IntegerType)))
+    case _ => u
   }
 }

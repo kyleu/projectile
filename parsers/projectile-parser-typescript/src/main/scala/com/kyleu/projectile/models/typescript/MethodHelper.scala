@@ -46,12 +46,11 @@ object MethodHelper {
     }
   }
 
-  def getParam(o: JsonObject) = ObjectField(
-    k = try { getName(extractObj[JsonObject](o, "name")) } catch { case NonFatal(x) => "_default" },
-    t = o.apply("type").map(extract[JsonObject]).map(TypeHelper.forNode).getOrElse(FieldType.AnyType),
-    req = o.apply("questionToken").isEmpty,
-    readonly = true
-  )
+  def getParam(o: JsonObject) = {
+    val k = try { getName(extractObj[JsonObject](o, "name")) } catch { case NonFatal(x) => "_default" }
+    val t = o.apply("type").map(extract[JsonObject]).map(TypeHelper.forNode).getOrElse(FieldType.AnyType)
+    ObjectField(k = k, t = t, req = o.apply("questionToken").isEmpty, readonly = true)
+  }
 
   def getTParam(o: JsonObject) = {
     val name = if (o.contains("name")) {

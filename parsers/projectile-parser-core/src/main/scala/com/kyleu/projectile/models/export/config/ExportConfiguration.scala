@@ -24,6 +24,19 @@ case class ExportConfiguration(
   val tagsPackage = systemPackage ++ project.getPackage(OutputPackage.Tags)
   val utilitiesPackage = systemPackage ++ project.getPackage(OutputPackage.Utils)
 
+  private[this] def mergeLists[T](left: List[T], right: List[T]) = {
+    var tmpLeft = left
+    left ++ right.dropWhile { x =>
+      tmpLeft.lastOption match {
+        case Some(h) if h == x =>
+          tmpLeft = tmpLeft.dropRight(1)
+          true
+        case _ => false
+      }
+    }
+  }
+  def mergedApplicationPackage(pkg: List[String]) = mergeLists(applicationPackage.toList, pkg)
+
   val isNewUi = project.flags("components")
 
   def withEnums(e: ExportEnum*) = this.copy(enums = enums ++ e)

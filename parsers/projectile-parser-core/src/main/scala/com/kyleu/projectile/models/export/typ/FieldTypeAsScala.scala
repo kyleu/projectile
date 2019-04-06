@@ -28,22 +28,23 @@ object FieldTypeAsScala {
     case XmlType => "String"
     case UuidType => "UUID"
 
-    case ObjectType(k, _, tp) => k + typeParamsString(config, tp)
-    case StructType(key, tp) => config.getModelOpt(key).map(_.className).getOrElse(key) + typeParamsString(config, tp)
+    case ObjectType(k, _, tp) => k + typeParamsString(config, tp, isJs)
+    case StructType(key, tp) => config.getModelOpt(key).map(_.className).getOrElse(key) + typeParamsString(config, tp, isJs)
 
     case EnumType(key) => config.getEnumOpt(key).map(_.className).getOrElse(key)
-    case ListType(typ) if isJs => s"js.Array[${asScala(config, typ)}]"
-    case ListType(typ) => s"List[${asScala(config, typ)}]"
-    case SetType(typ) => s"Set[${asScala(config, typ)}]"
-    case MapType(k, v) => s"Map[${asScala(config, k)}, ${asScala(config, v)}]"
+    case ListType(typ) if isJs => s"js.Array[${asScala(config, typ, isJs)}]"
+    case ListType(typ) => s"List[${asScala(config, typ, isJs)}]"
+    case SetType(typ) => s"Set[${asScala(config, typ, isJs)}]"
+    case MapType(k, v) => s"Map[${asScala(config, k, isJs)}, ${asScala(config, v, isJs)}]"
 
-    case UnionType(k, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" | ")
-    case UnionType(_, _) => "Json" // TODO: key
+    case UnionType(_, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" | ")
+    case UnionType(_, _) => "Json"
 
-    case IntersectionType(k, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" with ")
-    case IntersectionType(_, _) => "Json" // TODO: key
+    case IntersectionType(_, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" with ")
+    case IntersectionType(_, _) => "Json"
 
-    case MethodType(params, ret) => s"(${params.map(p => asScala(config, p.t)).mkString(", ")}): ${asScala(config, ret)}"
+    case MethodType(params, ret) if isJs => s"js.Function${params.length}[${params.map(p => asScala(config, p.t, isJs)).mkString(", ")}, ${asScala(config, ret, isJs)}]"
+    case MethodType(params, ret) => s"(${params.map(p => asScala(config, p.t, isJs)).mkString(", ")}): ${asScala(config, ret, isJs)}"
 
     case JsonType => "Json"
     case CodeType => "String"
@@ -63,10 +64,10 @@ object FieldTypeAsScala {
     }
   }
 
-  private[this] def typeParamsString(config: ExportConfiguration, tp: Seq[TypeParam]) = tp.toList match {
+  private[this] def typeParamsString(config: ExportConfiguration, tp: Seq[TypeParam], isJs: Boolean) = tp.toList match {
     case Nil => ""
     case _ => "[" + tp.map { p =>
-      p.name + p.constraint.map(c => s" <: " + asScala(config, c)).getOrElse("") + p.default.map(" = " + _).getOrElse("")
+      p.name + p.constraint.map(c => s" <: " + asScala(config, c, isJs)).getOrElse("") + p.default.map(" = " + _).getOrElse("")
     }.mkString(", ") + "]"
   }
 }

@@ -23,13 +23,13 @@ class AuthenticationController @javax.inject.Inject() (
   val providers = if (app.config.authGoogleSettings.clientSecret.nonEmpty) { Seq("google") } else { Nil }
 
   def signInForm = withoutSession("form") { implicit request => implicit td =>
-    val resp = Ok(actions.signin(request.identity, UserForms.signInForm, providers, actions.allowRegistration))
+    val resp = Ok(actions.signin(UserForms.signInForm, app.cfg(u = request.identity, admin = false)))
     Future.successful(resp)
   }
 
   def authenticateCredentials = withoutSession("authenticate") { implicit request => implicit td =>
     UserForms.signInForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(actions.signin(request.identity, form, providers, actions.allowRegistration))),
+      form => Future.successful(BadRequest(actions.signin(form, app.cfg(u = request.identity, admin = false)))),
       credentials => {
         val creds = credentials.copy(identifier = credentials.identifier.toLowerCase)
         credentialsProvider.authenticate(creds).flatMap { loginInfo =>

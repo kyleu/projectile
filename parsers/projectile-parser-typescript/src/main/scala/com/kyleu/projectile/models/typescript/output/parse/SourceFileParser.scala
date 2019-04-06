@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.file.{MarkdownFile, ScalaFile}
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.typescript.input.TypeScriptInput
-import com.kyleu.projectile.models.typescript.node.{NodeContext, SourceFileHeader, TypeScriptNode}
+import com.kyleu.projectile.models.typescript.node.{SourceFileHeader, TypeScriptNode}
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.SourceFile
 import com.kyleu.projectile.models.typescript.output.OutputHelper
 import com.kyleu.projectile.models.typescript.output.parse.ModuleParser.filter
@@ -58,30 +58,24 @@ object SourceFileParser {
     val fn = ExportHelper.escapeKeyword(TypeScriptInput.stripName(path.last))
     val cn = ExportHelper.toClassName(fn)
 
-    val (members, extraClasses) = MemberParser.filter(filter(node.statements))
-
-    val objFile = if (members.isEmpty) {
+    val filterResult = MemberParser.filter(filter(node.statements))
+    val filteredMembers = filterResult.members
+    val objFile = if (filteredMembers.isEmpty) {
       Nil
     } else {
-      val file = ScalaFile(path = OutputPath.SharedSource, dir = config.applicationPackage ++ ctx.pkg, key = cn)
+      val file = ScalaFile(path = OutputPath.SharedSource, dir = config.mergedApplicationPackage(ctx.pkg), key = cn)
 
-      file.addImport(Seq("scala", "scalajs"), "js")
       OutputHelper.printContext(file, node.ctx)
-      file.add("@js.native")
-      if (ctx.pkg.isEmpty) {
-        file.add(s"""@js.annotation.JSGlobalScope""")
-      } else {
-        file.add(s"""@js.annotation.JSGlobal("${ctx.pkg.mkString(".")}")""")
-      }
+      MemberHelper.addGlobal(file, config, ctx, Some(fn), filterResult.globalScoped)
       file.add(s"object $cn extends js.Object {", 1)
-      members.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = members.lastOption.contains(m)))
+      filteredMembers.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = filteredMembers.lastOption.contains(m)))
       file.add("}", -1)
       file.add()
       Seq(file)
     }
 
-    extraClasses.foldLeft(ctx -> config.withAdditional(objFile: _*)) { (carry, decl) =>
-      ObjectTypeParser.parseLiteral(carry._1, carry._2, decl.name, decl.typ.t.asInstanceOf[FieldType.ObjectType], decl.typ.r, decl.ctx)
+    filterResult.extraClasses.foldLeft(ctx -> config.withAdditional(objFile: _*)) { (carry, decl) =>
+      ObjectTypeParser.parseLiteral(carry._1, carry._2, decl._1, decl._2, decl._3, decl._4)
     }
   }
 }

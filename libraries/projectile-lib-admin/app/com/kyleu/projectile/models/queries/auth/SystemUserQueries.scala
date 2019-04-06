@@ -59,6 +59,6 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
   }
 
   override protected def toDataSeq(u: SystemUser) = Seq[Any](
-    u.id.toString, u.username, u.profile.providerID, u.profile.providerKey, u.role.toString, u.created
+    u.id.toString, u.username, u.profile.providerID, u.profile.providerKey, u.role.toString, u.settings, u.created
   )
 }

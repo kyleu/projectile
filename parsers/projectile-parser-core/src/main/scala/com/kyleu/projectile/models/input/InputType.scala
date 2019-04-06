@@ -40,6 +40,7 @@ object InputType {
     case object GraphQLMutation extends Model(value = "graphql-mutation", isGraphQL = true)
     case object GraphQLQuery extends Model(value = "graphql-query", isGraphQL = true)
     case object GraphQLReference extends Model(value = "graphql-reference", isGraphQL = true)
+    case object TypeScriptModel extends Model(value = "typescript-model")
 
     override val values = findValues
   }

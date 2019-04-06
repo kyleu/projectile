@@ -28,8 +28,7 @@ object EnumParser {
     file.add("@js.native")
     file.add(s"sealed trait $cn extends js.Object")
     file.add()
-    file.add("@js.native")
-    file.add(s"""@js.annotation.JSGlobal("${(ctx.pkg :+ node.name).mkString(".")}")""")
+    MemberHelper.addGlobal(file, out, ctx, Some(node.name))
     file.add(s"object $cn extends js.Object {", 1)
 
     val members = node.members.collect { case e: TypeScriptNode.EnumMember => e }

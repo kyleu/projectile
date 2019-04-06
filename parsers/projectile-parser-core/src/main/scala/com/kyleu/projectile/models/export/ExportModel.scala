@@ -95,6 +95,7 @@ case class ExportModel(
       case Some("input") => pkg
       case Some("mutation") => pkg
       case Some("query") => pkg
+      case _ if inputType == InputType.Model.TypeScriptModel => pkg
       case _ => "models" +: pkg
     })
   }

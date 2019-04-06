@@ -15,14 +15,10 @@ object ObjectTypeParser {
   def parse(ctx: ParseContext, config: ExportConfiguration, name: String, tParams: Seq[TypeParam], nodeCtx: NodeContext, fields: Seq[ObjectField]) = {
     val cn = ExportHelper.toClassName(name)
 
-    val file = ScalaFile(path = OutputPath.SharedSource, dir = config.applicationPackage ++ ctx.pkg, key = cn)
-
-    file.addImport(Seq("scala", "scalajs"), "js")
+    val file = ScalaFile(path = OutputPath.SharedSource, dir = config.mergedApplicationPackage(ctx.pkg), key = cn)
 
     OutputHelper.printContext(file, nodeCtx)
-
-    file.add("@js.native")
-    file.add("@js.annotation.JSGlobal")
+    MemberHelper.addGlobal(file, config, ctx, Some(name))
     file.add(s"object $cn extends js.Object {", 1)
     fields.foreach { f =>
       val node = TypeScriptNode.VariableDecl(name = f.k, typ = FieldTypeRequired(f.t, f.req), ctx = NodeContext.empty)

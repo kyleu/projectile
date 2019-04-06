@@ -18,6 +18,15 @@ object MemberHelper {
       FieldTypeAsScala.asScala(config = config, t = FieldType.StructType(jsTypes(key), tParams), isJs = true)
     case _ => FieldTypeAsScala.asScala(config = config, t = t, isJs = true)
   }
+
+  def addGlobal(file: ScalaFile, config: ExportConfiguration, ctx: ParseContext, name: Option[String], globalScoped: Boolean = false) = {
+    file.add("@js.native")
+    if (globalScoped) {
+      file.add(s"""@js.annotation.JSGlobalScope""")
+    } else {
+      file.add(s"""@js.annotation.JSGlobal("${(ctx.pkg ++ name.toSeq).mkString(".")}")""")
+    }
+  }
 }
 
 case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: ScalaFile) {
@@ -51,11 +60,30 @@ case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: Sc
     val abst = ctx.modifiers(ModifierFlag.Abstract)
     val decl = if (abst) { "" } else { " = js.native" }
     file.add(s"${ov}def ${ExportHelper.escapeKeyword(name)}$tParamsString($paramsString): ${forType(ret)}$decl")
+    params.map(_.t) ++ tParams.flatMap(t => t.constraint.toSeq ++ t.default.toSeq)
   }
 
   def forDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) = {
     val decl = if (ctx.isAbstract) { "" } else { " = js.native" }
     val keyword = if (ctx.isConst) { "val" } else { "var" }
     file.add(s"$keyword ${ExportHelper.escapeKeyword(name)}: ${forType(typ)}$decl")
+    Seq(typ.t)
+  }
+
+  def forIndex(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) = {
+    val paramsString = params.map(forObj).mkString(", ")
+    file.add("@js.annotation.JSBracketAccess")
+    file.add(s"def apply($paramsString): ${FieldTypeAsScala.asScala(config = config, t = typ, isJs = true)} = js.native")
+    if (!ctx.isConst) {
+      file.add()
+      file.add("@js.annotation.JSBracketAccess")
+      file.add(s"def update($paramsString, v: ${FieldTypeAsScala.asScala(config = config, t = typ, isJs = true)}): Unit = js.native")
+    }
+    Seq(typ)
+  }
+
+  def forApply(tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) = {
+    file.add("// Apply!")
+    tParams.flatMap(_.types) ++ params.map(_.t) :+ ret.t
   }
 }

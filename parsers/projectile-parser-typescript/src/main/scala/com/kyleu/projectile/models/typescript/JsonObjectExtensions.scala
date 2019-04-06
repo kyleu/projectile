@@ -11,8 +11,6 @@ object JsonObjectExtensions {
   class RichJsonObject(o: JsonObject) {
     def ext[T: Decoder](k: String) = extractObj[T](obj = o, key = k)
 
-    def typObjs(k: String = "type") = o.apply(k).map(extract[JsonObject]).map(TypeHelper.forNode)
-
     def typOpt(k: String = "type") = o.apply(k).map(extract[JsonObject]).map(TypeHelper.forNode)
     def typ(k: String = "type") = typOpt(k).getOrElse(crash(s"No type with key [$k]"))
     def typOrAny(k: String = "type") = typOpt(k).getOrElse(FieldType.AnyType)

@@ -18,7 +18,7 @@ class TestController @javax.inject.Inject() () extends ProjectileController {
     val breadcrumbs = Seq(BreadcrumbEntry("section1", "Section 1", Some("one")), BreadcrumbEntry("test", "Test", Some("t")), BreadcrumbEntry("a", "Section A", Some("a")))
     val cfg = UiConfig(projectName = "Test Project", menu = menu, urls = urls, html = html, user = user, breadcrumbs = breadcrumbs)
     val rsp = key match {
-      case "signin" => com.kyleu.projectile.components.views.html.auth.signin(username = "", allowRegistration = true, cfg = cfg)
+      case "signin" => com.kyleu.projectile.components.views.html.auth.signin(username = "", cfg = cfg)
       case "signup" => com.kyleu.projectile.components.views.html.auth.signup(username = "", email = "", cfg = cfg)
       case "error" => com.kyleu.projectile.components.views.html.error.servererror(cfg = cfg)
       case "notfound" => com.kyleu.projectile.components.views.html.error.notfound(cfg = cfg)

@@ -7,4 +7,6 @@ object TypeParam {
   implicit val jsonDecoder: Decoder[TypeParam] = deriveDecoder
 }
 
-case class TypeParam(name: String, constraint: Option[FieldType], default: Option[FieldType])
+case class TypeParam(name: String, constraint: Option[FieldType], default: Option[FieldType]) {
+  val types = constraint.toSeq ++ default.toSeq
+}

@@ -27,6 +27,7 @@ object CoreLogic extends FeatureLogic {
         case Model.GraphQLMutation => Seq(GraphQLOperationFile.export(config, model).rendered)
         case Model.GraphQLQuery => Seq(GraphQLOperationFile.export(config, model).rendered)
         case Model.GraphQLReference => Nil
+        case Model.TypeScriptModel => Nil
       }
     }
     val unions = config.unions.flatMap { union =>

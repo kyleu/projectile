@@ -30,7 +30,7 @@ class RegistrationController @javax.inject.Inject() (
         username = email.map(e => if (e.contains('@')) { e.substring(0, e.indexOf('@')) } else { "" }).getOrElse(""),
         email = email.getOrElse("")
       ))
-      Future.successful(Ok(actions.registerForm(request.identity, form)))
+      Future.successful(Ok(actions.registerForm(form, app.cfg(u = request.identity, admin = false))))
     } else {
       Future.successful(Redirect(actions.indexUrl).flashing("error" -> "You cannot sign up at this time, please contact your administrator"))
     }
@@ -41,7 +41,7 @@ class RegistrationController @javax.inject.Inject() (
       throw new IllegalStateException("You cannot sign up at this time, please contact your administrator")
     }
     UserForms.registrationForm.bindFromRequest.fold(
-      form => Future.successful(BadRequest(actions.registerForm(request.identity, form))),
+      form => Future.successful(BadRequest(actions.registerForm(form, app.cfg(u = request.identity, admin = false)))),
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email.toLowerCase)
         userSearchService.getByLoginInfo(loginInfo).flatMap {

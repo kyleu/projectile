@@ -3,56 +3,77 @@ package com.kyleu.projectile.models.typescript.output.parse
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ._
 import com.kyleu.projectile.models.output.file.ScalaFile
-import com.kyleu.projectile.models.typescript.node.{NodeHelper, SyntaxKind, TypeScriptNode}
+import com.kyleu.projectile.models.typescript.node.{NodeContext, NodeHelper, SyntaxKind, TypeScriptNode}
 import com.kyleu.projectile.models.typescript.output.OutputHelper
 
 object MemberParser {
-  def filter(tsns: Seq[TypeScriptNode]): (Seq[TypeScriptNode], Seq[TypeScriptNode.VariableDecl]) = {
+  case class Result(globalScoped: Boolean, members: Seq[TypeScriptNode], extraClasses: Seq[(String, FieldType.ObjectType, Boolean, NodeContext)])
+
+  def filter(tsns: Seq[TypeScriptNode]): Result = {
     val members = tsns.filterNot(_.ctx.isPrivate)
     def find(n: String) = members.find {
+      case node: TypeScriptNode.ModuleDecl if node.name == n => true
+      case node: TypeScriptNode.VariableDecl if node.name == n => true
       case node: TypeScriptNode.MethodDecl if node.name == n => true
       case _ => false
     }
 
-    val ambient = members.filter(x => x.ctx.kind == SyntaxKind.ExportAssignment || x.ctx.kind == SyntaxKind.DeclareKeyword)
-    val ret = if (ambient.isEmpty) {
-      members
-    } else {
-      ambient.map {
-        case a: TypeScriptNode.ExportAssignment => find(a.exp) match {
+    val ambient = members.filter(m => m.ctx.kind match {
+      case SyntaxKind.ExportAssignment => true
+      case SyntaxKind.DeclareKeyword => true
+      case SyntaxKind.FunctionDeclaration => true
+      case SyntaxKind.TypeAliasDeclaration => true
+      case SyntaxKind.VariableDeclaration => true
+      case _ => false
+    })
+
+    val (globalScoped, ret) = if (ambient.isEmpty) {
+      false -> members
+    } else if (ambient.size == members.size) {
+      true -> ambient.map {
+        case e: TypeScriptNode.ExportAssignment => find(e.exp) match {
           case Some(x) => x
-          case None => TypeScriptNode.Error(kind = a.ctx.kind.key, cls = "ExportAssignment", msg = a.exp)
+          case None => TypeScriptNode.Error(kind = e.ctx.kind.key, cls = "ExportAssignment", msg = s"Missing model for [${e.exp}]")
         }
-        case a => throw new IllegalStateException(s"Unhandled ambient delaration [$a]")
+        case x => x
       }
+    } else {
+      val missing = members.diff(ambient).map(_.ctx.kind).distinct.sortBy(_.key)
+      throw new IllegalStateException(s"Only ${ambient.size} of ${members.size} members are ambient. Missing: [${missing.mkString(", ")}]")
     }
-    ret -> members.collect { case x: TypeScriptNode.VariableDecl if x.typ.t.isInstanceOf[FieldType.ObjectType] => x }
+    val ext = members.collect {
+      case x: TypeScriptNode.VariableDecl if x.typ.t.isInstanceOf[FieldType.ObjectType] => (x.name, x.typ.t.asInstanceOf[FieldType.ObjectType], x.typ.r, x.ctx)
+    }
+    Result(globalScoped = globalScoped, members = ret.distinct, extraClasses = ext)
   }
 
   def print(ctx: ParseContext, config: ExportConfiguration, tsn: TypeScriptNode, file: ScalaFile, last: Boolean = false): Unit = {
+    file.addImport(Seq("scala", "scalajs"), "js")
+
     val h = MemberHelper(ctx, config, file)
     OutputHelper.printContext(file, tsn.ctx)
-    tsn match {
-      case node: TypeScriptNode.Constructor => if (node.ctx.isPublic) { file.add(s"def this(${node.params.map(h.forObj).mkString(", ")}) = this()") }
-      case node: TypeScriptNode.VariableDecl => h.forDecl(node.name, node.typ, node.ctx)
-      case node: TypeScriptNode.PropertyDecl => h.forDecl(node.name, node.typ, node.ctx)
-      case node: TypeScriptNode.PropertySig => h.forDecl(node.name, node.typ, node.ctx)
+    val typs = tsn match {
+      case node: TypeScriptNode.Constructor if node.ctx.isPublic =>
+        file.add(s"def this(${node.params.map(h.forObj).mkString(", ")}) = this()")
+        node.params.map(_.t)
+      case _: TypeScriptNode.Constructor => Nil
+      case node: TypeScriptNode.VariableDecl => h.forDecl(name = node.name, typ = node.typ, ctx = node.ctx)
+      case node: TypeScriptNode.PropertyDecl => h.forDecl(name = node.name, typ = node.typ, ctx = node.ctx)
+      case node: TypeScriptNode.PropertySig => h.forDecl(name = node.name, typ = node.typ, ctx = node.ctx)
       case node: TypeScriptNode.MethodDecl => h.forMethod(name = node.name, tParams = node.tParams, params = node.params, ret = node.ret, ctx = node.ctx)
       case node: TypeScriptNode.MethodSig => h.forMethod(name = node.name, tParams = node.tParams, params = node.params, ret = node.ret, ctx = node.ctx)
-      case node: TypeScriptNode.TypeAliasDecl => file.add(s"type ${node.name} = ${FieldTypeAsScala.asScala(config = config, t = node.typ, isJs = true)}")
-      case node: TypeScriptNode.IndexSig =>
-        h.addImport(node.typ)
-        val paramsString = node.params.map(h.forObj).mkString(", ")
-        file.add("@js.annotation.JSBracketAccess")
-        file.add(s"def apply($paramsString): ${FieldTypeAsScala.asScala(config = config, t = node.typ, isJs = true)} = js.native")
-        if (!node.ctx.isConst) {
-          file.add()
-          file.add("@js.annotation.JSBracketAccess")
-          file.add(s"def update($paramsString, v: ${FieldTypeAsScala.asScala(config = config, t = node.typ, isJs = true)}): Unit = js.native")
-        }
+      case node: TypeScriptNode.CallSig => h.forApply(tParams = node.tParams, params = node.params, ret = node.ret, ctx = node.ctx)
+      case node: TypeScriptNode.TypeAliasDecl =>
+        file.add(s"type ${node.name} = ${FieldTypeAsScala.asScala(config = config, t = node.typ, isJs = true)}")
+        Seq(node.typ)
+      case node: TypeScriptNode.IndexSig => h.forIndex(typ = node.typ, params = node.params, ctx = node.ctx)
       case node =>
         file.add(s"// ${node.getClass.getSimpleName}:${NodeHelper.asString(node)}")
+        Nil
     }
-    // if (!last) { file.add() }
+
+    typs.flatMap(t => FieldTypeImports.imports(config = config, t = t, isJs = true)).foreach { pkg =>
+      file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException()))
+    }
   }
 }

@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.auth
 
-import com.kyleu.projectile.models.config.UiConfig
+import com.kyleu.projectile.models.config.{NavUrls, UiConfig}
 import com.kyleu.projectile.models.user.{Role, SystemUser}
 import com.kyleu.projectile.util.tracing.TraceData
 import com.mohiva.play.silhouette.api.util.Credentials
@@ -30,28 +30,26 @@ class AuthActions(val projectName: String) {
 
   def adminIndexUrl = "/admin/system"
 
-  private[this] val uiConfig = UiConfig.empty.copy(projectName = projectName)
-
   def signin(
-    user: Option[SystemUser], form: Form[Credentials], providers: scala.Seq[String], allowRegistration: Boolean
+    form: Form[Credentials], cfg: UiConfig
   )(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
     val username = form.apply("identifier").value.getOrElse("")
-    com.kyleu.projectile.components.views.html.auth.signin(username, allowRegistration, uiConfig)
+    com.kyleu.projectile.components.views.html.auth.signin(username, cfg)
   }
 
   def registerForm(
-    u: Option[SystemUser], f: Form[RegistrationData]
+    f: Form[RegistrationData], cfg: UiConfig
   )(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
     val username = f.apply("username").value.getOrElse("")
     val email = f.apply("email").value.getOrElse("")
-    com.kyleu.projectile.components.views.html.auth.signup(username, email, uiConfig)
+    com.kyleu.projectile.components.views.html.auth.signup(username, email, cfg)
   }
 
-  def profile(u: SystemUser, cfg: UiConfig)(implicit request: Request[AnyContent], session: Session, flash: Flash): HtmlFormat.Appendable = {
+  def profile(cfg: UiConfig)(implicit request: Request[AnyContent], session: Session, flash: Flash): HtmlFormat.Appendable = {
     com.kyleu.projectile.views.html.profile.view(cfg)
   }
 
-  def changePasswordForm(u: SystemUser)(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
-    com.kyleu.projectile.components.views.html.auth.changePassword(uiConfig)
+  def changePasswordForm(cfg: UiConfig)(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
+    com.kyleu.projectile.components.views.html.auth.changePassword(cfg)
   }
 }

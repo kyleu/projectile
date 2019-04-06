@@ -7,8 +7,10 @@ case class NavUrls(
 
     profile: String = "/profile",
     signup: String = "/profile/signup",
+    signupAllowed: Boolean = true,
     changePassword: String = "/profile/password",
     signin: String = "/profile/signin",
     signout: String = "/profile/signout",
-    oauth: Option[String] = None
+    oauth: String = "/profile/signin/",
+    oauthProviders: Seq[String] = Nil
 )

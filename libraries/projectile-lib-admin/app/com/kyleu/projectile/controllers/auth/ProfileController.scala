@@ -27,14 +27,16 @@ class ProfileController @javax.inject.Inject() (
 ) extends AuthController("profile") {
   def view = withSession("view") { implicit request => implicit td =>
     Future.successful(render {
-      case Accepts.Html() => Ok(actions.profile(request.identity, app.cfg(u = Some(request.identity), admin = false, "profile")))
+      case Accepts.Html() => Ok(actions.profile(app.cfg(u = Some(request.identity), admin = false, "Profile", request.identity.profile.providerKey)))
       case Accepts.Json() => Ok(UserProfile.fromUser(request.identity).asJson)
     })
   }
 
   def save = withSession("view") { implicit request => implicit td =>
     UserForms.profileForm.bindFromRequest.fold(
-      _ => Future.successful(BadRequest(actions.profile(request.identity, app.cfg(u = Some(request.identity), admin = false, "profile")))),
+      _ => Future.successful(BadRequest(
+        actions.profile(app.cfg(u = Some(request.identity), admin = false, "Profile", request.identity.profile.providerKey))
+      )),
       profileData => {
         val settings = JsonObject.apply("theme" -> profileData.theme.asJson).asJson
         val newUser = request.identity.copy(username = profileData.username, settings = settings)
@@ -46,7 +48,7 @@ class ProfileController @javax.inject.Inject() (
   }
 
   def changePasswordForm = withSession("change-password-form") { implicit request => implicit td =>
-    Future.successful(Ok(actions.changePasswordForm(request.identity)))
+    Future.successful(Ok(actions.changePasswordForm(app.cfg(u = Some(request.identity), admin = false))))
   }
 
   def changePassword = withSession("change-password") { implicit request => implicit td =>

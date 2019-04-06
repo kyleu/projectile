@@ -62,7 +62,7 @@ object NodeService {
       case SyntaxKind.ConstructSignature => ConstructSig(typ = o.typ(), params = o.params(), ctx = ctx)
       case SyntaxKind.IndexSignature => IndexSig(typ = o.typ(), params = o.params(), ctx = ctx)
       case SyntaxKind.PropertySignature => PropertySig(name = o.name(), typ = o.typReq(), ctx = ctx)
-      case SyntaxKind.CallSignature => CallSig(params = o.params(), ret = o.typReq(), ctx = ctx)
+      case SyntaxKind.CallSignature => CallSig(tParams = o.tParams(), params = o.params(), ret = o.typReq(), ctx = ctx)
       case SyntaxKind.MethodSignature => MethodSig(name = o.name(), tParams = o.tParams(), params = o.params(), ret = o.typReq(), ctx = ctx)
 
       case SyntaxKind.ExportAssignment => ExportAssignment(exp = o.name("expression"), ctx = ctx)

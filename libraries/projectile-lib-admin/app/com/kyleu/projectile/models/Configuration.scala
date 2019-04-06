@@ -30,7 +30,9 @@ class Configuration @javax.inject.Inject() (val cnf: play.api.Configuration, val
   val (authWhitelistDomain, authGoogleSettings) = {
     val cfg = cnf.get[play.api.Configuration]("silhouette.authenticator.google")
 
-    Some(cfg.get[String]("whitelistDomain")).map(_.trim).filter(_.nonEmpty) -> OAuth2Settings(
+    val whitelist = Some(cfg.get[String]("whitelistDomain")).map(_.trim).filter(_.nonEmpty)
+
+    whitelist -> OAuth2Settings(
       authorizationURL = Some(cfg.get[String]("authorization")),
       accessTokenURL = cfg.get[String]("accessToken"),
       redirectURL = Some(cfg.get[String]("redirect")),
