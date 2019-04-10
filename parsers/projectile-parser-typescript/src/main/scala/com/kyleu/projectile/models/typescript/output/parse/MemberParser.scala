@@ -20,6 +20,9 @@ object MemberParser {
 
     val ambient = members.filter(m => m.ctx.kind match {
       case SyntaxKind.ExportAssignment => true
+      case SyntaxKind.ExportDeclaration => true
+      case SyntaxKind.ImportDeclaration => true
+      case SyntaxKind.ImportEqualsDeclaration => true
       case SyntaxKind.DeclareKeyword => true
       case SyntaxKind.FunctionDeclaration => true
       case SyntaxKind.TypeAliasDeclaration => true
@@ -30,12 +33,12 @@ object MemberParser {
     val (globalScoped, ret) = if (ambient.isEmpty) {
       false -> members
     } else if (ambient.size == members.size) {
-      true -> ambient.map {
-        case e: TypeScriptNode.ExportAssignment => find(e.exp) match {
-          case Some(x) => x
-          case None => TypeScriptNode.Error(kind = e.ctx.kind.key, cls = "ExportAssignment", msg = s"Missing model for [${e.exp}]")
-        }
-        case x => x
+      true -> ambient.flatMap {
+        case e: TypeScriptNode.ExportAssignment => Some(find(e.exp).getOrElse(
+          TypeScriptNode.Error(kind = e.ctx.kind.key, cls = "ExportAssignment", msg = s"Missing model for [${e.exp}]")
+        ))
+        case v: TypeScriptNode.VariableDecl if v.typ.t.isInstanceOf[FieldType.ObjectType] => None
+        case x => Some(x)
       }
     } else {
       val missing = members.diff(ambient).map(_.ctx.kind).distinct.sortBy(_.key)
@@ -48,8 +51,6 @@ object MemberParser {
   }
 
   def print(ctx: ParseContext, config: ExportConfiguration, tsn: TypeScriptNode, file: ScalaFile, last: Boolean = false): Unit = {
-    file.addImport(Seq("scala", "scalajs"), "js")
-
     val h = MemberHelper(ctx, config, file)
     OutputHelper.printContext(file, tsn.ctx)
     val typs = tsn match {
@@ -57,6 +58,7 @@ object MemberParser {
         file.add(s"def this(${node.params.map(h.forObj).mkString(", ")}) = this()")
         node.params.map(_.t)
       case _: TypeScriptNode.Constructor => Nil
+      case _: TypeScriptNode.ImportDecl => Nil
       case node: TypeScriptNode.VariableDecl => h.forDecl(name = node.name, typ = node.typ, ctx = node.ctx)
       case node: TypeScriptNode.PropertyDecl => h.forDecl(name = node.name, typ = node.typ, ctx = node.ctx)
       case node: TypeScriptNode.PropertySig => h.forDecl(name = node.name, typ = node.typ, ctx = node.ctx)

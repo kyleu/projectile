@@ -3,8 +3,9 @@ package com.kyleu.projectile.models.thrift.input
 import com.facebook.swift.parser.model._
 import com.kyleu.projectile.models.export.ExportField
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.typ.FieldType.StructType
+import com.kyleu.projectile.models.export.typ.FieldType.{StructType, UnionType}
 import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala}
+import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.util.StringUtils
 
 object ThriftFileHelper {
@@ -33,12 +34,17 @@ object ThriftFileHelper {
     value: Option[String],
     colType: FieldType
   ) = {
-    val propType = if (required) { FieldTypeAsScala.asScala(config, colType) } else { "Option[" + FieldTypeAsScala.asScala(config, colType) + "]" }
-    s"$name: $propType${propDefault(config, colType, required, value)}"
+    val propType = if (required) {
+      FieldTypeAsScala.asScala(config, colType, isThrift = true)
+    } else {
+      "Option[" + FieldTypeAsScala.asScala(config, colType, isThrift = true) + "]"
+    }
+    s"${ExportHelper.escapeKeyword(name)}: $propType${propDefault(config, colType, required, value)}"
   }
 
   private[this] def defaultForType(config: ExportConfiguration, colType: FieldType, required: Boolean): String = colType match {
     case _ if !required => "None"
+    case FieldType.UnionType(_, _) => "null"
     case FieldType.ListType(_) => "Nil"
     case FieldType.SetType(_) => "Set.empty"
     case FieldType.MapType(_, _) => "Map.empty"
@@ -60,6 +66,7 @@ object ThriftFileHelper {
 
   private[this] def propDefault(config: ExportConfiguration, colType: FieldType, required: Boolean, value: Option[String]) = value match {
     case Some(v) if required => colType match {
+      case FieldType.UnionType(_, _) => ""
       case FieldType.EnumType(_) => " = " + defaultForType(config, colType, required)
       case FieldType.StructType(_, _) => " = " + defaultForType(config, colType, required)
       case _ => " = " + v
@@ -75,8 +82,10 @@ object ThriftFileHelper {
     if (input.exportModelNames.contains(cls)) { Some(StructType(cls, Nil)) } else { None }
   }.orElse {
     input.typedefs.get(cls).map(colTypeForIdentifier(_, input))
+  }.orElse {
+    if (input.exportUnionNames.contains(cls)) { Some(UnionType(cls, Nil)) } else { None }
   }.getOrElse {
-    throw new IllegalStateException(s"Col type error: no enum or model found with key [$cls]")
+    throw new IllegalStateException(s"Col type error: no enum, model, or union found with key [$cls]")
   }
 
   private[this] def colTypeForIdentifier(name: String, input: ThriftInput): FieldType = name match {

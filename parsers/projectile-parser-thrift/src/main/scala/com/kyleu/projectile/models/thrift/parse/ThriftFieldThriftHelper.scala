@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.thrift.parse
 
 import com.kyleu.projectile.models.export.ExportField
 import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.thrift.input.{ThriftFileHelper, ThriftInput}
 import com.kyleu.projectile.models.thrift.schema.ThriftStructField
 
@@ -12,7 +13,7 @@ object ThriftFieldThriftHelper {
   }
 
   def getFromField(field: ExportField) = {
-    parse(field.propertyName, field.t, field.required)
+    parse(ExportHelper.escapeKeyword(field.propertyName), field.t, field.required)
   }
 
   private[this] def parse(name: String, t: FieldType, required: Boolean): String = t match {

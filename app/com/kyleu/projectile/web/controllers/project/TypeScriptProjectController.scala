@@ -68,7 +68,7 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
     val p = in.fakeSummary().copy(packages = Map(OutputPackage.Application -> Seq("com", "definitelyscala", ExportHelper.escapeKeyword(k))))
 
     val path = TypeScriptInput.stripName(s"${FilesystemUtils.tgtDir}/$k/$f")
-    val name = TypeScriptInput.stripName(s"typescript-$k-$f")
+    val name = TypeScriptInput.stripName(s"$k-$f")
     val projectDir = File(path)
     if (!projectDir.exists) {
       projectDir.createIfNotExists(asDirectory = true, createParents = true)

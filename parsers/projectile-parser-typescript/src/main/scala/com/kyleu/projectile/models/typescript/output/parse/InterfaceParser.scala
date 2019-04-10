@@ -1,10 +1,8 @@
 package com.kyleu.projectile.models.typescript.output.parse
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
-import com.kyleu.projectile.models.typescript.node.TypeScriptNode
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.InterfaceDecl
 import com.kyleu.projectile.models.typescript.output.OutputHelper
 
@@ -13,11 +11,11 @@ object InterfaceParser {
     val cn = ExportHelper.escapeKeyword(ExportHelper.toClassName(node.name))
 
     val file = ScalaFile(path = OutputPath.SharedSource, dir = config.mergedApplicationPackage(ctx.pkg), key = cn)
+    file.addImport(Seq("scala", "scalajs"), "js")
 
     OutputHelper.printContext(file, node.ctx)
     val tp = OutputHelper.tParams(node.tParams)
     if (node.members.isEmpty) {
-      file.addImport(Seq("scala", "scalajs"), "js")
       file.add("@js.native")
       file.add(s"trait $cn$tp extends js.Object")
     } else {

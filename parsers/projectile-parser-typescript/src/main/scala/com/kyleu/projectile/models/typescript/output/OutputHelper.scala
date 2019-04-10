@@ -8,38 +8,41 @@ import com.kyleu.projectile.models.typescript.node.{NodeContext, NodeHelper, Typ
 import com.kyleu.projectile.models.typescript.output.parse.{MemberParser, ParseContext}
 
 object OutputHelper {
-  def printContext(file: ScalaFile, ctx: NodeContext) = ctx.jsDoc match {
-    case None => // noop
-    case Some(jsDoc) =>
-      jsDoc.comment match {
-        case h :: Nil if jsDoc.params.isEmpty => file.add("/** " + h + " */")
-        case _ =>
-          file.add("/**")
-          jsDoc.comment.foreach(c => file.add(" * " + c))
-          jsDoc.examples.filterNot(_.isEmpty).foreach { ex =>
-            file.add(" * ")
-            file.add(" * {{{")
-            ex.foreach(l => file.add(" * " + l))
-            file.add(" * }}}")
-          }
-          if (jsDoc.params.nonEmpty) {
-            file.add(" * ")
-            jsDoc.params.foreach { p =>
-              file.add(s" * @param ${p.name}${p.comment.headOption.map(" " + _).getOrElse("")}")
-              if (p.comment.nonEmpty) {
-                p.comment.tail.foreach(c => file.add(" * " + (0 until (p.name.length + 8)).map(_ => " ").mkString + c))
-              }
-            }
-          }
-          if (jsDoc.ret.nonEmpty) {
-            file.add(" * ")
-            jsDoc.ret.foreach { r =>
-              file.add(s" * @return $r")
-            }
-          }
-          file.add(" */")
-          jsDoc.deprecated.foreach(r => file.add(s"""@deprecated("$r", "???")"""))
+  def printContext(file: ScalaFile, ctx: NodeContext) = ctx.jsDoc.foreach {
+    case jsDoc if jsDoc.isEmpty => // noop
+    case jsDoc if jsDoc.singleLine => file.add(s"/** ${jsDoc.comment.headOption.getOrElse("???")} */")
+    case jsDoc =>
+      file.add("/**")
+      jsDoc.comment.foreach(c => file.add(" * " + c))
+      jsDoc.examples.filterNot(_.isEmpty).foreach { ex =>
+        file.add(" * ")
+        file.add(" * {{{")
+        ex.foreach(l => file.add(" * " + l))
+        file.add(" * }}}")
       }
+      if (jsDoc.params.nonEmpty) {
+        file.add(" * ")
+        jsDoc.params.foreach { p =>
+          file.add(s" * @param ${p.name}${p.comment.headOption.map(" " + _).getOrElse("")}")
+          if (p.comment.nonEmpty) {
+            p.comment.tail.foreach(c => file.add(" * " + (0 until (p.name.length + 8)).map(_ => " ").mkString + c))
+          }
+        }
+      }
+      if (jsDoc.ret.nonEmpty) {
+        file.add(" * ")
+        jsDoc.ret.foreach { r =>
+          file.add(s" * @return $r")
+        }
+      }
+      jsDoc.see.foreach(s => file.add(s" * @see $s"))
+      jsDoc.since.foreach(s => file.add(s" * @since $s"))
+      jsDoc.deprecated.toList match {
+        case Nil => // noop
+        case _ :: t => t.dropWhile(_.trim.isEmpty).foreach(l => file.add(s""" * $l"""))
+      }
+      file.add(" */")
+      jsDoc.deprecated.headOption.foreach(h => file.add(s"""@deprecated("$h", "0")"""))
   }
 
   def keywords(node: TypeScriptNode) = node.ctx.modifiers.map(_ + " ").mkString
@@ -56,7 +59,7 @@ object OutputHelper {
     if (objs.nonEmpty) {
       objKey.foreach(k => file.add(s"object ${ExportHelper.toClassName(k)} {", 1))
       printObjects(ctx = ctx, config = config, file = file, objs = objs)
-      objKey.foreach(k => file.add("}", -1))
+      objKey.foreach(_ => file.add("}", -1))
       file.add()
     }
   }

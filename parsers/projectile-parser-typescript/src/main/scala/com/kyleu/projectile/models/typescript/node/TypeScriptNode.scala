@@ -15,6 +15,7 @@ object TypeScriptNode {
       path: String, header: SourceFileHeader, statements: Seq[TypeScriptNode], ctx: NodeContext
   ) extends TypeScriptNode(children = statements)
   case class SourceFileReference(path: String, ctx: NodeContext) extends TypeScriptNode
+  case class TypesReference(ref: String, ctx: NodeContext) extends TypeScriptNode
 
   case class ImportDecl(ctx: NodeContext) extends TypeScriptNode
 

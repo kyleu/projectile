@@ -72,7 +72,7 @@ object ThriftControllerFile {
       file.add(postCall, 1)
       m.args.foreach { arg =>
         arg.addImport(config, file, Nil)
-        val argRootType = FieldTypeAsScala.asScala(config, arg.t)
+        val argRootType = FieldTypeAsScala.asScala(config, arg.t, isThrift = true)
         val argType = if (arg.required) { argRootType } else { s"Option[$argRootType]" }
         val ex = s"""throw new IllegalStateException(s"[${arg.key}] json [$${args("${arg.key}")}] is not a valid [$argType]")"""
         val comma = if (m.args.lastOption.contains(arg)) { "" } else { "," }

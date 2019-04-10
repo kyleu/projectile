@@ -23,12 +23,10 @@ object ModuleParser {
     } else {
       val file = ScalaFile(path = OutputPath.SharedSource, dir = config.mergedApplicationPackage(ctx.pkg), key = cn)
       OutputHelper.printContext(file, node.ctx)
-
       MemberHelper.addGlobal(file, config, ctx, None)
       file.add(s"object $cn extends js.Object {", 1)
       filteredMembers.foreach(m => MemberParser.print(ctx = ctx, config = config, tsn = m, file = file, last = filteredMembers.lastOption.contains(m)))
       file.add("}", -1)
-      file.add()
       Seq(file)
     }
 

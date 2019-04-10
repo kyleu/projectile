@@ -3,7 +3,8 @@ package com.kyleu.projectile.models.typescript.input
 import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPackage}
+import com.kyleu.projectile.models.output.file.{OutputFile, PlainTextFile, ScalaFile}
+import com.kyleu.projectile.models.output.{ExportHelper, OutputPackage, OutputPath}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary, ProjectTemplate}
 import com.kyleu.projectile.models.typescript.node.{NodeHelper, TypeScriptNode}
 import com.kyleu.projectile.models.typescript.output.TypeScriptOutput
@@ -21,18 +22,22 @@ case class TypeScriptInput(
     nodes: Seq[TypeScriptNode] = Nil,
     logs: Seq[String] = Nil
 ) extends Input {
-  def fakeSummary() = ProjectSummary(key = key + "-generated", template = ProjectTemplate.ScalaLibrary, input = key)
+  def fakeSummary() = ProjectSummary(key = TypeScriptInput.stripName(key), template = ProjectTemplate.ScalaLibrary, input = key)
 
   override val template = InputTemplate.TypeScript
+
+  lazy val srcFiles = nodes.flatMap(NodeHelper.getSourceFileNodes)
+  lazy val moduleReferences = nodes.flatMap(NodeHelper.getModuleReferenceNodes)
 
   lazy val output = {
     val k = TypeScriptInput.stripName(key)
     val ctx = ParseContext(key = k, pkg = Nil, root = File("."))
-    val indexFile = SourceFileParser.forSourceFiles(ctx, nodes.flatMap(NodeHelper.getSourceFileNodes))
-    val p = Project(template = ProjectTemplate.Custom, key + "-generated", key).copy(packages = Map(
+    val p = Project(template = ProjectTemplate.Custom, k, k).copy(packages = Map(
       OutputPackage.Application -> Seq("com", "definitelyscala", ExportHelper.escapeKeyword(k))
     ))
-    val ec = ExportConfiguration(project = p).withAdditional(indexFile)
+    val indexFile = SourceFileParser.forSourceFiles(ctx, srcFiles, moduleReferences)
+    val importFile = importScalaFile(p)
+    val ec = ExportConfiguration(project = p).withAdditional(indexFile, importFile)
     TypeScriptOutput.forNodes(nodes = nodes, ctx = ctx, out = ec)
   }
 
@@ -40,5 +45,28 @@ case class TypeScriptInput(
   override lazy val models = output.models
   override lazy val unions = output.unions
   override lazy val services = output.services
-  override lazy val additional = output.additional
+
+  override lazy val additional = {
+    val sources = srcFiles.map { f =>
+      val path = f.path.split('/').map(_.trim).filter(_.nonEmpty)
+      val dir = path.init.dropWhile(_ != key).toList match {
+        case h :: t if h == key => t
+        case x => x
+      }
+      val ret = PlainTextFile(path = OutputPath.TypeScriptOutput, dir = dir, key = path.last)
+      f.ctx.src.foreach(ret.add(_))
+      ret
+    }
+
+    output.additional ++ sources
+  }
+
+  private[this] def importScalaFile(p: Project) = {
+    val file = ScalaFile(path = OutputPath.ServerSource, dir = p.packages(OutputPackage.Application), key = "Require")
+    file.addImport(Seq("scala", "scalajs"), "js")
+    file.add("@js.native")
+    file.add(s"""@js.annotation.JSImport("${p.key}", js.annotation.JSImport.Namespace)""")
+    file.add("object Require extends js.Object")
+    file
+  }
 }

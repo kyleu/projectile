@@ -38,7 +38,7 @@ object ProjectExampleService {
         ret = ret :+ (file.getName -> fOut.size.toInt)
       }
     }
-    val replacements = Map("project" -> name)
+    val replacements = Map("_PROJECT_NAME" -> name)
     def replaceToken(f: File): Unit = if (f.isDirectory) {
       f.name match {
         case "target" => // noop
@@ -46,7 +46,7 @@ object ProjectExampleService {
       }
     } else {
       val orig = f.contentAsString
-      val n = replacements.foldLeft(orig)((l, r) => l.replaceAllLiterally("{{" + r._1 + "}}", r._2))
+      val n = replacements.foldLeft(orig)((l, r) => l.replaceAllLiterally(r._1, r._2))
       if (orig != n) { f.overwrite(n) }
     }
     replaceToken(to)

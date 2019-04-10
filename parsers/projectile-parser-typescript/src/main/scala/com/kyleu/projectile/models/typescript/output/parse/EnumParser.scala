@@ -22,8 +22,6 @@ object EnumParser {
 
     val file = ScalaFile(path = OutputPath.SharedSource, dir = out.applicationPackage ++ ctx.pkg, key = ExportHelper.toClassName(node.name))
 
-    file.addImport(Seq("scala", "scalajs"), "js")
-
     OutputHelper.printContext(file, node.ctx)
     file.add("@js.native")
     file.add(s"sealed trait $cn extends js.Object")

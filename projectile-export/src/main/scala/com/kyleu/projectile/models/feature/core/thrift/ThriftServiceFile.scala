@@ -52,10 +52,13 @@ object ThriftServiceFile {
       val implicitArgs = s"implicit parentTd: TraceData, headers: Map[String, String] = Map.empty"
       method.args.foreach(a => a.addImport(config, file, svc.pkg))
       file.add()
-      val s = FieldTypeAsScala.asScala(config, method.returnType)
+      val s = FieldTypeAsScala.asScala(config, method.returnType, isThrift = true)
       file.add(s"""def ${method.name}($args)($implicitArgs): Future[$s] = trace("${method.name}") { td =>""", 1)
       val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg)).mkString(", ")
-      FieldTypeImports.imports(config, method.returnType).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
+      val argImps = method.args.flatMap(a => FieldTypeImports.imports(config, a.t, isThrift = true))
+      val retImps = FieldTypeImports.imports(config, method.returnType, isThrift = true)
+      (argImps ++ retImps).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
+
       file.add(s"val _request = Request($thriftServiceCanonicalName.${method.name.capitalize}.Args($argsMapped))")
       file.add(s"val _requestWithHeaders = injectTraceDataToHeaders(options)(headers, td).foldLeft(_request)((acc, kv) => acc.setHeader(kv._1, kv._2))")
       file.add(s"val _response = svc.${method.name}(_requestWithHeaders)")

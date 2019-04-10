@@ -35,6 +35,12 @@ case class JsDocNode(
 ) {
   def emptyOpt = if (this == JsDocNode.empty) { None } else { Some(this) }
 
+  lazy val singleLine = comment.size == 1 && deprecated.size < 2 && emptyMembers
+  lazy val isEmpty = comment.isEmpty && deprecated.size < 2 && emptyMembers
+
+  private[this] lazy val emptyMembers = params.isEmpty && ret.isEmpty && since.isEmpty && version.isEmpty && interface.isEmpty &&
+    examples.isEmpty && defaults.isEmpty && ext.isEmpty && see.isEmpty && aliases.isEmpty && tags.isEmpty && authors.isEmpty && unprocessed.isEmpty
+
   def merge(o: JsDocNode) = JsDocNode(
     comment = comment ++ o.comment,
     params = params ++ o.params,

@@ -4,7 +4,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType._
 
 object FieldTypeAsScala {
-  def asScala(config: ExportConfiguration, t: FieldType, isJs: Boolean = false): String = t match {
+  def asScala(config: ExportConfiguration, t: FieldType, isThrift: Boolean = false, isJs: Boolean = false): String = t match {
     case UnitType => "Unit"
 
     case StringType => "String"
@@ -32,19 +32,27 @@ object FieldTypeAsScala {
     case StructType(key, tp) => config.getModelOpt(key).map(_.className).getOrElse(key) + typeParamsString(config, tp, isJs)
 
     case EnumType(key) => config.getEnumOpt(key).map(_.className).getOrElse(key)
-    case ListType(typ) if isJs => s"js.Array[${asScala(config, typ, isJs)}]"
-    case ListType(typ) => s"List[${asScala(config, typ, isJs)}]"
-    case SetType(typ) => s"Set[${asScala(config, typ, isJs)}]"
-    case MapType(k, v) => s"Map[${asScala(config, k, isJs)}, ${asScala(config, v, isJs)}]"
+    case ListType(typ) if isJs => s"js.Array[${asScala(config = config, t = typ, isThrift = isThrift, isJs = isJs)}]"
+    case ListType(typ) => s"List[${asScala(config, typ, isThrift = isThrift, isJs = isJs)}]"
+    case SetType(typ) => s"Set[${asScala(config, typ, isThrift = isThrift, isJs = isJs)}]"
+    case MapType(k, v) => s"Map[${asScala(config, k, isThrift = isThrift, isJs = isJs)}, ${asScala(config, v, isThrift = isThrift, isJs = isJs)}]"
 
-    case UnionType(_, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" | ")
+    case UnionType(_, v) if isJs => v.map(x => asScala(config, x, isThrift = isThrift, isJs = isJs)).mkString(" | ")
+    case UnionType(key, _) if isThrift => key
     case UnionType(_, _) => "Json"
 
-    case IntersectionType(_, v) if isJs => v.map(x => asScala(config, x, isJs)).mkString(" with ")
+    case IntersectionType(_, v) if isJs => v.map(x => asScala(config, x, isThrift = isThrift, isJs = isJs)).mkString(" with ")
     case IntersectionType(_, _) => "Json"
 
-    case MethodType(params, ret) if isJs => s"js.Function${params.length}[${params.map(p => asScala(config, p.t, isJs)).mkString(", ")}, ${asScala(config, ret, isJs)}]"
-    case MethodType(params, ret) => s"(${params.map(p => asScala(config, p.t, isJs)).mkString(", ")}): ${asScala(config, ret, isJs)}"
+    case MethodType(params, ret) if isJs =>
+      val paramsString = params.map { p =>
+        val sc = asScala(config, p.t, isThrift = isThrift, isJs = isJs)
+        if (p.k.toLowerCase == sc.toLowerCase) { sc } else { s"/* ${p.k}: */ $sc" }
+      }.mkString(", ")
+      s"js.Function${params.length}[$paramsString, ${asScala(config, ret, isThrift = isThrift, isJs = isJs)}]"
+    case MethodType(params, ret) =>
+      val paramsString = params.map(p => asScala(config, p.t, isThrift = isThrift, isJs = isJs)).mkString(", ")
+      s"($paramsString): ${asScala(config, ret, isThrift = isThrift, isJs = isJs)}"
 
     case JsonType => "Json"
     case CodeType => "String"

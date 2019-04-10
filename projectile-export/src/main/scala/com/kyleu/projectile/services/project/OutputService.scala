@@ -37,6 +37,11 @@ class OutputService(svc: ProjectileService) {
     }
   }
 
+  def saveExtra(o: ProjectOutput, files: Seq[OutputFile], verbose: Boolean, cfg: ConfigService) = files.map { f =>
+    val result = write(cfg, f.rendered, o.getDirectory(cfg.workingDirectory, f.path), verbose)
+    OutputWriteResult(f.toString, result._1, result._2)
+  }
+
   private[this] def write(cfg: ConfigService, file: OutputFile.Rendered, dir: File, verbose: Boolean) = {
     val f = dir / (file.dir :+ file.filename).mkString("/")
     val existed = f.exists

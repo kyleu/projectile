@@ -20,6 +20,7 @@ sealed abstract class ProjectTemplate(
     case OutputPath.SharedSource => "src/main/scala"
     case OutputPath.SharedTest => "src/test/scala"
     case OutputPath.ThriftOutput => "src/main/thrift"
+    case OutputPath.TypeScriptOutput => "src/main/typescript"
     case OutputPath.WikiMarkdown => "wiki"
   }
 }

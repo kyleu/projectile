@@ -14,9 +14,9 @@ object FilesystemUtils {
     saveProjectFiles(root)
 
     val rootFile = root / "build.sbt"
-    val rootContent = Seq("import sbt._", "") ++ rootKids.map(k => s"""lazy val `$k` = project.in(file("$k"))""") ++ Seq(
+    val rootContent = Seq("import sbt._", "") ++ rootKids.map(k => s"""lazy val `${clean(k)}` = project.in(file("$k"))""") ++ Seq(
       "",
-      s"lazy val all = Seq(${rootKids.map(x => s"`$x`").mkString(", ")})",
+      s"lazy val all = Seq(${rootKids.map(x => s"`${clean(x)}`").mkString(", ")})",
       "",
       "lazy val `aggregate` = {",
       "  val `aggregate` = project.in(file(\".\"))",
@@ -32,9 +32,9 @@ object FilesystemUtils {
 
       saveProjectFiles(catDir)
 
-      val catContent = Seq("import sbt._", "") ++ catKids.map(k => s"""lazy val `$k` = project.in(file("$k"))""") ++ Seq(
+      val catContent = Seq("import sbt._", "") ++ catKids.map(k => s"""lazy val `${clean(k)}` = project.in(file("$k"))""") ++ Seq(
         "",
-        s"lazy val all = Seq(${catKids.map(x => s"`$x`").mkString(", ")})",
+        s"lazy val all = Seq(${catKids.map(x => s"`${clean(x)}`").mkString(", ")})",
         "",
         s"lazy val `$cat` = {",
         s"""  val `$cat` = project.in(file("."))""",
@@ -58,4 +58,7 @@ object FilesystemUtils {
       pluginsFile.overwrite("""addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.26")""")
     }
   }
+
+  private[this] val badNames = Set("clone", "notify")
+  private[this] def clean(s: String) = if (badNames(s)) { s + "_project" } else { s }.replaceAllLiterally(".", "_")
 }

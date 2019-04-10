@@ -47,6 +47,7 @@ case class ThriftInput(
   override lazy val services = thriftServices.map(s => ThriftExportService.loadService(s, this))
 
   lazy val exportModelNames = structs.map(_.key).toSet
+  lazy val exportUnionNames = unions.map(_.key).toSet
 
   private[this] def getThriftEnum(k: String) = {
     intEnums.find(_.key == k).map(Left.apply).orElse(stringEnums.find(_.key == k).map(Right.apply)).getOrElse {

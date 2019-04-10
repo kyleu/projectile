@@ -31,8 +31,7 @@ object ModelHelper {
 
   def addEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val fieldStrings = model.fields.map { field =>
-      val imports = FieldTypeImports.imports(config, field.t)
-      imports.foreach {
+      FieldTypeImports.imports(config, field.t).foreach {
         case x if x == Seq("java", "time") => config.addCommonImport(file, "DateUtils")
         case _ => //noop
       }
@@ -54,7 +53,7 @@ object ModelHelper {
       case x => file.add(x + ",")
     }
     file.add(s") = {", -1)
-    file.indent(1)
+    file.indent()
     file.add(s"${model.className}(${model.fields.map(_.propertyName).mkString(", ")})")
     file.add("}", -1)
   }

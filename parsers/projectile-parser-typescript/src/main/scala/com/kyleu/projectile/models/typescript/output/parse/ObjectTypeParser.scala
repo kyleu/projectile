@@ -16,7 +16,6 @@ object ObjectTypeParser {
     val cn = ExportHelper.toClassName(name)
 
     val file = ScalaFile(path = OutputPath.SharedSource, dir = config.mergedApplicationPackage(ctx.pkg), key = cn)
-
     OutputHelper.printContext(file, nodeCtx)
     MemberHelper.addGlobal(file, config, ctx, Some(name))
     file.add(s"object $cn extends js.Object {", 1)

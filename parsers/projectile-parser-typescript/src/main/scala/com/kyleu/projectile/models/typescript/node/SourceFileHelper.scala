@@ -2,8 +2,7 @@ package com.kyleu.projectile.models.typescript.node
 
 import com.kyleu.projectile.models.typescript.JsonObjectExtensions._
 import com.kyleu.projectile.models.typescript.node.TypeScriptNode.{Error, SourceFile, Unknown}
-import com.kyleu.projectile.services.typescript.FileService
-import com.kyleu.projectile.services.typescript.ServiceParams
+import com.kyleu.projectile.services.typescript.{FileService, ServiceParams}
 import com.kyleu.projectile.util.JsonSerializers.extractObj
 import io.circe.{Json, JsonObject}
 
@@ -42,10 +41,7 @@ object SourceFileHelper {
     SourceFile(path = norm, header = header, statements = includes ++ getKids, ctx = ctx)
   }
 
-  def parseIncludes(src: Iterable[String]) = src.flatMap {
-    case l if l.contains("<reference") => Some(parseRef(l))
-    case _ => None
-  }
+  def parseReferences(src: Iterable[String]) = src.filter(_.contains("<reference")).map(parseRef)
 
   private[this] def parseHeader(src: Seq[String]) = {
     val (referenceLines, headerLines) = src.takeWhile(line => commentTokens.exists(line.contains) || line.trim.isEmpty).partition(_.contains("<reference"))
@@ -86,7 +82,7 @@ object SourceFileHelper {
   private[this] def parseRef(line: String) = line match {
     case x if x.contains(" types") =>
       val qIdx = quoteIndex(x, x.indexOf(" types"))
-      removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1)))
+      "types:" + removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1)))
     case x if x.contains(" path") =>
       val qIdx = quoteIndex(x, x.indexOf(" path"))
       "path:" + removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1)))

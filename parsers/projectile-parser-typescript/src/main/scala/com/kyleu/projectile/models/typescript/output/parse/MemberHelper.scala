@@ -20,6 +20,7 @@ object MemberHelper {
   }
 
   def addGlobal(file: ScalaFile, config: ExportConfiguration, ctx: ParseContext, name: Option[String], globalScoped: Boolean = false) = {
+    file.addImport(Seq("scala", "scalajs"), "js")
     file.add("@js.native")
     if (globalScoped) {
       file.add(s"""@js.annotation.JSGlobalScope""")
@@ -30,36 +31,34 @@ object MemberHelper {
 }
 
 case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: ScalaFile) {
-  def addImport(t: FieldType) = FieldTypeImports.imports(config = config, t = t, isJs = true).foreach(pkg => file.addImport(p = pkg.init, c = pkg.last))
+  def addImports(types: FieldType*) = types.foreach { t =>
+    FieldTypeImports.imports(config = config, t = t, isJs = true).foreach(pkg => file.addImport(p = pkg.init, c = pkg.last))
+  }
 
   def forType(typ: FieldTypeRequired) = {
-    addImport(typ.t)
+    addImports(typ.t)
     MemberHelper.jsType(config, typ.t)
   }
 
   def forTParam(t: TypeParam) = t.constraint match {
     case Some(c) =>
-      addImport(c)
+      addImports(c)
       ExportHelper.escapeKeyword(t.name) + " <: " + FieldTypeAsScala.asScala(config = config, t = c, isJs = true)
     case None =>
       ExportHelper.escapeKeyword(t.name)
   }
 
   def forObj(obj: ObjectField) = {
-    addImport(obj.t)
+    addImports(obj.t)
     s"${ExportHelper.escapeKeyword(obj.k)}: ${MemberHelper.jsType(config, obj.t)}"
   }
 
   def forMethod(name: String, tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) = {
-    val ov = name match {
-      case "toString" | "clone" => "override "
-      case _ => ""
-    }
     val paramsString = params.map(forObj).mkString(", ")
     val tParamsString = if (tParams.isEmpty) { "" } else { "[" + tParams.map(forTParam).mkString(", ") + "]" }
     val abst = ctx.modifiers(ModifierFlag.Abstract)
     val decl = if (abst) { "" } else { " = js.native" }
-    file.add(s"${ov}def ${ExportHelper.escapeKeyword(name)}$tParamsString($paramsString): ${forType(ret)}$decl")
+    file.add(s"${ov(name)}def ${ExportHelper.escapeKeyword(name)}$tParamsString($paramsString): ${forType(ret)}$decl")
     params.map(_.t) ++ tParams.flatMap(t => t.constraint.toSeq ++ t.default.toSeq)
   }
 
@@ -83,7 +82,17 @@ case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: Sc
   }
 
   def forApply(tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext) = {
-    file.add("// Apply!")
+    val paramsString = params.map(forObj).mkString(", ")
+    val tParamsString = if (tParams.isEmpty) { "" } else { "[" + tParams.map(forTParam).mkString(", ") + "]" }
+    val abst = ctx.modifiers(ModifierFlag.Abstract)
+    val decl = if (abst) { "" } else { " = js.native" }
+    file.add(s"def apply$tParamsString($paramsString): ${forType(ret)}$decl")
+    params.map(_.t) ++ tParams.flatMap(t => t.constraint.toSeq ++ t.default.toSeq)
     tParams.flatMap(_.types) ++ params.map(_.t) :+ ret.t
+  }
+
+  private[this] def ov(name: String) = name match {
+    case "toString" | "clone" => "override "
+    case _ => ""
   }
 }
