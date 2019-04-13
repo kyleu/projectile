@@ -58,7 +58,7 @@ trait ProjectHelper { this: ProjectileService =>
     o -> outputSvc.persist(o = o, verbose = verbose, cfg = configForProject(o.project.key))
   }
   def exportProjectFromInput(p: ProjectSummary, i: Input, cfg: ConfigService, verbose: Boolean) = {
-    val projectRoot = better.files.File.temp
+    val projectRoot = cfg.workingDirectory
     val project = loadSvc.transform(projectRoot, p, i)
     val exportCfg = {
       ExportConfiguration(project = project, enums = i.enums, models = i.models, unions = i.unions, services = i.services, additional = i.additional)

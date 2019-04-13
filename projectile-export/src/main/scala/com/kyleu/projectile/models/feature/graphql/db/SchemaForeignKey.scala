@@ -18,7 +18,7 @@ object SchemaForeignKey {
             srcCol.addImport(config, file, src.pkg)
             file.addImport(Seq("sangria", "execution", "deferred"), "HasId")
             val fn = s"${src.propertyName}By${srcCol.className}Fetcher"
-            file.addMarker("fetcher", (src.graphqlPackage(config) :+ s"${src.className}Schema" :+ fn).mkString("."))
+            file.addMarkers("fetcher", (src.graphqlPackage(config) :+ s"${src.className}Schema" :+ fn).mkString("."))
             file.add(s"val $fn = Fetcher { (c: GraphQLContext, values: Seq[$idType]) =>", 1)
             file.add(s"c.${src.injectedService(config)}.getBy${srcCol.className}Seq(c.creds, values)(c.trace)")
             file.add(s"}(HasId[${src.className}, $idType](_.${srcCol.propertyName}))", -1)
@@ -27,7 +27,7 @@ object SchemaForeignKey {
             val relName = s"${src.propertyName}By${srcCol.className}"
             val idType = if (srcCol.required) { srcCol.scalaType(config) } else { "Option[" + srcCol.scalaType(config) + "]" }
 
-            file.addMarker("fetcher", (src.graphqlPackage(config) :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
+            file.addMarkers("fetcher", (src.graphqlPackage(config) :+ s"${src.className}Schema" :+ s"${relName}Fetcher").mkString("."))
             file.addImport(Seq("sangria", "execution", "deferred"), "Relation")
             srcCol.addImport(config, file, src.pkg)
             file.add(s"""val ${relName}Relation = Relation[${src.className}, $idType]("by${srcCol.className}", x => Seq(x.${srcCol.propertyName}))""")

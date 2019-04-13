@@ -82,7 +82,7 @@ object SourceFileHelper {
   private[this] def parseRef(line: String) = line match {
     case x if x.contains(" types") =>
       val qIdx = quoteIndex(x, x.indexOf(" types"))
-      "types:" + removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1)))
+      "types:" + removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1))).dropWhile(x => x == '/' | x == '.')
     case x if x.contains(" path") =>
       val qIdx = quoteIndex(x, x.indexOf(" path"))
       "path:" + removeQuotes(x.substring(qIdx, quoteIndex(x, qIdx + 1)))

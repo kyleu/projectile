@@ -36,11 +36,11 @@ object ControllerFile {
     file.addImport(model.modelPackage(config), model.className + "Result")
 
     if (model.propertyName != "audit") {
-      file.addMarker("string-search", model.key)
+      file.addMarkers("string-search", model.key)
       model.pkFields match {
         case sole :: Nil => sole.t match {
-          case FieldType.UuidType => file.addMarker("uuid-search", model.key)
-          case FieldType.IntegerType => file.addMarker("int-search", model.key)
+          case FieldType.UuidType => file.addMarkers("uuid-search", model.key)
+          case FieldType.IntegerType => file.addMarkers("int-search", model.key)
           case _ => // noop
         }
         case _ => // noop

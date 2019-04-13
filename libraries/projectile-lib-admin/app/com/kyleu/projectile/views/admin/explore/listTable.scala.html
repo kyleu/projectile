@@ -1,16 +1,16 @@
 @(
     cols: Seq[(String, String)], rows: Seq[Html], modelPlural: String,
     orderByUrl: Option[(Option[String], Boolean) => Call], orderBy: Option[String], orderAsc: Boolean
-)<table class="bordered responsive-table">
+)<table class="bordered highlight responsive-table data-table">
   <thead>
     <tr>
       @cols.map { col =>
         @orderByUrl.map { u =>
           @if(orderBy.contains(col._1)) {
             @if(orderAsc) {
-              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons" style="font-size: 1rem;">arrow_drop_down</i></a></th>
+              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons">arrow_drop_down</i></a></th>
             } else {
-              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons" style="font-size: 1rem;">arrow_drop_up</i></a></th>
+              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons">arrow_drop_up</i></a></th>
             }
           } else {
             <th><a class="sort-link" href="@u(Some(col._1), true)">@col._2</a></th>

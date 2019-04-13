@@ -24,7 +24,7 @@ abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: S
 
   private[this] val markers = collection.mutable.HashMap.empty[String, Seq[String]]
   def markersFor(key: String) = markers.getOrElseUpdate(key, Nil)
-  def addMarker(key: String, v: String) = markers(key) = markersFor(key) :+ v
+  def addMarkers(key: String, v: String*) = markers(key) = markersFor(key) ++ v
 
   def indent(indentDelta: Int = 1): Unit = currentIndent += indentDelta
 

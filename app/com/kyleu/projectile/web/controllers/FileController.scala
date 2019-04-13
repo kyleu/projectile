@@ -31,7 +31,7 @@ class FileController @javax.inject.Inject() () extends ProjectileController {
       "Saved"
     }
 
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.FileController.viewFile(path)).flashing("success" -> msg))
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.FileController.viewFile(path)).flashing("success" -> msg.take(512)))
   }
 
   def deleteFile(path: String) = Action.async { implicit request =>

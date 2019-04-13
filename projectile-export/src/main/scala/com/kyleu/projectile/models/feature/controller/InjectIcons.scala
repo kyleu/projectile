@@ -1,5 +1,6 @@
 package com.kyleu.projectile.models.feature.controller
 
+import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.kyleu.projectile.models.output.OutputPath
@@ -10,44 +11,44 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val models = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
-
     val o = original.mkString("\n")
-
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model icons")
     val startIndex = o.indexOf(params.start)
     val endIndex = o.indexOf(params.end)
-
-    val newLines = if (config.isNewUi) {
-      val pkgs = models.flatMap(_.pkg.headOption).distinct.flatMap { pkg =>
-        o.indexOf(s"val pkg_$pkg = ") match {
-          case x if x > -1 && x < startIndex => None
-          case x if x > endIndex => None
-          case _ => Some(s"""val pkg_$pkg = "${randomMaterialIcon(pkg)}"""")
-        }
-      }.sorted
-
-      val mods = models.flatMap { m =>
-        o.indexOf("val " + m.propertyName + " = ") match {
-          case x if x > -1 && x < startIndex => None
-          case x if x > endIndex => None
-          case _ => Some(s"""val ${m.propertyName} = "${m.icon.getOrElse(randomMaterialIcon(m.propertyName))}"""")
-        }
-      }.sorted
-
-      pkgs ++ Seq("") ++ mods
-    } else {
-      models.flatMap { m =>
-        o.indexOf("val " + m.propertyName + " = ") match {
-          case x if x > -1 && x < startIndex => None
-          case x if x > endIndex => None
-          case -1 => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomFaIcon(m.propertyName))}"""")
-          case _ => None
-        }
-      }.sorted
-    }
-
+    val newLines = if (config.isNewUi) { newContent(o, startIndex, endIndex, models) } else { originalContent(o, startIndex, endIndex, models) }
     TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)
   }
+
+  private[this] def newContent(o: String, startIndex: Int, endIndex: Int, models: Seq[ExportModel]) = {
+    val pkgs = models.flatMap(_.pkg.headOption)
+    val sysPkg = if (models.exists(_.pkg.isEmpty)) { Seq("system") } else { Nil }
+    val packages = (pkgs ++ sysPkg).distinct.flatMap { pkg =>
+      o.indexOf(s"val pkg_$pkg = ") match {
+        case x if x > -1 && x < startIndex => None
+        case x if x > endIndex => None
+        case _ => Some(s"""val pkg_$pkg = "${randomMaterialIcon(pkg)}"""")
+      }
+    }.sorted
+
+    val mods = models.flatMap { m =>
+      o.indexOf("val " + m.propertyName + " = ") match {
+        case x if x > -1 && x < startIndex => None
+        case x if x > endIndex => None
+        case _ => Some(s"""val ${m.propertyName} = "${m.icon.getOrElse(randomMaterialIcon(m.propertyName))}"""")
+      }
+    }.sorted
+
+    packages ++ mods
+  }
+
+  private[this] def originalContent(o: String, startIndex: Int, endIndex: Int, models: Seq[ExportModel]) = models.flatMap { m =>
+    o.indexOf("val " + m.propertyName + " = ") match {
+      case x if x > -1 && x < startIndex => None
+      case x if x > endIndex => None
+      case -1 => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomFaIcon(m.propertyName))}"""")
+      case _ => None
+    }
+  }.sorted
 
   private[this] val faIcons = IndexedSeq(
     "address-book-o", "anchor", "asterisk", "bar-chart-o", "beer", "bell-o", "bicycle", "birthday-cake", "bookmark-o",

@@ -48,7 +48,7 @@ class ProfileController @javax.inject.Inject() (
   }
 
   def changePassword = withSession("change-password") { implicit request => implicit td =>
-    def errorResponse(msg: String) = Redirect(actions.changePasswordUrl).flashing("error" -> msg)
+    def errorResponse(msg: String) = Redirect(actions.changePasswordUrl).flashing("error" -> msg.take(512))
     UserForms.changePasswordForm.bindFromRequest().fold(
       formWithErrors => {
         Future.successful(errorResponse(ControllerUtils.errorsToString(formWithErrors.errors)))

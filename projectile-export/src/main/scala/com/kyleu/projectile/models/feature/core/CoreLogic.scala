@@ -41,9 +41,12 @@ object CoreLogic extends FeatureLogic {
         case Service.ThriftService => Seq(ThriftServiceFile.export(config, svc).rendered)
       }
     }
+
     val additional = config.additional.map(_.rendered)
     val fc = enums.size + models.size + unions.size + services.size + additional.size
     debug(s"Exported [${enums.size}] enums, [${models.size}] models, [${unions.size}] unions, and [${services.size}] services, creating [$fc] files")
     additional ++ enums ++ models ++ unions ++ services
   }
+
+  override val injections = Seq(InjectBuildSbt)
 }

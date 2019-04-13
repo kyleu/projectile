@@ -11,7 +11,7 @@ object TwirlSearchResultFile {
     file.add(s"""@(model: ${model.fullClassPath(config)}, hit: String)<div class="search-result">""", 1)
 
     file.add(s"""<div class="right">""", 1)
-    file.add(TwirlHelper.iconHtml(config = config, propertyName = model.propertyName, style = Some("font-size: 1rem;")) + " " + model.title)
+    file.add(TwirlHelper.iconHtml(config = config, propertyName = model.propertyName) + " " + model.title)
     file.add(s"</div>", -1)
 
     file.add("<div>", 1)
@@ -19,7 +19,9 @@ object TwirlSearchResultFile {
       file.add("@model")
     } else {
       val cs = model.pkFields.map(f => "model." + f.propertyName)
-      file.add(s"""<a href="@${TwirlHelper.routesClass(config, model)}.view(${cs.mkString(", ")})">${cs.map("@" + _).mkString(", ")}</a>""")
+      val content = cs.map("@" + _).mkString(", ")
+      val route = s"@${TwirlHelper.routesClass(config, model)}.view(${cs.mkString(", ")}"
+      file.add(s"""<a href="$route)">$content</a>""")
     }
     file.add("</div>", -1)
 

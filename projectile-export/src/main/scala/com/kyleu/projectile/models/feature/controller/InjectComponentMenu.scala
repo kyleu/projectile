@@ -33,8 +33,10 @@ object InjectComponentMenu extends FeatureLogic.Inject(path = OutputPath.ServerS
           val comma = if (last) { "" } else { "," }
           val section = ExportHelper.toClassName(pkgGroup._1)
 
-          val h = s"""NavMenu(key = "${pkgGroup._1}", title = "$section", url = None, children = Seq("""
-          val t = s"""), flatSection = true)$comma"""
+          val sectionIcon = s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.pkg_${pkgGroup._1}"
+          val h = s"""NavMenu(key = "${pkgGroup._1}", title = "$section", url = None, icon = Some($sectionIcon), children = Seq("""
+          // val t = s"""), flatSection = true)$comma"""
+          val t = s"""))$comma"""
 
           val memberLines = h +: models.map { model =>
             val lastMember = models.lastOption.contains(model)

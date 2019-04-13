@@ -24,13 +24,13 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
   def update(key: String) = Action.async { implicit request =>
     val result = projectile.updateProject(key)
     val msg = result.mkString("\n")
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg))
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg.take(512)))
   }
 
   def fix(key: String, t: String, src: String, tgt: String) = Action.async { implicit request =>
     val result = projectile.fix(key, t, src, tgt)
     val msg = result.toString
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> msg))
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> msg.take(512)))
   }
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>

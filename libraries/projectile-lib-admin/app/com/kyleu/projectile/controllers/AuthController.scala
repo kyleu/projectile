@@ -55,7 +55,7 @@ abstract class AuthController(name: String) extends BaseController(name) {
       case Some(_) => "You must be an administrator to access that"
       case None => s"You must sign in or register before accessing ${app.projectName}"
     }
-    Future.successful(Redirect(app.actions.failedRedirect).flashing("error" -> msg).withSession(request.session + ("returnUrl" -> request.uri)))
+    Future.successful(Redirect(app.actions.failedRedirect).flashing("error" -> msg.take(512)).withSession(request.session + ("returnUrl" -> request.uri)))
   }
 
   protected def enhanceRequest(request: Request[AnyContent], user: Option[SystemUser], trace: TraceData) = {

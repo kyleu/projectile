@@ -13,7 +13,7 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
   def updateAll() = Action.async { implicit request =>
     val result = projectile.updateAll()
     val call = com.kyleu.projectile.web.controllers.routes.HomeController.index()
-    Future.successful(Redirect(call).flashing("success" -> result.mkString(", ").take(1000)))
+    Future.successful(Redirect(call).flashing("success" -> result.mkString(", ").take(512)))
   }
 
   def exportAll() = Action.async { implicit request =>

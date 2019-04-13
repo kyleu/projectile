@@ -33,3 +33,30 @@ html {
 #splash-content .card-panel.border-radius-6.splash-card {
   margin-left: 0 !important;
 }
+
+// Tables
+.data-table {
+  td {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Forms
+.nullable-input-container {
+  position: relative;
+}
+
+.nullable-link {
+  font-size: 150%;
+  cursor: pointer;
+  position: absolute;
+  right: 6px;
+  top: 14px;
+}
+
+.small.material-icons {
+  font-size: 1rem;
+}

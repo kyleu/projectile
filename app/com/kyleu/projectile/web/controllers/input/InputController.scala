@@ -27,14 +27,14 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
     val startMs = System.currentTimeMillis
     projectile.refreshInput(key)
     val msg = s"Refreshed input [$key] in [${System.currentTimeMillis - startMs}ms]"
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(key)).flashing("success" -> msg))
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(key)).flashing("success" -> msg.take(512)))
   }
 
   def refreshAll = Action.async { implicit request =>
     val startMs = System.currentTimeMillis
     val results = projectile.listInputs().map(i => projectile.refreshInput(i.key))
     val msg = s"Refreshed [${results.size}] inputs in [${System.currentTimeMillis - startMs}ms]"
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> msg))
+    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> msg.take(512)))
   }
 
   def formNew = Action.async { implicit request =>
