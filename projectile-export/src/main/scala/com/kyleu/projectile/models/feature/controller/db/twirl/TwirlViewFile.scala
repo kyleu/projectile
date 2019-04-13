@@ -32,7 +32,7 @@ object TwirlViewFile {
     TwirlViewHelper.addButtons(config, model, file)
     TwirlViewHelper.addFields(config, model, file)
     file.add("}", -1)
-    addNotesAndAudits(config, model, file)
+    addModelFeatures(config, model, file)
 
     TwirlViewHelper.addReferences(config, model, file)
     file.add("}", -1)
@@ -59,20 +59,27 @@ object TwirlViewFile {
     TwirlViewHelper.addFields(config, model, file)
     file.add("</div>", -1)
 
-    addNotesAndAudits(config, model, file)
+    addModelFeatures(config, model, file)
     file.add("</div>", -1)
 
     TwirlViewHelper.addReferences(config, model, file)
     file.add("}", -1)
   }
 
-  private[this] def addNotesAndAudits(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.pkFields.nonEmpty) {
+  private[this] def addModelFeatures(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.pkFields.nonEmpty) {
     val viewPkg = (config.viewPackage ++ Seq("html", "admin")).mkString(".")
     val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
+    if (config.project.flags("augmented")) {
+      val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
+      file.add()
+      file.add(s"""@$imp.AugmentService.augmentModel(model)""")
+    }
     if (model.features(ModelFeature.Notes)) {
+      file.add()
       file.add(s"""@$viewPkg.note.notes(notes, "${model.propertyName}", "${model.title}", $modelPks)""")
     }
     if (model.features(ModelFeature.Audit)) {
+      file.add()
       file.add(s"""@$viewPkg.audit.auditRecords(auditRecords, "${model.propertyName}", "${model.title}", $modelPks)""")
     }
   }

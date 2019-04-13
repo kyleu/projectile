@@ -25,6 +25,13 @@
       </div>
 
       <div class="collection-item">
+        <label>
+          <input name="flags" type="checkbox" value="augmented" @if(project.flags("augmented")) { checked="checked" } />
+          <span>Augmented Calls</span>
+        </label>
+      </div>
+
+      <div class="collection-item">
         <input class="btn theme" type="submit" value="Save" />
         <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(project.key)">Cancel</a>
       </div>
