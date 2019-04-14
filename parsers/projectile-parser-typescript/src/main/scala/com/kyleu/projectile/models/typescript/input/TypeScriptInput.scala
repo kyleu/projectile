@@ -29,7 +29,7 @@ case class TypeScriptInput(
   lazy val srcFiles = nodes.flatMap(NodeHelper.getSourceFileNodes)
   lazy val moduleReferences = nodes.flatMap(NodeHelper.getModuleReferenceNodes)
 
-  lazy val output = {
+  lazy val output: ExportConfiguration = {
     val k = TypeScriptInput.stripName(key)
     val ctx = ParseContext(key = k, pkg = Nil, root = File("."))
     val p = Project(template = ProjectTemplate.Custom, k, k).copy(packages = Map(
