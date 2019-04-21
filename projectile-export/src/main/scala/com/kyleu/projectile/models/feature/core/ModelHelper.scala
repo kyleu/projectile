@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.feature.core
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeImports, FieldTypeRestrictions}
+import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala, FieldTypeImports, FieldTypeRestrictions}
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -56,5 +56,28 @@ object ModelHelper {
     file.indent()
     file.add(s"${model.className}(${model.fields.map(_.propertyName).mkString(", ")})")
     file.add("}", -1)
+  }
+
+  def addJson(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.features(ModelFeature.Json)) {
+    // file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+    // file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
+
+    file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = (r: ${model.className}) => io.circe.Json.obj(", 1)
+    model.fields.foreach { f =>
+      val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
+      file.add(s"""("${f.propertyName}", r.${f.propertyName}.asJson)$comma""")
+    }
+    file.add(")", -1)
+    file.add()
+
+    file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = (c: io.circe.HCursor) => for {", 1)
+    model.fields.foreach { f =>
+      val ts = FieldTypeAsScala.asScala(config = config, t = f.t)
+      val typ = if (f.required) { ts } else { "Option[" + ts + "]" }
+      file.add(s"""${f.propertyName} <- c.downField("${f.propertyName}").as[$typ]""")
+    }
+    val props = model.fields.map(_.propertyName).mkString(", ")
+    file.add(s"} yield ${model.className}($props)", -1)
+    file.add()
   }
 }

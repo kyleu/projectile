@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.{ExportEnum, ExportModel}
+import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.RoutesFile
 
@@ -47,7 +47,7 @@ object RoutesFiles {
         val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
 
         val view = s"GET         $detailUrl $detailWs $controllerClass.view($args, t: Option[String] ?= None)"
-        val counts = if (model.validReferences(config).isEmpty) {
+        val counts = if (ExportModelReference.validReferences(config, model).isEmpty) {
           Nil
         } else {
           Seq(s"GET         $detailUrl/counts ${detailWs.drop(7)} $controllerClass.relationCounts($args)")

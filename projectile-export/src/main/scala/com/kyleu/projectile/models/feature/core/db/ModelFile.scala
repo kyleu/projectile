@@ -30,11 +30,7 @@ object ModelFile {
     }
 
     file.add(s"object ${model.className} {", 1)
-    if (model.features(ModelFeature.Json)) {
-      file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
-      file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-      file.add()
-    }
+    ModelHelper.addJson(config, file, model)
     ModelHelper.addEmpty(config, model, file)
     file.add("}", -1)
     file.add()

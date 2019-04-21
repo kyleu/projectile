@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.feature.graphql.db
 
-import com.kyleu.projectile.models.export.ExportModel
+import com.kyleu.projectile.models.export.{ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object SchemaObjectType {
   def addObjectType(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
-    val references = model.validReferences(config)
+    val references = ExportModelReference.validReferences(config, model)
     val withNotes = model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)
     if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && references.isEmpty) {
       file.add(s"implicit lazy val ${model.propertyName}Type: sangria.schema.ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")

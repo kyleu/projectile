@@ -72,7 +72,7 @@ object TwirlViewFile {
     if (config.project.flags("augmented")) {
       val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
       file.add()
-      file.add(s"""@$imp.AugmentService.augmentModel(model)""")
+      file.add(s"""@$imp.AugmentService.augmentModel(model, request.queryString)""")
     }
     if (model.features(ModelFeature.Notes)) {
       file.add()

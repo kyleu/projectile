@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.core.ModelHelper
 import com.kyleu.projectile.models.input.InputType
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.output.file.ScalaFile
@@ -14,7 +15,6 @@ object StructModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = model.pkg, key = model.className)
-
     if (model.features(ModelFeature.Json)) {
       config.addCommonImport(file, "JsonSerializers", "_")
     }
@@ -22,20 +22,14 @@ object StructModelFile {
       config.addCommonImport(file, "DataField")
       config.addCommonImport(file, "DataFieldModel")
     }
-
     if (model.fields.isEmpty) { exportEmpty(config, model, file) } else { exportFields(config, model, file) }
-
     file
   }
 
   private[this] def exportEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val thriftModel = model.pkg.dropRight(1) :+ model.key
     file.add(s"object ${model.className} {", 1)
-    if (model.features(ModelFeature.Json)) {
-      file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
-      file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-      file.add()
-    }
+    ModelHelper.addJson(config, file, model)
     file.add(s"def fromThrift(t: ${thriftModel.mkString(".")}) = ${model.className}()")
     file.add("}", -1)
     file.add()
@@ -46,11 +40,7 @@ object StructModelFile {
 
   private[this] def exportFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     file.add(s"object ${model.className} {", 1)
-    if (model.features(ModelFeature.Json)) {
-      file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
-      file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-      file.add()
-    }
+    ModelHelper.addJson(config, file, model)
     val thriftModel = model.pkg.dropRight(1) :+ model.key
     file.add(s"def fromThrift(t: ${thriftModel.mkString(".")}) = ${model.className}(", 1)
     model.fields.foreach { field =>
@@ -62,7 +52,6 @@ object StructModelFile {
     file.add(")", -1)
     file.add("}", -1)
     file.add()
-
     file.add(s"final case class ${model.className}(", 2)
     addFields(config, model.pkg, model.fields, file)
     if (model.features(ModelFeature.DataModel)) {

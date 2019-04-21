@@ -16,8 +16,6 @@ object ControllerFile {
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
 
-    config.addCommonImport(file, "UiConfig")
-
     config.addCommonImport(file, "ServiceController")
     if (model.features(ModelFeature.Auth)) { config.addCommonImport(file, "ServiceAuthController") }
     if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditRecordRowService") }
@@ -36,7 +34,7 @@ object ControllerFile {
     file.addImport(model.modelPackage(config), model.className + "Result")
 
     if (model.propertyName != "audit") {
-      file.addMarkers("string-search", model.key)
+      if (model.pkFields.nonEmpty) { file.addMarkers("string-search", model.key) }
       model.pkFields match {
         case sole :: Nil => sole.t match {
           case FieldType.UuidType => file.addMarkers("uuid-search", model.key)

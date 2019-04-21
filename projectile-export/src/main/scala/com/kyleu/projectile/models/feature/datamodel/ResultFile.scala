@@ -35,9 +35,7 @@ object ResultFile {
 
     file.add()
     file.add(s"object ${model.className}Result {", 1)
-    file.add(s"implicit val jsonEncoder: Encoder[${model.className}Result] = deriveEncoder")
-    file.add(s"implicit val jsonDecoder: Decoder[${model.className}Result] = deriveDecoder")
-    file.add()
+    addJson(config, file, model)
 
     file.add("def fromRecords(")
     file.add("  q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None,")
@@ -51,4 +49,31 @@ object ResultFile {
 
     file
   }
+
+  private[this] def addJson(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.features(ModelFeature.Json)) {
+    // file.add(s"implicit val jsonEncoder: Encoder[${model.className}Result] = deriveEncoder")
+    // file.add(s"implicit val jsonDecoder: Decoder[${model.className}Result] = deriveDecoder")
+
+    val fields = Seq(
+      "filters" -> "Seq[Filter]", "orderBys" -> "Seq[OrderBy]", "totalCount" -> "Int", "paging" -> "PagingOptions",
+      "results" -> s"Seq[${model.className}]", "durationMs" -> "Int", "occurred" -> "LocalDateTime"
+    )
+
+    file.add(s"implicit val jsonEncoder: Encoder[${model.className}Result] = (r: ${model.className}Result) => io.circe.Json.obj(", 1)
+    fields.foreach { f =>
+      val comma = if (fields.lastOption.contains(f)) { "" } else { "," }
+      file.add(s"""("${f._1}", r.${f._1}.asJson)$comma""")
+    }
+    file.add(")", -1)
+    file.add()
+
+    file.add(s"implicit val jsonDecoder: Decoder[${model.className}Result] = (c: io.circe.HCursor) => for {", 1)
+    fields.foreach { f =>
+      file.add(s"""${f._1} <- c.downField("${f._1}").as[${f._2}]""")
+    }
+    val props = fields.map(_._1).mkString(", ")
+    file.add(s"} yield ${model.className}Result($props)", -1)
+    file.add()
+  }
+
 }

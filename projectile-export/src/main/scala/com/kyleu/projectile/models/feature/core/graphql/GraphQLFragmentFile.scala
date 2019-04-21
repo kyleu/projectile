@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.feature.core.graphql
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.core.ModelHelper
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.util.StringUtils
@@ -20,8 +21,7 @@ object GraphQLFragmentFile {
 
     val objCount = GraphQLObjectHelper.writeObjects(s"fragment:${model.className}", config, file, model.fields)
 
-    file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-    // file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+    ModelHelper.addJson(config, file, model)
 
     model.source.foreach { src =>
       addContent(file, src)

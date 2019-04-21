@@ -20,9 +20,11 @@ object PostgresInput {
 case class PostgresInput(
     override val key: String = "new",
     override val description: String = "...",
-    url: String = "jdbc:postgresql://localhost/db",
+    host: String = "localhost",
+    port: Int = 5432,
     username: String = "",
     password: String = "",
+    db: String = "",
     ssl: Boolean = false,
     catalog: Option[String] = None,
     enumTypes: Seq[EnumType] = Nil,
@@ -30,6 +32,8 @@ case class PostgresInput(
     views: Seq[View] = Nil
 ) extends Input {
   override def template = InputTemplate.Postgres
+
+  val url: String = s"jdbc:postgresql://$host:$port/$db"
 
   override lazy val enums = enumTypes.map(e => ExportEnum(
     inputType = InputType.Enum.PostgresEnum,
@@ -51,6 +55,7 @@ case class PostgresInput(
     props.setProperty("user", username)
     props.setProperty("password", password)
     props.setProperty("ssl", ssl.toString)
+    val url = s"jdbc:postgresql://$host:$port/$db"
     DriverManager.getConnection(url, props)
   }
 }

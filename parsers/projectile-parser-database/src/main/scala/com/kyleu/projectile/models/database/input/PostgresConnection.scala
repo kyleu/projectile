@@ -10,7 +10,8 @@ object PostgresConnection {
 }
 
 case class PostgresConnection(
-    url: String = "jdbc:postgresql://localhost/db",
+    host: String = "localhost",
+    port: Int = 5432,
     username: String = "",
     password: String = "",
     ssl: Boolean = false,

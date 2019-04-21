@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldTypeAsScala
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.core.ModelHelper
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -17,8 +18,7 @@ object GraphQLInputFile {
     config.addCommonImport(file, "JsonSerializers", "_")
 
     file.add(s"object ${model.className} {", 1)
-    file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-    file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
+    ModelHelper.addJson(config, file, model)
     file.add("}", -1)
 
     file.add()

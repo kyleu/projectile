@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.export.config
 
 import com.kyleu.projectile.models.database.schema.Table
-import com.kyleu.projectile.models.export.ExportModel
+import com.kyleu.projectile.models.export.{ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.output.ExportHelper
 
 object ExportConfigurationHelper {
@@ -31,7 +31,7 @@ object ExportConfigurationHelper {
             val tgtCol = t.columns.find(_.name == ref.target).getOrElse(
               throw new IllegalStateException(s"Missing column [${ref.target}] in table [${t.name}]")
             )
-            Seq(ExportModel.Reference(
+            Seq(ExportModelReference(
               name = name, propertyName = propertyName, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull
             ))
           case _ => None // multiple refs

@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db.twirl
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
-import com.kyleu.projectile.models.export.{ExportField, ExportModel}
+import com.kyleu.projectile.models.export.{ExportField, ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
@@ -18,14 +18,14 @@ object TwirlViewHelper {
     }
   }
 
-  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.validReferences(config).nonEmpty) {
+  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (ExportModelReference.validReferences(config, model).nonEmpty) {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     file.add()
     file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
-    model.transformedReferences(config).foreach { r =>
-      val src = r._3
-      val srcField = r._4
-      val tgtField = r._2
+    ExportModelReference.transformedReferences(config, model).foreach { r =>
+      val src = r.src
+      val srcField = r.tf
+      val tgtField = r.f
       val relArgs = s"""data-table="${src.propertyName}" data-field="${srcField.propertyName}" data-singular="${src.title}" data-plural="${src.plural}""""
       val relAttrs = s"""id="relation-${src.propertyName}-${srcField.propertyName}" $relArgs"""
       val relUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"

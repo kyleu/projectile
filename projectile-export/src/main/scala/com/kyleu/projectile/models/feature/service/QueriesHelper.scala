@@ -52,7 +52,6 @@ object QueriesHelper {
     config.addCommonImport(file, "OrderBy")
 
     val field = model.fields.find(_.key == col).getOrElse(throw new IllegalStateException(s"Missing column [$col]"))
-    field.addImport(config, file, Nil)
     val propId = columnPropertyIds.getOrElse(field.propertyName, field.propertyName)
     val propCls = field.className
     field.t match {
