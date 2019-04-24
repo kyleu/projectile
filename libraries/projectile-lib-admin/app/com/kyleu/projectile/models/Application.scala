@@ -59,7 +59,7 @@ class Application @javax.inject.Inject() (
     } catch {
       case NonFatal(x) =>
         val c = DatabaseConfig.fromConfig(config.cnf.underlying, "database.application")
-        throw new IllegalArgumentException(s"Cannot connect to database using [$c]: $x", x)
+        throw new IllegalArgumentException(s"Cannot connect to database using [${c.url}]: $x", x)
     }
 
     Future.successful(true)

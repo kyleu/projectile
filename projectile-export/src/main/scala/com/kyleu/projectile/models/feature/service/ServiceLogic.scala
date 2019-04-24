@@ -7,11 +7,13 @@ object ServiceLogic extends FeatureLogic {
   override def export(config: ExportConfiguration, info: String => Unit, debug: String => Unit) = {
     val svcModels = config.models.filter(_.features(ModelFeature.Service))
 
-    val models = svcModels.filter(_.inputType.isDatabase).flatMap { model =>
+    val modelFiles = svcModels.filter(_.inputType.isDatabase).flatMap { model =>
       Seq(QueriesFile.export(config, model).rendered, ServiceFile.export(config, model).rendered)
     }
 
-    debug(s"Exported [${models.size}] models")
-    models
+    val testFiles = ServiceTestFiles.export(config).map(_.rendered)
+
+    debug(s"Exported [${modelFiles.size}] models with [${testFiles.size}] test files")
+    modelFiles ++ testFiles
   }
 }

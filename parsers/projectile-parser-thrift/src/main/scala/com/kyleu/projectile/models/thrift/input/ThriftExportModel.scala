@@ -32,7 +32,7 @@ object ThriftExportModel {
     val t = ThriftFileHelper.columnTypeFor(f.t, input)
     ExportField(
       key = f.key,
-      propertyName = f.name,
+      propertyName = ExportHelper.toIdentifier(f.name),
       title = ExportHelper.toDefaultTitle(f.key),
       description = None,
       t = t,

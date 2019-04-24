@@ -66,7 +66,7 @@ object ThriftControllerFile {
 
     val argNames = "argNames = Seq(" + m.args.map("\"" + _.key + "\"").mkString(", ") + ")"
     val postCall = s"""def ${m.name}Call = postHelper(title = "${m.name}", act = rc.${m.name}(), $argNames, result = (args, td) => svc.${m.name}("""
-    if (argNames.isEmpty) {
+    if (m.args.isEmpty) {
       file.add(postCall + ")(td).map(_.asJson))")
     } else {
       file.add(postCall, 1)
