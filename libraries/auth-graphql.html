@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>AuthGraphQL · Projectile</title>
+<title>Auth/GraphQL · Projectile</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-AuthGraphQL
+Auth/GraphQL
 </span>
 </div>
 </div>
@@ -145,17 +145,12 @@ KyleU/projectile
     <li><a href="../gettingStarted/installing.html" class="page">Installing Projectile</a></li>
     <li><a href="../gettingStarted/project.html" class="page">Creating a Project</a></li>
   </ul></li>
-  <li><a href="../tutorial/index.html" class="page">Tutorials</a>
-  <ul>
-    <li><a href="../tutorial/poker/index.html" class="page">estimate.poker</a></li>
-    <li><a href="../tutorial/starwars/index.html" class="page">starwars</a></li>
-    <li><a href="../tutorial/thrifty/index.html" class="page">thrifty</a></li>
-  </ul></li>
   <li><a href="../codegen/index.html" class="page">Code Generation</a>
   <ul>
     <li><a href="../codegen/database.html" class="page">Database</a></li>
     <li><a href="../codegen/thrift.html" class="page">Thrift</a></li>
     <li><a href="../codegen/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../codegen/typescript.html" class="page">TypeScript</a></li>
     <li><a href="../codegen/sbt-plugin.html" class="page">SBT Plugin</a></li>
   </ul></li>
   <li><a href="../libraries/index.html" class="page">Scala Libraries</a>
@@ -173,15 +168,27 @@ KyleU/projectile
     <li><a href="../libraries/play.html" class="page">Play</a></li>
     <li><a href="../libraries/websocket.html" class="page">Websocket</a></li>
     <li><a href="../libraries/auth.html" class="page">Auth</a></li>
-    <li><a href="../libraries/auth-graphql.html" class="active page">AuthGraphQL</a></li>
+    <li><a href="../libraries/auth-graphql.html" class="active page">Auth/GraphQL</a></li>
+  </ul></li>
+  <li><a href="../tutorial/index.html" class="page">Tutorials</a>
+  <ul>
+    <li><a href="../tutorial/poker/index.html" class="page">estimate.poker</a></li>
+    <li><a href="../tutorial/react/index.html" class="page">react</a></li>
+    <li><a href="../tutorial/starwars/index.html" class="page">starwars</a></li>
+    <li><a href="../tutorial/thrifty/index.html" class="page">thrifty</a></li>
+  </ul></li>
+  <li><a href="../cookbook/index.html" class="page">Cookbook</a>
+  <ul>
+    <li><a href="../cookbook/add.html" class="page">Add Database Types</a></li>
+    <li><a href="../cookbook/remove.html" class="page">Remove Unused Files</a></li>
+    <li><a href="../cookbook/troubleshooting.html" class="page">Troubleshooting</a></li>
   </ul></li>
   <li><a href="../technology.html" class="page">Technology</a></li>
-  <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../libraries/auth-graphql.html#authgraphql" class="header">AuthGraphQL</a>
+  <li><a href="../libraries/auth-graphql.html#auth-graphql" class="header">Auth/GraphQL</a>
   <ul>
     <li><a href="../libraries/auth-graphql.html#usage" class="header">Usage</a></li>
     <li><a href="../libraries/auth-graphql.html#classes" class="header">Classes</a></li>
@@ -193,7 +200,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.3.5
+<i class="md-icon" title="Version">label_outline</i> 1.7.0
 </label>
 </li>
 </ul>
@@ -206,7 +213,7 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../libraries/auth-graphql.html#authgraphql" class="header">AuthGraphQL</a>
+  <li><a href="../libraries/auth-graphql.html#auth-graphql" class="header">Auth/GraphQL</a>
   <ul>
     <li><a href="../libraries/auth-graphql.html#usage" class="header">Usage</a></li>
     <li><a href="../libraries/auth-graphql.html#classes" class="header">Classes</a></li>
@@ -220,26 +227,26 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#authgraphql" name="authgraphql" class="anchor"><span class="anchor-link"></span></a>AuthGraphQL</h1>
+<h1><a href="#auth-graphql" name="auth-graphql" class="anchor"><span class="anchor-link"></span></a>Auth/GraphQL</h1>
 <p>Secure GraphQL controllers and views, including GraphiQL and GraphQL Voyager (<a href="../api/projectile-lib-auth-graphql/com/kyleu/projectile/index.html">API Documentation</a>)</p>
-<h3><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h3><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.kyleu" %% "projectile-lib-auth-graphql" % "1.3.5"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
+<h3><a href="#usage" name="usage" class="anchor"><span class="anchor-link"></span></a>Usage</h3><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "com.kyleu" %% "projectile-lib-auth-graphql" % "1.7.0"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;com.kyleu&lt;/groupId&gt;
   &lt;artifactId&gt;projectile-lib-auth-graphql_2.12&lt;/artifactId&gt;
-  &lt;version&gt;1.3.5&lt;/version&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">dependencies {
-  compile group: 'com.kyleu', name: 'projectile-lib-auth-graphql_2.12', version: '1.3.5'
+  compile group: 'com.kyleu', name: 'projectile-lib-auth-graphql_2.12', version: '1.7.0'
 }</code></pre></dd></dl>
 <h3><a href="#classes" name="classes" class="anchor"><span class="anchor-link"></span></a>Classes</h3>
 <p>TODO</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/libraries/auth-graphql.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.7.0/doc/src/libraries/auth-graphql.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.3.5
+1.7.0
 </span>
 </div>
 </article>
@@ -262,13 +269,13 @@ Auth
 </span>
 </div>
 </a>
-<a href="../technology.html" title="Technology" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../tutorial/index.html" title="Tutorials" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Technology
+Tutorials
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

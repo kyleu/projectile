@@ -113,10 +113,10 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="projectile--export" href="../../index.html"><span class="name">projectile</span></a>
+        <a title="projectile-export" href="../../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <p class="shortcomment cmt">projectile--export</p><div class="fullcomment"><div class="comment cmt"><p>projectile--export</p><p>Creates beautiful Scala code from your database, Thrift, or GraphQL definitions
+      <p class="shortcomment cmt">projectile-export</p><div class="fullcomment"><div class="comment cmt"><p>projectile-export</p><p>Creates beautiful Scala code from your database, Thrift, or GraphQL definitions
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="services"></a><a id="services:services"></a>
@@ -174,6 +174,10 @@
                         <span class="separator"></span>
                         <a class="object" href="ThriftInputService$.html" title=""></a>
                         <a href="ThriftInputService$.html" title="">ThriftInputService</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="object" href="TypeScriptInputService$.html" title=""></a>
+                        <a href="TypeScriptInputService$.html" title="">TypeScriptInputService</a>
                       </li>
               </ul>
             </div>
@@ -467,7 +471,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">loadPostgres</span><span class="params">(<span name="cfg">cfg: <a href="../config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>, <span name="summ">summ: <a href="../../models/input/InputSummary.html" class="extype" name="com.kyleu.projectile.models.input.InputSummary">InputSummary</a></span>)</span><span class="result">: <a href="../../models/database/input/PostgresInput.html" class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</a></span>
+        <span class="name">loadPostgres</span><span class="params">(<span name="cfg">cfg: <a href="../config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>, <span name="summ">summ: <span class="extype" name="com.kyleu.projectile.models.input.InputSummary">InputSummary</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</span></span>
       </span>
       
       
@@ -537,7 +541,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">savePostgres</span><span class="params">(<span name="cfg">cfg: <a href="../config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>, <span name="pgi">pgi: <a href="../../models/database/input/PostgresInput.html" class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</a></span>)</span><span class="result">: <a href="../../models/database/input/PostgresInput.html" class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</a></span>
+        <span class="name">savePostgres</span><span class="params">(<span name="cfg">cfg: <a href="../config/ConfigService.html" class="extype" name="com.kyleu.projectile.services.config.ConfigService">ConfigService</a></span>, <span name="pgi">pgi: <span class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</span></span>
       </span>
       
       
@@ -585,7 +589,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toPostgresInput</span><span class="params">(<span name="summ">summ: <a href="../../models/input/InputSummary.html" class="extype" name="com.kyleu.projectile.models.input.InputSummary">InputSummary</a></span>, <span name="pc">pc: <a href="../../models/database/input/PostgresConnection.html" class="extype" name="com.kyleu.projectile.models.database.input.PostgresConnection">PostgresConnection</a></span>, <span name="enums">enums: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/database/schema/EnumType.html" class="extype" name="com.kyleu.projectile.models.database.schema.EnumType">EnumType</a>] = <span class="symbol">Nil</span></span>, <span name="tables">tables: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/database/schema/Table.html" class="extype" name="com.kyleu.projectile.models.database.schema.Table">Table</a>] = <span class="symbol">Nil</span></span>, <span name="views">views: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/database/schema/View.html" class="extype" name="com.kyleu.projectile.models.database.schema.View">View</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="../../models/database/input/PostgresInput.html" class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</a></span>
+        <span class="name">toPostgresInput</span><span class="params">(<span name="summ">summ: <span class="extype" name="com.kyleu.projectile.models.input.InputSummary">InputSummary</span></span>, <span name="pc">pc: <span class="extype" name="com.kyleu.projectile.models.database.input.PostgresConnection">PostgresConnection</span></span>, <span name="enums">enums: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.database.schema.EnumType">EnumType</span>] = <span class="symbol">Nil</span></span>, <span name="tables">tables: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.database.schema.Table">Table</span>] = <span class="symbol">Nil</span></span>, <span name="views">views: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.database.schema.View">View</span>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.database.input.PostgresInput">PostgresInput</span></span>
       </span>
       
       

@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>Planning Poker · Projectile</title>
+<title>Websocket · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Planning Poker
+Websocket
 </span>
 </div>
 </div>
@@ -145,17 +145,12 @@ KyleU/projectile
     <li><a href="../../gettingStarted/installing.html" class="page">Installing Projectile</a></li>
     <li><a href="../../gettingStarted/project.html" class="page">Creating a Project</a></li>
   </ul></li>
-  <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
-  <ul>
-    <li><a href="../../tutorial/poker/index.html" class="page">estimate.poker</a></li>
-    <li><a href="../../tutorial/starwars/index.html" class="page">starwars</a></li>
-    <li><a href="../../tutorial/thrifty/index.html" class="page">thrifty</a></li>
-  </ul></li>
   <li><a href="../../codegen/index.html" class="page">Code Generation</a>
   <ul>
     <li><a href="../../codegen/database.html" class="page">Database</a></li>
     <li><a href="../../codegen/thrift.html" class="page">Thrift</a></li>
     <li><a href="../../codegen/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../../codegen/typescript.html" class="page">TypeScript</a></li>
     <li><a href="../../codegen/sbt-plugin.html" class="page">SBT Plugin</a></li>
   </ul></li>
   <li><a href="../../libraries/index.html" class="page">Scala Libraries</a>
@@ -173,18 +168,35 @@ KyleU/projectile
     <li><a href="../../libraries/play.html" class="page">Play</a></li>
     <li><a href="../../libraries/websocket.html" class="page">Websocket</a></li>
     <li><a href="../../libraries/auth.html" class="page">Auth</a></li>
-    <li><a href="../../libraries/auth-graphql.html" class="page">AuthGraphQL</a></li>
+    <li><a href="../../libraries/auth-graphql.html" class="page">Auth/GraphQL</a></li>
+  </ul></li>
+  <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
+  <ul>
+    <li><a href="../../tutorial/poker/index.html" class="page">estimate.poker</a></li>
+    <li><a href="../../tutorial/react/index.html" class="page">react</a></li>
+    <li><a href="../../tutorial/starwars/index.html" class="page">starwars</a></li>
+    <li><a href="../../tutorial/thrifty/index.html" class="page">thrifty</a></li>
+  </ul></li>
+  <li><a href="../../cookbook/index.html" class="page">Cookbook</a>
+  <ul>
+    <li><a href="../../cookbook/add.html" class="page">Add Database Types</a></li>
+    <li><a href="../../cookbook/remove.html" class="page">Remove Unused Files</a></li>
+    <li><a href="../../cookbook/troubleshooting.html" class="page">Troubleshooting</a></li>
   </ul></li>
   <li><a href="../../technology.html" class="page">Technology</a></li>
-  <li><a href="../../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/09-websocket.html#planning-poker" class="header">Planning Poker</a>
+  <li><a href="../../tutorial/poker/09-websocket.html#websocket" class="header">Websocket</a>
   <ul>
+    <li><a href="../../tutorial/poker/09-websocket.html#websocket-library" class="header">Websocket Library</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#network-messages" class="header">Network messages</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#participant-models" class="header">Participant models</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#actor-service" class="header">Actor service</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#scala-js-connection" class="header">Scala.js connection</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#controllers-routes-and-views" class="header">Controllers, routes, and views</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#putting-it-all-together" class="header">Putting it all together</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#explore-the-code" class="header">Explore the code</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
@@ -195,7 +207,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.3.5
+<i class="md-icon" title="Version">label_outline</i> 1.7.0
 </label>
 </li>
 </ul>
@@ -208,10 +220,15 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../../tutorial/poker/09-websocket.html#planning-poker" class="header">Planning Poker</a>
+  <li><a href="../../tutorial/poker/09-websocket.html#websocket" class="header">Websocket</a>
   <ul>
+    <li><a href="../../tutorial/poker/09-websocket.html#websocket-library" class="header">Websocket Library</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#network-messages" class="header">Network messages</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#participant-models" class="header">Participant models</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#actor-service" class="header">Actor service</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#scala-js-connection" class="header">Scala.js connection</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#controllers-routes-and-views" class="header">Controllers, routes, and views</a></li>
+    <li><a href="../../tutorial/poker/09-websocket.html#putting-it-all-together" class="header">Putting it all together</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#explore-the-code" class="header">Explore the code</a></li>
     <li><a href="../../tutorial/poker/09-websocket.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
@@ -224,81 +241,57 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#planning-poker" name="planning-poker" class="anchor"><span class="anchor-link"></span></a>Planning Poker</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
+<h1><a href="#websocket" name="websocket" class="anchor"><span class="anchor-link"></span></a>Websocket</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
 <p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>08-scala-js</code> branch</p></div>
-<p>TODO: Websocket</p>
+<h2><a href="#websocket-library" name="websocket-library" class="anchor"><span class="anchor-link"></span></a>Websocket Library</h2>
+<p>Edit <code>Server.scala</code>, and change it to depend on <a href="../../libraries/websocket.html"><code>projectile-lib-websocket</code></a>:</p>
+<p><code>project/Dependencies.scala</code>:</p>
+<pre class="prettyprint"><code class="language-scala">val all = Seq(&quot;websocket&quot;, &quot;slick&quot;).map(s =&gt; &quot;com.kyleu&quot; %% s&quot;projectile-lib-$s&quot; % version)
+</code></pre>
 <h2><a href="#network-messages" name="network-messages" class="anchor"><span class="anchor-link"></span></a>Network messages</h2>
-<p>Like all real-time web applications, we&rsquo;ll be using a websocket, passing JSON or binary serialized data bi-directionally. There are eight different client messages, and ten different server messages:</p>
-<p><code>shared/src/main/scala/models/message/ClientMessage.scala</code></p>
-<pre class="prettyprint"><code class="language-scala">package models.message
-
-import java.util.UUID
-
-import com.kyleu.projectile.util.BinarySerializers._
-import com.kyleu.projectile.util.JsonSerializers._
-import models.poll.PollStatusType
-
-sealed trait ClientMessage
-
-object ClientMessage {
-  implicit val jsonEncoder: Encoder[ClientMessage] = deriveEncoder
-  implicit val jsonDecoder: Decoder[ClientMessage] = deriveDecoder
-  implicit val pickler: Pickler[ClientMessage] = generatePickler
-
-  final case class Ping(ts: Long) extends ClientMessage
-
-  final case class JoinSession(id: UUID) extends ClientMessage
-
-  sealed trait SessionRequest
-
-  final case class UpdateSession(name: String, choices: Seq[String]) extends ClientMessage with SessionRequest
-  final case class UpdateProfile(name: String) extends ClientMessage with SessionRequest
-  final case class AddPoll(str: String) extends ClientMessage with SessionRequest
-  final case class UpdatePoll(poll: UUID, title: Option[String]) extends ClientMessage with SessionRequest
-  final case class SetPollStatus(poll: UUID, status: PollStatusType) extends ClientMessage with SessionRequest
-  final case class SubmitVote(poll: UUID, vote: String) extends ClientMessage with SessionRequest
+<p>Like most real-time web applications, we&rsquo;ll be using a websocket, passing JSON or binary serialized data bi-directionally. These files contain our message definitions. They&rsquo;ll grow as we add more functionality</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/shared/src/main/scala/models/message/ClientMessage.scala"><code>shared/src/main/scala/models/message/ClientMessage.scala</code></a></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/shared/src/main/scala/models/message/ServerMessage.scala"><code>shared/src/main/scala/models/message/ServerMessage.scala</code></a></li>
+</ul>
+<h2><a href="#participant-models" name="participant-models" class="anchor"><span class="anchor-link"></span></a>Participant models</h2>
+<p>We need each unique visitor to have an identifier, so we use the files that were generated by Projectile for the <code>participant</code> table. This file generates a participant based on an http request</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/app/util/web/ParticipantHelper.scala"><code>app/util/web/ParticipantHelper.scala</code></a></li>
+</ul>
+<h2><a href="#actor-service" name="actor-service" class="anchor"><span class="anchor-link"></span></a>Actor service</h2>
+<p>Out clients need to connect to something, so this file extends <a href="https://github.com/KyleU/projectile/blob/master/libraries/projectile-lib-websocket/app/com/kyleu/projectile/services/connection/ConnectionService.scala"><code>ConnectionService</code></a> and handles the messages we defined earlier</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/app/services/session/actor/ParticipantConnectionService.scala"><code>app/services/session/actor/ParticipantConnectionService.scala</code></a></li>
+</ul>
+<p>We also need to wire up an actor supervisor, so add the following lines to <code>ProjectileModule.scala</code>:</p>
+<pre class="prettyprint"><code class="language-scala">@Provides @javax.inject.Singleton @Named(&quot;connection-supervisor&quot;)
+def provideConnectionSupervisor(actorSystem: ActorSystem): ActorRef = {
+  actorSystem.actorOf(ConnectionSupervisor.props(err = WebsocketController.errJson), &quot;connections&quot;)
 }
 </code></pre>
-<p><code>shared/src/main/scala/models/message/ClientMessage.scala</code></p>
-<pre class="prettyprint"><code class="language-scala">package models.message
-
-import java.util.UUID
-
-import com.kyleu.projectile.util.BinarySerializers._
-import com.kyleu.projectile.util.JsonSerializers._
-import models.poll.{PollRow, VoteRow}
-import models.session.{MemberRow, SessionRow}
-
-sealed trait ServerMessage
-
-object ServerMessage {
-  implicit val jsonEncoder: Encoder[ServerMessage] = deriveEncoder
-  implicit val jsonDecoder: Decoder[ServerMessage] = deriveDecoder
-  implicit val pickler: Pickler[ServerMessage] = generatePickler
-
-  // System
-  final case class VersionResponse(version: String) extends ServerMessage
-  final case class Pong(ts: Long, serverTime: Long) extends ServerMessage
-  final case class Disconnected(reason: String) extends ServerMessage
-
-  // Session
-  final case class SessionNotFound(id: UUID) extends ServerMessage
-  final case class SessionJoined(
-      session: SessionRow, members: Seq[MemberRow], connected: Seq[UUID], polls: Seq[PollRow], votes: Seq[VoteRow]
-  ) extends ServerMessage
-  final case class SessionUpdate(session: SessionRow) extends ServerMessage
-
-  // Members
-  final case class MemberStatusUpdate(participant: UUID, connected: Boolean) extends ServerMessage
-  final case class MemberUpdate(member: MemberRow) extends ServerMessage
-
-  // Polls
-  final case class PollUpdate(poll: PollRow) extends ServerMessage
-  final case class VoteUpdate(vote: VoteRow) extends ServerMessage
-}
-</code></pre>
+<h2><a href="#scala-js-connection" name="scala-js-connection" class="anchor"><span class="anchor-link"></span></a>Scala.js connection</h2>
+<p>We need a client-side websocket connection, so we&rsquo;ll make <code>ConnectionService</code>, and a JS entrypoint</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/client/src/main/scala/ConnectionService.scala"><code>client/src/main/scala/ConnectionService.scala</code></a></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/client/src/main/scala/Entrypoint.scala"><code>client/src/main/scala/Entrypoint.scala</code></a></li>
+</ul>
 <h2><a href="#controllers-routes-and-views" name="controllers-routes-and-views" class="anchor"><span class="anchor-link"></span></a>Controllers, routes, and views</h2>
-<p>TODO</p>
+<p>Let&rsquo;s add a controller that defines a new <code>/test</code> action and extends <code>WebsocketController</code> to connect with our service.</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/app/controllers/ConnectionController.scala"><code>app/controllers/ConnectionController.scala</code></a></li>
+</ul>
+<p>Now we need a view for our new action, so here it is. Note that it includes our ScalaJS project <code>client</code>.</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/09-websocket/app/views/connect.scala.html"><code>app/views/connect.scala.html</code></a></li>
+</ul>
+<p>And finally, we&rsquo;ll add new <code>routes</code> for our new actions:</p>
+<pre><code>GET         /test                                    controllers.ConnectionController.test()
+GET         /connect                                 controllers.ConnectionController.connect(binary: Boolean ?= false)
+</code></pre>
+<h2><a href="#putting-it-all-together" name="putting-it-all-together" class="anchor"><span class="anchor-link"></span></a>Putting it all together</h2>
+<p>If you followed along (or just checked out this branch), you should have a working application the connects via a websocket and sends pings every few seconds. Exciting!</p>
+<p><a href="http://localhost:24000/test">http://localhost:24000/test</a></p>
 <h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
 <p><a href="https://github.com/KyleU/estimate/tree/09-websocket">https://github.com/KyleU/estimate/tree/09-websocket</a></p>
 <p>See this branch&rsquo;s Pull Request for detailed comments on the generated files</p>
@@ -307,13 +300,13 @@ object ServerMessage {
 <p>Ok, we&rsquo;re all wired up - let&rsquo;s finish this thing and <a href="10-planning-poker.html">build a real app</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/09-websocket.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.7.0/doc/src/tutorial/poker/09-websocket.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.3.5
+1.7.0
 </span>
 </div>
 </article>

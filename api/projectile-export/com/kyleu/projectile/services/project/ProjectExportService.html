@@ -113,10 +113,10 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="projectile--export" href="../../index.html"><span class="name">projectile</span></a>
+        <a title="projectile-export" href="../../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <p class="shortcomment cmt">projectile--export</p><div class="fullcomment"><div class="comment cmt"><p>projectile--export</p><p>Creates beautiful Scala code from your database, Thrift, or GraphQL definitions
+      <p class="shortcomment cmt">projectile-export</p><div class="fullcomment"><div class="comment cmt"><p>projectile-export</p><p>Creates beautiful Scala code from your database, Thrift, or GraphQL definitions
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="services"></a><a id="services:services"></a>
@@ -192,12 +192,24 @@
                         <a href="ModelMemberService.html" title="">ModelMemberService</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="OutputService.html" title=""></a>
+                        <a href="OutputService.html" title="">OutputService</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="object" href="ProjectExampleService$.html" title=""></a>
+                        <a href="ProjectExampleService$.html" title="">ProjectExampleService</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="" title=""></a>
                         <a href="" title="">ProjectExportService</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="trait" href="ProjectHelper.html" title=""></a>
                         <a href="ProjectHelper.html" title="">ProjectHelper</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="class" href="ProjectLoadService.html" title=""></a>
+                        <a href="ProjectLoadService.html" title="">ProjectLoadService</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="class" href="ProjectSummaryService.html" title=""></a>
@@ -491,7 +503,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getOutput</span><span class="params">(<span name="projectRoot">projectRoot: <span class="extype" name="better.files.File">File</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="../../models/project/ProjectOutput.html" class="extype" name="com.kyleu.projectile.models.project.ProjectOutput">ProjectOutput</a></span>
+        <span class="name">getOutput</span><span class="params">(<span name="projectRoot">projectRoot: <span class="extype" name="better.files.File">File</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.project.ProjectOutput">ProjectOutput</span></span>
       </span>
       
       
@@ -597,6 +609,22 @@
       </span>
       <span class="symbol">
         <span class="name">projectile</span><span class="result">: <a href="../ProjectileService.html" class="extype" name="com.kyleu.projectile.services.ProjectileService">ProjectileService</a></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.project.ProjectExportService#runExport" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="runExport(projectRoot:better.files.File,config:com.kyleu.projectile.models.export.config.ExportConfiguration,verbose:Boolean):com.kyleu.projectile.models.project.ProjectOutput"></a><a id="runExport(File,ExportConfiguration,Boolean):ProjectOutput"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/project/ProjectExportService.html#runExport(projectRoot:better.files.File,config:com.kyleu.projectile.models.export.config.ExportConfiguration,verbose:Boolean):com.kyleu.projectile.models.project.ProjectOutput" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">runExport</span><span class="params">(<span name="projectRoot">projectRoot: <span class="extype" name="better.files.File">File</span></span>, <span name="config">config: <span class="extype" name="com.kyleu.projectile.models.export.config.ExportConfiguration">ExportConfiguration</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.project.ProjectOutput">ProjectOutput</span></span>
       </span>
       
       

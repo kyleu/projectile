@@ -145,17 +145,12 @@ KyleU/projectile
     <li><a href="../../gettingStarted/installing.html" class="page">Installing Projectile</a></li>
     <li><a href="../../gettingStarted/project.html" class="page">Creating a Project</a></li>
   </ul></li>
-  <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
-  <ul>
-    <li><a href="../../tutorial/poker/index.html" class="page">estimate.poker</a></li>
-    <li><a href="../../tutorial/starwars/index.html" class="page">starwars</a></li>
-    <li><a href="../../tutorial/thrifty/index.html" class="page">thrifty</a></li>
-  </ul></li>
   <li><a href="../../codegen/index.html" class="page">Code Generation</a>
   <ul>
     <li><a href="../../codegen/database.html" class="page">Database</a></li>
     <li><a href="../../codegen/thrift.html" class="page">Thrift</a></li>
     <li><a href="../../codegen/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../../codegen/typescript.html" class="page">TypeScript</a></li>
     <li><a href="../../codegen/sbt-plugin.html" class="page">SBT Plugin</a></li>
   </ul></li>
   <li><a href="../../libraries/index.html" class="page">Scala Libraries</a>
@@ -173,16 +168,31 @@ KyleU/projectile
     <li><a href="../../libraries/play.html" class="page">Play</a></li>
     <li><a href="../../libraries/websocket.html" class="page">Websocket</a></li>
     <li><a href="../../libraries/auth.html" class="page">Auth</a></li>
-    <li><a href="../../libraries/auth-graphql.html" class="page">AuthGraphQL</a></li>
+    <li><a href="../../libraries/auth-graphql.html" class="page">Auth/GraphQL</a></li>
+  </ul></li>
+  <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
+  <ul>
+    <li><a href="../../tutorial/poker/index.html" class="page">estimate.poker</a></li>
+    <li><a href="../../tutorial/react/index.html" class="page">react</a></li>
+    <li><a href="../../tutorial/starwars/index.html" class="page">starwars</a></li>
+    <li><a href="../../tutorial/thrifty/index.html" class="page">thrifty</a></li>
+  </ul></li>
+  <li><a href="../../cookbook/index.html" class="page">Cookbook</a>
+  <ul>
+    <li><a href="../../cookbook/add.html" class="page">Add Database Types</a></li>
+    <li><a href="../../cookbook/remove.html" class="page">Remove Unused Files</a></li>
+    <li><a href="../../cookbook/troubleshooting.html" class="page">Troubleshooting</a></li>
   </ul></li>
   <li><a href="../../technology.html" class="page">Technology</a></li>
-  <li><a href="../../troubleshooting.html" class="page">Troubleshooting</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
   <li><a href="../../tutorial/poker/10-planning-poker.html#planning-poker" class="header">Planning Poker</a>
   <ul>
+    <li><a href="../../tutorial/poker/10-planning-poker.html#sessioncontext" class="header">SessionContext</a></li>
+    <li><a href="../../tutorial/poker/10-planning-poker.html#protocol" class="header">Protocol</a></li>
+    <li><a href="../../tutorial/poker/10-planning-poker.html#sessionmanager" class="header">SessionManager</a></li>
     <li><a href="../../tutorial/poker/10-planning-poker.html#explore-the-code" class="header">Explore the code</a></li>
     <li><a href="../../tutorial/poker/10-planning-poker.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
@@ -193,7 +203,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.3.5
+<i class="md-icon" title="Version">label_outline</i> 1.7.0
 </label>
 </li>
 </ul>
@@ -208,6 +218,9 @@ KyleU/projectile
 <ul>
   <li><a href="../../tutorial/poker/10-planning-poker.html#planning-poker" class="header">Planning Poker</a>
   <ul>
+    <li><a href="../../tutorial/poker/10-planning-poker.html#sessioncontext" class="header">SessionContext</a></li>
+    <li><a href="../../tutorial/poker/10-planning-poker.html#protocol" class="header">Protocol</a></li>
+    <li><a href="../../tutorial/poker/10-planning-poker.html#sessionmanager" class="header">SessionManager</a></li>
     <li><a href="../../tutorial/poker/10-planning-poker.html#explore-the-code" class="header">Explore the code</a></li>
     <li><a href="../../tutorial/poker/10-planning-poker.html#next-steps" class="header">Next steps</a></li>
   </ul></li>
@@ -222,7 +235,23 @@ KyleU/projectile
 <div class="md-content__searchable">
 <h1><a href="#planning-poker" name="planning-poker" class="anchor"><span class="anchor-link"></span></a>Planning Poker</h1><div class="callout note "><div class="callout-title">Prerequisites</div>
 <p>This page assumes you have checked out a local copy of <a href="https://github.com/KyleU/estimate">estimate.poker</a> and switched to the <code>09-websocket</code> branch</p></div>
-<p>TODO: Planning Poker</p>
+<p>Wow, <em>finally</em> we get around to building an actual useful application. After the last step, we&rsquo;ve got a web application that connects via Websocket, and passes ping messages. Now we&rsquo;ll extend that application to support <a href="https://en.wikipedia.org/wiki/Planning_poker">planning poker</a> sessions.</p>
+<h2><a href="#sessioncontext" name="sessioncontext" class="anchor"><span class="anchor-link"></span></a>SessionContext</h2>
+<p>Since we&rsquo;re lazy, let&rsquo;s create a shared SessionContext object that hold sets of members, polls, and votes. These match our database model, and uses the classes generated by Projectile. This class will be used on the JVM as well as in JavaScript</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/10-planning-poker/shared/src/main/scala/models/session/context/SessionContext.scala"><code>shared/src/main/scala/models/session/context/SessionContext.scala</code></a></li>
+</ul>
+<p>Let&rsquo;s also create a listener, that registers callbacks and reacts to change in the SessionContext</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/10-planning-poker/shared/src/main/scala/models/session/context/SessionContextListener.scala"><code>shared/src/main/scala/models/session/context/SessionContextListener.scala</code></a></li>
+</ul>
+<h2><a href="#protocol" name="protocol" class="anchor"><span class="anchor-link"></span></a>Protocol</h2>
+<p>We&rsquo;ll extend our messages files to define our protocol, mainly just add/edit/remove messages and updates from the server</p>
+<ul>
+  <li><a href="https://github.com/KyleU/estimate/blob/10-planning-poker/shared/src/main/scala/models/message/ClientMessage.scala"><code>shared/src/main/scala/models/message/ClientMessage.scala</code></a></li>
+  <li><a href="https://github.com/KyleU/estimate/blob/10-planning-poker/shared/src/main/scala/models/message/ServerMessage.scala"><code>shared/src/main/scala/models/message/ServerMessage.scala</code></a></li>
+</ul>
+<h2><a href="#sessionmanager" name="sessionmanager" class="anchor"><span class="anchor-link"></span></a>SessionManager</h2>
 <h2><a href="#explore-the-code" name="explore-the-code" class="anchor"><span class="anchor-link"></span></a>Explore the code</h2>
 <p><a href="https://github.com/KyleU/estimate/tree/10-planning-poker">https://github.com/KyleU/estimate/tree/10-planning-poker</a></p>
 <p>See this branch&rsquo;s Pull Request for detailed comments on the generated files</p>
@@ -231,13 +260,13 @@ KyleU/projectile
 <p><a href="11-wrapping-up.html">We&rsquo;re done</a>!</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.3.5/doc/src/tutorial/poker/10-planning-poker.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.7.0/doc/src/tutorial/poker/10-planning-poker.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.3.5
+1.7.0
 </span>
 </div>
 </article>
@@ -247,7 +276,7 @@ Edit this page
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a href="../../tutorial/poker/09-websocket.html" title="Planning Poker" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+<a href="../../tutorial/poker/09-websocket.html" title="Websocket" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -256,7 +285,7 @@ Edit this page
 <span class="md-footer-nav__direction">
 Previous
 </span>
-Planning Poker
+Websocket
 </span>
 </div>
 </a>
