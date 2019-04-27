@@ -30,14 +30,19 @@ For each table and view, Projectile can generate:
 * Play framework controllers and views exposing an Openapi/Swagger endpoint and a beautiful admin interface supporting local or OAuth login
 
 
-### @ref[Thrift IDL](codegen/thrift.md)
+### @ref[TypeScript Definitions](codegen/typescript.md)
 
-Projectile monitors your Thrift IDL, and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures
+Projectile can turn your TypeScript definition files into a well-designed Scala.js facade project. This is a work in progress, it's not quite ready
 
 
 ### @ref[GraphQL Queries](codegen/graphql.md)
 
 Projectile monitors your GraphQL schema and queries, and generates Scala case classes with input and result serialization 
+
+
+### @ref[Thrift IDL](codegen/thrift.md)
+
+Projectile monitors your Thrift IDL and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures
 
 
 ## License

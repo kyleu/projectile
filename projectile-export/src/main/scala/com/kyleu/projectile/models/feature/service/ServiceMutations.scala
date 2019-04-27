@@ -24,7 +24,7 @@ object ServiceMutations {
         val audit = model.pkFields.map(f => f.propertyName + ".toString").mkString(", ")
         file.add(s"""AuditHelper.onRemove("${model.className}", Seq($audit), current.toDataFields, creds)""")
       }
-      file.add(s"ApplicationDatabase.executeF(${model.className}Queries.removeByPrimaryKey($call))(td).map(_ => current)")
+      file.add(s"db.executeF(${model.className}Queries.removeByPrimaryKey($call))(td).map(_ => current)")
       file.indent(-1)
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp]")""")
       file.add("})", -1)
@@ -34,7 +34,7 @@ object ServiceMutations {
       file.add(s"def update(creds: Credentials, $sig, fields: Seq[DataField])$trace = {", 1)
       file.add(s"""traceF("update")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add(s"""case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for ${model.title} [$interp]")""")
-      file.add(s"case Some(_) => ApplicationDatabase.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
+      file.add(s"case Some(_) => db.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
       file.add(s"getByPrimaryKey(creds, $call)(td).map {", 1)
       file.add("case Some(newModel) =>", 1)
       val ids = model.pkFields.map {

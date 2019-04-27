@@ -1,8 +1,8 @@
 package com.kyleu
 
 /**
- * lib-projectile-auth
+ * lib-projectile-admin
  *
- * Common Silhouette authentication classes used by code generated from Projectile
+ * Combines auth, auth-graphql, web-components and websocket into a single package
  */
 package object projectile {}

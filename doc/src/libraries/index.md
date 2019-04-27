@@ -14,8 +14,10 @@
 * [Scala.js](scalajs.md)
 * [Play](play.md)
 * [Websocket](websocket.md)
+* [Web Components](web-components.md)
 * [Auth](auth.md)
-* [AuthGraphQL](auth-graphql.md)
+* [Auth/GraphQL](auth-graphql.md)
+* [Admin](admin.md)
 
 @@@
 
