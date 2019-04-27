@@ -59,9 +59,6 @@ object ModelHelper {
   }
 
   def addJson(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.features(ModelFeature.Json)) {
-    // file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = deriveEncoder")
-    // file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = deriveDecoder")
-
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = (r: ${model.className}) => io.circe.Json.obj(", 1)
     model.fields.foreach { f =>
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }

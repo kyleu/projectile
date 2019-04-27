@@ -82,7 +82,24 @@ object GraphQLObjectHelper {
     objs.mapValues(_.headOption.getOrElse(throw new IllegalStateException())).foreach { o =>
       val cn = ExportHelper.toClassName(o._1)
       file.add(s"object $cn {", 1)
-      file.add(s"implicit val jsonDecoder: Decoder[$cn] = deriveDecoder")
+
+      file.add(s"implicit val jsonEncoder: Encoder[$cn] = (r: $cn) => io.circe.Json.obj(", 1)
+      o._2.fields.foreach { f =>
+        val comma = if (o._2.fields.lastOption.contains(f)) { "" } else { "," }
+        file.add(s"""("${f.k}", r.${f.k}.asJson)$comma""")
+      }
+      file.add(")", -1)
+      file.add()
+
+      file.add(s"implicit val jsonDecoder: Decoder[$cn] = (c: io.circe.HCursor) => for {", 1)
+      o._2.fields.foreach { f =>
+        val ts = FieldTypeAsScala.asScala(config = config, t = f.t)
+        val typ = if (f.req) { ts } else { "Option[" + ts + "]" }
+        file.add(s"""${f.k} <- c.downField("${f.k}").as[$typ]""")
+      }
+      val props = o._2.fields.map(_.k).mkString(", ")
+      file.add(s"} yield $cn($props)", -1)
+
       file.add("}", -1)
       file.add(s"case class $cn(", 2)
       GraphQLObjectHelper.addObjectFields(config, file, o._2.fields)

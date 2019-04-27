@@ -51,9 +51,6 @@ object ResultFile {
   }
 
   private[this] def addJson(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.features(ModelFeature.Json)) {
-    // file.add(s"implicit val jsonEncoder: Encoder[${model.className}Result] = deriveEncoder")
-    // file.add(s"implicit val jsonDecoder: Decoder[${model.className}Result] = deriveDecoder")
-
     val fields = Seq(
       "filters" -> "Seq[Filter]", "orderBys" -> "Seq[OrderBy]", "totalCount" -> "Int", "paging" -> "PagingOptions",
       "results" -> s"Seq[${model.className}]", "durationMs" -> "Int", "occurred" -> "LocalDateTime"
@@ -75,5 +72,4 @@ object ResultFile {
     file.add(s"} yield ${model.className}Result($props)", -1)
     file.add()
   }
-
 }
