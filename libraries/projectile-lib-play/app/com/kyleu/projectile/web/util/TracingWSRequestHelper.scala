@@ -7,6 +7,8 @@ import akka.util.ByteString
 import play.api.mvc.MultipartFormData.Part
 import play.api.libs.ws._
 
+import scala.concurrent.duration.Duration
+
 private trait TracingWSRequestHelper extends WSRequest { this: TracingWSRequest =>
   override val url: String = request.url
   override val method: String = request.method
@@ -16,7 +18,7 @@ private trait TracingWSRequestHelper extends WSRequest { this: TracingWSRequest 
   override val calc: Option[WSSignatureCalculator] = request.calc
   override val auth: Option[(String, String, WSAuthScheme)] = request.auth
   override val followRedirects: Option[Boolean] = request.followRedirects
-  override val requestTimeout: Option[Int] = request.requestTimeout
+  override val requestTimeout: Option[Duration] = request.requestTimeout
   override val virtualHost = request.virtualHost
   override val proxyServer: Option[WSProxyServer] = request.proxyServer
 

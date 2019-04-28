@@ -48,8 +48,7 @@ object PlayServerHelper extends Logging with ServerHelper {
     val config = baseConfig.copy(port = port.orElse(baseConfig.port))
     val application: Application = {
       val environment = Environment(config.rootDir, process.classLoader, Mode.Prod)
-      // val context = ApplicationLoader.Context.create(environment)
-      val context = ApplicationLoader.createContext(environment)
+      val context = ApplicationLoader.Context.create(environment)
       val loader = ApplicationLoader(context)
       loader.load(context)
     }

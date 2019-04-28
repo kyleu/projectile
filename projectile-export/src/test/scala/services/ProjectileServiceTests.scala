@@ -16,7 +16,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
 
   lazy val svc = new ProjectileService(cfg)
   val db = "boilerplay"
-  lazy val conn = PostgresConnection(url = s"jdbc:postgresql://localhost/$db", username = db, password = db, db = db)
+  lazy val conn = PostgresConnection(host = "localhost", username = db, password = db, db = db)
 
   /*
   "ProjectileService" should "initialize correctly" in {

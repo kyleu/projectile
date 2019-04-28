@@ -2,13 +2,14 @@
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.6.21"
+    private[this] val version = "2.7.2"
     val filters = play.sbt.PlayImport.filters
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.7.1"
+    val json = "com.typesafe.play" %% "play-json" % "2.7.3"
+    val twirl = "com.typesafe.play" %% "twirl-api" % "1.4.1"
 
-    val all = Seq(filters, guice, cache, json)
+    val all = Seq(filters, guice, cache, json, twirl)
   }
 
   object Database {
@@ -50,7 +51,7 @@ object Dependencies {
   object Serialization {
     val version = "0.11.1"
     val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser", "circe-java8")
-    val jackson = "io.circe" %% "circe-jackson29" % "0.11.0"
+    val jackson = "io.circe" %% "circe-jackson29" % "0.11.1"
   }
 
   object Thrift {
@@ -75,7 +76,7 @@ object Dependencies {
   }
 
   object Metrics {
-    val version = "1.1.3"
+    val version = "1.1.4"
     val micrometerCore = "io.micrometer" % "micrometer-core" % version
     val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
     val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
@@ -86,11 +87,11 @@ object Dependencies {
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.26.1"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.26.2"
   }
 
   object Authentication {
-    private[this] val version = "5.0.7"
+    private[this] val version = "6.0.0-RC1"
     val silhouette = "com.mohiva" %% "play-silhouette" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
@@ -103,7 +104,7 @@ object Dependencies {
     val autocomplete = "org.webjars.bower" % "EasyAutocomplete" % "1.3.3" intransitive()
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.20.9" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.22.0" intransitive()
 
     val fontAwesome = "org.webjars" % "font-awesome" % "4.7.0" intransitive()
     val materialIcons = "org.webjars" % "material-design-icons" % "3.0.1"
@@ -121,7 +122,7 @@ object Dependencies {
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
     val commonsCodec = "commons-codec" % "commons-codec" % "1.12"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
-    val commonsLang = "org.apache.commons" % "commons-lang3" % "3.8.1"
+    val commonsLang = "org.apache.commons" % "commons-lang3" % "3.9"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.5"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % enumeratumCirceVersion
     val guava = "com.google.guava" % "guava" % "27.1-jre"
@@ -132,7 +133,7 @@ object Dependencies {
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
-    val typesafeConfig = "com.typesafe" % "config" % "1.3.3"
+    val typesafeConfig = "com.typesafe" % "config" % "1.3.4"
   }
 
   object Testing {
