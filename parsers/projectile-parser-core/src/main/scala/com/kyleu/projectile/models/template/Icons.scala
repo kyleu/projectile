@@ -6,6 +6,9 @@ object Icons {
   val selected = fa("check-circle-o")
   val empty = fa("circle-o")
 
+  val ok = fa("ok")
+  val error = fa("close")
+
   val result = fa("check")
   val projectile = fa("gears")
 

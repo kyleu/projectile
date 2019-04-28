@@ -1,8 +1,7 @@
-@(path: String)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.materialize("Page Not Found") {
+@(path: String)(implicit session: Session, flash: Flash)@com.kyleu.projectile.views.html.layout.materialize("Page Not Found") {
   <div class="text-centered">
     <h1>@path</h1>
-    <div class="text-large"><em>Page NoCannt Found</em></div>
+    <div class="text-large"><em>Page Not Found</em></div>
   </div>
 }
+

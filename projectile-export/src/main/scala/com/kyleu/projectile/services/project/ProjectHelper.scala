@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.input.Input
+import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.OutputFile
 import com.kyleu.projectile.models.project.ProjectSummary
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
@@ -69,7 +70,7 @@ trait ProjectHelper { this: ProjectileService =>
   }
   def exportAll() = listProjects().map(project => exportProject(key = project.key, verbose = false))
 
-  def loadConfig(key: String) = {
+  def loadExportConfig(key: String) = {
     val p = getProject(key)
     val input = p.getInput
 
@@ -81,6 +82,8 @@ trait ProjectHelper { this: ProjectileService =>
 
     ExportConfiguration(project = p, enums = exportEnums, models = exportModels, unions = exportUnions, services = exportServices, additional = additional)
   }
+
+  def getProjectStatus(key: String) = ProjectStatusService.status(getProject(key))
 
   private[this] def removeProjectFiles(key: String) = {
     (configForProject(key).projectDirectory / key).delete(swallowIOExceptions = true)

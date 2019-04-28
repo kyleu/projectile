@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.services.ProjectileService
 
 class ProjectExportService(val projectile: ProjectileService) {
-  def getOutput(projectRoot: File, key: String, verbose: Boolean) = runExport(projectRoot, projectile.loadConfig(key), verbose)
+  def getOutput(projectRoot: File, key: String, verbose: Boolean) = runExport(projectRoot, projectile.loadExportConfig(key), verbose)
 
   def runExport(projectRoot: File, config: ExportConfiguration, verbose: Boolean) = {
     val startMs = System.currentTimeMillis

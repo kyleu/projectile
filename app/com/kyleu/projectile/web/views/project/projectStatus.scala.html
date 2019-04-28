@@ -1,0 +1,40 @@
+@(inputType: com.kyleu.projectile.models.input.InputTemplate, project: com.kyleu.projectile.models.project.Project)
+@defining(com.kyleu.projectile.services.project.ProjectStatusService.status(project)) { statusEither =>
+  <div class="collection with-header">
+    @if(statusEither.isLeft) {
+      @defining(statusEither.left.get) { err =>
+        <div class="collection-header">
+          <h6><i class="fa @com.kyleu.projectile.models.template.Icons.error"></i> Project Status</h6>
+        </div>
+        <div class="collection-item">
+          <p>[@err._1]: @err._2</p>
+          @if(err._1 == "root-missing" || err._1 == "root-empty") {
+            <form action="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix(project.key, "", "", "")" method="get">
+              <input name="t" type="hidden" value="status" />
+              <input name="src" type="hidden" value="@err._1" />
+              @com.kyleu.projectile.services.project.ProjectExampleService.projects.map { p =>
+                <p>
+                  <label>
+                    <input name="tgt" type="radio" value="@p.key" />
+                    <span>@p.name</span>
+                  </label>
+                </p>
+              }
+              <input type="submit" value="Use Example Project" class="btn theme" />
+            </form>
+          } else {
+            <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.fix(project.key, "status", err._1, err._1)" class="btn theme">Fix</a>
+          }
+        </div>
+      }
+    }
+    @if(statusEither.isRight) {
+      <div class="collection-header">
+        <h6><i class="fa @com.kyleu.projectile.models.template.Icons.ok"></i> Project Status</h6>
+      </div>
+      <div class="collection-item">
+        <p><i class="fa @com.kyleu.projectile.models.template.Icons.ok"></i> @statusEither.right.get</p>
+      </div>
+    }
+  </div>
+}
