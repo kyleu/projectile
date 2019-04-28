@@ -2,14 +2,13 @@
 
 object Dependencies {
   object Play {
-    private[this] val version = "2.7.2"
+    private[this] val version = play.core.PlayVersion.current
     val filters = play.sbt.PlayImport.filters
     val guice = play.sbt.PlayImport.guice
     val cache = play.sbt.PlayImport.ehcache
-    val json = "com.typesafe.play" %% "play-json" % "2.7.3"
     val twirl = "com.typesafe.play" %% "twirl-api" % "1.4.1"
 
-    val all = Seq(filters, guice, cache, json, twirl)
+    val all = Seq(filters, guice, cache, twirl)
   }
 
   object Database {
@@ -44,7 +43,6 @@ object Dependencies {
 
   object GraphQL {
     val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
-    val playJson = "org.sangria-graphql" %% "sangria-play-json" % "1.0.5"
     val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
 
@@ -63,7 +61,7 @@ object Dependencies {
     }
 
     object Finagle {
-      val version = "18.12.0"
+      val version = "19.4.0"
 
       val core = "com.twitter" %% "finagle-core" % version
       val thrift = "com.twitter" %% "finagle-thrift" % version

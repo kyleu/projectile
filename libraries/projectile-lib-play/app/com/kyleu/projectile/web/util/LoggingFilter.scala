@@ -12,6 +12,10 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+object LoggingFilter {
+  def skipPath(p: String) = p.startsWith("/assets") || p.startsWith("/style") || p.startsWith("/components")
+}
+
 class LoggingFilter @Inject() (override implicit val mat: Materializer) extends Filter with Logging {
   val metricsName = "http_requests"
 
@@ -24,7 +28,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer) extends 
 
     nextFilter(request).transform(
       result => {
-        if (request.path.startsWith("/assets") || request.path.startsWith("/style") || request.path.startsWith("/components")) {
+        if (LoggingFilter.skipPath(request.path)) {
           result
         } else {
           logCompleted(result)

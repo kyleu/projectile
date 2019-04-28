@@ -24,7 +24,7 @@ object TracingFilter {
 class TracingFilter @Inject() (tracingService: OpenTracingService)(implicit val mat: Materializer) extends Filter {
   private val reqHeaderToSpanName: RequestHeader => String = TracingFilter.paramAwareRequestNamer
 
-  def apply(nextFilter: RequestHeader => Future[Result])(req: RequestHeader): Future[Result] = if (req.path.startsWith("/assets")) {
+  def apply(nextFilter: RequestHeader => Future[Result])(req: RequestHeader): Future[Result] = if (LoggingFilter.skipPath(req.path)) {
     nextFilter(req)
   } else {
     val serverSpan = tracingService.serverReceived(

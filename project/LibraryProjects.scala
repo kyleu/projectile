@@ -71,7 +71,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-graphql` = libraryProject(project in file("libraries/projectile-lib-graphql")).settings(
     description := "Common GraphQL classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.playJson, GraphQL.sangria, Utils.guice)
+    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria, Utils.guice)
   ).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-scalajs` = libraryProject(project in file("libraries/projectile-lib-scalajs")).settings(
@@ -87,17 +87,17 @@ object LibraryProjects {
 
   lazy val `projectile-lib-play` = libraryProject(project in file("libraries/projectile-lib-play")).settings(
     description := "Common Play Framework classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws) ++ WebJars.all
+    libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws, Play.twirl) ++ WebJars.all
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache,
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache :+ Play.twirl,
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-web-components`)
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
     description := "Common Silhouette authentication classes used by code generated from Projectile",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache,
+    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache :+ Play.twirl,
     includeFilter in (Assets, LessKeys.less) := "projectile.less"
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
@@ -111,7 +111,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-web-components` = libraryProject(project in file("libraries/projectile-lib-web-components")).settings(
     description := "Twirl templates for common Material Design web components",
-    libraryDependencies += WebJars.materialIcons
+    libraryDependencies ++= Seq(WebJars.materialIcons, Play.twirl)
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
 
   lazy val all = Seq(
