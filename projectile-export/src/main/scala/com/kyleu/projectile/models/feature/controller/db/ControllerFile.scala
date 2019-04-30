@@ -74,7 +74,7 @@ object ControllerFile {
     file.add("search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))")
     file.add("}", -1)
     file.add("}", -1)
-    ControllerHelper.writeForeignKeys(config, model, file)
+    ControllerReferences.writeForeignKeys(config, model, file)
     ControllerHelper.writePks(config, model, file, viewHtmlPackage, routesClass)
     ControllerReferences.write(config, model, file)
     file.add("}", -1)

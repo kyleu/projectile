@@ -7,8 +7,6 @@ import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ControllerHelper {
-  private[this] val relArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
-
   def writeView(config: ExportConfiguration, file: ScalaFile, model: ExportModel, viewPkg: String) = {
     val audited = model.features(ModelFeature.Audit)
     val withNotes = model.features(ModelFeature.Notes)
@@ -92,35 +90,5 @@ object ControllerHelper {
     file.add("""case Accepts.Json() => Ok(io.circe.Json.obj("status" -> io.circe.Json.fromString("removed")))""")
     file.add("})", -1)
     file.add("}", -1)
-  }
-
-  def writeForeignKeys(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
-    fk.references match {
-      case h :: Nil =>
-        val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
-        col.addImport(config, file, Nil)
-        val propId = col.propertyName
-        val propCls = col.className
-
-        file.add()
-        file.add(s"""def by$propCls($propId: ${col.scalaType(config)}, $relArgs) = {""", 1)
-        file.add(s"""withSession("get.by.$propId", admin = true) { implicit request => implicit td =>""", 1)
-        file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
-        file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
-
-        file.add(s"case MimeTypes.HTML => Ok(${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls(", 1)
-        val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "${col.title}")"""
-        file.add(s"""$cfgArg, $propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)""")
-        file.add("))", -1)
-        file.add("case MimeTypes.JSON => Ok(models.asJson)")
-        file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")
-        file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = models)).as(ServiceController.MimeTypes.png)")
-        file.add("case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(ServiceController.MimeTypes.svg)")
-
-        file.add("})", -1)
-        file.add("}", -1)
-        file.add("}", -1)
-      case _ => // noop
-    }
   }
 }

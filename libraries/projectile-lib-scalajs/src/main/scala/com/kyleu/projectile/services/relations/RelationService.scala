@@ -17,7 +17,11 @@ class RelationService(url: String) extends Entrypoint("relation") {
     $(".sort-link, .next-link, .prev-link", body).click { e: JQueryEventObject =>
       val jq = $(e.currentTarget)
       val href = jq.attr("href").toString
-      call(body, href)
+      if (href.contains("embedded=")) {
+        call(body, href)
+      } else {
+        call(body, href + "&embedded=true")
+      }
       false
     }
   }

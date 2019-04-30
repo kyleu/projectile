@@ -14,19 +14,19 @@ object CommonSchema extends CommonSchemaValueTypes with CommonSchemaReferenceTyp
   def deriveEnumeratumType[T <: enumeratum.EnumEntry](name: String, values: Seq[T]) = EnumType[T](
     name = name,
     description = None,
-    values = values.map(t => EnumValue(name = t.toString, value = t)).toList
+    values = values.map(t => EnumValue(name = t.toString.replaceAllLiterally(".", "_"), value = t)).toList
   )
 
   def deriveStringEnumeratumType[T <: enumeratum.values.StringEnumEntry](name: String, values: Seq[T]) = EnumType[T](
     name = name,
     description = None,
-    values = values.map(t => EnumValue(name = t.toString, value = t)).toList
+    values = values.map(t => EnumValue(name = t.toString.replaceAllLiterally(".", "_"), value = t)).toList
   )
 
   def deriveIntEnumeratumType[T <: enumeratum.values.IntEnumEntry](name: String, values: Seq[T]) = EnumType(
     name = name,
     description = None,
-    values = values.map(t => EnumValue(name = t.toString, value = t)).toList
+    values = values.map(t => EnumValue(name = t.toString.replaceAllLiterally(".", "_"), value = t)).toList
   )
 
   implicit lazy val tagType: ObjectType[GraphQLContext, Tag] = deriveObjectType()

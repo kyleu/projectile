@@ -17,7 +17,11 @@ object SchemaReferencesHelper {
           file.addImport(srcModel.graphqlPackage(config), srcModel.className + "Schema")
         }
         file.add("Field(", 1)
-        file.add(s"""name = "${ref.r.propertyName}",""")
+        val refName = ref.r.propertyName.indexOf(',') match {
+          case -1 => ref.r.propertyName
+          case idx => ref.r.propertyName.substring(0, idx)
+        }
+        file.add(s"""name = "$refName",""")
         file.add(s"""fieldType = ListType(${srcModel.className}Schema.${srcModel.propertyName}Type),""")
 
         val relationRef = s"${srcModel.className}Schema.${srcModel.propertyName}By${srcField.className}"

@@ -28,11 +28,13 @@ object TwirlViewHelper {
       val tgtField = r.f
       val relArgs = s"""data-table="${src.propertyName}" data-field="${srcField.propertyName}" data-singular="${src.title}" data-plural="${src.plural}""""
       val relAttrs = s"""id="relation-${src.propertyName}-${srcField.propertyName}" $relArgs"""
-      val relUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5))"
+      val relUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5), embedded = true)"
+      val linkUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName})"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
       file.add(TwirlHelper.iconHtml(config = config, propertyName = src.propertyName))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
+      file.add(s"""<span class="badge"><a href="@$linkUrl"><i class="material-icons">insert_link</i></a></span>""")
       file.add("</div>", -1)
       file.add("""<div class="collapsible-body"><span>Loading...</span></div>""")
       file.add("</li>", -1)

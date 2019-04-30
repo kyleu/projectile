@@ -51,8 +51,9 @@
       </div>
     </div>
     <div>
-    @if(offset > 0) { <a class="prev-link" href="@calls.prev">Prev Page</a> }
-    @if(rows.lengthCompare(limit) >= 0) { <a class="next-link" href="@calls.next">Next Page</a> }
+      @if(offset > 0) { <a class="prev-link" href="@calls.prev">Previous Page</a> }
+      @if(rows.lengthCompare(limit) >= 0) { <a class="next-link" href="@calls.next">Next Page</a> }
+      <div class="clear"></div>
     </div>
   }
 } else {

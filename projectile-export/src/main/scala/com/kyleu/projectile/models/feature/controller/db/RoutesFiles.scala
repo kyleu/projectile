@@ -6,10 +6,33 @@ import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.RoutesFile
 
 object RoutesFiles {
-  val limitArgs = "limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None"
-  val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " + limitArgs
-  val autocompleteArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None"
-  val relationArgs = "orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " + limitArgs
+  private[this] val limitArgs = "limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None"
+  private[this] val listArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, " + limitArgs
+  private[this] val autocompleteArgs = "q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None"
+  private[this] val relationArgs = s"orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, $limitArgs, embedded: Boolean ?= false"
+
+  def export(config: ExportConfiguration) = {
+    val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
+    val packages = filtered.flatMap(_.pkg.headOption).distinct
+
+    val routesContent = packages.map { p =>
+      val ms = config.models.filter(_.pkg.headOption.contains(p))
+      val es = config.enums.filter(_.pkg.headOption.contains(p))
+      val solo = es.isEmpty && ms.size == 1
+
+      if (solo) {
+        p -> routesContentFor(config, ms.headOption.getOrElse(throw new IllegalStateException()), solo = true)
+      } else {
+        p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(config, e)))
+      }
+    }
+
+    routesContent.map { p =>
+      val f = RoutesFile(p._1)
+      p._2.foreach(l => f.add(l))
+      f
+    }
+  }
 
   def routesContentFor(config: ExportConfiguration, model: ExportModel, solo: Boolean = false) = {
     val controllerClass = (model.controllerPackage(config) :+ (model.className + "Controller")).mkString(".")
@@ -62,32 +85,9 @@ object RoutesFiles {
     comment +: list +: autocomplete +: createForm +: createAct +: (fks ++ detail) :+ ""
   }
 
-  def enumRoutesContentFor(config: ExportConfiguration, e: ExportEnum) = {
+  private[this] def enumRoutesContentFor(config: ExportConfiguration, e: ExportEnum) = {
     val controllerClass = (e.controllerPackage(config) :+ (e.className + "Controller")).mkString(".")
     val detailWs = (0 until (55 - e.propertyName.length)).map(_ => " ").mkString
     Seq(s"GET         /${e.propertyName} $detailWs $controllerClass.list()", "")
-  }
-
-  def export(config: ExportConfiguration) = {
-    val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
-    val packages = filtered.flatMap(_.pkg.headOption).distinct
-
-    val routesContent = packages.map { p =>
-      val ms = config.models.filter(_.pkg.headOption.contains(p))
-      val es = config.enums.filter(_.pkg.headOption.contains(p))
-      val solo = es.isEmpty && ms.size == 1
-
-      if (solo) {
-        p -> routesContentFor(config, ms.headOption.getOrElse(throw new IllegalStateException()), solo = true)
-      } else {
-        p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(config, e)))
-      }
-    }
-
-    routesContent.map { p =>
-      val f = RoutesFile(p._1)
-      p._2.foreach(l => f.add(l))
-      f
-    }
   }
 }

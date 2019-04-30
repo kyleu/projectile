@@ -19,7 +19,10 @@ object ExportConfigurationHelper {
         fk.references match {
           case Nil => Nil // noop
           case ref :: Nil =>
-            val name = ExportHelper.toIdentifier(fk.name) match {
+            val name = ExportHelper.toIdentifier(fk.name.indexOf(',') match {
+              case -1 => fk.name
+              case idx => fk.name.substring(0, idx)
+            }) match {
               case x if t.columns.exists(_.name == x) => x + "FK"
               case x => x
             }
