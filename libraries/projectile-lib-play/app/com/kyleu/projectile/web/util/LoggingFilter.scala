@@ -9,14 +9,13 @@ import com.kyleu.projectile.util.tracing.TraceData
 import javax.inject.Inject
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object LoggingFilter {
   def skipPath(p: String) = p.startsWith("/assets") || p.startsWith("/style") || p.startsWith("/components")
 }
 
-class LoggingFilter @Inject() (override implicit val mat: Materializer) extends Filter with Logging {
+class LoggingFilter @Inject() (override implicit val mat: Materializer)(implicit ec: ExecutionContext) extends Filter with Logging {
   val metricsName = "http_requests"
 
   def apply(nextFilter: RequestHeader => Future[Result])(request: RequestHeader): Future[Result] = {

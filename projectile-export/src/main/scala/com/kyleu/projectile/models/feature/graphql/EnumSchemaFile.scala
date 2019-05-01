@@ -24,8 +24,9 @@ object EnumSchemaFile {
     file.addImport(Seq("sangria", "schema"), "ListType")
     file.addImport(Seq("sangria", "schema"), "fields")
     file.addImport(Seq("scala", "concurrent"), "Future")
+    file.addImport(Seq("scala", "concurrent"), "ExecutionContext")
 
-    file.add(s"""object ${enum.className}Schema extends GraphQLSchemaHelper("${enum.propertyName}") {""", 1)
+    file.add(s"""object ${enum.className}Schema extends GraphQLSchemaHelper("${enum.propertyName}")(ExecutionContext.global) {""", 1)
     file.add(s"implicit val ${enum.propertyName}EnumType: EnumType[${enum.className}] = CommonSchema.derive${t}EnumeratumType(", 1)
     file.add(s"""name = "${enum.className}",""")
     file.add(s"values = ${enum.className}.values")

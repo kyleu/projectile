@@ -5,13 +5,13 @@ import java.util.UUID
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.util.tracing.TraceData
+import com.kyleu.projectile.views.html.admin.explore.searchResults
 import play.api.mvc.Call
 import play.twirl.api.Html
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-abstract class BaseSearchController extends AuthController("search") {
+abstract class BaseSearchController(implicit ec: ExecutionContext) extends AuthController("search") {
   def search(q: String) = withSession("admin.search", admin = true) { implicit request => implicit td =>
     val creds = UserCredentials.fromRequest(request)
     val results = try {
@@ -25,7 +25,7 @@ abstract class BaseSearchController extends AuthController("search") {
     }
     results.map {
       case r if r.size == 1 => Redirect(r.head._1)
-      case r => Ok(com.kyleu.projectile.views.html.admin.explore.searchResults(q, r.map(_._2), app.cfg(Some(request.identity), admin = true, "Search", q)))
+      case r => Ok(searchResults(q, r.map(_._2), app.cfg(Some(request.identity), admin = true, "Search", q)))
     }
   }
 

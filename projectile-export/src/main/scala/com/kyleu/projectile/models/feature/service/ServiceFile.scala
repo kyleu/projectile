@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ServiceFile {
-  private[this] val inject = "@javax.inject.Inject() (val db: JdbcDatabase, override val tracing: TracingService)"
+  private[this] val inject = "@javax.inject.Inject() (val db: JdbcDatabase, override val tracing: TracingService)(implicit ec: ExecutionContext)"
   private[this] val searchArgs = "filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
 
   def export(config: ExportConfiguration, model: ExportModel) = {
@@ -18,7 +18,7 @@ object ServiceFile {
     file.addImport(Seq("scala", "concurrent"), "Future")
 
     config.addCommonImport(file, "JdbcDatabase")
-    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
+    config.addCommonImport(file, "ExecutionContext")
     config.addCommonImport(file, "DataField")
 
     config.addCommonImport(file, "Credentials")

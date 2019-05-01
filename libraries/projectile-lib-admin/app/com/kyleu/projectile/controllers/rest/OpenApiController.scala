@@ -5,13 +5,12 @@ import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.util.{JsonIncludeParser, JsonSerializers}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.util.control.NonFatal
 
 @javax.inject.Singleton
-class OpenApiController @javax.inject.Inject() (override val app: Application) extends AuthController("rest") {
+class OpenApiController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("rest") {
   private[this] def loadJson(key: String) = {
     val resource = Option(getClass.getClassLoader.getResourceAsStream(key)).getOrElse(throw new IllegalStateException(s"Cannot load [$key] from classpath."))
     val content = Source.fromInputStream(resource).getLines.filterNot(_.trim.startsWith("//")).mkString("\n")

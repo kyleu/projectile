@@ -8,14 +8,13 @@ import io.opentracing.propagation.{Format, TextMapExtractAdapter, TextMapInjectA
 import io.opentracing.{Span, Tracer}
 
 import scala.collection.JavaConverters._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
 /** Implements TracingService to provide system-wide tracing support */
 @javax.inject.Singleton
-class OpenTracingService @javax.inject.Inject() (cnf: MetricsConfig) extends TracingService {
+class OpenTracingService @javax.inject.Inject() (cnf: MetricsConfig)(implicit ec: ExecutionContext) extends TracingService {
   private[this] var cfg: Option[Configuration] = None
 
   override def noopTrace[A](name: String)(f: TraceData => Future[A]) = {

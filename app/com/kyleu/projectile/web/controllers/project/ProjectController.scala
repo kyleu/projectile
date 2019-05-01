@@ -3,6 +3,7 @@ package com.kyleu.projectile.web.controllers.project
 import com.kyleu.projectile.services.project.ProjectExampleService
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ExampleProjectHelper
+import play.twirl.api.Html
 
 import scala.concurrent.Future
 
@@ -29,8 +30,7 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
 
   def fix(key: String, t: String, src: String, tgt: String) = Action.async { implicit request =>
     val result = projectile.fix(key, t, src, tgt)
-    val msg = result.toString
-    Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> msg.take(512)))
+    Future.successful(Ok(Html(s"<pre>${result.mkString("\n")}</pre>")))
   }
 
   def export(key: String, verbose: Boolean) = Action.async { implicit request =>

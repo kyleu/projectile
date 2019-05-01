@@ -5,8 +5,6 @@ import com.kyleu.projectile.graphql.GraphQLService
 import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.models.user.{Role, SystemUser}
 import io.circe.Json
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.util.EncryptionUtils
 import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
@@ -15,14 +13,18 @@ import sangria.parser.SyntaxError
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.web.util.ControllerUtils.{jsonBody, jsonObject}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
-class GraphQLController @javax.inject.Inject() (override val app: Application, graphQLService: GraphQLService) extends AuthController("graphql") {
+class GraphQLController @javax.inject.Inject() (
+    override val app: Application, graphQLService: GraphQLService
+)(implicit ec: ExecutionContext) extends AuthController("graphql") {
   private[this] val secretKey = "GraphTastesBad"
 
-  def graphql(query: Option[String], variables: Option[String]) = withSession("graphql.ui", admin = true) { implicit request => implicit td =>
-    Future.successful(Ok(com.kyleu.projectile.views.html.graphql.graphiql(app.actions)))
+  def graphql(query: Option[String], variables: Option[String]) = {
+    withSession("graphql.ui", admin = true) { implicit request => implicit td =>
+      Future.successful(Ok(com.kyleu.projectile.views.html.graphql.graphiql(app.actions)))
+    }
   }
 
   def graphqlBody = withoutSession("graphql.post") { implicit request => implicit td =>

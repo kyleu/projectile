@@ -7,14 +7,16 @@ import com.kyleu.projectile.services.ProjectileService
 
 object ExportValidation {
   def validate(svc: ProjectileService, results: Seq[ProjectOutput]) = {
-    val out = results.flatMap { result =>
-      val cfg = svc.configForProject(result.project.key)
-      result.files.map(f => result.getDirectory(result.getDirectory(cfg.workingDirectory, OutputPath.Root), f.path) / f.filePath)
+    val withConfig = results.map(r => r -> svc.configForProject(r.project.key))
+
+    val out = withConfig.flatMap {
+      case (result, cfg) =>
+        result.files.map(f => result.getDirectory(result.getDirectory(cfg.workingDirectory, OutputPath.Root), f.path) / f.filePath)
     }
 
-    val roots = results.map { r =>
-      val cfg = svc.configForProject(r.project.key)
-      r.getDirectory(cfg.workingDirectory, OutputPath.Root)
+    val roots = withConfig.map {
+      case (result, cfg) =>
+        result.getDirectory(cfg.workingDirectory, OutputPath.Root)
     }.distinct
 
     val files = roots.flatMap(root => getGeneratedFiles(root).distinct.map { f =>
@@ -33,11 +35,7 @@ object ExportValidation {
     f.children.toSeq.flatMap {
       case child if badBoys(child.name) => Nil
       case child if child.isDirectory => getGeneratedFiles(child)
-      case child if extensions.exists(child.name.endsWith) => if (child.contentAsString.contains(magicWord)) {
-        Seq(child)
-      } else {
-        Nil
-      }
+      case child if extensions.exists(child.name.endsWith) && child.contentAsString.contains(magicWord) => Seq(child)
       case _ => Nil
     }
   }

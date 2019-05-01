@@ -43,8 +43,7 @@ object DoobieQueryService {
   }
 }
 
-class DoobieQueryService(dataSource: DataSource) {
-  val ec = ExecutionContext.global
+class DoobieQueryService(dataSource: DataSource)(implicit ec: ExecutionContext) {
   implicit val cs: ContextShift[IO] = IO.contextShift(ec)
 
   val db = Transactor.fromDataSource[IO](dataSource, ec, ec)

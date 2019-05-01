@@ -12,8 +12,7 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class ProfileController @javax.inject.Inject() (
@@ -23,7 +22,7 @@ class ProfileController @javax.inject.Inject() (
     hasher: PasswordHasher,
     userService: SystemUserService,
     actions: AuthActions
-) extends AuthController("profile") {
+)(implicit ec: ExecutionContext) extends AuthController("profile") {
   def view = withSession("view") { implicit request => implicit td =>
     Future.successful(render {
       case Accepts.Html() => Ok(actions.profile(request.identity))

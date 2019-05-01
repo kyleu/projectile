@@ -24,7 +24,7 @@ object ControllerFile {
 
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
+    config.addCommonImport(file, "ExecutionContext")
     config.addCommonImport(file, "ReftreeUtils", "_")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
@@ -63,7 +63,7 @@ object ControllerFile {
         file.add(ref)
     }
     val controller = if (model.features(ModelFeature.Auth)) { "ServiceAuthController" } else { "ServiceController" }
-    file.add(s") extends $controller(svc) {", -2)
+    file.add(s")(implicit ec: ExecutionContext) extends $controller(svc) {", -2)
     file.indent()
     file.add()
     addMutations(file, model, routesClass, viewHtmlPackage)

@@ -32,6 +32,7 @@ class Application @javax.inject.Inject() (
     val lifecycle: ApplicationLifecycle,
     val playEnv: Environment,
     val actorSystem: ActorSystem,
+    val db: JdbcDatabase,
     val silhouette: Silhouette[AuthEnv],
     val ws: TracingWSClient,
     val tracing: TracingService
@@ -55,7 +56,7 @@ class Application @javax.inject.Inject() (
     lifecycle.addStopHook(() => Future.successful(stop()))
 
     try {
-      ApplicationDatabase.open(config.cnf.underlying, tracing)
+      db.open(config.cnf.underlying, tracing)
     } catch {
       case NonFatal(x) =>
         val c = DatabaseConfig.fromConfig(config.cnf.underlying, "database.application")
@@ -66,7 +67,7 @@ class Application @javax.inject.Inject() (
   }
 
   private[this] def stop() = {
-    ApplicationDatabase.close()
+    db.close()
     CacheService.close()
     if (config.metrics.tracingEnabled) { tracing.close() }
     if (config.metrics.micrometerEnabled) { Instrumented.stop() }

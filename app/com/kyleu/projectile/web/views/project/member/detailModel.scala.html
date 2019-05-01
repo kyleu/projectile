@@ -58,7 +58,7 @@
           <tbody>
             @m.fields.map { f =>
               <tr>
-                <td>@f.key</td>
+                <td>@f.key@if(f.indexed){<span title="Indexed">*</span>}</td>
                 <td>
                   <input id="field-@f.key-propertyName" name="field-@f.key-propertyName" value="@f.propertyName" />
                 </td>

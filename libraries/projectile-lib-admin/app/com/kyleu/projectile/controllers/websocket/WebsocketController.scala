@@ -14,8 +14,7 @@ import com.mohiva.play.silhouette.api.HandlerResult
 import io.circe.{Json, JsonObject}
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object WebsocketController {
   def errJson(t: String, b: String) = {
@@ -23,7 +22,10 @@ object WebsocketController {
   }
 }
 
-abstract class WebsocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encoder: Pickler](name: String) extends AuthController(name) {
+abstract class WebsocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encoder: Pickler](name: String)(
+    implicit
+    ec: ExecutionContext
+) extends AuthController(name) {
   implicit def system: ActorSystem
   implicit def materializer: Materializer
 

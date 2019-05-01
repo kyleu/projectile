@@ -10,8 +10,7 @@ import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import play.api.mvc.Result
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class AuthenticationController @javax.inject.Inject() (
@@ -19,7 +18,7 @@ class AuthenticationController @javax.inject.Inject() (
     userSearchService: SystemUserSearchService,
     credentialsProvider: CredentialsProvider,
     actions: AuthActions
-) extends AuthController("authentication") {
+)(implicit ec: ExecutionContext) extends AuthController("authentication") {
   val providers = if (app.config.authGoogleSettings.clientSecret.nonEmpty) { Seq("google") } else { Nil }
 
   def signInForm = withoutSession("form") { implicit request => implicit td =>

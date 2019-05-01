@@ -11,7 +11,7 @@ object ProjectAuditService {
   def audit(svc: ProjectileService, inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
     val missing = inputs.flatMap(i => i._1.models.flatMap(checkMissing(i._1, _)))
 
-    val configMessages = missing ++ getDupes(inputs)
+    val configMessages = missing ++ getDupes(inputs) ++ getUnindexed(inputs.map(_._1))
 
     val orphans = ExportValidation.validate(svc = svc, results = inputs.map(_._2)).map { valResult =>
       AuditMessage(project = "all", srcModel = valResult._1, src = valResult._1, t = "orphan", tgt = valResult._1, message = valResult._2)
@@ -58,5 +58,13 @@ object ProjectAuditService {
     }
 
     dupeClassnames ++ dupeKeys
+  }
+
+  private[this] def getUnindexed(cfgs: Seq[ExportConfiguration]) = cfgs.flatMap { cfg =>
+    cfg.models.flatMap { m =>
+      m.fields.filter(f => f.inSearch && !f.indexed).map { f =>
+        AuditMessage(project = cfg.project.key, srcModel = m.key, src = m.key, t = "unindexed", tgt = f.key, message = "Unindexed search field")
+      }
+    }
   }
 }

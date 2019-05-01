@@ -3,7 +3,7 @@ package com.kyleu.projectile.models
 import java.util.TimeZone
 
 import akka.actor.ActorSystem
-import com.kyleu.projectile.models.config.UiConfig
+import com.kyleu.projectile.models.config.{Notification, NotificationService, UiConfig}
 import com.kyleu.projectile.models.auth.AuthEnv
 import com.kyleu.projectile.models.database.DatabaseConfig
 import com.kyleu.projectile.models.user.SystemUser
@@ -22,7 +22,11 @@ import scala.concurrent.{Await, Future}
 import scala.util.control.NonFatal
 
 object Application {
-  case class Actions(projectName: String, configForUser: (Option[SystemUser], Boolean, String*) => UiConfig, failedRedirect: String = "/profile/signin")
+  case class Actions(
+      projectName: String,
+      configForUser: (Option[SystemUser], Boolean, Seq[Notification], String*) => UiConfig,
+      failedRedirect: String = "/profile/signin"
+  )
 }
 
 @javax.inject.Singleton
@@ -34,14 +38,17 @@ class Application @javax.inject.Inject() (
     val actorSystem: ActorSystem,
     val silhouette: Silhouette[AuthEnv],
     val ws: TracingWSClient,
-    val tracing: TracingService
+    val tracing: TracingService,
+    val db: JdbcDatabase
 ) extends Logging {
 
   val projectName = actions.projectName
 
   Await.result(start(), 20.seconds)
 
-  def cfg(u: Option[SystemUser], admin: Boolean, breadcrumbs: String*) = actions.configForUser(u, admin, breadcrumbs: _*)
+  def cfg(u: Option[SystemUser], admin: Boolean, breadcrumbs: String*) = {
+    actions.configForUser(u, admin, NotificationService.getNotifications(u), breadcrumbs: _*)
+  }
 
   private[this] def start() = tracing.topLevelTrace("application.start") { implicit tn =>
     log.info(s"$projectName is starting")
@@ -55,7 +62,7 @@ class Application @javax.inject.Inject() (
     lifecycle.addStopHook(() => Future.successful(stop()))
 
     try {
-      ApplicationDatabase.open(config.cnf.underlying, tracing)
+      db.open(config.cnf.underlying, tracing)
     } catch {
       case NonFatal(x) =>
         val c = DatabaseConfig.fromConfig(config.cnf.underlying, "database.application")
@@ -66,7 +73,7 @@ class Application @javax.inject.Inject() (
   }
 
   private[this] def stop() = {
-    ApplicationDatabase.close()
+    db.close()
     CacheService.close()
     if (config.metrics.tracingEnabled) { tracing.close() }
     if (config.metrics.micrometerEnabled) { Instrumented.stop() }

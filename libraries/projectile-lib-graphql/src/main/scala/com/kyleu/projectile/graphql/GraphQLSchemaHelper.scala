@@ -2,7 +2,6 @@ package com.kyleu.projectile.graphql
 
 import java.time.LocalDateTime
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import com.kyleu.projectile.models.result.filter.{Filter, FilterSchema}
 import com.kyleu.projectile.models.result.orderBy.{OrderBy, OrderBySchema}
 import com.kyleu.projectile.models.result.paging.PagingOptions
@@ -11,7 +10,7 @@ import com.kyleu.projectile.services.ModelServiceHelper
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.tracing.TraceData
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object GraphQLSchemaHelper {
   final case class SearchArgs(start: LocalDateTime, filters: Seq[Filter], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int])
@@ -21,7 +20,7 @@ object GraphQLSchemaHelper {
   }
 }
 
-abstract class GraphQLSchemaHelper(val name: String) {
+abstract class GraphQLSchemaHelper(val name: String)(implicit ec: ExecutionContext) {
   protected def traceF[A](ctx: GraphQLContext, k: String)(f: TraceData => Future[A]) = ctx.tracing.trace(name + ".schema." + k)(f)(ctx.trace)
   protected def traceB[A](ctx: GraphQLContext, k: String)(f: TraceData => A) = ctx.tracing.traceBlocking(name + ".schema." + k)(f)(ctx.trace)
 

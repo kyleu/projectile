@@ -1,13 +1,13 @@
 package com.kyleu.projectile.services.database
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import com.kyleu.projectile.models.database.{DatabaseConfig, RawQuery, Statement}
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait Database[Conn] extends Logging {
+  protected[this] implicit def ec: ExecutionContext
   protected[this] def key: String
 
   def transaction[A](f: (TraceData, Conn) => A)(implicit traceData: TraceData): A

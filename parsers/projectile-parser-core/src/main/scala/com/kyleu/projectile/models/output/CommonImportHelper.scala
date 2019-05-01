@@ -9,7 +9,6 @@ object CommonImportHelper {
     case None => (s match {
       case "AugmentService" => c.applicationPackage ++ Seq("services", "augment")
       case "Application" => c.systemPackage :+ "models"
-      case "ApplicationDatabase" => c.systemPackage ++ Seq("services", "database")
       case "AuditHelper" => c.systemPackage ++ Seq("services", "audit")
       case "AuditRecordRowService" => c.applicationPackage ++ Seq("services", "audit")
       case "AuthController" => c.systemPackage :+ "controllers"

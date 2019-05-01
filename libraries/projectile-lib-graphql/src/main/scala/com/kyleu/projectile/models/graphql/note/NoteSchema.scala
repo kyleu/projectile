@@ -6,6 +6,8 @@ import com.kyleu.projectile.graphql.GraphQLUtils.deriveObjectType
 import com.kyleu.projectile.graphql.{GraphQLContext, GraphQLSchemaHelper}
 import com.kyleu.projectile.models.note.Note
 
-object NoteSchema extends GraphQLSchemaHelper("noteRow") {
+import scala.concurrent.ExecutionContext
+
+object NoteSchema extends GraphQLSchemaHelper("noteRow")(ExecutionContext.global) {
   implicit lazy val noteType: sangria.schema.ObjectType[GraphQLContext, Note] = deriveObjectType()
 }

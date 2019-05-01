@@ -19,7 +19,7 @@ object EnumControllerFile {
       config.addCommonImport(file, "BaseController")
     }
     config.addCommonImport(file, "JsonSerializers", "_")
-    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
+    config.addCommonImport(file, "ExecutionContext")
     config.addCommonImport(file, "ServiceController")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
@@ -28,7 +28,7 @@ object EnumControllerFile {
     val prefix = config.systemPackage.map(_ + ".").mkString
 
     file.add("@javax.inject.Singleton")
-    val constructorArgs = "@javax.inject.Inject() (override val app: Application)"
+    val constructorArgs = "@javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext)"
     val controller = if (enum.features(EnumFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${enum.className}Controller $constructorArgs extends $controller("${enum.propertyName}") {""", 1)
     file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)

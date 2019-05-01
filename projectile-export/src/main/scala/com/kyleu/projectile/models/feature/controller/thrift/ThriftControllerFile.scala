@@ -31,7 +31,7 @@ object ThriftControllerFile {
 
     config.addCommonImport(file, "ControllerUtils")
     config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "ExecutionContext", "Implicits", "global")
+    config.addCommonImport(file, "ExecutionContext")
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ThriftServiceRegistry")
     config.addCommonImport(file, "TraceData")
@@ -40,7 +40,7 @@ object ThriftControllerFile {
     file.addImport(Seq("play", "api", "mvc"), "Call")
 
     file.add("@javax.inject.Singleton")
-    val inject = "@javax.inject.Inject() (override val app: Application)"
+    val inject = "@javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext)"
     val controller = if (service.features(ServiceFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${service.className}Controller $inject extends $controller("${service.className}") {""", 1)
     file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")

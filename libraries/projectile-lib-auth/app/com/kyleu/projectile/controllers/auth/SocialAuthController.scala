@@ -12,8 +12,7 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, Silhouette}
 import com.mohiva.play.silhouette.impl.providers.{CommonSocialProfileBuilder, SocialProvider, SocialProviderRegistry}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class SocialAuthController @javax.inject.Inject() (
@@ -24,7 +23,7 @@ class SocialAuthController @javax.inject.Inject() (
     authInfoRepository: AuthInfoRepository,
     socialProviderRegistry: SocialProviderRegistry,
     actions: AuthActions
-) extends AuthController("socialAuth") {
+)(implicit ec: ExecutionContext) extends AuthController("socialAuth") {
   def authenticate(provider: String) = withoutSession("form") { implicit request => implicit td =>
     socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>

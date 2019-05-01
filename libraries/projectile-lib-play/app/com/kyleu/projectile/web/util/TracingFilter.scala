@@ -7,8 +7,7 @@ import play.api.libs.typedmap.TypedKey
 import play.api.mvc.{Filter, RequestHeader, Result}
 import play.api.routing.Router
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 object TracingFilter {
@@ -21,7 +20,7 @@ object TracingFilter {
   }
 }
 
-class TracingFilter @Inject() (tracingService: OpenTracingService)(implicit val mat: Materializer) extends Filter {
+class TracingFilter @Inject() (tracingService: OpenTracingService)(implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
   private val reqHeaderToSpanName: RequestHeader => String = TracingFilter.paramAwareRequestNamer
 
   def apply(nextFilter: RequestHeader => Future[Result])(req: RequestHeader): Future[Result] = if (LoggingFilter.skipPath(req.path)) {

@@ -12,8 +12,7 @@ import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent}
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class RegistrationController @javax.inject.Inject() (
@@ -23,7 +22,7 @@ class RegistrationController @javax.inject.Inject() (
     hasher: PasswordHasher,
     userService: SystemUserService,
     actions: AuthActions
-) extends AuthController("registration") {
+)(implicit ec: ExecutionContext) extends AuthController("registration") {
   def registrationForm(email: Option[String] = None) = withoutSession("form") { implicit request => implicit td =>
     if (actions.allowRegistration) {
       val form = UserForms.registrationForm.fill(RegistrationData(

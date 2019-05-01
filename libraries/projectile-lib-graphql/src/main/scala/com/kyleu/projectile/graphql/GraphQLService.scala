@@ -11,11 +11,13 @@ import sangria.marshalling.circe._
 import sangria.parser.QueryParser
 import sangria.validation.QueryValidator
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 @javax.inject.Singleton
-class GraphQLService @javax.inject.Inject() (tracing: TracingService, noteService: NoteService, injector: Injector, schema: GraphQLSchema) extends Logging {
+class GraphQLService @javax.inject.Inject() (
+    tracing: TracingService, noteService: NoteService, injector: Injector, schema: GraphQLSchema
+)(implicit ec: ExecutionContext) extends Logging {
   protected val exceptionHandler = ExceptionHandler {
     case (_, e: IllegalStateException) =>
       log.warn("Error encountered while running GraphQL query", e)(TraceData.noop)

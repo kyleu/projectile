@@ -4,21 +4,19 @@ import java.util.UUID
 
 import akka.actor.ActorRef
 import akka.pattern.ask
-import com.kyleu.projectile.models.config.UiConfig
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.models.connection.ConnectionMessage._
 import com.kyleu.projectile.services.connection.ConnectionSupervisor
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
 
 @javax.inject.Singleton
 class ConnectionActivityController @javax.inject.Inject() (
     override val app: Application,
     @javax.inject.Named("connection-supervisor") val connSupervisor: ActorRef
-) extends AuthController("admin.activity") {
+)(implicit ec: ExecutionContext) extends AuthController("admin.activity") {
   def connectionList = withSession("activity.connection.list", admin = true) { implicit request => implicit td =>
     ask(connSupervisor, GetConnectionStatus)(20.seconds).mapTo[ConnectionStatus].map { status =>
       Ok(com.kyleu.projectile.views.html.activity.connectionList(app.cfg(u = Some(request.identity), admin = true), status.connections))

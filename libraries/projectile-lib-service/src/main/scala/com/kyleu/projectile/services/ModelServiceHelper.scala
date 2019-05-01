@@ -6,10 +6,9 @@ import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.util.{Logging, NullUtils}
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
-abstract class ModelServiceHelper[T](val key: String) extends Logging {
+abstract class ModelServiceHelper[T](val key: String)(implicit ec: ExecutionContext) extends Logging {
   def tracing: TracingService
 
   def traceF[A](name: String)(f: TraceData => Future[A])(implicit trace: TraceData) = tracing.trace(key + ".service." + name)(td => f(td))

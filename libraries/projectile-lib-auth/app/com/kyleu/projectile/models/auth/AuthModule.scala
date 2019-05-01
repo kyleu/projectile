@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.Configuration
 import com.kyleu.projectile.services.user.{OAuth2InfoService, PasswordInfoService, SystemUserSearchService}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder, Signer}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.services.{AuthenticatorService, AvatarService, IdentityService}
+import com.mohiva.play.silhouette.api.services.{AuthenticatorService, AvatarService}
 import com.mohiva.play.silhouette.api.util._
 import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
 import com.mohiva.play.silhouette.crypto.{JcaCrypter, JcaCrypterSettings, JcaSigner, JcaSignerSettings}
@@ -22,6 +22,7 @@ import play.api.libs.ws.WSClient
 import play.api.mvc.DefaultCookieHeaderEncoding
 
 import scala.concurrent.ExecutionContext.Implicits.global
+
 class AuthModule extends AbstractModule with ScalaModule {
   override def configure() = {
     bind[Silhouette[AuthEnv]].to[SilhouetteProvider[AuthEnv]]

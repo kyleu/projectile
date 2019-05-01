@@ -52,8 +52,8 @@ There's a lot to unpack here, see the @ref[library documentation](../../librarie
 ```scala
 import java.util.UUID
 
-import com.kyleu.projectile.services.database.ApplicationDatabase
-import com.kyleu.projectile.services.database.slick.ApplicationSlick
+import com.kyleu.projectile.services.database.JdbcDatabase
+import com.kyleu.projectile.services.database.slick.SlickQueryService
 import com.kyleu.projectile.services.database.slick.SlickQueryService.imports._
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
@@ -71,15 +71,16 @@ object Entrypoint {
     val cfg = ConfigFactory.load()
     implicit val td: TraceData = TraceData.noop
 
-    ApplicationDatabase.open(cfg, TracingService.noop)
-    ApplicationSlick.open(TracingService.noop)
+    val db = new JdbcDatabase("application", "database.application")(scala.concurrent.ExecutionContext.global)
+    db.open(cfg, TracingService.noop)
+    val slick = new SlickQueryService(db, TracingService.noop)
 
     val id = UUID.randomUUID
     val title = scala.util.Random.alphanumeric.take(8).mkString
     val newSession = SessionRow.empty(id = id, title = title, slug = title.toLowerCase, status = SessionStatusType.Active)
 
-    val future = ApplicationDatabase.executeF(SessionRowQueries.insert(newSession)).flatMap { _ =>
-      ApplicationSlick.slick.run("getSession")(SessionRowTable.query.filter(_.id === id).result.head)
+    val future = db.executeF(SessionRowQueries.insert(newSession)).flatMap { _ =>
+      slick.run("getSession")(SessionRowTable.query.filter(_.id === id).result.head)
     }
 
     val session = Await.result(future, 10.seconds)

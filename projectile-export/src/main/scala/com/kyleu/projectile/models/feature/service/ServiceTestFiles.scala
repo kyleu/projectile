@@ -17,11 +17,13 @@ object ServiceTestFiles {
     val file = ScalaFile(path = OutputPath.ServerTest, dir = config.applicationPackage, key = "TestServices")
 
     config.addCommonImport(file, "TracingService")
-    config.addCommonImport(file, "ApplicationDatabase")
+    config.addCommonImport(file, "JdbcDatabase")
+    config.addCommonImport(file, "ExecutionContext")
 
     file.add(s"object TestServices {", 1)
+    file.add("private[this] implicit val ec = ExecutionContext.global")
     file.add("private[this] val trace = TracingService.noop")
-    file.add("private[this] val db = ApplicationDatabase")
+    file.add("""private[this] val db = new JdbcDatabase("application", "database.application")""")
     file.add()
     models.foreach { model =>
       // val offerRowService = new com.fevo.coco.nut.services.offer.OfferRowService(trace)

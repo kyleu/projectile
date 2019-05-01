@@ -8,9 +8,10 @@ import com.kyleu.projectile.models.database.jdbc.Queryable
 import com.kyleu.projectile.models.database.{DatabaseConfig, RawQuery, Statement}
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 
+import scala.concurrent.ExecutionContext
 import scala.util.control.NonFatal
 
-abstract class JdbcDatabase(override val key: String, configPrefix: String) extends Database[Connection] with Queryable {
+class JdbcDatabase(override val key: String, configPrefix: String)(implicit val ec: ExecutionContext) extends Database[Connection] with Queryable {
   protected val metricsId = s"${key}_database"
 
   private[this] def time[A](method: String, name: String)(f: => A) = f
@@ -18,7 +19,7 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
   private[this] var ds: Option[HikariDataSource] = None
   def source = ds.getOrElse(throw new IllegalStateException("Database not initialized"))
 
-  def open(cfg: com.typesafe.config.Config, svc: TracingService) = {
+  def open(cfg: com.typesafe.config.Config, tracing: TracingService) = {
     ds.foreach(_ => throw new IllegalStateException("Database already initialized"))
 
     Class.forName("org.postgresql.Driver")
@@ -40,7 +41,7 @@ abstract class JdbcDatabase(override val key: String, configPrefix: String) exte
 
     ds = Some(poolDataSource)
 
-    start(config, svc)
+    start(config, tracing)
   }
 
   override def transaction[A](f: (TraceData, Connection) => A)(implicit traceData: TraceData) = trace("transaction") { td =>
