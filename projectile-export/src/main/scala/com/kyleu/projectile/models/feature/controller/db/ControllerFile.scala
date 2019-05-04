@@ -18,7 +18,7 @@ object ControllerFile {
 
     config.addCommonImport(file, "ServiceController")
     if (model.features(ModelFeature.Auth)) { config.addCommonImport(file, "ServiceAuthController") }
-    if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditRecordRowService") }
+    if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditService") }
 
     config.addCommonImport(file, "OrderBy")
 
@@ -52,7 +52,7 @@ object ControllerFile {
 
     val extraSvcs = {
       val n = if (model.features(ModelFeature.Notes)) { ", noteSvc: NoteService" } else { "" }
-      val a = if (model.features(ModelFeature.Audit)) { ", auditRecordSvc: AuditRecordRowService" } else { "" }
+      val a = if (model.features(ModelFeature.Audit)) { ", auditRecordSvc: AuditService" } else { "" }
       n + a
     }
 
@@ -67,7 +67,7 @@ object ControllerFile {
     file.indent()
     file.add()
     addMutations(file, model, routesClass, viewHtmlPackage)
-    addListAction(file, model, viewHtmlPackage)
+    addListAction(config, file, model, viewHtmlPackage)
     file.add("""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
     file.add("""withSession("autocomplete", admin = true) { implicit request => implicit td =>""", 1)
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
@@ -81,7 +81,8 @@ object ControllerFile {
     file
   }
 
-  private[this] def addListAction(file: ScalaFile, model: ExportModel, viewHtmlPackage: String) = {
+  private[this] def addListAction(config: ExportConfiguration, file: ScalaFile, model: ExportModel, viewHtmlPackage: String) = {
+    val routesClass = (model.routesPackage(config) :+ (model.className + "Controller")).mkString(".")
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
     file.add("""withSession("list", admin = true) { implicit request => implicit td =>""", 1)
@@ -89,10 +90,17 @@ object ControllerFile {
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
-    file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}List(", 1)
+    file.add(s"case MimeTypes.HTML => r._2.toList match {", 1)
+
+    val redirArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
+    file.add(s"case model :: Nil => Redirect($routesClass.view($redirArgs))")
+
     val cfgArg = s"""app.cfg(u = Some(request.identity), admin = ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}")"""
-    file.add(s"$cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)")
-    file.add("))", -1)
+    val args = s"$cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)"
+    file.add(s"case _ => Ok($viewHtmlPackage.${model.propertyName}List($args))")
+
+    file.add("}", -1)
+
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
     file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
     file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)")

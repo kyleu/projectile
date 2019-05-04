@@ -9,7 +9,7 @@ object SchemaObjectType {
   def addObjectType(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
     val references = ExportModelReference.validReferences(config, model)
-    val withNotes = model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)
+    val withNotes = ( /* TODO */ 1 == 2) && model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)
     if (columnsDescriptions.isEmpty && model.foreignKeys.isEmpty && references.isEmpty) {
       file.add(s"implicit lazy val ${model.propertyName}Type: sangria.schema.ObjectType[GraphQLContext, ${model.className}] = deriveObjectType()")
     } else {

@@ -2,7 +2,6 @@ import Dependencies._
 import com.typesafe.sbt.less.Import.LessKeys
 import com.typesafe.sbt.web.SbtWeb.autoImport.Assets
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-import play.sbt.routes.RoutesKeys
 import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin

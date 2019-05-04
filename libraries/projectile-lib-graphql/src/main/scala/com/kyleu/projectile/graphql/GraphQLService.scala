@@ -2,7 +2,6 @@ package com.kyleu.projectile.graphql
 
 import com.google.inject.Injector
 import com.kyleu.projectile.services.Credentials
-import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import com.kyleu.projectile.util.{JsonSerializers, Logging}
 import io.circe.Json
@@ -16,7 +15,7 @@ import scala.util.{Failure, Success}
 
 @javax.inject.Singleton
 class GraphQLService @javax.inject.Inject() (
-    tracing: TracingService, noteService: NoteService, injector: Injector, schema: GraphQLSchema
+    tracing: TracingService, injector: Injector, schema: GraphQLSchema
 )(implicit ec: ExecutionContext) extends Logging {
   protected val exceptionHandler = ExceptionHandler {
     case (_, e: IllegalStateException) =>
@@ -44,8 +43,7 @@ class GraphQLService @javax.inject.Inject() (
             creds = creds,
             tracing = tracing,
             trace = td,
-            injector = injector,
-            noteLookup = (creds, t, pk) => implicit td => noteService.getFor(creds, t, pk)(td)
+            injector = injector
           )
           val ret = Executor.execute(
             schema = schema.schema,

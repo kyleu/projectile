@@ -1,0 +1,31 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.note.Note], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)
+@com.kyleu.projectile.views.html.admin.explore.list(
+  cfg = cfg,
+  model = "Note",
+  modelPlural = "Notes",
+  icon = "eject",
+  cols = Seq(
+    "id" -> "Id",
+    "relType" -> "Rel Type",
+    "relPk" -> "Rel Pk",
+    "text" -> "Text",
+    "author" -> "Author",
+    "created" -> "Created"
+  ),
+  totalCount = totalCount,
+  rows = modelSeq.map(model => com.kyleu.projectile.views.html.note.noteDataRow(model)),
+  orderBy = orderBy,
+  orderAsc = orderAsc,
+  calls = com.kyleu.projectile.models.result.web.ListCalls(
+    newCall = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.createForm()),
+    orderBy = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, _, _, Some(limit), Some(0))),
+    search = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(None, orderBy, orderAsc, Some(limit), None)),
+    next = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+    prev = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, orderBy, orderAsc, Some(limit), Some(offset - limit))
+  ),
+  limit = limit,
+  offset = offset,
+  q = q
+)

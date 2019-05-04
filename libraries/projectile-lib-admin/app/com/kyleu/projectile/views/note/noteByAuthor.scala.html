@@ -1,0 +1,31 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, author: java.util.UUID, modelSeq: Seq[com.kyleu.projectile.models.note.Note], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)
+@com.kyleu.projectile.views.html.admin.explore.list(
+  cfg = cfg,
+  model = "Note",
+  modelPlural = "Notes",
+  icon = "eject",
+  cols = Seq(
+    "id" -> "Id",
+    "relType" -> "Rel Type",
+    "relPk" -> "Rel Pk",
+    "text" -> "Text",
+    "author" -> "Author",
+    "created" -> "Created"
+  ),
+  orderBy = orderBy,
+  orderAsc = orderAsc,
+  totalCount = None,
+  rows = modelSeq.map(model => com.kyleu.projectile.views.html.note.noteDataRow(model)),
+  calls = com.kyleu.projectile.models.result.web.ListCalls(
+    orderBy = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.byAuthor(author, _, _, Some(limit), Some(0))),
+    search = None,
+    next = com.kyleu.projectile.controllers.admin.note.routes.NoteController.byAuthor(author, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+    prev = com.kyleu.projectile.controllers.admin.note.routes.NoteController.byAuthor(author, orderBy, orderAsc, Some(limit), Some(offset - limit)),
+  ),
+  limit = limit,
+  offset = offset,
+  q = None,
+  fullUI = false
+)

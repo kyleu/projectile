@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.export
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.util.JsonSerializers._
 
 object ExportModelReference {
@@ -15,7 +16,8 @@ object ExportModelReference {
   implicit val jsonDecoder: Decoder[ExportModelReference] = deriveDecoder
 
   def validReferences(config: ExportConfiguration, model: ExportModel) = {
-    model.references.filter(ref => config.getModelOpt(ref.srcTable).isDefined).groupBy(x => (x.srcCol, x.srcTable, x.tgt)).map(_._2.head).toList
+    val refs = model.references.filter(ref => config.getModelOpt(ref.srcTable).exists(_.features(ModelFeature.Core)))
+    refs.groupBy(x => (x.srcCol, x.srcTable, x.tgt)).map(_._2.head).toList
   }
 
   def transformedReferences(config: ExportConfiguration, model: ExportModel) = validReferences(config, model).flatMap { r =>

@@ -1,0 +1,23 @@
+@(model: com.kyleu.projectile.models.note.Note)<tr>
+  <td>
+    <a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.relType
+  </td>
+  <td>
+    @model.relPk
+  </td>
+  <td>
+    @model.text
+  </td>
+  <td>
+    @model.author
+    <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.author)">
+      <i class="material-icons small">account_circle</i>
+    </a>
+  </td>
+  <td>
+    @model.created
+  </td>
+</tr>

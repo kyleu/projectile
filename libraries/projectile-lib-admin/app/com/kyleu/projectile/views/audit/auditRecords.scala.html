@@ -1,0 +1,46 @@
+@(records: Seq[com.kyleu.projectile.models.audit.AuditRecord], model: String, title: String, pk: Any*)
+@com.kyleu.projectile.components.views.html.layout.card(None) {
+  @if(records.isEmpty) {
+    <i>
+      No audit records available for this @title.
+    </i>
+  } else {
+    @records.size @if(records.lengthCompare(1) == 0) { audit record } else { audit records } available for this @title.
+    <ul class="collection">
+      @records.map { record =>
+        <li class="collection-item">
+          <table>
+            <thead>
+              <tr>
+                <th>Audit</th>
+                <th>Record</th>
+                <th>Field</th>
+                <th>Original</th>
+                <th>New</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if(record.changes.isEmpty) {
+                <tr>
+                  <td style="width: 20%;"><a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(record.auditId)">@record.auditId</a></td>
+                  <td style="width: 20%;">@record.id</td>
+                  <td colspan="3" style="width: 60%;"><em>No changes</em></td>
+                </tr>
+              } else {
+                @record.changes.map { c =>
+                  <tr>
+                    <td style="width: 20%;"><a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(record.auditId)">@record.auditId</a></td>
+                    <td style="width: 20%;">@record.id</td>
+                    <td style="width: 20%;">@c.k</td>
+                    <td style="width: 20%;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+                    <td style="width: 20%;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </li>
+      }
+    </ul>
+  }
+}

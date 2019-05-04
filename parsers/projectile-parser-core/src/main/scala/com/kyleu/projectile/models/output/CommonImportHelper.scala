@@ -10,7 +10,7 @@ object CommonImportHelper {
       case "AugmentService" => c.applicationPackage ++ Seq("services", "augment")
       case "Application" => c.systemPackage :+ "models"
       case "AuditHelper" => c.systemPackage ++ Seq("services", "audit")
-      case "AuditRecordRowService" => c.applicationPackage ++ Seq("services", "audit")
+      case "AuditService" => c.systemPackage ++ Seq("services", "audit")
       case "AuthController" => c.systemPackage :+ "controllers"
       case "BaseController" => c.systemPackage :+ "controllers"
       case "BaseQueries" => c.systemPackage ++ Seq("models", "queries")

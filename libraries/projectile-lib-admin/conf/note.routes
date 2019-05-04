@@ -1,0 +1,11 @@
+# Note Routes
+GET         /                        com.kyleu.projectile.controllers.admin.note.NoteController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete            com.kyleu.projectile.controllers.admin.note.NoteController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /add/:model/*pk          com.kyleu.projectile.controllers.admin.note.NoteController.addForm(model, pk)
+GET         /form                    com.kyleu.projectile.controllers.admin.note.NoteController.createForm
+POST        /                        com.kyleu.projectile.controllers.admin.note.NoteController.create
+GET         /byAuthor/:author        com.kyleu.projectile.controllers.admin.note.NoteController.byAuthor(author: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /:id                     com.kyleu.projectile.controllers.admin.note.NoteController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/form                com.kyleu.projectile.controllers.admin.note.NoteController.editForm(id: java.util.UUID)
+POST        /:id                     com.kyleu.projectile.controllers.admin.note.NoteController.edit(id: java.util.UUID)
+GET         /:id/remove              com.kyleu.projectile.controllers.admin.note.NoteController.remove(id: java.util.UUID)

@@ -41,7 +41,7 @@ class SocialAuthController @javax.inject.Inject() (
                   throw new IllegalStateException(s"Email [${profile.email.getOrElse("-not provided-")}] must end with a whitelisted domain")
                 }
                 val username = profile.fullName.orElse(profile.firstName).orElse(profile.email).getOrElse(profile.loginInfo.providerKey)
-                userService.getByUsername(UserCredentials.system, username).flatMap { existing =>
+                userService.findByUsername(UserCredentials.system, username).flatMap { existing =>
                   val newUser = SystemUser(
                     id = UUID.randomUUID,
                     username = if (existing.isDefined) { username + "-" + scala.util.Random.alphanumeric.take(4).mkString } else { username },

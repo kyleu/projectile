@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportModelReference}
-import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature}
 import com.kyleu.projectile.models.output.file.RoutesFile
 
 object RoutesFiles {
@@ -16,8 +16,8 @@ object RoutesFiles {
     val packages = filtered.flatMap(_.pkg.headOption).distinct
 
     val routesContent = packages.map { p =>
-      val ms = config.models.filter(_.pkg.headOption.contains(p))
-      val es = config.enums.filter(_.pkg.headOption.contains(p))
+      val ms = config.models.filter(_.features(ModelFeature.Controller)).filter(_.pkg.headOption.contains(p))
+      val es = config.enums.filter(_.features(EnumFeature.Controller)).filter(_.pkg.headOption.contains(p))
       val solo = es.isEmpty && ms.size == 1
 
       if (solo) {
@@ -82,7 +82,7 @@ object RoutesFiles {
         )
         view +: (counts ++ extras)
     }
-    comment +: list +: autocomplete +: createForm +: createAct +: (fks ++ detail) :+ ""
+    "" +: comment +: list +: autocomplete +: createForm +: createAct +: (fks ++ detail)
   }
 
   private[this] def enumRoutesContentFor(config: ExportConfiguration, e: ExportEnum) = {

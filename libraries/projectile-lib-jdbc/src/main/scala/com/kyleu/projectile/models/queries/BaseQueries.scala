@@ -10,17 +10,19 @@ abstract class BaseQueries[T <: Product](val key: String, val tableName: String)
   protected def searchColumns: Seq[String] = Nil
   protected def fromRow(row: Row): T
 
-  protected def toDataSeq(t: T): Seq[Any] = t.productIterator.toSeq.zip(fields).map {
-    case x if x._2.typ == DatabaseFieldType.EncryptedStringType => x._1 match {
+  protected def cleanData(any: Any, field: DatabaseField) = any match {
+    case _ if field.typ == DatabaseFieldType.EncryptedStringType => any match {
       case value: Option[_] => value.map(l => EncryptionUtils.encrypt(l.toString))
-      case _ => EncryptionUtils.encrypt(x._1.toString)
+      case _ => EncryptionUtils.encrypt(any.toString)
     }
-    case x if x._2.typ.isList => x._1 match {
+    case _ if field.typ.isList => any match {
       case value: Option[_] => value.map(l => "{" + l.asInstanceOf[List[_]].map("\"" + _ + "\"").mkString(",") + "}")
-      case _ => "{" + x._1.asInstanceOf[List[_]].map("\"" + _ + "\"").mkString(",") + "}"
+      case _ => "{" + any.asInstanceOf[List[_]].map("\"" + _ + "\"").mkString(",") + "}"
     }
-    case x => x._1
+    case _ => any
   }
+
+  protected def toDataSeq(t: T): Seq[Any] = t.productIterator.toSeq.zip(fields).map(x => cleanData(x._1, x._2))
 
   lazy val quotedColumns = fields.map(f => quote(f.col)).mkString(", ")
   protected def placeholdersFor(seq: Seq[_]) = seq.map(_ => "?").mkString(", ")

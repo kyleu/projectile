@@ -12,37 +12,27 @@ object ControllerHelper {
     val withNotes = model.features(ModelFeature.Notes)
 
     val viewArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
-    val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
     val logArgs = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
 
     file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
     if (audited) {
-      file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+      file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     }
     if (withNotes) {
-      file.add(s"""val notesF = noteSvc.getFor(request, "${model.propertyName}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+      file.add(s"""val notesF = noteSvc.getFor(request, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     }
     file.add()
 
     val audMap = if (audited) { "auditsF.flatMap(audits => " } else { "" }
-    val auditHelp = if (audited) { "audits, " } else { "" }
-
     val notesMap = if (withNotes) { "notesF.flatMap(notes => " } else { "" }
-    val notesHelp = if (withNotes) { "notes, " } else { "" }
-
     file.add(s"""$notesMap${audMap}modelF.map {""", 1)
     file.add("case Some(model) => renderChoice(t) {", 1)
-    val keyString = model.pkFields match {
-      case head :: Nil if head.t == FieldType.StringType => ", model." + head.propertyName
-      case head :: Nil => ", model." + head.propertyName + ".toString"
-      case Nil => ", \"Detail\""
-      case _ => ", s\"" + model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ") + "\""
-    }
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}"$keyString)"""
-    val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
-    file.add(s"case MimeTypes.HTML => Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))")
+
+    val viewArg = getViewArg(config, model, audited, withNotes)
+
+    file.add(s"case MimeTypes.HTML => $viewArg")
     file.add("case MimeTypes.JSON => Ok(model.asJson)")
     file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)")
     file.add("case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)")
@@ -90,5 +80,20 @@ object ControllerHelper {
     file.add("""case Accepts.Json() => Ok(io.circe.Json.obj("status" -> io.circe.Json.fromString("removed")))""")
     file.add("})", -1)
     file.add("}", -1)
+  }
+
+  private[this] def getViewArg(config: ExportConfiguration, model: ExportModel, audited: Boolean, withNotes: Boolean) = {
+    val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
+    val auditHelp = if (audited) { "audits, " } else { "" }
+    val notesHelp = if (withNotes) { "notes, " } else { "" }
+    val keyString = model.pkFields match {
+      case head :: Nil if head.t == FieldType.StringType => ", model." + head.propertyName
+      case head :: Nil => ", model." + head.propertyName + ".toString"
+      case Nil => ", \"Detail\""
+      case _ => ", s\"" + model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ") + "\""
+    }
+    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}"$keyString)"""
+    val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
+    s"Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))"
   }
 }

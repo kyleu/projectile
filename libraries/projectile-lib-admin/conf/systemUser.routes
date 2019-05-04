@@ -1,0 +1,11 @@
+# Generated File
+
+# System User Routes
+GET         /                    com.kyleu.projectile.controllers.admin.user.SystemUserController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete        com.kyleu.projectile.controllers.admin.user.SystemUserController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                com.kyleu.projectile.controllers.admin.user.SystemUserController.createForm
+POST        /                    com.kyleu.projectile.controllers.admin.user.SystemUserController.create
+GET         /:id                 com.kyleu.projectile.controllers.admin.user.SystemUserController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/form            com.kyleu.projectile.controllers.admin.user.SystemUserController.editForm(id: java.util.UUID)
+POST        /:id                 com.kyleu.projectile.controllers.admin.user.SystemUserController.edit(id: java.util.UUID)
+GET         /:id/remove          com.kyleu.projectile.controllers.admin.user.SystemUserController.remove(id: java.util.UUID)

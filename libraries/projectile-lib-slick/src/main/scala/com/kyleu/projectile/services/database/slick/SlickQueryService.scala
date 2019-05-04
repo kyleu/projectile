@@ -30,7 +30,7 @@ class SlickQueryService(key: String, dataSource: DataSource, maxConnections: Int
 
   def runBatch[R](name: String = "batch.query", debugValues: Seq[(String, Any)] = Nil)(act: DBIOAction[R, NoStream, Nothing])(implicit parentTd: TraceData) = {
     tracingService.trace(traceKey + "." + name) { td =>
-      //TODO: Can't use slick with a sequence and get back the statements yet for some reason. Open issue.
+      // Can't use slick with a sequence and get back the statements yet for some reason. Open issue.
       //td.tag("sql", act.mkString("\n\n"))
 
       def getDumpInfo(dumpInfo: DumpInfo, tabs: String): String = {

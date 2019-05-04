@@ -34,15 +34,16 @@ object ServiceMutations {
       file.add(s"def update(creds: Credentials, $sig, fields: Seq[DataField])$trace = {", 1)
       file.add(s"""traceF("update")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add(s"""case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for ${model.title} [$interp]")""")
-      file.add(s"case Some(_) => db.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
+      val currName = if (model.features(ModelFeature.Audit)) { "current" } else { "_" }
+      file.add(s"case Some($currName) => db.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
       file.add(s"getByPrimaryKey(creds, $call)(td).map {", 1)
       file.add("case Some(newModel) =>", 1)
       val ids = model.pkFields.map {
-        case f if f.required => s"""DataField("${f.propertyName}", Some(${f.propertyName}.toString))"""
-        case f => s"""DataField("${f.propertyName}", ${f.propertyName}.map(_.toString))"""
+        case f if f.required => s"""${f.propertyName}.toString"""
+        case f => s"""${f.propertyName}.map(_.toString).getOrElse("unknown")"""
       }.mkString(", ")
       if (model.features(ModelFeature.Audit)) {
-        file.add(s"""AuditHelper.onUpdate("${model.className}", Seq($ids), newModel.toDataFields, fields, creds)""")
+        file.add(s"""AuditHelper.onUpdate("${model.className}", Seq($ids), current.toDataFields, fields, creds)""")
       }
       file.add(s"""newModel -> s"Updated [$${fields.size}] fields of ${model.title} [$interp]"""")
       file.indent(-1)

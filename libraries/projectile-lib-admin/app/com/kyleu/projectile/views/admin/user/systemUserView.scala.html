@@ -1,0 +1,44 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.user.SystemUser, notes: Seq[com.kyleu.projectile.models.note.Note], auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.components.views.html.layout.page(s"System User", cfg) {
+  @com.kyleu.projectile.components.views.html.layout.card(None) {
+    <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this System User?')" href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.remove(model.id)">Remove</a></div>
+    <table class="highlight responsive-table">
+      <tbody>
+        <tr>
+          <th>Id</th>
+          <td>@model.id</td>
+        </tr>
+        <tr>
+          <th>Username</th>
+          <td>@model.username</td>
+        </tr>
+        <tr>
+          <th>Provider</th>
+          <td>@model.provider</td>
+        </tr>
+        <tr>
+          <th>Key</th>
+          <td>@model.key</td>
+        </tr>
+        <tr>
+          <th>Role</th>
+          <td>@model.role</td>
+        </tr>
+        <tr>
+          <th>Created</th>
+          <td>@model.created</td>
+        </tr>
+        <tr>
+          <th>Settings</th>
+          <td><pre>@model.settings<pre></td>
+        </tr>
+      </tbody>
+    </table>
+  }
+
+  @com.kyleu.projectile.views.html.note.notes(cfg, notes, "SystemUserRow", "System User", model.id)
+
+  @com.kyleu.projectile.views.html.audit.auditRecords(auditRecords, "SystemUserRow", "System User", model.id)
+}
