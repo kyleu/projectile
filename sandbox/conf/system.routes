@@ -1,0 +1,5 @@
+GET         /                      controllers.admin.system.AdminController.index
+GET         /search                controllers.admin.system.SearchController.search(q ?= "")
+
+# Start model routes
+# End model routes

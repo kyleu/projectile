@@ -23,7 +23,7 @@ object LibraryProjects {
       val boopickle = "me.chrons" %%% "boopickle" % Utils.booPickleVersion
       Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum /* :+ magnolia */ :+ boopickle
     },
-    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort).taskValue
+    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort, "com.kyleu.projectile.util").taskValue
   ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13").disablePlugins(AssemblyPlugin)
 
   lazy val `projectile-lib-core-jvm` = `projectile-lib-core`.jvm.withId("projectile-lib-core")
@@ -91,7 +91,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache :+ Play.twirl,
+    libraryDependencies ++= Authentication.all ++ Seq(Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache, Utils.betterFiles)
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-web-components`)
 
   lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(

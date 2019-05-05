@@ -16,13 +16,11 @@ object ServiceInserts {
     } else {
       if (model.features(ModelFeature.Audit)) {
         config.addCommonImport(file, "AuditHelper")
-        file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map {", 1)
+        file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td).map(_.map { n =>", 1)
         val audit = model.pkFields.map(f => "n." + f.propertyName + ".toString").mkString(", ")
-        file.add("case Some(n) =>")
-        file.add(s"""  AuditHelper.onInsert("${model.className}", Seq($audit), n.toDataFields, creds)""")
-        file.add("  model")
-        file.add(s"""case None => throw new IllegalStateException("Unable to find ${model.title}.")""")
-        file.add("}", -1)
+        file.add(s"""AuditHelper.onInsert("${model.className}", Seq($audit), n.toDataFields, creds)""")
+        file.add("n")
+        file.add("})", -1)
       } else {
         file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td)")
       }

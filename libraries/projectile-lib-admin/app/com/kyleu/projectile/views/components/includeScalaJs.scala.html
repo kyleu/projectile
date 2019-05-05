@@ -1,1 +1,5 @@
-@(debug: Boolean)<script src="@if(debug) { "/assets/client-fastopt.js" } else { "/assets/client-opt.js" }" type="text/javascript" defer="defer"></script>
+@(debug: Boolean)@if(debug) {
+  <script src="/assets/client-fastopt.js" type="text/javascript" defer="defer"></script>
+} else {
+  <script src="/assets/client-opt.js" type="text/javascript" defer="defer"></script>
+}

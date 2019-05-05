@@ -17,7 +17,7 @@
   orderBy = orderBy,
   orderAsc = orderAsc,
   totalCount = None,
-  rows = modelSeq.map(model => com.kyleu.projectile.views.html.note.noteDataRow(model)),
+  rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.note.noteDataRow(model)),
   calls = com.kyleu.projectile.models.result.web.ListCalls(
     orderBy = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.byAuthor(author, _, _, Some(limit), Some(0))),
     search = None,

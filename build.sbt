@@ -44,5 +44,8 @@ lazy val `projectile-sbt` = SbtExportPlugin.`projectile-sbt`
 // Play Web Application
 lazy val `projectile-server` = Server.`projectile-server`
 
+// Sandbox App
+lazy val sandbox = Sandbox.sandbox
+
 // Paradox documentation
 lazy val doc = Documentation.doc

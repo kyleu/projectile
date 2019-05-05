@@ -15,7 +15,7 @@
     "userId" -> "User Id"
   ),
   totalCount = totalCount,
-  rows = modelSeq.map(model => com.kyleu.projectile.views.html.audit.auditDataRow(model)),
+  rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.audit.auditDataRow(model)),
   orderBy = orderBy,
   orderAsc = orderAsc,
   calls = com.kyleu.projectile.models.result.web.ListCalls(

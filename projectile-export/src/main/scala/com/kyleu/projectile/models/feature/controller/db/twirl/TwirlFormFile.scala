@@ -29,7 +29,7 @@ object TwirlFormFile {
 
     file.add("}", -1)
 
-    file.add(s"@$viewPkg.components.includeScalaJs(debug)")
+    file.add(s"@$systemViewPkg.components.includeScalaJs(debug)")
 
     if (model.fields.exists(field => model.foreignKeys.exists(_.references.forall(_.source == field.key)))) {
       file.add(s"@$systemViewPkg.components.includeAutocomplete(debug)")

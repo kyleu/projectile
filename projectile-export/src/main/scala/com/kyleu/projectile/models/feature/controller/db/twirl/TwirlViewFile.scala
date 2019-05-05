@@ -78,12 +78,12 @@ object TwirlViewFile {
     val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
     if (model.features(ModelFeature.Notes)) {
       file.add()
-      val viewPkg = (config.systemPackage ++ Seq("views", "html", "note")).mkString(".")
+      val viewPkg = (config.systemPackage ++ Seq("views", "html", "admin", "note")).mkString(".")
       file.add(s"""@$viewPkg.notes(cfg, notes, "${model.className}", "${model.title}", $modelPks)""")
     }
     if (model.features(ModelFeature.Audit)) {
       file.add()
-      val viewPkg = (config.systemPackage ++ Seq("views", "html", "audit")).mkString(".")
+      val viewPkg = (config.systemPackage ++ Seq("views", "html", "admin", "audit")).mkString(".")
       file.add(s"""@$viewPkg.auditRecords(auditRecords, "${model.className}", "${model.title}", $modelPks)""")
     }
   }

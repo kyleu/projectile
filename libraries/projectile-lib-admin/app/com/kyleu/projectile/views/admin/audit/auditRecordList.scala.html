@@ -1,0 +1,28 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.audit.AuditRecord], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)
+@com.kyleu.projectile.views.html.admin.explore.list(
+  cfg = cfg,
+  model = "Audit Record",
+  modelPlural = "Audit Records",
+  icon = "storage",
+  cols = Seq(
+    "id" -> "Id",
+    "t" -> "T",
+    "pk" -> "Pk"
+  ),
+  totalCount = totalCount,
+  rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.audit.auditRecordDataRow(model)),
+  orderBy = orderBy,
+  orderAsc = orderAsc,
+  calls = com.kyleu.projectile.models.result.web.ListCalls(
+    newCall = Some(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.createForm()),
+    orderBy = Some(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.list(q, _, _, Some(limit), Some(0))),
+    search = Some(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.list(None, orderBy, orderAsc, Some(limit), None)),
+    next = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.list(q, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+    prev = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.list(q, orderBy, orderAsc, Some(limit), Some(offset - limit))
+  ),
+  limit = limit,
+  offset = offset,
+  q = q
+)

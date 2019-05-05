@@ -19,13 +19,13 @@ class ConnectionActivityController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("admin.activity") {
   def connectionList = withSession("activity.connection.list", admin = true) { implicit request => implicit td =>
     ask(connSupervisor, GetConnectionStatus)(20.seconds).mapTo[ConnectionStatus].map { status =>
-      Ok(com.kyleu.projectile.views.html.activity.connectionList(app.cfg(u = Some(request.identity), admin = true), status.connections))
+      Ok(com.kyleu.projectile.views.html.admin.activity.connectionList(app.cfg(u = Some(request.identity), admin = true), status.connections))
     }
   }
 
   def connectionDetail(id: UUID) = withSession("activity.connection.detail", admin = true) { implicit request => implicit td =>
     ask(connSupervisor, ConnectionTraceRequest(id))(20.seconds).mapTo[ConnectionTraceResponse].map { c =>
-      Ok(com.kyleu.projectile.views.html.activity.connectionDetail(app.cfg(u = Some(request.identity), admin = true), c))
+      Ok(com.kyleu.projectile.views.html.admin.activity.connectionDetail(app.cfg(u = Some(request.identity), admin = true), c))
     }
   }
 

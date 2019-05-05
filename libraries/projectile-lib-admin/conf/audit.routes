@@ -1,9 +1,21 @@
+# Audit Record Routes
+GET         /record                           com.kyleu.projectile.controllers.admin.audit.AuditRecordController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /record/autocomplete              com.kyleu.projectile.controllers.admin.audit.AuditRecordController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /record/form                      com.kyleu.projectile.controllers.admin.audit.AuditRecordController.createForm
+POST        /record                           com.kyleu.projectile.controllers.admin.audit.AuditRecordController.create
+GET         /record/byAuditId/:auditId        com.kyleu.projectile.controllers.admin.audit.AuditRecordController.byAuditId(auditId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /record/:id                       com.kyleu.projectile.controllers.admin.audit.AuditRecordController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /record/:id/form                  com.kyleu.projectile.controllers.admin.audit.AuditRecordController.editForm(id: java.util.UUID)
+POST        /record/:id                       com.kyleu.projectile.controllers.admin.audit.AuditRecordController.edit(id: java.util.UUID)
+GET         /record/:id/remove                com.kyleu.projectile.controllers.admin.audit.AuditRecordController.remove(id: java.util.UUID)
+
 # Audit Routes
-GET         /                    com.kyleu.projectile.controllers.admin.audit.AuditController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
-GET         /autocomplete        com.kyleu.projectile.controllers.admin.audit.AuditController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
-GET         /form                com.kyleu.projectile.controllers.admin.audit.AuditController.createForm
-POST        /                    com.kyleu.projectile.controllers.admin.audit.AuditController.create
-GET         /:id                 com.kyleu.projectile.controllers.admin.audit.AuditController.view(id: java.util.UUID, t: Option[String] ?= None)
-GET         /:id/form            com.kyleu.projectile.controllers.admin.audit.AuditController.editForm(id: java.util.UUID)
-POST        /:id                 com.kyleu.projectile.controllers.admin.audit.AuditController.edit(id: java.util.UUID)
-GET         /:id/remove          com.kyleu.projectile.controllers.admin.audit.AuditController.remove(id: java.util.UUID)
+GET         /                                 com.kyleu.projectile.controllers.admin.audit.AuditController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete                     com.kyleu.projectile.controllers.admin.audit.AuditController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                             com.kyleu.projectile.controllers.admin.audit.AuditController.createForm
+POST        /                                 com.kyleu.projectile.controllers.admin.audit.AuditController.create
+GET         /:id                              com.kyleu.projectile.controllers.admin.audit.AuditController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/counts                       com.kyleu.projectile.controllers.admin.audit.AuditController.relationCounts(id: java.util.UUID)
+GET         /:id/form                         com.kyleu.projectile.controllers.admin.audit.AuditController.editForm(id: java.util.UUID)
+POST        /:id                              com.kyleu.projectile.controllers.admin.audit.AuditController.edit(id: java.util.UUID)
+GET         /:id/remove                       com.kyleu.projectile.controllers.admin.audit.AuditController.remove(id: java.util.UUID)

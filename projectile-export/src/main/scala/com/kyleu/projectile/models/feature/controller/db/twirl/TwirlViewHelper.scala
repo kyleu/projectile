@@ -40,7 +40,7 @@ object TwirlViewHelper {
       file.add("</li>", -1)
     }
     file.add("</ul>", -1)
-    file.add(s"@${(config.viewPackage ++ Seq("html", "components")).mkString(".")}.includeScalaJs(debug)")
+    file.add(s"@${(config.systemViewPackage ++ Seq("html", "components")).mkString(".")}.includeScalaJs(debug)")
     file.add(s"""<script>$$(function() { new RelationService('@${TwirlHelper.routesClass(config, model)}.relationCounts($args)') });</script>""")
   }
 

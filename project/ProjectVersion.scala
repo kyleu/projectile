@@ -2,9 +2,9 @@ import sbt._
 import sbt.Keys._
 
 object ProjectVersion {
-  def writeConfig(projectId: String, projectName: String, projectPort: Int) = Def.task {
+  def writeConfig(projectId: String, projectName: String, projectPort: Int, pkg: String = "util") = Def.task {
     val content =s"""
-      |package com.kyleu.projectile.util
+      |package $pkg
       |
       |object Version {
       |  val projectId = "$projectId"
