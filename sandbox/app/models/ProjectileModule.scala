@@ -1,6 +1,7 @@
 package models
 
 import com.google.inject.{AbstractModule, Provides}
+import com.kyleu.projectile.graphql.GraphQLSchema
 import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.models.auth.AuthActions
 import com.kyleu.projectile.models.config.{NavHtml, UiConfig, UserSettings}
@@ -11,6 +12,7 @@ import com.kyleu.projectile.util.metrics.MetricsConfig
 import com.kyleu.projectile.util.tracing.{OpenTracingService, TracingService}
 import com.kyleu.projectile.web.util.{ErrorHandler, GravatarUrl}
 import io.circe.JsonObject
+import models.graphql.Schema
 import models.template.UserMenu
 import net.codingwell.scalaguice.ScalaModule
 import util.Version
@@ -59,4 +61,7 @@ class ProjectileModule extends AbstractModule with ScalaModule {
     override def allowRegistration = true
     override def defaultRole = Role.Admin
   }
+
+  @Provides @javax.inject.Singleton
+  def providesGraphQLSchema(): GraphQLSchema = Schema
 }

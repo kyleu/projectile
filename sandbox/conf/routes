@@ -1,5 +1,4 @@
 GET         /                                        controllers.HomeController.home
-GET         /robots.txt                              controllers.HomeController.robots
 
 ->          /profile                                 profile.Routes
 ->          /components                              components.Routes

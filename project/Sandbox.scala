@@ -17,7 +17,6 @@ object Sandbox {
   }
 
   val sandbox = Project(id = projectId, base = file(projectId)).settings(Common.settings: _*).settings(
-    RoutesKeys.routesGenerator := InjectedRoutesGenerator,
     RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.web.util.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
@@ -25,7 +24,7 @@ object Sandbox {
     PlayKeys.playInteractionMode := PlayUtils.NonBlockingInteractionMode,
 
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(projectId, projectName, projectPort).taskValue
-  ).disablePlugins(PlayFilters).aggregate(LibraryProjects.`projectile-lib-admin`).dependsOn(LibraryProjects.`projectile-lib-admin`).enablePlugins(
+  ).dependsOn(LibraryProjects.`projectile-lib-admin`).disablePlugins(PlayFilters).enablePlugins(
     SbtWeb, PlayScala
   )
 }
