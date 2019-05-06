@@ -7,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.7.11"
+    val app = "1.7.12"
     val scala = "2.12.8"
   }
 
@@ -18,7 +18,7 @@ object Common {
 
   val compileOptions = Seq(
     "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-    "–Xcheck-null", /* "-Xfatal-warnings", */ /* "-Xlint", */ "-Xcheckinit", "-Xfuture", "-Yrangepos", "-Ypartial-unification",
+    "–Xcheck-null", /* "-Xfatal-warnings", */ /* "-Xlint," */ "-Xcheckinit", "-Xfuture", "-Yrangepos", "-Ypartial-unification",
     "-Yno-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
   ) ++ profileOptions
 

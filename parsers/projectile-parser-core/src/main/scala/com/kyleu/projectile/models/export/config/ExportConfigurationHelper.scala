@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.export.config
 
 import com.kyleu.projectile.models.database.schema.Table
-import com.kyleu.projectile.models.export.{ExportModel, ExportModelReference}
+import com.kyleu.projectile.models.export.ExportModelReference
 import com.kyleu.projectile.models.output.ExportHelper
 
 object ExportConfigurationHelper {

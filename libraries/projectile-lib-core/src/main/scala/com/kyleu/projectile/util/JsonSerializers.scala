@@ -4,7 +4,6 @@ import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 
 import io.circe.JsonObject
 import io.circe.generic.extras
-import io.circe.java8.time._
 import shapeless.Lazy
 
 import scala.language.implicitConversions

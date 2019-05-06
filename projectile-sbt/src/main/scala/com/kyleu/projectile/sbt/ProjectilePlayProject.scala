@@ -17,10 +17,8 @@ import sbtassembly.AssemblyPlugin.autoImport._
 object ProjectilePlayProject extends AutoPlugin {
   private[this] def isConf(x: (File, String)) = x._1.getAbsolutePath.contains("conf/")
 
-  val projectIdKey = settingKey[String]("The id of your project")
-
   object autoImport {
-    val projectileProjectId = projectIdKey
+    val projectileProjectId = settingKey[String]("The id of your project")
     val projectileProjectName = settingKey[String]("The name of your project")
     val projectileProjectPort = settingKey[Int]("The port for your project")
     val projectileVersion = com.kyleu.projectile.sbt.util.Version.version
@@ -41,8 +39,8 @@ object ProjectilePlayProject extends AutoPlugin {
 
     scalacOptions ++= Seq(
       "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-      "–Xcheck-null", "-Xfatal-warnings", /* "-Xlint", */ "-Xcheckinit", "-Xfuture", "-Yrangepos", "-Ypartial-unification",
-      "-Yno-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
+      "–Xcheck-null", /* "-Xfatal-warnings", */ /* "-Xlint", */ "-Xcheckinit", "-Xfuture", "-Yrangepos", "-Ypartial-unification",
+      /* "-Yno-adapted-args", */ "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
     ),
 
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
@@ -62,10 +60,9 @@ object ProjectilePlayProject extends AutoPlugin {
     dockerLabels ++= Map("project" -> autoImport.projectileProjectId.value),
     dockerUpdateLatest := true,
     defaultLinuxInstallLocation in Docker := s"/opt/${autoImport.projectileProjectId.value}",
-    packageName in Docker := packageName.value,
+    packageName in Docker := autoImport.projectileProjectId.value,
     dockerExposedVolumes := Seq(s"/opt/${autoImport.projectileProjectId.value}"),
     version in Docker := version.value,
-    dockerUsername := Some(autoImport.projectileProjectId.value),
 
     // Assembly
     assemblyJarName in assembly := autoImport.projectileProjectId.value + ".jar",

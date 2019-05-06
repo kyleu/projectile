@@ -6,9 +6,6 @@ import com.kyleu.projectile.util.Logging
 import scala.scalajs.js
 
 object FieldDefault {
-  private[this] val startLi = """<li class="ac-item theme-text" data-id="<%= item.id %>" data-text="<%= item.id %>">"""
-  private[this] val endLi = """</li>"""
-
   def onDefault(t: String, name: String, formEl: JQuery, checkbox: JQuery) = {
     val input = $(s"#input-$name", formEl)
     if (input.length != 1) {

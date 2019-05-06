@@ -5,8 +5,8 @@ import com.kyleu.projectile.util.JsonSerializers._
 object PagingOptions {
   case class Range(start: Int, end: Int)
 
-  private[this] implicit val jsonRangeEncoder: Encoder[Range] = deriveEncoder
-  private[this] implicit val jsonRangeDecoder: Decoder[Range] = deriveDecoder
+  implicit val jsonRangeEncoder: Encoder[Range] = deriveEncoder
+  implicit val jsonRangeDecoder: Decoder[Range] = deriveDecoder
 
   implicit val jsonEncoder: Encoder[PagingOptions] = deriveEncoder
   implicit val jsonDecoder: Decoder[PagingOptions] = deriveDecoder

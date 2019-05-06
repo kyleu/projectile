@@ -10,7 +10,6 @@ import play.api.http.{ContentTypeOf, Writeable}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.implicitConversions
 
 abstract class BaseController(val name: String) extends InjectedController with Logging {
   def tracing: TracingService
