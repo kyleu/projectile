@@ -1,6 +1,6 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.components.views.html.layout.page(
+)@com.kyleu.projectile.views.html.layout.page(
   title = "Swagger UI",
   cfg = cfg,
   stylesheets = Seq("/assets/lib/swagger-ui/swagger-ui.css")
@@ -27,7 +27,7 @@
     }
   </style>
 
-  @com.kyleu.projectile.components.views.html.layout.card(None) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute;
       width: 0;
       height: 0;">

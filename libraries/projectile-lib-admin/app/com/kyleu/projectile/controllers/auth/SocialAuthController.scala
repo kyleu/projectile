@@ -25,10 +25,18 @@ class SocialAuthController @javax.inject.Inject() (
     actions: AuthActions
 )(implicit ec: ExecutionContext) extends AuthController("socialAuth") {
   def authenticate(provider: String) = withoutSession("form") { implicit request => implicit td =>
+    println("#############")
+    println("#############")
+    println("#############")
+    println("#############")
     socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
         val rsp = p.authenticate().flatMap {
-          case Left(result) => Future.successful(result)
+          case Left(result) =>
+            println("#############OK")
+            println(result.session.data.toString())
+
+            Future.successful(result)
           case Right(authInfo) => p.retrieveProfile(authInfo).flatMap { profile =>
             val li = LoginInfo(profile.loginInfo.providerID, profile.loginInfo.providerKey)
 
@@ -60,6 +68,9 @@ class SocialAuthController @javax.inject.Inject() (
               result <- silhouette.env.authenticatorService.embed(value, Redirect(actions.indexUrl))
             } yield {
               silhouette.env.eventBus.publish(LoginEvent(user, request))
+              println("#############Create")
+              println(result.session.data.toString())
+
               result
             }
           }

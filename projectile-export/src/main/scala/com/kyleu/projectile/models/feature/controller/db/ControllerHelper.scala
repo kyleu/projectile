@@ -69,7 +69,7 @@ object ControllerHelper {
     file.add()
     file.add(s"""def edit($viewArgs) = withSession("edit", admin = true) { implicit request => implicit td =>""", 1)
     file.add(s"svc.update(request, $callArgs, fields = modelForm(request.body)).map(res => render {", 1)
-    file.add(s"""case Accepts.Html() => Redirect($routesClass.view($redirArgs)).flashing("success" -> res._2)""")
+    file.add(s"""case Accepts.Html() => Redirect($routesClass.view($redirArgs))""")
     file.add("case Accepts.Json() => Ok(res.asJson)")
     file.add("})", -1)
     file.add("}", -1)

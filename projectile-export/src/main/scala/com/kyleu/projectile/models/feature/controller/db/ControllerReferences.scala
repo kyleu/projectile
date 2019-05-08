@@ -62,8 +62,8 @@ object ControllerReferences {
         val call = s"${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls"
 
         if (config.project.flags("components")) {
-          file.addImport(Seq("com", "kyleu", "projectile", "components", "views", "html", "layout"), "page")
-          file.addImport(Seq("com", "kyleu", "projectile", "components", "views", "html", "layout"), "card")
+          file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "page")
+          file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "card")
           file.add("case MimeTypes.HTML =>", 1)
           file.add(s"val cfg = $cfgArg")
           file.add(s"val list = $call(cfg, $args)")

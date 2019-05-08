@@ -1,14 +1,18 @@
 @(actions: com.kyleu.projectile.models.Application.Actions)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.basic(actions.projectName + " GraphQL", scripts = Seq(
-  com.kyleu.projectile.controllers.graphql.routes.Assets.versioned("vendor/graphql/fetch.min.js").url,
-  com.kyleu.projectile.controllers.graphql.routes.Assets.versioned("vendor/graphql/react.min.js").url,
-  com.kyleu.projectile.controllers.graphql.routes.Assets.versioned("vendor/graphql/react-dom.min.js").url,
-  "/assets/lib/jquery/jquery.min.js",
-  com.kyleu.projectile.controllers.graphql.routes.Assets.versioned("vendor/graphql/graphiql.min.js").url
-), stylesheets = Seq(
-  com.kyleu.projectile.controllers.graphql.routes.Assets.versioned("vendor/graphql/graphiql.css").url
-)) {
+)@com.kyleu.projectile.views.html.layout.core(
+  title = actions.projectName + " GraphQL",
+  scripts = Seq(
+    com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/fetch.min.js").url,
+    com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/react.min.js").url,
+    com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/react-dom.min.js").url,
+    "/assets/lib/jquery/jquery.min.js",
+    com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/graphiql.min.js").url
+  ),
+  stylesheets = Seq(
+    com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/graphiql.css").url
+  )
+) {
   <style type="text/css">
     body {
       height: 100%;

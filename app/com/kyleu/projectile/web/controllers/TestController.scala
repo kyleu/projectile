@@ -1,7 +1,5 @@
 package com.kyleu.projectile.web.controllers
 
-import com.kyleu.projectile.models.config._
-
 import scala.concurrent.Future
 
 @javax.inject.Singleton

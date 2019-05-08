@@ -10,7 +10,7 @@ object TwirlListFile {
     val listFile = TwirlFile(model.viewPackage(config), model.propertyName + "List")
     val viewArgs = "q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int"
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
-    val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
+    val listCalls = (config.systemPackage ++ Seq("models", "web", "ListCalls")).mkString(".")
 
     val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     listFile.add(s"@($finalArgs, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)

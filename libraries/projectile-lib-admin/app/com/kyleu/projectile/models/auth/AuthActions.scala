@@ -34,7 +34,7 @@ class AuthActions(val projectName: String) {
     form: Form[Credentials], cfg: UiConfig
   )(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
     val username = form.apply("identifier").value.getOrElse("")
-    com.kyleu.projectile.components.views.html.auth.signin(username, cfg)
+    com.kyleu.projectile.views.html.auth.signin(username, cfg)
   }
 
   def registerForm(
@@ -42,7 +42,7 @@ class AuthActions(val projectName: String) {
   )(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
     val username = f.apply("username").value.getOrElse("")
     val email = f.apply("email").value.getOrElse("")
-    com.kyleu.projectile.components.views.html.auth.signup(username, email, cfg)
+    com.kyleu.projectile.views.html.auth.signup(username, email, cfg)
   }
 
   def profile(cfg: UiConfig)(implicit request: Request[AnyContent], session: Session, flash: Flash): HtmlFormat.Appendable = {
@@ -50,6 +50,6 @@ class AuthActions(val projectName: String) {
   }
 
   def changePasswordForm(cfg: UiConfig)(implicit request: Request[AnyContent], session: Session, flash: Flash, traceData: TraceData): HtmlFormat.Appendable = {
-    com.kyleu.projectile.components.views.html.auth.changePassword(cfg)
+    com.kyleu.projectile.views.html.auth.changePassword(cfg)
   }
 }

@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.auth.{AuthActions, UserForms}
 import com.kyleu.projectile.models.user.UserProfile
 import com.kyleu.projectile.services.user.SystemUserService
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.web.util.ControllerUtils
+import com.kyleu.projectile.models.web.ControllerUtils
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}

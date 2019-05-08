@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.util.BinarySerializers.Pickler
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.web.util.WebsocketUtils
+import com.kyleu.projectile.models.web.WebsocketUtils
 import com.mohiva.play.silhouette.api.HandlerResult
 import io.circe.{Json, JsonObject}
 import play.api.mvc._

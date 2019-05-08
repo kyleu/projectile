@@ -2,7 +2,7 @@ package com.kyleu.projectile.controllers.admin.note
 
 import java.util.UUID
 
-import com.kyleu.projectile.components.views.html.layout.{card, page}
+import com.kyleu.projectile.views.html.layout.{card, page}
 import com.kyleu.projectile.controllers.{ServiceAuthController, ServiceController}
 import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.models.note.{Note, NoteResult}
@@ -10,7 +10,7 @@ import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.web.util.ReftreeUtils._
+import com.kyleu.projectile.models.web.ReftreeUtils._
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}

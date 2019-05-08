@@ -10,10 +10,7 @@ object TwirlFormFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "Form")
 
-    val viewPkg = (config.viewPackage :+ "html").mkString(".")
-
     val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
-    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
 
     val extraArgs = "title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false"
 
@@ -21,7 +18,7 @@ object TwirlFormFile {
     file.add(s"@(cfg: $uc, model: ${model.fullClassPath(config)}, $extraArgs)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
 
-    file.add(s""")@$sharedViewPkg.layout.page(title, cfg) {""", 1)
+    file.add(s""")@$systemViewPkg.layout.page(title, cfg) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     if (config.isNewUi) { newContent(config, model, file) } else { originalContent(config, model, file) }
@@ -50,7 +47,7 @@ object TwirlFormFile {
   }
 
   private[this] def newContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
-    file.add("@com.kyleu.projectile.components.views.html.layout.card(None) {", 1)
+    file.add("@com.kyleu.projectile.views.html.layout.card(None) {", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add("""<div class="right"><a href="@cancel" class="btn-flat cancel-link">Cancel</a></div>""")
     file.add("""<div class="clear"></div>""")

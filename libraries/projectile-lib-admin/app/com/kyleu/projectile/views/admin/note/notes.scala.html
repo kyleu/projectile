@@ -1,5 +1,5 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, notes: Seq[com.kyleu.projectile.models.note.Note], model: String, title: String, pk: Any*)
-@com.kyleu.projectile.components.views.html.layout.card(None) {
+@com.kyleu.projectile.views.html.layout.card(None) {
   <div class="right"><a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.addForm(model, pk.mkString("/"))">Add Note</a></div>
   @if(notes.isEmpty) {
     <i>No notes available for this @{title}.</i>

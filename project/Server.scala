@@ -1,10 +1,11 @@
+import Dependencies.WebJars
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
-import play.sbt.PlayFilters
+import play.sbt.{PlayFilters, PlayScala}
 import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys
 import sbt.Keys._
@@ -16,11 +17,10 @@ object Server {
     name := Common.projectId,
     description := Common.projectName,
 
-    libraryDependencies ++= Dependencies.Play.all,
+    libraryDependencies ++= Dependencies.Play.all :+ WebJars.jquery :+ WebJars.materialize :+ WebJars.fontAwesome,
 
     // Play
     RoutesKeys.routesGenerator := InjectedRoutesGenerator,
-    RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.web.util.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
     PlayKeys.playDefaultPort := Common.projectPort,
@@ -73,8 +73,7 @@ object Server {
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
   lazy val `projectile-server` = withProjects(
-    Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, play.sbt.PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
-    SbtExportPlugin.`projectile-sbt`,
+    Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     ProjectileExport.`projectile-export`
-  ).dependsOn(LibraryProjects.`projectile-lib-play`).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*)
+  ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*).aggregate(SbtExportPlugin.`projectile-sbt`)
 }

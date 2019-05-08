@@ -12,7 +12,7 @@ trait GraphQLSchema {
   // Schema
   lazy val schema = sangria.schema.Schema(
     query = queryType,
-    mutation = Some(mutationType),
+    mutation = if (mutationType.fields.isEmpty) { None } else { Some(mutationType) },
     subscription = None,
     additionalTypes = Nil
   )

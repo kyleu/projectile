@@ -1,0 +1,15 @@
+@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.web.views.html.layout.basic(
+  title,
+  scripts = Seq(
+    "/assets/lib/jquery/jquery.js",
+    "/assets/lib/materializecss/js/materialize.js"
+  ) ++ scripts,
+  stylesheets = Seq(
+    "/assets/lib/font-awesome/css/font-awesome.css",
+    "/assets/lib/materializecss/css/materialize.css",
+    "/style/assets/stylesheets/projectile.css",
+    "/assets/stylesheets/main.css"
+  ) ++ stylesheets
+)(content)

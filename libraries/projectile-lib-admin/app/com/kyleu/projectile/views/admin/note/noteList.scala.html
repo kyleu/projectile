@@ -18,7 +18,7 @@
   rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.note.noteDataRow(model)),
   orderBy = orderBy,
   orderAsc = orderAsc,
-  calls = com.kyleu.projectile.models.result.web.ListCalls(
+  calls = com.kyleu.projectile.models.web.ListCalls(
     newCall = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.createForm()),
     orderBy = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, _, _, Some(limit), Some(0))),
     search = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(None, orderBy, orderAsc, Some(limit), None)),

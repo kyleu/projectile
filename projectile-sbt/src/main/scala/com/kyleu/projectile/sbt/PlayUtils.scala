@@ -18,6 +18,7 @@ object PlayUtils {
 
     override def start(server: => Closeable): Unit = synchronized {
       val theServer = server
+      System.clearProperty("play.server.http.port")
       if (runningServers(theServer)) {
         log("Noop: This server was already started")
       } else {

@@ -15,7 +15,7 @@
   orderAsc = orderAsc,
   totalCount = None,
   rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.audit.auditRecordDataRow(model)),
-  calls = com.kyleu.projectile.models.result.web.ListCalls(
+  calls = com.kyleu.projectile.models.web.ListCalls(
     orderBy = Some(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, _, _, Some(limit), Some(0))),
     search = None,
     next = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, orderBy, orderAsc, Some(limit), Some(offset + limit)),

@@ -21,9 +21,9 @@ object ServiceTestFiles {
     config.addCommonImport(file, "ExecutionContext")
 
     file.add(s"object TestServices {", 1)
-    file.add("private[this] implicit val ec = ExecutionContext.global")
+    file.add("private[this] implicit val ec: ExecutionContext = ExecutionContext.global")
     file.add("private[this] val trace = TracingService.noop")
-    file.add("""private[this] val db = new JdbcDatabase("application", "database.application")""")
+    file.add("""private[this] val db = new JdbcDatabase("application", "database.application") {}""")
     file.add()
     models.foreach { model =>
       // val offerRowService = new com.fevo.coco.nut.services.offer.OfferRowService(trace)

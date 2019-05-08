@@ -1,0 +1,66 @@
+html {
+  font-family: BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+// Nav bar
+.brand-sidebar .logo-wrapper a.brand-logo img {
+  padding: 0 7px;
+}
+
+#breadcrumbs-wrapper {
+  background: transparent;
+}
+
+// Splash page
+.splash-bg {
+  background-image: url('/components/images/flat-bg.jpg');
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
+
+#splash-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .card-panel.border-radius-6.splash-card {
+    margin-left: 0 !important;
+  }
+}
+
+#splash-content .card-panel.border-radius-6.splash-card {
+  margin-left: 0 !important;
+}
+
+// Tables
+.data-table {
+  td {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Forms
+.nullable-input-container {
+  position: relative;
+}
+
+.nullable-link {
+  font-size: 150%;
+  cursor: pointer;
+  position: absolute;
+  right: 6px;
+  top: 14px;
+}
+
+.small.material-icons {
+  font-size: 1rem;
+}
+
+input[type="text"].lookup {
+  margin-left: 3rem;
+}

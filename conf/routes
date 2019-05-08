@@ -1,3 +1,4 @@
+
 GET         /                                        com.kyleu.projectile.web.controllers.HomeController.index
 GET         /dir                                     com.kyleu.projectile.web.controllers.HomeController.changeDir(dir: Option[String] ?= None)
 GET         /dir/init                                com.kyleu.projectile.web.controllers.HomeController.initialize(d)

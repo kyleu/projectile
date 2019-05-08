@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.service
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldTypeFromString
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -36,7 +37,11 @@ object ServiceMutations {
       file.add(s"""case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for ${model.title} [$interp]")""")
       val currName = if (model.features(ModelFeature.Audit)) { "current" } else { "_" }
       file.add(s"case Some($currName) => db.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
-      file.add(s"getByPrimaryKey(creds, $call)(td).map {", 1)
+
+      val newCall = model.pkFields.map { f =>
+        s"""fields.find(_.k == "${f.propertyName}").flatMap(_.v).map(s => ${FieldTypeFromString.fromString(config, f.t, "s")}).getOrElse(${f.propertyName})"""
+      }.mkString(", ")
+      file.add(s"getByPrimaryKey(creds, $newCall)(td).map {", 1)
       file.add("case Some(newModel) =>", 1)
       val ids = model.pkFields.map {
         case f if f.required => s"""${f.propertyName}.toString"""

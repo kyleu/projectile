@@ -5,7 +5,7 @@ interp.load.ivy(
 
 @
 
-import com.kyleu.projectile.web.util.PlayServerHelper._
+import com.kyleu.projectile.models.web.PlayServerHelper._
 
 startServer(20000)
 

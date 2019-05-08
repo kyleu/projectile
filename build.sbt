@@ -19,14 +19,7 @@ lazy val `projectile-lib-service` = LibraryProjects.`projectile-lib-service`
 lazy val `projectile-lib-graphql` = LibraryProjects.`projectile-lib-graphql`
 lazy val `projectile-lib-scalajs` = LibraryProjects.`projectile-lib-scalajs`
 
-lazy val `projectile-lib-play` = LibraryProjects.`projectile-lib-play`
 lazy val `projectile-lib-admin` = LibraryProjects.`projectile-lib-admin`
-
-lazy val `projectile-lib-auth` = LibraryProjects.`projectile-lib-auth`
-lazy val `projectile-lib-auth-graphql` = LibraryProjects.`projectile-lib-auth-graphql`
-lazy val `projectile-lib-websocket` = LibraryProjects.`projectile-lib-websocket`
-
-lazy val `projectile-lib-web-components` = LibraryProjects.`projectile-lib-web-components`
 
 // Parser
 lazy val `projectile-parser-core` = ParserProjects.`projectile-parser-core`

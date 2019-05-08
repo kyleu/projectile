@@ -1,8 +1,8 @@
 package com.kyleu.projectile.web.controllers
 
 import com.kyleu.projectile.util.tracing.TraceData
-import play.api.mvc.InjectedController
 import com.kyleu.projectile.web.util.PlayServerHelper
+import play.api.mvc.InjectedController
 
 class ProjectileController extends InjectedController {
   protected[this] implicit val td: TraceData = TraceData.noop

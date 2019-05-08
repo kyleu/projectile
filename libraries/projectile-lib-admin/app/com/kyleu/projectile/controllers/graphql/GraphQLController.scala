@@ -11,7 +11,7 @@ import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.circe._
 import sangria.parser.SyntaxError
 import com.kyleu.projectile.util.tracing.TraceData
-import com.kyleu.projectile.web.util.ControllerUtils.{jsonBody, jsonObject}
+import com.kyleu.projectile.models.web.ControllerUtils.{jsonBody, jsonObject}
 
 import scala.concurrent.{ExecutionContext, Future}
 

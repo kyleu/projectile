@@ -1,6 +1,4 @@
 import Dependencies._
-import com.typesafe.sbt.less.Import.LessKeys
-import com.typesafe.sbt.web.SbtWeb.autoImport.Assets
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import sbt.Keys._
 import sbt._
@@ -84,42 +82,20 @@ object LibraryProjects {
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
 
-  lazy val `projectile-lib-play` = libraryProject(project in file("libraries/projectile-lib-play")).settings(
-    description := "Common Play Framework classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Utils.commonsLang, Utils.reftree, play.sbt.PlayImport.ws, Play.twirl) ++ WebJars.all
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-service`)
-
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
-    libraryDependencies ++= Authentication.all ++ Seq(Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache, Utils.betterFiles)
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-web-components`)
-
-  lazy val `projectile-lib-auth` = libraryProject(project in file("libraries/projectile-lib-auth")).settings(
-    description := "Common Silhouette authentication classes used by code generated from Projectile",
-    libraryDependencies ++= Authentication.all :+ play.sbt.PlayImport.ehcache :+ Play.twirl,
-    includeFilter in (Assets, LessKeys.less) := "projectile.less"
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
-
-  lazy val `projectile-lib-auth-graphql` = libraryProject(project in file("libraries/projectile-lib-auth-graphql")).settings(
-    description := "Secure GraphQL controllers and views, including GraphiQL and GraphQL Voyager",
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-auth`)
-
-  lazy val `projectile-lib-websocket` = libraryProject(project in file("libraries/projectile-lib-websocket")).settings(
-    description := "Websocket controller and admin actions for actor-backed websocket connections"
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-auth-graphql`)
-
-  lazy val `projectile-lib-web-components` = libraryProject(project in file("libraries/projectile-lib-web-components")).settings(
-    description := "Twirl templates for common Material Design web components",
-    libraryDependencies ++= Seq(WebJars.materialIcons, Play.twirl)
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-play`)
+    libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
+      Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache, 
+      Utils.betterFiles, Utils.commonsLang, Utils.reftree
+    )
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
     `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-play`, `projectile-lib-admin`, `projectile-lib-auth`, `projectile-lib-auth-graphql`,
-    `projectile-lib-websocket`, `projectile-lib-web-components`
+    `projectile-lib-admin`
   )
 
   lazy val allReferences = all.map(_.project)

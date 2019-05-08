@@ -1,2 +1,0 @@
-# Style
-GET         /assets/*file         com.kyleu.projectile.controllers.style.Assets.versioned(path = "/public/lib/projectile-lib-auth", file)

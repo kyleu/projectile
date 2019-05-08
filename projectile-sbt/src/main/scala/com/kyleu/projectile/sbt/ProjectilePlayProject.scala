@@ -102,7 +102,7 @@ object ProjectilePlayProject extends AutoPlugin {
 
     // Play
     RoutesKeys.routesGenerator := InjectedRoutesGenerator,
-    RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.web.util.QueryStringUtils._"),
+    RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.models.web.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
     PlayKeys.playDefaultPort := autoImport.projectileProjectPort.value,

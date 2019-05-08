@@ -14,8 +14,7 @@ object ThriftTwirlServiceFile {
     file.add(s"@(cfg: $cfg, debug: Boolean = false)(")
     file.add("    implicit request: Request[AnyContent], session: Session, flash: Flash")
     val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
-    val sharedViewPkg = if (config.isNewUi) { (config.componentViewPackage :+ "html").mkString(".") } else { systemViewPkg + ".admin" }
-    file.add(s""")@$sharedViewPkg.layout.page("${service.className}", cfg) {""", 1)
+    file.add(s""")@$systemViewPkg.layout.page("${service.className}", cfg) {""", 1)
     file.add("""<div class="row">""", 1)
     file.add("""<div class="col s12">""", 1)
     file.add("""<div class="collection with-header">""", 1)

@@ -1,25 +1,52 @@
-@(projectile: com.kyleu.projectile.services.ProjectileService, recent: Seq[String])(
+@(projectile: com.kyleu.projectile.services.ProjectileService, d: Option[String] = None)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Directory") {
-  <form method="get" action="@com.kyleu.projectile.web.controllers.routes.HomeController.changeDir()">
+  <form method="get" action="@com.kyleu.projectile.web.controllers.routes.HomeController.changeDir()" onsubmit="return addToHistory($('#dir-input').val());">
     <div class="collection with-header">
+      @d.map { dir =>
+        <div class="collection-item">
+          Set directory to [@dir]
+        </div>
+      }
       <div class="collection-header">
         <h5><i class=" @com.kyleu.projectile.models.template.Icons.projectile"></i> New Directory</h5>
       </div>
       <div class="collection-item">
-        <p><input name="dir" type="text" value="@projectile.rootCfg.path" /></p>
+        <p><input id="dir-input" name="dir" type="text" value="@projectile.rootCfg.path" /></p>
         <input type="submit" class="btn theme" value="Submit" />
       </div>
-      @if(recent.nonEmpty) {
-        <div class="collection-item">
-          Recent Directories:
-          <ul>
-          @recent.map { r =>
-            <li><a href="@com.kyleu.projectile.web.controllers.routes.HomeController.changeDir(Some(r))">@r</a></li>
-          }
-          </ul>
-        </div>
-      }
+      <div class="collection-item">
+        Recent Directories:
+        <ul id="dir-list"></ul>
+      </div>
     </div>
   </form>
+  <script>
+    var key = "projectile.dir.history";
+    function getHistory() {
+      var result = window.localStorage.getItem(key);
+      if(result === null || result === undefined) {
+        result = ".";
+      }
+      return result.split("||").filter(function(e) { return e.length > 0 });
+    }
+
+    function addToHistory(s) {
+      var current = getHistory();
+      var items = current.concat([s]);
+      var distinct = items.filter(function(item, pos) {
+        return items.indexOf(item) === pos;
+      }).sort();
+      var v = distinct.join("||");
+      console.info(v);
+      window.localStorage.setItem(key, v);
+      return true;
+    }
+
+    $(function() {
+      $("#dir-list").html(getHistory().map(function(r) {
+        return "<li><a href=\"/dir?dir=" + r + "\">" + r + "</a></li>";
+      }).join("\n"));
+    });
+  </script>
 }

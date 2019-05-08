@@ -1,11 +1,11 @@
 @(q: String, results: Seq[Html], cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.components.views.html.layout.page("Search Results", cfg) {
+)@com.kyleu.projectile.views.html.layout.page("Search Results", cfg) {
   @if(results.isEmpty) {
     <div>No search results for [@q]</div>
   }
   @results.map { result =>
-    @com.kyleu.projectile.components.views.html.layout.card(None) {
+    @com.kyleu.projectile.views.html.layout.card(None) {
       <div>@result</div>
     }
   }

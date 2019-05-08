@@ -44,6 +44,10 @@ case class ExportModel(
     fields = fields.filterNot(f => m.ignored.contains(f.key)).map(f => f.copy(
       propertyName = m.getOverride(s"${f.key}.propertyName", f.propertyName),
       title = m.getOverride(s"${f.key}.title", f.title),
+      t = m.getOverride(s"${f.key}.type", "") match {
+        case "" => f.t
+        case x => FieldType.withValue(x)
+      },
       inSearch = m.getOverride(s"${f.key}.search", f.inSearch.toString).toBoolean
     )),
     foreignKeys = foreignKeys.filterNot(fk => m.ignored.contains("fk." + fk.name)).map { fk =>

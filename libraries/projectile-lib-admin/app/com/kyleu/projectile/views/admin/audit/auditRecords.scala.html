@@ -1,5 +1,5 @@
 @(records: Seq[com.kyleu.projectile.models.audit.AuditRecord], model: String, title: String, pk: Any*)
-@com.kyleu.projectile.components.views.html.layout.card(None) {
+@com.kyleu.projectile.views.html.layout.card(None) {
   @if(records.isEmpty) {
     <i>
       No audit records available for this @title.

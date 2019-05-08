@@ -49,7 +49,13 @@ object TwirlViewHelper {
     file.add("<tbody>", 1)
     model.fields.foreach { field =>
       file.add("<tr>", 1)
-      file.add(s"<th>${field.title}</th>")
+      val clipboard = if (field.required) {
+        s"""@model.${field.propertyName}.toString.replaceAllLiterally("'", "")"""
+      } else {
+        s"""@model.${field.propertyName}.map(_.toString.replaceAllLiterally("'", ""))"""
+      }
+      val thContent = s"""<div title="Click to copy" onclick="ClipboardUtils.writeClipboard('$clipboard')" style="cursor: pointer;">${field.title}</div>"""
+      file.add(s"<th>$thContent</th>")
       model.foreignKeys.find(_.references.forall(_.source == field.key)) match {
         case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
           file.add("<td>", 1)

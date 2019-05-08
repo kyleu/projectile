@@ -1,5 +1,4 @@
 import com.typesafe.sbt.web.SbtWeb
-import play.routes.compiler.InjectedRoutesGenerator
 import play.sbt.{PlayFilters, PlayScala}
 import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys
@@ -17,7 +16,7 @@ object Sandbox {
   }
 
   val sandbox = Project(id = projectId, base = file(projectId)).settings(Common.settings: _*).settings(
-    RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.web.util.QueryStringUtils._"),
+    RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.models.web.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
     PlayKeys.playDefaultPort := projectPort,

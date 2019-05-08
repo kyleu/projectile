@@ -6,7 +6,6 @@ import com.kyleu.projectile.models.config.NotificationService
 import com.kyleu.projectile.services.audit.{AuditHelper, AuditService}
 import com.kyleu.projectile.services.database.MigrateTask
 import com.kyleu.projectile.util.tracing.TraceData
-import io.circe.Json
 
 import scala.concurrent.{ExecutionContext, Future}
 

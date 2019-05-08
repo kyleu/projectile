@@ -1,8 +1,8 @@
 @* Generated File *@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.audit.Audit, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.components.views.html.layout.page(s"Audit", cfg) {
-  @com.kyleu.projectile.components.views.html.layout.card(None) {
+)@com.kyleu.projectile.views.html.layout.page(s"Audit", cfg) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Audit?')" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.remove(model.id)">Remove</a></div>
     <table class="highlight responsive-table">

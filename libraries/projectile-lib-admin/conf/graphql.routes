@@ -4,5 +4,3 @@ POST        /                     com.kyleu.projectile.controllers.graphql.Graph
 
 GET         /schema               com.kyleu.projectile.controllers.graphql.SchemaController.renderSchema()
 GET         /voyager/:root        com.kyleu.projectile.controllers.graphql.SchemaController.voyager(root)
-
-GET         /assets/*file         com.kyleu.projectile.controllers.graphql.Assets.versioned(path = "/public/lib/projectile-lib-admin", file)

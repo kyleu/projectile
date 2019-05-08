@@ -23,7 +23,6 @@ import play.api.mvc.DefaultCookieHeaderEncoding
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuthModule extends AbstractModule with ScalaModule {
-
   override def configure() = {
     bind[Silhouette[AuthEnv]].to[SilhouetteProvider[AuthEnv]]
     bind[PasswordHasher].toInstance(new BCryptPasswordHasher())

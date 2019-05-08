@@ -7,7 +7,7 @@ import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.web.util.ReftreeUtils._
+import com.kyleu.projectile.models.web.ReftreeUtils._
 import java.util.UUID
 import com.kyleu.projectile.models.user.{SystemUser, SystemUserResult}
 import play.api.http.MimeTypes

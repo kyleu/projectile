@@ -43,7 +43,6 @@ object GraphQLFragmentFile {
   }
 
   private[this] def addContent(file: ScalaFile, src: String) = {
-    file.add()
     file.add("val content = \"\"\"", 1)
     StringUtils.lines(src).foreach(l => file.add("|" + l))
     file.add("\"\"\".stripMargin.trim", -1)

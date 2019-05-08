@@ -14,7 +14,7 @@ object TwirlRelationFiles {
     val refArgs = refFields.map(r => r.propertyName + ": " + r.scalaTypeFull(config).mkString(".")).mkString(", ")
 
     val modelPkg = (config.applicationPackage :+ "models").mkString(".")
-    val listCalls = (config.systemPackage ++ Seq("models", "result", "web", "ListCalls")).mkString(".")
+    val listCalls = (config.systemPackage ++ Seq("models", "web", "ListCalls")).mkString(".")
 
     val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     listFile.add(s"@($finalArgs, $refArgs, modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)

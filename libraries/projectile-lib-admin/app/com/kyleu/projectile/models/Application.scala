@@ -12,7 +12,7 @@ import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.TracingService
 import com.kyleu.projectile.util.{EncryptionUtils, Logging}
-import com.kyleu.projectile.web.util.TracingWSClient
+import com.kyleu.projectile.models.web.TracingWSClient
 import com.mohiva.play.silhouette.api.Silhouette
 import play.api.Environment
 import play.api.inject.ApplicationLifecycle
