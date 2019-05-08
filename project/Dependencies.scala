@@ -6,7 +6,7 @@ object Dependencies {
     val filters = play.sbt.PlayImport.filters
     val cache = play.sbt.PlayImport.ehcache
     val guice = play.sbt.PlayImport.guice
-    val json = "com.typesafe.play" %% "play-json" % "2.7.2"
+    val json = "com.typesafe.play" %% "play-json" % "2.7.3"
     val twirl = "com.typesafe.play" %% "twirl-api" % "1.4.1"
     val ws = play.sbt.PlayImport.ws
 
@@ -83,11 +83,11 @@ object Dependencies {
   }
 
   object Tracing {
-    val version = "0.34.0"
+    val version = "0.35.3"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.26.2"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.27.0"
   }
 
   object Authentication {
@@ -127,9 +127,9 @@ object Dependencies {
     val guava = "com.google.guava" % "guava" % "27.1-jre"
     val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
-    val logging = "org.slf4j" % "slf4j-api" % "1.7.25"
+    val logging = "org.slf4j" % "slf4j-api" % "1.7.26"
     val reftree = "io.github.stanch" %% "reftree" % "1.3.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.2"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.3"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.4"

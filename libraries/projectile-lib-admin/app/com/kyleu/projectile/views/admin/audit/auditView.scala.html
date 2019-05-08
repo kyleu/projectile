@@ -1,3 +1,4 @@
+@* Generated File *@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.audit.Audit, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(s"Audit", cfg) {
@@ -50,10 +51,10 @@
     </table>
   }
 
-  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "audit", "Audit", model.id)
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Audit", "Audit", model.id)
 
   <ul id="model-relations" class="collapsible" data-collapsible="expandable">
-    <li id="relation-auditRecord-auditId" data-table="auditRecord" data-field="auditId" data-singular="Audit Record" data-plural="Audit Records" data-url="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(model.id, limit = Some(5), embedded = true)">
+    <li id="relation-auditRecord-auditId" data-table="auditRecordRow" data-field="auditId" data-singular="Audit Record" data-plural="Audit Records" data-url="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(model.id, limit = Some(5), embedded = true)">
       <div class="collapsible-header">
         <i class="material-icons small">memory</i>
         <span class="title">Audit Records</span>&nbsp;by Audit Id

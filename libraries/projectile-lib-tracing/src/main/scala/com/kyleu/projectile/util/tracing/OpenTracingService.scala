@@ -4,7 +4,7 @@ import com.kyleu.projectile.util.metrics.MetricsConfig
 import io.jaegertracing.Configuration
 import io.jaegertracing.micrometer.MicrometerMetricsFactory
 import io.opentracing.noop.NoopTracerFactory
-import io.opentracing.propagation.{Format, TextMapExtractAdapter, TextMapInjectAdapter}
+import io.opentracing.propagation.{Format, TextMapExtract, TextMapExtractAdapter, TextMapInject, TextMapInjectAdapter}
 import io.opentracing.{Span, Tracer}
 
 import scala.collection.JavaConverters._
@@ -104,7 +104,7 @@ class OpenTracingService @javax.inject.Inject() (cnf: MetricsConfig)(implicit ec
   }
 
   def newSpan[A](name: String, headers: Map[String, String]) = {
-    Option(tracer.extract(Format.Builtin.HTTP_HEADERS, new TextMapExtractAdapter(headers.asJava))) match {
+    Option(tracer.extract(Format.Builtin.HTTP_HEADERS.asInstanceOf[Format[TextMapExtract]], new TextMapExtractAdapter(headers.asJava))) match {
       case Some(extracted) => tracer.buildSpan(name).asChildOf(extracted)
       case None => tracer.buildSpan(name)
     }
@@ -113,7 +113,7 @@ class OpenTracingService @javax.inject.Inject() (cnf: MetricsConfig)(implicit ec
   def toMap(td: TraceData) = td match {
     case tdz: TraceDataOpenTracing =>
       val data = new java.util.HashMap[String, String]()
-      tracer.inject(tdz.span.context, Format.Builtin.HTTP_HEADERS, new TextMapInjectAdapter(data))
+      tracer.inject(tdz.span.context, Format.Builtin.HTTP_HEADERS.asInstanceOf[Format[TextMapInject]], new TextMapInjectAdapter(data))
       data.asScala
     case _ => Map.empty
   }

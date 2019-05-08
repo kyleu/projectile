@@ -1,0 +1,11 @@
+@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page("Sandbox", cfg) {
+  @com.kyleu.projectile.views.html.layout.card(Some("Sandbox")) {
+    Heyheyhey!
+  }
+
+  @defining(Seq(com.kyleu.projectile.models.audit.AuditRecord(auditId = java.util.UUID.randomUUID, t = "foo"))) { records =>
+    @com.kyleu.projectile.views.html.admin.audit.auditRecords(records, "Test", "Test", "???")
+  }
+}

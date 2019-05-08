@@ -2,10 +2,10 @@
 @com.kyleu.projectile.views.html.layout.card(None) {
   @if(records.isEmpty) {
     <i>
-      No audit records available for this @title.
+      No audit records available for this @title
     </i>
   } else {
-    @records.size @if(records.lengthCompare(1) == 0) { audit record } else { audit records } available for this @title.
+    @records.size @if(records.lengthCompare(1) == 0) { audit record } else { audit records } available for this @title
     <ul class="collection">
       @records.map { record =>
         <li class="collection-item">

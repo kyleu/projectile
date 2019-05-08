@@ -22,8 +22,10 @@ object Sandbox {
     PlayKeys.playDefaultPort := projectPort,
     PlayKeys.playInteractionMode := PlayUtils.NonBlockingInteractionMode,
 
+    // libraryDependencies += "com.kyleu" %% "projectile-lib-admin" % Common.Versions.app,
+
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(projectId, projectName, projectPort).taskValue
-  ).dependsOn(LibraryProjects.`projectile-lib-admin`).disablePlugins(PlayFilters).enablePlugins(
-    SbtWeb, PlayScala
+  ).disablePlugins(PlayFilters).enablePlugins(SbtWeb, PlayScala).dependsOn(
+    LibraryProjects.`projectile-lib-admin`
   )
 }

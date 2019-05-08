@@ -19,4 +19,8 @@ class HomeController @javax.inject.Inject() (override val app: Application, aud:
   def home() = withSession("home") { implicit request => implicit td =>
     Future.successful(Ok(views.html.index(request.identity, app.cfg(Some(request.identity), admin = false), app.config.debug)))
   }
+
+  def sandbox() = withSession("home") { implicit request => implicit td =>
+    Future.successful(Ok(views.html.sandbox(request.identity, app.cfg(Some(request.identity), admin = false))))
+  }
 }
