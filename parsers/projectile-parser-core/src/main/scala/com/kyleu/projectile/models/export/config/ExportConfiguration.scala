@@ -36,8 +36,6 @@ case class ExportConfiguration(
   }
   def mergedApplicationPackage(pkg: List[String]) = mergeLists(applicationPackage.toList, pkg)
 
-  val isNewUi = project.flags("components")
-
   def withEnums(e: ExportEnum*) = this.copy(enums = enums ++ e)
   def getEnumOpt(k: String) = enums.find(_.key == k)
   def getEnum(k: String, ctx: String) = getEnumOpt(k).getOrElse {

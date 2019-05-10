@@ -3,7 +3,7 @@
   @if(i.flatSection) {
     <li id="nav-@i.key" class="navigation-header">
       <a class="navigation-header-text">@i.title</a>
-      <i class="navigation-header-icon material-icons">more_horiz</i>
+      <i class="navigation-header-icon material-icons">@com.kyleu.projectile.models.web.InternalIcons.section</i>
     </li>
     @i.children.map { child =>
       @com.kyleu.projectile.views.html.layout.pageNavItem(child, breadcrumbs.drop(1), active)
@@ -12,14 +12,14 @@
     @if(i.children.isEmpty) {
       <li id="nav-@i.key" class="bold@if(active) { active}">
         <a class="waves-effect waves-cyan@if(active) { active}" href="@i.url">
-          <i class="material-icons">@i.icon.getOrElse("radio_button_unchecked")</i>
+          <i class="material-icons">@i.icon.getOrElse(com.kyleu.projectile.models.web.InternalIcons.default)</i>
           <span class="menu-title">@i.title</span>
         </a>
       </li>
     } else {
       <li id="nav-@i.key" class="bold @if(active) { active}">
         <a class="collapsible-header waves-effect waves-cyan" href="@i.url" onclick="return false;">
-          <i class="material-icons">@i.icon.getOrElse("radio_button_unchecked")</i>
+          <i class="material-icons">@i.icon.getOrElse(com.kyleu.projectile.models.web.InternalIcons.default)</i>
           <span class="menu-title" data-i18n="">@i.title</span>
         </a>
         <div class="collapsible-body">

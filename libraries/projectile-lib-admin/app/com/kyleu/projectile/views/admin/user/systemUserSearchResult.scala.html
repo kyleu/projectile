@@ -1,6 +1,6 @@
 @(model: com.kyleu.projectile.models.user.SystemUser, hit: String)<div class="search-result">
   <div class="right">
-    <i class="material-icons small">"user"</i> System User
+    <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i> System User
   </div>
   <div>
     <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id)">@model.id</a>

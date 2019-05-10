@@ -15,11 +15,11 @@ object TwirlViewFile {
     val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
     file.add(s"@($finalArgs, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
-    if (config.isNewUi) { newContent(config, model, file) } else { originalContent(config, model, file) }
+    addContent(config, model, file)
     file
   }
 
-  private[this] def newContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
+  private[this] def addContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     val systemViewPkg = (config.systemViewPackage ++ Seq("html")).mkString(".")
     file.add(s""")@$systemViewPkg.layout.page(s"${model.title}", cfg) {""", 1)
     file.add("@com.kyleu.projectile.views.html.layout.card(None) {", 1)
@@ -27,31 +27,6 @@ object TwirlViewFile {
     TwirlViewHelper.addFields(config, model, file)
     file.add("}", -1)
     addModelFeatures(config, model, file)
-    TwirlViewHelper.addReferences(config, model, file)
-    file.add()
-    file.add(s"@$systemViewPkg.components.includeScalaJs(debug)")
-    file.add("}", -1)
-  }
-
-  private[this] def originalContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
-    val systemViewPkg = (config.systemViewPackage ++ Seq("html")).mkString(".")
-    val toInterp = model.pkFields.map(c => "${model." + c.propertyName + "}").mkString(", ")
-    file.add(s""")@$systemViewPkg.admin.layout.page(s"${model.title} [$toInterp]", cfg) {""", 1)
-    file.add("""<div class="collection with-header">""", 1)
-    file.add("<div class=\"collection-header\">", 1)
-    TwirlViewHelper.addButtons(config, model, file)
-    file.add("<h5>", 1)
-    val modelIcon = TwirlHelper.iconHtml(config = config, propertyName = model.propertyName)
-    file.add(s"""<a href="@${TwirlHelper.routesClass(config, model)}.list()">$modelIcon</a>""")
-    val toTwirl = model.pkFields.map(c => "@model." + c.propertyName).mkString(", ")
-    file.add(s"""${model.title} [$toTwirl]""")
-    file.add("</h5>", -1)
-    file.add("</div>", -1)
-    file.add("<div class=\"collection-item\">", 1)
-    TwirlViewHelper.addFields(config, model, file)
-    file.add("</div>", -1)
-    addModelFeatures(config, model, file)
-    file.add("</div>", -1)
     TwirlViewHelper.addReferences(config, model, file)
     file.add()
     file.add(s"@$systemViewPkg.components.includeScalaJs(debug)")

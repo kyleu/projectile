@@ -29,7 +29,7 @@ abstract class BaseController(val name: String) extends InjectedController with 
     }
   }
 
-  protected def getTraceData(implicit requestHeader: RequestHeader) = requestHeader.attrs(TracingFilter.traceKey)
+  protected def getTraceData(implicit requestHeader: RequestHeader) = requestHeader.attrs.get(TracingFilter.traceKey).getOrElse(TraceData.noop)
 
   private[this] val defaultPrinter = Printer.spaces2
   protected implicit val contentTypeOfJson: ContentTypeOf[Json] = ContentTypeOf(Some("application/json"))

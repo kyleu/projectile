@@ -18,8 +18,8 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
     DatabaseField(title = "Provider", prop = "provider", col = "provider", typ = StringType),
     DatabaseField(title = "Key", prop = "key", col = "key", typ = StringType),
     DatabaseField(title = "Role", prop = "role", col = "role", typ = StringType),
-    DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType),
-    DatabaseField(title = "Settings", prop = "settings", col = "settings", typ = JsonType)
+    DatabaseField(title = "Settings", prop = "settings", col = "settings", typ = JsonType),
+    DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType)
   )
   override protected val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "username", "provider", "key")

@@ -1,11 +1,11 @@
 @(name: String, avatarUrl: String, notifications: Seq[com.kyleu.projectile.models.config.Notification])
 <ul class="navbar-list right">
-  <li class="hide-on-med-and-down"><a class="waves-effect waves-block waves-light toggle-fullscreen" href="" onclick="return false;"><i class="material-icons">settings_overscan</i></a></li>
-  <li class="hide-on-large-only"><a class="waves-effect waves-block waves-light search-button" href="" onclick="return false;"><i class="material-icons">search</i></a></li>
+  <li class="hide-on-med-and-down"><a class="waves-effect waves-block waves-light toggle-fullscreen" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.fullscreen</i></a></li>
+  <li class="hide-on-large-only"><a class="waves-effect waves-block waves-light search-button" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i></a></li>
   @if(notifications.nonEmpty) {
     <li><a class="waves-effect waves-block waves-light notification-button" href="" onclick="return false;" data-target="notifications-dropdown">
       <small class="notification-badge" style="right: -22px;">@notifications.size</small>
-      <i class="material-icons">notifications_none</i></a></li>
+      <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.notifications</i></a></li>
   }
   <li><a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);" data-target="profile-dropdown">
     <span class="avatar-status avatar-online" title="@name">
@@ -34,6 +34,6 @@
 }
 
 <ul class="dropdown-content" id="profile-dropdown">
-  <li><a class="grey-text text-darken-1" href="/profile"><i class="material-icons">person_outline</i> Profile</a></li>
-  <li><a class="grey-text text-darken-1" href="/profile/signout"><i class="material-icons">keyboard_tab</i> Sign out</a></li>
+  <li><a class="grey-text text-darken-1" href="/profile"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.profile</i> Profile</a></li>
+  <li><a class="grey-text text-darken-1" href="/profile/signout"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.signout</i> Sign out</a></li>
 </ul>

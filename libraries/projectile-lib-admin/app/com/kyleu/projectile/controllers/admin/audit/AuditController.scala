@@ -43,7 +43,7 @@ class AuditController @javax.inject.Inject() (
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil => Redirect(com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id))
-          case _ => Ok(com.kyleu.projectile.views.html.admin.audit.auditList(app.cfg(u = Some(request.identity), admin = true, "audit", "audit"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
+          case _ => Ok(com.kyleu.projectile.views.html.admin.audit.auditList(app.cfg(u = Some(request.identity), admin = true, "audit"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
         }
         case MimeTypes.JSON => Ok(AuditResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case ServiceController.MimeTypes.csv => csvResponse("Audit", svc.csvFor(r._1, r._2))
@@ -62,17 +62,18 @@ class AuditController @javax.inject.Inject() (
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>
     val modelF = svc.getByPrimaryKey(request, id)
+    val recordsF = recordSvc.getByAuditId(request, id)
     val notesF = noteSvc.getFor(request, "Audit", id)
 
-    notesF.flatMap(notes => modelF.map {
+    notesF.flatMap(notes => recordsF.flatMap(records => modelF.map {
       case Some(model) => renderChoice(t) {
-        case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.audit.auditView(app.cfg(Some(request.identity), true, "audit", "audit", model.id.toString), model, notes, app.config.debug))
+        case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.audit.auditView(app.cfg(Some(request.identity), true, "audit", model.id.toString), model, records, notes, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
         case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)
         case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)
       }
       case None => NotFound(s"No Audit found with id [$id]")
-    })
+    }))
   }
 
   def editForm(id: UUID) = withSession("edit.form", admin = true) { implicit request => implicit td =>
@@ -80,7 +81,7 @@ class AuditController @javax.inject.Inject() (
     val call = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.edit(id)
     svc.getByPrimaryKey(request, id).map {
       case Some(model) => Ok(
-        com.kyleu.projectile.views.html.admin.audit.auditForm(app.cfg(Some(request.identity), true, "audit", "audit", "Edit"), model, s"Audit [$id]", cancel, call, debug = app.config.debug)
+        com.kyleu.projectile.views.html.admin.audit.auditForm(app.cfg(Some(request.identity), true, "audit", "Edit"), model, s"Audit [$id]", cancel, call, debug = app.config.debug)
       )
       case None => NotFound(s"No Audit found with id [$id]")
     }

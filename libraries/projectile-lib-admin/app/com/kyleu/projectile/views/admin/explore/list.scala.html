@@ -32,7 +32,7 @@
             <i class="fa @icon" style="margin-right: 6px;"></i>
             @{totalCount.map(total => com.kyleu.projectile.util.NumberUtils.withCommas(total)).map(_ + " ").getOrElse("") + modelPlural + q.filter(_.trim.nonEmpty).map(q => s" matching [$q]").getOrElse("")}
             @calls.newCall.map { nu =>
-              <a href="@nu"><i class="material-icons">playlist_add</i></a>
+              <a href="@nu"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.add</i></a>
             }
           </h5>
           @if(offset > 0) {

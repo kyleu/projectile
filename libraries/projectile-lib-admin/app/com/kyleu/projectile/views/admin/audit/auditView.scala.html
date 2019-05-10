@@ -1,68 +1,76 @@
 @* Generated File *@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.audit.Audit, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.audit.Audit, records: Seq[com.kyleu.projectile.models.audit.AuditRecord], notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(s"Audit", cfg) {
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Audit?')" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.remove(model.id)">Remove</a></div>
+    <h6>@model.id</h6>
+    <em>@model.app@@@model.server</em>
+    <div style="font-size: 140%; padding: 12px 0;">@model.msg</div>
     <table class="highlight responsive-table">
       <tbody>
         <tr>
-          <th>Id</th>
-          <td>@model.id</td>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.userId.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">User ID</div></th>
+          <td>
+            @model.userId
+            @model.userId.map { uid =>
+              <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(uid)">
+                <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i>
+              </a>
+            }
+          </td>
         </tr>
         <tr>
-          <th>Act</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.act.replaceAllLiterally("'", "")')" style="cursor: pointer;">Act</div></th>
           <td>@model.act</td>
         </tr>
         <tr>
-          <th>App</th>
-          <td>@model.app</td>
-        </tr>
-        <tr>
-          <th>Client</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.client.replaceAllLiterally("'", "")')" style="cursor: pointer;">Client</div></th>
           <td>@model.client</td>
         </tr>
         <tr>
-          <th>Server</th>
-          <td>@model.server</td>
-        </tr>
-        <tr>
-          <th>User Id</th>
-          <td>@model.userId</td>
-        </tr>
-        <tr>
-          <th>Tags</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.tags.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Tags</div></th>
           <td><pre>@model.tags<pre></td>
         </tr>
         <tr>
-          <th>Msg</th>
-          <td>@model.msg</td>
-        </tr>
-        <tr>
-          <th>Started</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.started.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Started</div></th>
           <td>@model.started</td>
         </tr>
         <tr>
-          <th>Completed</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.completed.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Completed</div></th>
           <td>@model.completed</td>
         </tr>
       </tbody>
     </table>
   }
 
-  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Audit", "Audit", model.id)
-
-  <ul id="model-relations" class="collapsible" data-collapsible="expandable">
-    <li id="relation-auditRecord-auditId" data-table="auditRecordRow" data-field="auditId" data-singular="Audit Record" data-plural="Audit Records" data-url="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(model.id, limit = Some(5), embedded = true)">
-      <div class="collapsible-header">
-        <i class="material-icons small">memory</i>
-        <span class="title">Audit Records</span>&nbsp;by Audit Id
-        <span class="badge"><a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(model.id)"><i class="material-icons">insert_link</i></a></span>
+  @records.map { record =>
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <h6>@defining(com.kyleu.projectile.models.audit.AuditCallbackProvider.getViewRoute(record.t, record.pk.toIndexedSeq)) { call =>
+        @if(call.isDefined) {
+          <a href="@call">@record.t @record.pk.mkString(", ")</a>
+        } else {
+          @record.t @record.pk.mkString(", ")
+        }
+      }</h6>
+      <em>Record <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(record.id)">@record.id</a></em>
+      <div style="padding: 12px;">
+        @if(record.changes.isEmpty) {
+          <em>No changes</em>
+        } else {
+          @record.changes.map { c =>
+            <div class="chip">
+              <strong style="font-size: 120%;">@c.k: </strong>
+              <span style="color: darkred;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+              -&gt;
+              <span style="color: darkgreen;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+            </div>
+          }
+        }
       </div>
-      <div class="collapsible-body"><span>Loading...</span></div>
-    </li>
-  </ul>
-  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
-  <script>$(function() { new RelationService('@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.relationCounts(model.id)') });</script>
+    }
+  }
+
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Audit", "Audit", model.id)
 }

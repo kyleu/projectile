@@ -9,31 +9,24 @@
     <ul class="collection">
       @records.map { record =>
         <li class="collection-item">
-          <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(record.auditId)">@record.auditId</a>: @record.id
-          <table>
-            <thead>
-              <tr>
-                <th>Field</th>
-                <th>Original Value</th>
-                <th>Updated Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              @if(record.changes.isEmpty) {
-                <tr>
-                  <td colspan="3"><em>No changes</em></td>
-                </tr>
-              } else {
-                @record.changes.map { c =>
-                  <tr>
-                    <td style="width: 33%;">@c.k</td>
-                    <td style="width: 33%;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
-                    <td style="width: 33%;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
-                  </tr>
-                }
+          <div class="right">
+            Record <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(record.id)">@record.id</a>
+          </div>
+          Audit <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(record.auditId)">@record.auditId</a>
+          <div style="padding: 12px;">
+            @if(record.changes.isEmpty) {
+              <em>No changes</em>
+            } else {
+              @record.changes.map { c =>
+                <div class="chip">
+                  <strong style="font-size: 120%;">@c.k: </strong>
+                  <span style="color: darkred;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+                  -&gt;
+                  <span style="color: darkgreen;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+                </div>
               }
-            </tbody>
-          </table>
+            }
+          </div>
         </li>
       }
     </ul>

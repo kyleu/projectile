@@ -17,5 +17,10 @@
   </td>
   <td>
     @model.userId
+    @model.userId.map { uid =>
+      <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(uid)">
+        <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i>
+      </a>
+    }
   </td>
 </tr>

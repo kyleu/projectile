@@ -9,6 +9,7 @@ import com.kyleu.projectile.models.queries.{BaseQueries, ResultFieldHelper}
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
+import com.kyleu.projectile.models.tag.Tag
 
 object AuditQueries extends BaseQueries[Audit]("audit", "audit") {
   override val fields = Seq(
@@ -18,7 +19,7 @@ object AuditQueries extends BaseQueries[Audit]("audit", "audit") {
     DatabaseField(title = "Client", prop = "client", col = "client", typ = StringType),
     DatabaseField(title = "Server", prop = "server", col = "server", typ = StringType),
     DatabaseField(title = "User Id", prop = "userId", col = "user_id", typ = UuidType),
-    DatabaseField(title = "Tags", prop = "tags", col = "tags", typ = JsonType),
+    DatabaseField(title = "Tags", prop = "tags", col = "tags", typ = TagsType),
     DatabaseField(title = "Msg", prop = "msg", col = "msg", typ = StringType),
     DatabaseField(title = "Started", prop = "started", col = "started", typ = TimestampType),
     DatabaseField(title = "Completed", prop = "completed", col = "completed", typ = TimestampType)
@@ -97,9 +98,17 @@ object AuditQueries extends BaseQueries[Audit]("audit", "audit") {
     client = StringType(row, "client"),
     server = StringType(row, "server"),
     userId = UuidType.opt(row, "user_id"),
-    tags = JsonType(row, "tags"),
+    tags = JsonType(row, "tags").as[Seq[Tag]] match {
+      case Right(x) => x
+      case Left(x) => Nil
+    },
     msg = StringType(row, "msg"),
     started = TimestampType(row, "started"),
     completed = TimestampType(row, "completed")
   )
+
+  override protected def toDataSeq(a: Audit) = {
+    import com.kyleu.projectile.util.JsonSerializers._
+    Seq[Any](a.id, a.act, a.app, a.client, a.server, a.userId, a.tags.asJson, a.msg, a.started, a.completed)
+  }
 }

@@ -61,20 +61,14 @@ object ControllerReferences {
         val args = s"""$propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)"""
         val call = s"${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls"
 
-        if (config.project.flags("components")) {
-          file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "page")
-          file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "card")
-          file.add("case MimeTypes.HTML =>", 1)
-          file.add(s"val cfg = $cfgArg")
-          file.add(s"val list = $call(cfg, $args)")
-          val fullCall = s"""Ok(page(s"${model.plural} by ${col.title} [$$$propId]", cfg)(card(None)(list)))"""
-          file.add(s"""if (embedded) { Ok(list) } else { $fullCall }""")
-          file.indent(-1)
-        } else {
-          file.add(s"case MimeTypes.HTML => Ok($call(", 1)
-          file.add(s"$cfgArg, $args")
-          file.add("))", -1)
-        }
+        file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "page")
+        file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "card")
+        file.add("case MimeTypes.HTML =>", 1)
+        file.add(s"val cfg = $cfgArg")
+        file.add(s"val list = $call(cfg, $args)")
+        val fullCall = s"""Ok(page(s"${model.plural} by ${col.title} [$$$propId]", cfg)(card(None)(list)))"""
+        file.add(s"""if (embedded) { Ok(list) } else { $fullCall }""")
+        file.indent(-1)
 
         file.add("case MimeTypes.JSON => Ok(models.asJson)")
         file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")

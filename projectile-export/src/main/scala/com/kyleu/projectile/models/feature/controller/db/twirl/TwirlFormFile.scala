@@ -21,7 +21,7 @@ object TwirlFormFile {
     file.add(s""")@$systemViewPkg.layout.page(title, cfg) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
-    if (config.isNewUi) { newContent(config, model, file) } else { originalContent(config, model, file) }
+    addContent(config, model, file)
     file.add("</form>", -1)
 
     file.add("}", -1)
@@ -46,26 +46,13 @@ object TwirlFormFile {
     file
   }
 
-  private[this] def newContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
+  private[this] def addContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     file.add("@com.kyleu.projectile.views.html.layout.card(None) {", 1)
     file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add("""<div class="right"><a href="@cancel" class="btn-flat cancel-link">Cancel</a></div>""")
     file.add("""<div class="clear"></div>""")
     table(config, model, file)
     file.add("}", -1)
-  }
-
-  private[this] def originalContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
-    file.add("""<div class="collection with-header">""", 1)
-    file.add("<div class=\"collection-header\">", 1)
-    file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
-    file.add("""<div class="right"><a href="@cancel" class="btn-flat cancel-link">Cancel</a></div>""")
-    file.add(s"""<h5>${TwirlHelper.iconHtml(config = config, propertyName = model.propertyName)} @title</h5>""")
-    file.add("</div>", -1)
-    file.add("<div class=\"collection-item\">", 1)
-    table(config, model, file)
-    file.add("</div>", -1)
-    file.add("</div>", -1)
   }
 
   private[this] def table(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {

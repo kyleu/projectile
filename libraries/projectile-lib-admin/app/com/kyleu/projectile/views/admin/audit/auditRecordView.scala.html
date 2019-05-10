@@ -14,7 +14,9 @@
           <th>Audit Id</th>
           <td>
             @model.auditId
-            <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.auditId)"><i class="material-icons small">storage</i></a>
+            <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.auditId)">
+              <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.audit</i>
+            </a>
           </td>
         </tr>
         <tr>
@@ -27,7 +29,16 @@
         </tr>
         <tr>
           <th>Changes</th>
-          <td><pre>@model.changes<pre></td>
+          <td>
+            @model.changes.map { c =>
+              <div class="chip">
+                <strong style="font-size: 120%;">@c.k: </strong>
+                <span style="color: darkred;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+                -&gt;
+                <span style="color: darkgreen;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+              </div>
+            }
+          </td>
         </tr>
       </tbody>
     </table>

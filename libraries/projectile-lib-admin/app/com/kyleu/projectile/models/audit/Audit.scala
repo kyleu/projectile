@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import com.kyleu.projectile.models.result.data.{DataField, DataFieldModel, DataSummary}
+import com.kyleu.projectile.models.tag.Tag
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
@@ -20,7 +21,7 @@ final case class Audit(
     client: String = "n/a",
     server: String = "n/a",
     userId: Option[UUID] = None,
-    tags: Json = JsonObject.empty.asJson,
+    tags: Seq[Tag] = Nil,
     msg: String = "n/a",
     started: LocalDateTime = DateUtils.now,
     completed: LocalDateTime = DateUtils.now
@@ -32,7 +33,7 @@ final case class Audit(
     DataField("client", Some(client)),
     DataField("server", Some(server)),
     DataField("userId", userId.map(_.toString)),
-    DataField("tags", Some(tags.toString)),
+    DataField("tags", Some(tags.asJson.toString)),
     DataField("msg", Some(msg)),
     DataField("started", Some(started.toString)),
     DataField("completed", Some(completed.toString))

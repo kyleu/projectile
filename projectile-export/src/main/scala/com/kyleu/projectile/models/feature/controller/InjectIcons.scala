@@ -15,11 +15,11 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model icons")
     val startIndex = o.indexOf(params.start)
     val endIndex = o.indexOf(params.end)
-    val newLines = if (config.isNewUi) { newContent(o, startIndex, endIndex, models) } else { originalContent(o, startIndex, endIndex, models) }
+    val newLines = content(o, startIndex, endIndex, models)
     TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)
   }
 
-  private[this] def newContent(o: String, startIndex: Int, endIndex: Int, models: Seq[ExportModel]) = {
+  private[this] def content(o: String, startIndex: Int, endIndex: Int, models: Seq[ExportModel]) = {
     val pkgs = models.flatMap(_.pkg.headOption)
     val sysPkg = if (models.exists(_.pkg.isEmpty)) { Seq("system") } else { Nil }
     val packages = (pkgs ++ sysPkg).distinct.flatMap { pkg =>
@@ -40,29 +40,6 @@ object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, f
 
     packages ++ mods
   }
-
-  private[this] def originalContent(o: String, startIndex: Int, endIndex: Int, models: Seq[ExportModel]) = models.flatMap { m =>
-    o.indexOf("val " + m.propertyName + " = ") match {
-      case x if x > -1 && x < startIndex => None
-      case x if x > endIndex => None
-      case -1 => Some(s"""val ${m.propertyName} = "fa-${m.icon.getOrElse(randomFaIcon(m.propertyName))}"""")
-      case _ => None
-    }
-  }.sorted
-
-  private[this] val faIcons = IndexedSeq(
-    "address-book-o", "anchor", "asterisk", "bar-chart-o", "beer", "bell-o", "bicycle", "birthday-cake", "bookmark-o",
-    "bullhorn", "bus", "car", "code", "cog", "cube", "diamond", "envelope-o", "exchange", "eye", "eyedropper",
-    "folder-o", "folder-open-o", "frown-o", "futbol-o", "gamepad", "gavel", "gift", "glass", "globe", "graduation-cap",
-    "hand-lizard-o", "hand-paper-o", "hand-peace-o", "hand-pointer-o", "hand-rock-o", "hand-scissors-o", "hand-spock-o", "handshake-o",
-    "hashtag", "hdd-o", "headphones", "heart", "heart-o", "heartbeat", "history", "home", "hourglass", "hourglass-o", "hourglass-start",
-    "i-cursor", "id-badge", "id-card", "id-card-o", "inbox", "industry", "info", "info-circle", "key", "keyboard-o",
-    "language", "laptop", "leaf", "lemon-o", "level-down", "level-up", "life-ring", "lightbulb-o", "line-chart", "location-arrow",
-    "lock", "low-vision", "magic", "magnet", "male", "map", "map-marker", "map-o", "map-pin", "map-signs",
-    "meh-o", "money", "moon-o", "motorcycle", "newspaper-o", "paper-plane-o", "paw", "phone", "photo", "plane", "print", "puzzle-piece"
-  )
-
-  private[this] def randomFaIcon(s: String) = faIcons(Math.abs(s.hashCode) % faIcons.size)
 
   private[this] val materialIcons = IndexedSeq(
     "account_balance", "alarm", "assignment", "book", "build", "cached", "code", "eject", "event",

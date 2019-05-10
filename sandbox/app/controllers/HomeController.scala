@@ -23,4 +23,8 @@ class HomeController @javax.inject.Inject() (override val app: Application, aud:
   def sandbox() = withSession("home") { implicit request => implicit td =>
     Future.successful(Ok(views.html.sandbox(request.identity, app.cfg(Some(request.identity), admin = false))))
   }
+
+  def redir(file: String) = withoutSession("redir") { implicit request => implicit td =>
+    Future.successful(Redirect(controllers.routes.Assets.versioned(file)))
+  }
 }
