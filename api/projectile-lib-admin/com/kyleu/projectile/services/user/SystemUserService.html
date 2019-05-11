@@ -116,7 +116,7 @@
         <a title="lib-projectile-admin" href="../../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <p class="shortcomment cmt">lib-projectile-admin</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-admin</p><p>Combines auth, auth-graphql, web-components and websocket into a single package
+      <p class="shortcomment cmt">lib-projectile-admin</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-admin</p><p>Provides an administration web interface, graphql and rest IDE, authentication, and more
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="services"></a><a id="services:services"></a>
@@ -189,7 +189,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">SystemUserService</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">SystemUserService</span><span class="result"> extends <span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper">ModelServiceHelper</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]</span>
       </span>
       </h4>
 
@@ -201,7 +201,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper">ModelServiceHelper</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="com.kyleu.projectile.util.Logging">Logging</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -227,7 +227,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.kyleu.projectile.services.user.SystemUserService"><span>SystemUserService</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.kyleu.projectile.services.user.SystemUserService"><span>SystemUserService</span></li><li class="in" name="com.kyleu.projectile.services.ModelServiceHelper"><span>ModelServiceHelper</span></li><li class="in" name="com.kyleu.projectile.util.Logging"><span>Logging</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -248,9 +248,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.services.user.SystemUserService#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(tracing:com.kyleu.projectile.util.tracing.TracingService,hasher:com.mohiva.play.silhouette.api.util.PasswordHasher):com.kyleu.projectile.services.user.SystemUserService"></a><a id="&lt;init&gt;:SystemUserService"></a>
+      <a id="&lt;init&gt;(db:com.kyleu.projectile.services.database.JdbcDatabase,tracing:com.kyleu.projectile.util.tracing.TracingService)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.services.user.SystemUserService"></a><a id="&lt;init&gt;:SystemUserService"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#&lt;init&gt;(tracing:com.kyleu.projectile.util.tracing.TracingService,hasher:com.mohiva.play.silhouette.api.util.PasswordHasher):com.kyleu.projectile.services.user.SystemUserService" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#&lt;init&gt;(db:com.kyleu.projectile.services.database.JdbcDatabase,tracing:com.kyleu.projectile.util.tracing.TracingService)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.services.user.SystemUserService" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -259,7 +259,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">SystemUserService</span><span class="params">(<span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="hasher">hasher: <span class="extype" name="com.mohiva.play.silhouette.api.util.PasswordHasher">PasswordHasher</span></span>)</span>
+        <span class="name">SystemUserService</span><span class="params">(<span name="db">db: <span class="extype" name="com.kyleu.projectile.services.database.JdbcDatabase">JdbcDatabase</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -364,6 +364,134 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#countAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="countAll(creds:com.kyleu.projectile.services.Credentials,filters:Seq[com.kyleu.projectile.models.result.filter.Filter])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="countAll(Credentials,Seq[Filter])(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#countAll(creds:com.kyleu.projectile.services.Credentials,filters:Seq[com.kyleu.projectile.models.result.filter.Filter])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countAll</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="filters">filters: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.filter.Filter">Filter</span>] = <span class="symbol">Nil</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.services.user.SystemUserService">SystemUserService</a> → ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#countById" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="countById(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="countById(Credentials,UUID)(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#countById(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countById</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#countByKey" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="countByKey(creds:com.kyleu.projectile.services.Credentials,key:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="countByKey(Credentials,String)(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#countByKey(creds:com.kyleu.projectile.services.Credentials,key:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countByKey</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#countByProvider" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="countByProvider(creds:com.kyleu.projectile.services.Credentials,provider:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="countByProvider(Credentials,String)(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#countByProvider(creds:com.kyleu.projectile.services.Credentials,provider:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countByProvider</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="provider">provider: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#countByUsername" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="countByUsername(creds:com.kyleu.projectile.services.Credentials,username:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="countByUsername(Credentials,String)(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#countByUsername(creds:com.kyleu.projectile.services.Credentials,username:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">countByUsername</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#create" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="create(creds:com.kyleu.projectile.services.Credentials,fields:Seq[com.kyleu.projectile.models.result.data.DataField])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="create(Credentials,Seq[DataField])(TraceData):Future[Option[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#create(creds:com.kyleu.projectile.services.Credentials,fields:Seq[com.kyleu.projectile.models.result.data.DataField])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">create</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="fields">fields: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.data.DataField">DataField</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Option">Option</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#csvFor" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="csvFor(totalCount:Int,rows:Seq[com.kyleu.projectile.models.user.SystemUser])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):String"></a><a id="csvFor(Int,Seq[SystemUser])(TraceData):String"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#csvFor(totalCount:Int,rows:Seq[com.kyleu.projectile.models.user.SystemUser])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">csvFor</span><span class="params">(<span name="totalCount">totalCount: <span class="extype" name="scala.Int">Int</span></span>, <span name="rows">rows: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#db" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="db:com.kyleu.projectile.services.database.JdbcDatabase"></a><a id="db:JdbcDatabase"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#db:com.kyleu.projectile.services.database.JdbcDatabase" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">db</span><span class="result">: <span class="extype" name="com.kyleu.projectile.services.database.JdbcDatabase">JdbcDatabase</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -396,6 +524,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.ModelServiceHelper#fieldVal" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fieldVal(fields:Seq[com.kyleu.projectile.models.result.data.DataField],k:String):String"></a><a id="fieldVal(Seq[DataField],String):String"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#fieldVal(fields:Seq[com.kyleu.projectile.models.result.data.DataField],k:String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fieldVal</span><span class="params">(<span name="fields">fields: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.data.DataField">DataField</span>]</span>, <span name="k">k: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>ModelServiceHelper</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -418,6 +562,118 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#findByUsername" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="findByUsername(creds:com.kyleu.projectile.services.Credentials,username:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="findByUsername(Credentials,String)(TraceData):Future[Option[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#findByUsername(creds:com.kyleu.projectile.services.Credentials,username:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">findByUsername</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Option">Option</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getAll(creds:com.kyleu.projectile.services.Credentials,filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getAll(Credentials,Seq[Filter],Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getAll(creds:com.kyleu.projectile.services.Credentials,filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAll</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="filters">filters: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.filter.Filter">Filter</span>] = <span class="symbol">Nil</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.services.user.SystemUserService">SystemUserService</a> → ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.ModelServiceHelper#getAllWithCount" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getAllWithCount(creds:com.kyleu.projectile.services.Credentials,filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[(Int,Seq[T])]"></a><a id="getAllWithCount(Credentials,Seq[Filter],Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[(Int,Seq[SystemUser])]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getAllWithCount(creds:com.kyleu.projectile.services.Credentials,filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[(Int,Seq[T])]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAllWithCount</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="filters">filters: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.filter.Filter">Filter</span>]</span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>]</span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>])]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getById" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getById(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getById(Credentials,UUID,Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getById(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getById</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByIdSeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByIdSeq(creds:com.kyleu.projectile.services.Credentials,idSeq:Seq[java.util.UUID])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByIdSeq(Credentials,Seq[UUID])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByIdSeq(creds:com.kyleu.projectile.services.Credentials,idSeq:Seq[java.util.UUID])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByIdSeq</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="idSeq">idSeq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.util.UUID">UUID</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByKey" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByKey(creds:com.kyleu.projectile.services.Credentials,key:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByKey(Credentials,String,Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByKey(creds:com.kyleu.projectile.services.Credentials,key:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByKey</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByKeySeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByKeySeq(creds:com.kyleu.projectile.services.Credentials,keySeq:Seq[String])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByKeySeq(Credentials,Seq[String])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByKeySeq(creds:com.kyleu.projectile.services.Credentials,keySeq:Seq[String])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByKeySeq</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="keySeq">keySeq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
     </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByPrimaryKey" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="getByPrimaryKey(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByPrimaryKey(Credentials,UUID)(TraceData):Future[Option[SystemUser]]"></a>
       <span class="permalink">
@@ -434,10 +690,10 @@
       </span>
       
       
-    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByUsername" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getByUsername(creds:com.kyleu.projectile.services.Credentials,username:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByUsername(Credentials,String)(TraceData):Future[Option[SystemUser]]"></a>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByPrimaryKeyRequired" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByPrimaryKeyRequired(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[com.kyleu.projectile.models.user.SystemUser]"></a><a id="getByPrimaryKeyRequired(Credentials,UUID)(TraceData):Future[SystemUser]"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByUsername(creds:com.kyleu.projectile.services.Credentials,username:String)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Option[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByPrimaryKeyRequired(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[com.kyleu.projectile.models.user.SystemUser]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -446,7 +702,87 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getByUsername</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Option">Option</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+        <span class="name">getByPrimaryKeyRequired</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByPrimaryKeySeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByPrimaryKeySeq(creds:com.kyleu.projectile.services.Credentials,idSeq:Seq[java.util.UUID])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByPrimaryKeySeq(Credentials,Seq[UUID])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByPrimaryKeySeq(creds:com.kyleu.projectile.services.Credentials,idSeq:Seq[java.util.UUID])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByPrimaryKeySeq</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="idSeq">idSeq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.util.UUID">UUID</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByProvider" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByProvider(creds:com.kyleu.projectile.services.Credentials,provider:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByProvider(Credentials,String,Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByProvider(creds:com.kyleu.projectile.services.Credentials,provider:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByProvider</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="provider">provider: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByProviderSeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByProviderSeq(creds:com.kyleu.projectile.services.Credentials,providerSeq:Seq[String])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByProviderSeq(Credentials,Seq[String])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByProviderSeq(creds:com.kyleu.projectile.services.Credentials,providerSeq:Seq[String])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByProviderSeq</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="providerSeq">providerSeq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByUsername" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByUsername(creds:com.kyleu.projectile.services.Credentials,username:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByUsername(Credentials,String,Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByUsername(creds:com.kyleu.projectile.services.Credentials,username:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByUsername</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#getByUsernameSeq" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getByUsernameSeq(creds:com.kyleu.projectile.services.Credentials,usernameSeq:Seq[String])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="getByUsernameSeq(Credentials,Seq[String])(TraceData):Future[Seq[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#getByUsernameSeq(creds:com.kyleu.projectile.services.Credentials,usernameSeq:Seq[String])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Seq[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getByUsernameSeq</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="usernameSeq">usernameSeq: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
       </span>
       
       
@@ -504,6 +840,22 @@
       </span>
       
       
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#insertBatch" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="insertBatch(creds:com.kyleu.projectile.services.Credentials,models:Seq[com.kyleu.projectile.models.user.SystemUser])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="insertBatch(Credentials,Seq[SystemUser])(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#insertBatch(creds:com.kyleu.projectile.services.Credentials,models:Seq[com.kyleu.projectile.models.user.SystemUser])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">insertBatch</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="models">models: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -536,6 +888,38 @@
       </span>
       
       
+    </li><li name="com.kyleu.projectile.services.ModelServiceHelper#key" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="key:String"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#key:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">key</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.util.Logging#log" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="log:com.kyleu.projectile.util.Logging.TraceLogger"></a><a id="log:TraceLogger"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#log:com.kyleu.projectile.util.Logging.TraceLogger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">lazy val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">log</span><span class="result">: <span class="extype" name="com.kyleu.projectile.util.Logging.TraceLogger">TraceLogger</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd>Logging</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -606,6 +990,70 @@
       </span>
       
       
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#search" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="search(creds:com.kyleu.projectile.services.Credentials,q:Option[String],filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[List[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="search(Credentials,Option[String],Seq[Filter],Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[List[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#search(creds:com.kyleu.projectile.services.Credentials,q:Option[String],filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[List[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">search</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="q">q: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="filters">filters: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.filter.Filter">Filter</span>] = <span class="symbol">Nil</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.List">List</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.services.user.SystemUserService">SystemUserService</a> → ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#searchCount" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="searchCount(creds:com.kyleu.projectile.services.Credentials,q:Option[String],filters:Seq[com.kyleu.projectile.models.result.filter.Filter])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]"></a><a id="searchCount(Credentials,Option[String],Seq[Filter])(TraceData):Future[Int]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#searchCount(creds:com.kyleu.projectile.services.Credentials,q:Option[String],filters:Seq[com.kyleu.projectile.models.result.filter.Filter])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[Int]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">searchCount</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="q">q: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="filters">filters: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.filter.Filter">Filter</span>] = <span class="symbol">Nil</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.services.user.SystemUserService">SystemUserService</a> → ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#searchExact" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="searchExact(creds:com.kyleu.projectile.services.Credentials,q:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[List[com.kyleu.projectile.models.user.SystemUser]]"></a><a id="searchExact(Credentials,String,Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[List[SystemUser]]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#searchExact(creds:com.kyleu.projectile.services.Credentials,q:String,orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[List[com.kyleu.projectile.models.user.SystemUser]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">searchExact</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="q">q: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>] = <span class="symbol">Nil</span></span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.List">List</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]]</span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.ModelServiceHelper#searchWithCount" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="searchWithCount(creds:com.kyleu.projectile.services.Credentials,q:Option[String],filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[(Int,Seq[T])]"></a><a id="searchWithCount(Credentials,Option[String],Seq[Filter],Seq[OrderBy],Option[Int],Option[Int])(TraceData):Future[(Int,Seq[SystemUser])]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#searchWithCount(creds:com.kyleu.projectile.services.Credentials,q:Option[String],filters:Seq[com.kyleu.projectile.models.result.filter.Filter],orderBys:Seq[com.kyleu.projectile.models.result.orderBy.OrderBy],limit:Option[Int],offset:Option[Int])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[(Int,Seq[T])]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">searchWithCount</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="q">q: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="filters">filters: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.filter.Filter">Filter</span>]</span>, <span name="orderBys">orderBys: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.orderBy.OrderBy">OrderBy</span>]</span>, <span name="limit">limit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[(<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>])]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelServiceHelper</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -638,7 +1086,39 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.kyleu.projectile.services.user.SystemUserService#tracing" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="com.kyleu.projectile.services.ModelServiceHelper#traceB" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="traceB[A](name:String)(f:com.kyleu.projectile.util.tracing.TraceData=&gt;A)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):A"></a><a id="traceB[A](String)((TraceData)⇒A)(TraceData):A"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#traceB[A](name:String)(f:com.kyleu.projectile.util.tracing.TraceData=&gt;A)(implicittrace:com.kyleu.projectile.util.tracing.TraceData):A" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">traceB</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span name="f">f: (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper.traceB.A">A</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper.traceB.A">A</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.ModelServiceHelper#traceF" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="traceF[A](name:String)(f:com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[A])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[A]"></a><a id="traceF[A](String)((TraceData)⇒Future[A])(TraceData):Future[A]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#traceF[A](name:String)(f:com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[A])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">traceF</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span name="f">f: (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper.traceF.A">A</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper.traceF.A">A</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#tracing" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="tracing:com.kyleu.projectile.util.tracing.TracingService"></a><a id="tracing:TracingService"></a>
       <span class="permalink">
       <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#tracing:com.kyleu.projectile.util.tracing.TracingService" title="Permalink">
@@ -651,6 +1131,22 @@
       </span>
       <span class="symbol">
         <span class="name">tracing</span><span class="result">: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.services.user.SystemUserService">SystemUserService</a> → ModelServiceHelper</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.user.SystemUserService#update" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="update(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID,fields:Seq[com.kyleu.projectile.models.result.data.DataField])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[(com.kyleu.projectile.models.user.SystemUser,String)]"></a><a id="update(Credentials,UUID,Seq[DataField])(TraceData):Future[(SystemUser,String)]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/user/SystemUserService.html#update(creds:com.kyleu.projectile.services.Credentials,id:java.util.UUID,fields:Seq[com.kyleu.projectile.models.result.data.DataField])(implicittrace:com.kyleu.projectile.util.tracing.TraceData):scala.concurrent.Future[(com.kyleu.projectile.models.user.SystemUser,String)]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">update</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>, <span name="fields">fields: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.result.data.DataField">DataField</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[(<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
       </span>
       
       
@@ -748,7 +1244,11 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="com.kyleu.projectile.services.ModelServiceHelper">
+              <h3>Inherited from <span class="extype" name="com.kyleu.projectile.services.ModelServiceHelper">ModelServiceHelper</span>[<a href="../../models/user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>]</h3>
+            </div><div class="parent" name="com.kyleu.projectile.util.Logging">
+              <h3>Inherited from <span class="extype" name="com.kyleu.projectile.util.Logging">Logging</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

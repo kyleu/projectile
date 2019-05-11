@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/images/favicon.png">
-<title>estimate.poker · Projectile</title>
+<title>react · Projectile</title>
 <link rel="stylesheet" href="../../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-estimate.poker
+react
 </span>
 </div>
 </div>
@@ -165,16 +165,11 @@ KyleU/projectile
     <li><a href="../../libraries/graphql.html" class="page">GraphQL</a></li>
     <li><a href="../../libraries/service.html" class="page">Service</a></li>
     <li><a href="../../libraries/scalajs.html" class="page">Scala.js</a></li>
-    <li><a href="../../libraries/play.html" class="page">Play</a></li>
-    <li><a href="../../libraries/websocket.html" class="page">Websocket</a></li>
-    <li><a href="../../libraries/web-components.html" class="page">Web Components</a></li>
-    <li><a href="../../libraries/auth.html" class="page">Auth</a></li>
-    <li><a href="../../libraries/auth-graphql.html" class="page">Auth/GraphQL</a></li>
     <li><a href="../../libraries/admin.html" class="page">Admin</a></li>
   </ul></li>
   <li><a href="../../tutorial/index.html" class="page">Tutorials</a>
   <ul>
-    <li><a href="../../tutorial/poker/index.html" class="active page">estimate.poker</a></li>
+    <li><a href="../../tutorial/poker/index.html" class="active page">react</a></li>
     <li><a href="../../tutorial/react/index.html" class="page">react</a></li>
     <li><a href="../../tutorial/starwars/index.html" class="page">starwars</a></li>
     <li><a href="../../tutorial/thrifty/index.html" class="page">thrifty</a></li>
@@ -188,89 +183,34 @@ KyleU/projectile
   <li><a href="../../technology.html" class="page">Technology</a></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">Table of contents</label>
-<ul>
-  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">estimate.poker</a>
-  <ul>
-    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo site</a></li>
-    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source code</a></li>
-    <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
-    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
-  </ul></li>
-</ul>
 </nav>
 
 </nav>
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.7.3
+<i class="md-icon" title="Version">label_outline</i> 1.8.2
 </label>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">Table of contents</label>
-<ul>
-  <li><a href="../../tutorial/poker/index.html#estimate-poker" class="header">estimate.poker</a>
-  <ul>
-    <li><a href="../../tutorial/poker/index.html#demo-site" class="header">Demo site</a></li>
-    <li><a href="../../tutorial/poker/index.html#source-code" class="header">Source code</a></li>
-    <li><a href="../../tutorial/poker/index.html#overview" class="header">Overview</a></li>
-    <li><a href="../../tutorial/poker/index.html#database-schema" class="header">Database schema</a></li>
-  </ul></li>
-</ul>
-</nav>
-
-</div>
-</div>
-</div>
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#estimate-poker" name="estimate-poker" class="anchor"><span class="anchor-link"></span></a>estimate.poker</h1>
-<p>The estimate.poker tutorial will start with a &ldquo;Hello World&rdquo; Scala application, set up a PostgreSQL database, add Projectile, generate more and more features, and finally produce a web application with:</p>
-<ul>
-  <li>Websocket transport of shared Scala classes for real-time client updates</li>
-  <li>Play Framework admin site with UI for data access, search, and mutations</li>
-  <li>Full GraphQL API, with a schema visualizer and query IDE</li>
-  <li>Code generated services to reduce CRUD boilerplate</li>
-</ul>
-<h2><a href="#demo-site" name="demo-site" class="anchor"><span class="anchor-link"></span></a>Demo site</h2>
-<p>You can see the end result of this tutorial at <a href="https://estimate.poker">https://estimate.poker</a></p>
-<h2><a href="#source-code" name="source-code" class="anchor"><span class="anchor-link"></span></a>Source code</h2>
-<p>The source code for this project is available at <a href="https://github.com/KyleU/estimate">https://github.com/KyleU/estimate</a></p>
-<h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
-<ul>
-  <li><a href="01-hello-world.html">Hello World</a> will help you clone and build an initial Scala sbt project</li>
-  <li><a href="02-database-setup.html">Database Setup</a> guides you though configuring a new postgres database</li>
-  <li><a href="03-configuring-projectile.html">Configuring Projectile</a> configures Projectile and get your first project set up</li>
-  <li><a href="04-basic-codegen.html">Basic Codegen</a> will create our first generated classes using Projectile</li>
-  <li><a href="05-more-features.html">More Features</a> adds database queries, services, a GraphQL endpoint</li>
-  <li><a href="06-web-application.html">Web Application</a> will turn our console-based duckling into a beautiful web swan</li>
-  <li><a href="07-admin-site.html">Admin Site</a> generates a full-feature admin site and GraphQL API</li>
-  <li><a href="08-scala-js.html">Scala.js</a> creates a Scala.js project and shared code cross-compiled to Scala.js</li>
-  <li><a href="09-websocket.html">Websocket</a> builds a websocket transport for shared messages, Scala.js logic, and a few simple views</li>
-  <li><a href="10-planning-poker.html">Planning Poker</a> finally builds on what we&rsquo;ve created to make a real planning poker app</li>
-  <li><a href="11-wrapping-up.html">Wrapping Up</a> TODO</li>
-</ul>
-<h2><a href="#database-schema" name="database-schema" class="anchor"><span class="anchor-link"></span></a>Database schema</h2>
-<p>The schema is created by a flyway migration, available <a href="https://github.com/KyleU/estimate/blob/master/conf/db/migration/V1__InitialSchema.sql">here</a></p>
-<p><img src="img/02-01-ddl.png" alt="db schema" /></p>
+<h1><a href="#react" name="react" class="anchor"><span class="anchor-link"></span></a>react</h1>
+<p>This tutorial uses a Postgres database to generate a full web application for Agile Planning Poker.</p>
+<p>TODO</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.7.3/doc/src/tutorial/poker/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.8.2/doc/src/tutorial/poker/index.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.7.3
+1.8.2
 </span>
 </div>
 </article>
@@ -293,13 +233,13 @@ Tutorials
 </span>
 </div>
 </a>
-<a href="../../tutorial/poker/01-hello-world.html" title="Hello World" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../../tutorial/react/index.html" title="react" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Hello World
+react
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

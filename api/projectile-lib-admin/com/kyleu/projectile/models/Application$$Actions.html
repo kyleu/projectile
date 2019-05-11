@@ -116,7 +116,7 @@
         <a title="lib-projectile-admin" href="../index.html"><span class="name">projectile</span></a>
       </span>
       
-      <p class="shortcomment cmt">lib-projectile-admin</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-admin</p><p>Combines auth, auth-graphql, web-components and websocket into a single package
+      <p class="shortcomment cmt">lib-projectile-admin</p><div class="fullcomment"><div class="comment cmt"><p>lib-projectile-admin</p><p>Provides an administration web interface, graphql and rest IDE, authentication, and more
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="com.kyleu">kyleu</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.models" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="models"></a><a id="models:models"></a>
@@ -177,7 +177,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Actions</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="configForUser">configForUser: (<span class="extype" name="scala.Option">Option</span>[<a href="user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>*) ⇒ <span class="extype" name="com.kyleu.projectile.models.config.UiConfig">UiConfig</span></span>, <span name="failedRedirect">failedRedirect: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;/profile/signin&quot;</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Actions</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="configForUser">configForUser: (<span class="extype" name="scala.Option">Option</span>[<a href="user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="config/Notification.html" class="extype" name="com.kyleu.projectile.models.config.Notification">Notification</a>], <span class="extype" name="scala.Predef.String">String</span>*) ⇒ <a href="config/UiConfig.html" class="extype" name="com.kyleu.projectile.models.config.UiConfig">UiConfig</a></span>, <span name="failedRedirect">failedRedirect: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;/profile/signin&quot;</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -233,9 +233,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.models.Application.Actions#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(projectName:String,configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,String*)=&gt;com.kyleu.projectile.models.config.UiConfig,failedRedirect:String):com.kyleu.projectile.models.Application.Actions"></a><a id="&lt;init&gt;:Actions"></a>
+      <a id="&lt;init&gt;(projectName:String,configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,Seq[com.kyleu.projectile.models.config.Notification],String*)=&gt;com.kyleu.projectile.models.config.UiConfig,failedRedirect:String):com.kyleu.projectile.models.Application.Actions"></a><a id="&lt;init&gt;:Actions"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/models/Application$$Actions.html#&lt;init&gt;(projectName:String,configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,String*)=&gt;com.kyleu.projectile.models.config.UiConfig,failedRedirect:String):com.kyleu.projectile.models.Application.Actions" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/models/Application$$Actions.html#&lt;init&gt;(projectName:String,configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,Seq[com.kyleu.projectile.models.config.Notification],String*)=&gt;com.kyleu.projectile.models.config.UiConfig,failedRedirect:String):com.kyleu.projectile.models.Application.Actions" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -244,7 +244,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Actions</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="configForUser">configForUser: (<span class="extype" name="scala.Option">Option</span>[<a href="user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>*) ⇒ <span class="extype" name="com.kyleu.projectile.models.config.UiConfig">UiConfig</span></span>, <span name="failedRedirect">failedRedirect: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;/profile/signin&quot;</span></span>)</span>
+        <span class="name">Actions</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="configForUser">configForUser: (<span class="extype" name="scala.Option">Option</span>[<a href="user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="config/Notification.html" class="extype" name="com.kyleu.projectile.models.config.Notification">Notification</a>], <span class="extype" name="scala.Predef.String">String</span>*) ⇒ <a href="config/UiConfig.html" class="extype" name="com.kyleu.projectile.models.config.UiConfig">UiConfig</a></span>, <span name="failedRedirect">failedRedirect: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;/profile/signin&quot;</span></span>)</span>
       </span>
       
       
@@ -347,9 +347,9 @@
               
         </dd></dl></div>
     </li><li name="com.kyleu.projectile.models.Application.Actions#configForUser" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,String*)=&gt;com.kyleu.projectile.models.config.UiConfig"></a><a id="configForUser:(Option[SystemUser],Boolean,String*)⇒UiConfig"></a>
+      <a id="configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,Seq[com.kyleu.projectile.models.config.Notification],String*)=&gt;com.kyleu.projectile.models.config.UiConfig"></a><a id="configForUser:(Option[SystemUser],Boolean,Seq[Notification],String*)⇒UiConfig"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/models/Application$$Actions.html#configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,String*)=&gt;com.kyleu.projectile.models.config.UiConfig" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/models/Application$$Actions.html#configForUser:(Option[com.kyleu.projectile.models.user.SystemUser],Boolean,Seq[com.kyleu.projectile.models.config.Notification],String*)=&gt;com.kyleu.projectile.models.config.UiConfig" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -358,7 +358,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">configForUser</span><span class="result">: (<span class="extype" name="scala.Option">Option</span>[<a href="user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Predef.String">String</span>*) ⇒ <span class="extype" name="com.kyleu.projectile.models.config.UiConfig">UiConfig</span></span>
+        <span class="name">configForUser</span><span class="result">: (<span class="extype" name="scala.Option">Option</span>[<a href="user/SystemUser.html" class="extype" name="com.kyleu.projectile.models.user.SystemUser">SystemUser</a>], <span class="extype" name="scala.Boolean">Boolean</span>, <span class="extype" name="scala.Seq">Seq</span>[<a href="config/Notification.html" class="extype" name="com.kyleu.projectile.models.config.Notification">Notification</a>], <span class="extype" name="scala.Predef.String">String</span>*) ⇒ <a href="config/UiConfig.html" class="extype" name="com.kyleu.projectile.models.config.UiConfig">UiConfig</a></span>
       </span>
       
       

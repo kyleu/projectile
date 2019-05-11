@@ -152,6 +152,10 @@
                         <a href="DateTimeSchema$.html" title="">DateTimeSchema</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
+                        <a class="object" href="EmptySchema$.html" title=""></a>
+                        <a href="EmptySchema$.html" title="">EmptySchema</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
                         <a class="class" href="" title=""></a>
                         <a href="" title="">GraphQLContext</a>
                       </li><li class="current-entities indented4">
@@ -197,7 +201,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -253,9 +257,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.graphql.GraphQLContext#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(creds:com.kyleu.projectile.services.Credentials,tracing:com.kyleu.projectile.util.tracing.TracingService,trace:com.kyleu.projectile.util.tracing.TraceData,injector:com.google.inject.Injector,noteLookup:(com.kyleu.projectile.services.Credentials,String,Any*)=&gt;com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[Seq[com.kyleu.projectile.models.note.Note]]):com.kyleu.projectile.graphql.GraphQLContext"></a><a id="&lt;init&gt;:GraphQLContext"></a>
+      <a id="&lt;init&gt;(creds:com.kyleu.projectile.services.Credentials,tracing:com.kyleu.projectile.util.tracing.TracingService,trace:com.kyleu.projectile.util.tracing.TraceData,injector:com.google.inject.Injector):com.kyleu.projectile.graphql.GraphQLContext"></a><a id="&lt;init&gt;:GraphQLContext"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/graphql/GraphQLContext.html#&lt;init&gt;(creds:com.kyleu.projectile.services.Credentials,tracing:com.kyleu.projectile.util.tracing.TracingService,trace:com.kyleu.projectile.util.tracing.TraceData,injector:com.google.inject.Injector,noteLookup:(com.kyleu.projectile.services.Credentials,String,Any*)=&gt;com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[Seq[com.kyleu.projectile.models.note.Note]]):com.kyleu.projectile.graphql.GraphQLContext" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/graphql/GraphQLContext.html#&lt;init&gt;(creds:com.kyleu.projectile.services.Credentials,tracing:com.kyleu.projectile.util.tracing.TracingService,trace:com.kyleu.projectile.util.tracing.TraceData,injector:com.google.inject.Injector):com.kyleu.projectile.graphql.GraphQLContext" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -264,7 +268,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>, <span name="noteLookup">noteLookup: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>)</span>
+        <span class="name">GraphQLContext</span><span class="params">(<span name="creds">creds: <span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span></span>, <span name="tracing">tracing: <span class="extype" name="com.kyleu.projectile.util.tracing.TracingService">TracingService</span></span>, <span name="trace">trace: <span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span></span>, <span name="injector">injector: <span class="extype" name="com.google.inject.Injector">Injector</span></span>)</span>
       </span>
       
       
@@ -487,22 +491,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.kyleu.projectile.graphql.GraphQLContext#noteLookup" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="noteLookup:(com.kyleu.projectile.services.Credentials,String,Any*)=&gt;com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[Seq[com.kyleu.projectile.models.note.Note]]"></a><a id="noteLookup:(Credentials,String,Any*)⇒(TraceData)⇒Future[Seq[Note]]"></a>
-      <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/graphql/GraphQLContext.html#noteLookup:(com.kyleu.projectile.services.Credentials,String,Any*)=&gt;com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[Seq[com.kyleu.projectile.models.note.Note]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">noteLookup</span><span class="result">: (<span class="extype" name="com.kyleu.projectile.services.Credentials">Credentials</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>*) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="com.kyleu.projectile.models.note.Note">Note</span>]]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">

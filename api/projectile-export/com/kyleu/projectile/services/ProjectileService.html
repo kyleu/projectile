@@ -609,9 +609,9 @@
               
         </dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.audit.AuditHelper#fix" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="fix(key:String,t:String,src:String,tgt:String):String"></a><a id="fix(String,String,String,String):String"></a>
+      <a id="fix(key:String,t:String,src:String,tgt:String):Seq[String]"></a><a id="fix(String,String,String,String):Seq[String]"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#fix(key:String,t:String,src:String,tgt:String):String" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#fix(key:String,t:String,src:String,tgt:String):Seq[String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -620,7 +620,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fix</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="t">t: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="src">src: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="tgt">tgt: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">fix</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="t">t: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="src">src: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="tgt">tgt: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/audit/AuditHelper.html" class="extype" name="com.kyleu.projectile.services.project.audit.AuditHelper">AuditHelper</a></dd></dl></div>
@@ -723,6 +723,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/codegen/CodegenHelper.html" class="extype" name="com.kyleu.projectile.services.project.codegen.CodegenHelper">CodegenHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#getProjectStatus" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getProjectStatus(key:String):scala.util.Either[(String,String),String]"></a><a id="getProjectStatus(String):Either[(String,String),String]"></a>
+      <span class="permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#getProjectStatus(key:String):scala.util.Either[(String,String),String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getProjectStatus</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Either">Either</span>[(<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="java.lang.String">String</span>), <span class="extype" name="java.lang.String">String</span>]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.ProjectHelper#getProjectSummary" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getProjectSummary(key:String):com.kyleu.projectile.models.project.ProjectSummary"></a><a id="getProjectSummary(String):ProjectSummary"></a>
       <span class="permalink">
@@ -838,10 +854,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>
-    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#loadConfig" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="loadConfig(key:String):com.kyleu.projectile.models.export.config.ExportConfiguration"></a><a id="loadConfig(String):ExportConfiguration"></a>
+    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#loadExportConfig" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="loadExportConfig(key:String):com.kyleu.projectile.models.export.config.ExportConfiguration"></a><a id="loadExportConfig(String):ExportConfiguration"></a>
       <span class="permalink">
-      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#loadConfig(key:String):com.kyleu.projectile.models.export.config.ExportConfiguration" title="Permalink">
+      <a href="../../../../com/kyleu/projectile/services/ProjectileService.html#loadExportConfig(key:String):com.kyleu.projectile.models.export.config.ExportConfiguration" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -850,7 +866,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">loadConfig</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.export.config.ExportConfiguration">ExportConfiguration</span></span>
+        <span class="name">loadExportConfig</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="com.kyleu.projectile.models.export.config.ExportConfiguration">ExportConfiguration</span></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="project/ProjectHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectHelper">ProjectHelper</a></dd></dl></div>

@@ -168,10 +168,6 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.kyleu.projectile.services.database">database</a></dd></dl></div>
     </li><li class="current-entities indented6">
                         <span class="separator"></span>
-                        <a class="object" href="ApplicationDoobie$.html" title=""></a>
-                        <a href="ApplicationDoobie$.html" title="">ApplicationDoobie</a>
-                      </li><li class="current-entities indented6">
-                        <span class="separator"></span>
                         <a class="class" href="DoobieQueries.html" title=""></a>
                         <a href="DoobieQueries.html" title="">DoobieQueries</a>
                       </li><li class="current-entities indented6">
@@ -263,9 +259,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.services.database.doobie.DoobieQueryService#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(dataSource:javax.sql.DataSource):com.kyleu.projectile.services.database.doobie.DoobieQueryService"></a><a id="&lt;init&gt;:DoobieQueryService"></a>
+      <a id="&lt;init&gt;(dataSource:javax.sql.DataSource)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.services.database.doobie.DoobieQueryService"></a><a id="&lt;init&gt;:DoobieQueryService"></a>
       <span class="permalink">
-      <a href="../../../../../../com/kyleu/projectile/services/database/doobie/DoobieQueryService.html#&lt;init&gt;(dataSource:javax.sql.DataSource):com.kyleu.projectile.services.database.doobie.DoobieQueryService" title="Permalink">
+      <a href="../../../../../../com/kyleu/projectile/services/database/doobie/DoobieQueryService.html#&lt;init&gt;(dataSource:javax.sql.DataSource)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.services.database.doobie.DoobieQueryService" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -274,7 +270,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">DoobieQueryService</span><span class="params">(<span name="dataSource">dataSource: <span class="extype" name="javax.sql.DataSource">DataSource</span></span>)</span>
+        <span class="name">DoobieQueryService</span><span class="params">(<span name="dataSource">dataSource: <span class="extype" name="javax.sql.DataSource">DataSource</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
       </span>
       
       
@@ -405,22 +401,6 @@
       </span>
       <span class="symbol">
         <span class="name">db</span><span class="result">: <span class="extype" name="doobie.util.transactor.Transactor.Aux">Aux</span>[<span class="extype" name="cats.effect.IO">IO</span>, <span class="extype" name="javax.sql.DataSource">DataSource</span>]</span>
-      </span>
-      
-      
-    </li><li name="com.kyleu.projectile.services.database.doobie.DoobieQueryService#ec" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ec:scala.concurrent.ExecutionContextExecutor"></a><a id="ec:ExecutionContextExecutor"></a>
-      <span class="permalink">
-      <a href="../../../../../../com/kyleu/projectile/services/database/doobie/DoobieQueryService.html#ec:scala.concurrent.ExecutionContextExecutor" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">ec</span><span class="result">: <span class="extype" name="scala.concurrent.ExecutionContextExecutor">ExecutionContextExecutor</span></span>
       </span>
       
       
