@@ -3,6 +3,6 @@ package com.kyleu
 /**
  * lib-projectile-admin
  *
- * Combines auth, auth-graphql, web-components and websocket into a single package
+ * Provides an administration web interface, graphql and rest IDE, authentication, and more
  */
 package object projectile {}

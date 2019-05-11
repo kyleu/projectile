@@ -1,5 +1,5 @@
 # react
 
-This tutorial uses the React TypeScript definitions to generates a Scala.js project.
+This tutorial uses the React TypeScript definitions to generate a Scala.js project.
 
 TODO

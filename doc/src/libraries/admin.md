@@ -1,6 +1,6 @@
 # Admin
 
-Combines auth, auth-graphql, web-components and websocket into a single package ([API Documentation](../api/projectile-lib-admin/com/kyleu/projectile/index.html))
+Provides an administration web interface, graphql and rest IDE, authentication, and more ([API Documentation](../api/projectile-lib-admin/com/kyleu/projectile/index.html))
 
 ### Usage
 
