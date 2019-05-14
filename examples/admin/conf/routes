@@ -1,0 +1,20 @@
+GET         /                                        controllers.HomeController.home
+
+->          /profile                                 profile.Routes
+->          /components                              components.Routes
+
+# Admin
+->          /admin/system                            system.Routes
+
+->          /admin/graphql                           graphql.Routes
+->          /admin/rest                              rest.Routes
+->          /admin/audit                             audit.Routes
+->          /admin/note                              note.Routes
+->          /admin/systemUser                        systemUser.Routes
+
+# Start model route files
+# End model route files
+
+# Assets
+GET         /favicon.ico                             controllers.Assets.at(file = "images/ui/favicon/favicon.ico")
+GET         /assets/*file                            controllers.Assets.versioned(file)
