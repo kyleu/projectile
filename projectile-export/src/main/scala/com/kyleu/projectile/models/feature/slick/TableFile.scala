@@ -23,6 +23,7 @@ object TableFile {
     file.add(s"val query = TableQuery[${model.className}Table]")
     TableHelper.addQueries(config, file, model)
     TableHelper.addReferences(config, file, model)
+    TableHelper.addExtensions(config, file, model)
     file.add("}", -1)
     file.add()
 

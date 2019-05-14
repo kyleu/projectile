@@ -36,8 +36,7 @@ class OpenApiController @javax.inject.Inject() (override val app: Application)(i
   }
 
   def ui() = withSession("index", admin = true) { implicit request => implicit td =>
-    Future.successful(Ok(com.kyleu.projectile.views.html.rest.swagger(
-      app.cfg(u = Some(request.identity), admin = true, "rest", "ide")
-    )))
+    val cfg = app.cfg(Some(request.identity), admin = true, "system", "rest")
+    Future.successful(Ok(com.kyleu.projectile.views.html.rest.swagger(cfg)))
   }
 }

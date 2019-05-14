@@ -4,24 +4,19 @@
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Note?')" href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.remove(model.id)">Remove</a></div>
+    <h6><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">@model.id</div></h6>
+    <em>@model.relType.map { rt =>
+      @defining(model.relPk.getOrElse("").split(",").map(_.trim).filter(_.nonEmpty).toIndexedSeq) { pk =>
+        @defining(com.kyleu.projectile.models.audit.AuditCallbackProvider.getViewRoute(rt, pk)) { call =>
+          @rt @if(call.isDefined) { <a href="@call">@pk.mkString(". ")</a> } else { @pk.mkString(". ") }
+        }
+      }
+    }</em>
+    <pre>@model.text</pre>
+  }
+  @com.kyleu.projectile.views.html.layout.card(None) {
     <table class="highlight responsive-table">
       <tbody>
-        <tr>
-          <th>Id</th>
-          <td>@model.id</td>
-        </tr>
-        <tr>
-          <th>Rel Type</th>
-          <td>@model.relType.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
-        </tr>
-        <tr>
-          <th>Rel Pk</th>
-          <td>@model.relPk.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
-        </tr>
-        <tr>
-          <th>Text</th>
-          <td>@model.text</td>
-        </tr>
         <tr>
           <th>Author</th>
           <td>
@@ -38,4 +33,6 @@
   }
 
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "note", "Note", model.id)
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

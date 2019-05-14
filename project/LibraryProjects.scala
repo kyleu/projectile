@@ -85,7 +85,7 @@ object LibraryProjects {
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
-      Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache, 
+      Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
       Utils.betterFiles, Utils.commonsLang, Utils.reftree
     )
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)

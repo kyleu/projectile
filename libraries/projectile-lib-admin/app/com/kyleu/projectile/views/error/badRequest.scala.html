@@ -1,8 +1,7 @@
 @(path: String, error: String)(
     implicit session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.splash("Bad Request") {
-  <div class="text-centered">
-    <h1>@path</h1>
-    <div class="text-large"><em>Bad Request: @error</em></div>
-  </div>
+  <h6>Bad Request</h6>
+  <p>@path</p>
+  <p>@error</p>
 }

@@ -7,11 +7,11 @@
     <table class="highlight responsive-table">
       <tbody>
         <tr>
-          <th>Id</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
           <td>@model.id</td>
         </tr>
         <tr>
-          <th>Audit Id</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.auditId.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Audit Id</div></th>
           <td>
             @model.auditId
             <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.auditId)">
@@ -20,11 +20,11 @@
           </td>
         </tr>
         <tr>
-          <th>T</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Model Type</div></th>
           <td>@model.t</td>
         </tr>
         <tr>
-          <th>Pk</th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.pk.mkString(", ").replaceAllLiterally("'", "")')" style="cursor: pointer;">Model PK</div></th>
           <td>@model.pk.mkString(", ")</td>
         </tr>
         <tr>

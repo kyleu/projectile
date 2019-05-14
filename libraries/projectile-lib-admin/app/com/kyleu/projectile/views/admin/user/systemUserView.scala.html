@@ -4,23 +4,16 @@
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this System User?')" href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.remove(model.id)">Remove</a></div>
+    <h6><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.username.replaceAllLiterally("'", "")')" style="cursor: pointer;">@model.username</div></h6>
+    <em title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">@model.id</em>
+  }
+
+  @com.kyleu.projectile.views.html.layout.card(None) {
     <table class="highlight responsive-table">
       <tbody>
         <tr>
-          <th>Id</th>
-          <td>@model.id</td>
-        </tr>
-        <tr>
-          <th>Username</th>
-          <td>@model.username</td>
-        </tr>
-        <tr>
-          <th>Provider</th>
-          <td>@model.provider</td>
-        </tr>
-        <tr>
-          <th>Key</th>
-          <td>@model.key</td>
+          <th>Authentication</th>
+          <td>@model.provider:@model.key</td>
         </tr>
         <tr>
           <th>Role</th>
@@ -38,7 +31,9 @@
     </table>
   }
 
-  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "SystemUserRow", "System User", model.id)
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "SystemUser", "System User", model.id)
 
-  @com.kyleu.projectile.views.html.admin.audit.auditRecords(auditRecords, "SystemUserRow", "System User", model.id)
+  @com.kyleu.projectile.views.html.admin.audit.auditRecords(auditRecords, "SystemUser", "System User", model.id)
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

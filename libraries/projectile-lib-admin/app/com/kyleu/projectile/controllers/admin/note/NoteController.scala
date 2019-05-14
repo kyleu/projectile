@@ -23,18 +23,18 @@ class NoteController @javax.inject.Inject() (
     val note = Note.empty(relType = Some(model), relPk = Some(pk), author = request.identity.id)
     val cancel = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list()
     val call = com.kyleu.projectile.controllers.admin.note.routes.NoteController.create()
-    val cfg = app.cfg(Some(request.identity), admin = true)
-    Future.successful(Ok(
-      com.kyleu.projectile.views.html.admin.note.noteForm(cfg, note, s"Note for $model:$pk", cancel, call, isNew = true, debug = app.config.debug)
-    ))
+    val cfg = app.cfg(Some(request.identity), admin = true, "system", "notes", "Create")
+    val title = s"Note for $model:$pk"
+    Future.successful(Ok(com.kyleu.projectile.views.html.admin.note.noteForm(cfg, note, title, cancel, call, isNew = true, debug = app.config.debug)))
   }
 
   def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list()
     val call = com.kyleu.projectile.controllers.admin.note.routes.NoteController.create()
-    Future.successful(Ok(com.kyleu.projectile.views.html.admin.note.noteForm(
-      app.cfg(Some(request.identity), true, "note", "note", "Create"), Note.empty(), "New Note", cancel, call, isNew = true, debug = app.config.debug
-    )))
+    val cfg = app.cfg(Some(request.identity), admin = true, "system", "notes", "Create")
+    Future.successful(Ok(
+      com.kyleu.projectile.views.html.admin.note.noteForm(cfg, Note.empty(), "New Note", cancel, call, isNew = true, debug = app.config.debug)
+    ))
   }
 
   def create = withSession("create", admin = true) { implicit request => implicit td =>
@@ -52,7 +52,7 @@ class NoteController @javax.inject.Inject() (
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil => Redirect(com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(model.id))
           case _ => Ok(com.kyleu.projectile.views.html.admin.note.noteList(
-            app.cfg(u = Some(request.identity), admin = true, "note", "note"),
+            app.cfg(u = Some(request.identity), admin = true, "system", "notes"),
             Some(r._1),
             r._2,
             q,
@@ -84,7 +84,7 @@ class NoteController @javax.inject.Inject() (
       val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
       svc.getByAuthor(request, author, orderBys, limit, offset).map(models => renderChoice(t) {
         case MimeTypes.HTML =>
-          val cfg = app.cfg(Some(request.identity), true, "note", "note", "Author")
+          val cfg = app.cfg(Some(request.identity), true, "system", "notes", "By Author")
           val list = com.kyleu.projectile.views.html.admin.note.noteByAuthor(cfg, author, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0))
           if (embedded) { Ok(list) } else { Ok(page(s"Notes by Author [$author]", cfg)(card(None)(list))) }
         case MimeTypes.JSON => Ok(models.asJson)
@@ -97,12 +97,12 @@ class NoteController @javax.inject.Inject() (
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>
     val modelF = svc.getByPrimaryKey(request, id)
-    val notesF = svc.getFor(request, "note", id)
+    val notesF = svc.getFor(request, "Note", id)
 
     notesF.flatMap(notes => modelF.map {
       case Some(model) => renderChoice(t) {
         case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.note.noteView(
-          app.cfg(Some(request.identity), true, "note", "note", model.id.toString),
+          app.cfg(Some(request.identity), true, "system", "notes", model.id.toString),
           model,
           notes,
           app.config.debug)
@@ -119,9 +119,9 @@ class NoteController @javax.inject.Inject() (
     val cancel = com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(id)
     val call = com.kyleu.projectile.controllers.admin.note.routes.NoteController.edit(id)
     svc.getByPrimaryKey(request, id).map {
-      case Some(model) => Ok(com.kyleu.projectile.views.html.admin.note.noteForm(
-        app.cfg(Some(request.identity), true, "note", "note", "Edit"), model, s"Note [$id]", cancel, call, debug = app.config.debug
-      ))
+      case Some(model) =>
+        val cfg = app.cfg(Some(request.identity), true, "system", "notes", "Edit")
+        Ok(com.kyleu.projectile.views.html.admin.note.noteForm(cfg, model, s"Note [$id]", cancel, call, debug = app.config.debug))
       case None => NotFound(s"No Note found with id [$id]")
     }
   }

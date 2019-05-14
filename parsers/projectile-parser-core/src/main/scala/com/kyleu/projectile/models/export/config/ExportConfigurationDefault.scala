@@ -16,7 +16,7 @@ object ExportConfigurationDefault {
     title = toDefaultTitle(col.name),
     description = col.description,
     t = col.columnType,
-    defaultValue = col.defaultValue,
+    defaultValue = None, // col.defaultValue,
     required = col.notNull,
     indexed = indexed,
     unique = unique,

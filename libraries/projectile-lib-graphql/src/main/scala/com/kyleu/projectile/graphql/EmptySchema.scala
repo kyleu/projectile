@@ -3,10 +3,14 @@ package com.kyleu.projectile.graphql
 import sangria.execution.deferred.DeferredResolver
 import sangria.schema._
 
+import scala.concurrent.Future
+
 object EmptySchema extends GraphQLSchema {
   override val resolver = DeferredResolver.fetchers()
 
-  private[this] val queryFields = fields[GraphQLContext, Unit]()
+  private[this] val queryFields = fields[GraphQLContext, Unit](
+    Field(name = "status", fieldType = StringType, resolve = _ => Future.successful("OK"))
+  )
 
   override val queryType = ObjectType(
     name = "Query",

@@ -1,0 +1,2 @@
+GET         /               com.kyleu.projectile.controllers.admin.encrypt.EncryptionController.form
+POST        /               com.kyleu.projectile.controllers.admin.encrypt.EncryptionController.post

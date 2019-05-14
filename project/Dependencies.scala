@@ -83,7 +83,7 @@ object Dependencies {
   }
 
   object Tracing {
-    val version = "0.35.3"
+    val version = "0.35.4"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
@@ -115,10 +115,10 @@ object Dependencies {
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.2.5"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1" // Do not change
     val chimney = "io.scalaland" %% "chimney" % "0.3.1"
-    val clist = "org.backuity.clist" %% "clist-core"   % "3.5.0"
-    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.0" % "provided"
+    val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
+    val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"
     val commonsCodec = "commons-codec" % "commons-codec" % "1.12"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.9"

@@ -22,8 +22,9 @@ class SystemUserController @javax.inject.Inject() (
   def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.list()
     val call = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.create()
+    val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user", "Create")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.user.systemUserForm(
-      app.cfg(Some(request.identity), true, "auth", "system_user", "Create"), SystemUser.empty(), "New System User", cancel, call, isNew = true, debug = app.config.debug
+      cfg, SystemUser.empty(), "New System User", cancel, call, isNew = true, debug = app.config.debug
     )))
   }
 
@@ -41,7 +42,9 @@ class SystemUserController @javax.inject.Inject() (
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil => Redirect(com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id))
-          case _ => Ok(com.kyleu.projectile.views.html.admin.user.systemUserList(app.cfg(u = Some(request.identity), admin = true, "auth", "system_user"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
+          case _ =>
+            val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user")
+            Ok(com.kyleu.projectile.views.html.admin.user.systemUserList(cfg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
         }
         case MimeTypes.JSON => Ok(SystemUserResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case ServiceController.MimeTypes.csv => csvResponse("SystemUser", svc.csvFor(r._1, r._2))
@@ -65,7 +68,9 @@ class SystemUserController @javax.inject.Inject() (
 
     notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
       case Some(model) => renderChoice(t) {
-        case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.user.systemUserView(app.cfg(Some(request.identity), true, "auth", "system_user", model.id.toString), model, notes, audits, app.config.debug))
+        case MimeTypes.HTML =>
+          val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user", model.id.toString)
+          Ok(com.kyleu.projectile.views.html.admin.user.systemUserView(cfg, model, notes, audits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
         case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)
         case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)
@@ -78,9 +83,9 @@ class SystemUserController @javax.inject.Inject() (
     val cancel = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(id)
     val call = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.edit(id)
     svc.getByPrimaryKey(request, id).map {
-      case Some(model) => Ok(
-        com.kyleu.projectile.views.html.admin.user.systemUserForm(app.cfg(Some(request.identity), true, "auth", "system_user", "Edit"), model, s"System User [$id]", cancel, call, debug = app.config.debug)
-      )
+      case Some(model) =>
+        val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user", "Edit")
+        Ok(com.kyleu.projectile.views.html.admin.user.systemUserForm(cfg, model, s"System User [$id]", cancel, call, debug = app.config.debug))
       case None => NotFound(s"No SystemUser found with id [$id]")
     }
   }

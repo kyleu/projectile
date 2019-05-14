@@ -5,9 +5,11 @@
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Audit?')" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.remove(model.id)">Remove</a></div>
-    <h6>@model.id</h6>
+    <h6><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">@model.id</div></h6>
     <em>@model.app@@@model.server</em>
-    <div style="font-size: 140%; padding: 12px 0;">@model.msg</div>
+    <pre>@model.msg</pre>
+  }
+  @com.kyleu.projectile.views.html.layout.card(None) {
     <table class="highlight responsive-table">
       <tbody>
         <tr>
@@ -30,10 +32,6 @@
           <td>@model.client</td>
         </tr>
         <tr>
-          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.tags.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Tags</div></th>
-          <td><pre>@model.tags<pre></td>
-        </tr>
-        <tr>
           <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.started.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Started</div></th>
           <td>@model.started</td>
         </tr>
@@ -48,11 +46,7 @@
   @records.map { record =>
     @com.kyleu.projectile.views.html.layout.card(None) {
       <h6>@defining(com.kyleu.projectile.models.audit.AuditCallbackProvider.getViewRoute(record.t, record.pk.toIndexedSeq)) { call =>
-        @if(call.isDefined) {
-          <a href="@call">@record.t @record.pk.mkString(", ")</a>
-        } else {
-          @record.t @record.pk.mkString(", ")
-        }
+        @record.t @if(call.isDefined) { <a href="@call">@record.pk.mkString(", ")</a> } else { @record.pk.mkString(", ") }
       }</h6>
       <em>Record <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(record.id)">@record.id</a></em>
       <div style="padding: 12px;">
@@ -73,4 +67,6 @@
   }
 
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Audit", "Audit", model.id)
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

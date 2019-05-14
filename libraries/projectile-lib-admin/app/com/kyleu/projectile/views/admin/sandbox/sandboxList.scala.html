@@ -1,0 +1,26 @@
+@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(cfg.projectName + " Sandbox Tasks", cfg) {
+  <ul class="collection with-header">
+    <li class="collection-header">
+      <h5>Sandbox Tasks</h5>
+    </li>
+    @if(com.kyleu.projectile.models.sandbox.SandboxTask.getAll.isEmpty) {
+      <li class="collection-item">
+        No sandbox tasks defined. Register some with <code>SandboxTask.register</code>
+      </li>
+    }
+    @com.kyleu.projectile.models.sandbox.SandboxTask.getAll.map { task =>
+      <li class="collection-item">
+        <div class="right">
+          <form action="@com.kyleu.projectile.controllers.admin.sandbox.routes.SandboxController.run(task.id)">
+            <input name="arg" placeholder="Run with argument" />
+          </form>
+        </div>
+        <div><a href="@com.kyleu.projectile.controllers.admin.sandbox.routes.SandboxController.run(task.id)">@task.name</a></div>
+        <div>@task.description</div>
+        <div class="clear"></div>
+      </li>
+    }
+  </ul>
+}

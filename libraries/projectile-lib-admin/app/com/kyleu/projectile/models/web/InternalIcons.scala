@@ -2,10 +2,18 @@ package com.kyleu.projectile.models.web
 
 object InternalIcons {
   val default = "radio_button_unchecked"
+  val status = "more_horiz"
 
   val audit = "storage"
   val auditRecord = "memory"
+  val note = "folder_open"
   val systemUser = "account_circle"
+
+  val encryption = "enhanced_encryption"
+  val sandbox = "widgets"
+
+  val rest = "dialpad"
+  val graphql = "brightness_high"
 
   val link = "insert_link"
   val add = "playlist_add"
@@ -13,7 +21,7 @@ object InternalIcons {
   val sortAsc = "arrow_drop_down"
   val sortDesc = "arrow_drop_up"
 
-  val date = "calendar_today"
+  val date = "date_range"
   val time = "access_time"
 
   val error = "error"

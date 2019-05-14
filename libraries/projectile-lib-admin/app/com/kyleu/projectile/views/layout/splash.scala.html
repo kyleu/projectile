@@ -19,28 +19,30 @@
       <div class="col s12">
         <div class="container">
           <div id="splash-content" class="row">
-            @flash.get("error").map { err =>
-              <div class="card-alert card gradient-45deg-red-pink">
-                <div class="card-content white-text">
-                  <p>
-                    <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
+            <div class="col s12 m6 l4 z-depth-4 card-panel border-radius-6 splash-card bg-opacity-8">
+              @flash.get("error").map { err =>
+                <div class="card-alert card gradient-45deg-red-pink">
+                  <div class="card-content white-text">
+                    <p>
+                      <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
+                  </div>
+                  <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
                 </div>
-                <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-            }
-            @flash.get("success").map { success =>
-              <div class="card-alert card gradient-45deg-green-teal">
-                <div class="card-content white-text">
-                  <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
+              }
+              @flash.get("success").map { success =>
+                <div class="card-alert card gradient-45deg-green-teal">
+                  <div class="card-content white-text">
+                    <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
+                  </div>
+                  <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
                 </div>
-                <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-            }
-            @content
+              }
+              @content
+            </div>
           </div>
         </div>
       </div>

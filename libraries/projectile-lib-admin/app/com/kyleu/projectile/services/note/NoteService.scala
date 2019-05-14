@@ -3,6 +3,7 @@ package com.kyleu.projectile.services.note
 import java.time.LocalDateTime
 import java.util.UUID
 
+import com.google.inject.name.Named
 import com.kyleu.projectile.models.note.Note
 import com.kyleu.projectile.models.queries.note.NoteQueries
 import com.kyleu.projectile.models.result.data.DataField
@@ -17,7 +18,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class NoteService @javax.inject.Inject() (
-    db: JdbcDatabase, override val tracing: TracingService
+    @Named("system") db: JdbcDatabase,
+    override val tracing: TracingService
 )(implicit ec: ExecutionContext) extends ModelServiceHelper[Note]("note") {
 
   def getFor(creds: Credentials, model: String, pk: Any*)(implicit trace: TraceData) = {

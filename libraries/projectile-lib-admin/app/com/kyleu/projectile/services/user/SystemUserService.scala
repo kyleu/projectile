@@ -10,6 +10,7 @@ import com.kyleu.projectile.util.CsvUtils
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import java.util.UUID
 
+import com.google.inject.name.Named
 import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.queries.auth.{SystemUserQueries, UserSearchQueries}
 import com.kyleu.projectile.services.cache.UserCache
@@ -17,7 +18,10 @@ import com.kyleu.projectile.services.cache.UserCache
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
-class SystemUserService @javax.inject.Inject() (val db: JdbcDatabase, override val tracing: TracingService)(implicit ec: ExecutionContext) extends ModelServiceHelper[SystemUser]("systemUser") {
+class SystemUserService @javax.inject.Inject() (
+    @Named("system") val db: JdbcDatabase,
+    override val tracing: TracingService
+)(implicit ec: ExecutionContext) extends ModelServiceHelper[SystemUser]("systemUser") {
   def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = {
     traceF("get.by.primary.key")(td => db.queryF(SystemUserQueries.getByPrimaryKey(id))(td))
   }

@@ -3,6 +3,7 @@ package com.kyleu.projectile.services.audit
 
 import java.util.UUID
 
+import com.google.inject.name.Named
 import com.kyleu.projectile.models.audit.AuditRecord
 import com.kyleu.projectile.models.queries.audit.AuditRecordQueries
 import com.kyleu.projectile.models.result.data.DataField
@@ -16,7 +17,10 @@ import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
-class AuditRecordService @javax.inject.Inject() (val db: JdbcDatabase, override val tracing: TracingService)(implicit ec: ExecutionContext) extends ModelServiceHelper[AuditRecord]("auditRecordRow") {
+class AuditRecordService @javax.inject.Inject() (
+    @Named("system") val db: JdbcDatabase,
+    override val tracing: TracingService
+)(implicit ec: ExecutionContext) extends ModelServiceHelper[AuditRecord]("auditRecordRow") {
   def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = {
     traceF("get.by.primary.key")(td => db.queryF(AuditRecordQueries.getByPrimaryKey(id))(td))
   }

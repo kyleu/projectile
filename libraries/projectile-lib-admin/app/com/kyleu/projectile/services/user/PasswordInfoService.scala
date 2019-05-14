@@ -1,5 +1,6 @@
 package com.kyleu.projectile.services.user
 
+import com.google.inject.name.Named
 import com.kyleu.projectile.models.queries.auth.PasswordInfoQueries
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.util.tracing.OpenTracingService
@@ -11,7 +12,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class PasswordInfoService @javax.inject.Inject() (
-    db: JdbcDatabase, tracingService: OpenTracingService
+    @Named("system") db: JdbcDatabase,
+    tracingService: OpenTracingService
 )(implicit ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
   override def find(loginInfo: LoginInfo) = tracingService.noopTrace("password.find") { implicit td =>
     Future.successful(db.query(PasswordInfoQueries.getByPrimaryKey(loginInfo.providerID, loginInfo.providerKey)))

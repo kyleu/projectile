@@ -1,7 +1,11 @@
 @(path: String, ex: Option[Throwable])(
     implicit session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.splash("Error") {
-  <div class="col s12 m6 l4 z-depth-4 card-panel border-radius-6 splash-card bg-opacity-8">
-    500
-  </div>
+  <h6>500 Internal Server Error</h6>
+  <p>An error has occurred, and has been logged. We're very sorry.</p>
+  @ex.map { x =>
+    <!--
+@com.kyleu.projectile.util.ExceptionUtils.print(x)
+    -->
+  }
 }

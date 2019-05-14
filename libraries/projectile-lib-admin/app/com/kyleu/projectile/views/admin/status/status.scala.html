@@ -1,0 +1,34 @@
+@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, status: com.kyleu.projectile.controllers.admin.status.AppStatus)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(cfg.projectName + " Status", cfg) {
+  <ul class="collection with-header">
+    <li class="collection-header">
+      <div class="right">v@status.version</div>
+      <h5>@status.status</h5>
+      <em>@com.kyleu.projectile.util.DateUtils.niceDateTime(status.measured)</em>
+    </li>
+    @if(status.timings.nonEmpty) {
+      <li class="collection-item">
+        <h6>Timings</h6>
+        <ul>
+        @status.timings.map { t =>
+          <li>
+            <div class="right">@t.dur</div>
+            @t.msg
+          </li>
+        }
+        </ul>
+      </li>
+    }
+    @if(status.errors.nonEmpty) {
+      <li class="collection-item">
+        <h6>Errors</h6>
+        <ul>
+          @status.errors.map { e =>
+            <li>@e</li>
+          }
+        </ul>
+      </li>
+    }
+  </ul>
+}

@@ -78,6 +78,11 @@ case class ExportModel(
     case _ => true
   }
 
+  def searchCols = (foreignKeys.flatMap(_.references match {
+    case ref :: Nil => Some(ref.source)
+    case _ => None
+  }) ++ searchFields.map(_.key)).distinct.sorted
+
   def modelPackage(config: ExportConfiguration) = {
     val prelude = if (inputType.isThrift) { Nil } else { config.applicationPackage }
     prelude ++ (pkg.lastOption match {

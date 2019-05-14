@@ -115,7 +115,7 @@
         $('.save-dir-input').val(parameters.dir);
         $('.save-name-input').val(parameters.name);
 
-        var gqlChildren = [
+        var gqlLogo = [
           React.createElement(GraphiQL.Logo, {}, [
             React.createElement("a", { "href": "/", "className": "title-link" }, "@actions.projectName GraphQL")
           ])
@@ -131,9 +131,12 @@
           defaultQuery: "query FirstQuery {\n  status\n  version\n}"
         };
 
-        var gql = React.createElement(GraphiQL, gqlProps, gqlChildren);
+        var gql = React.createElement(GraphiQL, gqlProps, gqlLogo);
 
         ReactDOM.render(gql, elem);
+
+        $(".toolbar").append($("<a class='toolbar-button' href='@com.kyleu.projectile.controllers.graphql.routes.SchemaController.voyager("Query")'>Visualize Query</a>"));
+        $(".toolbar").append($("<a class='toolbar-button' href='@com.kyleu.projectile.controllers.graphql.routes.SchemaController.voyager("Mutation")'>Visualize Mutation</a>"));
       }
 
       renderGraphiql(document.getElementById('graphiql'));

@@ -74,14 +74,7 @@ object ServiceHelper {
   }
 
   def writeForeignKeys(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
-    val fkCols = model.foreignKeys.flatMap { fk =>
-      fk.references match {
-        case ref :: Nil => Some(ref.source)
-        case _ => None
-      }
-    }
-    val cols = (fkCols ++ model.searchFields.map(_.key)).distinct.sorted
-    cols.foreach(col => addRelationMethodsToFile(config, model, file, col))
+    model.searchCols.foreach(col => addRelationMethodsToFile(config, model, file, col))
   }
 
   private[this] def addRelationMethodsToFile(config: ExportConfiguration, model: ExportModel, file: ScalaFile, col: String) = {

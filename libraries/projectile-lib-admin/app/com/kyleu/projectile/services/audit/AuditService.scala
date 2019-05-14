@@ -2,6 +2,7 @@ package com.kyleu.projectile.services.audit
 
 import java.util.UUID
 
+import com.google.inject.name.Named
 import com.kyleu.projectile.models.audit.{Audit, AuditRecord}
 import com.kyleu.projectile.models.queries.audit.{AuditQueries, AuditRecordQueries}
 import com.kyleu.projectile.models.result.data.DataField
@@ -15,21 +16,24 @@ import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
-class AuditService @javax.inject.Inject() (val db: JdbcDatabase, override val tracing: TracingService)(implicit ec: ExecutionContext) extends ModelServiceHelper[Audit]("audit") {
+class AuditService @javax.inject.Inject() (
+    @Named("system") val db: JdbcDatabase,
+    override val tracing: TracingService
+)(implicit ec: ExecutionContext) extends ModelServiceHelper[Audit]("audit") {
   def getByModel(creds: Credentials, model: String, pk: Any*)(implicit trace: TraceData) = {
     db.queryF(AuditRecordQueries.GetByRelation(model, pk.map(_.toString).toList))
   }
 
   def callback(a: Audit, records: Seq[AuditRecord])(implicit trace: TraceData) = {
     if (records.exists(r => r.changes.nonEmpty)) {
-      persist(db, a, records)
+      persist(a, records)
       log.info(a.changeLog)
     } else {
       log.info(s"Ignoring audit [${a.id}], as it has no changes.")
     }
   }
 
-  protected[this] def persist(db: JdbcDatabase, a: Audit, records: Seq[AuditRecord])(implicit trace: TraceData) = {
+  protected[this] def persist(a: Audit, records: Seq[AuditRecord])(implicit trace: TraceData) = {
     log.debug(s"Persisting audit [${a.id}]...")
     val ret = db.executeF(AuditQueries.insert(a.asInstanceOf[Audit])).flatMap { _ =>
       db.executeF(AuditRecordQueries.insertBatch(records)).map { _ =>

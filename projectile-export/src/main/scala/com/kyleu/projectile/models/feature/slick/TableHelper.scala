@@ -1,8 +1,10 @@
 package com.kyleu.projectile.models.feature.slick
 
+import com.kyleu.projectile.models.database.schema.ForeignKey
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object TableHelper {
@@ -60,5 +62,30 @@ object TableHelper {
         case _ => // noop
       }
     }
+  }
+
+  def addExtensions(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
+    file.addImport(Seq("scala", "language"), "higherKinds")
+    file.add()
+    file.add(s"implicit class ${model.className}TableExtensions[C[_]](q: Query[${model.className}Table, ${model.className}, C]) {", 1)
+    model.foreignKeys.groupBy(_.targetTable).toList.foreach { fk =>
+      val target = config.getModel(fk._1, "tableExtensions")
+      file.addImport(target.slickPackage(config), target.className + "Table")
+
+      def proc(fk: ForeignKey, key: String) = fk.references match {
+        case ref :: Nil =>
+          val srcCol = model.getField(ref.source)
+          val tgtCol = target.getField(ref.target)
+          file.add(s"def with$key = q.join(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
+          file.add(s"def with${key}Opt = q.joinLeft(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
+        case x => throw new IllegalStateException("Extension error")
+      }
+
+      fk._2 match {
+        case solo :: Nil => proc(solo, target.className)
+        case multiple => multiple.foreach(m => proc(m, s"${target.className}By${ExportHelper.toClassName(m.references.head.source)}"))
+      }
+    }
+    file.add("}", -1)
   }
 }
