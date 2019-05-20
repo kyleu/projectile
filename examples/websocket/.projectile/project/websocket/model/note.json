@@ -1,7 +1,0 @@
-{
-  "key" : "note",
-  "pkg" : [ "note" ],
-  "features" : [ "shared", "datamodel", "auth", "graphql", "service", "slick", "controller", "notes", "json", "core" ],
-  "ignored" : [ ],
-  "overrides" : [ ]
-}

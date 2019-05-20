@@ -1,8 +1,0 @@
-{
-  "url" : "jdbc:postgresql://localhost/websocket",
-  "username" : "websocket",
-  "password" : "websocket",
-  "ssl" : false,
-  "db" : "db",
-  "catalog" : null
-}
