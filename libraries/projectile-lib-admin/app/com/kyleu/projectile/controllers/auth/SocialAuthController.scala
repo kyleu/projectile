@@ -3,8 +3,8 @@ package com.kyleu.projectile.controllers.auth
 import java.util.UUID
 
 import com.kyleu.projectile.controllers.AuthController
-import com.kyleu.projectile.models.Application
-import com.kyleu.projectile.models.auth.{AuthActions, AuthEnv, UserCredentials}
+import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}
+import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.services.user.{SystemUserSearchService, SystemUserService}
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -22,7 +22,7 @@ class SocialAuthController @javax.inject.Inject() (
     userSearchService: SystemUserSearchService,
     authInfoRepository: AuthInfoRepository,
     socialProviderRegistry: SocialProviderRegistry,
-    actions: AuthActions
+    configProvider: Application.UiConfigProvider
 )(implicit ec: ExecutionContext) extends AuthController("socialAuth") {
   def authenticate(provider: String) = withoutSession("form") { implicit request => implicit td =>
     socialProviderRegistry.get[SocialProvider](provider) match {
@@ -46,7 +46,7 @@ class SocialAuthController @javax.inject.Inject() (
                     id = UUID.randomUUID,
                     username = if (existing.isDefined) { username + "-" + scala.util.Random.alphanumeric.take(4).mkString } else { username },
                     profile = profile.loginInfo,
-                    role = actions.defaultRole
+                    role = configProvider.defaultRole
                   )
                   userService.insert(UserCredentials(newUser, request.remoteAddress), newUser)
                 }
@@ -57,7 +57,7 @@ class SocialAuthController @javax.inject.Inject() (
               _ <- authInfoRepository.save(profile.loginInfo, authInfo)
               authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)
               value <- silhouette.env.authenticatorService.init(authenticator)
-              result <- silhouette.env.authenticatorService.embed(value, Redirect(actions.indexUrl))
+              result <- silhouette.env.authenticatorService.embed(value, Redirect("/"))
             } yield {
               silhouette.env.eventBus.publish(LoginEvent(user, request))
               result
@@ -68,7 +68,7 @@ class SocialAuthController @javax.inject.Inject() (
         rsp.recover {
           case e: ProviderException =>
             log.error("Unexpected provider error", e)
-            Redirect(actions.signinUrl).flashing("error" -> "Could not authenticate")
+            Redirect(com.kyleu.projectile.controllers.auth.routes.AuthenticationController.signInForm()).flashing("error" -> "Could not authenticate")
         }
       case _ => throw new IllegalStateException(s"Invalid provider [$provider]")
     }

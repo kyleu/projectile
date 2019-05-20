@@ -92,8 +92,8 @@ object TwirlViewHelper {
     case FieldType.TagsType if field.required => s"""@model.${field.propertyName}.map(x => x.k + "=" + x.v).mkString(", ")"""
     case FieldType.TagsType => s"""@model.${field.propertyName}.map(_.map(x => x.k + "=" + x.v).mkString(", "))"""
 
-    case FieldType.CodeType | FieldType.JsonType if field.required => s"<pre>@model.${field.propertyName}<pre>"
-    case FieldType.CodeType | FieldType.JsonType => s"<pre>@model.${field.propertyName}.getOrElse(com.kyleu.projectile.util.NullUtils.str)<pre>"
+    case FieldType.CodeType | FieldType.JsonType if field.required => s"<pre>@model.${field.propertyName}</pre>"
+    case FieldType.CodeType | FieldType.JsonType => s"<pre>@model.${field.propertyName}.getOrElse(com.kyleu.projectile.util.NullUtils.str)</pre>"
 
     case _ if field.required => s"@model.${field.propertyName}"
     case _ =>

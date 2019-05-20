@@ -1,0 +1,17 @@
+@(model: com.kyleu.projectile.models.task.ScheduledTaskRun)<tr>
+  <td>
+    <a href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.task
+  </td>
+  <td>
+    @model.arguments
+  </td>
+  <td>
+    @model.status
+  </td>
+  <td>
+    @model.started
+  </td>
+</tr>

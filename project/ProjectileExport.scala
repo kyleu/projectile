@@ -25,7 +25,7 @@ object ProjectileExport {
       case "pom.properties" => MergeStrategy.discard
       case "application.conf" => MergeStrategy.concat
       case x => (assemblyMergeStrategy in assembly).value(x)
-    },
+    }
   ).dependsOn(
     ParserProjects.`projectile-parser-database`,
     ParserProjects.`projectile-parser-graphql`,

@@ -1,0 +1,7 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page("Testbed", cfg) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div>Content</div>
+  }
+}

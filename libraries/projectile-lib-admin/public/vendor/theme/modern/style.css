@@ -2698,9 +2698,9 @@ body
 
 #main
 {
-    min-height: -webkit-calc(100% - 116px);
-    min-height:    -moz-calc(100% - 116px);
-    min-height:         calc(100% - 116px);
+    min-height: -webkit-calc(100% - 64px);
+    min-height:    -moz-calc(100% - 64px);
+    min-height:         calc(100% - 64px);
     padding-left: 0;
 
     -webkit-transition: .3s ease all;

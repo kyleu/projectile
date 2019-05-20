@@ -1,0 +1,23 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, tasks: Seq[com.kyleu.projectile.models.task.ScheduledTask])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page("Scheduled Tasks", cfg) {
+  <ul class="collection with-header">
+    <li class="collection-header">
+      <div class="right"><a href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduleController.run("all")">Run All</a></div>
+      <h5>Scheduled Tasks</h5>
+      @if(tasks.isEmpty) {
+        <div>No scheduled tasks defined. Register some with <code>ScheduledTaskRegistry.register</code></div>
+      } else {
+        <em>@tasks.size scheduled tasks available</em>
+      }
+    </li>
+    @tasks.map { task =>
+      <li class="collection-item">
+        <div><a href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduleController.run(task.key)">@task.title</a></div>
+        @task.description.map { desc =>
+          <em>@desc</em>
+        }
+      </li>
+    }
+  </ul>
+}

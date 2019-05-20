@@ -19,7 +19,7 @@ class ProjectExportService(val projectile: ProjectileService) {
       Nil
     }
 
-    val featureOutputs = config.project.features.map(feature => FeatureService.export(feature, projectRoot, config, verbose)).toSeq
+    val featureOutputs = config.project.features.toList.sortBy(_.value).map(feature => FeatureService.export(feature, projectRoot, config, verbose)).toSeq
 
     ProjectOutput(project = config.project.toSummary, rootLogs = rootLogs, featureOutput = featureOutputs, duration = System.currentTimeMillis - startMs)
   }

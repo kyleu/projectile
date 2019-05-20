@@ -25,7 +25,7 @@ abstract class BaseSearchController(implicit ec: ExecutionContext) extends AuthC
     }
     results.map {
       case r if r.size == 1 => Redirect(r.head._1)
-      case r => Ok(searchResults(q, r.map(_._2), app.cfg(Some(request.identity), admin = true, "Search", q)))
+      case r => Ok(searchResults(q, r.map(_._2), app.cfgAdmin(u = request.identity, "Search", q)))
     }
   }
 

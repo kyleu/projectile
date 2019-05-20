@@ -43,6 +43,8 @@
     </table>
   }
 
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString)
+
   @records.map { record =>
     @com.kyleu.projectile.views.html.layout.card(None) {
       <h6>@defining(com.kyleu.projectile.models.audit.AuditCallbackProvider.getViewRoute(record.t, record.pk.toIndexedSeq)) { call =>

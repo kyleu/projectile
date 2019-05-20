@@ -47,7 +47,7 @@ object ThriftControllerFile {
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()
     file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    val cfg = s"""app.cfg(u = Some(request.identity), admin = ${service.features(ServiceFeature.Auth)}, "thrift", "${service.key}")"""
+    val cfg = s"""app.cfgAdmin(u = request.identity, "thrift", "${service.key}")"""
     file.add(s"Future.successful(Ok(${(config.viewPackage :+ "html" :+ "admin" :+ "thrift").mkString(".")}.${service.propertyName}($cfg)))")
     file.add("}", -1)
 
@@ -85,7 +85,7 @@ object ThriftControllerFile {
   private[this] def addHelpers(svc: ExportService, file: ScalaFile, config: ExportConfiguration) = {
     file.add()
     file.add(s"""private[this] val listCall = ("${svc.className}", rc.list())""")
-    val cfg = s"""app.cfg(u = Some(request.identity), admin = ${svc.features(ServiceFeature.Auth)}, "thrift", "${svc.key}")"""
+    val cfg = s"""app.cfgAdmin(u = request.identity, "thrift", "${svc.key}")"""
 
     val args = "title: String, act: Call, args: Json"
     file.add(s"""private[this] def getHelper($args) = withSession(title, admin = true) { implicit request => implicit td =>""", 1)

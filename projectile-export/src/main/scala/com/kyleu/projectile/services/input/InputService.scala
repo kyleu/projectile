@@ -72,7 +72,7 @@ class InputService(val cfg: ConfigService) {
 
   def remove(key: String) = {
     (dir / key).delete(swallowIOExceptions = true)
-    ProjectileResponse.OK
+    ProjectileResponse.OK(s"Removed input [$key]")
   }
 
   def refresh(key: String) = load(key) match {

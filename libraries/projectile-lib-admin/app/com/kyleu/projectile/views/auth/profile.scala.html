@@ -1,0 +1,295 @@
+@(username: String, cfg: com.kyleu.projectile.models.config.UiConfig, errors: Seq[(String, String)])(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)
+
+@colors(key: String, title: String, inputClass: String, selected: Option[String]) = {
+  <div class="input-field col s12 @inputClass mb-0">
+    <p class="mt-0">@title</p>
+    <input id="@key" name="@key" type="hidden" value="@selected.getOrElse("")" />
+    <div class="gradient-color">
+      @com.kyleu.projectile.models.auth.ProfileData.gradientColors.map { c =>
+        @if(selected.contains(c)) {
+          <span class="@inputClass-option @c selected" data-color="@c"></span>
+        } else {
+          <span class="@inputClass-option @c" data-color="@c"></span>
+        }
+      }
+    </div>
+    <div class="solid-color">
+      @com.kyleu.projectile.models.auth.ProfileData.solidColors.map { c =>
+        @if(selected.contains(c)) {
+          <span class="@inputClass-option @c selected" data-color="@c"></span>
+        } else {
+          <span class="@inputClass-option @c" data-color="@c"></span>
+        }
+      }
+    </div>
+  </div>
+}
+
+@com.kyleu.projectile.views.html.layout.page("Settings", cfg) {
+  @errors.map { err =>
+    <div class="card-alert card gradient-45deg-red-pink">
+      <div class="card-content white-text">
+        <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err._1: @err._2</p>
+      </div>
+      <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  }
+  <form action="@cfg.urls.profile" method="post">
+    @com.kyleu.projectile.views.html.layout.card(title = Some("Username")) {
+      <div class="input-field">
+        <label for="username">Username</label>
+        <input name="username" type="text" value="@username" />
+      </div>
+    }
+    @com.kyleu.projectile.views.html.layout.card(title = Some("Theme (reload required)")) {
+      <div class="input-field">
+        <ul>
+        @com.kyleu.projectile.models.user.Theme.values.map { theme =>
+          <li>
+            <p>
+              <label>
+                @if(cfg.user.theme == theme.value) {
+                  <input name="theme" type="radio" value="@theme" checked="checked" />
+                } else {
+                  <input name="theme" type="radio" value="@theme" onclick="document.location.href = '?thm=@theme';" />
+                }
+              <span>@theme.title</span>
+              </label>
+            </p>
+          </li>
+        }
+        </ul>
+      </div>
+    }
+
+    @com.kyleu.projectile.views.html.layout.card(title = Some("Menu Options")) {
+      <div class="theme-cutomizer" style="width: initial;">
+        <div class="menu-options">
+          <div class="menu-options-form row">
+            @colors("menuColor", "Color", "menu-color", cfg.user.menuColor)
+            @colors("menuBackgroundColor", "Background Color", "menu-bg-color", cfg.user.menuBackgroundColor)
+            <div class="input-field col s12">
+              <div class="switch">
+                Dark
+                <label class="float-right">
+                  <input class="menu-dark-checkbox" type="checkbox" name="menuDark" value="true" @if(cfg.user.menuDark) { checked="checked" } /> <span class="lever ml-0"></span>
+                </label>
+              </div>
+            </div>
+            <div class="input-field col s12">
+              <div class="switch">
+                Collapsed
+                <label class="float-right">
+                  <input class="menu-collapsed-checkbox" type="checkbox" name="menuCollapsed" value="true" @if(cfg.user.menuCollapsed) { checked="checked" } /> <span class="lever ml-0"></span>
+                </label>
+              </div>
+            </div>
+            <div class="input-field col s12">
+              <div class="switch">
+                <p class="mt-0">Selection</p>
+                <label>
+                  <input class="menu-selection-radio with-gap" value="sidenav-active-square" name="menuSelection" @if(cfg.user.menuSelection.contains("sidenav-active-square")) { checked="checked" } type="radio" />
+                  <span>Square</span>
+                </label>
+                <label>
+                  <input class="menu-selection-radio with-gap" value="sidenav-active-rounded" name="menuSelection" @if(cfg.user.menuSelection.contains("sidenav-active-rounded")) { checked="checked" } type="radio" />
+                  <span>Rounded</span>
+                </label>
+                <label>
+                  <input class="menu-selection-radio with-gap" value="" name="menuSelection" @if(cfg.user.menuSelection.forall(_ == "")) { checked="checked" } type="radio" />
+                  <span>Normal</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @com.kyleu.projectile.views.html.layout.card(title = Some("Navbar Options")) {
+      <div class="theme-cutomizer" style="width: initial;">
+        <div class="navbar-options row">
+          @colors("navbarColor", "Color", "navbar-color", cfg.user.navbarColor)
+          <div class="input-field col s12">
+            <div class="switch">
+              Dark
+              <label class="float-right">
+                <input class="navbar-dark-checkbox" type="checkbox" name="navbarDark" value="true" @if(cfg.user.navbarDark) { checked="checked" } /> <span class="lever ml-0"></span>
+              </label>
+            </div>
+          </div>
+          <!--
+          <div class="input-field col s12">
+            <div class="switch">
+              Fixed
+              <label class="float-right">
+                <input class="navbar-fixed-checkbox" type="checkbox" checked="checked" /> <span class="lever ml-0"></span>
+              </label>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    }
+
+    @com.kyleu.projectile.views.html.layout.card(title = None) {
+      <button class="btn waves-effect waves-light" type="submit">Save</button>
+    }
+  </form>
+
+  <script>
+    var menuBgDefault = false;
+
+    $(document).ready(function() {
+      function removeColorClass(el) {
+        $(el).removeClass("gradient-45deg-indigo-blue gradient-45deg-purple-deep-orange gradient-45deg-light-blue-cyan gradient-45deg-purple-amber gradient-45deg-purple-deep-purple gradient-45deg-deep-orange-orange gradient-45deg-green-teal gradient-45deg-indigo-light-blue gradient-45deg-red-pink red purple pink deep-purple cyan teal light-blue amber darken-3 brown darken-2 gradient-45deg-indigo-purple gradient-45deg-deep-purple-blue");
+      }
+
+      var b = $("body");
+      if(b.hasClass("vertical-modern-menu") || b.hasClass("vertical-menu-nav-dark")) {
+        $(".menu-bg-color").hide();
+        $("#menuBackgroundColor").val("");
+      } else if(b.hasClass("vertical-gradient-menu") || b.hasClass("vertical-dark-menu")) {
+        $(".menu-color").hide();
+        $("#menuColor").val("");
+        menuBgDefault = true;
+      } else if(b.hasClass("horizontal-menu")) {
+        $(".menu-options").hide();
+      }
+
+      // Menu Options
+      $(".menu-color-option, .menu-bg-color-option").click(function() {
+        $(".menu-color .menu-color-option, .menu-bg-color .menu-bg-color-option").removeClass("selected");
+        $(this).addClass("selected");
+        var menu_color = $(this).attr("data-color");
+        if(menuBgDefault) {
+          menuDark(true);
+          menuBGColor(menu_color);
+        } else {
+          menuColor(menu_color);
+        }
+      });
+
+
+      var menuDarkCheckbox = $(".menu-dark-checkbox");
+      menuDarkCheckbox.click(function() {
+        if(menuDarkCheckbox.prop("checked")) {
+          menuDark(true);
+        } else {
+          menuDark(false);
+        }
+      });
+
+      $(".menu-selection-radio").click(function() {
+        var menu_selection = $(this).val();
+        menuSelection(menu_selection);
+      });
+
+      $(".menu-collapsed-checkbox").click(function() {
+        if($(".menu-collapsed-checkbox").prop("checked")) {
+          menuCollapsed(true);
+        } else {
+          menuCollapsed(false);
+        }
+      });
+
+      function menuColor(menu_color) {
+        removeColorClass(".sidenav-main .sidenav li a.active");
+        $("#menuColor").val(menu_color);
+        $(".sidenav-main .sidenav li a.active").css({ background: "none" }).addClass(menu_color + " gradient-shadow");
+      }
+
+      function menuBGColor(menu_color) {
+        removeColorClass(".sidenav-main");
+        $("#menuBackgroundColor").val(menu_color);
+        $(".sidenav-main").addClass(menu_color + " sidenav-gradient");
+      }
+
+      function menuDark(isDark) {
+        $(".menu-bg-color .menu-bg-color-option").removeClass("selected");
+        $("#menuBackgroundColor").val("");
+        removeColorClass(".sidenav-main");
+        if(isDark) {
+          menuDarkCheckbox.prop("checked", true);
+          $(".sidenav-main").removeClass("sidenav-light").addClass("sidenav-dark");
+        } else {
+          menuDarkCheckbox.prop("checked", false);
+          $(".sidenav-main").addClass("sidenav-light").removeClass("sidenav-dark");
+        }
+      }
+
+      function menuCollapsed(isCollapsed) {
+        if(isCollapsed) {
+          $(".sidenav-main").removeClass("nav-lock");
+          $(".navbar-main.nav-collapsible").removeClass("sideNav-lock").addClass("nav-expanded");
+          $(".navbar-toggler i").html("radio_button_unchecked");
+          $("#main").addClass("main-full");
+          $(".sidenav-main.nav-collapsible, .navbar .brand-sidebar").trigger("mouseleave");
+        } else {
+          $(".sidenav-main").addClass("nav-lock").removeClass("nav-collapsed");
+          $(".navbar-main.nav-collapsible").addClass("sideNav-lock").removeClass("nav-collapsed");
+          $(".navbar-toggler i").html("radio_button_checked");
+          $("#main").removeClass("main-full");
+          $(".sidenav-main.nav-collapsible, .navbar .brand-sidebar").trigger("mouseenter");
+        }
+      }
+
+      function menuSelection(menu_selection) {
+        $(".sidenav-main").removeClass("sidenav-active-square sidenav-active-rounded").addClass(menu_selection);
+      }
+
+      // Navbar Options
+      $(".navbar-color-option").click(function() {
+        $(".navbar-color .navbar-color-option").removeClass("selected");
+        $(this).addClass("selected");
+        var navbar_color = $(this).attr("data-color");
+        navbarColor(navbar_color);
+      });
+
+      var navbarDarkCheckbox = $(".navbar-dark-checkbox");
+      navbarDarkCheckbox.click(function() {
+        if(navbarDarkCheckbox.prop("checked")) {
+          navbarDark(true);
+        } else {
+          navbarDark(false);
+        }
+      });
+
+      $(".navbar-fixed-checkbox").click(function() {
+        if($(".navbar-fixed-checkbox").prop("checked")) {
+          $("#header .navbar").addClass("navbar-fixed");
+        } else {
+          $("#header .navbar").removeClass("navbar-fixed");
+        }
+      });
+
+      function navbarDark(isDark) {
+        $(".navbar-color .navbar-color-option").removeClass("selected");
+        $("#navbarColor").val("");
+        removeColorClass(".navbar-main");
+        if(isDark) {
+          navbarDarkCheckbox.prop("checked", true);
+          $(".navbar-main").removeClass("navbar-light").addClass("navbar-dark");
+        } else {
+          navbarDarkCheckbox.prop("checked", false);
+          $(".navbar-main").addClass("navbar-light").removeClass("navbar-dark");
+        }
+      }
+
+      function navbarColor(navbar_color) {
+        removeColorClass(".navbar-main");
+        $("#navbarColor").val(navbar_color);
+        $(".navbar-main").addClass(navbar_color);
+        if(b.hasClass("vertical-modern-menu")) {
+          removeColorClass(".content-wrapper-before");
+          $(".content-wrapper-before").addClass(navbar_color);
+        }
+      }
+    });
+  </script>
+
+}

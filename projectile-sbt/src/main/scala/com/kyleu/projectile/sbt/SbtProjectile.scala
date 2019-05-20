@@ -17,6 +17,7 @@ object SbtProjectile extends AutoPlugin {
     val projectileCodegen = taskKey[Unit](
       "Runs Projectile, refreshing the generated files in your project"
     )
+    val projectileVersion = com.kyleu.projectile.util.Version.version
   }
 
   override lazy val projectSettings = Seq(

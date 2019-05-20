@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.config
 case class NavUrls(
     home: String = "/",
 
-    search: String = "/admin/system/search",
+    search: String = "/admin/search",
 
     profile: String = "/profile",
     signup: String = "/profile/signup",

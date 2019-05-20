@@ -1,6 +1,7 @@
 package com.kyleu.projectile.services.database
 
 import com.kyleu.projectile.models.database.{DatabaseConfig, RawQuery, Statement}
+import com.kyleu.projectile.models.queries.CommonQueries
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 
@@ -21,16 +22,22 @@ trait Database[Conn] extends Logging {
 
   private[this] var tracingServiceOpt: Option[TracingService] = None
   protected def tracing = tracingServiceOpt.getOrElse {
-    throw new IllegalStateException("Tracing service not configured. Did you forget to call \"open\"?")
+    // throw new IllegalStateException("Tracing service not configured. Did you forget to call \"open\"?")
+    TracingService.noop
   }
 
   private[this] var config: Option[DatabaseConfig] = None
   def getConfig = config.getOrElse(throw new IllegalStateException("Database not open"))
 
+  private[this] var started: Boolean = false
+  def isStarted = started
   protected[this] def start(cfg: DatabaseConfig, svc: TracingService) = {
     tracingServiceOpt = Some(svc)
     config = Some(cfg)
+    started = true
   }
+
+  def doesTableExist(name: String): Boolean = (!isStarted) || query(CommonQueries.DoesTableExist(name))(TraceData.noop)
 
   protected[this] def prependComment(obj: Object, sql: String) = s"/* ${obj.getClass.getSimpleName.replace("$", "")} */ $sql"
 

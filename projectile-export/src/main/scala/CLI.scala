@@ -1,9 +1,8 @@
 import com.kyleu.projectile.ProjectileCLI
 import com.kyleu.projectile.models.cli.CommandLineOutput
-import com.kyleu.projectile.util.tracing.TraceData
-import com.kyleu.projectile.util.{Logging, Version}
+import com.kyleu.projectile.util.Version
 
-object CLI extends Logging {
+object CLI {
   def main(args: Array[String]): Unit = {
     val startMs = System.currentTimeMillis
     val result = if (args.headOption.contains("batch")) {
@@ -11,7 +10,7 @@ object CLI extends Logging {
     } else {
       ProjectileCLI.runArgs(args).toSeq
     }
-    log.info(s"${Version.projectName} completed successfully in [${System.currentTimeMillis - startMs}ms]")(TraceData.noop)
+    println(s"${Version.projectName} ${Version.version} completed successfully in [${System.currentTimeMillis - startMs}ms]")
     result.foreach(CommandLineOutput.logResponse)
   }
 }

@@ -7,15 +7,13 @@ import com.kyleu.projectile.models.output.OutputWriteResult
 import com.kyleu.projectile.models.project.audit.AuditResult
 import com.kyleu.projectile.models.project.codegen.CodegenResult
 import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSummary}
-import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.JacksonUtils.printJackson
-import com.kyleu.projectile.util.tracing.TraceData
 
-object CommandLineOutput extends Logging {
-  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => log.info(s)(TraceData.noop))
+object CommandLineOutput {
+  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => println(s))
 
   def logsFor(r: ProjectileResponse): Seq[String] = r match {
-    case OK => Seq("Success: OK")
+    case OK(msg) => Seq(s"Success: $msg")
     case Error(msg) => Seq(s"Error: $msg")
     case JsonResponse(json) => Seq(printJackson(json))
 

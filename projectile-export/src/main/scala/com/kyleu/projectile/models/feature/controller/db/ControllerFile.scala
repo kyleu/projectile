@@ -95,7 +95,7 @@ object ControllerFile {
     val redirArgs = model.pkFields.map(f => "model." + f.propertyName).mkString(", ")
     file.add(s"case model :: Nil => Redirect($routesClass.view($redirArgs))")
 
-    val cfgArg = s"""app.cfg(u = Some(request.identity), admin = ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}")"""
+    val cfgArg = s"""app.cfgAdmin(u = request.identity, "${model.firstPackage}", "${model.key}")"""
     val args = s"$cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)"
     file.add(s"case _ => Ok($viewHtmlPackage.${model.propertyName}List($args))")
 
@@ -116,7 +116,7 @@ object ControllerFile {
     file.add(s"val cancel = $routesClass.list()")
     file.add(s"val call = $routesClass.create()")
     file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "Create")"""
+    val cfgArg = s"""app.cfgAdmin(u = request.identity, "${model.firstPackage}", "${model.key}", "Create")"""
     file.add(s"""$cfgArg, ${model.className}.empty(), "New ${model.title}", cancel, call, isNew = true, debug = app.config.debug""")
     file.add(")))", -1)
     file.add("}", -1)

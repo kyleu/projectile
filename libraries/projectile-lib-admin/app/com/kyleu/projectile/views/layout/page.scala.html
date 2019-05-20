@@ -1,57 +1,36 @@
 @(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.core(
-  title = title,
-  scripts = Seq(
-    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.js"),
-    com.kyleu.projectile.controllers.Assets.path("vendor/plugins.min.js")
-  ) ++ scripts,
-  stylesheets = Seq(
-    "/assets/lib/material-design-icons/material-icons.css",
-    com.kyleu.projectile.controllers.Assets.path(s"vendor/theme/${cfg.user.theme}/materialize.css"),
-    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.css"),
-    com.kyleu.projectile.controllers.Assets.path(s"vendor/theme/${cfg.user.theme}/style.css"),
-    com.kyleu.projectile.controllers.Assets.path(s"stylesheets/components.css")
-  ) ++ stylesheets
-) {
+)@com.kyleu.projectile.views.html.layout.fullscreen(title = title, cfg = cfg) {
   @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
-  <body class="@theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
-    @com.kyleu.projectile.views.html.layout.pageHeader(cfg, theme)
-    @com.kyleu.projectile.views.html.layout.pageNav(cfg, theme)
-    <div id="main">
-      <div class="row">
-        @theme.contentBefore.map { cb =>
-          <div class="content-wrapper-before @cb"></div>
-        }
-        @com.kyleu.projectile.views.html.layout.breadcrumbs(title, cfg)
-        @flash.get("error").map { err =>
-          <div class="card-alert card gradient-45deg-red-pink">
-            <div class="card-content white-text">
-              <p>
-                <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
-            </div>
-            <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
+    <div class="row">
+      @theme.contentBefore.map { cb => <div class="content-wrapper-before @cfg.user.navbarColor"></div> }
+      @com.kyleu.projectile.views.html.layout.breadcrumbs(title, cfg)
+      @flash.get("error").map { err =>
+        <div class="card-alert card gradient-45deg-red-pink">
+          <div class="card-content white-text">
+            <p>
+              <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
           </div>
-        }
-        @flash.get("success").map { success =>
-          <div class="card-alert card gradient-45deg-green-teal">
-            <div class="card-content white-text">
-              <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
-            </div>
-            <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
+          <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      }
+      @flash.get("success").map { success =>
+        <div class="card-alert card gradient-45deg-green-teal">
+          <div class="card-content white-text">
+            <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
           </div>
-        }
-        <div class="col s12">
-          <div class="container">
-            @content
-          </div>
+          <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      }
+      <div class="col s12">
+        <div class="container">
+          @content
         </div>
       </div>
     </div>
-  </body>
   }
 }

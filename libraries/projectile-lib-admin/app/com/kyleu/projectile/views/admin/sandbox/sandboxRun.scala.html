@@ -1,4 +1,4 @@
-@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, result: com.kyleu.projectile.models.sandbox.SandboxTask.Result)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, result: com.kyleu.projectile.models.sandbox.SandboxTask.Result)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = s"${result.task.name} Result", cfg = cfg) {
   <div class="row">
@@ -20,4 +20,6 @@
       </div>
     </div>
   </div>
+
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(result, request.queryString)
 }

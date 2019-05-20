@@ -2676,9 +2676,9 @@
 */
 .vertical-dark-menu .app-page #main
 {
-    min-height: -webkit-calc(100% - 116px);
-    min-height:    -moz-calc(100% - 116px);
-    min-height:         calc(100% - 116px);
+    min-height: -webkit-calc(100% - 64px);
+    min-height:    -moz-calc(100% - 64px);
+    min-height:         calc(100% - 64px);
 }
 
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */

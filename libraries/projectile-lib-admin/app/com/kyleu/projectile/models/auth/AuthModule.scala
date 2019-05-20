@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.auth
 
 import com.google.inject.{AbstractModule, Provides}
-import com.kyleu.projectile.models.Configuration
+import com.kyleu.projectile.models.config.Configuration
 import com.kyleu.projectile.services.user.{OAuth2InfoService, PasswordInfoService, SystemUserSearchService}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder, Signer}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
@@ -20,6 +20,7 @@ import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepo
 import net.codingwell.scalaguice.ScalaModule
 import play.api.libs.ws.WSClient
 import play.api.mvc.DefaultCookieHeaderEncoding
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuthModule extends AbstractModule with ScalaModule {

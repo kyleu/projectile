@@ -33,6 +33,7 @@ lazy val `projectile-export` = ProjectileExport.`projectile-export`
 
 // SBT Plugin
 lazy val `projectile-sbt` = SbtExportPlugin.`projectile-sbt`
+lazy val `projectile-sbt-admin` = SbtExportPlugin.`projectile-sbt-admin`
 
 // Play Web Application
 lazy val `projectile-server` = Server.`projectile-server`

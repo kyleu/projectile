@@ -1,7 +1,6 @@
 package com.kyleu.projectile.controllers.admin.user
 
 import com.kyleu.projectile.controllers.{ServiceAuthController, ServiceController}
-import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.note.NoteService
@@ -9,8 +8,11 @@ import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.models.web.ReftreeUtils._
 import java.util.UUID
+
+import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
 import com.kyleu.projectile.models.user.{SystemUser, SystemUserResult}
 import play.api.http.MimeTypes
+
 import scala.concurrent.{ExecutionContext, Future}
 import com.kyleu.projectile.services.user.SystemUserService
 
@@ -18,11 +20,13 @@ import com.kyleu.projectile.services.user.SystemUserService
 class SystemUserController @javax.inject.Inject() (
     override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
+  ApplicationFeatures.enable("user")
+  if (!app.db.doesTableExist("system_user")) { app.addError("table.system_user", "Missing [system_user] table") }
 
   def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.list()
     val call = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.create()
-    val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user", "Create")
+    val cfg = app.cfgAdmin(u = request.identity, "system", "models", "user", "Create")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.user.systemUserForm(
       cfg, SystemUser.empty(), "New System User", cancel, call, isNew = true, debug = app.config.debug
     )))
@@ -43,7 +47,7 @@ class SystemUserController @javax.inject.Inject() (
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil => Redirect(com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id))
           case _ =>
-            val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user")
+            val cfg = app.cfgAdmin(u = request.identity, "system", "models", "user")
             Ok(com.kyleu.projectile.views.html.admin.user.systemUserList(cfg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
         }
         case MimeTypes.JSON => Ok(SystemUserResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -69,7 +73,7 @@ class SystemUserController @javax.inject.Inject() (
     notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
       case Some(model) => renderChoice(t) {
         case MimeTypes.HTML =>
-          val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user", model.id.toString)
+          val cfg = app.cfgAdmin(u = request.identity, "system", "models", "user", model.id.toString)
           Ok(com.kyleu.projectile.views.html.admin.user.systemUserView(cfg, model, notes, audits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
         case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)
@@ -84,7 +88,7 @@ class SystemUserController @javax.inject.Inject() (
     val call = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.edit(id)
     svc.getByPrimaryKey(request, id).map {
       case Some(model) =>
-        val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "user", "Edit")
+        val cfg = app.cfgAdmin(u = request.identity, "system", "models", "user", "Edit")
         Ok(com.kyleu.projectile.views.html.admin.user.systemUserForm(cfg, model, s"System User [$id]", cancel, call, debug = app.config.debug))
       case None => NotFound(s"No SystemUser found with id [$id]")
     }

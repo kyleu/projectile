@@ -1,7 +1,9 @@
-@(name: String, avatarUrl: String, notifications: Seq[com.kyleu.projectile.models.config.Notification])
+@(name: String, avatarUrl: String, notifications: Seq[com.kyleu.projectile.models.notification.Notification])
 <ul class="navbar-list right">
   <li class="hide-on-med-and-down"><a class="waves-effect waves-block waves-light toggle-fullscreen" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.fullscreen</i></a></li>
-  <li class="hide-on-large-only"><a class="waves-effect waves-block waves-light search-button" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i></a></li>
+  @if(com.kyleu.projectile.models.module.ApplicationFeatures.enabled("search")) {
+    <li class="hide-on-large-only"><a class="waves-effect waves-block waves-light search-button" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i></a></li>
+  }
   @if(notifications.nonEmpty) {
     <li><a class="waves-effect waves-block waves-light notification-button" href="" onclick="return false;" data-target="notifications-dropdown">
       <small class="notification-badge" style="right: -22px;">@notifications.size</small>

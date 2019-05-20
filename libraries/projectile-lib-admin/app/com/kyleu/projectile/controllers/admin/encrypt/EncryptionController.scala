@@ -1,7 +1,7 @@
 package com.kyleu.projectile.controllers.admin.encrypt
 
 import com.kyleu.projectile.controllers.AuthController
-import com.kyleu.projectile.models.Application
+import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
 import com.kyleu.projectile.models.web.ControllerUtils
 import com.kyleu.projectile.util.EncryptionUtils
 
@@ -9,9 +9,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class EncryptionController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("encryption") {
+  ApplicationFeatures.enable("encryption")
+
   def form = withSession("list", admin = true) { implicit request => implicit td =>
-    val cfg = app.cfg(Some(request.identity), admin = true, "system", "encryption")
-    Future.successful(Ok(com.kyleu.projectile.views.html.admin.encrypt.encryption(request.identity, cfg)))
+    val cfg = app.cfgAdmin(u = request.identity, "system", "tools", "encryption")
+    Future.successful(Ok(com.kyleu.projectile.views.html.admin.encrypt.encryption(cfg)))
   }
 
   def post() = withSession("list", admin = true) { implicit request => implicit td =>
@@ -27,7 +29,7 @@ class EncryptionController @javax.inject.Inject() (override val app: Application
       case _ => throw new IllegalStateException("Must provide [action] value of \"encrypt\" or \"decrypt\".")
     }
 
-    val cfg = app.cfg(Some(request.identity), admin = true, "system", "encryption")
-    Future.successful(Ok(com.kyleu.projectile.views.html.admin.encrypt.encryption(request.identity, cfg, unenc, enc)))
+    val cfg = app.cfgAdmin(u = request.identity, "system", "tools", "encryption")
+    Future.successful(Ok(com.kyleu.projectile.views.html.admin.encrypt.encryption(cfg, unenc, enc)))
   }
 }

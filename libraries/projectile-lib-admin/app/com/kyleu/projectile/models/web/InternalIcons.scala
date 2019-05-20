@@ -2,13 +2,18 @@ package com.kyleu.projectile.models.web
 
 object InternalIcons {
   val default = "radio_button_unchecked"
-  val status = "more_horiz"
 
   val audit = "storage"
   val auditRecord = "memory"
   val note = "folder_open"
   val systemUser = "account_circle"
+  val scheduledTaskRun = "event"
 
+  val tools = "code"
+  val models = "explore"
+
+  val status = "more_horiz"
+  val process = "track_changes"
   val encryption = "enhanced_encryption"
   val sandbox = "widgets"
 
@@ -31,7 +36,8 @@ object InternalIcons {
   val email = "mail_outline"
   val password = "lock_outline"
 
-  val navbar = "radio_button_checked"
+  val navbarOpen = "radio_button_checked"
+  val navbarClosed = "radio_button_unchecked"
   val section = "more_horiz"
   val search = "search"
   val notifications = "notifications_none"

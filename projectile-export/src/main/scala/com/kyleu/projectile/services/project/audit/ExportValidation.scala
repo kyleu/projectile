@@ -6,6 +6,10 @@ import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.services.ProjectileService
 
 object ExportValidation {
+  private[this] val magicWord = "Generated File"
+  val badBoys = Set("target", "public", ".idea", ".git", "charts", "logs", "node_modules")
+  val extensions = Set("conf", "graphql", "html", "json", "md", "routes", "sbt", "scala", "thrift", "txt").map("." + _)
+
   def validate(svc: ProjectileService, results: Seq[ProjectOutput]) = {
     val withConfig = results.map(r => r -> svc.configForProject(r.project.key))
 
@@ -25,10 +29,6 @@ object ExportValidation {
 
     files.flatMap(f => if (out.contains(f._1)) { None } else { Some(f._2 -> "Untracked") })
   }
-
-  private[this] val magicWord = "Generated File"
-  private[this] val badBoys = Set("target", "public", ".idea", ".git", "project", "charts", "node_modules")
-  private[this] val extensions = Set("graphql", "html", "json", "md", "routes", "scala", "thrift", "txt").map("." + _)
 
   private[this] def getGeneratedFiles(f: File): Seq[File] = {
     if (!f.isDirectory) { throw new IllegalStateException(s"[$f] is not a directory") }

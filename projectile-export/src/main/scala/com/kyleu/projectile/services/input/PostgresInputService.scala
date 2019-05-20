@@ -28,18 +28,28 @@ object PostgresInputService {
     if (pgi.enumTypes.nonEmpty) {
       val enumDir = dir / "enum"
       enumDir.createDirectories()
+      enumDir.list.map(_.name).filter(_.endsWith(".json")).map(_.stripSuffix(".json")).filterNot(n => pgi.enumTypes.exists(_.key == n)).foreach { n =>
+        (enumDir / s"$n.json").delete(swallowIOExceptions = true)
+      }
+
       pgi.enumTypes.foreach(e => (enumDir / s"${e.key}.json").overwrite(JacksonUtils.printJackson(e.asJson)))
     }
 
     if (pgi.tables.nonEmpty) {
       val tableDir = dir / "table"
       tableDir.createDirectories()
+      tableDir.list.map(_.name).filter(_.endsWith(".json")).map(_.stripSuffix(".json")).filterNot(n => pgi.tables.exists(_.name == n)).foreach { n =>
+        (tableDir / s"$n.json").delete(swallowIOExceptions = true)
+      }
       pgi.tables.foreach(t => (tableDir / s"${t.name}.json").overwrite(JacksonUtils.printJackson(t.asJson)))
     }
 
     if (pgi.views.nonEmpty) {
       val viewDir = dir / "view"
       viewDir.createDirectories()
+      viewDir.list.map(_.name).filter(_.endsWith(".json")).map(_.stripSuffix(".json")).filterNot(n => pgi.views.exists(_.name == n)).foreach { n =>
+        (viewDir / s"$n.json").delete(swallowIOExceptions = true)
+      }
       pgi.views.foreach(v => (viewDir / s"${v.name}.json").overwrite(JacksonUtils.printJackson(v.asJson)))
     }
 

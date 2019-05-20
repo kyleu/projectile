@@ -35,7 +35,7 @@ object EnumControllerFile {
     file.add("Future.successful(render {", 1)
     file.add(s"case Accepts.Html() => Ok(${prefix}views.html.admin.layout.listPage(", 1)
     file.add(s"""title = "${enum.className}",""")
-    file.add(s"""cfg = app.cfg(u = Some(request.identity), admin = ${enum.features(EnumFeature.Auth)}, "${enum.firstPackage}", "${enum.key}"),""")
+    file.add(s"""cfg = app.cfgAdmin(u = request.identity, "${enum.firstPackage}", "${enum.key}"),""")
     file.add(s"vals = ${enum.className}.values.map(v => Html(v.toString))")
     file.add("))", -1)
     file.add(s"""case Accepts.Json() => Ok(${enum.className}.values.asJson)""")

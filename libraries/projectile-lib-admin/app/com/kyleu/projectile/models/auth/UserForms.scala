@@ -13,13 +13,21 @@ object UserForms {
   val registrationForm = Form(mapping(
     "username" -> nonEmptyText,
     "email" -> nonEmptyText,
-    "password" -> nonEmptyText,
-    "passwordConfirm" -> nonEmptyText
+    "password" -> nonEmptyText
   )(RegistrationData.apply)(RegistrationData.unapply))
 
   val profileForm = Form(mapping(
     "username" -> nonEmptyText,
-    "theme" -> nonEmptyText
+    "theme" -> nonEmptyText,
+
+    "menuColor" -> text,
+    "menuBackgroundColor" -> text,
+    "menuDark" -> optional(text),
+    "menuCollapsed" -> optional(text),
+    "menuSelection" -> text,
+
+    "navbarColor" -> text,
+    "navbarDark" -> optional(text)
   )(ProfileData.apply)(ProfileData.unapply))
 
   final case class PasswordChange(oldPassword: String, newPassword: String, confirm: String)

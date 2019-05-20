@@ -1,16 +1,26 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, theme: com.kyleu.projectile.models.user.Theme)
-<aside class="sidenav-main nav-expanded nav-lock nav-collapsible @theme.asideClass">
-  <div class="brand-sidebar">
-    <h1 class="logo-wrapper">
-      <a class="brand-logo darken-1" href="@cfg.urls.home">
-        <img src="@theme.logo" alt="logo"/>
-        <span class="logo-text hide-on-med-and-down">@cfg.projectName</span>
-      </a>
-      <a class="navbar-toggler" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.navbar</i></a></h1>
-  </div>
 
-  <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion">
-    @cfg.menu.map(x => com.kyleu.projectile.views.html.layout.pageNavItem(x, cfg.breadcrumbs))
-  </ul>
-  <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="" onclick="return false;" data-target="slide-out"><i class="material-icons">menu</i></a>
-</aside>
+@defining(if(cfg.user.menuCollapsed) { "nav-expanded " } else { "nav-expanded nav-lock" }) { collapse =>
+  <aside class="sidenav-main @collapse nav-collapsible @cfg.user.menuDarkClass @theme.asideClass @cfg.user.menuBackgroundColor.map(_ + " sidenav-gradient").getOrElse("") @cfg.user.menuSelection.getOrElse("")">
+    <div class="brand-sidebar">
+      <h1 class="logo-wrapper">
+        <a class="brand-logo darken-1" href="@cfg.urls.home">
+          <img id="app-logo" src="@cfg.user.logo" alt="logo"/>
+          <span class="logo-text hide-on-med-and-down">@cfg.projectName</span>
+        </a>
+        <a class="navbar-toggler" href="" onclick="return false;">
+          @if(cfg.user.menuCollapsed) {
+            <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.navbarClosed</i>
+          } else {
+            <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.navbarOpen</i>
+          }
+        </a>
+      </h1>
+    </div>
+
+    <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion">
+      @cfg.menu.map(x => com.kyleu.projectile.views.html.layout.pageNavItem(x, cfg.breadcrumbs, cfg.user.menuColor))
+    </ul>
+    <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="" onclick="return false;" data-target="slide-out"><i class="material-icons">menu</i></a>
+  </aside>
+}

@@ -1,4 +1,4 @@
-@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, status: com.kyleu.projectile.controllers.admin.status.AppStatus)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, status: com.kyleu.projectile.models.status.AppStatus)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(cfg.projectName + " Status", cfg) {
   <ul class="collection with-header">

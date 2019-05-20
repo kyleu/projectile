@@ -106,14 +106,26 @@ object Dependencies {
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialIcons = "org.webjars" % "material-design-icons" % "3.0.1"
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.22.0" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.22.1" intransitive()
 
     val all = Seq(autocomplete, jquery, materialIcons, materialize, swaggerUi)
+  }
+  
+  object Logging {
+    val logback = "ch.qos.logback" % "logback-core" % "1.2.3"
+    val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
+    
+    val all = Seq(logback, logbackClassic, slf4j)
   }
 
   object Utils {
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.2.5"
+
+    val logback = "ch.qos.logback" % "logback-core" % "1.2.3"
+    val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1" // Do not change
     val chimney = "io.scalaland" %% "chimney" % "0.3.1"
@@ -127,10 +139,8 @@ object Dependencies {
     val guava = "com.google.guava" % "guava" % "27.1-jre"
     val guice = "com.google.inject" % "guice" % "4.2.2"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
-    val logging = "org.slf4j" % "slf4j-api" % "1.7.26"
     val reftree = "io.github.stanch" %% "reftree" % "1.3.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.3"
-    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.4"
   }

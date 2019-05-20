@@ -21,6 +21,6 @@ object ProjectStatusService {
   }
 
   private[this] def buildExample(p: Project, tgt: String) = {
-    ProjectExampleService.extract(tgt, File(p.getPath(OutputPath.Root)), p.key).map(x => x._1 + ": " + x._2).mkString("\n").take(1024)
+    ProjectExampleService.extract(tgt, File(p.getPath(OutputPath.Root)), p.key)
   }
 }

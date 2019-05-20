@@ -4,6 +4,9 @@
   <h6>500 Internal Server Error</h6>
   <p>An error has occurred, and has been logged. We're very sorry.</p>
   @ex.map { x =>
+    @if(x.isInstanceOf[IllegalStateException]) {
+      <p>@x.getMessage</p>
+    }
     <!--
 @com.kyleu.projectile.util.ExceptionUtils.print(x)
     -->

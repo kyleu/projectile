@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.cli
 
-import enumeratum.{CirceEnum, Enum, EnumEntry}
+import enumeratum.{Enum, EnumEntry}
 import com.kyleu.projectile.models.command.ProjectileCommand
 import com.kyleu.projectile.models.input.InputSummary
 import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
@@ -15,13 +15,7 @@ sealed trait CommandLineAction extends EnumEntry { this: Command =>
   def toCommand: ProjectileCommand
 }
 
-object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandLineAction] {
-  private[this] def keys = ProjectExampleService.projects.map(_.key).sorted.mkString(", ")
-
-  object Doctor extends Command(name = "doctor", description = "Validates the app configuration, if present") with CommandLineAction {
-    override def toCommand = ProjectileCommand.Doctor
-  }
-
+object CommandLineAction extends Enum[CommandLineAction] {
   object Init extends Command(name = "init", description = "Creates the config directory and required files, if missing") with CommandLineAction {
     override def toCommand = ProjectileCommand.Init
   }
@@ -60,10 +54,12 @@ object CommandLineAction extends Enum[CommandLineAction] with CirceEnum[CommandL
   }
 
   // Examples
-  object ExampleCreate extends Command(name = "example-create", description = s"Creates a new project from one of [$keys]") with CommandLineAction {
+  private[this] val newMsg = s"Creates a new project from a template, one of [${ProjectExampleService.projects.map(_.key).mkString(", ")}]"
+  object New extends Command(name = "new", description = newMsg) with CommandLineAction {
     var key = arg[String]()
-    var outdir = arg[String]()
-    override def toCommand = ProjectileCommand.CreateExample(key, outdir)
+    var template = arg[String]()
+    var force = opt[Option[Boolean]](description = "When set, overwrites files")
+    override def toCommand = ProjectileCommand.CreateExample(key, template, force.getOrElse(false))
   }
 
   // Projects

@@ -1,6 +1,7 @@
 # GraphQL
-GET         /                     com.kyleu.projectile.controllers.graphql.GraphQLController.graphql(query: Option[String] ?= None, variables: Option[String] ?= None)
-POST        /                     com.kyleu.projectile.controllers.graphql.GraphQLController.graphqlBody
+GET         /                     com.kyleu.projectile.controllers.admin.graphql.GraphQLController.iframe()
+GET         /ide                  com.kyleu.projectile.controllers.admin.graphql.GraphQLController.graphql(query: Option[String] ?= None, variables: Option[String] ?= None)
+POST        /                     com.kyleu.projectile.controllers.admin.graphql.GraphQLController.graphqlBody
 
-GET         /schema               com.kyleu.projectile.controllers.graphql.SchemaController.renderSchema()
-GET         /voyager/:root        com.kyleu.projectile.controllers.graphql.SchemaController.voyager(root)
+GET         /schema               com.kyleu.projectile.controllers.admin.graphql.SchemaController.renderSchema()
+GET         /voyager/:root        com.kyleu.projectile.controllers.admin.graphql.SchemaController.voyager(root)

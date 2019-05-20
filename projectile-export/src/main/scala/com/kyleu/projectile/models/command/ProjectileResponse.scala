@@ -11,7 +11,7 @@ import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSumma
 sealed trait ProjectileResponse extends EnumEntry
 
 object ProjectileResponse extends Enum[ProjectileResponse] {
-  case object OK extends ProjectileResponse
+  case class OK(msg: String) extends ProjectileResponse
   case class Error(msg: String) extends ProjectileResponse
   case class JsonResponse(json: Json) extends ProjectileResponse
 

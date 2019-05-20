@@ -59,7 +59,7 @@ object ControllerHelper {
     file.add(s"svc.getByPrimaryKey(request, $getArgs).map {", 1)
     file.add("case Some(model) => Ok(", 1)
 
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "Edit")"""
+    val cfgArg = s"""app.cfgAdmin(request.identity, "${model.firstPackage}", "${model.key}", "Edit")"""
     val extraArgs = "cancel, call, debug = app.config.debug"
     file.add(s"""$viewPkg.${model.propertyName}Form($cfgArg, model, s"${model.title} [$logArgs]", $extraArgs)""")
     file.add(")", -1)
@@ -92,7 +92,7 @@ object ControllerHelper {
       case Nil => ", \"Detail\""
       case _ => ", s\"" + model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ") + "\""
     }
-    val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}"$keyString)"""
+    val cfgArg = s"""app.cfgAdmin(u = request.identity, "${model.firstPackage}", "${model.key}"$keyString)"""
     val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
     s"Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))"
   }

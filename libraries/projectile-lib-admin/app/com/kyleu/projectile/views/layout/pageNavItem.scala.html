@@ -1,4 +1,5 @@
-@(i: com.kyleu.projectile.models.config.NavMenu, breadcrumbs: Seq[com.kyleu.projectile.models.config.BreadcrumbEntry], act: Boolean = true)
+@import com.kyleu.projectile.models.menu.NavMenu
+@(i: NavMenu, breadcrumbs: Seq[com.kyleu.projectile.models.config.BreadcrumbEntry], menuColor: Option[String], act: Boolean = true)
 @defining(act && breadcrumbs.headOption.exists(_.key == i.key)) { active =>
   @if(i.flatSection) {
     <li id="nav-@i.key" class="navigation-header">
@@ -6,12 +7,12 @@
       <i class="navigation-header-icon material-icons">@com.kyleu.projectile.models.web.InternalIcons.section</i>
     </li>
     @i.children.map { child =>
-      @com.kyleu.projectile.views.html.layout.pageNavItem(child, breadcrumbs.drop(1), active)
+      @com.kyleu.projectile.views.html.layout.pageNavItem(child, breadcrumbs.drop(1), menuColor, active)
     }
   } else {
     @if(i.children.isEmpty) {
       <li id="nav-@i.key" class="bold@if(active) { active}">
-        <a class="waves-effect waves-cyan@if(active) { active}" href="@i.url">
+        <a class="waves-effect waves-cyan@if(active) { @menuColor active}" href="@i.url">
           <i class="material-icons">@i.icon.getOrElse(com.kyleu.projectile.models.web.InternalIcons.default)</i>
           <span class="menu-title">@i.title</span>
         </a>
@@ -25,7 +26,7 @@
         <div class="collapsible-body">
           <ul class="collapsible collapsible-sub" data-collapsible="accordion">
           @i.children.map { child =>
-            @com.kyleu.projectile.views.html.layout.pageNavItem(child, breadcrumbs.drop(1), active)
+            @com.kyleu.projectile.views.html.layout.pageNavItem(child, breadcrumbs.drop(1), menuColor, active)
           }
           </ul>
         </div>

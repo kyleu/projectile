@@ -17,9 +17,8 @@ object LibraryProjects {
     description := "Classes and utilities shared between Scala and Scala.js",
     libraryDependencies ++= {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
-      // val magnolia = "io.circe" %%% "circe-magnolia-derivation" % "0.4.0"
       val boopickle = "me.chrons" %%% "boopickle" % Utils.booPickleVersion
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum /* :+ magnolia */ :+ boopickle
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum :+ boopickle
     },
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort, "com.kyleu.projectile.util").taskValue
   ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13").disablePlugins(AssemblyPlugin)
@@ -29,7 +28,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-scala` = libraryProject(project in file("libraries/projectile-lib-scala")).settings(
     description := "Common classes relating to core models and utilities",
-    libraryDependencies ++= Seq(Utils.slf4j, Utils.commonsCodec),
+    libraryDependencies ++= Logging.all :+ Utils.commonsCodec,
   ).dependsOn(`projectile-lib-core-jvm`)
 
   lazy val `projectile-lib-tracing` = libraryProject(project in file("libraries/projectile-lib-tracing")).settings(
@@ -75,7 +74,7 @@ object LibraryProjects {
     description := "Common Scala.js classes used by code generated from Projectile",
     libraryDependencies ++= {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-      val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.4"
+      val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.5"
       val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
       val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.7"
       Seq(jQuery, javaTime, jsDom)

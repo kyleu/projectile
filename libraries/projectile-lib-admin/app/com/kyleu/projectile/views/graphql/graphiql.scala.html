@@ -1,7 +1,6 @@
-@(actions: com.kyleu.projectile.models.Application.Actions)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.core(
-  title = actions.projectName + " GraphQL",
+@(cfg: com.kyleu.projectile.models.config.UiConfig)(implicit session: Session, flash: Flash)
+@com.kyleu.projectile.views.html.layout.core(
+  title = cfg.projectName + " GraphQL",
   scripts = Seq(
     com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/fetch.min.js").url,
     com.kyleu.projectile.controllers.routes.Assets.versioned("vendor/graphql/react.min.js").url,
@@ -25,11 +24,6 @@
       height: 100vh;
     }
 
-    .graphiql-container .docExplorerShow:before {
-      border-left: 2px solid #fff;
-      border-top: 2px solid #fff;
-    }
-
     .graphiql-container .CodeMirror-lines {
       padding: 0;
     }
@@ -48,12 +42,12 @@
     }
 
     .graphiql-container .topBar, .graphiql-container .docExplorerShow {
-      background: #607d8b;
-      color: #fff;
+      background: #fff;
+      color: #000;
     }
 
     .graphiql-container .title-link {
-      color: #fff;
+      color: #000;
     }
   </style>
 
@@ -115,11 +109,7 @@
         $('.save-dir-input').val(parameters.dir);
         $('.save-name-input').val(parameters.name);
 
-        var gqlLogo = [
-          React.createElement(GraphiQL.Logo, {}, [
-            React.createElement("a", { "href": "/", "className": "title-link" }, "@actions.projectName GraphQL")
-          ])
-        ];
+        var gqlLogo = [React.createElement(GraphiQL.Logo, {}, [])];
 
         var gqlProps = {
           fetcher: graphQLFetcher,
@@ -135,8 +125,8 @@
 
         ReactDOM.render(gql, elem);
 
-        $(".toolbar").append($("<a class='toolbar-button' href='@com.kyleu.projectile.controllers.graphql.routes.SchemaController.voyager("Query")'>Visualize Query</a>"));
-        $(".toolbar").append($("<a class='toolbar-button' href='@com.kyleu.projectile.controllers.graphql.routes.SchemaController.voyager("Mutation")'>Visualize Mutation</a>"));
+        $(".toolbar").append($("<a class='toolbar-button' href='@com.kyleu.projectile.controllers.admin.graphql.routes.SchemaController.voyager("Query")'>Visualize Query</a>"));
+        $(".toolbar").append($("<a class='toolbar-button' href='@com.kyleu.projectile.controllers.admin.graphql.routes.SchemaController.voyager("Mutation")'>Visualize Mutation</a>"));
       }
 
       renderGraphiql(document.getElementById('graphiql'));

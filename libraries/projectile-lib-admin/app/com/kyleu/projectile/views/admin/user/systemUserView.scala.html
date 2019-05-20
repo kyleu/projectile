@@ -25,11 +25,13 @@
         </tr>
         <tr>
           <th>Settings</th>
-          <td><pre>@model.settings<pre></td>
+          <td><pre>@model.settings</pre></td>
         </tr>
       </tbody>
     </table>
   }
+
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString)
 
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "SystemUser", "System User", model.id)
 

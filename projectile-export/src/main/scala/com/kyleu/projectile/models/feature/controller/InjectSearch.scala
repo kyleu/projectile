@@ -6,8 +6,8 @@ import com.kyleu.projectile.models.feature.FeatureLogic
 import com.kyleu.projectile.models.feature.controller.db.twirl.TwirlHelper
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
-object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "SearchController.scala") {
-  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "controllers" :+ "admin" :+ "system"
+object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "SearchHelper.scala") {
+  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "search"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     def searchStringFieldsFor(s: Seq[String]) = {

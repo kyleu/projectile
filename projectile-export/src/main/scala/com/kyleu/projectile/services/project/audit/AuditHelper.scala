@@ -39,7 +39,7 @@ trait AuditHelper { this: ProjectileService =>
           case x => throw new IllegalStateException(s"Unhandled fix source [$x]")
         }
       case "orphan" => Seq(fixOrphan(rootCfg.workingDirectory, msg.src))
-      case "status" => Seq(ProjectStatusService.fix(getProject(msg.project), msg.src, msg.tgt))
+      case "status" => Seq(ProjectStatusService.fix(getProject(msg.project), msg.src, msg.tgt)).map(_.toString)
       case "unindexed" => Seq(fixUnindexed(msg.src, msg.tgt))
       case x => throw new IllegalStateException(s"I don't know how to fix a [$x] yet")
     }

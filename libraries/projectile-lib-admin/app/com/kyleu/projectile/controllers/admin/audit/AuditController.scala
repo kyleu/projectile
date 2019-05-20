@@ -1,7 +1,6 @@
 package com.kyleu.projectile.controllers.admin.audit
 
 import com.kyleu.projectile.controllers.{ServiceAuthController, ServiceController}
-import com.kyleu.projectile.models.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
@@ -10,6 +9,7 @@ import com.kyleu.projectile.models.web.ReftreeUtils._
 import java.util.UUID
 
 import com.kyleu.projectile.models.audit.{Audit, AuditResult}
+import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
 import com.kyleu.projectile.models.result.RelationCount
 import com.kyleu.projectile.services.audit.{AuditRecordService, AuditService}
 import play.api.http.MimeTypes
@@ -20,11 +20,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuditController @javax.inject.Inject() (
     override val app: Application, svc: AuditService, recordSvc: AuditRecordService, noteSvc: NoteService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
+  ApplicationFeatures.enable("audit")
+  if (!app.db.doesTableExist("audit")) { app.addError("table.audit", "Missing [audit] table") }
 
   def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.list()
     val call = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.create()
-    val cfg = app.cfg(Some(request.identity), true, "system", "audit", "Create")
+    val cfg = app.cfgAdmin(u = request.identity, "system", "models", "audit", "Create")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.audit.auditForm(
       cfg, Audit(act = "new"), "New Audit", cancel, call, isNew = true, debug = app.config.debug
     )))
@@ -45,7 +47,7 @@ class AuditController @javax.inject.Inject() (
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil => Redirect(com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id))
           case _ =>
-            val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "audit")
+            val cfg = app.cfgAdmin(u = request.identity, "system", "models", "audit")
             Ok(com.kyleu.projectile.views.html.admin.audit.auditList(cfg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
         }
         case MimeTypes.JSON => Ok(AuditResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -71,7 +73,7 @@ class AuditController @javax.inject.Inject() (
     notesF.flatMap(notes => recordsF.flatMap(records => modelF.map {
       case Some(model) => renderChoice(t) {
         case MimeTypes.HTML =>
-          val cfg = app.cfg(Some(request.identity), true, "system", "audit", model.id.toString)
+          val cfg = app.cfgAdmin(u = request.identity, "system", "models", "audit", model.id.toString)
           Ok(com.kyleu.projectile.views.html.admin.audit.auditView(cfg, model, records, notes, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
         case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)
@@ -86,7 +88,7 @@ class AuditController @javax.inject.Inject() (
     val call = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.edit(id)
     svc.getByPrimaryKey(request, id).map {
       case Some(model) =>
-        val cfg = app.cfg(Some(request.identity), true, "system", "audit", model.id.toString)
+        val cfg = app.cfgAdmin(u = request.identity, "system", "models", "audit", model.id.toString)
         Ok(com.kyleu.projectile.views.html.admin.audit.auditForm(cfg, model, s"Audit [$id]", cancel, call, debug = app.config.debug))
       case None => NotFound(s"No Audit found with id [$id]")
     }

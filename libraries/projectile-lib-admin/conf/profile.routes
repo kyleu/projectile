@@ -1,5 +1,6 @@
+
 # Profile
-GET         /                        com.kyleu.projectile.controllers.auth.ProfileController.view
+GET         /                        com.kyleu.projectile.controllers.auth.ProfileController.view(thm: Option[String] ?= None)
 POST        /                        com.kyleu.projectile.controllers.auth.ProfileController.save
 GET         /password/change         com.kyleu.projectile.controllers.auth.ProfileController.changePasswordForm
 POST        /password/change         com.kyleu.projectile.controllers.auth.ProfileController.changePassword

@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "AuditCallbacks.scala") {
-  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "services" :+ "audit"
+  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "audit"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     routesLogic(config, markers, lookupLogic(config, markers, original))

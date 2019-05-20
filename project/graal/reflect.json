@@ -1,0 +1,554 @@
+[
+  {
+    "name": "com.kyleu.projectile.models.cli.CommandLineAction$",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredClasses": true,
+    "allPublicClasses": true
+  },
+
+
+
+
+  {
+    "name" : "com.sun.crypto.provider.SunJCE",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "com.sun.net.ssl.internal.ssl.Provider",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "com.sun.security.sasl.Provider",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+
+
+
+
+  {
+    "name" : "java.lang.String",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.net.Inet6AddressImpl",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.AlgorithmParametersSpi",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.KeyStoreSpi",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.MessageDigestSpi",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.interfaces.DSAPrivateKey",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.interfaces.DSAPublicKey",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.interfaces.RSAPrivateKey",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.interfaces.RSAPublicKey",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.security.spec.DSAParameterSpec",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "java.util.Date",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "javax.security.auth.x500.X500Principal",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "org.jcp.xml.dsig.internal.dom.XMLDSigRI",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+
+
+
+
+  {
+    "name" : "sun.net.www.protocol.http.Handler",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.net.www.protocol.jar.Handler",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ISO_8859_1",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ISO_8859_2",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ISO_8859_4",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ISO_8859_5",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ISO_8859_7",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ISO_8859_9",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.MS1250",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.MS1251",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.MS1252",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.MS1253",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.MS1254",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.MS1257",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.UTF_16",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.UTF_16BE",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.UTF_16LE",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.UTF_32",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.UTF_32BE",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.UTF_32LE",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ext.ExtendedCharsets",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ext.ISO_8859_3",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ext.ISO_8859_6",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.nio.cs.ext.ISO_8859_8",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.reflect.Reflection",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ec.ECDSASignature$Raw",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ec.ECDSASignature$SHA1",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ec.ECKeyFactory",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ec.ECKeyPairGenerator",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ec.ECParameters",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ec.SunEC",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.jgss.SunProvider",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.krb5.PrincipalName",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.DSA$SHA1withDSA",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.DSAKeyFactory",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.DSAParameters",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.JavaKeyStore$DualFormatJKS",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.JavaKeyStore$JKS",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.MD5",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.NativePRNG",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.SHA",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.SHA2$SHA256",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.Sun",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.provider.X509Factory",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.rsa.RSAKeyFactory",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.rsa.RSASignature$MD5withRSA",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.rsa.RSASignature$SHA1withRSA",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.rsa.RSASignature$SHA256withRSA",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.rsa.SunRsaSign",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.smartcardio.SunPCSC",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ssl.KeyManagerFactoryImpl$SunX509",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ssl.SSLContextImpl$DefaultSSLContext",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ssl.SSLContextImpl$TLS12Context",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.ssl.TrustManagerFactoryImpl$PKIXFactory",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.util.ObjectIdentifier",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.AuthorityInfoAccessExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.AuthorityKeyIdentifierExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.BasicConstraintsExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.CRLDistributionPointsExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.CertificateExtensions",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.CertificatePoliciesExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.ExtendedKeyUsageExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.IssuerAlternativeNameExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.KeyUsageExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.NameConstraintsExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.NetscapeCertTypeExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.PolicyMappingsExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.PrivateKeyUsageExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.SubjectAlternativeNameExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+  {
+    "name" : "sun.security.x509.SubjectKeyIdentifierExtension",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true
+  },
+
+
+
+
+  {
+    "name": "java.lang.Boolean",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.Byte",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.Double",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.Float",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.Integer",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.Long",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.Short",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.lang.String",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true
+  },
+  {
+    "name": "java.net.Inet6AddressImpl",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "java.util.Date",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+
+
+
+
+  {
+    "name": "scala.collection.concurrent.TrieMap",
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "scala.Product",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "scala.Serializable",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "scala.concurrent.Future$InternalCallbackExecutor$",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "sun.reflect.Reflection",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  }
+]

@@ -1,12 +1,12 @@
 package models.template
 
-import com.kyleu.projectile.models.config.{MenuProvider, NavMenu}
+import com.kyleu.projectile.models.menu.{MenuProvider, NavMenu, SystemMenu}
 import com.kyleu.projectile.models.user.SystemUser
 
 object UserMenu extends MenuProvider {
-  private[this] lazy val staticSandbox = NavMenu(key = "sandbox", title = "Sandbox", url = Some(controllers.routes.HomeController.sandbox().url))
+  private[this] lazy val staticTestbed = NavMenu(key = "testbed", title = "Testbed", url = Some(controllers.routes.HomeController.testbed().url))
 
-  private[this] lazy val staticMenu = Seq(staticSandbox) ++ ComponentMenu.menu :+ NavMenu.system
+  private[this] lazy val staticMenu = Seq(staticTestbed) ++ ComponentMenu.menu :+ SystemMenu.currentMenu
 
-  override def adminMenu(u: SystemUser) = staticMenu
+  override def adminMenu(u: SystemUser) = standardMenu(u) ++ staticMenu
 }

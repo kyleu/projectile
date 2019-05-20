@@ -7,8 +7,8 @@ object CommonImportHelper {
   def get(c: ExportConfiguration, s: String) = c.project.classOverrides.get(s) match {
     case Some(o) => StringUtils.toList(o.substring(0, o.lastIndexOf('.')).trim, '.') -> o.substring(o.lastIndexOf('.') + 1).trim
     case None => (s match {
-      case "AugmentService" => c.applicationPackage ++ Seq("services", "augment")
-      case "Application" => c.systemPackage :+ "models"
+      case "AugmentService" => c.systemPackage ++ Seq("services", "augment")
+      case "Application" => c.systemPackage :+ "models" :+ "module"
       case "AuditHelper" => c.systemPackage ++ Seq("services", "audit")
       case "AuditService" => c.systemPackage ++ Seq("services", "audit")
       case "AuthController" => c.systemPackage :+ "controllers"

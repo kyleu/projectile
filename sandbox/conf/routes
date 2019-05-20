@@ -1,14 +1,12 @@
 GET        /                                controllers.HomeController.home
-GET        /sandbox                         controllers.HomeController.sandbox
+GET        /testbed                         controllers.HomeController.testbed
 
+# Projectile
 ->         /profile                         profile.Routes
 ->         /components                      components.Routes
 
 # Admin
-->         /admin/system                    system.Routes
-
-->         /admin/encrypt                   encrypt.Routes
-->         /admin/sandbox                   sandbox.Routes
+->         /admin/search                    search.Routes
 
 ->         /admin/graphql                   graphql.Routes
 ->         /admin/rest                      rest.Routes
@@ -16,6 +14,11 @@ GET        /sandbox                         controllers.HomeController.sandbox
 ->         /admin/audit                     audit.Routes
 ->         /admin/note                      note.Routes
 ->         /admin/systemUser                systemUser.Routes
+
+->         /admin/encrypt                   encrypt.Routes
+->         /admin/sandbox                   sandbox.Routes
+->         /admin/task                      task.Routes
+->         /admin/process                   process.Routes
 
 ->         /admin/status                    status.Routes
 

@@ -11,7 +11,6 @@ import com.kyleu.projectile.util.Version
 sealed trait ProjectileCommand extends EnumEntry
 
 object ProjectileCommand extends Enum[ProjectileCommand] {
-  case object Doctor extends ProjectileCommand
   case object Init extends ProjectileCommand
   case object Testbed extends ProjectileCommand
 
@@ -34,7 +33,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case object Audit extends ProjectileCommand
 
   // Examples
-  case class CreateExample(key: String, out: String) extends ProjectileCommand
+  case class CreateExample(key: String, template: String, force: Boolean) extends ProjectileCommand
 
   // Projects
   case class Projects(key: Option[String]) extends ProjectileCommand

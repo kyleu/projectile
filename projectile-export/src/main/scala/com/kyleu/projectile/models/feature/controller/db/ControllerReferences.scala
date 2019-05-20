@@ -2,7 +2,6 @@ package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.{ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ControllerReferences {
@@ -57,7 +56,7 @@ object ControllerReferences {
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
         file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
 
-        val cfgArg = s"""app.cfg(Some(request.identity), ${model.features(ModelFeature.Auth)}, "${model.firstPackage}", "${model.key}", "${col.title}")"""
+        val cfgArg = s"""app.cfgAdmin(request.identity, "${model.firstPackage}", "${model.key}", "${col.title}")"""
         val args = s"""$propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)"""
         val call = s"${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls"
 

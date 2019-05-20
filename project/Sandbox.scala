@@ -24,6 +24,7 @@ object Sandbox {
     PlayKeys.devSettings := Seq("play.server.akka.requestTimeout" -> "infinite"),
     PlayKeys.playDefaultPort := projectPort,
     PlayKeys.playInteractionMode := PlayUtils.NonBlockingInteractionMode,
+    RoutesKeys.routesImport += "models.module.ModelBindables._",
 
     scalaJSProjects := Seq(LibraryProjects.`projectile-lib-scalajs`),
 

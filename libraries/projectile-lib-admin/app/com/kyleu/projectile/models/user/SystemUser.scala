@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.user
 import java.time.LocalDateTime
 import java.util.UUID
 
+import com.kyleu.projectile.models.config.UserSettings
 import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import com.kyleu.projectile.models.result.data.{DataField, DataFieldModel, DataSummary}
 import com.kyleu.projectile.util.DateUtils
@@ -52,9 +53,11 @@ final case class SystemUser(
     created: LocalDateTime = DateUtils.now
 ) extends Identity with DataFieldModel {
 
-  def email = profile.providerKey
-  def provider = profile.providerID
-  def key = profile.providerKey
+  val email = profile.providerKey
+  val provider = profile.providerID
+  val key = profile.providerKey
+
+  lazy val settingsObj = extract[UserSettings](settings)
 
   def isAdmin = role == Role.Admin
 

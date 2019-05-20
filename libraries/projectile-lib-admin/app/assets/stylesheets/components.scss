@@ -64,3 +64,12 @@ html {
 input[type="text"].lookup {
   margin-left: 3rem;
 }
+
+.sidenav li a.active {
+  background: inherit;
+  box-shadow: none;
+}
+
+.sidenav li .collapsible-body a i {
+  font-size: 1rem;
+}

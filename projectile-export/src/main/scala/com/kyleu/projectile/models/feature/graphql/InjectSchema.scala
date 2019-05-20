@@ -15,12 +15,6 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
     }.sortBy(m => m.modelPackage(config).mkString + m.className)
     val services = config.services.filter(s => s.features(ServiceFeature.GraphQL) && s.inputType.isDatabase).sortBy(s => s.pkg.mkString + s.className)
 
-    def serviceFieldsFor(s: Seq[String]) = {
-      val newLines = services.map(s => s"${(s.pkg :+ s"${s.className}Schema").mkString(".")}.serviceFields ++").sorted
-      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "service methods")
-      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
-    }
-
     def fetcherFieldsFor(s: Seq[String]) = {
       val fetchers = markers.getOrElse("fetcher", Nil).sorted
       if (fetchers.isEmpty) {
@@ -36,28 +30,27 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       }
     }
 
-    def enumQueryFieldsFor(s: Seq[String]) = {
-      val newLines = enums.map(e => s"${e.graphqlPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields ++")
-      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "enum query fields")
-      TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
-    }
-
-    def modelQueryFieldsFor(s: Seq[String]) = {
-      val newLines = models.map(m => s"${(m.graphqlPackage(config) :+ m.className).mkString(".")}Schema.queryFields ++")
-      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model query fields")
+    def queryFieldsFor(s: Seq[String]) = {
+      val newLines = Seq(
+        enums.map(e => s"${e.graphqlPackage(config).map(_ + ".").mkString}${e.className}Schema.queryFields ++").sorted,
+        models.map(m => s"${(m.graphqlPackage(config) :+ m.className).mkString(".")}Schema.queryFields ++").sorted,
+        services.map(s => s"${(s.pkg :+ s"${s.className}Schema").mkString(".")}.serviceFields ++").sorted
+      ).flatten
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "query fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
     def mutationFieldsFor(s: Seq[String]) = {
-      val newLines = models.filter(_.pkFields.nonEmpty).map(m => s"${(m.graphqlPackage(config) :+ m.className).mkString(".")}Schema.mutationFields ++")
-      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model mutation fields")
+      val newLines = Seq(
+        models.filter(_.pkFields.nonEmpty).map(m => s"${(m.graphqlPackage(config) :+ m.className).mkString(".")}Schema.mutationFields ++")
+      ).flatten
+      val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "mutation fields")
       TextSectionHelper.replaceBetween(filename = filename, original = s, p = params, newLines = newLines, project = config.project.key)
     }
 
-    val postMutation = mutationFieldsFor(original)
-    val postModel = modelQueryFieldsFor(postMutation)
-    val postEnum = enumQueryFieldsFor(postModel)
-    val postFetcher = fetcherFieldsFor(postEnum)
-    serviceFieldsFor(postFetcher)
+    val postFetcher = fetcherFieldsFor(original)
+    val postQuery = queryFieldsFor(postFetcher)
+    val postMutation = mutationFieldsFor(postQuery)
+    postMutation
   }
 }

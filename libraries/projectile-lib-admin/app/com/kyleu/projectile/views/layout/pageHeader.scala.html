@@ -1,26 +1,32 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, theme: com.kyleu.projectile.models.user.Theme)
 <header class="page-topbar" id="header">
   <div class="navbar navbar-fixed">
-    <nav class="navbar-main navbar-color nav-collapsible sideNav-lock @theme.navClass">
-      <div class="nav-wrapper">
-        <div class="header-search-wrapper hide-on-med-and-down"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i>
-          <form action="@cfg.urls.search">
-            <input class="header-search-input z-depth-2" type="text" name="q" placeholder="Search" />
-          </form>
-        </div>
-        @cfg.html.menu
-      </div>
-      <nav class="display-none search-sm">
+    @defining(if(cfg.user.menuCollapsed) { "nav-collapsible nav-expanded" } else { "nav-collapsible sideNav-lock" }) { collapse =>
+      <nav class="navbar-main navbar-color @collapse @cfg.user.navbarDarkClass @cfg.user.navbarColor.getOrElse("")">
         <div class="nav-wrapper">
-          <form action="@cfg.urls.search">
-            <div class="input-field">
-              <input class="search-box-sm" type="search" name="q" required="" />
-              <label class="label-icon" for="q"><i class="material-icons search-sm-icon">@com.kyleu.projectile.models.web.InternalIcons.search</i></label>
-              <i class="material-icons search-sm-close">@com.kyleu.projectile.models.web.InternalIcons.close</i>
+          @if(com.kyleu.projectile.models.module.ApplicationFeatures.enabled("search")) {
+            <div class="header-search-wrapper hide-on-med-and-down"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i>
+              <form action="@cfg.urls.search">
+                <input class="header-search-input z-depth-2" type="text" name="q" placeholder="Search" />
+              </form>
             </div>
-          </form>
+          }
+          @cfg.html.menu
         </div>
+        @if(com.kyleu.projectile.models.module.ApplicationFeatures.enabled("search")) {
+          <nav class="display-none search-sm">
+            <div class="nav-wrapper">
+              <form action="@cfg.urls.search">
+                <div class="input-field">
+                  <input class="search-box-sm" type="search" name="q" required=""/>
+                  <label class="label-icon" for="q"><i class="material-icons search-sm-icon">@com.kyleu.projectile.models.web.InternalIcons.search</i></label>
+                  <i class="material-icons search-sm-close">@com.kyleu.projectile.models.web.InternalIcons.close</i>
+                </div>
+              </form>
+            </div>
+          </nav>
+        }
       </nav>
-    </nav>
+    }
   </div>
 </header>

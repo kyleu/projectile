@@ -1,9 +1,9 @@
-@(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+@(title: String, fullWidth: Boolean = false, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.core(
   title = title,
   scripts = Seq(
-    "/assets/lib/jquery/jquery.js",
+    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.js"),
     com.kyleu.projectile.controllers.Assets.path("vendor/plugins.min.js")
   ) ++ scripts,
   stylesheets = Seq(
@@ -19,30 +19,32 @@
       <div class="col s12">
         <div class="container">
           <div id="splash-content" class="row">
-            <div class="col s12 m6 l4 z-depth-4 card-panel border-radius-6 splash-card bg-opacity-8">
-              @flash.get("error").map { err =>
-                <div class="card-alert card gradient-45deg-red-pink">
-                  <div class="card-content white-text">
-                    <p>
-                      <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
+            @defining(if(fullWidth) { "s12" } else { "s12 m6 l4" }) { width =>
+              <div class="col @width z-depth-4 card-panel border-radius-6 splash-card bg-opacity-8">
+                @flash.get("error").map { err =>
+                  <div class="card-alert card gradient-45deg-red-pink">
+                    <div class="card-content white-text">
+                      <p>
+                        <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
+                    </div>
+                    <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
                   </div>
-                  <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-              }
-              @flash.get("success").map { success =>
-                <div class="card-alert card gradient-45deg-green-teal">
-                  <div class="card-content white-text">
-                    <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
+                }
+                @flash.get("success").map { success =>
+                  <div class="card-alert card gradient-45deg-green-teal">
+                    <div class="card-content white-text">
+                      <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
+                    </div>
+                    <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
                   </div>
-                  <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-              }
-              @content
-            </div>
+                }
+                @content
+              </div>
+            }
           </div>
         </div>
       </div>

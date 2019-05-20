@@ -60,6 +60,6 @@ class ConfigService(val path: String) extends Logging {
   def init() = {
     inputDirectory.createDirectories()
     projectDirectory.createDirectories()
-    ProjectileResponse.OK
+    ProjectileResponse.OK("Initialized [.projectile] directory")
   }
 }

@@ -1,13 +1,7 @@
-@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, devmode: Boolean)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, devmode: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.splash(util.Version.projectName) {
-  <ul class="collection with-header">
-    <li class="collection-header">
-      <h4>Welcome to @cfg.projectName</h4>
-      @if(user.role == com.kyleu.projectile.models.user.Role.Admin) {
-        <h5>You're an administrator, so head on over to the <a href="@controllers.admin.system.routes.AdminController.index()">admin section</a></h5>
-      }
-    </li>
-  </ul>
-  @com.kyleu.projectile.views.html.components.includeScalaJs(devmode)
+)@com.kyleu.projectile.views.html.layout.page(util.Version.projectName, cfg) {
+  @com.kyleu.projectile.views.html.layout.card(Some(s"Welcome to ${cfg.projectName}")) {
+    <p>Now it's time to make this application your own!</p>
+  }
 }

@@ -2,15 +2,15 @@ package com.kyleu.projectile.services
 
 import com.kyleu.projectile.models.cli.ServerHelper
 import com.kyleu.projectile.models.command.ProjectileCommand._
-import io.circe.Json
-import com.kyleu.projectile.models.command.{ProjectileCommand, ProjectileResponse}
 import com.kyleu.projectile.models.command.ProjectileResponse._
-import com.kyleu.projectile.services.config.{ConfigService, ConfigValidator}
+import com.kyleu.projectile.models.command.{ProjectileCommand, ProjectileResponse}
+import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.input.InputHelper
-import com.kyleu.projectile.services.project.ProjectHelper
+import com.kyleu.projectile.services.project.{ProjectExampleService, ProjectHelper}
 import com.kyleu.projectile.services.project.audit.AuditHelper
 import com.kyleu.projectile.services.project.codegen.CodegenHelper
 import com.kyleu.projectile.util.JsonSerializers._
+import io.circe.Json
 
 class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) extends InputHelper with ProjectHelper with CodegenHelper with AuditHelper {
   val rootDir = better.files.File(rootCfg.path)
@@ -24,7 +24,6 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
 
     val processCore: PartialFunction[ProjectileCommand, ProjectileResponse] = {
       case Init => init()
-      case Doctor => doctor(verbose)
       case Testbed => testbed()
       case s: ServerStart => ServerHelper.inst match {
         case Some(srv) => srv.startServer(s.port)
@@ -34,16 +33,24 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
         case Some(srv) => srv.stopServer()
         case None => serverHelp()
       }
+      case CreateExample(key, template, force) => createExample(key, template, force)
     }
 
     processCore.orElse(processInput).orElse(processProject).apply(cmd)
   }
 
   def init() = rootCfg.init()
-  def doctor(verbose: Boolean) = ConfigValidator.validate(rootCfg, verbose)
   def testbed() = JsonResponse(Json.True)
 
   def serverHelp() = Error(ServerHelper.sbtError)
+
+  def createExample(key: String, template: String, force: Boolean) = {
+    val proj = ProjectExampleService.projects.find(_.key == template).getOrElse {
+      throw new IllegalStateException(s"Template must be one of [${ProjectExampleService.projects.map(_.key).mkString(", ")}]")
+    }
+    ProjectExampleService.extract(project = template, to = rootDir, name = key, force = force)
+    ProjectileResponse.OK(s"Example project [$key] created in directory [${rootDir.pathAsString}] from template [$template]")
+  }
 
   protected val processProject: PartialFunction[ProjectileCommand, ProjectileResponse] = {
     case Projects(key) => key match {

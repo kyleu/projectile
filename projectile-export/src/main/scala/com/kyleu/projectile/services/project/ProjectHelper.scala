@@ -87,7 +87,7 @@ trait ProjectHelper { this: ProjectileService =>
 
   private[this] def removeProjectFiles(key: String) = {
     (configForProject(key).projectDirectory / key).delete(swallowIOExceptions = true)
-    ProjectileResponse.OK
+    ProjectileResponse.OK(s"Removed project [$key]")
   }
 
   protected[this] def projectResults(k: String) = {

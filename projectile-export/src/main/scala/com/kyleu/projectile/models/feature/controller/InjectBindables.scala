@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectBindables extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "ModelBindables.scala") {
-  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "util" :+ "web"
+  override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "module"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
     val enums = config.enums.filter(_.features(EnumFeature.Controller))

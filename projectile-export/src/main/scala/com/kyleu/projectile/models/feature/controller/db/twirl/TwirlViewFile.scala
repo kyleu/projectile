@@ -34,11 +34,9 @@ object TwirlViewFile {
   }
 
   private[this] def addModelFeatures(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.pkFields.nonEmpty) {
-    if (config.project.flags("augmented")) {
-      val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
-      file.add()
-      file.add(s"""@$imp.AugmentService.augmentModel(model, request.queryString)""")
-    }
+    val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
+    file.add()
+    file.add(s"""@$imp.AugmentService.views.augment(model, request.queryString)""")
     val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
     if (model.features(ModelFeature.Notes)) {
       file.add()
