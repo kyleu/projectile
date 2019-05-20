@@ -48,6 +48,7 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
   }
 
   def exampleExtract(k: String) = Action.async { implicit request =>
-    Future.successful(Ok(ProjectExampleService.extract(k, root / k, k).map(x => x._1 + ": " + x._2).mkString("\n")))
+    ProjectExampleService.extract(k, root / k, k)
+    Future.successful(Ok("OK"))
   }
 }

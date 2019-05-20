@@ -1,7 +1,7 @@
 package com.kyleu.projectile.web.util
 
 import com.kyleu.projectile.models.cli.ServerHelper
-import com.kyleu.projectile.models.command.ProjectileResponse.OK
+import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.util.Logging
@@ -24,13 +24,13 @@ object PlayServerHelper extends Logging with ServerHelper {
 
   override def startServer(port: Int) = {
     serverOpt = Some(start(Some(port)))
-    OK
+    ProjectileResponse.OK(s"Server started on port [$port]")
   }
 
   override def stopServer() = {
     serverOpt.getOrElse(throw new IllegalStateException("No server has been started"))._2.stop()
     serverOpt = None
-    OK
+    ProjectileResponse.OK("Server stopped")
   }
 
   private[this] def setSvc(svc: ProjectileService) = {

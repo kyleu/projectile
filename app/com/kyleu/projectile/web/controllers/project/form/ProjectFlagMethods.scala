@@ -10,7 +10,7 @@ trait ProjectFlagMethods { this: ProjectFormController =>
 
   def saveFlags() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
-    val project = projectile.saveProject(summary.copy(flags = form("flags").split(',').map(_.trim).toSet))
+    val project = projectile.saveProject(summary.copy(flags = form.getOrElse("flags", "").split(',').map(_.trim).toSet))
     Future.successful(redir(project.key).flashing("success" -> s"Saved flags for project [${project.key}]"))
   }
 }
