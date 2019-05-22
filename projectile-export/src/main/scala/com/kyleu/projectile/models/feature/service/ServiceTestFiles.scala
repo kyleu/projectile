@@ -29,7 +29,6 @@ object ServiceTestFiles {
 
     file.add()
     models.foreach { model =>
-      // val offerRowService = new com.fevo.coco.nut.services.offer.OfferRowService(trace)
       val fullSvc = (model.servicePackage(config) :+ (model.className + "Service")).mkString(".")
       file.add(s"lazy val ${model.propertyName}Service = new $fullSvc(db, trace)")
     }

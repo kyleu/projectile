@@ -27,7 +27,9 @@ object UserForms {
     "menuSelection" -> text,
 
     "navbarColor" -> text,
-    "navbarDark" -> optional(text)
+    "navbarDark" -> optional(text),
+
+    "buttonColor" -> text
   )(ProfileData.apply)(ProfileData.unapply))
 
   final case class PasswordChange(oldPassword: String, newPassword: String, confirm: String)

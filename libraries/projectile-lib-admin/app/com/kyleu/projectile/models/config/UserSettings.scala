@@ -21,6 +21,8 @@ case class UserSettings(
     navbarColor: Option[String] = Some("gradient-45deg-indigo-blue"),
     navbarDark: Boolean = true,
 
+    buttonColor: Option[String] = None,
+
     avatarUrl: Option[String] = None
 ) {
   val menuDarkClass = if (menuDark) { "sidenav-dark" } else { "sidenav-light" }

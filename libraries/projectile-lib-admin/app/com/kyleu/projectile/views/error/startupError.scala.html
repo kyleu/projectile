@@ -6,11 +6,16 @@
     @app.getErrors.map { err =>
       <li class="collection-item">
         <p>@err._2</p>
-        @com.kyleu.projectile.models.web.StartupErrorFixes.messageFor(err._1, err._2, err._3)
+        @defining(com.kyleu.projectile.models.web.StartupErrorFixes.messageFor(err._1, err._2, err._3)) { msg =>
+          <p>@msg._2</p>
+          @msg._1.map { m =>
+            <div><a href="/?fix=@err._1" class="btn">@m</a></div>
+          }
+        }
       </li>
     }
     <li class="collection-item">
-      <a href="/?errors=reset" class="btn">Try Again</a>
+      <a href="/?errors=reset" class="btn">Check Again</a>
     </li>
   </ul>
 }

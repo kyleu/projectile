@@ -1,9 +1,9 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.graphql.input.GraphQLInput)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 ) @com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <div class="right"><a class="btn theme" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
       <h5 title="Hash: @input.hash"><i class="@input.template.icon"></i> @input.key</h5>
       @input.description
     </div>
@@ -26,10 +26,10 @@
       }
       @input.schema.map { q =>
         <div class="collection-item">
-          <h6 title="@q.schema">@q.schemaClass</h6>
+          <h6 title="@q.schema">@q.schema</h6>
           <ul>
           @q.fileClasses.map { f =>
-            <li title="@f._2"><i class="fa @com.kyleu.projectile.models.template.Icons.file"></i> @f._1</li>
+            <li title="@f._2"><i class="fa @com.kyleu.projectile.models.template.Icons.file"></i> @f._2</li>
           }
           </ul>
         </div>

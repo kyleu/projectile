@@ -1,8 +1,9 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(
   title = "Swagger UI",
   cfg = cfg,
+  icon = Some(com.kyleu.projectile.models.web.InternalIcons.rest),
   stylesheets = Seq("/assets/lib/swagger-ui/swagger-ui.css")
 ) {
   <style>

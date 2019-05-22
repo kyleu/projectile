@@ -1,6 +1,6 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, unenc: String = "", enc: String = "")(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(cfg.projectName + " Encryption", cfg) {
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = cfg.projectName + " Encryption", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.encryption)) {
   <ul class="collection with-header">
     <li class="collection-header">
       <h5>Encryption</h5>
@@ -12,7 +12,7 @@
           <label for="unenc">Unencrypted Text</label>
         </div>
         <input type="hidden" name="action" value="encrypt" />
-        <button type="submit" class="btn">Encrypt</button>
+        <button type="submit" class="btn @cfg.user.buttonColor">Encrypt</button>
       </form>
     </li>
     <li class="collection-item">
@@ -22,7 +22,7 @@
           <label for="enc">Encrypted Text</label>
         </div>
         <input type="hidden" name="action" value="decrypt" />
-        <button type="submit" class="btn">Decrypt</button>
+        <button type="submit" class="btn @cfg.user.buttonColor">Decrypt</button>
       </form>
     </li>
   </ul>

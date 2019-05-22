@@ -1,20 +1,24 @@
 GET        /                                controllers.HomeController.home
 
 # Projectile
-->         /profile                         profile.Routes
 ->         /components                      components.Routes
+
+->         /profile                         profile.Routes
+->         /sitemap                         sitemap.Routes
 
 # Admin - Uncomment to enable features
 ->         /admin/search                    search.Routes
-# ->       /admin/encrypt                   encrypt.Routes
-# ->       /admin/sandbox                   sandbox.Routes
-
 ->         /admin/graphql                   graphql.Routes
 ->         /admin/rest                      rest.Routes
 
 ->         /admin/audit                     audit.Routes
 ->         /admin/note                      note.Routes
 ->         /admin/systemUser                systemUser.Routes
+
+# ->       /admin/encrypt                   encrypt.Routes
+# ->       /admin/sandbox                   sandbox.Routes
+# ->       /admin/process                   process.Routes
+# ->       /admin/sql                       sql.Routes
 
 # ->        /admin/status                    status.Routes
 

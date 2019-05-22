@@ -63,12 +63,13 @@ abstract class AdminModule(
         val html = NavHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, user.avatarUrl.getOrElse(""), notifications))
         UiConfig(
           projectName = projectName,
+          userId = Some(u.id),
           menu = menu,
           urls = navUrls,
           html = html,
           user = user,
           notifications = notifications,
-          breadcrumbs = menuProvider.breadcrumbs(menu, breadcrumbs)
+          breadcrumbs = MenuProvider.breadcrumbs(menu, breadcrumbs)
         )
     }
   }

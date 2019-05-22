@@ -12,10 +12,13 @@ object InternalIcons {
   val tools = "code"
   val models = "explore"
 
+  val connection = "device_hub"
   val status = "more_horiz"
   val process = "track_changes"
   val encryption = "enhanced_encryption"
   val sandbox = "widgets"
+  val sitemap = "directions"
+  val sql = "report_problem"
 
   val rest = "dialpad"
   val graphql = "brightness_high"

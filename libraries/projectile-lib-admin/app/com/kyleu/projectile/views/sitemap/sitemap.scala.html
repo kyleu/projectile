@@ -1,0 +1,24 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, segments: Seq[String], m: com.kyleu.projectile.models.menu.NavMenu)(implicit session: Session, flash: Flash)
+@com.kyleu.projectile.views.html.layout.page(title = "Sitemap", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.sitemap)) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="menu-item">
+      @com.kyleu.projectile.views.html.sitemap.menu(segments.dropRight(1), m)
+    </div>
+  }
+  <style>
+    .menu-item {
+      font-size: 120%;
+    }
+
+    .menu-item .item {
+      margin-bottom: 8px;
+    }
+
+    .menu-item .children {
+      margin-left: 24px;
+    }
+    .menu-item .material-icons {
+      font-size: 100%;
+    }
+  </style>
+}

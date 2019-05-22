@@ -1,0 +1,5 @@
+{
+  "template" : "postgres",
+  "key" : "db",
+  "description" : "_PROJECT_NAME database"
+}

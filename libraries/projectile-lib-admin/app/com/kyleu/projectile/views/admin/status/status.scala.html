@@ -1,6 +1,6 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, status: com.kyleu.projectile.models.status.AppStatus)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(cfg.projectName + " Status", cfg) {
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = cfg.projectName + " Status", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.status)) {
   <ul class="collection with-header">
     <li class="collection-header">
       <div class="right">v@status.version</div>

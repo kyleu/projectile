@@ -1,8 +1,9 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.input.Input)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Edit") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.input.routes.InputController.save()">
     <input id="key" name="key" type="hidden" value="@input.key" />
+    <input id="template" name="template" type="hidden" value="@input.template.value" />
 
     <div class="collection with-header">
       <div class="collection-header">
@@ -21,18 +22,16 @@
         </div>
       </div>
       @if(input.isInstanceOf[com.kyleu.projectile.models.database.input.PostgresInput]) {
-        <div class="collection-item">
-          <div class="input-field">
-            <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")">Connection Settings</a>
-          </div>
-        </div>
+        @postgresForm(input.asInstanceOf[com.kyleu.projectile.models.database.input.PostgresInput])
+      }
+      @if(input.isInstanceOf[com.kyleu.projectile.models.graphql.input.GraphQLInput]) {
+        @graphQLForm(input.asInstanceOf[com.kyleu.projectile.models.graphql.input.GraphQLInput])
       }
       @if(input.isInstanceOf[com.kyleu.projectile.models.thrift.input.ThriftInput]) {
-        <div class="collection-item">
-          <div class="input-field">
-            <a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/thrift-files.json")">Thrift Files</a>
-          </div>
-        </div>
+        @thriftForm(input.asInstanceOf[com.kyleu.projectile.models.thrift.input.ThriftInput])
+      }
+      @if(input.isInstanceOf[com.kyleu.projectile.models.typescript.input.TypeScriptInput]) {
+        @typeScriptForm(input.asInstanceOf[com.kyleu.projectile.models.typescript.input.TypeScriptInput])
       }
       <div class="collection-item">
         <input class="btn theme" type="submit" value="Save" />

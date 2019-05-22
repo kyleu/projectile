@@ -7,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.9.3"
+    val app = "1.9.6"
     val scala = "2.12.8"
   }
 

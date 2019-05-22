@@ -1,10 +1,10 @@
-@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, icon: Option[String] = None, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
     implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.fullscreen(title = title, cfg = cfg) {
+)@com.kyleu.projectile.views.html.layout.fullscreen(title = title, cfg = cfg, scripts = scripts, stylesheets = stylesheets) {
   @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
     <div class="row">
       @theme.contentBefore.map { cb => <div class="content-wrapper-before @cfg.user.navbarColor"></div> }
-      @com.kyleu.projectile.views.html.layout.breadcrumbs(title, cfg)
+      @com.kyleu.projectile.views.html.layout.breadcrumbs(title, cfg, icon)
       @flash.get("error").map { err =>
         <div class="card-alert card gradient-45deg-red-pink">
           <div class="card-content white-text">

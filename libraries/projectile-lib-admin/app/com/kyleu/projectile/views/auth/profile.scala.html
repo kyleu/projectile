@@ -1,11 +1,12 @@
 @(username: String, cfg: com.kyleu.projectile.models.config.UiConfig, errors: Seq[(String, String)])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )
 
-@colors(key: String, title: String, inputClass: String, selected: Option[String]) = {
+@colors(key: String, title: String, inputClass: String, selected: Option[String], includeGradients: Boolean = true) = {
   <div class="input-field col s12 @inputClass mb-0">
     <p class="mt-0">@title</p>
     <input id="@key" name="@key" type="hidden" value="@selected.getOrElse("")" />
+    @if(includeGradients) {
     <div class="gradient-color">
       @com.kyleu.projectile.models.auth.ProfileData.gradientColors.map { c =>
         @if(selected.contains(c)) {
@@ -15,6 +16,7 @@
         }
       }
     </div>
+    }
     <div class="solid-color">
       @com.kyleu.projectile.models.auth.ProfileData.solidColors.map { c =>
         @if(selected.contains(c)) {
@@ -27,7 +29,7 @@
   </div>
 }
 
-@com.kyleu.projectile.views.html.layout.page("Settings", cfg) {
+@com.kyleu.projectile.views.html.layout.page(title = "Settings", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.profile)) {
   @errors.map { err =>
     <div class="card-alert card gradient-45deg-red-pink">
       <div class="card-content white-text">
@@ -122,31 +124,47 @@
               </label>
             </div>
           </div>
-          <!--
-          <div class="input-field col s12">
-            <div class="switch">
-              Fixed
-              <label class="float-right">
-                <input class="navbar-fixed-checkbox" type="checkbox" checked="checked" /> <span class="lever ml-0"></span>
-              </label>
-            </div>
-          </div>
-          -->
+        </div>
+      </div>
+    }
+
+    @com.kyleu.projectile.views.html.layout.card(title = Some("Element Options")) {
+      <div class="theme-cutomizer" style="width: initial;">
+        <div class="element-options row">
+          @colors("buttonColor", "Button Color", "button-color", cfg.user.buttonColor)
         </div>
       </div>
     }
 
     @com.kyleu.projectile.views.html.layout.card(title = None) {
-      <button class="btn waves-effect waves-light" type="submit">Save</button>
+      <button class="btn @cfg.user.buttonColor waves-effect waves-light" type="submit">Save</button>
     }
   </form>
+
+  <style>
+    .theme-cutomizer .element-options .button-color-option, .theme-cutomizer .element-options .accent-color-option {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: 3px solid #fff;
+      border-radius: 12px;
+    }
+
+    .theme-cutomizer .element-options .button-color-option.selected, .theme-cutomizer .element-options .accent-color-option.selected {
+      -webkit-box-shadow: 0 0 10px 3px #03a9f4;
+      box-shadow: 0 0 10px 3px #03a9f4;
+    }
+  </style>
 
   <script>
     var menuBgDefault = false;
 
     $(document).ready(function() {
       function removeColorClass(el) {
-        $(el).removeClass("gradient-45deg-indigo-blue gradient-45deg-purple-deep-orange gradient-45deg-light-blue-cyan gradient-45deg-purple-amber gradient-45deg-purple-deep-purple gradient-45deg-deep-orange-orange gradient-45deg-green-teal gradient-45deg-indigo-light-blue gradient-45deg-red-pink red purple pink deep-purple cyan teal light-blue amber darken-3 brown darken-2 gradient-45deg-indigo-purple gradient-45deg-deep-purple-blue");
+        $(el).removeClass("@com.kyleu.projectile.models.auth.ProfileData.allColors.mkString(" ")");
       }
 
       var b = $("body");
@@ -200,7 +218,7 @@
       function menuColor(menu_color) {
         removeColorClass(".sidenav-main .sidenav li a.active");
         $("#menuColor").val(menu_color);
-        $(".sidenav-main .sidenav li a.active").css({ background: "none" }).addClass(menu_color + " gradient-shadow");
+        $(".sidenav-main .sidenav li a.active").css({ background: "none" }).addClass(menu_color + " gradient");
       }
 
       function menuBGColor(menu_color) {
@@ -259,14 +277,6 @@
         }
       });
 
-      $(".navbar-fixed-checkbox").click(function() {
-        if($(".navbar-fixed-checkbox").prop("checked")) {
-          $("#header .navbar").addClass("navbar-fixed");
-        } else {
-          $("#header .navbar").removeClass("navbar-fixed");
-        }
-      });
-
       function navbarDark(isDark) {
         $(".navbar-color .navbar-color-option").removeClass("selected");
         $("#navbarColor").val("");
@@ -288,6 +298,31 @@
           removeColorClass(".content-wrapper-before");
           $(".content-wrapper-before").addClass(navbar_color);
         }
+      }
+
+      // Element Options
+      $(".button-color-option").click(function() {
+        $(".button-color .button-color-option").removeClass("selected");
+        $(this).addClass("selected");
+        var button_color = $(this).attr("data-color");
+        buttonColor(button_color);
+      });
+
+      function buttonColor(button_color) {
+        removeColorClass(".btn");
+        $("#buttonColor").val(button_color);
+        $(".btn").addClass(button_color);
+      }
+
+      $(".accent-color-option").click(function() {
+        $(".accent-color .accent-color-option").removeClass("selected");
+        $(this).addClass("selected");
+        var accent_color = $(this).attr("data-color");
+        accentColor(accent_color);
+      });
+
+      function accentColor(accent_color) {
+        $("#accentColor").val(accent_color);
       }
     });
   </script>

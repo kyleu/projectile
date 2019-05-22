@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, inputs: Seq[com.kyleu.projectile.models.input.InputSummary], projects: Seq[com.kyleu.projectile.models.project.ProjectSummary])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, com.kyleu.projectile.util.Version.projectName) {
   <div class="row">
     <div class="col s12">

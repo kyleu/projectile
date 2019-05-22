@@ -1,4 +1,3 @@
-/* Generated File */
 package com.kyleu.projectile.services.audit
 
 import java.util.UUID

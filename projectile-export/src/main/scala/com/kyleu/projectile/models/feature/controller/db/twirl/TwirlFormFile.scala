@@ -18,7 +18,8 @@ object TwirlFormFile {
     file.add(s"@(cfg: $uc, model: ${model.fullClassPath(config)}, $extraArgs)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
 
-    file.add(s""")@$systemViewPkg.layout.page(title, cfg) {""", 1)
+    val icon = s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.${model.propertyName}"
+    file.add(s""")@$systemViewPkg.layout.page(title = title, cfg = cfg, icon = Some($icon)) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     addContent(config, model, file)
@@ -48,7 +49,7 @@ object TwirlFormFile {
 
   private[this] def addContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     file.add("@com.kyleu.projectile.views.html.layout.card(None) {", 1)
-    file.add(s"""<div class="right"><button type="submit" class="btn theme">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
+    file.add(s"""<div class="right"><button type="submit" class="btn @cfg.user.buttonColor">@if(isNew) {Create} else {Save} ${model.title}</button></div>""")
     file.add("""<div class="right"><a href="@cancel" class="btn-flat cancel-link">Cancel</a></div>""")
     file.add("""<div class="clear"></div>""")
     table(config, model, file)

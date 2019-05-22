@@ -1,9 +1,9 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.database.input.PostgresInput)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 ) @com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">
-      <div class="right"><a href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
+      <div class="right"><a class="btn theme" href="@com.kyleu.projectile.web.controllers.input.routes.InputController.form(input.key)">Edit</a></div>
       <h5 title="Hash: @input.hash"><i class="@input.template.icon"></i> @input.key</h5>
       @input.description
     </div>
@@ -19,7 +19,6 @@
   <div id="input-detail">
     <div class="collection">
       <div class="collection-item">
-        <div class="right"><a href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"input/${input.key}/dbconn.json")">Connection Settings</a></div>
         @input.url
       </div>
       <div class="collection-item">Username: @input.username</div>

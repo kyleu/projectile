@@ -12,16 +12,17 @@ import com.kyleu.projectile.models.audit.{Audit, AuditResult}
 import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
 import com.kyleu.projectile.models.result.RelationCount
 import com.kyleu.projectile.services.audit.{AuditRecordService, AuditService}
+import com.kyleu.projectile.services.database.JdbcDatabase
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class AuditController @javax.inject.Inject() (
-    override val app: Application, svc: AuditService, recordSvc: AuditRecordService, noteSvc: NoteService
+    override val app: Application, svc: AuditService, recordSvc: AuditRecordService, noteSvc: NoteService, db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeatures.enable("audit")
-  if (!app.db.doesTableExist("audit")) { app.addError("table.audit", "Missing [audit] table") }
+  if (!db.doesTableExist("audit")) { app.addError("table.audit", "Missing [audit] table") }
 
   def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.list()

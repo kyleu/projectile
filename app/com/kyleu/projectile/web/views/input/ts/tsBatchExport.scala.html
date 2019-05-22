@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, k: String, status: String, results: Seq[(String, Either[Throwable, com.kyleu.projectile.models.project.ProjectOutput])])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Batch Export", mainDivClass = "margined") {
   <ul class="collection with-header">
     <li class="collection-header">

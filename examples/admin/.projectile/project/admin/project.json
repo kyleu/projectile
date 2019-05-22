@@ -1,0 +1,12 @@
+{
+  "key" : "admin",
+  "template" : "play",
+  "input" : "db",
+  "description" : "_PROJECT_NAME project",
+  "features" : [ ],
+  "packages" : { },
+  "classOverrides" : { },
+  "defaultEnumFeatures" : [ ],
+  "defaultModelFeatures" : [ ],
+  "defaultServiceFeatures" : [ ]
+}

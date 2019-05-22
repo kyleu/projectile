@@ -1,0 +1,2 @@
+GET         /            com.kyleu.projectile.controllers.sitemap.SitemapController.sitemap()
+GET         /*path       com.kyleu.projectile.controllers.sitemap.SitemapController.menu(path)

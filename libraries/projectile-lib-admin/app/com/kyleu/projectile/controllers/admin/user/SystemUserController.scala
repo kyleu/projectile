@@ -11,6 +11,7 @@ import java.util.UUID
 
 import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
 import com.kyleu.projectile.models.user.{SystemUser, SystemUserResult}
+import com.kyleu.projectile.services.database.JdbcDatabase
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -18,10 +19,10 @@ import com.kyleu.projectile.services.user.SystemUserService
 
 @javax.inject.Singleton
 class SystemUserController @javax.inject.Inject() (
-    override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService
+    override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService, db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeatures.enable("user")
-  if (!app.db.doesTableExist("system_user")) { app.addError("table.system_user", "Missing [system_user] table") }
+  if (!db.doesTableExist("system_user")) { app.addError("table.system_user", "Missing [system_user] table") }
 
   def createForm = withSession("create.form", admin = true) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.list()

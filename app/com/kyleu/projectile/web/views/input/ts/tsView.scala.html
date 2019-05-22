@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, k: String, path: String, input: com.kyleu.projectile.models.typescript.input.TypeScriptInput, forceCompile: Boolean)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, path, mainDivClass = "margined") {
   <ul class="collection with-header">
     <li class="collection-header">

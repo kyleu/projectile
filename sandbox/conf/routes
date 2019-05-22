@@ -2,8 +2,10 @@ GET        /                                controllers.HomeController.home
 GET        /testbed                         controllers.HomeController.testbed
 
 # Projectile
-->         /profile                         profile.Routes
 ->         /components                      components.Routes
+
+->         /profile                         profile.Routes
+->         /sitemap                         sitemap.Routes
 
 # Admin
 ->         /admin/search                    search.Routes
@@ -15,10 +17,12 @@ GET        /testbed                         controllers.HomeController.testbed
 ->         /admin/note                      note.Routes
 ->         /admin/systemUser                systemUser.Routes
 
+->         /admin/connection                connection.Routes
 ->         /admin/encrypt                   encrypt.Routes
 ->         /admin/sandbox                   sandbox.Routes
 ->         /admin/task                      task.Routes
 ->         /admin/process                   process.Routes
+->         /admin/sql                       sql.Routes
 
 ->         /admin/status                    status.Routes
 

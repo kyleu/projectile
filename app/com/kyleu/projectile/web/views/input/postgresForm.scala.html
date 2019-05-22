@@ -1,0 +1,38 @@
+@(input: com.kyleu.projectile.models.database.input.PostgresInput)
+<div class="collection-item">
+  <div class="row">
+    <div class="col s12">
+      <h6>Database Settings</h6>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="host" name="host" type="text" value="@input.host" />
+      <label for="host">Host</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="port" name="port" type="number" value="@input.port" />
+      <label for="port">Port</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="username" name="username" type="text" value="@input.username" />
+      <label for="username">Username</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="password" name="password" type="text" value="-unchanged-" />
+      <label for="password">Password</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="db" name="db" type="text" value="@input.db" />
+      <label for="db">Database</label>
+    </div>
+  </div>
+</div>

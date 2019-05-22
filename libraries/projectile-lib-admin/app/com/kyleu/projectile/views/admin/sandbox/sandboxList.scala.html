@@ -1,6 +1,6 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(cfg.projectName + " Sandbox Tasks", cfg) {
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Sandbox Tasks", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.sandbox)) {
   <ul class="collection with-header">
     <li class="collection-header">
       <h5>Sandbox Tasks</h5>

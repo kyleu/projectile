@@ -1,0 +1,8 @@
+{
+  "host" : "localhost",
+  "username" : "_PROJECT_NAME",
+  "password" : "_PROJECT_NAME",
+  "ssl" : false,
+  "db" : "_PROJECT_NAME",
+  "catalog" : null
+}

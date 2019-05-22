@@ -10,7 +10,7 @@ object TwirlViewHelper {
   def addButtons(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     if (model.pkFields.nonEmpty) {
-      file.add(s"""<div class="right"><a class="btn" href="@${TwirlHelper.routesClass(config, model)}.editForm($args)">Edit</a></div>""")
+      file.add(s"""<div class="right"><a class="btn @cfg.user.buttonColor" href="@${TwirlHelper.routesClass(config, model)}.editForm($args)">Edit</a></div>""")
       val rc = TwirlHelper.routesClass(config, model)
 
       val onClick = s"""onclick="return confirm('Are you sure you want to remove this ${model.title}?')""""

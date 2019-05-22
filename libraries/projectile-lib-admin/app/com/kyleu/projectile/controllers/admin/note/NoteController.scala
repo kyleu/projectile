@@ -11,16 +11,17 @@ import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.models.web.ReftreeUtils._
+import com.kyleu.projectile.services.database.JdbcDatabase
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class NoteController @javax.inject.Inject() (
-    override val app: Application, svc: NoteService
+    override val app: Application, svc: NoteService, db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeatures.enable("note")
-  if (!app.db.doesTableExist("note")) { app.addError("table.note", "Missing [note] table") }
+  if (!db.doesTableExist("note")) { app.addError("table.note", "Missing [note] table") }
 
   def addForm(model: String, pk: String) = withSession("add.form", admin = true) { implicit request => implicit td =>
     val note = Note.empty(relType = Some(model), relPk = Some(pk), author = request.identity.id)

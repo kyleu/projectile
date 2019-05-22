@@ -1,6 +1,6 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, tasks: Seq[com.kyleu.projectile.models.task.ScheduledTask])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page("Scheduled Tasks", cfg) {
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Scheduled Tasks", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.scheduledTaskRun)) {
   <ul class="collection with-header">
     <li class="collection-header">
       <div class="right"><a href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduleController.run("all")">Run All</a></div>

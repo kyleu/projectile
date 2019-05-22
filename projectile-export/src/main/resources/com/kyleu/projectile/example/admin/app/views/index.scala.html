@@ -1,7 +1,0 @@
-@(user: com.kyleu.projectile.models.user.SystemUser, cfg: com.kyleu.projectile.models.config.UiConfig, devmode: Boolean)(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(util.Version.projectName, cfg) {
-  @com.kyleu.projectile.views.html.layout.card(Some(s"Welcome to ${cfg.projectName}")) {
-    <p>Now it's time to make this application your own!</p>
-  }
-}

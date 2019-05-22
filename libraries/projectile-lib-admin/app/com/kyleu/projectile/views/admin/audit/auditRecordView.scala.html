@@ -1,8 +1,8 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.audit.AuditRecord, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(s"Audit Record", cfg) {
+)@com.kyleu.projectile.views.html.layout.page(title = s"Audit Record", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.auditRecord)) {
   @com.kyleu.projectile.views.html.layout.card(None) {
-    <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Audit Record?')" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.remove(model.id)">Remove</a></div>
     <table class="highlight responsive-table">
       <tbody>
@@ -44,7 +44,7 @@
     </table>
   }
 
-  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString)
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
 
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "AuditRecord", "Audit Record", model.id)
 }

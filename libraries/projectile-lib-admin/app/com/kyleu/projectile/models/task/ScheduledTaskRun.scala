@@ -1,4 +1,3 @@
-/* Generated File */
 package com.kyleu.projectile.models.task
 
 import java.time.LocalDateTime

@@ -1,4 +1,3 @@
-/* Generated File */
 package com.kyleu.projectile.controllers.admin.task
 
 import java.util.UUID

@@ -1,14 +1,14 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, connections: Seq[com.kyleu.projectile.models.connection.ConnectionDescription])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page("Active Connections", cfg) {
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Active Connections", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.connection)) {
   <ul class="collection with-header">
     <li class="collection-header">
-      <h5><i class="fa fa-globe"></i> @com.kyleu.projectile.util.NumberUtils.withCommas(connections.size) Active Connections</h5>
+      <h5><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.connection</i> @com.kyleu.projectile.util.NumberUtils.withCommas(connections.size) Active Connections</h5>
     </li>
     <li class="collection-item">
       <form action="@com.kyleu.projectile.controllers.admin.connection.routes.ConnectionActivityController.broadcast()" method="get">
         <input placeholder="Message" id="broadcast-input" name="msg" type="text" class="validate" />
-        <button type="submit" class="btn theme" style="margin: 8px 0;">Broadcast</button>
+        <button type="submit" class="btn @cfg.user.buttonColor" style="margin: 8px 0;">Broadcast</button>
       </form>
     </li>
     <li class="collection-item">

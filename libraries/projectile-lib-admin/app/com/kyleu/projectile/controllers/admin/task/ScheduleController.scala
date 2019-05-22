@@ -2,17 +2,17 @@ package com.kyleu.projectile.controllers.admin.task
 
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
+import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.task.{ScheduledTaskRegistry, ScheduledTaskService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class ScheduleController @javax.inject.Inject() (
-    override val app: Application,
-    svc: ScheduledTaskService
+    override val app: Application, svc: ScheduledTaskService, db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends AuthController("schedule") {
   ApplicationFeatures.enable("task")
-  if (!app.db.doesTableExist("scheduled_task_run")) { app.addError("table.scheduled_task_run", "Missing [scheduled_task_run] table") }
+  if (!db.doesTableExist("scheduled_task_run")) { app.addError("table.scheduled_task_run", "Missing [scheduled_task_run] table") }
 
   def list = withSession("list", admin = true) { implicit request => implicit td =>
     val cfg = app.cfgAdmin(u = request.identity, "system", "tools", "task")

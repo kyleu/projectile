@@ -15,9 +15,9 @@
     q: Option[String] = None,
     fullUI: Boolean = true
 )(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@if(fullUI) {
-  @com.kyleu.projectile.views.html.layout.page(title = s"$model Management", cfg = cfg) {
+  @com.kyleu.projectile.views.html.layout.page(title = s"$model Management", cfg = cfg, icon = Some(icon)) {
     @com.kyleu.projectile.views.html.layout.card(None) {
       <div>
         <div>
@@ -29,7 +29,7 @@
             </div>
           }
           <h5>
-            <i class="fa @icon" style="margin-right: 6px;"></i>
+            <i class="material-icons" style="margin-right: 6px;">@icon</i>
             @{totalCount.map(total => com.kyleu.projectile.util.NumberUtils.withCommas(total)).map(_ + " ").getOrElse("") + modelPlural + q.filter(_.trim.nonEmpty).map(q => s" matching [$q]").getOrElse("")}
             @calls.newCall.map { nu =>
               <a href="@nu"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.add</i></a>
@@ -45,8 +45,8 @@
         </div>
       </div>
       <div>
-      @if(offset > 0) { <a class="prev-link left btn" href="@calls.prev">Prev Page</a> }
-      @if(rows.lengthCompare(limit) >= 0) { <a class="next-link right btn" style="margin: 18px 0;" href="@calls.next">Next Page</a> }
+      @if(offset > 0) { <a class="prev-link left btn @cfg.user.buttonColor" href="@calls.prev">Prev Page</a> }
+      @if(rows.lengthCompare(limit) >= 0) { <a class="next-link right btn @cfg.user.buttonColor" style="margin: 18px 0;" href="@calls.next">Next Page</a> }
       </div>
     }
   }

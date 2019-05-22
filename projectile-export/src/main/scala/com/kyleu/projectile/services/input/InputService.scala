@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresI
 import com.kyleu.projectile.models.graphql.input.GraphQLInput
 import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
 import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
-import com.kyleu.projectile.models.typescript.input.TypeScriptInput
+import com.kyleu.projectile.models.typescript.input.{TypeScriptInput, TypeScriptOptions}
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.database.schema.SchemaHelper
 import com.kyleu.projectile.util.JsonFileLoader
@@ -68,6 +68,11 @@ class InputService(val cfg: ConfigService) {
   def setThriftOptions(key: String, to: ThriftOptions) = {
     val input = ThriftInput.fromSummary(is = getSummary(key), files = to.files)
     ThriftInputService.saveThrift(cfg, input)
+  }
+
+  def setTypeScriptOptions(key: String, to: TypeScriptOptions) = {
+    val input = TypeScriptInput.fromSummary(is = getSummary(key), files = to.files)
+    TypeScriptInputService.saveTypeScript(cfg, input)
   }
 
   def remove(key: String) = {

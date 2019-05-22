@@ -1,8 +1,8 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.task.ScheduledTaskRun, notes: Seq[com.kyleu.projectile.models.note.Note], auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(s"Scheduled Task Run", cfg) {
+)@com.kyleu.projectile.views.html.layout.page(title = s"Scheduled Task Run", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.scheduledTaskRun)) {
   @com.kyleu.projectile.views.html.layout.card(None) {
-    <div class="right"><a class="btn" href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Scheduled Task Run?')" href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.remove(model.id)">Remove</a></div>
     <table class="highlight responsive-table">
       <tbody>
@@ -38,7 +38,7 @@
     </table>
   }
 
-  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString)
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
 
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "ScheduledTaskRun", "Scheduled Task Run", model.id)
 

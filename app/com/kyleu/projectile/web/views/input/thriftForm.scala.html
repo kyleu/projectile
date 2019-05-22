@@ -1,0 +1,14 @@
+@(input: com.kyleu.projectile.models.thrift.input.ThriftInput)
+<div class="collection-item">
+  <div class="row">
+    <div class="col s12">
+      <h6>Thrift Files</h6>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <textarea id="files" name="files" class="materialize-textarea">@input.files.mkString("\n")</textarea>
+      <label for="files">Files (one per line)</label>
+    </div>
+  </div>
+</div>

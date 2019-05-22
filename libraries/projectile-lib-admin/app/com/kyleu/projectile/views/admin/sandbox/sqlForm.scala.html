@@ -1,0 +1,60 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, sql: String, result: Option[Seq[(Int, String, Seq[String], Seq[Seq[Option[String]]])]])(
+    implicit session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "SQL Prompt", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.sql)) {
+  @if(result.isEmpty) {
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <ul>
+        <li>Be careful, seriously</li>
+        <li>You can separate statements with a semicolon</li>
+        <li>Your queries will be run in a transaction, and immediately rolled back unless "Commit" is checked</li>
+      </ul>
+    }
+  }
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <form action="@com.kyleu.projectile.controllers.admin.sql.routes.SqlBackdoorController.sqlPost()" method="post">
+      <textarea class="materialize-textarea" style="font-family: 'roboto-mono', monospace;" name="sql">@sql</textarea>
+      <div style="padding: 12px 0;">
+        <label>
+          <input name="format" value="html" type="radio" checked />
+          <span>Html</span>
+        </label>
+
+        <label>
+          <input name="format" value="csv" type="radio" />
+          <span>CSV</span>
+        </label>
+      </div>
+      <button class="btn @cfg.user.buttonColor" type="submit" style="margin-right: 12px;">Execute</button>
+      <label>
+        <input name="commit" value="true" type="checkbox" />
+        <span>Commit Changes</span>
+      </label>
+    </form>
+  }
+
+  @result.map { res =>
+    @res.zipWithIndex.map { x =>
+      @com.kyleu.projectile.views.html.layout.card(Some(s"Result ${x._2 + 1} (${x._1._1} ms, ${res.size} rows)")) {
+        <pre>@x._1._2</pre>
+        <table class="highlight">
+          <thead>
+            <tr>
+            @x._1._3.map { c =>
+              <th>@c</th>
+            }
+            </tr>
+          </thead>
+          <tbody>
+          @x._1._4.map { row =>
+            <tr>
+              @row.map { c =>
+                <td>@c.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+              }
+            </tr>
+          }
+          </tbody>
+        </table>
+      }
+    }
+  }
+}

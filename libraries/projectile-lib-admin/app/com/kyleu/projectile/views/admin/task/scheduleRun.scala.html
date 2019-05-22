@@ -1,6 +1,6 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, results: Seq[com.kyleu.projectile.models.task.ScheduledTaskRun])(
     implicit request: Request[AnyContent], session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(title = "Scheduled Task Result", cfg = cfg) {
+)@com.kyleu.projectile.views.html.layout.page(title = "Scheduled Task Result", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.scheduledTaskRun)) {
   @if(results.isEmpty) {
     <div>No results...</div>
   }
@@ -16,6 +16,6 @@
       </div>
     </div>
 
-    @com.kyleu.projectile.services.augment.AugmentService.views.augment(result, request.queryString)
+    @com.kyleu.projectile.services.augment.AugmentService.views.augment(result, request.queryString, cfg)
   }
 }

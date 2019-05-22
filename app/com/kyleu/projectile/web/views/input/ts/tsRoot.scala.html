@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, files: Seq[String])(
-    implicit request: Request[AnyContent], session: Session, flash: Flash
+    implicit session: Session, flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Root") {
   <div class="collection with-header">
     <div class="collection-header">

@@ -25,10 +25,12 @@ object GraphQLInputService {
     gi
   }
 
-  def loadGraphQL(cfg: ConfigService, summ: InputSummary) = {
-    val dir = cfg.inputDirectory / summ.key
+  def loadOptions(cfg: ConfigService, key: String) = {
+    JsonFileLoader.loadFile[GraphQLOptions](cfg.inputDirectory / key / fn, "GraphQL query files")
+  }
 
-    val pc = JsonFileLoader.loadFile[GraphQLOptions](dir / fn, "GraphQL query files")
-    GraphQLInput.fromSummary(summ, pc.schema, cfg.workingDirectory)
+  def loadGraphQL(cfg: ConfigService, summ: InputSummary) = {
+    val opts = loadOptions(cfg, summ.key)
+    GraphQLInput.fromSummary(summ, opts.schema, cfg.workingDirectory)
   }
 }

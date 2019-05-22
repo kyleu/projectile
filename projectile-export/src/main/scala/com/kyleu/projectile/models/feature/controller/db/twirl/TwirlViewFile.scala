@@ -21,7 +21,8 @@ object TwirlViewFile {
 
   private[this] def addContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     val systemViewPkg = (config.systemViewPackage ++ Seq("html")).mkString(".")
-    file.add(s""")@$systemViewPkg.layout.page(s"${model.title}", cfg) {""", 1)
+    val icon = s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.${model.propertyName}"
+    file.add(s""")@$systemViewPkg.layout.page(title = s"${model.title}", cfg = cfg, icon = Some($icon)) {""", 1)
     file.add("@com.kyleu.projectile.views.html.layout.card(None) {", 1)
     TwirlViewHelper.addButtons(config, model, file)
     TwirlViewHelper.addFields(config, model, file)
@@ -36,7 +37,7 @@ object TwirlViewFile {
   private[this] def addModelFeatures(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.pkFields.nonEmpty) {
     val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
     file.add()
-    file.add(s"""@$imp.AugmentService.views.augment(model, request.queryString)""")
+    file.add(s"""@$imp.AugmentService.views.augment(model, request.queryString, cfg)""")
     val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
     if (model.features(ModelFeature.Notes)) {
       file.add()

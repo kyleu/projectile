@@ -64,10 +64,13 @@ object PostgresInputService {
       .transform
   }
 
+  def loadConnection(cfg: ConfigService, key: String) = {
+    JsonFileLoader.loadFile[PostgresConnection](cfg.inputDirectory / key / fn, "Postgres connection")
+  }
+
   def loadPostgres(cfg: ConfigService, summ: InputSummary) = {
     val dir = cfg.inputDirectory / summ.key
-
-    val pc = JsonFileLoader.loadFile[PostgresConnection](dir / fn, "Postgres connection")
+    val pc = loadConnection(cfg, summ.key)
 
     def loadDir[A: Decoder](k: String) = {
       val d = dir / k

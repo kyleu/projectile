@@ -1,10 +1,11 @@
 package com.kyleu.projectile.web.controllers.input
 
-import com.kyleu.projectile.models.database.input.PostgresInput
+import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresInput}
 import com.kyleu.projectile.models.graphql.input.GraphQLInput
 import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
-import com.kyleu.projectile.models.thrift.input.ThriftInput
-import com.kyleu.projectile.models.typescript.input.TypeScriptInput
+import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
+import com.kyleu.projectile.models.typescript.input.{TypeScriptInput, TypeScriptOptions}
+import com.kyleu.projectile.services.input.PostgresInputService
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.{ControllerUtils, ExampleProjectHelper}
 
@@ -48,6 +49,19 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
   def save() = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = InputSummary(template = InputTemplate.withValue(form("template")), key = form("key"), description = form("description"))
+    lazy val files = form("files").split("\n").map(_.trim).filter(_.nonEmpty)
+    summary.template match {
+      case InputTemplate.Postgres => projectile.setPostgresOptions(summary.key, PostgresConnection(
+        host = form("host"),
+        port = form("port").toInt,
+        username = form("username"),
+        password = Some(form("password")).filter(_ != "-unchanged-").getOrElse(PostgresInputService.loadConnection(projectile.rootCfg, summary.key).password),
+        db = form("db")
+      ))
+      case InputTemplate.GraphQL => // projectile.setGraphQLOptions(summary.key, GraphQLOptions(???))
+      case InputTemplate.Thrift => projectile.setThriftOptions(summary.key, ThriftOptions(files = files))
+      case InputTemplate.TypeScript => projectile.setTypeScriptOptions(summary.key, TypeScriptOptions(files = files))
+    }
     val input = projectile.addInput(summary)
     val msg = "success" -> s"Saved input [${input.key}]"
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)).flashing(msg))

@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.command.{ProjectileCommand, ProjectileRespons
 import com.kyleu.projectile.models.database.input.PostgresConnection
 import com.kyleu.projectile.models.input.InputSummary
 import com.kyleu.projectile.models.thrift.input.ThriftOptions
+import com.kyleu.projectile.models.typescript.input.TypeScriptOptions
 import com.kyleu.projectile.services.ProjectileService
 
 trait InputHelper { this: ProjectileService =>
@@ -17,6 +18,7 @@ trait InputHelper { this: ProjectileService =>
   def addInput(summary: InputSummary) = inputSvc.add(summary)
   def setPostgresOptions(key: String, conn: PostgresConnection) = inputSvc.setPostgresOptions(key, conn)
   def setThriftOptions(key: String, to: ThriftOptions) = inputSvc.setThriftOptions(key, to)
+  def setTypeScriptOptions(key: String, to: TypeScriptOptions) = inputSvc.setTypeScriptOptions(key, to)
   def removeInput(key: String) = inputSvc.remove(key)
   def refreshInput(key: String) = inputSvc.refresh(key)
 

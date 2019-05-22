@@ -1,0 +1,19 @@
+@(segments: Seq[String], m: com.kyleu.projectile.models.menu.NavMenu)
+<div>
+  @defining((segments :+ m.key).dropWhile(_ == "_root")) { segs =>
+    @defining(m.url.getOrElse(com.kyleu.projectile.controllers.sitemap.routes.SitemapController.menu(segs.mkString("/")))) { url =>
+      <div class="item">
+        <i class="material-icons">@m.icon.getOrElse(com.kyleu.projectile.models.web.InternalIcons.default)</i>
+        <a href="@url">@m.title</a>
+        @m.description.map { d => - <em>@d</em> }
+      </div>
+    }
+    @if(m.children.nonEmpty) {
+      <div class="children">
+      @m.children.map { c =>
+        @com.kyleu.projectile.views.html.sitemap.menu(segs, c)
+      }
+      </div>
+    }
+  }
+</div>

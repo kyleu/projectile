@@ -1,0 +1,2 @@
+GET         /            com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sql
+POST        /            com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sqlPost

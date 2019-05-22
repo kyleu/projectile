@@ -3,6 +3,7 @@ package com.kyleu.projectile.controllers
 import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.user.{Role, SystemUser}
+import com.kyleu.projectile.models.web.StartupErrorFixes
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.TraceData
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
@@ -78,14 +79,20 @@ abstract class AuthController(name: String) extends BaseController(name) {
   }
 
   private[this] def appErrors() = Action.async { implicit r =>
-    if (r.queryString.get("errors").exists(_.headOption.contains("reset"))) {
-      if (app.reload()) {
-        Future.successful(Redirect("/"))
-      } else {
-        Future.successful(Ok(com.kyleu.projectile.views.html.error.startupError(app)))
-      }
+    def reload() = if (app.reload()) {
+      Future.successful(Redirect("/"))
     } else {
       Future.successful(Ok(com.kyleu.projectile.views.html.error.startupError(app)))
+    }
+    if (r.queryString.get("errors").exists(_.headOption.contains("reset"))) {
+      reload()
+    } else {
+      r.queryString.get("fix").map(_.head) match {
+        case Some(fix) =>
+          StartupErrorFixes.fix(app, fix)
+          reload()
+        case None => Future.successful(Ok(com.kyleu.projectile.views.html.error.startupError(app)))
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.connection.ConnectionMessage._
-import com.kyleu.projectile.models.module.Application
+import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
 import com.kyleu.projectile.services.connection.ConnectionSupervisor
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -17,6 +17,8 @@ class ConnectionActivityController @javax.inject.Inject() (
     override val app: Application,
     @javax.inject.Named("connection-supervisor") val connSupervisor: ActorRef
 )(implicit ec: ExecutionContext) extends AuthController("admin.activity") {
+  ApplicationFeatures.enable("connection")
+
   def connectionList = withSession("activity.connection.list", admin = true) { implicit request => implicit td =>
     ask(connSupervisor, GetConnectionStatus)(20.seconds).mapTo[ConnectionStatus].map { status =>
       Ok(com.kyleu.projectile.views.html.admin.activity.connectionList(app.cfgAdmin(u = request.identity), status.connections))
