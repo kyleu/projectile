@@ -22,11 +22,12 @@ case class UserSettings(
     navbarDark: Boolean = true,
 
     buttonColor: Option[String] = None,
+    accentColor: Option[String] = None,
 
     avatarUrl: Option[String] = None
 ) {
   val menuDarkClass = if (menuDark) { "sidenav-dark" } else { "sidenav-light" }
 
-  val logo = if (navbarDark) { "/assets/images/logo-white.svg" } else { "/assets/images/logo-black.svg" }
+  val logo = if (menuDark) { "/assets/images/logo-white.svg" } else { "/assets/images/logo-black.svg" }
   val navbarDarkClass = if (navbarDark) { "navbar-dark" } else { "navbar-light" }
 }

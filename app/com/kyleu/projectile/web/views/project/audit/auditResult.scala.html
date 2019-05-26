@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, result: com.kyleu.projectile.models.project.audit.AuditResult)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "Audit Result") {
   <div class="collection with-header">
     <div class="collection-header">

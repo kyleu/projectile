@@ -12,6 +12,7 @@ object NodeService {
     SourceFileHelper.parseSourceFile(ctx = ctx, obj = o, getKids = kids("statements").map(_._2), params = params)
   }
 
+  @com.github.ghik.silencer.silent
   def parseNode(ctx: NodeContext, o: JsonObject, params: ServiceParams): (Seq[String], TypeScriptNode) = {
     var messages = params.messages
     def addMessages(x: (Seq[String], TypeScriptNode)) = { messages = messages ++ x._1; x._2 }

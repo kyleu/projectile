@@ -98,6 +98,6 @@ class JdbcDatabase(override val key: String, configPrefix: String)(implicit val 
   override def close() = {
     ds.foreach(_.close())
     ds = None
-    true
+    super.close()
   }
 }

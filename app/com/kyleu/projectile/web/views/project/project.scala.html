@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, inputType: com.kyleu.projectile.models.input.InputTemplate, project: com.kyleu.projectile.models.project.Project)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Project Detail") {
   @com.kyleu.projectile.web.views.html.project.projectSummary(inputType, project)
   @com.kyleu.projectile.web.views.html.project.projectStatus(inputType, project)

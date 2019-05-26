@@ -19,7 +19,7 @@
     </div>
 
     <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion">
-      @cfg.menu.map(x => com.kyleu.projectile.views.html.layout.pageNavItem(x, cfg.breadcrumbs, cfg.user.menuColor))
+      @cfg.menu.map(x => com.kyleu.projectile.views.html.layout.pageNavItem(x, Nil, cfg.breadcrumbs, cfg.user.menuColor))
     </ul>
     <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="" onclick="return false;" data-target="slide-out"><i class="material-icons">menu</i></a>
   </aside>

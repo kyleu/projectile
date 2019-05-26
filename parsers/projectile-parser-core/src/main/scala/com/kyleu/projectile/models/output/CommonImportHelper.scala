@@ -44,6 +44,7 @@ object CommonImportHelper {
       case "NullUtils" => c.utilitiesPackage
       case "OrderBy" => c.resultsPackage :+ "orderBy"
       case "PagingOptions" => c.resultsPackage :+ "paging"
+      case "PermissionService" => c.systemPackage :+ "services" :+ "auth"
       case "RelationCount" => c.systemPackage ++ Seq("models", "result")
       case "ReftreeUtils" => c.systemPackage ++ Seq("models", "web")
       case "ResultFieldHelper" => c.systemPackage ++ Seq("models", "queries")

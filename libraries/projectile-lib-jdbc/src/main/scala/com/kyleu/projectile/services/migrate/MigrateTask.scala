@@ -1,4 +1,4 @@
-package com.kyleu.projectile.services.database
+package com.kyleu.projectile.services.migrate
 
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData

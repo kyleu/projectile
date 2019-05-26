@@ -30,7 +30,7 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewService(projectile, key, inputServices)))
   }
 
-  def add(key: String, serviceKey: String) = Action.async { implicit request =>
+  def add(key: String, serviceKey: String) = Action.async { _ =>
     val p = projectile.getProject(key)
     val i = p.getInput
     serviceKey match {
@@ -87,7 +87,7 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
     Future.successful(redir.flashing("success" -> s"Saved service [$serviceKey]"))
   }
 
-  def remove(key: String, member: String) = Action.async { implicit request =>
+  def remove(key: String, member: String) = Action.async { _ =>
     projectile.removeServiceMember(key, member)
     Future.successful(Redirect(
       com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)

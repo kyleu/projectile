@@ -114,4 +114,5 @@ case class ExportModel(
     throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}]")
   }
   def getFieldOpt(k: String) = fields.find(f => f.key == k || f.propertyName == k)
+  def perm(act: String) = s"""("${pkg.headOption.getOrElse("system")}", "$className", "$act")"""
 }

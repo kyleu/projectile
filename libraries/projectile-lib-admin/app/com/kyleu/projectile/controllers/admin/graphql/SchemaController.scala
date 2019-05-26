@@ -13,12 +13,12 @@ class SchemaController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("schema") {
   lazy val idl = SchemaRenderer.renderSchema(schema.schema)
 
-  def renderSchema() = withSession("graphql.schema", admin = true) { implicit request => implicit td =>
+  def renderSchema() = withSession("render", ("tools", "GraphQL", "post")) { _ => _ =>
     Future.successful(Ok(idl))
   }
 
-  def voyager(root: String) = withSession("schema.render", admin = true) { implicit request => implicit td =>
-    val cfg = app.cfgAdmin(u = request.identity, "admin", "system", "graphql")
+  def voyager(root: String) = withSession("voyager", ("tools", "GraphQL", "visualize")) { implicit request => _ =>
+    val cfg = app.cfg(u = Some(request.identity), "admin", "system", "graphql")
     Future.successful(Ok(com.kyleu.projectile.views.html.graphql.voyager(root = root, cfg = cfg)))
   }
 }

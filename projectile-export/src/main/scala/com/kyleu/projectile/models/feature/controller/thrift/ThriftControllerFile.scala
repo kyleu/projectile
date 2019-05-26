@@ -46,8 +46,8 @@ object ThriftControllerFile {
     file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()
-    file.add("""def list = withSession("list", admin = true) { implicit request => implicit td =>""", 1)
-    val cfg = s"""app.cfgAdmin(u = request.identity, "thrift", "${service.key}")"""
+    file.add(s"""def list = withSession("list", ${service.perm("view")}) { implicit request => implicit td =>""", 1)
+    val cfg = s"""app.cfg(u = Some(request.identity), "thrift", "${service.key}")"""
     file.add(s"Future.successful(Ok(${(config.viewPackage :+ "html" :+ "admin" :+ "thrift").mkString(".")}.${service.propertyName}($cfg)))")
     file.add("}", -1)
 
@@ -85,10 +85,10 @@ object ThriftControllerFile {
   private[this] def addHelpers(svc: ExportService, file: ScalaFile, config: ExportConfiguration) = {
     file.add()
     file.add(s"""private[this] val listCall = ("${svc.className}", rc.list())""")
-    val cfg = s"""app.cfgAdmin(u = request.identity, "thrift", "${svc.key}")"""
+    val cfg = s"""app.cfg(u = Some(request.identity), "thrift", "${svc.key}")"""
 
     val args = "title: String, act: Call, args: Json"
-    file.add(s"""private[this] def getHelper($args) = withSession(title, admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"""private[this] def getHelper($args) = withSession(title, ${svc.perm("run")}) { implicit request => implicit td =>""", 1)
     file.add("""Future.successful(render {""", 1)
     file.add(s"case Accepts.Html() => Ok(${config.systemViewPackage.mkString(".")}.html.admin.layout.methodCall(", 1)
     file.add(s"title = title, cfg = $cfg, svc = listCall, args = args, act = act, debug = app.config.debug")
@@ -99,7 +99,7 @@ object ThriftControllerFile {
 
     val postArgs = "title: String, act: Call, argNames: Seq[String], result: (Map[String, Json], TraceData) => Future[Json]"
     file.add(s"""private[this] def postHelper($postArgs) = {""", 1)
-    file.add("withSession(name, admin = true) { implicit request => implicit td =>", 1)
+    file.add(s"withSession(name, ${svc.perm("run")}) { implicit request => implicit td =>", 1)
     file.add("val started = DateUtils.now")
     file.add("val args = ControllerUtils.jsonArguments(request.body, argNames: _*)")
     file.add("""def ren(res: Option[Json] = None, err: Option[(String, String)] = None) = render {""", 1)

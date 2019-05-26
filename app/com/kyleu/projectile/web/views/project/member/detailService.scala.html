@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, key: String, p: com.kyleu.projectile.models.project.ProjectSummary, member: com.kyleu.projectile.models.project.member.ServiceMember, svc: com.kyleu.projectile.models.export.ExportService)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, svc.key + " Service") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.save(p.key, svc.key)">
     <div class="collection with-header">

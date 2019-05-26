@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, inputTemplate: com.kyleu.projectile.models.input.InputTemplate, project: com.kyleu.projectile.models.project.Project)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Feature Edit") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.saveFeatures()">
     <input id="key" name="key" type="hidden" value="@project.key" />

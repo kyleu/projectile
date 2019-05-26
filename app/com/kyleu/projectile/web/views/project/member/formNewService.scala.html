@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, key: String, inputServices: Seq[(String, Boolean)])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Service") {
   <div class="collection with-header">
     <div class="collection-header">

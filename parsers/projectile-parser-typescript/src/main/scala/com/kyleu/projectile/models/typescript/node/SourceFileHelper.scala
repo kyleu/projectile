@@ -71,7 +71,7 @@ object SourceFileHelper {
     line.substring(line.indexOf(k) + k.length).trim
   }
   private[this] def removeQuotes(s: String) = s.trim.dropWhile(c => c == '\"' || c == '\'').reverse.dropWhile(c => c == '\"' || c == '\'').reverse.trim
-  private[this] def quoteIndex(s: String, startIdx: Int = 0) = s.indexOf('\'', startIdx) match {
+  private[this] def quoteIndex(s: String, startIdx: Int) = s.indexOf('\'', startIdx) match {
     case -1 => s.indexOf('\"', startIdx) match {
       case -1 => throw new IllegalStateException(s"Cannot find quote after index [$startIdx] for string [$s]")
       case idx => idx

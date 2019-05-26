@@ -30,7 +30,7 @@ class ProjectModelController @javax.inject.Inject() () extends ProjectileControl
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewModel(projectile, key, inputModels)))
   }
 
-  def add(key: String, modelKey: String) = Action.async { implicit request =>
+  def add(key: String, modelKey: String) = Action.async { _ =>
     val p = projectile.getProject(key)
     val i = p.getInput
     modelKey match {
@@ -126,7 +126,7 @@ class ProjectModelController @javax.inject.Inject() () extends ProjectileControl
     Future.successful(redir.flashing("success" -> s"Saved model [$modelKey]"))
   }
 
-  def remove(key: String, member: String) = Action.async { implicit request =>
+  def remove(key: String, member: String) = Action.async { _ =>
     projectile.removeModelMember(key, member)
     Future.successful(Redirect(
       com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)

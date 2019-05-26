@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, header: String => Html, outputs: Seq[com.kyleu.projectile.models.project.ProjectOutput], files: Seq[com.kyleu.projectile.models.output.OutputWriteResult], verbose: Boolean)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(outputs.size == 1) {
   s"[${outputs.headOption.getOrElse(throw new IllegalStateException("No outputs")).project.key}] Export Result"
 } else {

@@ -1,0 +1,14 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, migrations: Seq[com.kyleu.projectile.models.migrate.DatabaseMigration])(
+    implicit flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Database Migrations", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.migration)) {
+  <div class="collection">
+    @migrations.map { m =>
+      <a class="collection-item" href="@com.kyleu.projectile.controllers.admin.migrate.routes.MigrationController.view(m.installedRank)">
+        <div>
+          <div class="right">@m.version.map("v" + _).getOrElse(m.installedRank.toString)</div>
+          @m.description
+        </div>
+      </a>
+    }
+  </div>
+}

@@ -1,4 +1,4 @@
-import Dependencies.WebJars
+import Dependencies._
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
 import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
@@ -17,7 +17,8 @@ object Server {
     name := Common.projectId,
     description := Common.projectName,
 
-    libraryDependencies ++= Dependencies.Play.all :+ WebJars.jquery :+ WebJars.materialize :+ WebJars.fontAwesome,
+    libraryDependencies ++= Play.all ++ Seq(WebJars.jquery, WebJars.materialize, WebJars.fontAwesome) ++ Compiler.all,
+    scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes")),
 
     // Play
     RoutesKeys.routesGenerator := InjectedRoutesGenerator,

@@ -48,7 +48,6 @@ object JsonService {
       case _ if json.isObject => json.asObject.get
       case _ => throw new IllegalStateException(s"Json [${json.noSpaces}] is not an object")
     }
-    def ext[T: Decoder](k: String) = extractObj[T](obj = obj, key = k)
     val ctx = nodeContext(json, params)
     try {
       NodeService.parseNode(ctx = ctx, o = obj, params = params)

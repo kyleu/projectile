@@ -44,7 +44,7 @@ object CacheService {
     })
   }
 
-  private def set(key: String, value: Any, expiration: Int = 0): Unit = {
+  private def set(key: String, value: Any, expiration: Int): Unit = {
     val element = new Element(key, value)
     if (expiration == 0) element.setEternal(true)
     element.setTimeToLive(expiration)

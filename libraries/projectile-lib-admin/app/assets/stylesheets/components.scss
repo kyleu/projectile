@@ -73,3 +73,7 @@ html {
 input[type="text"].lookup {
   margin-left: 3rem;
 }
+
+::-webkit-input-placeholder, ::-moz-placeholder, ::placeholder {
+  color: #000;
+}

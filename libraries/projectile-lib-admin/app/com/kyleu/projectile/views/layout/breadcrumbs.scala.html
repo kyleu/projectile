@@ -8,7 +8,7 @@
         @if(b.url.isDefined) {
           <li class="breadcrumb-item"><a href="@b.url">@b.title</a></li>
         } else {
-          @if(com.kyleu.projectile.models.module.ApplicationFeatures.enabled("sitemap")) {
+          @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Sitemap)) {
             <li class="breadcrumb-item"><a href="@com.kyleu.projectile.controllers.sitemap.routes.SitemapController.menu((cfg.breadcrumbs.takeWhile(_ != b) :+ b).map(_.key).mkString("/"))">@b.title</a></li>
           } else {
             <li class="breadcrumb-item">@b.title</li>
@@ -20,7 +20,7 @@
 }
 
 @if(cfg.user.theme == com.kyleu.projectile.models.user.Theme.Default.value) {
-  <div class="breadcrumbs-inline pt-3 pb-1" id="breadcrumbs-wrapper">
+  <div class="breadcrumbs-inline" style="padding: 24px 0;" id="breadcrumbs-wrapper">
     <div class="container">
       <div class="row">
         <div class="col s12 breadcrumbs-left">
@@ -46,7 +46,7 @@
   </div>
 }
 @if(cfg.user.theme == com.kyleu.projectile.models.user.Theme.Gradient.value) {
-  <div class="pt-3 pb-1" id="breadcrumbs-wrapper">
+  <div style="padding: 24px 0;" id="breadcrumbs-wrapper">
     <div class="container">
       <div class="row">
         <div class="col s12 m6 l6">
@@ -60,7 +60,7 @@
   </div>
 }
 @if(cfg.user.theme == com.kyleu.projectile.models.user.Theme.Modern.value) {
-  <div class="breadcrumbs-dark pb-0 pt-4" id="breadcrumbs-wrapper">
+  <div class="breadcrumbs-dark" style="padding: 24px 0;" id="breadcrumbs-wrapper">
     <div class="container">
       <div class="row">
         <div class="col s12 breadcrumbs-left">

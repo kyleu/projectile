@@ -7,7 +7,6 @@ import com.kyleu.projectile.models.result.data.{DataField, DataFieldModel, DataS
 import com.kyleu.projectile.models.tag.Tag
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
-import io.circe.JsonObject
 
 object Audit {
   implicit val jsonEncoder: Encoder[Audit] = deriveEncoder

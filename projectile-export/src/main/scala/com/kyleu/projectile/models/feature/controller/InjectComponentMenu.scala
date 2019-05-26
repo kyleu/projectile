@@ -29,14 +29,12 @@ object InjectComponentMenu extends FeatureLogic.Inject(path = OutputPath.ServerS
         case Nil => None
         // case model :: Nil => Some(model.title -> Seq(s"""// ${model.title}"""))
         case models =>
-          val last = groups.lastOption.contains(pkgGroup)
-          val comma = if (last) { "" } else { "," }
           val section = ExportHelper.toClassName(pkgGroup._1)
 
           val sectionIcon = s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.pkg_${pkgGroup._1}"
-          val h = s"""NavMenu(key = "${pkgGroup._1}", title = "$section", url = None, icon = Some($sectionIcon), children = Seq("""
+          val h = s"""Seq(NavMenu(key = "${pkgGroup._1}", title = "$section", url = None, icon = Some($sectionIcon), children = Seq("""
           // val t = s"""), flatSection = true)$comma"""
-          val t = s"""))$comma"""
+          val t = s"""))) ++"""
 
           val memberLines = h +: models.map { model =>
             val lastMember = models.lastOption.contains(model)

@@ -1,6 +1,5 @@
-@(path: String, ex: Option[Throwable])(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.splash("Error") {
+@(path: String, ex: Option[Throwable])(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.splash("Error") {
   <h6>500 Internal Server Error</h6>
   <p>An error has occurred, and has been logged. We're very sorry.</p>
   @ex.map { x =>

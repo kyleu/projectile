@@ -7,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.9.6"
+    val app = "1.9.9"
     val scala = "2.12.8"
   }
 
@@ -18,9 +18,18 @@ object Common {
 
   val compileOptions = Seq(
     "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-    "–Xcheck-null", /* "-Xfatal-warnings", */ /* "-Xlint," */ "-Xcheckinit", "-Xfuture", "-Yrangepos", "-Ypartial-unification",
-    "-Yno-adapted-args", "-Ywarn-dead-code", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
+    /* "-Xfatal-warnings", */ "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Xfuture",
+    "-Yrangepos", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-dead-code",
+    "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
   ) ++ profileOptions
+
+  def silencerOptions(path: String, pathFilters: Seq[String] = Nil, messageFilters: Seq[String] = Nil) = {
+    Seq(s"-P:silencer:sourceRoots=$path") ++ (
+      if(pathFilters.isEmpty) { Nil } else { Seq(s"-P:silencer:pathFilters=${pathFilters.mkString(";")}") }
+    ) ++ (
+      if(messageFilters.isEmpty) { Nil } else { Seq(s"-P:silencer:globalFilters=${messageFilters.mkString(";")}") }
+    )
+  }
 
   lazy val settings = Seq(
     version := Common.Versions.app,

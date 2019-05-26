@@ -4,7 +4,7 @@
     @defining(if(cfg.user.menuCollapsed) { "nav-collapsible nav-expanded" } else { "nav-collapsible sideNav-lock" }) { collapse =>
       <nav class="navbar-main navbar-color @collapse @cfg.user.navbarDarkClass @cfg.user.navbarColor.getOrElse("")">
         <div class="nav-wrapper">
-          @if(com.kyleu.projectile.models.module.ApplicationFeatures.enabled("search")) {
+          @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Search)) {
             <div class="header-search-wrapper hide-on-med-and-down"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i>
               <form action="@cfg.urls.search">
                 <input class="header-search-input z-depth-2" type="text" name="q" placeholder="Search" />
@@ -13,7 +13,7 @@
           }
           @cfg.html.menu
         </div>
-        @if(com.kyleu.projectile.models.module.ApplicationFeatures.enabled("search")) {
+        @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Search)) {
           <nav class="display-none search-sm">
             <div class="nav-wrapper">
               <form action="@cfg.urls.search">

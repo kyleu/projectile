@@ -1,6 +1,6 @@
-@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, icon: Option[String] = None, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.fullscreen(title = title, cfg = cfg, scripts = scripts, stylesheets = stylesheets) {
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, icon: Option[String] = None, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(
+    content: Html
+)(implicit flash: Flash) @com.kyleu.projectile.views.html.layout.fullscreen(title = title, cfg = cfg, scripts = scripts, stylesheets = stylesheets) {
   @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
     <div class="row">
       @theme.contentBefore.map { cb => <div class="content-wrapper-before @cfg.user.navbarColor"></div> }

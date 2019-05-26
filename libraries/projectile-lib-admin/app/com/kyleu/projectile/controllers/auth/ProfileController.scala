@@ -1,12 +1,15 @@
 package com.kyleu.projectile.controllers.auth
 
 import com.kyleu.projectile.controllers.AuthController
+import com.kyleu.projectile.controllers.auth.routes.ProfileController
 import com.kyleu.projectile.models.auth.UserForms
-import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
+import com.kyleu.projectile.models.menu.SystemMenu
+import com.kyleu.projectile.models.module.ApplicationFeature.Profile.value
+import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.user.UserProfile
 import com.kyleu.projectile.services.user.SystemUserService
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.models.web.ControllerUtils
+import com.kyleu.projectile.models.web.{ControllerUtils, InternalIcons}
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Credentials, PasswordHasher}
@@ -22,12 +25,13 @@ class ProfileController @javax.inject.Inject() (
     hasher: PasswordHasher,
     userService: SystemUserService
 )(implicit ec: ExecutionContext) extends AuthController("profile") {
-  ApplicationFeatures.enable("profile")
+  ApplicationFeature.enable(ApplicationFeature.Profile)
+  SystemMenu.addRootMenu(value, "Profile", Some("View your system profile"), ProfileController.view(), InternalIcons.systemUser)
 
-  def view(thm: Option[String]) = withSession("view") { implicit request => implicit td =>
+  def view(thm: Option[String]) = withSession("view") { implicit request => _ =>
     Future.successful(render {
       case Accepts.Html() =>
-        val cfg = app.cfg(u = Some(request.identity), admin = false, "system", "profile", request.identity.profile.providerKey)
+        val cfg = app.cfg(u = Some(request.identity), "system", "profile", request.identity.profile.providerKey)
         Ok(com.kyleu.projectile.views.html.auth.profile(request.identity.username, cfg.copy(user = cfg.user.copy(theme = thm.getOrElse(cfg.user.theme))), Nil))
       case Accepts.Json() => Ok(UserProfile.fromUser(request.identity).asJson)
     })
@@ -36,7 +40,7 @@ class ProfileController @javax.inject.Inject() (
   def save = withSession("view") { implicit request => implicit td =>
     UserForms.profileForm.bindFromRequest.fold(
       form => Future.successful {
-        val cfg = app.cfg(u = Some(request.identity), admin = false, "system", "profile", request.identity.profile.providerKey)
+        val cfg = app.cfg(u = Some(request.identity), "system", "profile", request.identity.profile.providerKey)
         val errors = form.errors.map(e => e.key -> e.message)
         BadRequest(com.kyleu.projectile.views.html.auth.profile(request.identity.username, cfg, errors))
       },
@@ -51,12 +55,12 @@ class ProfileController @javax.inject.Inject() (
     )
   }
 
-  def changePasswordForm = withSession("change-password-form") { implicit request => implicit td =>
-    val cfg = app.cfg(u = Some(request.identity), admin = false, "system", "profile")
+  def changePasswordForm = withSession("change-password-form") { implicit request => _ =>
+    val cfg = app.cfg(u = Some(request.identity), "system", "profile")
     Future.successful(Ok(com.kyleu.projectile.views.html.auth.changePassword(cfg)))
   }
 
-  def changePassword = withSession("change-password") { implicit request => implicit td =>
+  def changePassword = withSession("change-password") { implicit request => _ =>
     def errorResponse(msg: String) = {
       Redirect(com.kyleu.projectile.controllers.auth.routes.ProfileController.changePasswordForm()).flashing("error" -> msg)
     }

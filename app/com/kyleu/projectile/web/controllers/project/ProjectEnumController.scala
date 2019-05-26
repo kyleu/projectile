@@ -30,7 +30,7 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewEnum(projectile, key, inputEnums)))
   }
 
-  def add(key: String, enumKey: String) = Action.async { implicit request =>
+  def add(key: String, enumKey: String) = Action.async { _ =>
     val p = projectile.getProject(key)
     val i = p.getInput
     enumKey match {
@@ -80,7 +80,7 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
     Future.successful(redir.flashing("success" -> s"Saved enum [$enumKey]"))
   }
 
-  def remove(key: String, member: String) = Action.async { implicit request =>
+  def remove(key: String, member: String) = Action.async { _ =>
     projectile.removeEnumMember(key, member)
     Future.successful(Redirect(
       com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)

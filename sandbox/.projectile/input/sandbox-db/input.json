@@ -1,0 +1,5 @@
+{
+  "template" : "postgres",
+  "key" : "sandbox-db",
+  "description" : "Sandbox Database"
+}

@@ -22,11 +22,11 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
 
   def kids(d: File) = d.children.filter(_.isDirectory).map(c => c.name).filterNot(x => x == "target" || x == "project").toList.sorted
 
-  def sync() = Action.async { implicit request =>
+  def sync() = Action.async { _ =>
     FilesystemUtils.syncBuildFiles()
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.listRoot()).flashing("success" -> "Synced!"))
   }
-  def saveAudit(k: String, f: String) = Action.async { implicit request =>
+  def saveAudit(k: String, f: String) = Action.async { _ =>
     AuditUtils.saveAudit(k, TypeScriptInput.stripName(f))
     val msg = "success" -> "Saved!"
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.TypeScriptProjectController.export(k, f)).flashing(msg))

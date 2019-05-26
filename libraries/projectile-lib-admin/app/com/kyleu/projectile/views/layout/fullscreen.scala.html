@@ -1,18 +1,8 @@
-@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.core(
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)
+@com.kyleu.projectile.views.html.layout.core(
   title = title,
-  scripts = Seq(
-    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.js"),
-    com.kyleu.projectile.controllers.Assets.path("vendor/plugins.min.js")
-  ) ++ scripts,
-  stylesheets = Seq(
-    "/assets/lib/material-design-icons/material-icons.css",
-    com.kyleu.projectile.controllers.Assets.path(s"vendor/theme/${cfg.user.theme}/materialize.css"),
-    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.css"),
-    com.kyleu.projectile.controllers.Assets.path(s"vendor/theme/${cfg.user.theme}/style.css"),
-    com.kyleu.projectile.controllers.Assets.path(s"stylesheets/components.css")
-  ) ++ stylesheets
+  scripts = com.kyleu.projectile.models.web.ControllerUtils.commonScripts ++ scripts,
+  stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets
 ) {
   @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
     <body class="@theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">

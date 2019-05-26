@@ -66,4 +66,6 @@ case class ExportEnum(
   } else {
     config.applicationPackage ++ List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
   }
+
+  def perm = s"""("${pkg.headOption.getOrElse("system")}", "$className", "list")"""
 }

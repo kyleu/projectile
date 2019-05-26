@@ -36,14 +36,14 @@ object InjectBindables extends FeatureLogic.Inject(path = OutputPath.ServerSourc
       sb.append("  case Left(x) => throw new IllegalStateException(x)")
       sb.append("}")
 
-      val pArg = s"implicit binder: PathBindable[$t]"
-      sb.append(s"implicit def ${prop}PathBindable($pArg): PathBindable[$cp] = new PathBindable[$cp] {")
+      val pArg = s"implicit binder: play.api.mvc.PathBindable[$t]"
+      sb.append(s"implicit def ${prop}PathBindable($pArg): play.api.mvc.PathBindable[$cp] = new play.api.mvc.PathBindable[$cp] {")
       sb.append(s"  override def bind(key: String, value: String) = ${prop}Extractor(binder.bind(key, value))")
       sb.append(s"  override def unbind(key: String, e: $cp) = $bind")
       sb.append("}")
 
-      val qArg = s"implicit binder: QueryStringBindable[$t]"
-      sb.append(s"implicit def ${prop}QueryStringBindable($qArg): QueryStringBindable[$cp] = new QueryStringBindable[$cp] {")
+      val qArg = s"implicit binder: play.api.mvc.QueryStringBindable[$t]"
+      sb.append(s"implicit def ${prop}QueryStringBindable($qArg): play.api.mvc.QueryStringBindable[$cp] = new play.api.mvc.QueryStringBindable[$cp] {")
       sb.append(s"  override def bind(key: String, params: Map[String, Seq[String]]) = binder.bind(key, params).map(${prop}Extractor)")
       sb.append(s"  override def unbind(key: String, e: $cp) = $bind")
       sb.append("}")

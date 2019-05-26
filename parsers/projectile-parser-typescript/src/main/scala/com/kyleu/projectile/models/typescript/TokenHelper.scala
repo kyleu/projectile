@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.typescript.node.SyntaxKind._
 import com.kyleu.projectile.models.typescript.node.SyntaxKind
 
 object TokenHelper {
+  @com.github.ghik.silencer.silent
   def getToken(kind: SyntaxKind) = kind match {
     case OpenBraceToken => "{"
     case CloseBraceToken => "}"

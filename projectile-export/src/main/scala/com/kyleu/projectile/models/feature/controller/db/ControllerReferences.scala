@@ -16,7 +16,7 @@ object ControllerReferences {
       val pkArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
 
       file.add()
-      file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", admin = true) { implicit request => implicit td =>""", 1)
+      file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
 
       references.foreach { r =>
         file.add(s"val ${r.src.propertyName}By${r.tf.className}F = ${r.src.propertyName}S.countBy${r.tf.className}(request, $pkRefs)")
@@ -52,11 +52,11 @@ object ControllerReferences {
 
         file.add()
         file.add(s"""def by$propCls($propId: ${col.scalaType(config)}, $relArgs) = {""", 1)
-        file.add(s"""withSession("get.by.$propId", admin = true) { implicit request => implicit td =>""", 1)
+        file.add(s"""withSession("get.by.$propId", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
         file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
 
-        val cfgArg = s"""app.cfgAdmin(request.identity, "${model.firstPackage}", "${model.key}", "${col.title}")"""
+        val cfgArg = s"""app.cfg(Some(request.identity), "${model.firstPackage}", "${model.key}", "${col.title}")"""
         val args = s"""$propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)"""
         val call = s"${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls"
 

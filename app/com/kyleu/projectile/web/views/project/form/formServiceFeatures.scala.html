@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.ProjectSummary)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Feature Edit") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.saveFeatures(project.key)">
     <div class="collection with-header">

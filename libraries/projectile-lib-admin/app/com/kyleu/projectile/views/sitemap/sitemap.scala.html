@@ -1,4 +1,4 @@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, segments: Seq[String], m: com.kyleu.projectile.models.menu.NavMenu)(implicit session: Session, flash: Flash)
+@(cfg: com.kyleu.projectile.models.config.UiConfig, segments: Seq[String], m: com.kyleu.projectile.models.menu.NavMenu)(implicit flash: Flash)
 @com.kyleu.projectile.views.html.layout.page(title = "Sitemap", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.sitemap)) {
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="menu-item">

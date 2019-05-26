@@ -1,17 +1,22 @@
 package com.kyleu.projectile.controllers.admin.graphql
 
 import com.kyleu.projectile.controllers.AuthController
+import com.kyleu.projectile.controllers.admin.graphql.routes.GraphQLController
 import com.kyleu.projectile.graphql.GraphQLService
-import com.kyleu.projectile.models.user.{Role, SystemUser}
+import com.kyleu.projectile.models.user.SystemUser
 import io.circe.Json
 import com.kyleu.projectile.models.auth.UserCredentials
-import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
+import com.kyleu.projectile.models.menu.SystemMenu
+import com.kyleu.projectile.models.module.ApplicationFeature.Graphql.value
+import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.util.EncryptionUtils
 import sangria.execution.{ErrorWithResolver, QueryAnalysisError}
 import sangria.marshalling.circe._
 import sangria.parser.SyntaxError
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.models.web.ControllerUtils.{jsonBody, jsonObject}
+import com.kyleu.projectile.models.web.InternalIcons
+import com.kyleu.projectile.services.auth.PermissionService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -19,21 +24,25 @@ import scala.concurrent.{ExecutionContext, Future}
 class GraphQLController @javax.inject.Inject() (
     override val app: Application, graphQLService: GraphQLService
 )(implicit ec: ExecutionContext) extends AuthController("graphql") {
-  ApplicationFeatures.enable("graphql")
+  ApplicationFeature.enable(ApplicationFeature.Graphql)
+  PermissionService.registerModel("tools", "GraphQL", "GraphQL", Some(InternalIcons.graphql), "post", "ide", "visualize")
+  SystemMenu.addRootMenu(value, "GraphQL", Some("A full GraphQL IDE and schema visualizer"), GraphQLController.iframe(), InternalIcons.graphql)
 
   private[this] val secretKey = "GraphTastesBad"
 
-  def iframe() = withSession("iframe", admin = true) { implicit request => implicit td =>
-    Future.successful(Ok(com.kyleu.projectile.views.html.graphql.iframe(app.cfgAdmin(u = request.identity, "system", "graphql"))))
+  def iframe() = withSession("iframe", ("tools", "GraphQL", "ide")) { implicit request => _ =>
+    Future.successful(Ok(com.kyleu.projectile.views.html.graphql.iframe(app.cfg(u = Some(request.identity), "system", "graphql"))))
   }
 
-  def graphql(query: Option[String], variables: Option[String]) = withSession("ui", admin = true) { implicit request => implicit td =>
-    Future.successful(Ok(com.kyleu.projectile.views.html.graphql.graphiql(app.cfgAdmin(u = request.identity, "system", "graphql"))))
+  def graphql(query: Option[String], variables: Option[String]) = {
+    withSession("ide", ("tools", "GraphQL", "ide")) { implicit request => _ =>
+      Future.successful(Ok(com.kyleu.projectile.views.html.graphql.graphiql(app.cfg(u = Some(request.identity), "system", "graphql"))))
+    }
   }
 
   def graphqlBody = withoutSession("post") { implicit request => implicit td =>
     val allowed = request.identity match {
-      case Some(u) if u.role == Role.Admin => true // All cool, admin
+      case Some(u) if PermissionService.check(u.role, "tools", "GraphQL", "ide")._1 => true // All cool, permissions passed
       case Some(_) => false
       case None if request.headers.get("admin-graphql-auth").exists(x => EncryptionUtils.decrypt(x) == secretKey) => true // All Cool, config backdoor
       case None =>

@@ -15,7 +15,7 @@ object ControllerHelper {
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
     val logArgs = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
 
-    file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
     file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
     if (audited) {
       file.add(s"""val auditsF = auditRecordSvc.getByModel(request, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
@@ -53,13 +53,13 @@ object ControllerHelper {
     file.add()
     writeView(config, file, model, viewPkg)
     file.add()
-    file.add(s"""def editForm($viewArgs) = withSession("edit.form", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"""def editForm($viewArgs) = withSession("edit.form", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
     file.add(s"val cancel = $routesClass.view($getArgs)")
     file.add(s"val call = $routesClass.edit($getArgs)")
     file.add(s"svc.getByPrimaryKey(request, $getArgs).map {", 1)
     file.add("case Some(model) => Ok(", 1)
 
-    val cfgArg = s"""app.cfgAdmin(request.identity, "${model.firstPackage}", "${model.key}", "Edit")"""
+    val cfgArg = s"""app.cfg(Some(request.identity), "${model.firstPackage}", "${model.key}", "Edit")"""
     val extraArgs = "cancel, call, debug = app.config.debug"
     file.add(s"""$viewPkg.${model.propertyName}Form($cfgArg, model, s"${model.title} [$logArgs]", $extraArgs)""")
     file.add(")", -1)
@@ -67,14 +67,14 @@ object ControllerHelper {
     file.add("}", -1)
     file.add("}", -1)
     file.add()
-    file.add(s"""def edit($viewArgs) = withSession("edit", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"""def edit($viewArgs) = withSession("edit", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
     file.add(s"svc.update(request, $callArgs, fields = modelForm(request.body)).map(res => render {", 1)
     file.add(s"""case Accepts.Html() => Redirect($routesClass.view($redirArgs))""")
     file.add("case Accepts.Json() => Ok(res.asJson)")
     file.add("})", -1)
     file.add("}", -1)
     file.add()
-    file.add(s"""def remove($viewArgs) = withSession("remove", admin = true) { implicit request => implicit td =>""", 1)
+    file.add(s"""def remove($viewArgs) = withSession("remove", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
     file.add(s"svc.remove(request, $callArgs).map(_ => render {", 1)
     file.add(s"case Accepts.Html() => Redirect($routesClass.list())")
     file.add("""case Accepts.Json() => Ok(io.circe.Json.obj("status" -> io.circe.Json.fromString("removed")))""")
@@ -92,7 +92,7 @@ object ControllerHelper {
       case Nil => ", \"Detail\""
       case _ => ", s\"" + model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ") + "\""
     }
-    val cfgArg = s"""app.cfgAdmin(u = request.identity, "${model.firstPackage}", "${model.key}"$keyString)"""
+    val cfgArg = s"""app.cfg(u = Some(request.identity), "${model.firstPackage}", "${model.key}"$keyString)"""
     val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
     s"Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))"
   }

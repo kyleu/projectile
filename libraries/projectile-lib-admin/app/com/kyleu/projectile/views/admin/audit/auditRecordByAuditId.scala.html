@@ -1,5 +1,5 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, auditId: java.util.UUID, modelSeq: Seq[com.kyleu.projectile.models.audit.AuditRecord], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )
 @com.kyleu.projectile.views.html.admin.explore.list(
   cfg = cfg,

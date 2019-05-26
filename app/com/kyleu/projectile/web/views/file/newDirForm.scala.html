@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, d: Option[String] = None)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Directory") {
   <form method="get" action="@com.kyleu.projectile.web.controllers.routes.HomeController.changeDir()" onsubmit="return addToHistory($('#dir-input').val());">
     <div class="collection with-header">

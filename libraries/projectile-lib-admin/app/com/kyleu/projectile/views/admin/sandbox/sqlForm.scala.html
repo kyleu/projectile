@@ -1,5 +1,5 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, sql: String, result: Option[Seq[(Int, String, Seq[String], Seq[Seq[Option[String]]])]])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = "SQL Prompt", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.sql)) {
   @if(result.isEmpty) {
     @com.kyleu.projectile.views.html.layout.card(None) {

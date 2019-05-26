@@ -3,10 +3,12 @@
   "template" : "play",
   "input" : "db",
   "description" : "_PROJECT_NAME project",
-  "features" : [ ],
+  "features" : [ "audit", "datamodel", "graphql", "service", "controller", "notes", "core" ],
+  "flags" : [ ],
+  "paths" : { },
   "packages" : { },
   "classOverrides" : { },
-  "defaultEnumFeatures" : [ ],
-  "defaultModelFeatures" : [ ],
-  "defaultServiceFeatures" : [ ]
+  "defaultEnumFeatures" : [ "auth", "shared", "controller", "core", "graphql" ],
+  "defaultModelFeatures" : [ "auth", "shared", "json", "datamodel", "service", "controller", "notes", "audit", "core", "graphql" ],
+  "defaultServiceFeatures" : [ "core", "graphql", "controller", "auth" ]
 }

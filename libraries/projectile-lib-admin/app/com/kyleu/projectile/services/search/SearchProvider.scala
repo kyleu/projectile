@@ -11,15 +11,14 @@ import play.twirl.api.Html
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@com.github.ghik.silencer.silent
 class SearchProvider {
   def intSearches(app: Application, injector: Injector, creds: Credentials)(
-    q: String,
-    id: Int
+    q: String, id: Int
   )(implicit ec: ExecutionContext, td: TraceData): Seq[Future[Seq[(Call, Html)]]] = Nil
 
   def uuidSearches(app: Application, injector: Injector, creds: Credentials)(
-    q: String,
-    id: UUID
+    q: String, id: UUID
   )(implicit ec: ExecutionContext, td: TraceData): Seq[Future[Seq[(Call, Html)]]] = Nil
 
   def stringSearches(app: Application, injector: Injector, creds: Credentials)(

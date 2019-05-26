@@ -11,8 +11,8 @@ import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
 object SystemUser {
-  private[this] implicit val jsonLoginInfoEncoder: Encoder[LoginInfo] = deriveEncoder
-  private[this] implicit val jsonLoginInfoDecoder: Decoder[LoginInfo] = deriveDecoder
+  implicit val jsonLoginInfoEncoder: Encoder[LoginInfo] = deriveEncoder
+  implicit val jsonLoginInfoDecoder: Decoder[LoginInfo] = deriveDecoder
 
   implicit val jsonEncoder: Encoder[SystemUser] = deriveEncoder
   implicit val jsonDecoder: Decoder[SystemUser] = deriveDecoder
@@ -20,27 +20,29 @@ object SystemUser {
   def empty() = SystemUser(
     id = UUID.randomUUID,
     username = "",
-    profile = LoginInfo("anonymous", "guest")
+    profile = LoginInfo("anonymous", "guest"),
+    role = "user"
   )
 
   val system = SystemUser(
     id = UUID.fromString("88888888-8888-8888-8888-888888888888"),
     username = "",
     profile = LoginInfo("anonymous", "system"),
-    role = Role.Admin
+    role = "admin"
   )
 
   val guest = SystemUser(
     id = UUID.fromString("77777777-7777-7777-7777-777777777777"),
     username = "guest",
-    profile = LoginInfo("anonymous", "guest")
+    profile = LoginInfo("anonymous", "guest"),
+    role = "user"
   )
 
   val api = SystemUser(
     id = UUID.fromString("44444444-4444-4444-4444-444444444444"),
     username = "api",
     profile = LoginInfo("anonymous", "api"),
-    role = Role.Admin
+    role = "admin"
   )
 }
 
@@ -48,7 +50,7 @@ final case class SystemUser(
     id: UUID,
     username: String,
     profile: LoginInfo,
-    role: Role = Role.User,
+    role: String,
     settings: Json = JsonObject.empty.asJson,
     created: LocalDateTime = DateUtils.now
 ) extends Identity with DataFieldModel {
@@ -59,7 +61,7 @@ final case class SystemUser(
 
   lazy val settingsObj = extract[UserSettings](settings)
 
-  def isAdmin = role == Role.Admin
+  def isAdmin = role == "admin"
 
   override def toDataFields = Seq(
     DataField("id", Some(id.toString)),

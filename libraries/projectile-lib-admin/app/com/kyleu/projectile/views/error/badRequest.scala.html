@@ -1,6 +1,5 @@
-@(path: String, error: String)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.splash("Bad Request") {
+@(path: String, error: String)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.splash("Bad Request") {
   <h6>Bad Request</h6>
   <p>@path</p>
   <p>@error</p>

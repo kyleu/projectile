@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.thrift.input.{ThriftInput, ThriftOptions}
 import com.kyleu.projectile.models.typescript.input.{TypeScriptInput, TypeScriptOptions}
 import com.kyleu.projectile.services.input.PostgresInputService
 import com.kyleu.projectile.web.controllers.ProjectileController
-import com.kyleu.projectile.web.util.{ControllerUtils, ExampleProjectHelper}
+import com.kyleu.projectile.web.util.ControllerUtils
 
 import scala.concurrent.Future
 
@@ -24,14 +24,14 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Ok(view))
   }
 
-  def refresh(key: String) = Action.async { implicit request =>
+  def refresh(key: String) = Action.async { _ =>
     val startMs = System.currentTimeMillis
     projectile.refreshInput(key)
     val msg = s"Refreshed input [$key] in [${System.currentTimeMillis - startMs}ms]"
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(key)).flashing("success" -> msg.take(512)))
   }
 
-  def refreshAll = Action.async { implicit request =>
+  def refreshAll = Action.async { _ =>
     val startMs = System.currentTimeMillis
     val results = projectile.listInputs().map(i => projectile.refreshInput(i.key))
     val msg = s"Refreshed [${results.size}] inputs in [${System.currentTimeMillis - startMs}ms]"
@@ -67,7 +67,7 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)).flashing(msg))
   }
 
-  def remove(key: String) = Action.async { implicit request =>
+  def remove(key: String) = Action.async { _ =>
     val removed = projectile.removeInput(key)
     val msg = "success" -> s"Removed input [$key]: $removed"
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing(msg))

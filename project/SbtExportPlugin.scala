@@ -13,9 +13,9 @@ object SbtExportPlugin {
     addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.21"),
     addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9"),
 
-    addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.5.0"),
-    addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.27"),
-    addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.8-0.6" exclude ("org.scala-js", "sbt-scalajs")),
+    addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.0"),
+    addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.28"),
+    addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.9-0.6" exclude ("org.scala-js", "sbt-scalajs")),
 
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(
       projectId = Common.projectId + "-sbt",

@@ -1,0 +1,47 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, roles: Seq[(String, (String, String))], perms: Seq[com.kyleu.projectile.services.auth.PermissionService.PackageInfo])(
+    implicit flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Permissions", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.permission)) {
+  @com.kyleu.projectile.views.html.layout.card(title = None) {
+    <a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.permission.routes.PermissionController.editForm()">Edit</a>
+    <a class="btn btn-flat" href="@com.kyleu.projectile.controllers.admin.permission.routes.PermissionController.refresh()">Refresh</a>
+  }
+
+  @perms.map { pkg =>
+    @com.kyleu.projectile.views.html.layout.card(title = Some(pkg.title), icon = Some(pkg.icon)) {
+      <table>
+        <thead>
+          @defining(100.0 / (roles.size + 2)) { w =>
+            <tr>
+              <th style="width: @w%;">Model</th>
+              <th style="width: @w%;">Action</th>
+              @roles.map { role =>
+                <th style="width: @w%;" title="@role._2._2">@role._2._1</th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @pkg.models.map { model =>
+            @model.actions.map { act =>
+              <tr>
+                <td>@if(model.actions.headOption.contains(act)) { @model.icon.map { i => <i class="material-icons" style="font-size: 100%;">@i</i> } @model.title }</td>
+                <td>@act</td>
+                @roles.map { role =>
+                  <td>
+                    @defining(com.kyleu.projectile.services.auth.PermissionService.check(role._1, pkg.key, model.key, act)) { ch =>
+                      @if(ch._1) {
+                        <i class="material-icons green-text" title="@ch._2">@com.kyleu.projectile.models.web.InternalIcons.ok</i>
+                      } else {
+                        <i class="material-icons red-text" title="@ch._2">@com.kyleu.projectile.models.web.InternalIcons.cancel</i>
+                      }
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+  }
+}

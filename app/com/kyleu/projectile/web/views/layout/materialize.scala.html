@@ -1,5 +1,5 @@
 @(title: String, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.basic(
   title,
   scripts = Seq(

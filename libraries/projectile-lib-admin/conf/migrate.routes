@@ -1,0 +1,2 @@
+GET        /             com.kyleu.projectile.controllers.admin.migrate.MigrationController.list
+GET        /:rank        com.kyleu.projectile.controllers.admin.migrate.MigrationController.view(rank: Long)

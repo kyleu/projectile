@@ -1,18 +1,9 @@
 @(title: String, fullWidth: Boolean = false, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.core(
   title = title,
-  scripts = Seq(
-    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.js"),
-    com.kyleu.projectile.controllers.Assets.path("vendor/plugins.min.js")
-  ) ++ scripts,
-  stylesheets = Seq(
-    "/assets/lib/material-design-icons/material-icons.css",
-    com.kyleu.projectile.controllers.Assets.path(s"vendor/theme/default/materialize.css"),
-    com.kyleu.projectile.controllers.Assets.path("vendor/vendors.min.css"),
-    com.kyleu.projectile.controllers.Assets.path(s"vendor/theme/default/style.css"),
-    com.kyleu.projectile.controllers.Assets.path(s"stylesheets/components.css")
-  ) ++ stylesheets
+  scripts = com.kyleu.projectile.models.web.ControllerUtils.commonScripts ++ scripts,
+  stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets
 ) {
  <body class="splash-bg" data-open="click" data-menu="vertical-menu-nav-dark" data-col="1-column">
     <div class="row">

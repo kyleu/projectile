@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.graphql.db.SchemaHelper.injectedService
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -52,7 +53,7 @@ object SchemaFile {
     if (model.pkFields.nonEmpty) {
       file.add(s"""unitField(name = "${model.propertyName}", desc = None, t = OptionType(${model.propertyName}Type), f = (c, td) => {""", 1)
       val args = model.pkFields.map(pkField => pkField -> s"${model.propertyName}${pkField.className}Arg")
-      file.add(s"""c.ctx.${model.injectedService(config)}.getByPrimaryKey(c.ctx.creds, ${
+      file.add(s"""c.ctx.${injectedService(model, config)}.getByPrimaryKey(c.ctx.creds, ${
         args.map {
           case a if a._1.required => s"c.arg(${a._2})"
           case a => s"""c.arg(${a._2}).getOrElse(throw new IllegalStateException("No [${a._1.propertyName}] provided"))"""
@@ -65,13 +66,13 @@ object SchemaFile {
       case pkField :: Nil =>
         file.add(s"""unitField(name = "${model.propertyName}Seq", desc = None, t = ListType(${model.propertyName}Type), f = (c, td) => {""", 1)
         val arg = s"${model.propertyName}${pkField.className}SeqArg"
-        file.add(s"""c.ctx.${model.injectedService(config)}.getByPrimaryKeySeq(c.ctx.creds, c.arg($arg))(td)""")
+        file.add(s"""c.ctx.${injectedService(model, config)}.getByPrimaryKeySeq(c.ctx.creds, c.arg($arg))(td)""")
         file.add(s"}, $arg),", -1)
       case _ => // noop
     }
 
     file.add(s"""unitField(name = "${model.propertyName}Search", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
-    file.add(s"""runSearch(c.ctx.${model.injectedService(config)}, c, td).map(toResult)""")
+    file.add(s"""runSearch(c.ctx.${injectedService(model, config)}, c, td).map(toResult)""")
     file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (model.extraFields.nonEmpty) { "," } else { "" }}", -1)
 
     SchemaHelper.addSearchFields(config, model, file)

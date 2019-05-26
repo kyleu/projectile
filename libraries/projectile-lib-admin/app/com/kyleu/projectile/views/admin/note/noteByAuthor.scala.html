@@ -1,11 +1,11 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, author: java.util.UUID, modelSeq: Seq[com.kyleu.projectile.models.note.Note], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )
 @com.kyleu.projectile.views.html.admin.explore.list(
   cfg = cfg,
   model = "Note",
   modelPlural = "Notes",
-  icon = "eject",
+  icon = com.kyleu.projectile.models.web.InternalIcons.note,
   cols = Seq(
     "id" -> "Id",
     "relType" -> "Rel Type",

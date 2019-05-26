@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, k: String, status: String, results: Seq[com.kyleu.projectile.web.controllers.input.TypeScriptController.Result])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "TypeScript Batch Parse", mainDivClass = "margined") {
   <ul class="collection with-header">
     <li class="collection-header">

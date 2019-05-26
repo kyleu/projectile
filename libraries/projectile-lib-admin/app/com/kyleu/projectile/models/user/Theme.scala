@@ -23,13 +23,13 @@ object Theme extends StringEnum[Theme] with StringCirceEnum[Theme] {
   case object Dark extends Theme(
     value = "dark",
     title = "Dark",
-    bodyClass = "page-header-light vertical-dark-menu",
+    bodyClass = "page-header-light vertical-dark-menu"
   )
 
   case object Gradient extends Theme(
     value = "gradient",
     title = "Gradient",
-    bodyClass = "page-header-light vertical-gradient-menu",
+    bodyClass = "page-header-light vertical-gradient-menu"
   )
 
   case object Modern extends Theme(

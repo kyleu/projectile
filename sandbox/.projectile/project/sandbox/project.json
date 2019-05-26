@@ -1,0 +1,14 @@
+{
+  "key" : "sandbox",
+  "template" : "play",
+  "input" : "sandbox-db",
+  "description" : "Sandbox Project",
+  "features" : [ "audit", "datamodel", "graphql", "service", "controller", "notes", "core" ],
+  "flags" : [ ],
+  "paths" : { },
+  "packages" : { },
+  "classOverrides" : { },
+  "defaultEnumFeatures" : [ "auth", "shared", "controller", "core", "graphql" ],
+  "defaultModelFeatures" : [ "auth", "shared", "json", "datamodel", "service", "controller", "notes", "core", "graphql" ],
+  "defaultServiceFeatures" : [ "core", "graphql", "controller", "auth" ]
+}

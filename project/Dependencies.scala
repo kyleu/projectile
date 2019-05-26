@@ -20,7 +20,7 @@ object Dependencies {
 
     object Slick {
       val version = "3.3.0"
-      val pgVersion = "0.17.2"
+      val pgVersion = "0.17.3"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
@@ -83,11 +83,11 @@ object Dependencies {
   }
 
   object Tracing {
-    val version = "0.35.4"
+    val version = "0.35.5"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.27.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.28.0"
   }
 
   object Authentication {
@@ -110,15 +110,22 @@ object Dependencies {
 
     val all = Seq(autocomplete, jquery, materialIcons, materialize, swaggerUi)
   }
-  
+
   object Logging {
     val logback = "ch.qos.logback" % "logback-core" % "1.2.3"
     val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
-    
+
     val all = Seq(logback, logbackClassic, slf4j)
   }
 
+  object Compiler {
+    val silencerPlugin = compilerPlugin("com.github.ghik" %% "silencer-plugin" % "1.3.4")
+    val silencerLib = "com.github.ghik" %% "silencer-lib" % "1.3.4" % Provided
+    
+    val all = Seq(silencerPlugin, silencerLib)
+  }
+  
   object Utils {
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.2.5"

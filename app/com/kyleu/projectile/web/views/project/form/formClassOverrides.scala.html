@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, project: com.kyleu.projectile.models.project.Project)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, project.key + " Class Override Edit") {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.saveClassOverrides()">
     <input id="key" name="key" type="hidden" value="@project.key" />

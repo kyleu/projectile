@@ -30,7 +30,8 @@ final case class ProfileData(
     navbarColor: String = "",
     navbarDark: Option[String] = None,
 
-    buttonColor: String = ""
+    buttonColor: String = "",
+    accentColor: String = ""
 ) {
   private[this] def opt(s: String) = s.trim match {
     case NullUtils.str | "" => None
@@ -50,6 +51,7 @@ final case class ProfileData(
     navbarDark = navbarDark.contains("true"),
 
     buttonColor = opt(buttonColor),
+    accentColor = opt(accentColor),
 
     avatarUrl = None
   )

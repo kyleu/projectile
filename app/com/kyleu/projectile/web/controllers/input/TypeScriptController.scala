@@ -65,7 +65,7 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
     Future.successful(Ok(tsBatchParse(projectile, k, status, files)))
   }
 
-  private[this] def getInput(k: String, f: String, compile: Boolean = false) = {
+  private[this] def getInput(k: String, f: String, compile: Boolean) = {
     val tmpKey = dir + "/" + k + "/" + f
     val tmp = root / tmpKey
     val key = if (tmp.isDirectory) { tmpKey + "/index.d.ts" } else { tmpKey }

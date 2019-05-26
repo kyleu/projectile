@@ -2,7 +2,6 @@ package com.kyleu.projectile.models.graphql.audit
 
 import com.kyleu.projectile.graphql.{GraphQLContext, GraphQLSchemaHelper}
 import com.kyleu.projectile.graphql.GraphQLUtils._
-import com.kyleu.projectile.models.graphql.note.NoteSchema
 import java.util.UUID
 
 import com.kyleu.projectile.models.audit.{Audit, AuditResult}
@@ -13,7 +12,7 @@ import sangria.schema._
 object AuditSchema extends GraphQLSchemaHelper("audit") {
   implicit val auditPrimaryKeyId: HasId[Audit, UUID] = HasId[Audit, UUID](_.id)
   private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[UUID]) = {
-    c.injector.getInstance(classOf[AuditService]).getByPrimaryKeySeq(c.creds, idSeq)(c.trace)
+    c.getInstance[AuditService].getByPrimaryKeySeq(c.creds, idSeq)(c.trace)
   }
   val auditByPrimaryKeyFetcher = Fetcher(getByPrimaryKeySeq)
 
@@ -47,43 +46,43 @@ object AuditSchema extends GraphQLSchemaHelper("audit") {
 
   val queryFields = fields(
     unitField(name = "audit", desc = None, t = OptionType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByPrimaryKey(c.ctx.creds, c.arg(auditIdArg))(td)
+      c.ctx.getInstance[AuditService].getByPrimaryKey(c.ctx.creds, c.arg(auditIdArg))(td)
     }, auditIdArg),
     unitField(name = "auditSeq", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByPrimaryKeySeq(c.ctx.creds, c.arg(auditIdSeqArg))(td)
+      c.ctx.getInstance[AuditService].getByPrimaryKeySeq(c.ctx.creds, c.arg(auditIdSeqArg))(td)
     }, auditIdSeqArg),
     unitField(name = "auditSearch", desc = None, t = auditResultType, f = (c, td) => {
-      runSearch(c.ctx.injector.getInstance(classOf[AuditService]), c, td).map(toResult)
+      runSearch(c.ctx.getInstance[AuditService], c, td).map(toResult)
     }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg),
     unitField(name = "auditsByAct", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByAct(c.ctx.creds, c.arg(auditActArg))(td)
+      c.ctx.getInstance[AuditService].getByAct(c.ctx.creds, c.arg(auditActArg))(td)
     }, auditActArg),
     unitField(name = "auditsByActSeq", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByActSeq(c.ctx.creds, c.arg(auditActSeqArg))(td)
+      c.ctx.getInstance[AuditService].getByActSeq(c.ctx.creds, c.arg(auditActSeqArg))(td)
     }, auditActSeqArg),
     unitField(name = "auditsByApp", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByApp(c.ctx.creds, c.arg(auditAppArg))(td)
+      c.ctx.getInstance[AuditService].getByApp(c.ctx.creds, c.arg(auditAppArg))(td)
     }, auditAppArg),
     unitField(name = "auditsByAppSeq", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByAppSeq(c.ctx.creds, c.arg(auditAppSeqArg))(td)
+      c.ctx.getInstance[AuditService].getByAppSeq(c.ctx.creds, c.arg(auditAppSeqArg))(td)
     }, auditAppSeqArg),
     unitField(name = "auditsByClient", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByClient(c.ctx.creds, c.arg(auditClientArg))(td)
+      c.ctx.getInstance[AuditService].getByClient(c.ctx.creds, c.arg(auditClientArg))(td)
     }, auditClientArg),
     unitField(name = "auditsByClientSeq", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByClientSeq(c.ctx.creds, c.arg(auditClientSeqArg))(td)
+      c.ctx.getInstance[AuditService].getByClientSeq(c.ctx.creds, c.arg(auditClientSeqArg))(td)
     }, auditClientSeqArg),
     unitField(name = "auditsByServer", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByServer(c.ctx.creds, c.arg(auditServerArg))(td)
+      c.ctx.getInstance[AuditService].getByServer(c.ctx.creds, c.arg(auditServerArg))(td)
     }, auditServerArg),
     unitField(name = "auditsByServerSeq", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByServerSeq(c.ctx.creds, c.arg(auditServerSeqArg))(td)
+      c.ctx.getInstance[AuditService].getByServerSeq(c.ctx.creds, c.arg(auditServerSeqArg))(td)
     }, auditServerSeqArg),
     unitField(name = "auditsByUserId", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByUserId(c.ctx.creds, c.arg(auditUserIdArg))(td)
+      c.ctx.getInstance[AuditService].getByUserId(c.ctx.creds, c.arg(auditUserIdArg))(td)
     }, auditUserIdArg),
     unitField(name = "auditsByUserIdSeq", desc = None, t = ListType(auditType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[AuditService]).getByUserIdSeq(c.ctx.creds, c.arg(auditUserIdSeqArg))(td)
+      c.ctx.getInstance[AuditService].getByUserIdSeq(c.ctx.creds, c.arg(auditUserIdSeqArg))(td)
     }, auditUserIdSeqArg)
   )
 
@@ -91,13 +90,13 @@ object AuditSchema extends GraphQLSchemaHelper("audit") {
     name = "AuditMutations",
     fields = fields(
       unitField(name = "create", desc = None, t = OptionType(auditType), f = (c, td) => {
-        c.ctx.injector.getInstance(classOf[AuditService]).create(c.ctx.creds, c.arg(dataFieldsArg))(td)
+        c.ctx.getInstance[AuditService].create(c.ctx.creds, c.arg(dataFieldsArg))(td)
       }, dataFieldsArg),
       unitField(name = "update", desc = None, t = OptionType(auditType), f = (c, td) => {
-        c.ctx.injector.getInstance(classOf[AuditService]).update(c.ctx.creds, c.arg(auditIdArg), c.arg(dataFieldsArg))(td).map(_._1)
+        c.ctx.getInstance[AuditService].update(c.ctx.creds, c.arg(auditIdArg), c.arg(dataFieldsArg))(td).map(_._1)
       }, auditIdArg, dataFieldsArg),
       unitField(name = "remove", desc = None, t = auditType, f = (c, td) => {
-        c.ctx.injector.getInstance(classOf[AuditService]).remove(c.ctx.creds, c.arg(auditIdArg))(td)
+        c.ctx.getInstance[AuditService].remove(c.ctx.creds, c.arg(auditIdArg))(td)
       }, auditIdArg)
     )
   )

@@ -1,6 +1,5 @@
-@(username: String, email: String, cfg: com.kyleu.projectile.models.config.UiConfig)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.splash("Sign up for " + cfg.projectName) {
+@(username: String, email: String, cfg: com.kyleu.projectile.models.config.UiConfig)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.splash("Sign up for " + cfg.projectName) {
   <form action="@cfg.urls.signup" method="post">
     <div class="row">
       <div class="input-field col s12">

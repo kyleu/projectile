@@ -2,7 +2,6 @@ package com.kyleu.projectile.services.process
 
 import java.util.UUID
 
-import com.kyleu.projectile.models.user.Role
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.process.CachedProc
 import com.kyleu.projectile.util.tracing.TraceData
@@ -18,7 +17,7 @@ object ProcessService extends Logging {
     throw new IllegalStateException(s"Cannot find process with id [$id].")
   }
 
-  def isAllowed(creds: UserCredentials, cmd: Seq[String]) = creds.user.role.qualifies(Role.Admin)
+  def isAllowed(creds: UserCredentials, cmd: Seq[String]) = creds.user.role == "admin"
 
   def start(creds: UserCredentials, cmd: Seq[String], onOutput: CachedProc.Output => Unit, onComplete: (Int, Long) => Unit, async: Boolean = false) = {
     if (!isAllowed(creds, cmd)) {

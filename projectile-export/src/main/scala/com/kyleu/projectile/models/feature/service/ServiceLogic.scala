@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.feature.service
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.feature.service.db.{QueriesFile, ServiceFile, ServiceTestFiles}
 import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
 
 object ServiceLogic extends FeatureLogic {
@@ -16,4 +17,6 @@ object ServiceLogic extends FeatureLogic {
     debug(s"Exported [${modelFiles.size}] models with [${testFiles.size}] test files")
     modelFiles ++ testFiles
   }
+
+  override val injections = Seq(InjectIcons, InjectStartup)
 }

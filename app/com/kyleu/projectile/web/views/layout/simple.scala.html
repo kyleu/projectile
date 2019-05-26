@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, title: String, mainDivClass: String = "static-container container", scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.materialize(title, scripts = scripts, stylesheets = stylesheets) {
   <header>
     <nav id="topnav" class="theme">

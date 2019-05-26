@@ -1,5 +1,6 @@
 package com.kyleu.projectile.models.web
 
+import com.kyleu.projectile.controllers.Assets
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.util.JsonSerializers.Json
 import com.kyleu.projectile.util.{JsonSerializers, NullUtils}
@@ -54,4 +55,13 @@ object ControllerUtils {
     }
     fields.map(f => DataField(f, valFor(f)))
   }
+
+  lazy val commonScripts = Seq(Assets.path("vendor/vendors.min.js"), Assets.path("vendor/plugins.min.js"))
+  lazy val commonStylesheets = Seq(
+    "/assets/lib/material-design-icons/material-icons.css",
+    Assets.path(s"vendor/theme/default/materialize.css"),
+    Assets.path("vendor/vendors.min.css"),
+    Assets.path(s"vendor/theme/default/style.css"),
+    Assets.path(s"stylesheets/components.css")
+  )
 }

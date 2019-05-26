@@ -8,7 +8,7 @@ class TestController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Ok(com.kyleu.projectile.web.views.html.test.testlist(projectile, Seq("deftyped"))))
   }
 
-  def test(key: String, theme: String) = Action.async { implicit request =>
+  def test(key: String, theme: String) = Action.async { _ =>
     val rsp = key match {
       case "deftyped" => sortDefinitelyTyped()
       case _ => throw new IllegalStateException(s"Unhandled test [$key]")
@@ -24,7 +24,6 @@ class TestController @javax.inject.Inject() () extends ProjectileController {
     val children = dir.children.filter(_.isDirectory).filterNot(_.name == "project")
 
     val data = children.toList.sortBy(_.name).map(c => c.name -> loadDeps(c))
-    val roots = data.filter(_._2.isEmpty).map(_._1)
 
     val (nodeps, deps) = data.partition(_._2.isEmpty)
 

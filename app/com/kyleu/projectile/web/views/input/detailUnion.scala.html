@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, union: com.kyleu.projectile.models.export.ExportUnion)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, s"[${union.key}] Union Detail") {
   <div class="collection with-header">
     <div class="collection-header">

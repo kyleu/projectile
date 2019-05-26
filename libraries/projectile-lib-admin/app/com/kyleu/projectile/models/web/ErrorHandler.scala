@@ -14,13 +14,13 @@ import scala.concurrent._
 
 object ErrorHandler {
   class Actions() {
-    def badRequest(path: String, error: String)(implicit session: Session, flash: Flash): Html = {
+    def badRequest(path: String, error: String)(implicit flash: Flash): Html = {
       com.kyleu.projectile.views.html.error.badRequest(path, error)
     }
-    def serverError(error: String, ex: Option[Throwable])(implicit session: Session, flash: Flash): Html = {
+    def serverError(error: String, ex: Option[Throwable])(implicit flash: Flash): Html = {
       com.kyleu.projectile.views.html.error.serverError(error, ex)
     }
-    def notFound(path: String)(implicit session: Session, flash: Flash): Html = {
+    def notFound(path: String)(implicit flash: Flash): Html = {
       com.kyleu.projectile.views.html.error.notFound(path)
     }
   }
@@ -48,7 +48,7 @@ class ErrorHandler @Inject() (
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
     render.async {
       case Accepts.Json() => jsonError(request, ex)
-      case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.session, request.flash)))
+      case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.flash)))
     }(request)
   }
 
@@ -57,7 +57,7 @@ class ErrorHandler @Inject() (
     td.tag("error.message", message)
     render.async {
       case Accepts.Json() => jsonNotFound(request, statusCode, message)
-      case _ => Future.successful(Results.NotFound(actions.notFound(request.path)(request.session, request.flash)))
+      case _ => Future.successful(Results.NotFound(actions.notFound(request.path)(request.flash)))
     }(request)
   }
 
@@ -66,7 +66,7 @@ class ErrorHandler @Inject() (
     td.tag("error.message", error)
     render.async {
       case Accepts.Json() => jsonBadRequest(request, error)
-      case _ => Future.successful(Results.BadRequest(actions.badRequest(request.path, error)(request.session, request.flash)))
+      case _ => Future.successful(Results.BadRequest(actions.badRequest(request.path, error)(request.flash)))
     }(request)
   }
 

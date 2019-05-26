@@ -2,8 +2,9 @@ package com.kyleu.projectile.controllers
 
 import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}
 import com.kyleu.projectile.models.module.Application
-import com.kyleu.projectile.models.user.{Role, SystemUser}
+import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.StartupErrorFixes
+import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.TraceData
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
@@ -16,13 +17,12 @@ abstract class AuthController(name: String) extends BaseController(name) {
   type Req = SecuredRequest[AuthEnv, AnyContent]
 
   def app: Application
-
   override def tracing = app.tracing
 
+  private[this] def appErrorsOr(f: () => Action[AnyContent]): Action[AnyContent] = if (app.errors.hasErrors) { appErrors() } else { f() }
+
   protected def withoutSession(action: String)(block: UserAwareRequest[AuthEnv, AnyContent] => TraceData => Future[Result])(implicit ec: ExecutionContext) = {
-    if (app.hasErrors) {
-      appErrors()
-    } else {
+    appErrorsOr { () =>
       app.silhouette.UserAwareAction.async { implicit request =>
         Instrumented.timeFuture(metricsName + "_request", "action", name + "_" + action) {
           app.tracing.trace(name + ".controller." + action) { td =>
@@ -34,22 +34,21 @@ abstract class AuthController(name: String) extends BaseController(name) {
     }
   }
 
-  protected def withSession(action: String, admin: Boolean = false)(block: Req => TraceData => Future[Result])(implicit ec: ExecutionContext) = {
-    if (app.hasErrors) {
-      appErrors()
-    } else {
+  protected def withSession(action: String, permissions: (String, String, String)*)(
+    block: Req => TraceData => Future[Result]
+  )(implicit ec: ExecutionContext) = {
+    appErrorsOr { () =>
       app.silhouette.UserAwareAction.async { implicit request =>
         request.identity match {
-          case Some(u) => if (admin && u.role != Role.Admin) {
-            failRequest(request)
-          } else {
-            Instrumented.timeFuture(metricsName + "_request", "action", name + "_" + action) {
+          case Some(u) => permissions.map(p => PermissionService.check(u.role, p._1, p._2, p._3)).filter(!_._1).map(_._2).toList match {
+            case Nil => Instrumented.timeFuture(metricsName + "_request", "action", name + "_" + action) {
               app.tracing.trace(name + ".controller." + action) { td =>
                 enhanceRequest(request, Some(u), td)
                 val auth = request.authenticator.getOrElse(throw new IllegalStateException("No auth!"))
                 block(SecuredRequest(u, auth, request))(td)
               }(getTraceData)
             }
+            case x => Future.successful(Redirect("/").flashing("error" -> "You are not authorized to access that page"))
           }
           case None => failRequest(request)
         }
@@ -61,7 +60,7 @@ abstract class AuthController(name: String) extends BaseController(name) {
 
   protected def failRequest(request: UserAwareRequest[AuthEnv, AnyContent]) = {
     val msg = request.identity match {
-      case Some(_) => "You must be an administrator to access that"
+      case Some(_) => "You do not have sufficient permissions to access that"
       case None => s"You must sign in or register before accessing this application"
     }
     val redir = Redirect(com.kyleu.projectile.controllers.auth.routes.AuthenticationController.signInForm())

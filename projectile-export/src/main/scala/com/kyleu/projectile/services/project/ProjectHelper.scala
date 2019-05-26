@@ -4,11 +4,8 @@ import com.kyleu.projectile.models.command.ProjectileResponse
 import com.kyleu.projectile.models.command.ProjectileResponse._
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.input.Input
-import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.output.file.OutputFile
 import com.kyleu.projectile.models.project.ProjectSummary
 import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
-import com.kyleu.projectile.models.typescript.input.TypeScriptInput
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 

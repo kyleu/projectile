@@ -6,10 +6,15 @@ import java.util.UUID
 
 import com.github.tototoshi.csv.CSVWriter
 import com.kyleu.projectile.controllers.AuthController
+import com.kyleu.projectile.controllers.admin.sql.routes.SqlBackdoorController
 import com.kyleu.projectile.models.database.jdbc.Conversions
 import com.kyleu.projectile.models.database.{Query, Row}
-import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
+import com.kyleu.projectile.models.menu.SystemMenu
+import com.kyleu.projectile.models.module.ApplicationFeature.Sql.value
+import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.queries.SqlParser
+import com.kyleu.projectile.models.web.InternalIcons
+import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.util.NullUtils
 import com.kyleu.projectile.util.tracing.TraceData
@@ -22,14 +27,16 @@ import scala.util.control.NonFatal
 class SqlBackdoorController @javax.inject.Inject() (
     override val app: Application, db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends AuthController("sql") {
-  ApplicationFeatures.enable("sql")
+  ApplicationFeature.enable(ApplicationFeature.Sql)
+  PermissionService.registerModel("tools", "SQL", "SQL Access", Some(InternalIcons.sql), "prompt", "commit")
+  SystemMenu.addToolMenu(value, "SQL Access", Some("A SQL prompt for the application database (dangerous)"), SqlBackdoorController.sql(), InternalIcons.sql)
 
-  def sql = withSession("form", admin = true) { implicit request => implicit td =>
-    val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "tools", "sql")
+  def sql = withSession("form", ("tools", "SQL", "prompt")) { implicit request => _ =>
+    val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sql")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.sandbox.sqlForm(cfg, "select * from foo", None)))
   }
 
-  def sqlPost = withSession("post", admin = true) { implicit request => implicit td =>
+  def sqlPost = withSession("post", ("tools", "SQL", "prompt")) { implicit request => implicit td =>
     val form = request.body.asFormUrlEncoded.get
     val sql = form("sql").head
     val format = form.get("format").flatMap(_.headOption).getOrElse("html")
@@ -58,13 +65,13 @@ class SqlBackdoorController @javax.inject.Inject() (
       }
       val response = format match {
         case "html" =>
-          val cfg = app.cfg(u = Some(request.identity), admin = true, "system", "tools", "sql")
+          val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sql")
           Ok(com.kyleu.projectile.views.html.admin.sandbox.sqlForm(cfg, sql, Some(results)))
         case "csv" if results.size > 1 => throw new IllegalStateException("Cannot export CSV for multiple statements")
         case "csv" => Ok(csvFor(results.head._4, results.head._3).toString).withHeaders(CONTENT_DISPOSITION -> "attachment; filename=fuchu-export.csv")
         case _ => throw new IllegalStateException("Can only handle \"html\" and \"csv\" formats")
       }
-      if (!commit) { conn.rollback() }
+      if ((!commit) || (!PermissionService.check(request.identity.role, "tools", "SQL", "commit")._1)) { conn.rollback() }
       Future.successful(response)
     }
   }

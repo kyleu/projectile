@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, summary: com.kyleu.projectile.models.project.ProjectSummary, inputs: Seq[String])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, if(summary.key == "new") { "New Project" } else { summary.key }) {
   <form method="post" action="@com.kyleu.projectile.web.controllers.project.form.routes.ProjectFormController.saveSummary()">
   <div class="collection with-header">

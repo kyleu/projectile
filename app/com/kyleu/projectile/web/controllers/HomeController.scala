@@ -33,13 +33,13 @@ class HomeController @javax.inject.Inject() () extends ProjectileController {
     }
   }
 
-  def initialize(d: String) = Action.async { implicit request =>
+  def initialize(d: String) = Action.async { _ =>
     PlayServerHelper.setNewDirectory(d)
     projectile.init()
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()))
   }
 
-  def refreshAll = Action.async { implicit request =>
+  def refreshAll = Action.async { _ =>
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing {
       "success" -> "Refreshed a bunch of stuff; you're welcome"
     })

@@ -1,9 +1,8 @@
-@(app: com.kyleu.projectile.models.module.Application)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.splash("Error", fullWidth = true) {
+@(app: com.kyleu.projectile.models.module.Application)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.splash("Error", fullWidth = true) {
   <h6>Startup Errors</h6>
   <ul class="collection">
-    @app.getErrors.map { err =>
+    @app.errors.getErrors.map { err =>
       <li class="collection-item">
         <p>@err._2</p>
         @defining(com.kyleu.projectile.models.web.StartupErrorFixes.messageFor(err._1, err._2, err._3)) { msg =>

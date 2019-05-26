@@ -45,8 +45,8 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
   def serverHelp() = Error(ServerHelper.sbtError)
 
   def createExample(key: String, template: String, force: Boolean) = {
-    val proj = ProjectExampleService.projects.find(_.key == template).getOrElse {
-      throw new IllegalStateException(s"Template must be one of [${ProjectExampleService.projects.map(_.key).mkString(", ")}]")
+    ProjectExampleService.projects.find(_.key == template).getOrElse {
+      throw new IllegalStateException(s"Template [$key}] must be one of [${ProjectExampleService.projects.map(_.key).mkString(", ")}]")
     }
     ProjectExampleService.extract(project = template, to = rootDir, name = key, force = force)
     ProjectileResponse.OK(s"Example project [$key] created in directory [${rootDir.pathAsString}] from template [$template]")

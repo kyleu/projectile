@@ -1,6 +1,5 @@
-@(username: String, cfg: com.kyleu.projectile.models.config.UiConfig)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.views.html.layout.splash("Sign in to " + cfg.projectName) {
+@(username: String, cfg: com.kyleu.projectile.models.config.UiConfig)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.splash("Sign in to " + cfg.projectName) {
   <form action="@cfg.urls.signin" method="post">
     <div class="row">
       <div class="input-field col s12">

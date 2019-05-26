@@ -4,12 +4,14 @@ import better.files.Resource
 import com.kyleu.projectile.models.database.Statement
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.queries.SqlParser
+import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData
 import play.twirl.api.Html
 
 import scala.util.Random
+import scala.util.control.NonFatal
 
-object StartupErrorFixes {
+object StartupErrorFixes extends Logging {
   def messageFor(key: String, msg: String, params: Map[String, String]) = key match {
     case "database" => msg match {
       case _ if msg.contains("Connection") && msg.contains("refused") =>
@@ -41,13 +43,11 @@ object StartupErrorFixes {
     case _ => throw new IllegalStateException(s"Cannot fix [$key]")
   }
 
-  private[this] def schemaFor(key: String) = (key match {
-    case "audit" => Some("AuditSchema")
-    case "note" => Some("NoteSchema")
-    case "system_user" => Some("SystemUserSchema")
-    case "scheduled_task_run" => Some("ScheduledTaskRunSchema")
-    case _ => None
-  }).map(schema => Resource.getAsString(s"ddl/$schema.sql"))
+  private[this] def schemaFor(key: String) = try {
+    Some(Resource.getAsString(s"ddl/$key.sql").dropWhile(_.toInt == 65279 /* UTF8 BOM */ ))
+  } catch {
+    case NonFatal(x) => None
+  }
 
   private[this] def sqlError(error: String, sql: String) = {
     val m = s"<p>$error run the following sql to resolve the issue:</p>"
@@ -66,7 +66,8 @@ object StartupErrorFixes {
     val statements = SqlParser.split(sql)
     app.db.transaction { (_, conn) =>
       statements.map { s =>
-        app.db.execute(new Statement { override def sql = s._1 }, Some(conn))
+        log.info("Running the following SQL:\n" + s._1)
+        app.db.execute(Statement.adhoc(s._1), Some(conn))
       }
     }(td)
   }

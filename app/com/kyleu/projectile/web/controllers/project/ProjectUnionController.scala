@@ -28,7 +28,7 @@ class ProjectUnionController @javax.inject.Inject() () extends ProjectileControl
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewUnion(projectile, key, inputUnions)))
   }
 
-  def add(key: String, unionKey: String) = Action.async { implicit request =>
+  def add(key: String, unionKey: String) = Action.async { _ =>
     val p = projectile.getProject(key)
     val i = p.getInput
     unionKey match {
@@ -77,7 +77,7 @@ class ProjectUnionController @javax.inject.Inject() () extends ProjectileControl
     Future.successful(redir.flashing("success" -> s"Saved union [$unionKey]"))
   }
 
-  def remove(key: String, member: String) = Action.async { implicit request =>
+  def remove(key: String, member: String) = Action.async { _ =>
     projectile.removeUnionMember(key, member)
     Future.successful(Redirect(
       com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)

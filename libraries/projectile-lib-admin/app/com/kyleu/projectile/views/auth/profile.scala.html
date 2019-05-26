@@ -1,10 +1,10 @@
 @(username: String, cfg: com.kyleu.projectile.models.config.UiConfig, errors: Seq[(String, String)])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )
 
 @colors(key: String, title: String, inputClass: String, selected: Option[String], includeGradients: Boolean = true) = {
   <div class="input-field col s12 @inputClass mb-0">
-    <p class="mt-0">@title</p>
+    <p class="mt-0 mb-2">@Html(title)</p>
     <input id="@key" name="@key" type="hidden" value="@selected.getOrElse("")" />
     @if(includeGradients) {
     <div class="gradient-color">
@@ -47,6 +47,7 @@
         <input name="username" type="text" value="@username" />
       </div>
     }
+
     @com.kyleu.projectile.views.html.layout.card(title = Some("Theme (reload required)")) {
       <div class="input-field">
         <ul>
@@ -68,12 +69,28 @@
       </div>
     }
 
+    @com.kyleu.projectile.views.html.layout.card(title = Some("Navbar Options")) {
+      <div class="theme-cutomizer" style="width: initial;">
+        <div class="navbar-options row">
+          @colors("navbarColor", "Navbar Color", "navbar-color", cfg.user.navbarColor)
+          <div class="input-field col s12">
+            <div class="switch">
+              Dark
+              <label class="float-right">
+                <input class="navbar-dark-checkbox" type="checkbox" name="navbarDark" value="true" @if(cfg.user.navbarDark) { checked="checked" } /> <span class="lever ml-0"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     @com.kyleu.projectile.views.html.layout.card(title = Some("Menu Options")) {
       <div class="theme-cutomizer" style="width: initial;">
         <div class="menu-options">
           <div class="menu-options-form row">
-            @colors("menuColor", "Color", "menu-color", cfg.user.menuColor)
-            @colors("menuBackgroundColor", "Background Color", "menu-bg-color", cfg.user.menuBackgroundColor)
+            @colors("menuColor", "Menu Item Color", "menu-color", cfg.user.menuColor)
+            @colors("menuBackgroundColor", "Menu Background Color", "menu-bg-color", cfg.user.menuBackgroundColor)
             <div class="input-field col s12">
               <div class="switch">
                 Dark
@@ -112,26 +129,15 @@
       </div>
     }
 
-    @com.kyleu.projectile.views.html.layout.card(title = Some("Navbar Options")) {
-      <div class="theme-cutomizer" style="width: initial;">
-        <div class="navbar-options row">
-          @colors("navbarColor", "Color", "navbar-color", cfg.user.navbarColor)
-          <div class="input-field col s12">
-            <div class="switch">
-              Dark
-              <label class="float-right">
-                <input class="navbar-dark-checkbox" type="checkbox" name="navbarDark" value="true" @if(cfg.user.navbarDark) { checked="checked" } /> <span class="lever ml-0"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
-
     @com.kyleu.projectile.views.html.layout.card(title = Some("Element Options")) {
       <div class="theme-cutomizer" style="width: initial;">
         <div class="element-options row">
-          @colors("buttonColor", "Button Color", "button-color", cfg.user.buttonColor)
+        @colors("buttonColor", "Button Color", "button-color", cfg.user.buttonColor)
+        </div>
+      </div>
+      <div class="theme-cutomizer" style="width: initial;">
+        <div class="element-options row">
+        @colors("accentColor", "Accent Color (<a href=\"\" onclick=\"return false;\">links</a>)", "accent-color", cfg.user.accentColor, includeGradients = false)
         </div>
       </div>
     }

@@ -2,19 +2,20 @@ package com.kyleu.projectile.controllers.sitemap
 
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.menu.NavMenu
-import com.kyleu.projectile.models.module.{Application, ApplicationFeatures}
+import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class SitemapController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("sitemap") {
-  ApplicationFeatures.enable("sitemap")
+  ApplicationFeature.enable(ApplicationFeature.Sitemap)
+  // SystemMenu.addRootMenu(key, "Sitemap", Some("The sitemap of this application"), SitemapController.sitemap(), InternalIcons.sitemap)
 
   def sitemap() = menu("")
 
-  def menu(path: String) = withoutSession("testbed") { implicit request => implicit td =>
+  def menu(path: String) = withoutSession("testbed") { implicit request => _ =>
     val segments = path.split("/").map(_.trim).filter(_.nonEmpty)
-    val cfg = app.cfg(request.identity, admin = false, segments: _*)
+    val cfg = app.cfg(request.identity, segments: _*)
     val root = NavMenu(key = "_root", title = cfg.projectName, description = Some("The home page of this application"), url = Some("/"), children = cfg.menu)
     val result = segments.foldLeft((Seq.empty[String], root)) { (l, r) =>
       l._2.children.find(_.key == r) match {

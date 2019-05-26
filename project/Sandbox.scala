@@ -30,6 +30,9 @@ object Sandbox {
 
     JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
     pipelineStages in Assets := Seq(scalaJSPipeline),
+    
+    libraryDependencies ++= Dependencies.Compiler.all,
+    scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes")),
 
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(projectId, projectName, projectPort).taskValue
   ).disablePlugins(PlayFilters).enablePlugins(SbtWeb, PlayScala).dependsOn(

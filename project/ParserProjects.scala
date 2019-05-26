@@ -21,13 +21,12 @@ object ParserProjects {
   ).disablePlugins(AssemblyPlugin).dependsOn(`projectile-parser-core`)
 
   lazy val `projectile-parser-thrift` = (project in file("parsers/projectile-parser-thrift")).settings(Common.settings: _*).settings(
-    description := "Reads and transforms Thrift IDL files",
-    libraryDependencies ++= Seq(),
+    description := "Reads and transforms Thrift IDL files"
   ).disablePlugins(AssemblyPlugin).dependsOn(`projectile-parser-core`)
 
   lazy val `projectile-parser-typescript` = (project in file("parsers/projectile-parser-typescript")).settings(Common.settings: _*).settings(
     description := "Loads models from a TypeScript definition files",
-    libraryDependencies ++= Seq(),
+    libraryDependencies ++= Compiler.all
   ).disablePlugins(AssemblyPlugin).dependsOn(`projectile-parser-core`)
 
   lazy val all = Seq(

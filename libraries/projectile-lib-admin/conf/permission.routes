@@ -1,0 +1,9 @@
+GET         /                  com.kyleu.projectile.controllers.admin.permission.PermissionController.list
+
+GET         /refresh           com.kyleu.projectile.controllers.admin.permission.PermissionController.refresh
+
+GET         /edit              com.kyleu.projectile.controllers.admin.permission.PermissionController.editForm
+GET         /delete            com.kyleu.projectile.controllers.admin.permission.PermissionController.delete(role, pkg: Option[String] ?= None, model: Option[String] ?= None, action: Option[String] ?= None)
+POST        /edit              com.kyleu.projectile.controllers.admin.permission.PermissionController.set
+
+

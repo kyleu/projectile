@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, key: String, inputUnions: Seq[(String, Boolean)])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.web.views.html.layout.simple(projectile, "New Union") {
   <div class="collection with-header">
     <div class="collection-header">

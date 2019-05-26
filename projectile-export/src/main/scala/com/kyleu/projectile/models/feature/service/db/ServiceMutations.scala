@@ -1,4 +1,4 @@
-package com.kyleu.projectile.models.feature.service
+package com.kyleu.projectile.models.feature.service.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration

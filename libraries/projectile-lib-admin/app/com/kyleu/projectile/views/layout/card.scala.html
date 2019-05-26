@@ -1,8 +1,8 @@
-@(title: Option[String], right: Option[Html] = None)(content: Html)
+@(title: Option[String], icon: Option[String] = None, right: Option[Html] = None)(content: Html)
 <div class="card">
   <div class="card-content">
     @right.map { r => <div class="right">@r</div> }
-    @title.map { t => <span class="card-title">@t</span> }
+    @title.map { t => <span class="card-title">@icon.map { i => <i class="material-icons" style="font-size: 15px;">@i</i> }@t</span> }
     @content
   </div>
 </div>

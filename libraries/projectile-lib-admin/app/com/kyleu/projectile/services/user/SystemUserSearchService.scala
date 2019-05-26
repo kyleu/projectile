@@ -11,30 +11,28 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.services.IdentityService
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class SystemUserSearchService @javax.inject.Inject() (
     @Named("system") db: JdbcDatabase,
     tracingService: OpenTracingService
 ) extends IdentityService[SystemUser] with Logging {
-  override def retrieve(loginInfo: LoginInfo) = tracingService.noopTrace("user.retreive") { implicit td =>
-    UserCache.getUserByLoginInfo(loginInfo) match {
-      case Some(u) => Future.successful(Some(u))
-      case None =>
-        val u = db.query(SystemUserQueries.FindUserByProfile(loginInfo))(td)
-        u.foreach(UserCache.cacheUser)
-        Future.successful(u)
-    }
-  }
+  override def retrieve(loginInfo: LoginInfo) = getByLoginInfo(loginInfo)(TraceData.noop)
 
   def getByLoginInfo(loginInfo: LoginInfo)(implicit trace: TraceData) = {
     tracingService.trace("user.get.by.login.info") { td =>
       UserCache.getUserByLoginInfo(loginInfo) match {
         case Some(u) => Future.successful(Some(u))
-        case None =>
+        case None => try {
           val u = db.query(SystemUserQueries.FindUserByProfile(loginInfo))(td)
           u.foreach(UserCache.cacheUser)
           Future.successful(u)
+        } catch {
+          case NonFatal(x) =>
+            log.warn(s"Error retrieving system user by login info [$loginInfo]", x)
+            Future.successful(None)
+        }
       }
     }
   }

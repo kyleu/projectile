@@ -17,18 +17,18 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.project(projectile, i.template, p)))
   }
 
-  def remove(key: String) = Action.async { implicit request =>
+  def remove(key: String) = Action.async { _ =>
     projectile.removeProject(key)
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.routes.HomeController.index()).flashing("success" -> s"Removed project [$key]"))
   }
 
-  def update(key: String) = Action.async { implicit request =>
+  def update(key: String) = Action.async { _ =>
     val result = projectile.updateProject(key)
     val msg = result.mkString("\n")
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(key)).flashing("success" -> msg.take(512)))
   }
 
-  def fix(key: String, t: String, src: String, tgt: String) = Action.async { implicit request =>
+  def fix(key: String, t: String, src: String, tgt: String) = Action.async { _ =>
     val result = projectile.fix(key, t, src, tgt)
     Future.successful(Ok(Html(s"<pre>${result.mkString("\n")}</pre>")))
   }
@@ -43,11 +43,11 @@ class ProjectController @javax.inject.Inject() () extends ProjectileController {
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.examples(projectile, ExampleProjectHelper.listFiles())))
   }
 
-  def exampleCompile() = Action.async { implicit request =>
+  def exampleCompile() = Action.async { _ =>
     Future.successful(Ok(ExampleProjectHelper.compileAll().map(x => x._1 + ": " + x._2).mkString("\n")))
   }
 
-  def exampleExtract(k: String) = Action.async { implicit request =>
+  def exampleExtract(k: String) = Action.async { _ =>
     ProjectExampleService.extract(k, root / k, k)
     Future.successful(Ok("OK"))
   }

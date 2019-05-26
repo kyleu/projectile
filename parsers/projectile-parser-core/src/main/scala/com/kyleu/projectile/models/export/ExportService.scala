@@ -19,7 +19,6 @@ case class ExportService(
     methods: Seq[ExportMethod],
     features: Set[ServiceFeature] = Set.empty
 ) {
-
   def apply(m: ServiceMember) = copy(
     pkg = m.pkg.toList,
     className = m.getOverride("className", ExportHelper.toClassName(ExportHelper.toIdentifier(m.key))),
@@ -33,4 +32,6 @@ case class ExportService(
   def getMethod(k: String) = getMethodOpt(k).getOrElse {
     throw new IllegalStateException(s"No method for service [$className] with name [$k]. Available methods: [${methods.mkString(", ")}]")
   }
+
+  def perm(act: String) = s"""("${pkg.headOption.getOrElse("system")}", "$className", "$act")"""
 }

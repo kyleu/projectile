@@ -8,14 +8,12 @@ import com.kyleu.projectile.models.graphql.EmptySchema
 import com.kyleu.projectile.models.menu.MenuProvider
 import com.kyleu.projectile.models.notification.Notification
 import com.kyleu.projectile.models.status.{AppStatus, StatusProvider}
-import com.kyleu.projectile.models.user.{Role, SystemUser}
+import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.{ErrorHandler, GravatarUrl}
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.search.SearchProvider
-import com.kyleu.projectile.util.JsonSerializers.extract
 import com.kyleu.projectile.util.metrics.MetricsConfig
 import com.kyleu.projectile.util.tracing.{OpenTracingService, TracingService}
-import io.circe.JsonObject
 import net.codingwell.scalaguice.ScalaModule
 
 import scala.concurrent.ExecutionContext
@@ -23,7 +21,7 @@ import scala.concurrent.ExecutionContext
 abstract class AdminModule(
     val projectName: String,
     val allowSignup: Boolean,
-    val initialRole: Role,
+    val initialRole: String,
     val oauthProviders: Seq[String] = Nil,
     val menuProvider: MenuProvider
 ) extends AbstractModule with ScalaModule {
@@ -54,13 +52,12 @@ abstract class AdminModule(
   protected[this] def uiConfigProvider: Application.UiConfigProvider = new Application.UiConfigProvider {
     override def allowRegistration = allowSignup
     override def defaultRole = initialRole
-    override def configForUser(su: Option[SystemUser], admin: Boolean, notifications: Seq[Notification], breadcrumbs: String*) = su match {
+    override def configForUser(su: Option[SystemUser], notifications: Seq[Notification], breadcrumbs: String*) = su match {
       case None => UiConfig(projectName = projectName, menu = menuProvider.guestMenu, urls = navUrls)
       case Some(u) =>
         val menu = menuProvider.menuFor(Some(u))
-        val theme = extract[JsonObject](u.settings).apply("theme").map(extract[String]).getOrElse("dark")
         val user = u.settingsObj.copy(avatarUrl = Some(GravatarUrl(u.email)))
-        val html = NavHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, user.avatarUrl.getOrElse(""), notifications))
+        val html = NavHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, GravatarUrl(u.email), notifications))
         UiConfig(
           projectName = projectName,
           userId = Some(u.id),
@@ -76,6 +73,9 @@ abstract class AdminModule(
 
   // GraphQL
   protected[this] def schema: GraphQLSchema = EmptySchema
+
+  protected[this] def inj[T](injector: Injector, c: Class[_]*): Unit = c.foreach(cls => injector.getInstance(cls))
+  protected[this] def ref(x: Any*): Unit = {} // noop
 
   // Guice
   @Provides @javax.inject.Singleton

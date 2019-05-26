@@ -1,5 +1,5 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, connections: Seq[com.kyleu.projectile.models.connection.ConnectionDescription])(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = "Active Connections", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.connection)) {
   <ul class="collection with-header">
     <li class="collection-header">

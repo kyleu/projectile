@@ -6,7 +6,6 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object SchemaReferencesHelper {
   def writeFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile, isLast: Boolean) = {
-    val hasFk = model.foreignKeys.exists(_.references.size == 1)
     val references = ExportModelReference.transformedReferences(config, model)
     references.foreach { ref =>
       val srcModel = ref.src

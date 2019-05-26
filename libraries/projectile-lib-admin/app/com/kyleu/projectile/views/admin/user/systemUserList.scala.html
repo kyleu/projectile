@@ -1,11 +1,11 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.user.SystemUser], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )
 @com.kyleu.projectile.views.html.admin.explore.list(
   cfg = cfg,
   model = "System User",
   modelPlural = "System Users",
-  icon = "user",
+  icon = com.kyleu.projectile.models.web.InternalIcons.systemUser,
   cols = Seq(
     "id" -> "Id",
     "username" -> "Username",

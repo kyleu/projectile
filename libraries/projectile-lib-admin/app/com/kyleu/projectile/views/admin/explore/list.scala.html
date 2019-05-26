@@ -15,31 +15,31 @@
     q: Option[String] = None,
     fullUI: Boolean = true
 )(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@if(fullUI) {
   @com.kyleu.projectile.views.html.layout.page(title = s"$model Management", cfg = cfg, icon = Some(icon)) {
     @com.kyleu.projectile.views.html.layout.card(None) {
       <div>
         <div>
-          @calls.search.map { search =>
-            <div class="right">
-              <form action="@search" method="get">
-                <input type="text" name="q" placeholder="Search @modelPlural" value="@q.getOrElse("")" />
-              </form>
-            </div>
+          @calls.newCall.map { nu =>
+            <div class="right"><a class="btn @cfg.user.buttonColor" href="@nu">Add @model</a></div>
           }
           <h5>
             <i class="material-icons" style="margin-right: 6px;">@icon</i>
             @{totalCount.map(total => com.kyleu.projectile.util.NumberUtils.withCommas(total)).map(_ + " ").getOrElse("") + modelPlural + q.filter(_.trim.nonEmpty).map(q => s" matching [$q]").getOrElse("")}
-            @calls.newCall.map { nu =>
-              <a href="@nu"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.add</i></a>
-            }
           </h5>
           @if(offset > 0) {
             <em>Page @((offset / limit) + 1) </em>
           }
         </div>
         <div class="clear"></div>
+        @calls.search.map { search =>
+          <div>
+            <form action="@search" method="get">
+              <input type="text" name="q" placeholder="Search @modelPlural" value="@q.getOrElse("")" />
+            </form>
+          </div>
+        }
         <div style="overflow: auto;">
           @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc)
         </div>

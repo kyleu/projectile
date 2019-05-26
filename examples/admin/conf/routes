@@ -1,13 +1,15 @@
 GET        /                                controllers.HomeController.home
 
-# Projectile
+# Projectile - Uncomment to enable features
 ->         /components                      components.Routes
 
 ->         /profile                         profile.Routes
 ->         /sitemap                         sitemap.Routes
 
-# Admin - Uncomment to enable features
+# Admin
 ->         /admin/search                    search.Routes
+->         /admin/permission                permission.Routes
+
 ->         /admin/graphql                   graphql.Routes
 ->         /admin/rest                      rest.Routes
 
@@ -15,12 +17,15 @@ GET        /                                controllers.HomeController.home
 ->         /admin/note                      note.Routes
 ->         /admin/systemUser                systemUser.Routes
 
+# ->       /admin/connection                connection.Routes
 # ->       /admin/encrypt                   encrypt.Routes
 # ->       /admin/sandbox                   sandbox.Routes
-# ->       /admin/process                   process.Routes
+->         /admin/migrate                   migrate.Routes
 # ->       /admin/sql                       sql.Routes
+->         /admin/task                      task.Routes
+# ->       /admin/process                   process.Routes
 
-# ->        /admin/status                    status.Routes
+# ->       /admin/status                    status.Routes
 
 # Start model route files
 # End model route files

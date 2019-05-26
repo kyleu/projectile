@@ -13,7 +13,7 @@ import sangria.schema._
 object NoteSchema extends GraphQLSchemaHelper("note") {
   implicit val notePrimaryKeyId: HasId[Note, UUID] = HasId[Note, UUID](_.id)
   private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[UUID]) = {
-    c.injector.getInstance(classOf[NoteService]).getByPrimaryKeySeq(c.creds, idSeq)(c.trace)
+    c.getInstance[NoteService].getByPrimaryKeySeq(c.creds, idSeq)(c.trace)
   }
   val noteByPrimaryKeyFetcher = Fetcher(getByPrimaryKeySeq)
 
@@ -33,7 +33,7 @@ object NoteSchema extends GraphQLSchemaHelper("note") {
 
   val noteByAuthorRelation = Relation[Note, UUID]("byAuthor", x => Seq(x.author))
   val noteByAuthorFetcher = Fetcher.rel[GraphQLContext, Note, Note, UUID](
-    getByPrimaryKeySeq, (c, rels) => c.injector.getInstance(classOf[NoteService]).getByAuthorSeq(c.creds, rels(noteByAuthorRelation))(c.trace)
+    getByPrimaryKeySeq, (c, rels) => c.getInstance[NoteService].getByAuthorSeq(c.creds, rels(noteByAuthorRelation))(c.trace)
   )
 
   implicit lazy val noteType: sangria.schema.ObjectType[GraphQLContext, Note] = deriveObjectType()
@@ -42,43 +42,43 @@ object NoteSchema extends GraphQLSchemaHelper("note") {
 
   val queryFields = fields(
     unitField(name = "note", desc = None, t = OptionType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByPrimaryKey(c.ctx.creds, c.arg(noteIdArg))(td)
+      c.ctx.getInstance[NoteService].getByPrimaryKey(c.ctx.creds, c.arg(noteIdArg))(td)
     }, noteIdArg),
     unitField(name = "noteSeq", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByPrimaryKeySeq(c.ctx.creds, c.arg(noteIdSeqArg))(td)
+      c.ctx.getInstance[NoteService].getByPrimaryKeySeq(c.ctx.creds, c.arg(noteIdSeqArg))(td)
     }, noteIdSeqArg),
     unitField(name = "noteSearch", desc = None, t = noteResultType, f = (c, td) => {
-      runSearch(c.ctx.injector.getInstance(classOf[NoteService]), c, td).map(toResult)
+      runSearch(c.ctx.getInstance[NoteService], c, td).map(toResult)
     }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg),
     unitField(name = "notesByRelType", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByRelType(c.ctx.creds, c.arg(noteRelTypeArg))(td)
+      c.ctx.getInstance[NoteService].getByRelType(c.ctx.creds, c.arg(noteRelTypeArg))(td)
     }, noteRelTypeArg),
     unitField(name = "notesByRelTypeSeq", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByRelTypeSeq(c.ctx.creds, c.arg(noteRelTypeSeqArg))(td)
+      c.ctx.getInstance[NoteService].getByRelTypeSeq(c.ctx.creds, c.arg(noteRelTypeSeqArg))(td)
     }, noteRelTypeSeqArg),
     unitField(name = "notesByRelPk", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByRelPk(c.ctx.creds, c.arg(noteRelPkArg))(td)
+      c.ctx.getInstance[NoteService].getByRelPk(c.ctx.creds, c.arg(noteRelPkArg))(td)
     }, noteRelPkArg),
     unitField(name = "notesByRelPkSeq", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByRelPkSeq(c.ctx.creds, c.arg(noteRelPkSeqArg))(td)
+      c.ctx.getInstance[NoteService].getByRelPkSeq(c.ctx.creds, c.arg(noteRelPkSeqArg))(td)
     }, noteRelPkSeqArg),
     unitField(name = "notesByText", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByText(c.ctx.creds, c.arg(noteTextArg))(td)
+      c.ctx.getInstance[NoteService].getByText(c.ctx.creds, c.arg(noteTextArg))(td)
     }, noteTextArg),
     unitField(name = "notesByTextSeq", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByTextSeq(c.ctx.creds, c.arg(noteTextSeqArg))(td)
+      c.ctx.getInstance[NoteService].getByTextSeq(c.ctx.creds, c.arg(noteTextSeqArg))(td)
     }, noteTextSeqArg),
     unitField(name = "notesByAuthor", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByAuthor(c.ctx.creds, c.arg(noteAuthorArg))(td)
+      c.ctx.getInstance[NoteService].getByAuthor(c.ctx.creds, c.arg(noteAuthorArg))(td)
     }, noteAuthorArg),
     unitField(name = "notesByAuthorSeq", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByAuthorSeq(c.ctx.creds, c.arg(noteAuthorSeqArg))(td)
+      c.ctx.getInstance[NoteService].getByAuthorSeq(c.ctx.creds, c.arg(noteAuthorSeqArg))(td)
     }, noteAuthorSeqArg),
     unitField(name = "notesByCreated", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByCreated(c.ctx.creds, c.arg(noteCreatedArg))(td)
+      c.ctx.getInstance[NoteService].getByCreated(c.ctx.creds, c.arg(noteCreatedArg))(td)
     }, noteCreatedArg),
     unitField(name = "notesByCreatedSeq", desc = None, t = ListType(noteType), f = (c, td) => {
-      c.ctx.injector.getInstance(classOf[NoteService]).getByCreatedSeq(c.ctx.creds, c.arg(noteCreatedSeqArg))(td)
+      c.ctx.getInstance[NoteService].getByCreatedSeq(c.ctx.creds, c.arg(noteCreatedSeqArg))(td)
     }, noteCreatedSeqArg)
   )
 
@@ -86,13 +86,13 @@ object NoteSchema extends GraphQLSchemaHelper("note") {
     name = "NoteMutations",
     fields = fields(
       unitField(name = "create", desc = None, t = OptionType(noteType), f = (c, td) => {
-        c.ctx.injector.getInstance(classOf[NoteService]).create(c.ctx.creds, c.arg(dataFieldsArg))(td)
+        c.ctx.getInstance[NoteService].create(c.ctx.creds, c.arg(dataFieldsArg))(td)
       }, dataFieldsArg),
       unitField(name = "update", desc = None, t = OptionType(noteType), f = (c, td) => {
-        c.ctx.injector.getInstance(classOf[NoteService]).update(c.ctx.creds, c.arg(noteIdArg), c.arg(dataFieldsArg))(td).map(_._1)
+        c.ctx.getInstance[NoteService].update(c.ctx.creds, c.arg(noteIdArg), c.arg(dataFieldsArg))(td).map(_._1)
       }, noteIdArg, dataFieldsArg),
       unitField(name = "remove", desc = None, t = noteType, f = (c, td) => {
-        c.ctx.injector.getInstance(classOf[NoteService]).remove(c.ctx.creds, c.arg(noteIdArg))(td)
+        c.ctx.getInstance[NoteService].remove(c.ctx.creds, c.arg(noteIdArg))(td)
       }, noteIdArg)
     )
   )

@@ -18,7 +18,11 @@ trait Database[Conn] extends Logging {
   def query[A](q: RawQuery[A], conn: Option[Conn] = None)(implicit traceData: TraceData): A
   def queryF[A](q: RawQuery[A], conn: Option[Conn] = None)(implicit traceData: TraceData): Future[A] = Future(query(q, conn))
 
-  def close(): Boolean
+  def close() = {
+    tracingServiceOpt = None
+    config = None
+    started = false
+  }
 
   private[this] var tracingServiceOpt: Option[TracingService] = None
   protected def tracing = tracingServiceOpt.getOrElse {

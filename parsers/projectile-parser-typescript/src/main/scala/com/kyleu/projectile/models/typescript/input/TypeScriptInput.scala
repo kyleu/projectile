@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.typescript.input
 import better.files.File
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.input.{Input, InputSummary, InputTemplate}
-import com.kyleu.projectile.models.output.file.{OutputFile, PlainTextFile, ScalaFile}
+import com.kyleu.projectile.models.output.file.{PlainTextFile, ScalaFile}
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPackage, OutputPath}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary, ProjectTemplate}
 import com.kyleu.projectile.models.typescript.node.{NodeHelper, TypeScriptNode}

@@ -3,14 +3,20 @@ package com.kyleu.projectile.models.web
 object InternalIcons {
   val default = "radio_button_unchecked"
 
+  val ok = "check"
+  val cancel = "close"
+
   val audit = "storage"
   val auditRecord = "memory"
   val note = "folder_open"
   val systemUser = "account_circle"
+  val role = "account_circle"
   val scheduledTaskRun = "event"
+  val migration = "airport_shuttle"
 
   val tools = "code"
   val models = "explore"
+  val permission = "fingerprint"
 
   val connection = "device_hub"
   val status = "more_horiz"

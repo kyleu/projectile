@@ -8,7 +8,7 @@ import com.kyleu.projectile.models.queries.{BaseQueries, ResultFieldHelper}
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
-import com.kyleu.projectile.models.user.{Role, SystemUser}
+import com.kyleu.projectile.models.user.SystemUser
 import com.mohiva.play.silhouette.api.LoginInfo
 
 object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_user") {
@@ -41,7 +41,7 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
   final case class UpdateUser(u: SystemUser) extends Statement {
     override val name = s"$key.update.user"
     override val sql = updateSql(Seq("username", "provider", "key", "role", "settings"))
-    override val values = Seq[Any](u.username, u.profile.providerID, u.profile.providerKey, u.role.toString, u.settings, u.id)
+    override val values = Seq[Any](u.username, u.profile.providerID, u.profile.providerKey, u.role, u.settings, u.id)
   }
 
   final case class FindUserByUsername(username: String) extends FlatSingleRowQuery[SystemUser] {
@@ -98,7 +98,7 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
     val id = UuidType(row, "id")
     val username = StringType(row, "username")
     val profile = LoginInfo(StringType(row, "provider"), StringType(row, "key"))
-    val role = Role.withValue(StringType(row, "role").trim)
+    val role = StringType(row, "role")
     val settings = JsonType(row, "settings")
     val created = TimestampType(row, "created")
     SystemUser(id, username, profile, role, settings, created)

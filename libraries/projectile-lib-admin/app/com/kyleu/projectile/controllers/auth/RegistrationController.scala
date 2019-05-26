@@ -23,10 +23,10 @@ class RegistrationController @javax.inject.Inject() (
     userService: SystemUserService,
     configProvider: Application.UiConfigProvider
 )(implicit ec: ExecutionContext) extends AuthController("registration") {
-  def registrationForm(email: Option[String] = None) = withoutSession("form") { implicit request => implicit td =>
+  def registrationForm(email: Option[String] = None) = withoutSession("form") { implicit request => _ =>
     if (configProvider.allowRegistration) {
       val username = email.map(e => if (e.contains('@')) { e.substring(0, e.indexOf('@')) } else { "" }).getOrElse("")
-      val cfg = app.cfg(u = request.identity, admin = false)
+      val cfg = app.cfg(u = request.identity)
       Future.successful(Ok(com.kyleu.projectile.views.html.auth.signup(username, email.getOrElse(""), cfg)))
     } else {
       Future.successful(Redirect("/").flashing("error" -> "You cannot sign up at this time, please contact your administrator"))
@@ -39,7 +39,7 @@ class RegistrationController @javax.inject.Inject() (
     }
     UserForms.registrationForm.bindFromRequest.fold(
       form => {
-        val cfg = app.cfg(u = request.identity, admin = false)
+        val cfg = app.cfg(u = request.identity)
         val username = form.apply("username").value.getOrElse("")
         val email = form.apply("email").value.getOrElse("")
         Future.successful(BadRequest(com.kyleu.projectile.views.html.auth.signup(username, email, cfg)))

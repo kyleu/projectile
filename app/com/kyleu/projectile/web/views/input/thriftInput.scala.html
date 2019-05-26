@@ -1,5 +1,5 @@
 @(projectile: com.kyleu.projectile.services.ProjectileService, input: com.kyleu.projectile.models.thrift.input.ThriftInput)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 ) @com.kyleu.projectile.web.views.html.layout.simple(projectile, input.key + " Input Detail") {
   <div class="collection with-header">
     <div class="collection-header">

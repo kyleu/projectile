@@ -6,6 +6,7 @@ import com.kyleu.projectile.util.Logging
 import org.scalajs.dom
 import org.scalajs.jquery.{JQuery, jQuery => $}
 
+import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportTopLevel
 
 @JSExportTopLevel("FormService")
@@ -19,7 +20,9 @@ class FormService(id: String) extends Entrypoint("form") {
   fields.each { e: dom.Element => wireField($(e)) }
   FormHelper.process()
 
-  scalajs.js.Dynamic.global.$("select").formSelect()
+  scalajs.js.Dynamic.global.$("select").formSelect(js.Dynamic.literal(
+    dropdownOptions = js.Dynamic.literal(container = dom.document.body)
+  ))
 
   Logging.info(s"Form service started. [${fields.length}] fields")
 

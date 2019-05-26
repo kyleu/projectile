@@ -37,7 +37,8 @@ object LibraryProjects {
       Metrics.micrometerCore, Metrics.micrometerStatsd, Metrics.micrometerPrometheus,
       Tracing.datadogTracing, Tracing.jaegerCore, Tracing.jaegerThrift, Tracing.jaegerMetrics,
       Utils.javaxInject, Utils.typesafeConfig
-    )
+    ) ++ Compiler.all,
+    scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, messageFilters = Seq(".*Nullable.*"))
   ).dependsOn(`projectile-lib-scala`)
 
   lazy val `projectile-lib-jdbc` = libraryProject(project in file("libraries/projectile-lib-jdbc")).settings(
@@ -86,7 +87,8 @@ object LibraryProjects {
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
       Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
       Utils.betterFiles, Utils.commonsLang, Utils.reftree
-    )
+    ) ++ Compiler.all,
+    scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes"))
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)
 
   lazy val all = Seq(

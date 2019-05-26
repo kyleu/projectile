@@ -7,8 +7,8 @@ import com.kyleu.projectile.models.audit.{Audit, AuditField, AuditRecord}
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData
-import com.kyleu.projectile.util.{Logging, NullUtils}
 
 object AuditHelper extends Logging {
   private[this] lazy val server = InetAddress.getLocalHost.getHostName

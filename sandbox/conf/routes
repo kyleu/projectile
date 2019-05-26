@@ -9,6 +9,7 @@ GET        /testbed                         controllers.HomeController.testbed
 
 # Admin
 ->         /admin/search                    search.Routes
+->         /admin/permission                permission.Routes
 
 ->         /admin/graphql                   graphql.Routes
 ->         /admin/rest                      rest.Routes
@@ -17,12 +18,13 @@ GET        /testbed                         controllers.HomeController.testbed
 ->         /admin/note                      note.Routes
 ->         /admin/systemUser                systemUser.Routes
 
-->         /admin/connection                connection.Routes
+# ->       /admin/connection                connection.Routes
 ->         /admin/encrypt                   encrypt.Routes
 ->         /admin/sandbox                   sandbox.Routes
+->         /admin/migrate                   migrate.Routes
+->         /admin/sql                       sql.Routes
 ->         /admin/task                      task.Routes
 ->         /admin/process                   process.Routes
-->         /admin/sql                       sql.Routes
 
 ->         /admin/status                    status.Routes
 

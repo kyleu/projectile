@@ -16,6 +16,6 @@ final case class UserProfile(
     id: UUID,
     username: String,
     email: String,
-    role: Role,
+    role: String,
     created: LocalDateTime
 )

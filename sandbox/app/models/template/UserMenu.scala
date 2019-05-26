@@ -8,7 +8,5 @@ object UserMenu extends MenuProvider {
     NavMenu(key = "testbed", title = "Testbed", description = Some("Just new boot goofin'"), url = Some(controllers.routes.HomeController.testbed().url))
   }
 
-  private[this] lazy val staticMenu = Seq(staticTestbed) ++ ComponentMenu.menu :+ SystemMenu.currentMenu
-
-  override def adminMenu(u: SystemUser) = standardMenu(u) ++ staticMenu
+  override def userMenu(u: SystemUser) = Seq(staticTestbed) ++ ComponentMenu.menu :+ SystemMenu.currentMenu(u.role)
 }

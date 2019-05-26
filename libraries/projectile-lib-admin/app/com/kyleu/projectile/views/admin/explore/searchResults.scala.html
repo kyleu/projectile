@@ -1,5 +1,5 @@
 @(q: String, results: Seq[Html], cfg: com.kyleu.projectile.models.config.UiConfig)(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = "Search Results", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.search)) {
   @com.kyleu.projectile.views.html.layout.card(None) {
     @if(results.isEmpty) {

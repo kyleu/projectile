@@ -1,0 +1,153 @@
+@(
+  cfg: com.kyleu.projectile.models.config.UiConfig,
+  roles: Seq[(String, (String, String))],
+  perms: Seq[com.kyleu.projectile.services.auth.PermissionService.PackageInfo],
+  dbPerms: Seq[com.kyleu.projectile.models.auth.Permission]
+)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.page(title = "Database Permissions", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.permission)) {
+  @com.kyleu.projectile.views.html.layout.card(title = None) {
+    <form action="" method="post">
+      <div class="row">
+        <div class="col s12 m4">
+          <div class="input-field">
+            <select id="pkg" name="pkg">
+              <option value="" selected="selected">All packages</option>
+              @perms.map { p =>
+              <option value="@p.key">@p.title</option>
+              }
+            </select>
+            <label for="pkg">Package</label>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <input id="model-input" type="hidden" name="model" value="" />
+          <div class="input-field model-container" id="model-container-todo">
+            <input id="models-todo" type="text" placeholder="All models" disabled="disabled" />
+            <label for="models-todo">Model</label>
+          </div>
+          @perms.map { p =>
+          <div class="input-field model-container" id="model-container-@p.key" style="display: none;">
+            <select class="models" id="models-@p.key">
+              <option value="" selected="selected">All models</option>
+              @p.models.map { m =>
+              <option value="@m.key">@m.title</option>
+              }
+            </select>
+            <label for="models-@p.key">Model</label>
+          </div>
+          }
+        </div>
+        <div class="col s12 m4">
+          <input id="action-input" type="hidden" name="action" value="" />
+          <div class="input-field action-container" id="action-container-todo">
+            <input id="actions-todo" type="text" placeholder="All actions" disabled="disabled" />
+            <label for="actions-todo">Action</label>
+          </div>
+          @perms.map { p =>
+            @p.models.map { m =>
+              <div class="input-field action-container" id="action-container-@p.key-@m.key" style="display: none;">
+                <select class="actions" id="actions-@p.key-@m.key">
+                  <option value="" selected="selected">All actions</option>
+                  @m.actions.map { a =>
+                  <option value="@a">@a</option>
+                  }
+                </select>
+                <label for="actions-@p.key">Action</label>
+              </div>
+            }
+          }
+        </div>
+
+        <div class="col s12 m4">
+          <div class="input-field">
+            <select id="role" name="role">
+              <option value="" selected="selected">Choose a role</option>
+              @roles.map { role =>
+              <option value="@role._1">@role._2._1</option>
+              }
+            </select>
+            <label for="role">Role</label>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="input-field">
+            <label>
+              <input id="allow" type="checkbox" name="allow" value="true" />
+              <span>Allow</span>
+            </label>
+          </div>
+        </div>
+        <div class="col s12 m4">
+          <div class="input-field">
+            <input class="btn @cfg.user.buttonColor" type="submit" value="Set Permission" />
+          </div>
+        </div>
+    </div>
+    </form>
+  }
+
+  @com.kyleu.projectile.views.html.layout.card(title = Some("Database Permissions")) {
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Package</th>
+          <th>Model</th>
+          <th>Action</th>
+          <th>Allow</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @dbPerms.map { p =>
+          <tr>
+            <td>@p.role</td>
+            <td>@p.pkg.getOrElse("*")</td>
+            <td>@p.model.getOrElse("*")</td>
+            <td>@p.action.getOrElse("*")</td>
+            <td>@if(p.allow) {
+              <i class="material-icons green-text">@com.kyleu.projectile.models.web.InternalIcons.ok</i>
+            } else {
+              <i class="material-icons red-text">@com.kyleu.projectile.models.web.InternalIcons.cancel</i>
+            }</td>
+            <td>
+              @if(p.pkg.nonEmpty || p.model.nonEmpty || p.action.nonEmpty) {
+                <a href="@com.kyleu.projectile.controllers.admin.permission.routes.PermissionController.delete(p.role, p.pkg, p.model, p.action)">Delete</a>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  <script>
+    function wire() {
+      var pkg = $("#pkg").val();
+      if(pkg === "") { pkg = "todo"; }
+      $(".model-container").hide();
+      $("#model-container-" + pkg).show();
+
+      var model = $("#models-" + pkg).val();
+      $("#model-input").val(model);
+
+      var action = "";
+      $(".action-container").hide();
+      if(model === "") {
+        $("#action-container-todo").show();
+      } else {
+        $("#action-container-" + pkg + "-" + model).show();
+        action = $("#actions-" + pkg + "-" + model).val();
+      }
+      $("#action-input").val(action);
+    }
+
+    $(function() {
+      $("select").formSelect({ "dropdownOptions": { "container": document.body } });
+      $("#pkg").on('change', wire);
+      $(".models").on('change', wire);
+      $(".actions").on('change', wire);
+      wire()
+    });
+  </script>
+}

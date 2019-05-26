@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 @javax.inject.Singleton
 class BulkProjectController @javax.inject.Inject() () extends ProjectileController {
-  def updateAll() = Action.async { implicit request =>
+  def updateAll() = Action.async { _ =>
     val result = projectile.updateAll()
     val call = com.kyleu.projectile.web.controllers.routes.HomeController.index()
     Future.successful(Redirect(call).flashing("success" -> result.mkString(", ").take(512)))

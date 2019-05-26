@@ -38,7 +38,7 @@ class ScheduledTaskService @javax.inject.Inject() (
     start(creds, Seq(task), args)
   }
 
-  private[this] def start(creds: UserCredentials = UserCredentials.system, tasks: Seq[ScheduledTask], args: Seq[String] = Nil)(implicit td: TraceData) = {
+  private[this] def start(creds: UserCredentials, tasks: Seq[ScheduledTask], args: Seq[String])(implicit td: TraceData) = {
     tracingService.trace("scheduledTaskService.run") { trace =>
       val id = UUID.randomUUID
       val f = if (tasks.isEmpty) {

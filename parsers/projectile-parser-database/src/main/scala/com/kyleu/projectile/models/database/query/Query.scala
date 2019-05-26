@@ -24,6 +24,11 @@ object Query {
     def flatMap(row: JdbcRow): Option[A]
     override final def reduce(rows: Iterator[JdbcRow]) = if (rows.hasNext) { flatMap(rows.next()) } else { None }
   }
+
+  def adhoc(q: String) = new Query[Seq[Map[String, AnyRef]]] {
+    override def sql = q
+    override def reduce(rows: Iterator[JdbcRow]) = rows.map(_.toMap).toList
+  }
 }
 
 trait Query[A] extends Query.RawQuery[A] {

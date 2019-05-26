@@ -1,6 +1,5 @@
-@(projectile: com.kyleu.projectile.services.ProjectileService, path: String, content: String)(
-    implicit session: Session, flash: Flash
-)@com.kyleu.projectile.web.views.html.layout.simple(projectile, path) {
+@(projectile: com.kyleu.projectile.services.ProjectileService, path: String, content: String)(implicit flash: Flash)
+@com.kyleu.projectile.web.views.html.layout.simple(projectile, path) {
   <div class="collection with-header">
     <div class="collection-header">
       <div class="right">

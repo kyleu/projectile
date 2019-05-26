@@ -10,7 +10,7 @@
     completed: Option[java.time.LocalDateTime] = None,
     debug: Boolean = false
 )(
-    implicit session: Session, flash: Flash
+    implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = title, cfg = cfg) {
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="row">
