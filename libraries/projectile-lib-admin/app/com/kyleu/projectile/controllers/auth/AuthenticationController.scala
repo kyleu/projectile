@@ -24,7 +24,7 @@ class AuthenticationController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("authentication") {
   val providers = if (app.config.authGoogleSettings.clientSecret.nonEmpty) { Seq("google") } else { Nil }
 
-  def signInForm = withoutSession("form") { implicit request => _ =>
+  def signInForm = withoutSession("form") { implicit request => implicit td =>
     Future.successful(Ok(signin(UserForms.signInForm, app.cfg(u = request.identity))))
   }
 

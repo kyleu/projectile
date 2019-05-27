@@ -7,6 +7,7 @@ import play.api.{Environment, Mode}
 
 @javax.inject.Singleton
 class Configuration @javax.inject.Inject() (val cnf: play.api.Configuration, val metrics: MetricsConfig, env: Environment) {
+  val projectName = cnf.get[String]("projectName")
   val debug = env.mode == Mode.Dev
   val secretKey = cnf.get[String]("play.http.secret.key")
   val scheduledTaskEnabled = cnf.get[Boolean]("scheduled.task.enabled")

@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectOpenApiSchema extends FeatureLogic.Inject(path = OutputPath.ServerResource, filename = "schemas.json") {
+  override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.inputType.isDatabase)
   override def dir(config: ExportConfiguration) = Seq("openapi", "components", "schema")
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

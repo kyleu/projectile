@@ -28,7 +28,7 @@ class ProfileController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Profile)
   SystemMenu.addRootMenu(value, "Profile", Some("View your system profile"), ProfileController.view(), InternalIcons.systemUser)
 
-  def view(thm: Option[String]) = withSession("view") { implicit request => _ =>
+  def view(thm: Option[String]) = withSession("view") { implicit request => implicit td =>
     Future.successful(render {
       case Accepts.Html() =>
         val cfg = app.cfg(u = Some(request.identity), "system", "profile", request.identity.profile.providerKey)
@@ -55,7 +55,7 @@ class ProfileController @javax.inject.Inject() (
     )
   }
 
-  def changePasswordForm = withSession("change-password-form") { implicit request => _ =>
+  def changePasswordForm = withSession("change-password-form") { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "profile")
     Future.successful(Ok(com.kyleu.projectile.views.html.auth.changePassword(cfg)))
   }

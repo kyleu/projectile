@@ -30,7 +30,7 @@ class NoteController @javax.inject.Inject() (
   PermissionService.registerModel("models", "Note", "Note", Some(InternalIcons.note), "view", "edit")
   SystemMenu.addModelMenu(value, "Notes", Some("You can log notes on most pages, this lets you manage them"), NoteController.list(), InternalIcons.note)
 
-  def addForm(model: String, pk: String) = withSession("add.form", ("models", "Note", "edit")) { implicit request => _ =>
+  def addForm(model: String, pk: String) = withSession("add.form", ("models", "Note", "edit")) { implicit request => implicit td =>
     val note = Note.empty(relType = Some(model), relPk = Some(pk), author = request.identity.id)
     val cancel = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list()
     val call = com.kyleu.projectile.controllers.admin.note.routes.NoteController.create()
@@ -39,7 +39,7 @@ class NoteController @javax.inject.Inject() (
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.note.noteForm(cfg, note, title, cancel, call, isNew = true, debug = app.config.debug)))
   }
 
-  def createForm = withSession("create.form", ("models", "Note", "edit")) { implicit request => _ =>
+  def createForm = withSession("create.form", ("models", "Note", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list()
     val call = com.kyleu.projectile.controllers.admin.note.routes.NoteController.create()
     val cfg = app.cfg(u = Some(request.identity), "system", "models", "note", "Create")

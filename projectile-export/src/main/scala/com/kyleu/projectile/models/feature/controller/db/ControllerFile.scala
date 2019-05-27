@@ -119,7 +119,7 @@ object ControllerFile {
 
   private[this] def addMutations(config: ExportConfiguration, file: ScalaFile, model: ExportModel, routesClass: String, viewHtmlPackage: String) = {
     if (!model.readOnly) {
-      file.add(s"""def createForm = withSession("create.form", ${model.perm("edit")}) { implicit request => _ =>""", 1)
+      file.add(s"""def createForm = withSession("create.form", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
       file.add(s"val cancel = $routesClass.list()")
       file.add(s"val call = $routesClass.create()")
       file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}Form(", 1)

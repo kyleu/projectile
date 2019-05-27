@@ -7,6 +7,7 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectIcons extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "Icons.scala") {
+  override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.inputType.isDatabase)
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

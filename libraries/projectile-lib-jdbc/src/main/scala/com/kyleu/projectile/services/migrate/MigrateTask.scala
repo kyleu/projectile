@@ -34,6 +34,7 @@ object MigrateTask extends Logging {
     if (numApplied > 0) {
       log.info(s"Applied [$numApplied] new database migrations")
     }
+    log.info(s"Database migrations up to date, [${flyway.info().all().length}] currently applied")
   } catch {
     case NonFatal(x) => log.error("Error running Flyway migrations", x)
   }

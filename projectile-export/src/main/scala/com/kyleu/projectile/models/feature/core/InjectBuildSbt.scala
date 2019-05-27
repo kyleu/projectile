@@ -2,10 +2,13 @@ package com.kyleu.projectile.models.feature.core
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.FeatureLogic
+import com.kyleu.projectile.models.input.InputType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectBuildSbt extends FeatureLogic.Inject(path = OutputPath.Root, filename = "build.sbt") {
+  override def applies(config: ExportConfiguration) = config.models.exists(_.inputType == InputType.Model.TypeScriptModel)
+
   override def dir(config: ExportConfiguration) = Nil
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

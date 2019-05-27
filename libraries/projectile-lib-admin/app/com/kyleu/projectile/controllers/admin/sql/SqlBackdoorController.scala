@@ -31,7 +31,7 @@ class SqlBackdoorController @javax.inject.Inject() (
   PermissionService.registerModel("tools", "SQL", "SQL Access", Some(InternalIcons.sql), "prompt", "commit")
   SystemMenu.addToolMenu(value, "SQL Access", Some("A SQL prompt for the application database (dangerous)"), SqlBackdoorController.sql(), InternalIcons.sql)
 
-  def sql = withSession("form", ("tools", "SQL", "prompt")) { implicit request => _ =>
+  def sql = withSession("form", ("tools", "SQL", "prompt")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sql")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.sandbox.sqlForm(cfg, "select * from foo", None)))
   }

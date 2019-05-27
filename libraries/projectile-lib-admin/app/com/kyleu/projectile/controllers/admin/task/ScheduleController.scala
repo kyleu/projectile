@@ -22,7 +22,7 @@ class ScheduleController @javax.inject.Inject() (
   val desc = "View the history and configuration of scheduled tasks"
   SystemMenu.addToolMenu(value, "Scheduled Task", Some(desc), ScheduleController.list(), InternalIcons.scheduledTaskRun)
 
-  def list = withSession("list", ("tools", "ScheduledTaskRun", "view")) { implicit request => _ =>
+  def list = withSession("list", ("tools", "ScheduledTaskRun", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "task")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.task.scheduleList(cfg, ScheduledTaskRegistry.getAll)))
   }

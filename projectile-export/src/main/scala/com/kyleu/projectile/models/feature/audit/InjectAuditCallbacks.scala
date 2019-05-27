@@ -8,10 +8,15 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "AuditCallbacks.scala") {
+  override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.Service))
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "services" :+ "audit"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
-    routesLogic(config, markers, lookupLogic(config, markers, original))
+    if (original.exists(_.contains("registry lookups"))) {
+      routesLogic(config, markers, lookupLogic(config, markers, original))
+    } else {
+      routesLogic(config, markers, original)
+    }
   }
 
   private[this] def lookupLogic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

@@ -2,11 +2,12 @@ package com.kyleu.projectile.models.feature.controller
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.OutputPath
-import com.kyleu.projectile.models.feature.FeatureLogic
+import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.kyleu.projectile.models.feature.controller.db.twirl.TwirlHelper
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "SearchHelper.scala") {
+  override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.Controller))
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "search"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

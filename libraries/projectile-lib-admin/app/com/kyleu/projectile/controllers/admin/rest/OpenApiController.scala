@@ -44,7 +44,7 @@ class OpenApiController @javax.inject.Inject() (override val app: Application)(i
     jsonContent
   }
 
-  def ui() = withSession("index", ("tools", "Rest", "ide")) { implicit request => _ =>
+  def ui() = withSession("index", ("tools", "Rest", "ide")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "rest")
     Future.successful(Ok(com.kyleu.projectile.views.html.rest.swagger(cfg)))
   }

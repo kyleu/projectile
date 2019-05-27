@@ -21,7 +21,7 @@ class ProcessController @javax.inject.Inject() (
   PermissionService.registerModel("tools", "Process", "Process", Some(InternalIcons.process), "view", "run")
   SystemMenu.addToolMenu(value, "Processes", Some("Run processes on the application server (dangerous)"), ProcessController.list(), InternalIcons.process)
 
-  def list = withSession("sandbox.list", ("tools", "Process", "view")) { implicit request => _ =>
+  def list = withSession("sandbox.list", ("tools", "Process", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "process")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.process.procList(cfg, ProcessService.getActive)))
   }
@@ -36,7 +36,7 @@ class ProcessController @javax.inject.Inject() (
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.process.procDetail(cfg, proc)))
   }
 
-  def detail(id: UUID) = withSession("list", ("tools", "Process", "view")) { implicit request => _ =>
+  def detail(id: UUID) = withSession("list", ("tools", "Process", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "process")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.process.procDetail(cfg, ProcessService.getProc(id))))
   }

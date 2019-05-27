@@ -22,7 +22,7 @@ class StatusController @javax.inject.Inject() (
   PermissionService.registerModel("tools", "Status", "System Status", Some(InternalIcons.status), "view")
   SystemMenu.addToolMenu(value, "App Status", Some("View the status of this application"), StatusController.status(), InternalIcons.status)
 
-  def status = withSession("status", ("tools", "Status", "view")) { implicit request => _ =>
+  def status = withSession("status", ("tools", "Status", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "status")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.status.status(cfg, statusProvider.getStatus(app, injector))))
   }

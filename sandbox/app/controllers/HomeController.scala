@@ -7,11 +7,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class HomeController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("home") {
-  def home() = withSession("home") { implicit request => _ =>
+  def home() = withSession("home") { implicit request => implicit td =>
     Future.successful(Ok(views.html.index(app.cfg(Some(request.identity)), app.config.debug)))
   }
 
-  def testbed() = withSession("testbed") { implicit request => _ =>
+  def testbed() = withSession("testbed") { implicit request => implicit td =>
     Future.successful(Ok(views.html.testbed(app.cfg(Some(request.identity), "testbed"))))
   }
 

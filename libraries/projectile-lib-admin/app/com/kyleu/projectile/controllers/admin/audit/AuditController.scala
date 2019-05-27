@@ -15,7 +15,7 @@ import com.kyleu.projectile.models.module.ApplicationFeature.Audit.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.result.RelationCount
 import com.kyleu.projectile.models.web.InternalIcons
-import com.kyleu.projectile.services.audit.{AuditRecordService, AuditService}
+import com.kyleu.projectile.services.audit.{AuditHelper, AuditRecordService, AuditService}
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import play.api.http.MimeTypes
@@ -30,8 +30,9 @@ class AuditController @javax.inject.Inject() (
   app.errors.checkTable("audit")
   PermissionService.registerModel("models", "Audit", "Audit", Some(InternalIcons.audit), "view", "edit")
   SystemMenu.addModelMenu(value, "Audits", Some("System audits provide detailed change logging"), AuditController.list(), InternalIcons.audit)
+  AuditHelper.init(appName = app.config.projectName, service = svc)
 
-  def createForm = withSession("create.form", ("models", "Audit", "edit")) { implicit request => _ =>
+  def createForm = withSession("create.form", ("models", "Audit", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.list()
     val call = com.kyleu.projectile.controllers.admin.audit.routes.AuditController.create()
     val cfg = app.cfg(u = Some(request.identity), "system", "models", "audit", "Create")

@@ -7,16 +7,14 @@ import com.kyleu.projectile.models.status.AppStatus
 import com.kyleu.projectile.services.audit.{AuditHelper, AuditService}
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.notification.NotificationService
-import models.audit.AuditCallbacks
 import models.graphql.Schema
 import models.search.SearchHelper
-import models.template.UserMenu
+import models.template.{Icons, UserMenu}
+import services.audit.AuditCallbacks
 import util.Version
 
 class ProjectileModule extends AdminModule(projectName = Version.projectName, allowSignup = true, initialRole = "admin", menuProvider = UserMenu) {
   override protected def onStartup(app: Application, injector: Injector) = {
-    NotificationService.setCallback(f = _ => Nil)
-    AuditHelper.init(appName = projectName, service = injector.getInstance(classOf[AuditService]))
     AuditCallbackProvider.init(new AuditCallbacks(injector))
 
     PermissionService.registerRole("manager", "Manager", "A manager, I guess")

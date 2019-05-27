@@ -3,9 +3,11 @@ package com.kyleu.projectile.models.feature.service
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
-import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
+import com.kyleu.projectile.models.output.{CommonImportHelper, ExportHelper, OutputPath}
 
-object InjectStartup extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "ProjectileModule.scala") {
+object InjectStartup extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename =
+  "ProjectileModule.scala") {
+  override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.inputType.isDatabase)
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "module"
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
@@ -13,7 +15,8 @@ object InjectStartup extends FeatureLogic.Inject(path = OutputPath.ServerSource,
     val packages = filtered.flatMap(_.pkg.headOption).distinct
 
     def registerFor(pkg: String) = {
-      s"""PermissionService.registerPackage("$pkg", "${ExportHelper.toClassName(pkg)}", Icons.pkg_$pkg)"""
+      val ico = CommonImportHelper.get(config, "Icons")
+      s"""PermissionService.registerPackage("$pkg", "${ExportHelper.toClassName(pkg)}", ${(ico._1 :+ ico._2).mkString(".")}.pkg_$pkg)"""
     }
 
     val newLines = packages.sorted.map(registerFor)

@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectThriftModel extends FeatureLogic.Inject(path = OutputPath.ThriftOutput, filename = "models.thrift") {
+  override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.Thrift))
   override def dir(config: ExportConfiguration) = Nil
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

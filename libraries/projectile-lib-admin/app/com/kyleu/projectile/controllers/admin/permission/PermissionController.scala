@@ -28,7 +28,7 @@ class PermissionController @javax.inject.Inject() (
   PermissionService.registerModel("tools", "Permission", "Permission", Some(InternalIcons.permission), "view", "edit", "refresh")
   SystemMenu.addToolMenu(value, "Permissions", Some("Configure roles and permissions"), PermissionController.list(), InternalIcons.permission)
 
-  def list() = withSession("list", ("tools", "Permission", "view")) { implicit request => _ =>
+  def list() = withSession("list", ("tools", "Permission", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "permission")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.permission.permissionList(cfg, PermissionService.roles(), PermissionService.packages())))
   }

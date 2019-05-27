@@ -26,16 +26,17 @@ class GraphQLController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("graphql") {
   ApplicationFeature.enable(ApplicationFeature.Graphql)
   PermissionService.registerModel("tools", "GraphQL", "GraphQL", Some(InternalIcons.graphql), "post", "ide", "visualize")
-  SystemMenu.addRootMenu(value, "GraphQL", Some("A full GraphQL IDE and schema visualizer"), GraphQLController.iframe(), InternalIcons.graphql)
+  val description = "A full GraphQL IDE and schema visualizer"
+  SystemMenu.addRootMenu(value, "GraphQL", Some(description), GraphQLController.iframe(), InternalIcons.graphql, ("", "", ""))
 
   private[this] val secretKey = "GraphTastesBad"
 
-  def iframe() = withSession("iframe", ("tools", "GraphQL", "ide")) { implicit request => _ =>
+  def iframe() = withSession("iframe", ("tools", "GraphQL", "ide")) { implicit request => implicit td =>
     Future.successful(Ok(com.kyleu.projectile.views.html.graphql.iframe(app.cfg(u = Some(request.identity), "system", "graphql"))))
   }
 
   def graphql(query: Option[String], variables: Option[String]) = {
-    withSession("ide", ("tools", "GraphQL", "ide")) { implicit request => _ =>
+    withSession("ide", ("tools", "GraphQL", "ide")) { implicit request => implicit td =>
       Future.successful(Ok(com.kyleu.projectile.views.html.graphql.graphiql(app.cfg(u = Some(request.identity), "system", "graphql"))))
     }
   }

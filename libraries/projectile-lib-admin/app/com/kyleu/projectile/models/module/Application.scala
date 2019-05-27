@@ -48,7 +48,9 @@ class Application @javax.inject.Inject() (
 ) extends Logging {
   val errors = new ApplicationErrors(this)
 
-  def cfg(u: Option[SystemUser], breadcrumbs: String*) = uiConfigProvider.configForUser(u, NotificationService.getNotifications(u), breadcrumbs: _*)
+  def cfg(u: Option[SystemUser], breadcrumbs: String*)(implicit td: TraceData) = {
+    uiConfigProvider.configForUser(u, NotificationService.getNotifications(u), breadcrumbs: _*)
+  }
 
   def reload() = {
     try { stop() } catch { case _: Throwable => () }

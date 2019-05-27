@@ -20,7 +20,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ScheduledTaskRunController @javax.inject.Inject() (
     override val app: Application, svc: ScheduledTaskRunService, noteSvc: NoteService, auditRecordSvc: AuditService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
-  def createForm = withSession("create.form", ("tools", "ScheduledTaskRun", "edit")) { implicit request => _ =>
+  def createForm = withSession("create.form", ("tools", "ScheduledTaskRun", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.list()
     val call = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.create()
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunForm(

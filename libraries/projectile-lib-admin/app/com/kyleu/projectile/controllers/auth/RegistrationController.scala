@@ -23,7 +23,7 @@ class RegistrationController @javax.inject.Inject() (
     userService: SystemUserService,
     configProvider: Application.UiConfigProvider
 )(implicit ec: ExecutionContext) extends AuthController("registration") {
-  def registrationForm(email: Option[String] = None) = withoutSession("form") { implicit request => _ =>
+  def registrationForm(email: Option[String] = None) = withoutSession("form") { implicit request => implicit td =>
     if (configProvider.allowRegistration) {
       val username = email.map(e => if (e.contains('@')) { e.substring(0, e.indexOf('@')) } else { "" }).getOrElse("")
       val cfg = app.cfg(u = request.identity)

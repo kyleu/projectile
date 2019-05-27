@@ -34,6 +34,7 @@ object CommonImportHelper {
       case "GraphQLQuery" => c.systemPackage :+ "graphql"
       case "GraphQLSchemaHelper" => c.systemPackage :+ "graphql"
       case "GraphQLUtils" => c.systemPackage :+ "graphql"
+      case "Icons" => c.applicationPackage :+ "models" :+ "template"
       case "JdbcDatabase" => c.systemPackage ++ Seq("services", "database")
       case "JsonSerializers" => c.utilitiesPackage
       case "ModelAuthServiceHelper" => c.systemPackage :+ "services"

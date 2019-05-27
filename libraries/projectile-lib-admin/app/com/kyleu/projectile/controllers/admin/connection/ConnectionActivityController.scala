@@ -22,13 +22,13 @@ class ConnectionActivityController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Connection)
   PermissionService.registerModel("tools", "Connection", "Connection", Some(InternalIcons.connection), "view", "broadcast")
 
-  def connectionList = withSession("list", ("tools", "Connection", "view")) { implicit request => _ =>
+  def connectionList = withSession("list", ("tools", "Connection", "view")) { implicit request => implicit td =>
     ask(connSupervisor, GetConnectionStatus)(20.seconds).mapTo[ConnectionStatus].map { status =>
       Ok(com.kyleu.projectile.views.html.admin.activity.connectionList(app.cfg(u = Some(request.identity)), status.connections))
     }
   }
 
-  def connectionDetail(id: UUID) = withSession("detail", ("tools", "Connection", "view")) { implicit request => _ =>
+  def connectionDetail(id: UUID) = withSession("detail", ("tools", "Connection", "view")) { implicit request => implicit td =>
     ask(connSupervisor, ConnectionTraceRequest(id))(20.seconds).mapTo[ConnectionTraceResponse].map { c =>
       Ok(com.kyleu.projectile.views.html.admin.activity.connectionDetail(app.cfg(u = Some(request.identity)), c))
     }

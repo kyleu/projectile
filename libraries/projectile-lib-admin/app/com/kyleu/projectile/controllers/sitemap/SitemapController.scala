@@ -13,7 +13,7 @@ class SitemapController @javax.inject.Inject() (override val app: Application)(i
 
   def sitemap() = menu("")
 
-  def menu(path: String) = withoutSession("testbed") { implicit request => _ =>
+  def menu(path: String) = withoutSession("testbed") { implicit request => implicit td =>
     val segments = path.split("/").map(_.trim).filter(_.nonEmpty)
     val cfg = app.cfg(request.identity, segments: _*)
     val root = NavMenu(key = "_root", title = cfg.projectName, description = Some("The home page of this application"), url = Some("/"), children = cfg.menu)

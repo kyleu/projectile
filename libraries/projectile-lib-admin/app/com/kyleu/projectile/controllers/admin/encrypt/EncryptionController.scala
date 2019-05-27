@@ -18,12 +18,12 @@ class EncryptionController @javax.inject.Inject() (override val app: Application
   val desc = "Allows you to encrypt and decrypt strings using the system keys"
   SystemMenu.addToolMenu(value, "Encryption", Some(desc), EncryptionController.form(), InternalIcons.encryption)
 
-  def form = withSession("form", ("tools", "Encryption", "form")) { implicit request => _ =>
+  def form = withSession("form", ("tools", "Encryption", "form")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "encryption")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.encrypt.encryption(cfg)))
   }
 
-  def post() = withSession("post", ("audit", "Connection", "encrypt"), ("tools", "Connection", "decrypt")) { implicit request => _ =>
+  def post() = withSession("post", ("audit", "Connection", "encrypt"), ("tools", "Connection", "decrypt")) { implicit request => implicit td =>
     val form = ControllerUtils.getForm(request.body)
     val action = form.get("action")
     val (unenc, enc) = action match {

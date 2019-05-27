@@ -7,6 +7,7 @@ import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectComponentMenu extends FeatureLogic.Inject(path = OutputPath.ServerSource, filename = "ComponentMenu.scala") {
+  override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.Controller))
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "template"
 
   private[this] def modelsFor(config: ExportConfiguration) = {

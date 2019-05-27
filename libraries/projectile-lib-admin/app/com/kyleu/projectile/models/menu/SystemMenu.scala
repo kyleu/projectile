@@ -28,8 +28,6 @@ object SystemMenu {
     NavMenu(key = x._1, title = x._2, description = x._3, url = Some(x._4().url), icon = Some(x._5))
   }
 
-  def check(role: String, perms: Seq[(String, String, String)]) = perms.forall(p => PermissionService.check(role, p._1, p._2, p._3)._1)
-
   def currentMenu(role: String) = {
     val models = modelMenus.filter(m => check(role, m._6)).distinct.map(toMenu) match {
       case Nil => Nil
@@ -42,4 +40,6 @@ object SystemMenu {
     val roots = rootMenus.filter(m => check(role, m._6)).distinct.map(toMenu)
     NavMenu(key = "system", title = "System", description = Some(systemDesc), children = roots ++ models ++ tools, flatSection = true)
   }
+
+  private[this] def check(role: String, perms: Seq[(String, String, String)]) = perms.forall(p => PermissionService.check(role, p._1, p._2, p._3)._1)
 }

@@ -48,7 +48,9 @@ abstract class AuthController(name: String) extends BaseController(name) {
                 block(SecuredRequest(u, auth, request))(td)
               }(getTraceData)
             }
-            case x => Future.successful(Redirect("/").flashing("error" -> "You are not authorized to access that page"))
+            case x =>
+              val msg = permissions.map(p => s"${p._1}.${p._2}.${p._3}").mkString(", ")
+              Future.successful(Redirect("/").flashing("error" -> s"You are not authorized to access that page ($msg)"))
           }
           case None => failRequest(request)
         }

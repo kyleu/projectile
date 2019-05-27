@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
 object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource, filename = "routes") {
+  override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.inputType.isDatabase)
   override def dir(config: ExportConfiguration) = Nil
 
   override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {

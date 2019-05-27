@@ -17,7 +17,7 @@ class SchemaController @javax.inject.Inject() (
     Future.successful(Ok(idl))
   }
 
-  def voyager(root: String) = withSession("voyager", ("tools", "GraphQL", "visualize")) { implicit request => _ =>
+  def voyager(root: String) = withSession("voyager", ("tools", "GraphQL", "visualize")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "admin", "system", "graphql")
     Future.successful(Ok(com.kyleu.projectile.views.html.graphql.voyager(root = root, cfg = cfg)))
   }

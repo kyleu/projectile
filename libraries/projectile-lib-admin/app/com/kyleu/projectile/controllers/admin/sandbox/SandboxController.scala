@@ -25,7 +25,7 @@ class SandboxController @javax.inject.Inject() (
 
   implicit val timeout: Timeout = Timeout(10.seconds)
 
-  def list = withSession("list", ("tools", "Sandbox", "view")) { implicit request => _ =>
+  def list = withSession("list", ("tools", "Sandbox", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sandbox")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.sandbox.sandboxList(cfg)))
   }

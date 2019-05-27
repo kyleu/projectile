@@ -8,12 +8,10 @@ import util.Version
 import scala.concurrent.Future
 
 object Schema extends BaseGraphQLSchema {
-  override protected def additionalFetchers = {
-    Nil ++
-      /* Start model fetchers */
-      /* End model fetchers */
-      Nil
-  }
+  override protected def additionalFetchers = Nil ++
+    /* Start model fetchers */
+    /* End model fetchers */
+    Nil
 
   override protected def additionalQueryFields = fields[GraphQLContext, Unit](
     Field(name = "status", fieldType = StringType, resolve = c => Future.successful("OK")),
@@ -23,10 +21,8 @@ object Schema extends BaseGraphQLSchema {
     /* End query fields */
     Nil
 
-  override protected def additionalMutationFields = {
-    Nil ++
-      /* Start mutation fields */
-      /* End mutation fields */
-      Nil
-  }
+  override protected def additionalMutationFields = Nil ++
+    /* Start mutation fields */
+    /* End mutation fields */
+    Nil
 }

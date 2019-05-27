@@ -24,7 +24,7 @@ class AuditRecordController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("models", "AuditRecord", "Audit Record", Some(InternalIcons.auditRecord), "view", "edit")
 
-  def createForm = withSession("create.form", ("models", "AuditRecord", "edit")) { implicit request => _ =>
+  def createForm = withSession("create.form", ("models", "AuditRecord", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.list()
     val call = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.create()
     val model = AuditRecord(auditId = UUID.randomUUID, t = "")

@@ -10,31 +10,36 @@ import scala.util.control.NonFatal
 
 object FeatureLogic {
   abstract class Inject(val path: OutputPath, val filename: String) {
+    def applies(config: ExportConfiguration): Boolean
     def dir(config: ExportConfiguration): Seq[String]
     def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]): Seq[String]
 
     def inject(config: ExportConfiguration, markers: Map[String, Seq[String]], projectRoot: File, info: String => Unit, debug: String => Unit) = {
-      val projectPath = projectRoot / config.project.getPath(path)
-      val d = dir(config).mkString("/")
-      val f = projectPath / d / filename
+      if (applies(config)) {
+        val projectPath = projectRoot / config.project.getPath(path)
+        val d = dir(config).mkString("/")
+        val f = projectPath / d / filename
 
-      if (f.isRegularFile && f.isReadable) {
-        val (status, newContent) = try {
-          "OK" -> logic(config, markers, StringUtils.lines(f.contentAsString))
-        } catch {
-          case NonFatal(x) => "Error" -> Seq(x.toString)
+        if (f.isRegularFile && f.isReadable) {
+          val (status, newContent) = try {
+            "OK" -> logic(config, markers, StringUtils.lines(f.contentAsString))
+          } catch {
+            case NonFatal(x) => "Error" -> Seq(x.toString)
+          }
+
+          debug(s"Injected $filename")
+          Seq(InjectResult(
+            path = path,
+            dir = dir(config),
+            filename = filename,
+            status = status,
+            content = newContent.map(_ + "\n").mkString
+          ))
+        } else {
+          info(s"Cannot load file [${f.pathAsString}] for injection")
+          Nil
         }
-
-        debug(s"Injected $filename")
-        Seq(InjectResult(
-          path = path,
-          dir = dir(config),
-          filename = filename,
-          status = status,
-          content = newContent.map(_ + "\n").mkString
-        ))
       } else {
-        info(s"Cannot load file [${f.pathAsString}] for injection")
         Nil
       }
     }
