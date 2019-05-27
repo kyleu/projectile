@@ -13,6 +13,7 @@ import com.kyleu.projectile.services.migrate.MigrateTask
 import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class MigrationController @javax.inject.Inject() (
@@ -23,7 +24,11 @@ class MigrationController @javax.inject.Inject() (
   val msg = "Flyway database migrations, to evolve your database"
   SystemMenu.addToolMenu(ApplicationFeature.Migrate.value, "Database Migrations", Some(msg), MigrationController.list(), InternalIcons.migration)
 
-  MigrateTask.migrate(app.db.source)(TraceData.noop)
+  try {
+    MigrateTask.migrate(app.db.source)(TraceData.noop)
+  } catch {
+    case NonFatal(x) => log.error("Error running database migrations", x)(TraceData.noop)
+  }
 
   def list = withSession("list", ("tools", "Migrate", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "migrate")

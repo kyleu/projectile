@@ -4,11 +4,11 @@
   <ul class="collection">
     @app.errors.getErrors.map { err =>
       <li class="collection-item">
-        <p>@err._2</p>
-        @defining(com.kyleu.projectile.models.web.StartupErrorFixes.messageFor(err._1, err._2, err._3)) { msg =>
+        <p>@err.msg</p>
+        @defining(com.kyleu.projectile.models.web.StartupErrorFixes.messageFor(err.key, err.msg, err.params)) { msg =>
           <p>@msg._2</p>
           @msg._1.map { m =>
-            <div><a href="/?fix=@err._1" class="btn">@m</a></div>
+            <div><a href="/?fix=@err.key" class="btn">@m</a></div>
           }
         }
       </li>

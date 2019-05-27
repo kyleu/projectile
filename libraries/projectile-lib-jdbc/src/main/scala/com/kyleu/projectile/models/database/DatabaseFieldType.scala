@@ -15,7 +15,10 @@ sealed abstract class DatabaseFieldType[T](val key: String, val isNumeric: Boole
 }
 
 object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[DatabaseFieldType[_]] with DatabaseFieldHelper {
-  case object StringType extends DatabaseFieldType[String]("string")
+  case object StringType extends DatabaseFieldType[String]("string") {
+    override def apply(row: Row, col: String) = stringCoerce(row.as[Any](col))
+    override def opt(row: Row, col: String) = row.asOpt[Any](col).map(stringCoerce)
+  }
 
   case object EncryptedStringType extends DatabaseFieldType[String]("encrypted") {
     override def apply(row: Row, col: String) = EncryptionUtils.decrypt(row.as[String](col))
@@ -91,8 +94,8 @@ object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[Datab
   }
 
   case object ByteArrayType extends DatabaseFieldType[Array[Byte]]("byteArray") {
-    override def apply(row: Row, col: String) = row.as[PgArray](col).getArray.asInstanceOf[Array[Byte]]
-    override def opt(row: Row, col: String) = row.asOpt[PgArray](col).map(_.asInstanceOf[Array[Byte]])
+    override def apply(row: Row, col: String) = binaryCoerce(row.as[Any](col))
+    override def opt(row: Row, col: String) = row.asOpt[Any](col).map(binaryCoerce)
   }
   case object IntArrayType extends DatabaseFieldType[List[Int]]("intArray", isList = true) {
     override def apply(row: Row, col: String) = row.as[PgArray](col).getArray.asInstanceOf[Array[Any]].map(intCoerce).toList

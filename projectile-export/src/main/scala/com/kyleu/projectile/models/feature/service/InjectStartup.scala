@@ -16,7 +16,8 @@ object InjectStartup extends FeatureLogic.Inject(path = OutputPath.ServerSource,
 
     def registerFor(pkg: String) = {
       val ico = CommonImportHelper.get(config, "Icons")
-      s"""PermissionService.registerPackage("$pkg", "${ExportHelper.toClassName(pkg)}", ${(ico._1 :+ ico._2).mkString(".")}.pkg_$pkg)"""
+      val perm = CommonImportHelper.get(config, "PermissionService")
+      s"""${(perm._1 :+ perm._2).mkString(".")}.registerPackage("$pkg", "${ExportHelper.toClassName(pkg)}", ${(ico._1 :+ ico._2).mkString(".")}.pkg_$pkg)"""
     }
 
     val newLines = packages.sorted.map(registerFor)

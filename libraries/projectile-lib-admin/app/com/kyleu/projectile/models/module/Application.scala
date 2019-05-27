@@ -58,7 +58,7 @@ class Application @javax.inject.Inject() (
     Await.result(start(restart = true), 20.seconds)
     errors.checkTables()
     if (ApplicationFeature.enabled(ApplicationFeature.Permission)) {
-      PermissionService.initialize(db.query(PermissionQueries.getAll())(TraceData.noop))
+      try { PermissionService.initialize(db.query(PermissionQueries.getAll())(TraceData.noop)) } catch { case _: Throwable => () }
     }
     !errors.hasErrors
   }

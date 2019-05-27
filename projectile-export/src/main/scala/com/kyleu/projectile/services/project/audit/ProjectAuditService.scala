@@ -10,8 +10,8 @@ import com.kyleu.projectile.services.ProjectileService
 object ProjectAuditService {
   def audit(svc: ProjectileService, inputs: Seq[(ExportConfiguration, ProjectOutput)]) = {
     val missing = inputs.flatMap(i => i._1.models.flatMap(checkMissing(i._1, _)))
-
-    val configMessages = missing ++ getDupes(inputs) ++ getUnindexed(inputs.map(_._1))
+    val configs = inputs.map(_._1)
+    val configMessages = missing ++ getDupes(inputs) ++ getUnindexed(configs) ++ getMissingPks(configs) ++ getMismatchedRelations(configs)
 
     val orphans = ExportValidation.validate(svc = svc, results = inputs.map(_._2)).map { valResult =>
       AuditMessage(project = "all", srcModel = valResult._1, src = valResult._1, t = "orphan", tgt = valResult._1, message = valResult._2)
@@ -64,6 +64,26 @@ object ProjectAuditService {
     cfg.models.flatMap { m =>
       m.fields.filter(f => f.inSearch && !f.indexed).map { f =>
         AuditMessage(project = cfg.project.key, srcModel = m.key, src = m.key, t = "unindexed", tgt = f.key, message = "Unindexed search field")
+      }
+    }
+  }
+
+  private[this] def getMissingPks(inputs: Seq[ExportConfiguration]) = inputs.flatMap { i =>
+    i.models.filter(_.pkFields.isEmpty).map { m =>
+      AuditMessage(project = i.project.key, srcModel = m.key, src = m.key, t = "no-pk", tgt = m.key, message = s"Table [${m.key}] lacks a primary key")
+    }
+  }
+
+  private[this] def getMismatchedRelations(inputs: Seq[ExportConfiguration]) = inputs.flatMap { i =>
+    i.models.flatMap { m =>
+      m.references.map(r => (r, m.getField(r.tgt), i.getModelOpt(r.srcTable).map(_.getField(r.srcCol)))).flatMap {
+        case (r, src, tgt) if tgt.isEmpty =>
+          val msg = s"Relationship [${r.name}] is missing column [${r.srcTable}:${r.srcCol}]"
+          Some(AuditMessage(project = i.project.key, srcModel = m.key, src = src.key, t = "missing-fk", tgt = r.srcTable + ":" + r.srcCol, message = msg))
+        case (r, src, Some(tgt)) if tgt.t != src.t =>
+          val msg = s"Relationship [${r.name}] is of type [${src.t}], but target column [${r.srcTable}:${r.srcCol}] is of type [${tgt.t}}]"
+          Some(AuditMessage(project = i.project.key, srcModel = m.key, src = src.key, t = "missing-fk", tgt = r.srcTable + ":" + r.srcCol, message = msg))
+        case _ => None
       }
     }
   }

@@ -22,6 +22,7 @@ object ExportHelper {
 
   def toDefaultPlural(str: String) = str match {
     case x if x.endsWith("s") => x
+    case x if x.endsWith("y") => x.dropRight(1) + "ies"
     case _ => str + "s"
   }
 

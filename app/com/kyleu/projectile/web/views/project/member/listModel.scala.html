@@ -13,7 +13,13 @@
   }
   @project.models.sortBy(_.key).map { m =>
     <div class="collection-item">
-      <div class="right">@m.pkg.mkString(".")</div>
+      <div class="right">
+        @if(m.pkg.isEmpty && com.kyleu.projectile.services.project.ProjectLoadService.Provided.models(m.key)) {
+          <em>provided</em>
+        } else {
+          @m.pkg.mkString(".")
+        }
+      </div>
       <a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.detail(project.key, m.key)">
         <i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @m.key
       </a>

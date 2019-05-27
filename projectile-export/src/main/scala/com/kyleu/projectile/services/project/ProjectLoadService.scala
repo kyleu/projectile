@@ -11,11 +11,15 @@ import com.kyleu.projectile.util.JsonFileLoader
 import com.kyleu.projectile.util.JsonSerializers.Decoder
 import io.scalaland.chimney.dsl._
 
-class ProjectLoadService(p: ProjectileService) {
-  private[this] val providedModels = Set(
-    "audit", "audit_record", "flyway_schema_history", "note", "oauth2_info", "password_info", "scheduled_task_run", "system_permission", "system_user"
-  )
+object ProjectLoadService {
+  object Provided {
+    val models = Set(
+      "audit", "audit_record", "flyway_schema_history", "note", "oauth2_info", "password_info", "scheduled_task_run", "system_permission", "system_user"
+    )
+  }
+}
 
+class ProjectLoadService(p: ProjectileService) {
   def load(cfg: ConfigService, key: String) = {
     val summary = p.getProjectSummary(key)
     val input = p.getInput(summary.input)
@@ -36,7 +40,7 @@ class ProjectLoadService(p: ProjectileService) {
 
     val customModels = loadDir[ModelMember](dir, s"${summary.key}/model")
     val models = (customModels.map(_.key) ++ input.models.map(_.key)).distinct.sorted.map(key => customModels.find(_.key == key).getOrElse {
-      val features = if (providedModels(key)) { Set.empty[ModelFeature] } else { summary.defaultModelFeatures.map(ModelFeature.withValue) }
+      val features = if (ProjectLoadService.Provided.models(key)) { Set.empty[ModelFeature] } else { summary.defaultModelFeatures.map(ModelFeature.withValue) }
       input.models.find(_.key == key) match {
         case Some(im) => ModelMember(pkg = im.pkg, key = key, features = features)
         case None => throw new IllegalStateException("Inconceivable!")

@@ -4,15 +4,26 @@ import com.kyleu.projectile.models.database.DatabaseConfig
 
 import scala.util.control.NonFatal
 
+object ApplicationErrors {
+  case class Err(key: String, msg: String, params: Map[String, String] = Map.empty, ex: Option[Throwable] = None)
+}
+
 class ApplicationErrors(app: Application) {
-  private[this] var errors = List.empty[(String, String, Map[String, String], Option[Throwable])]
+  private[this] var errors = List.empty[ApplicationErrors.Err]
   private[this] var tables = Set.empty[String]
 
   def addError(key: String, msg: String, params: Map[String, String] = Map.empty, ex: Option[Throwable] = None) = {
-    errors = errors :+ ((key, msg, params, ex))
+    errors = errors :+ ApplicationErrors.Err(key, msg, params, ex)
   }
   def hasErrors = errors.nonEmpty
-  def getErrors = errors
+
+  private[this] def idx(k: String) = k match {
+    case "table.system_user" => 0
+    case "table.audit" => 1
+    case _ => 10000
+  }
+
+  def getErrors = errors.map(e => idx(e.key) -> e).sortBy(_._1).map(_._2)
 
   def checkDatabase() = if (!app.db.isStarted) {
     try {

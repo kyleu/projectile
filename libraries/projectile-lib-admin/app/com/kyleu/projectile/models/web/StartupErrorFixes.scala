@@ -24,7 +24,7 @@ object StartupErrorFixes extends Logging {
         val u = params.getOrElse("username", "{{USERNAME}}")
         val db = params.getOrElse("database", "{{DATABASE}}")
         val sql = s"create database $db with owner = $u encoding = 'utf8' connection limit = -1;"
-        Some("Create Database") -> sqlError("The database doesn't exist. Either set <code>database.application.local.database</code> in application.conf, or", sql)
+        None -> sqlError("The database doesn't exist. Either set <code>database.application.local.database</code> in application.conf, or", sql)
       case _ => None -> Html("<p>See the error logs for more information</p>")
     }
     case _ if key.startsWith("table.") => Some("Create Tables") -> tableError(key.stripPrefix("table."))
