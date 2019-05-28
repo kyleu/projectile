@@ -26,6 +26,7 @@ class ProfileController @javax.inject.Inject() (
     userService: SystemUserService
 )(implicit ec: ExecutionContext) extends AuthController("profile") {
   ApplicationFeature.enable(ApplicationFeature.Profile)
+  app.errors.checkTable("system_user")
   SystemMenu.addRootMenu(value, "Profile", Some("View your system profile"), ProfileController.view(), InternalIcons.systemUser)
 
   def view(thm: Option[String]) = withSession("view") { implicit request => implicit td =>

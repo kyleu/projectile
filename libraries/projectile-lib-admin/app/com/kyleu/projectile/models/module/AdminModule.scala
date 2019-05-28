@@ -1,7 +1,9 @@
 package com.kyleu.projectile.models.module
 
+import akka.actor.{ActorRef, ActorSystem}
 import com.google.inject.name.Named
 import com.google.inject.{AbstractModule, Injector, Provides}
+import com.kyleu.projectile.controllers.websocket.WebSocketController
 import com.kyleu.projectile.graphql.GraphQLSchema
 import com.kyleu.projectile.models.config._
 import com.kyleu.projectile.models.graphql.EmptySchema
@@ -12,6 +14,7 @@ import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.{ErrorHandler, GravatarUrl}
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.search.SearchProvider
+import com.kyleu.projectile.services.websocket.ConnectionSupervisor
 import com.kyleu.projectile.util.metrics.MetricsConfig
 import com.kyleu.projectile.util.tracing.{OpenTracingService, TracingService}
 import net.codingwell.scalaguice.ScalaModule
@@ -96,5 +99,9 @@ abstract class AdminModule(
   def providesStatusProvider(): StatusProvider = new StatusProvider {
     override def onAppStartup(app: Application, injector: Injector) = onStartup(app, injector)
     override def getStatus(app: Application, injector: Injector) = appStatus(app, injector)
+  }
+  @Provides @javax.inject.Singleton @Named("connection-supervisor")
+  def provideConnectionSupervisor(actorSystem: ActorSystem): ActorRef = {
+    actorSystem.actorOf(ConnectionSupervisor.props(err = WebSocketController.errJson), "connections")
   }
 }

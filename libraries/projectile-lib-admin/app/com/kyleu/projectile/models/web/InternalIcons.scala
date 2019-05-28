@@ -17,6 +17,7 @@ object InternalIcons {
   val tools = "code"
   val models = "explore"
   val permission = "fingerprint"
+  val help = "help_outline"
 
   val connection = "device_hub"
   val status = "more_horiz"

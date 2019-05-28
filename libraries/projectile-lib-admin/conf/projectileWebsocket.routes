@@ -1,0 +1,4 @@
+# Activity routes
+GET        /                      com.kyleu.projectile.controllers.admin.websocket.ConnectionActivityController.connectionList
+GET        /broadcast             com.kyleu.projectile.controllers.admin.websocket.ConnectionActivityController.broadcast(msg: Option[String] ?= None)
+GET        /connection/:id        com.kyleu.projectile.controllers.admin.websocket.ConnectionActivityController.connectionDetail(id: java.util.UUID)

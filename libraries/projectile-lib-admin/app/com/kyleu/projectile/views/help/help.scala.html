@@ -1,0 +1,32 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, entry: com.kyleu.projectile.models.help.HelpEntry)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.page(title = "Help", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.help)) {
+  @com.kyleu.projectile.views.html.layout.card(title = Some(entry.title), icon = entry.icon) {
+    @entry.description.map { d => <div><em>@d</em></div> }
+    <div class="mt-2">@entry.content.map(Html.apply).getOrElse(Html("No additional help content is available"))</div>
+  }
+  @if(entry.children.nonEmpty) {
+    @com.kyleu.projectile.views.html.layout.card(Some("Children")) {
+      <div class="menu-item">
+        @entry.children.map { c =>
+          @com.kyleu.projectile.views.html.help.entry(c)
+        }
+      </div>
+    }
+  }
+  <style>
+    .menu-item {
+      font-size: 120%;
+    }
+
+    .menu-item .item {
+      margin-bottom: 8px;
+    }
+
+    .menu-item .children {
+      margin-left: 24px;
+    }
+    .menu-item .material-icons {
+      font-size: 100%;
+    }
+  </style>
+}

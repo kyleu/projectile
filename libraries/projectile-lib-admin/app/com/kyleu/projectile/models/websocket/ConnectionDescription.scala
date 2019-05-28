@@ -1,4 +1,4 @@
-package com.kyleu.projectile.models.connection
+package com.kyleu.projectile.models.websocket
 
 import java.time.LocalDateTime
 import java.util.UUID

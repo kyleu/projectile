@@ -11,7 +11,6 @@ import java.util.UUID
 import com.kyleu.projectile.controllers.admin.audit.routes.AuditController
 import com.kyleu.projectile.models.audit.{Audit, AuditResult}
 import com.kyleu.projectile.models.menu.SystemMenu
-import com.kyleu.projectile.models.module.ApplicationFeature.Audit.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.result.RelationCount
 import com.kyleu.projectile.models.web.InternalIcons
@@ -29,7 +28,7 @@ class AuditController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Audit)
   app.errors.checkTable("audit")
   PermissionService.registerModel("models", "Audit", "Audit", Some(InternalIcons.audit), "view", "edit")
-  SystemMenu.addModelMenu(value, "Audits", Some("System audits provide detailed change logging"), AuditController.list(), InternalIcons.audit)
+  SystemMenu.addModelMenu("audit", "Audits", Some("System audits provide detailed change logging"), AuditController.list(), InternalIcons.audit)
   AuditHelper.init(appName = app.config.projectName, service = svc)
 
   def createForm = withSession("create.form", ("models", "Audit", "edit")) { implicit request => implicit td =>

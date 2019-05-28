@@ -1,9 +1,9 @@
-package com.kyleu.projectile.services.connection
+package com.kyleu.projectile.services.websocket
 
 import java.util.UUID
 
 import akka.actor.{Actor, ActorRef, Timers}
-import com.kyleu.projectile.models.connection.ConnectionMessage._
+import com.kyleu.projectile.models.websocket.ConnectionMessage._
 import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData

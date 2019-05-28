@@ -1,11 +1,11 @@
-package com.kyleu.projectile.services.connection
+package com.kyleu.projectile.services.websocket
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 import akka.actor.{Actor, ActorRef, OneForOneStrategy, Props, SupervisorStrategy}
-import com.kyleu.projectile.models.connection.ConnectionMessage._
-import com.kyleu.projectile.models.connection.{ConnectionDescription, ConnectionMessage}
+import com.kyleu.projectile.models.websocket.ConnectionMessage._
+import com.kyleu.projectile.models.websocket.{ConnectionDescription, ConnectionMessage}
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.util.{DateUtils, Logging}
 

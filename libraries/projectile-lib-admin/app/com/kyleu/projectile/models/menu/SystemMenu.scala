@@ -24,6 +24,11 @@ object SystemMenu {
     toolMenus = toolMenus :+ ((key, title, desc, () => call, icon, permissions))
   }
 
+  private[this] var tailMenus = List.empty[(String, String, Option[String], () => Call, String, Seq[(String, String, String)])]
+  def addTailMenu(key: String, title: String, desc: Option[String], call: => Call, icon: String, permissions: (String, String, String)*) = {
+    tailMenus = tailMenus :+ ((key, title, desc, () => call, icon, permissions))
+  }
+
   private[this] def toMenu(x: (String, String, Option[String], () => Call, String, Seq[(String, String, String)])) = {
     NavMenu(key = x._1, title = x._2, description = x._3, url = Some(x._4().url), icon = Some(x._5))
   }
@@ -38,7 +43,8 @@ object SystemMenu {
       case menus => Seq(NavMenu(key = "tools", title = "Tools", description = Some(toolsDesc), icon = Some(InternalIcons.tools), children = menus))
     }
     val roots = rootMenus.filter(m => check(role, m._6)).distinct.map(toMenu)
-    NavMenu(key = "system", title = "System", description = Some(systemDesc), children = roots ++ models ++ tools, flatSection = true)
+    val tails = tailMenus.filter(m => check(role, m._6)).distinct.map(toMenu)
+    NavMenu(key = "system", title = "System", description = Some(systemDesc), children = roots ++ models ++ tools ++ tails, flatSection = true)
   }
 
   private[this] def check(role: String, perms: Seq[(String, String, String)]) = perms.forall(p => PermissionService.check(role, p._1, p._2, p._3)._1)

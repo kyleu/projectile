@@ -19,7 +19,7 @@ object AppStatus {
 
 case class AppStatus(
     name: String,
-    version: String = "Unknown",
+    version: String = "0.0.0",
     status: String = "OK",
     timings: Seq[AppStatus.Timing] = Nil,
     errors: Seq[String] = Nil,

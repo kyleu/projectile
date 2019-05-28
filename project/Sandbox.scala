@@ -1,4 +1,3 @@
-import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.sbt.PlayImport.PlayKeys
@@ -28,9 +27,8 @@ object Sandbox {
 
     scalaJSProjects := Seq(LibraryProjects.`projectile-lib-scalajs`),
 
-    JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
     pipelineStages in Assets := Seq(scalaJSPipeline),
-    
+
     libraryDependencies ++= Dependencies.Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes")),
 

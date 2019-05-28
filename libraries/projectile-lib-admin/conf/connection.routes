@@ -1,4 +1,0 @@
-# Activity routes
-GET        /                      com.kyleu.projectile.controllers.admin.connection.ConnectionActivityController.connectionList
-GET        /broadcast             com.kyleu.projectile.controllers.admin.connection.ConnectionActivityController.broadcast(msg: Option[String] ?= None)
-GET        /connection/:id        com.kyleu.projectile.controllers.admin.connection.ConnectionActivityController.connectionDetail(id: java.util.UUID)

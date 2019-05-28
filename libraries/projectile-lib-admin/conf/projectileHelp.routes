@@ -1,0 +1,2 @@
+GET         /            com.kyleu.projectile.controllers.help.HelpEntryController.root()
+GET         /*path       com.kyleu.projectile.controllers.help.HelpEntryController.entry(path)

@@ -1,9 +1,9 @@
-package com.kyleu.projectile.services.connection
+package com.kyleu.projectile.services.websocket
 
 import java.util.UUID
 
 import akka.actor.{ActorRef, Props}
-import com.kyleu.projectile.models.connection.ConnectionMessage.ConnectionTraceResponse
+import com.kyleu.projectile.models.websocket.ConnectionMessage._
 import com.kyleu.projectile.services.Credentials
 import io.circe.Json
 

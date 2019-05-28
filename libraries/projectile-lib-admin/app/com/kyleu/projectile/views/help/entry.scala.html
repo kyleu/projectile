@@ -1,0 +1,17 @@
+@(entry: com.kyleu.projectile.models.help.HelpEntry)
+<div>
+  @defining(com.kyleu.projectile.controllers.help.routes.HelpEntryController.entry(entry.path.mkString("/"))) { url =>
+    <div class="item">
+      <i class="material-icons">@entry.icon.getOrElse(com.kyleu.projectile.models.web.InternalIcons.default)</i>
+      <a href="@url">@entry.title</a>
+      @entry.description.map { d => - <em>@d</em> }
+    </div>
+  }
+  @if(entry.children.nonEmpty) {
+    <div class="children">
+    @entry.children.map { c =>
+      @com.kyleu.projectile.views.html.help.entry(c)
+    }
+    </div>
+  }
+</div>

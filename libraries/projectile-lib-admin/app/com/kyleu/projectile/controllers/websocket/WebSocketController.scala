@@ -9,20 +9,20 @@ import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.util.BinarySerializers.Pickler
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.models.web.WebsocketUtils
+import com.kyleu.projectile.models.web.WebSocketUtils
 import com.mohiva.play.silhouette.api.HandlerResult
 import io.circe.{Json, JsonObject}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object WebsocketController {
+object WebSocketController {
   def errJson(t: String, b: String) = {
     Json.fromJsonObject(JsonObject.apply("status" -> "error".asJson, "top" -> t.asJson, "bottom" -> b.asJson))
   }
 }
 
-abstract class WebsocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encoder: Pickler](name: String)(
+abstract class WebSocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encoder: Pickler](name: String)(
     implicit
     ec: ExecutionContext
 ) extends AuthController(name) {
@@ -35,7 +35,7 @@ abstract class WebsocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encod
 
   def connectAnonymous(binary: Boolean) = WebSocket.accept[ClientMsg, ServerMsg] { request =>
     val connectionId = UUID.randomUUID()
-    WebsocketUtils.actorRef(connectionId) { out =>
+    WebSocketUtils.actorRef(connectionId) { out =>
       onConnect(connectionId = connectionId, creds = Credentials.anonymous, out = out, request = request)
     }
   }(formatter.transformer(binary))
@@ -44,7 +44,7 @@ abstract class WebsocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encod
     val connectionId = UUID.randomUUID()
     implicit val req: Request[AnyContent] = Request(request, AnyContentAsEmpty)
     app.silhouette.UserAwareRequestHandler { ua => Future.successful(HandlerResult(Ok, ua.identity)) }.map {
-      case HandlerResult(_, user) => Right(WebsocketUtils.actorRef(connectionId) { out =>
+      case HandlerResult(_, user) => Right(WebSocketUtils.actorRef(connectionId) { out =>
         val creds = user match {
           case Some(u) => UserCredentials(u, request.remoteAddress)
           case None => Credentials.anonymous

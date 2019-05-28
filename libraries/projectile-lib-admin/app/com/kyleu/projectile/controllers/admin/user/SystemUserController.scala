@@ -27,7 +27,6 @@ class SystemUserController @javax.inject.Inject() (
     override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService, db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeature.enable(ApplicationFeature.User)
-  app.errors.checkTable("system_user")
   PermissionService.registerModel("models", "SystemUser", "System User", Some(InternalIcons.systemUser), "view", "edit")
   SystemMenu.addModelMenu(value, "System Users", Some("Manage the users of this application"), SystemUserController.list(), InternalIcons.systemUser)
 

@@ -6,7 +6,7 @@ import akka.actor.{Actor, ActorRef, ActorRefFactory, OneForOneStrategy, PoisonPi
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import akka.stream.{Materializer, OverflowStrategy}
 
-object WebsocketUtils {
+object WebSocketUtils {
   class FlowActor(props: ActorRef => Props, connId: UUID, outActor: ActorRef) extends Actor {
     val flowActor = context.watch(context.actorOf(props(outActor), "flow-" + connId))
 

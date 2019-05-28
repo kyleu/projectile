@@ -20,7 +20,7 @@ class SitemapController @javax.inject.Inject() (override val app: Application)(i
     val result = segments.foldLeft((Seq.empty[String], root)) { (l, r) =>
       l._2.children.find(_.key == r) match {
         case Some(item) => (l._1 :+ r, item)
-        case None => throw new IllegalStateException(s"Cannot load menu with path [$path]")
+        case None => throw new IllegalStateException(s"Cannot load menu with path [$path], possible permissions problem")
       }
     }
 

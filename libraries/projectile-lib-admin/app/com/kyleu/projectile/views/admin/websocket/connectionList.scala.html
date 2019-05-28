@@ -1,12 +1,13 @@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, connections: Seq[com.kyleu.projectile.models.connection.ConnectionDescription])(
+@import com.kyleu.projectile.models.websocket.ConnectionDescription
+@(cfg: com.kyleu.projectile.models.config.UiConfig, connections: Seq[ConnectionDescription])(
     implicit flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(title = "Active Connections", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.connection)) {
+)@com.kyleu.projectile.views.html.layout.page(title = "Active WebSockets", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.connection)) {
   <ul class="collection with-header">
     <li class="collection-header">
-      <h5><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.connection</i> @com.kyleu.projectile.util.NumberUtils.withCommas(connections.size) Active Connections</h5>
+      <h5><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.connection</i> @com.kyleu.projectile.util.NumberUtils.withCommas(connections.size) Connections</h5>
     </li>
     <li class="collection-item">
-      <form action="@com.kyleu.projectile.controllers.admin.connection.routes.ConnectionActivityController.broadcast()" method="get">
+      <form action="@com.kyleu.projectile.controllers.admin.websocket.routes.ConnectionActivityController.broadcast()" method="get">
         <input placeholder="Message" id="broadcast-input" name="msg" type="text" class="validate" />
         <button type="submit" class="btn @cfg.user.buttonColor" style="margin: 8px 0;">Broadcast</button>
       </form>
@@ -29,7 +30,7 @@
             @connections.map { connection =>
               <tr>
                 <td>
-                  <a href="@com.kyleu.projectile.controllers.admin.connection.routes.ConnectionActivityController.connectionDetail(connection.id)">@connection.id</a>
+                  <a href="@com.kyleu.projectile.controllers.admin.websocket.routes.ConnectionActivityController.connectionDetail(connection.id)">@connection.id</a>
                 </td>
                 <td>@connection.userId</td>
                 <td>@connection.username</td>

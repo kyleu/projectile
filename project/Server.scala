@@ -1,7 +1,6 @@
 import Dependencies._
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
-import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
@@ -35,7 +34,6 @@ object Server {
     },
 
     // Sbt-Web
-    JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
     pipelineStages += gzip,
 
     // Source Control
