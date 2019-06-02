@@ -21,6 +21,7 @@ object InternalIcons {
 
   val connection = "device_hub"
   val status = "more_horiz"
+  val reporting = "assignment"
   val process = "track_changes"
   val encryption = "enhanced_encryption"
   val sandbox = "widgets"

@@ -5,7 +5,6 @@
 * [Database](database.md)
 * [Thrift](thrift.md)
 * [GraphQL](graphql.md)
-* [TypeScript](typescript.md)
 * [SBT Plugin](sbt-plugin.md)
 
 @@@
@@ -29,11 +28,6 @@ to provide case classes with Json serialization, services that use Scala Futures
 #### @ref[GraphQL Export](graphql.md)
 
 For a GraphQL schema and a set of queries, Projectile can create strongly-typed Scala representations of your models and services, and helper methods to call a running api. 
-
-
-#### @ref[TypeScript](typescript.md)
-
-Projectile parses TypeScript definitions and creates a Scala.js facade project 
 
 
 #### @ref[SBT Plugin](sbt-plugin.md)

@@ -1,2 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Database Migrations: Runs Flyway on application startup, and provides a UI to explore applied migrations
+
 GET        /             com.kyleu.projectile.controllers.admin.migrate.MigrationController.list
 GET        /:rank        com.kyleu.projectile.controllers.admin.migrate.MigrationController.view(rank: Long)

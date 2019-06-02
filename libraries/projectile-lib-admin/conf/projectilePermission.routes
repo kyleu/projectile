@@ -1,3 +1,7 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Permissions: Provides enforcement and a UI for the management of role-based permissions
+
 GET         /                  com.kyleu.projectile.controllers.admin.permission.PermissionController.list
 
 GET         /refresh           com.kyleu.projectile.controllers.admin.permission.PermissionController.refresh

@@ -1,3 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Profile: Authentication routes, change password, and a profile view for changing user settings
 
 # Profile
 GET         /                        com.kyleu.projectile.controllers.auth.ProfileController.view(thm: Option[String] ?= None)

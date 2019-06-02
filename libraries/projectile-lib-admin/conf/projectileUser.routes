@@ -1,6 +1,7 @@
-# Generated File
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
 
-# System User Routes
+## System Users: Provides a UI for managing the system users in the application
+
 GET         /                    com.kyleu.projectile.controllers.admin.user.SystemUserController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
 GET         /autocomplete        com.kyleu.projectile.controllers.admin.user.SystemUserController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
 GET         /form                com.kyleu.projectile.controllers.admin.user.SystemUserController.createForm

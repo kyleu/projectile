@@ -1,2 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Sitemap: Provides a navigable tree of actions available to the user
+
 GET         /            com.kyleu.projectile.controllers.sitemap.SitemapController.sitemap()
 GET         /*path       com.kyleu.projectile.controllers.sitemap.SitemapController.menu(path)

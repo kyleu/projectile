@@ -1,1 +1,5 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Components: Used to allow requests for shared assets, mainly scripts and stylesheets
+
 GET        /*file        com.kyleu.projectile.controllers.Assets.versioned(path = "/public/lib/projectile-lib-admin", file)

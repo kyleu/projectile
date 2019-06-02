@@ -69,7 +69,7 @@ object ProjectAuditService {
   }
 
   private[this] def getMissingPks(inputs: Seq[ExportConfiguration]) = inputs.flatMap { i =>
-    i.models.filter(_.pkFields.isEmpty).map { m =>
+    i.models.filter(_.inputType.isDatabase).filter(_.pkFields.isEmpty).map { m =>
       AuditMessage(project = i.project.key, srcModel = m.key, src = m.key, t = "no-pk", tgt = m.key, message = s"Table [${m.key}] lacks a primary key")
     }
   }

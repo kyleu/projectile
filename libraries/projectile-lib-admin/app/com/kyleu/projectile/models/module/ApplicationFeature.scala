@@ -22,6 +22,7 @@ object ApplicationFeature extends StringEnum[ApplicationFeature] with StringCirc
   case object Permission extends ApplicationFeature("permission")
   case object Process extends ApplicationFeature("process")
   case object Profile extends ApplicationFeature("profile")
+  case object Reporting extends ApplicationFeature("reporting")
   case object Rest extends ApplicationFeature("rest")
   case object Sandbox extends ApplicationFeature("sandbox")
   case object Search extends ApplicationFeature("search")

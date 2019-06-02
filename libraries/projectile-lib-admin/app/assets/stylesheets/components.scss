@@ -43,6 +43,14 @@ html {
   margin-left: 0 !important;
 }
 
+// Layout
+.full-size {
+  width: 100%;
+  height: calc(100vh - 64px);
+  border: 0;
+  padding: 0;
+}
+
 // Tables
 .data-table {
   td {
@@ -66,8 +74,8 @@ html {
   top: 14px;
 }
 
-.small.material-icons {
-  font-size: 1rem;
+.inline.material-icons {
+  font-size: 80%;
 }
 
 input[type="text"].lookup {
@@ -76,4 +84,9 @@ input[type="text"].lookup {
 
 ::-webkit-input-placeholder, ::-moz-placeholder, ::placeholder {
   color: #000;
+}
+
+// Colors
+.collapsible-body {
+  background-color: white;
 }

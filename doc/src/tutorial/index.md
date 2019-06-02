@@ -3,7 +3,6 @@
 @@@ index
 
 * [estimate.poker](poker/index.md)
-* [react](react/index.md)
 * [starwars](starwars/index.md)
 * [thrifty](thrifty/index.md)
 
@@ -16,11 +15,6 @@ The tutorials exist to help you understand and use Projectile effectively.
 
 This tutorial uses a PostgreSQL database to create a web app providing real-time [planning poker](https://en.wikipedia.org/wiki/Planning_poker) estimation sessions. 
 You can see the final result at [estimate.poker](https://estimate.poker), and view the source [here](https://github.com/KyleU/estimate).
-
-
-## @ref[react](react/index.md)
-
-This tutorial uses the React TypeScript definitions to generates a Scala.js project.
 
 
 ## @ref[starwars](starwars/index.md)

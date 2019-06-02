@@ -1,3 +1,0 @@
-# Add Database Types
-
-TODO

@@ -1,7 +1,7 @@
 package com.kyleu.projectile.controllers.admin.audit
 
 import com.kyleu.projectile.views.html.layout.{card, page}
-import com.kyleu.projectile.controllers.{ServiceAuthController, ServiceController}
+import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController, ServiceController}
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
@@ -52,9 +52,9 @@ class AuditRecordController @javax.inject.Inject() (
           ))
         }
         case MimeTypes.JSON => Ok(AuditRecordResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
-        case ServiceController.MimeTypes.csv => csvResponse("AuditRecord", svc.csvFor(r._1, r._2))
-        case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)
-        case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)
+        case BaseController.MimeTypes.csv => csvResponse("AuditRecord", svc.csvFor(r._1, r._2))
+        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
+        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -79,9 +79,9 @@ class AuditRecordController @javax.inject.Inject() (
           )
           if (embedded) { Ok(list) } else { Ok(page(s"Audit Records by Audit Id [$auditId]", cfg)(card(None)(list))) }
         case MimeTypes.JSON => Ok(models.asJson)
-        case ServiceController.MimeTypes.csv => csvResponse("AuditRecord by auditId", svc.csvFor(0, models))
-        case ServiceController.MimeTypes.png => Ok(renderToPng(v = models)).as(ServiceController.MimeTypes.png)
-        case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(ServiceController.MimeTypes.svg)
+        case BaseController.MimeTypes.csv => csvResponse("AuditRecord by auditId", svc.csvFor(0, models))
+        case BaseController.MimeTypes.png => Ok(renderToPng(v = models)).as(BaseController.MimeTypes.png)
+        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -96,8 +96,8 @@ class AuditRecordController @javax.inject.Inject() (
           app.cfg(u = Some(request.identity), "audit", "Record", model.id.toString), model, notes, app.config.debug
         ))
         case MimeTypes.JSON => Ok(model.asJson)
-        case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)
-        case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)
+        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
+        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
       }
       case None => NotFound(s"No AuditRecord found with id [$id]")
     })

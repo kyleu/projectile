@@ -1,0 +1,70 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig)(
+    implicit flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Reporting", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.reporting)) {
+  @if(com.kyleu.projectile.services.reporting.ReportService.listReports().isEmpty) {
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <div>
+        No reports defined. Register some with
+        <code>ReportService.register</code>
+      </div>
+    }
+  } else {
+    <ul class="collapsible">
+      @com.kyleu.projectile.services.reporting.ReportService.listReports().map { report =>
+        <li>
+          <div class="collapsible-header">
+            @report.title
+          </div>
+          <div class="collapsible-body">
+            <form action="@com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.run(report.key)" method="get">
+              <div>
+                @if(report.args.isEmpty) {
+                  <div style="padding-bottom: 12px;"><em>No arguments</em></div>
+                } else {
+                  @report.args.map { a =>
+                    <div class="input-field">
+                      <input id="@report.key-@a.key" name="@a.key" type="text">
+                      <label for="@report.key-@a.key">@a.key</label>
+                    </div>
+                  }
+                }
+              </div>
+              <button type="submit" class="btn @cfg.user.buttonColor">Run Report</button>
+            </form>
+          </div>
+        </li>
+      }
+    </ul>
+
+    @defining(com.kyleu.projectile.services.reporting.ReportService.getCachedResults) { results =>
+      @if(results.nonEmpty) {
+        @com.kyleu.projectile.views.html.layout.card(Some("Recent report runs")) {
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Report</th>
+                <th>Run At</th>
+              </tr>
+            </thead>
+            <tbody>
+              @results.map { result =>
+                <tr>
+                  <td><a href="@com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.cached(result.id)">@result.id</a></td>
+                  <td>@result.report.title</td>
+                  <td>@result.occurred</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    }
+  }
+
+  <script>
+    $(function(){
+      $('.collapsible').collapsible({accordion: false});
+    });
+  </script>
+}

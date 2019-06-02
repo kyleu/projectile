@@ -1,3 +1,7 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## System Processes: Allows execution and monitoring of arbitrary processes (very dangerous!)
+
 GET        /           com.kyleu.projectile.controllers.admin.process.ProcessController.list
 GET        /run        com.kyleu.projectile.controllers.admin.process.ProcessController.run(cmd: Option[String] ?= None)
 GET        /:id        com.kyleu.projectile.controllers.admin.process.ProcessController.detail(id: java.util.UUID)

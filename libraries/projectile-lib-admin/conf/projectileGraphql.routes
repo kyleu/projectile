@@ -1,4 +1,7 @@
-# GraphQL
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## GraphQL: Provides an endpoint for a Sangria GraphQL schema, a GraphiQL IDE, and GraphQL Voyager schema visualization
+
 GET         /                     com.kyleu.projectile.controllers.admin.graphql.GraphQLController.iframe()
 GET         /ide                  com.kyleu.projectile.controllers.admin.graphql.GraphQLController.graphql(query: Option[String] ?= None, variables: Option[String] ?= None)
 POST        /                     com.kyleu.projectile.controllers.admin.graphql.GraphQLController.graphqlBody

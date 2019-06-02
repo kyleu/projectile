@@ -16,8 +16,12 @@ object ControllerFile {
     file.addImport(model.modelPackage(config), model.className)
     config.addCommonImport(file, "Application")
 
-    config.addCommonImport(file, "ServiceController")
-    if (model.features(ModelFeature.Auth)) { config.addCommonImport(file, "ServiceAuthController") }
+    config.addCommonImport(file, "BaseController")
+    if (model.features(ModelFeature.Auth)) {
+      config.addCommonImport(file, "ServiceAuthController")
+    } else {
+      config.addCommonImport(file, "ServiceController")
+    }
     if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditService") }
 
     config.addCommonImport(file, "OrderBy")
@@ -108,9 +112,9 @@ object ControllerFile {
     file.add("}", -1)
 
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
-    file.add(s"""case ServiceController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
-    file.add("case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)")
-    file.add("case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)")
+    file.add(s"""case BaseController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
+    file.add("case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)")
+    file.add("case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)")
     file.add("})", -1)
     file.add("}", -1)
     file.add("}", -1)

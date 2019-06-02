@@ -4,14 +4,18 @@
 
 * [Getting Started](gettingStarted/index.md)
 * [Code Generation](codegen/index.md)
+* [Admin Web Application](admin/index.md)
 * [Libraries](libraries/index.md)
 * [Tutorials](tutorial/index.md)
-* [Cookbook](cookbook/index.md)
 * [Technology](technology.md)
 
 @@@
 
-Projectile creates beautiful Scala code from your Postgres database, GraphQL queries, TypeScript definitions, or Thrift IDL.
+Projectile creates and manages beautiful Scala code from your Postgres database, GraphQL queries, or Thrift IDL.
+
+With a command line interface or web UI, Projectile lets you extend your project as your API grows and changes.
+
+For Postgres schemata, a full featured web application can be managed and grown, including authentication, GraphQL, Swagger, csv/svg exports, and more.
 
 https://kyleu.com/projectile
 
@@ -21,28 +25,26 @@ https://github.com/KyleU/projectile
 
 ### @ref[Postgres Database](codegen/database.md)
 
-For each table and view, Projectile can generate:
+For each table and view in your schema, Projectile can generate:
 
 * Case classes with Circe JSON serialization using Scala representations of all database types (including Enumeratum enums)
-* Strongly-typed database queries for all CRUD operations and indexed queries, along with an asynchronous service interface
-* Slick or Doobie bindings, supporting all Postgres types and pre-built common queries
-* A full-featured Sangria GraphQL interface, supporting batched relationship traversal and a lovely IDE and Schema visualizer
-* Play framework controllers and views exposing an Openapi/Swagger endpoint and a beautiful admin interface supporting local or OAuth login
-
-
-### @ref[TypeScript Definitions](codegen/typescript.md)
-
-Projectile can turn your TypeScript definition files into a well-designed Scala.js facade project. This is a work in progress, it's not quite ready
+* Strongly-typed queries for all CRUD operations and indexed relationships, along with an asynchronous @ref[service](codegen/features/db/service.md) interface supporting end-to-end tracing
+* @ref[Slick](codegen/features/db/slick.md) or @ref[Doobie](codegen/features/db/doobie.md) bindings, supporting all Postgres types and pre-built common queries
+* A full-featured Sangria @ref[GraphQL](codegen/features/db/graphql.md) interface, supporting batched relationship traversal and a lovely IDE and Schema visualizer
+* Play Framework controllers and views exposing an @ref[OpenAPI](codegen/features/db/openapi.md)/Swagger endpoint 
+* A detailed and beautiful @ref[admin](admin/index.md) @ref[web](codegen/features/db/controller.md) application supporting local or OAuth login, and @ref[loads of features](admin/index.md)
 
 
 ### @ref[GraphQL Queries](codegen/graphql.md)
 
-Projectile monitors your GraphQL schema and queries, and generates Scala case classes with input and result serialization 
+Projectile monitors your GraphQL schema and queries, and generates Scala case classes with input and result serialization.
+You can start a new GraphQL project with `projectile example-create graphql`, or view the @ref[example project](tutorial/starwars/index.md).
 
 
 ### @ref[Thrift IDL](codegen/thrift.md)
 
 Projectile monitors your Thrift IDL and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures
+You can start a new GraphQL project with `projectile example-create thrift`, or view the @ref[example project](tutorial/thrifty/index.md).
 
 
 ## License

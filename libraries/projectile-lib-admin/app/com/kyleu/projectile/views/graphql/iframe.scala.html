@@ -1,4 +1,4 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig)
 @com.kyleu.projectile.views.html.layout.fullscreen(cfg.projectName + " GraphQL", cfg) {
-  <iframe style="width: 100%; height: calc(100vh - 70px); border: 0; padding: 0;" src="@com.kyleu.projectile.controllers.admin.graphql.routes.GraphQLController.graphql()"></iframe>
+  <iframe class="full-size" src="@com.kyleu.projectile.controllers.admin.graphql.routes.GraphQLController.graphql()"></iframe>
 }

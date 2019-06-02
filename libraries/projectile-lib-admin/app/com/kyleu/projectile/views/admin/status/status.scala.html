@@ -1,14 +1,11 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, status: com.kyleu.projectile.models.status.AppStatus)(
     implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = cfg.projectName + " Status", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.status)) {
-  <ul class="collection with-header">
-    <li class="collection-header">
-      <div class="right">v@status.version</div>
-      <h5>@status.status</h5>
-      <em>@com.kyleu.projectile.util.DateUtils.niceDateTime(status.measured)</em>
-    </li>
+  @com.kyleu.projectile.views.html.layout.card(title = Some(status.status), right = Some(Html(status.version))) {
+    <em>@com.kyleu.projectile.util.DateUtils.niceDateTime(status.measured)</em>
+
     @if(status.timings.nonEmpty) {
-      <li class="collection-item">
+      <div>
         <h6>Timings</h6>
         <ul>
         @status.timings.map { t =>
@@ -18,17 +15,45 @@
           </li>
         }
         </ul>
-      </li>
+      </div>
     }
     @if(status.errors.nonEmpty) {
-      <li class="collection-item">
+      <div class="collection-item">
         <h6>Errors</h6>
         <ul>
           @status.errors.map { e =>
             <li>@e</li>
           }
         </ul>
-      </li>
+      </div>
     }
-  </ul>
+  }
+    @defining(com.kyleu.projectile.services.status.AppVersions.getVersions) { versions =>
+      @if(versions.nonEmpty) {
+        @com.kyleu.projectile.views.html.layout.card(title = Some("Version History")) {
+          <ul class="collection">
+            @versions.reverse.map { v =>
+              <li class="collection-item">
+                <div class="right">@v.on</div>
+                <h6>@v.v - @v.title</h6>
+                @v.desc.map { d => <em>@d</em>}
+                @if(v.features.nonEmpty) {
+                  <ul class="browser-default">
+                    @v.features.map { f =>
+                      <li>
+                        @if(f._3().isDefined) {
+                          <a href="@f._3()">@f._1</a>: @f._2
+                        } else {
+                          @f._1: @f._2
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+              </li>
+            }
+          </ul>
+        }
+      }
+    }
 }

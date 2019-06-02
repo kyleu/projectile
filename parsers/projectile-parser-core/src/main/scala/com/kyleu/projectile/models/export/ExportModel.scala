@@ -73,10 +73,6 @@ case class ExportModel(
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == FieldType.TagsType)
   val searchFields = fields.filter(_.inSearch)
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
-  val extraFields = searchFields.filterNot(pkFields.contains).filter {
-    case x if x.t == FieldType.TagsType => false
-    case _ => true
-  }
 
   def searchCols = (foreignKeys.flatMap(_.references match {
     case ref :: Nil => Some(ref.source)

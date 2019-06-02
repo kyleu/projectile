@@ -9,11 +9,12 @@ import com.kyleu.projectile.models.config._
 import com.kyleu.projectile.models.graphql.EmptySchema
 import com.kyleu.projectile.models.menu.MenuProvider
 import com.kyleu.projectile.models.notification.Notification
-import com.kyleu.projectile.models.status.{AppStatus, StatusProvider}
+import com.kyleu.projectile.models.status.AppStatus
 import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.{ErrorHandler, GravatarUrl}
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.search.SearchProvider
+import com.kyleu.projectile.services.status.StatusProvider
 import com.kyleu.projectile.services.websocket.ConnectionSupervisor
 import com.kyleu.projectile.util.metrics.MetricsConfig
 import com.kyleu.projectile.util.tracing.{OpenTracingService, TracingService}

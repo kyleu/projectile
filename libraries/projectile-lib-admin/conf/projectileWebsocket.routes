@@ -1,4 +1,7 @@
-# Activity routes
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Websockets: Provides a UI that allows you to view and broadcast to connected websockets
+
 GET        /                      com.kyleu.projectile.controllers.admin.websocket.ConnectionActivityController.connectionList
 GET        /broadcast             com.kyleu.projectile.controllers.admin.websocket.ConnectionActivityController.broadcast(msg: Option[String] ?= None)
 GET        /connection/:id        com.kyleu.projectile.controllers.admin.websocket.ConnectionActivityController.connectionDetail(id: java.util.UUID)

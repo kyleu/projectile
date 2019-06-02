@@ -1,2 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Help: Provides help files for each action defined in a user's menu
+
 GET         /            com.kyleu.projectile.controllers.help.HelpEntryController.root()
 GET         /*path       com.kyleu.projectile.controllers.help.HelpEntryController.entry(path)

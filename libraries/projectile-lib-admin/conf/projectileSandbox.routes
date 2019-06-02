@@ -1,2 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Sandbox Tasks: Mostly a developer tool, this is a framework to run ad-hoc tasks and explore the results
+
 GET        /            com.kyleu.projectile.controllers.admin.sandbox.SandboxController.list
 GET        /:key        com.kyleu.projectile.controllers.admin.sandbox.SandboxController.run(key, arg: Option[String] ?= None)

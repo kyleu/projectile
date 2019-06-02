@@ -24,15 +24,15 @@
           @pkg.models.map { model =>
             @model.actions.map { act =>
               <tr>
-                <td>@if(model.actions.headOption.contains(act)) { @model.icon.map { i => <i class="material-icons" style="font-size: 100%;">@i</i> } @model.title }</td>
+                <td>@if(model.actions.headOption.contains(act)) { @model.icon.map { i => <i class="material-icons inline">@i</i> } @model.title }</td>
                 <td>@act</td>
                 @roles.map { role =>
                   <td>
                     @defining(com.kyleu.projectile.services.auth.PermissionService.check(role._1, pkg.key, model.key, act)) { ch =>
                       @if(ch._1) {
-                        <i class="material-icons green-text" title="@ch._2">@com.kyleu.projectile.models.web.InternalIcons.ok</i>
+                        <i class="material-icons green-text" title="@ch._2" style="font-size: 130%;">@com.kyleu.projectile.models.web.InternalIcons.ok</i>
                       } else {
-                        <i class="material-icons red-text" title="@ch._2">@com.kyleu.projectile.models.web.InternalIcons.cancel</i>
+                        <i class="material-icons red-text" title="@ch._2" style="font-size: 130%;">@com.kyleu.projectile.models.web.InternalIcons.cancel</i>
                       }
                     }
                   </td>

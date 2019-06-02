@@ -1,2 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Encryption: Uses the secret key from system configuration to encrypt and decrypt strings, including user sessions
+
 GET         /               com.kyleu.projectile.controllers.admin.encrypt.EncryptionController.form
 POST        /               com.kyleu.projectile.controllers.admin.encrypt.EncryptionController.post

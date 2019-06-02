@@ -4,7 +4,7 @@
 )@com.kyleu.projectile.views.html.layout.page(title = "Active WebSockets", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.connection)) {
   <ul class="collection with-header">
     <li class="collection-header">
-      <h5><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.connection</i> @com.kyleu.projectile.util.NumberUtils.withCommas(connections.size) Connections</h5>
+      <h5><i class="material-icons inline">@com.kyleu.projectile.models.web.InternalIcons.connection</i> @com.kyleu.projectile.util.NumberUtils.withCommas(connections.size) Connections</h5>
     </li>
     <li class="collection-item">
       <form action="@com.kyleu.projectile.controllers.admin.websocket.routes.ConnectionActivityController.broadcast()" method="get">

@@ -8,9 +8,9 @@
         @orderByUrl.map { u =>
           @if(orderBy.contains(col._1)) {
             @if(orderAsc) {
-              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.sortAsc</i></a></th>
+              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons inline">@com.kyleu.projectile.models.web.InternalIcons.sortAsc</i></a></th>
             } else {
-              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.sortDesc</i></a></th>
+              <th><a class="sort-link" href="@u(Some(col._1), !orderAsc)">@col._2 <i class="material-icons inline">@com.kyleu.projectile.models.web.InternalIcons.sortDesc</i></a></th>
             }
           } else {
             <th><a class="sort-link" href="@u(Some(col._1), true)">@col._2</a></th>

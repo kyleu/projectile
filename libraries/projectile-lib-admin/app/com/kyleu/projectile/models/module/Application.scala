@@ -8,13 +8,13 @@ import com.kyleu.projectile.models.auth.AuthEnv
 import com.kyleu.projectile.models.config.{Configuration, UiConfig}
 import com.kyleu.projectile.models.notification.Notification
 import com.kyleu.projectile.models.queries.permission.PermissionQueries
-import com.kyleu.projectile.models.status.StatusProvider
 import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.TracingWSClient
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.cache.CacheService
 import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.services.notification.NotificationService
+import com.kyleu.projectile.services.status.StatusProvider
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import com.kyleu.projectile.util.{EncryptionUtils, Logging}

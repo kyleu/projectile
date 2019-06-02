@@ -18,7 +18,7 @@
                       <p>
                         <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.error</i> @err</p>
                     </div>
-                    <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+                    <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close" onclick="$(this).closest('.card-alert').fadeOut('slow');">
                       <span aria-hidden="true">×</span>
                     </button>
                   </div>
@@ -28,7 +28,7 @@
                     <div class="card-content white-text">
                       <p><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.success</i> @success</p>
                     </div>
-                    <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close">
+                    <button type="button" class="close white-text" data-dismiss="alert" aria-label="Close" onclick="$(this).closest('.card-alert').fadeOut('slow');">
                       <span aria-hidden="true">×</span>
                     </button>
                   </div>

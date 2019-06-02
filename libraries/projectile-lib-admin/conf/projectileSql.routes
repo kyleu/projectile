@@ -1,2 +1,6 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## SQL Prompt: Allows execution of arbitrary sql, with a UI that adds a small safety net (still quite dangerous!)
+
 GET         /            com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sql
 POST        /            com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sqlPost

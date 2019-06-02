@@ -2,7 +2,7 @@ package com.kyleu.projectile.controllers.admin.task
 
 import java.util.UUID
 
-import com.kyleu.projectile.controllers.{ServiceAuthController, ServiceController}
+import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController, ServiceController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.models.task.{ScheduledTaskRun, ScheduledTaskRunResult}
@@ -48,9 +48,9 @@ class ScheduledTaskRunController @javax.inject.Inject() (
           ))
         }
         case MimeTypes.JSON => Ok(ScheduledTaskRunResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
-        case ServiceController.MimeTypes.csv => csvResponse("ScheduledTaskRun", svc.csvFor(r._1, r._2))
-        case ServiceController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(ServiceController.MimeTypes.png)
-        case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(ServiceController.MimeTypes.svg)
+        case BaseController.MimeTypes.csv => csvResponse("ScheduledTaskRun", svc.csvFor(r._1, r._2))
+        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
+        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -73,8 +73,8 @@ class ScheduledTaskRunController @javax.inject.Inject() (
           app.cfg(u = Some(request.identity), "task", "scheduled_task_run", model.id.toString), model, notes, audits, app.config.debug
         ))
         case MimeTypes.JSON => Ok(model.asJson)
-        case ServiceController.MimeTypes.png => Ok(renderToPng(v = model)).as(ServiceController.MimeTypes.png)
-        case ServiceController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(ServiceController.MimeTypes.svg)
+        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
+        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
       }
       case None => NotFound(s"No ScheduledTaskRun found with id [$id]")
     }))

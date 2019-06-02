@@ -4,11 +4,11 @@
 
 TODO
 
-[Example](https://github.com/KyleU/boilerplay/blob/master/app/models/table/settings/SettingKeyTypeColumnType.scala)
+[Example](https://github.com/KyleU/boilerplay/blob/master/app/models/table/film/MpaaRatingTypeColumnType.scala)
 
 
 ## Slick tables
 
 TODO
 
-[Example](https://github.com/KyleU/boilerplay/blob/master/app/models/table/note/NoteTable.scala)
+[Example](https://github.com/KyleU/boilerplay/blob/master/app/models/table/customer/CustomerTable.scala)

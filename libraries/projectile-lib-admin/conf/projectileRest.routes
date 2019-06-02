@@ -1,3 +1,6 @@
-# Rest/Swagger/OpenAPI
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Swagger/OpenAPI: Provides Swagger documentation and a UI for interactively calling each controller's actions
+
 GET        /                    com.kyleu.projectile.controllers.admin.rest.OpenApiController.ui()
 GET        /openapi.json        com.kyleu.projectile.controllers.admin.rest.OpenApiController.json()

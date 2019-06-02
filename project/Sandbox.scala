@@ -34,7 +34,6 @@ object Sandbox {
 
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(projectId, projectName, projectPort).taskValue
   ).disablePlugins(PlayFilters).enablePlugins(SbtWeb, PlayScala).dependsOn(
-    LibraryProjects.`projectile-lib-admin`,
-    ProjectileExport.`projectile-export`
+    LibraryProjects.`projectile-lib-admin`, ProjectileExport.`projectile-export`
   )
 }

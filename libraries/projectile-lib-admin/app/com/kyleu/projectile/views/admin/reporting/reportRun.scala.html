@@ -1,0 +1,75 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, result: com.kyleu.projectile.models.reporting.ReportResult, sort: Option[String] = None)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = result.report.title, cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.reporting)) {
+  @defining(com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.cached(result.id)) { cachedUrl =>
+    @defining(Html(s"""<a href="$cachedUrl?t=csv" class="btn ${cfg.user.buttonColor.getOrElse("")}">Download CSV</a>""")) { downloadButton =>
+      @com.kyleu.projectile.views.html.layout.card(Some(com.kyleu.projectile.util.DateUtils.niceDateTime(result.occurred)), right = Some(downloadButton)) {
+        <div>Report ran successfully in [@{result.durationMs}ms] (<a href="@cachedUrl">share link</a>)</div>
+      }
+    }
+  }
+
+  @defining(com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.run(result.report.key) + "?" + result.args.map(x => x._1 + "=" + x._2).mkString("&")) { url =>
+    @com.kyleu.projectile.views.html.layout.card(Some("Arguments"), right = Some(Html(s"""<a href="$url" class="btn ${cfg.user.buttonColor.getOrElse("")}">Run Again</a>"""))) {
+      @if(result.report.args.isEmpty) {
+        <em>No arguments</em>
+      } else {
+        <table>
+          <tbody>
+            @result.report.args.sortBy(_.key).map { a =>
+              <tr>
+                <th>@a.key</th>
+                <td>@result.args.get(a.key).filterNot(_.isEmpty).getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
+  }
+
+  @com.kyleu.projectile.views.html.layout.card(Some("Result")) {
+    <div style="overflow: auto;">
+      <table class="highlight">
+        <thead>
+          <tr>
+            @result.columns.map { col =>
+              <th style="white-space: nowrap;" title="@col._1">
+                @if(sort.contains(col._1)) {
+                  <a href="@com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.cached(result.id)?sort=-@col._1">
+                    <strong>@col._2 <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.sortDesc</i></strong>
+                  </a>
+                } else {
+                  @if(sort.contains("-" + col._1)) {
+                    <a href="@com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.cached(result.id)?sort=@col._1">
+                      <strong>@col._2 <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.sortAsc</i></strong>
+                    </a>
+                  } else {
+                    <a href="@com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.cached(result.id)?sort=@col._1">
+                      @col._2
+                    </a>
+                  }
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @result.rows.map { row =>
+            <tr>
+              @row.map { data =>
+                <td style="white-space: nowrap;">
+                  @if(data.isEmpty) { @com.kyleu.projectile.util.NullUtils.str }
+                  @data.map { d =>
+                    @if(d._2.isEmpty) { @d._1 }
+                    @d._2.map { u => <a href="@u">@d._1</a> }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+}

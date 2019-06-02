@@ -4,4 +4,4 @@
 
 TODO
 
-[Example](https://github.com/KyleU/boilerplay/blob/master/conf/openapi/paths/note/noteRow.json)
+[Example](https://github.com/KyleU/boilerplay/blob/master/conf/openapi/paths/customer/customerRow.json)

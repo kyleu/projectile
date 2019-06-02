@@ -1,1 +1,5 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Search: Global site-wide search
+
 GET         /                com.kyleu.projectile.controllers.admin.search.SearchController.search(q ?= "")

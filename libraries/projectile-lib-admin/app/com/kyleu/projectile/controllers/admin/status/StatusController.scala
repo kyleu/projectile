@@ -6,9 +6,9 @@ import com.kyleu.projectile.controllers.admin.status.routes.StatusController
 import com.kyleu.projectile.models.menu.SystemMenu
 import com.kyleu.projectile.models.module.ApplicationFeature.Status.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
-import com.kyleu.projectile.models.status.StatusProvider
 import com.kyleu.projectile.models.web.InternalIcons
 import com.kyleu.projectile.services.auth.PermissionService
+import com.kyleu.projectile.services.status.StatusProvider
 
 import scala.concurrent.{ExecutionContext, Future}
 

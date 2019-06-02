@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.graphql.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.feature.graphql.db.SchemaHelper.injectedService
@@ -73,10 +74,15 @@ object SchemaFile {
 
     file.add(s"""unitField(name = "${model.propertyName}Search", desc = None, t = ${model.propertyName}ResultType, f = (c, td) => {""", 1)
     file.add(s"""runSearch(c.ctx.${injectedService(model, config)}, c, td).map(toResult)""")
-    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (model.extraFields.nonEmpty) { "," } else { "" }}", -1)
+    file.add(s"}, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)${if (extraFields(model).nonEmpty) { "," } else { "" }}", -1)
 
     SchemaHelper.addSearchFields(config, model, file)
 
     file.add(")", -1)
+  }
+
+  def extraFields(model: ExportModel) = model.searchFields.filterNot(model.pkFields.contains).filter {
+    case x if x.t == FieldType.TagsType => false
+    case _ => true
   }
 }

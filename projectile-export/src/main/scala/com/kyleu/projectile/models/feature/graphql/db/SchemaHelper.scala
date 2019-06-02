@@ -43,10 +43,10 @@ object SchemaHelper {
   }
 
   def addSearchArguments(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
-    model.extraFields.foreach { f =>
+    SchemaFile.extraFields(model).foreach { f =>
       addArguments(config, model, f, file)
     }
-    if (model.extraFields.nonEmpty) { file.add() }
+    if (SchemaFile.extraFields(model).nonEmpty) { file.add() }
   }
 
   def addArguments(config: ExportConfiguration, model: ExportModel, field: ExportField, file: ScalaFile) = if (model.pkFields.nonEmpty) {
@@ -56,8 +56,8 @@ object SchemaHelper {
     file.add(s"""val ${model.propertyName}${field.className}SeqArg = Argument("${field.propertyName}s", $seqGraphQlArgType)""")
   }
 
-  def addSearchFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.extraFields.foreach { field =>
-    val comma = if (model.extraFields.lastOption.contains(field)) { "" } else { "," }
+  def addSearchFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = SchemaFile.extraFields(model).foreach { field =>
+    val comma = if (SchemaFile.extraFields(model).lastOption.contains(field)) { "" } else { "," }
     val listType = s"ListType(${model.propertyName}Type)"
     val arg = s"${model.propertyName}${field.className}Arg"
 

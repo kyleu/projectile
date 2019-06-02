@@ -4,6 +4,16 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import com.kyleu.projectile.util.DateUtils
+import com.kyleu.projectile.util.JsonSerializers._
+
+object Permission {
+  object Path {
+    implicit val jsonEncoder: Encoder[Path] = deriveEncoder
+    implicit val jsonDecoder: Decoder[Path] = deriveDecoder
+  }
+
+  case class Path(pkg: String, model: String, act: String)
+}
 
 case class Permission(
     role: String,

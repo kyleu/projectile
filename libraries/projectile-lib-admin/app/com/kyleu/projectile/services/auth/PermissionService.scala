@@ -21,6 +21,7 @@ object PermissionService extends Logging {
     case Some(svc) => svc.check(pkg, model, action)
     case None => (role == "admin") -> "uninitialized"
   }
+  def checkPaths(role: String, paths: Permission.Path*) = paths.map(p => check(role, p.pkg, p.model, p.act))
 
   private[this] val services = collection.mutable.HashMap.empty[String, PermissionService]
 

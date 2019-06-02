@@ -1,0 +1,7 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Reporting: A framework to run reports, explore the results, and export to other formats
+
+GET        /                  com.kyleu.projectile.controllers.admin.reporting.ReportController.list
+GET        /:key              com.kyleu.projectile.controllers.admin.reporting.ReportController.run(key, t: Option[String] ?= None)
+GET        /cached/:id        com.kyleu.projectile.controllers.admin.reporting.ReportController.cached(id: java.util.UUID, t: Option[String] ?= None, sort: Option[String] ?= None)

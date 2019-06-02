@@ -1,0 +1,24 @@
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, icon: Option[String] = None, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)
+@com.kyleu.projectile.views.html.layout.fullscreen(title, cfg, scripts = scripts, stylesheets = stylesheets) {
+  <div class="full-size">
+    @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
+      @theme.contentBefore.map { cb => <div class="content-wrapper-before @cfg.user.navbarColor"></div> }
+      @com.kyleu.projectile.views.html.layout.breadcrumbs(title, cfg, icon)
+      <div id="fullscreen-card">
+        <div class="card" style="height: 100%; margin:0 1rem;">
+          <div class="card-content" style="height: 100%; margin:0;">
+            @content
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+  <script>
+    function resize() {
+      var card = $("#fullscreen-card");
+      card.height("calc(100vh - " + card.offset().top + "px - 1rem)");
+    }
+    $(resize);
+    $(window).on("resize", resize );
+  </script>
+}

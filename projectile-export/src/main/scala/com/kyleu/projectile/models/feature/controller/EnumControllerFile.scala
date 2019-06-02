@@ -20,7 +20,7 @@ object EnumControllerFile {
     }
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "ExecutionContext")
-    config.addCommonImport(file, "ServiceController")
+    config.addCommonImport(file, "BaseController")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "twirl", "api"), "Html")
@@ -39,7 +39,7 @@ object EnumControllerFile {
     file.add(s"vals = ${enum.className}.values.map(v => Html(v.toString))")
     file.add("))", -1)
     file.add(s"""case Accepts.Json() => Ok(${enum.className}.values.asJson)""")
-    file.add(s"""case ServiceController.acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")
+    file.add(s"""case BaseController.acceptsCsv() => Ok(${enum.className}.values.mkString(", ")).as("text/csv")""")
     file.add("})", -1)
     file.add("}", -1)
     file.add("}", -1)

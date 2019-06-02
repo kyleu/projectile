@@ -10,6 +10,7 @@ sealed abstract class ProjectTemplate(
     val description: String,
     val icon: String
 ) extends StringEnumEntry {
+  override def toString = value
   def path(p: OutputPath) = p match {
     case OutputPath.Root => "."
     case OutputPath.GraphQLOutput => "src/main/resources/graphql"

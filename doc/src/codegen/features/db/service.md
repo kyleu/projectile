@@ -4,11 +4,11 @@
 
 TODO
 
-[Example](https://github.com/KyleU/boilerplay/blob/master/app/models/queries/note/NoteRowQueries.scala)
+[Example](https://github.com/KyleU/boilerplay/blob/master/app/models/queries/customer/CustomerRowQueries.scala)
 
 
 ## Asynchronous service
 
 TODO
 
-[Example](https://github.com/KyleU/boilerplay/blob/master/app/services/note/NoteRowService.scala)
+[Example](https://github.com/KyleU/boilerplay/blob/master/app/services/customer/CustomerRowService.scala)

@@ -1,4 +1,7 @@
-# Note Routes
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Notes: For enabled models, allows management of associated notes
+
 GET         /                        com.kyleu.projectile.controllers.admin.note.NoteController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
 GET         /autocomplete            com.kyleu.projectile.controllers.admin.note.NoteController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
 GET         /add/:model/*pk          com.kyleu.projectile.controllers.admin.note.NoteController.addForm(model, pk)

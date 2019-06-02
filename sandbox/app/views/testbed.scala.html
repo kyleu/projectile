@@ -1,7 +1,22 @@
-@(cfg: com.kyleu.projectile.models.config.UiConfig)(
-    implicit flash: Flash
-)@com.kyleu.projectile.views.html.layout.page("Testbed", cfg) {
-  @com.kyleu.projectile.views.html.layout.card(None) {
-    <div>Content</div>
+@(cfg: com.kyleu.projectile.models.config.UiConfig, debug: Boolean = false)(implicit flash: Flash)
+@defining("page") { key =>
+  @if(key == "page") {
+    @com.kyleu.projectile.views.html.layout.page("Testbed", cfg) {
+      @com.kyleu.projectile.views.html.layout.card(None) {
+        <div>Content</div>
+      }
+    }
   }
+  @if(key == "fullscreen") {
+    @com.kyleu.projectile.views.html.layout.fullscreen("Testbed", cfg) {
+      <div>Content</div>
+    }
+  }
+  @if(key == "fullscreenCard") {
+    @com.kyleu.projectile.views.html.layout.fullscreenCard("Testbed", cfg) {
+      <div class="card-title">Content</div>
+
+    }
+  }
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

@@ -64,4 +64,7 @@ object ControllerUtils {
     Assets.path(s"vendor/theme/default/style.css"),
     Assets.path(s"stylesheets/components.css")
   )
+
+  lazy val dataTableScripts = Seq(Assets.path("vendor/dataTables/dataTables.min.js"))
+  lazy val dataTableStylesheets = Seq(Assets.path("vendor/dataTables/dataTables.min.css"))
 }

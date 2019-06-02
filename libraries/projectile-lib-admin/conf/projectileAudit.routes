@@ -1,3 +1,7 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Auditing: For enabled models, logs changes to the database automatically, with detailed information on what changed and by whom
+
 # Audit Record Routes
 GET         /record                           com.kyleu.projectile.controllers.admin.audit.AuditRecordController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
 GET         /record/autocomplete              com.kyleu.projectile.controllers.admin.audit.AuditRecordController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)

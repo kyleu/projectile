@@ -12,7 +12,7 @@ class HomeController @javax.inject.Inject() (override val app: Application)(impl
   }
 
   def testbed() = withSession("testbed") { implicit request => implicit td =>
-    Future.successful(Ok(views.html.testbed(app.cfg(Some(request.identity), "testbed"))))
+    Future.successful(Ok(views.html.testbed(cfg = app.cfg(Some(request.identity), "testbed"), debug = app.config.debug)))
   }
 
   def redir(file: String) = withoutSession("redir") { _ => _ =>

@@ -20,7 +20,7 @@ class JdbcDatabase(override val key: String, configPrefix: String)(implicit val 
   def source = ds.getOrElse(throw new IllegalStateException("Database not initialized"))
 
   def open(cfg: com.typesafe.config.Config, tracing: TracingService) = {
-    ds.foreach(_ => throw new IllegalStateException("Database already initialized"))
+    ds.foreach(_ => close())
 
     Class.forName("org.postgresql.Driver")
     val config = DatabaseConfig.fromConfig(cfg, configPrefix)
