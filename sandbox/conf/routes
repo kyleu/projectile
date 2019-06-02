@@ -3,7 +3,8 @@ GET        /connect                                 controllers.ConnectionContro
 GET        /testbed                                 controllers.HomeController.testbed
 
 ### Projectile Features
-## The following sections are features which, when uncommented, add functionality to the application
+## The following sections are features which, when uncommented, add functionality to the application.
+## See docs for details: 
 ->         /components                              projectileComponents.Routes
 ->         /profile                                 projectileProfile.Routes
 ->         /sitemap                                 projectileSitemap.Routes

@@ -5,7 +5,7 @@ Using one of the methods described in @ref[Installing Projectile](installing.md)
 ## Starting point
 
 This assumes you've got an existing project that you'd like to add Projectile generated code to.
-If you'd prefer to instead start from a brand new project, [install Projectile](asdf) and run `projectile example-create` in an empty directory.
+If you'd prefer to instead start from a brand new project, [install Projectile](asdf) and run `projectile new` in an empty directory.
 
 Open your project directory, and run `projectile server` 
 

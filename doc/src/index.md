@@ -27,7 +27,7 @@ https://github.com/KyleU/projectile
 
 For each table and view in your schema, Projectile can generate:
 
-* Case classes with Circe JSON serialization using Scala representations of all database types (including Enumeratum enums)
+* Case classes with Circe @ref[json](codegen/features/db/core.md) serialization using Scala representations of all database types (including Enumeratum enums)
 * Strongly-typed queries for all CRUD operations and indexed relationships, along with an asynchronous @ref[service](codegen/features/db/service.md) interface supporting end-to-end tracing
 * @ref[Slick](codegen/features/db/slick.md) or @ref[Doobie](codegen/features/db/doobie.md) bindings, supporting all Postgres types and pre-built common queries
 * A full-featured Sangria @ref[GraphQL](codegen/features/db/graphql.md) interface, supporting batched relationship traversal and a lovely IDE and Schema visualizer
@@ -38,13 +38,15 @@ For each table and view in your schema, Projectile can generate:
 ### @ref[GraphQL Queries](codegen/graphql.md)
 
 Projectile monitors your GraphQL schema and queries, and generates Scala case classes with input and result serialization.
-You can start a new GraphQL project with `projectile example-create graphql`, or view the @ref[example project](tutorial/starwars/index.md).
+
+You can start a new GraphQL project with `projectile new graphql`, or view the @ref[example project](tutorial/starwars/index.md).
 
 
 ### @ref[Thrift IDL](codegen/thrift.md)
 
 Projectile monitors your Thrift IDL and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures
-You can start a new GraphQL project with `projectile example-create thrift`, or view the @ref[example project](tutorial/thrifty/index.md).
+
+You can start a new GraphQL project with `projectile new thrift`, or view the @ref[example project](tutorial/thrifty/index.md).
 
 
 ## License
