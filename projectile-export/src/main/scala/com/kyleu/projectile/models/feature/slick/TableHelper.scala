@@ -78,7 +78,7 @@ object TableHelper {
           val tgtCol = target.getField(ref.target)
           file.add(s"def with$key = q.join(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
           file.add(s"def with${key}Opt = q.joinLeft(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
-        case x => throw new IllegalStateException("Extension error")
+        case _ => // noop
       }
 
       fk._2 match {
