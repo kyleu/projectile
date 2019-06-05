@@ -2,7 +2,7 @@ package com.kyleu.projectile.controllers.admin.task
 
 import java.util.UUID
 
-import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController, ServiceController}
+import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.models.task.{ScheduledTaskRun, ScheduledTaskRunResult}

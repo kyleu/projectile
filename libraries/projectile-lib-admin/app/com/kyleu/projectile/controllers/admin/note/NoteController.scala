@@ -4,7 +4,7 @@ import java.util.UUID
 
 import com.kyleu.projectile.controllers.admin.note.routes.NoteController
 import com.kyleu.projectile.views.html.layout.{card, page}
-import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController, ServiceController}
+import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.menu.SystemMenu
 import com.kyleu.projectile.models.module.ApplicationFeature.Note.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}

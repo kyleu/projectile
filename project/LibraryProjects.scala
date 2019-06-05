@@ -76,7 +76,7 @@ object LibraryProjects {
     libraryDependencies ++= {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.5"
-      val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13"
+      val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC2"
       val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.7"
       Seq(jQuery, javaTime, jsDom)
     }
@@ -85,8 +85,7 @@ object LibraryProjects {
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
-      Play.cache, Play.twirl, Play.filters, Play.guice, Play.ws, Play.json, Play.cache,
-      Utils.betterFiles, Utils.commonsLang, Utils.reftree
+      Play.cache, Play.filters, Play.guice, Play.json, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang, Utils.reftree
     ) ++ Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes"))
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)

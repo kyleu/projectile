@@ -10,7 +10,7 @@ object SbtExportPlugin {
   lazy val `projectile-sbt-admin` = (project in file("projectile-sbt-admin")).settings(Common.settings: _*).settings(
     addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.2"),
 
-    addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.21"),
+    addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.22"),
     addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9"),
 
     addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.0"),

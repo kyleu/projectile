@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.google.inject.Injector
 import com.kyleu.projectile.models.auth.Permission
+import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.tracing.TraceData
 import play.api.mvc.Call
@@ -46,4 +47,5 @@ abstract class ProjectileReport(
     case None => throw new IllegalStateException(s"Argument [$key] is required, and was not provided")
   }
   protected def uuidArg(key: String, m: Map[String, String]) = stringArg(key, m).map(UUID.fromString)
+  protected def ldtArg(key: String, m: Map[String, String]) = stringArg(key, m).map(DateUtils.fromString)
 }

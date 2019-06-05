@@ -36,8 +36,8 @@ object DoobieQueryService {
     })(j => j.spaces2)
     implicit val tagsMeta: Meta[List[Tag]] = Meta[Map[String, String]].timap(Tag.fromMap)(Tag.toMap)
 
-    def in[F[_]: Reducible, A: Param](f: Fragment, fs: F[A]): Fragment = doobie.Fragments.in(f, fs)
-    def notIn[F[_]: Reducible, A: Param](f: Fragment, fs: F[A]): Fragment = doobie.Fragments.notIn(f, fs)
+    def in[F[_]: Reducible, A: Put](f: Fragment, fs: F[A]): Fragment = doobie.Fragments.in(f, fs)
+    def notIn[F[_]: Reducible, A: Put](f: Fragment, fs: F[A]): Fragment = doobie.Fragments.notIn(f, fs)
     def whereAndOpt(fs: Option[Fragment]*) = doobie.Fragments.whereAndOpt(fs: _*)
     def whereAnd(fs: Fragment*) = doobie.Fragments.whereAnd(fs: _*)
   }

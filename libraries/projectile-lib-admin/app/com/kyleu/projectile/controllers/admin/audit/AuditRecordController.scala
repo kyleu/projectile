@@ -1,7 +1,7 @@
 package com.kyleu.projectile.controllers.admin.audit
 
 import com.kyleu.projectile.views.html.layout.{card, page}
-import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController, ServiceController}
+import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils

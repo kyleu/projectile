@@ -64,14 +64,17 @@ object DateUtils {
     parseIsoOffsetDateTime(s).map(zdt => new java.sql.Timestamp(zdt.toInstant.toEpochMilli))
   }
 
-  def sqlDateTimeFromString(s: String): java.sql.Timestamp = {
+  def fromString(s: String) = {
     def parse(sdf: SimpleDateFormat) = try {
-      Some(new java.sql.Timestamp(sdf.parse(s).getTime))
+      Some(fromMillis(sdf.parse(s).getTime))
     } catch {
       case _: java.text.ParseException => None
     }
-    sqlTimestampFromIsoOffsetDateTime(s)
-      .orElse(parse(dtFmtIso)).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtStd)).orElse(parse(dtFmtAmPm))
-      .getOrElse(throw new IllegalStateException(s"Cannot parse timestamp from [$s]"))
+    parse(dtFmtIso).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtStd)).orElse(parse(dtFmtAmPm))
+      .getOrElse(throw new IllegalStateException(s"Cannot parse date/time from [$s]"))
+  }
+
+  def sqlDateTimeFromString(s: String): java.sql.Timestamp = {
+    sqlTimestampFromIsoOffsetDateTime(s).getOrElse(new java.sql.Timestamp(toMillis(fromString(s))))
   }
 }

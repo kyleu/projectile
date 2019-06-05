@@ -5,6 +5,7 @@
 * [Auditing](features/audit.md)
 * [Components](features/components.md)
 * [Database Migrations](features/migrate.md)
+* [Email](features/email.md)
 * [Encryption](features/encrypt.md)
 * [GraphQL](features/graphql.md)
 * [Help](features/help.md)

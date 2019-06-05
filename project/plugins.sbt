@@ -16,7 +16,7 @@ addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.9-0.6" exclude("org.scala-
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // App Packaging
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.21")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.22")
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9")
 
 // Publishing

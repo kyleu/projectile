@@ -1,6 +1,6 @@
 package com.kyleu.projectile.controllers.admin.user
 
-import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController, ServiceController}
+import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.note.NoteService

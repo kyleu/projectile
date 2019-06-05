@@ -7,7 +7,7 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.10.0"
+    val app = "1.10.3"
     val scala = "2.12.8"
   }
 
@@ -22,15 +22,7 @@ object Common {
     "-Yrangepos", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-dead-code",
     "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
   ) ++ profileOptions
-
-  def silencerOptions(path: String, pathFilters: Seq[String] = Nil, messageFilters: Seq[String] = Nil) = {
-    Seq(s"-P:silencer:sourceRoots=$path") ++ (
-      if(pathFilters.isEmpty) { Nil } else { Seq(s"-P:silencer:pathFilters=${pathFilters.mkString(";")}") }
-    ) ++ (
-      if(messageFilters.isEmpty) { Nil } else { Seq(s"-P:silencer:globalFilters=${messageFilters.mkString(";")}") }
-    )
-  }
-
+  
   lazy val settings = Seq(
     version := Common.Versions.app,
     scalaVersion := Common.Versions.scala,
@@ -49,4 +41,10 @@ object Common {
 
     publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
   ) ++ (if(profilingEnabled) { Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0")) } else { Nil })
+
+  def silencerOptions(path: String, pathFilters: Seq[String] = Nil, messageFilters: Seq[String] = Nil) = {
+    Seq(s"-P:silencer:sourceRoots=$path") ++ (
+      if(pathFilters.isEmpty) { Nil } else { Seq(s"-P:silencer:pathFilters=${pathFilters.mkString(";")}") }
+    ) ++ (if(messageFilters.isEmpty) { Nil } else { Seq(s"-P:silencer:globalFilters=${messageFilters.mkString(";")}") })
+  }
 }
