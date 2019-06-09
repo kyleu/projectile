@@ -9,7 +9,7 @@ import com.kyleu.projectile.services.project.ProjectExampleService
 import com.kyleu.projectile.services.typescript.{AstExportService, FileService}
 import com.kyleu.projectile.util.{Logging, NumberUtils}
 import com.kyleu.projectile.web.controllers.ProjectileController
-import com.kyleu.projectile.web.util.{AuditUtils, CollectionUtils, FilesystemUtils}
+import com.kyleu.projectile.web.util.{AuditUtils, CollectionUtils, TypeScriptProjectHelper}
 import com.kyleu.projectile.web.views.html.input.ts._
 
 import scala.concurrent.Future
@@ -23,7 +23,7 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
   def kids(d: File) = d.children.filter(_.isDirectory).map(c => c.name).filterNot(x => x == "target" || x == "project").toList.sorted
 
   def sync() = Action.async { _ =>
-    FilesystemUtils.syncBuildFiles()
+    TypeScriptProjectHelper.syncBuildFiles()
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.TypeScriptController.listRoot()).flashing("success" -> "Synced!"))
   }
   def saveAudit(k: String, f: String) = Action.async { _ =>
@@ -67,7 +67,7 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
     val in = getInput(k, f)
     val p = in.fakeSummary().copy(packages = Map(OutputPackage.Application -> Seq("com", "definitelyscala", ExportHelper.escapeKeyword(k))))
 
-    val path = TypeScriptInput.stripName(s"${FilesystemUtils.tgtDir}/$k/$f")
+    val path = TypeScriptInput.stripName(s"${TypeScriptProjectHelper.tgtDir}/$k/$f")
     val name = TypeScriptInput.stripName(s"$k-$f")
     val projectDir = File(path)
     if (!projectDir.exists) {

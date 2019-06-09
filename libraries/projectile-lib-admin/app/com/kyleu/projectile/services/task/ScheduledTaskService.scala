@@ -4,9 +4,9 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import com.kyleu.projectile.models.config.Configuration
-import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.task.ScheduledTaskRun
 import com.kyleu.projectile.models.task.{ScheduledTask, ScheduledTaskOutput}
+import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.{DateUtils, Logging}
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
@@ -20,25 +20,26 @@ class ScheduledTaskService @javax.inject.Inject() (
     runService: ScheduledTaskRunService,
     tracingService: TracingService
 )(implicit ec: ExecutionContext) extends Logging {
-  def initSchedule(system: ActorSystem, creds: UserCredentials, args: Seq[String], delaySecs: Int = 5, intervalSecs: Int = 15)(implicit td: TraceData): Unit = {
+  def initSchedule(system: ActorSystem, creds: Credentials, args: Seq[String], delaySecs: Int = 5, intervalSecs: Int = 15)(implicit td: TraceData): Unit = {
     if (config.scheduledTaskEnabled) {
       import scala.concurrent.duration._
       log.info(s"Scheduling task to run every [$intervalSecs] seconds, after an initial [$delaySecs] second delay.")
       system.scheduler.schedule(delaySecs.seconds, intervalSecs.seconds, (() => runAll(creds, args)): Runnable)
     } else {
-      log.info("Scheduled task is disabled.")
+      log.info("Scheduled task is disabled, skipping timed schedule")
+      log.info("To enable, set [scheduled.task.enabled] in application.conf")
     }
   }
 
-  def runAll(creds: UserCredentials = UserCredentials.system, args: Seq[String] = Nil)(implicit td: TraceData) = {
+  def runAll(creds: Credentials = Credentials.system, args: Seq[String] = Nil)(implicit td: TraceData) = {
     start(creds, ScheduledTaskRegistry.getAll, args)
   }
 
-  def runSingle(creds: UserCredentials = UserCredentials.system, task: ScheduledTask, args: Seq[String] = Nil)(implicit td: TraceData) = {
+  def runSingle(creds: Credentials = Credentials.system, task: ScheduledTask, args: Seq[String] = Nil)(implicit td: TraceData) = {
     start(creds, Seq(task), args)
   }
 
-  private[this] def start(creds: UserCredentials, tasks: Seq[ScheduledTask], args: Seq[String])(implicit td: TraceData) = {
+  private[this] def start(creds: Credentials, tasks: Seq[ScheduledTask], args: Seq[String])(implicit td: TraceData) = {
     tracingService.trace("scheduledTaskService.run") { trace =>
       val id = UUID.randomUUID
       val f = if (tasks.isEmpty) {
@@ -66,7 +67,7 @@ class ScheduledTaskService @javax.inject.Inject() (
     }
   }
 
-  private[this] def go(id: UUID, creds: UserCredentials, args: Seq[String], task: ScheduledTask, td: TraceData) = {
+  private[this] def go(id: UUID, creds: Credentials, args: Seq[String], task: ScheduledTask, td: TraceData) = {
     val start = DateUtils.now
     val startMs = DateUtils.toMillis(start)
 
@@ -77,7 +78,7 @@ class ScheduledTaskService @javax.inject.Inject() (
 
     def fin(status: String) = {
       val ret = ScheduledTaskOutput(
-        userId = creds.user.id, username = creds.user.username,
+        userId = creds.id, username = creds.name,
         status = status, logs = logs,
         start = start, end = DateUtils.now
       )

@@ -1,7 +1,6 @@
 package com.kyleu.projectile.models.task
 
 import java.time.LocalDateTime
-import java.util.UUID
 
 import com.kyleu.projectile.util.DateUtils
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
@@ -21,7 +20,7 @@ object ScheduledTaskOutput {
 }
 
 final case class ScheduledTaskOutput(
-    userId: UUID,
+    userId: String,
     username: String,
     status: String,
     logs: Seq[ScheduledTaskOutput.Log],

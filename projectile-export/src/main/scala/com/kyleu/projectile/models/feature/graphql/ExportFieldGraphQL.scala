@@ -17,7 +17,7 @@ object ExportFieldGraphQL {
     case IntegerType => "IntType"
     case LongType => "LongType"
     case FloatType => "FloatType"
-    case DoubleType => "DoubleType"
+    case DoubleType => "FloatType"
     case BigDecimalType => "BigDecimalType"
 
     case DateType => "localDateType"

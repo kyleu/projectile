@@ -34,7 +34,7 @@ object AuditUtils {
 
   private[this] val badNames = Set(".DS_Store")
   private[this] def kids(d: File) = d.children.filter(_.isDirectory).map(c => c.name).filterNot(x => x == "target" || x == "project").toList.sorted
-  private[this] def srcDir(k: String, f: String) = File(FilesystemUtils.tgtDir) / k / f / "src" / "main" / "scala"
+  private[this] def srcDir(k: String, f: String) = File(TypeScriptProjectHelper.tgtDir) / k / f / "src" / "main" / "scala"
 
   private[this] def getResult(s: File, t: File, stack: Seq[String] = Nil): Seq[FileResult] = if (s.isDirectory) {
     s.children.filterNot(c => badNames(c.name)).flatMap(c => getResult(c, t / c.name, stack :+ t.name)).toList

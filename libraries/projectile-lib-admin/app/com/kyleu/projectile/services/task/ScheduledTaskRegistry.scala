@@ -1,7 +1,7 @@
 package com.kyleu.projectile.services.task
 
-import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.task.ScheduledTask
+import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.tracing.TraceData
 
@@ -17,11 +17,11 @@ object ScheduledTaskRegistry {
 
   def byKey(key: String) = all.find(_.key == key).getOrElse(throw new IllegalStateException(s"No task with key [$key]."))
 
-  def runAll(creds: UserCredentials, tasks: Seq[ScheduledTask], log: String => Unit)(implicit td: TraceData) = {
+  def runAll(creds: Credentials, tasks: Seq[ScheduledTask], log: String => Unit)(implicit td: TraceData) = {
     Future.sequence(tasks.map(t => run(creds, t, log).map(t -> _))).map(_.toMap)
   }
 
-  def run(creds: UserCredentials, task: ScheduledTask, log: String => Unit)(implicit td: TraceData) = {
+  def run(creds: Credentials, task: ScheduledTask, log: String => Unit)(implicit td: TraceData) = {
     val start = DateUtils.nowMillis
     Try(task.run(creds, log)) match {
       case Success(r) => r.map { ret =>

@@ -10,20 +10,11 @@ object ProjectileExport {
     test in assembly := {},
     assemblyJarName in assembly := Common.projectId + "-export.jar",
     assemblyMergeStrategy in assembly := {
-      case PathList("javax", "servlet", _ @ _*) => MergeStrategy.first
-      case PathList("javax", "xml", _ @ _*) => MergeStrategy.first
-      case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
       case PathList("org", "apache", "commons", "logging", _ @ _*) => MergeStrategy.first
-      case PathList("org", "w3c", "dom", _ @ _*) => MergeStrategy.first
-      case PathList("org", "w3c", "dom", "events", _ @ _*) => MergeStrategy.first
       case PathList("javax", "annotation", _ @ _*) => MergeStrategy.first
-      case PathList("net", "jcip", "annotations", _ @ _*) => MergeStrategy.first
-      case PathList("sqlj", _ @ _*) => MergeStrategy.first
       case "module-info.class" => MergeStrategy.discard
       case "pom.xml" => MergeStrategy.discard
-      case "JS_DEPENDENCIES" => MergeStrategy.discard
       case "pom.properties" => MergeStrategy.discard
-      case "application.conf" => MergeStrategy.concat
       case x => (assemblyMergeStrategy in assembly).value(x)
     }
   ).dependsOn(

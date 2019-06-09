@@ -64,6 +64,9 @@ object ProjectilePlayProject extends AutoPlugin {
     assemblyJarName in assembly := projectID.value.name + ".jar",
     test in assembly := {},
     assemblyMergeStrategy in assembly := {
+      case PathList("com", "sun", _@ _*) => MergeStrategy.first
+      case PathList("com", "google", "inject", _@ _*) => MergeStrategy.first
+      case PathList("javax", "activation", _@ _*) => MergeStrategy.first
       case PathList("javax", "servlet", _@ _*) => MergeStrategy.first
       case PathList("javax", "xml", _@ _*) => MergeStrategy.first
       case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
@@ -74,12 +77,16 @@ object ProjectilePlayProject extends AutoPlugin {
       case PathList("net", "jcip", "annotations", _@ _*) => MergeStrategy.first
       case PathList("play", "api", "libs", "ws", _@ _*) => MergeStrategy.first
       case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
+      case PathList("META-INF", "native", "libnetty_transport_native_epoll_x86_64.so") => MergeStrategy.first
+      case PathList("META-INF", "mimetypes.default") => MergeStrategy.first
+      case PathList("META-INF", "mailcap.default") => MergeStrategy.first
       case PathList("sqlj", _@ _*) => MergeStrategy.first
       case PathList("play", "reference-overrides.conf") => MergeStrategy.first
       case "module-info.class" => MergeStrategy.discard
       case "messages" => MergeStrategy.concat
       case "pom.xml" => MergeStrategy.discard
       case "JS_DEPENDENCIES" => MergeStrategy.discard
+      case "BUILD" => MergeStrategy.discard
       case "pom.properties" => MergeStrategy.discard
       case "application.conf" => MergeStrategy.concat
       case x => (assemblyMergeStrategy in assembly).value(x)

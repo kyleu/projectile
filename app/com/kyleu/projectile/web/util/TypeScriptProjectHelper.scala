@@ -2,7 +2,7 @@ package com.kyleu.projectile.web.util
 
 import better.files.File
 
-object FilesystemUtils {
+object TypeScriptProjectHelper {
   val tgtDir = "out/typescript-projects"
 
   private[this] def kids(d: File) = d.children.filter(_.isDirectory).map(c => c.name).filterNot(x => x == "target" || x == "project").toList.sorted
@@ -55,7 +55,7 @@ object FilesystemUtils {
     val pluginsFile = dir / "project" / "plugins.sbt"
     if (!pluginsFile.exists) {
       pluginsFile.createIfNotExists(createParents = true)
-      pluginsFile.overwrite("""addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.26")""")
+      pluginsFile.overwrite("""addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.28")""")
     }
   }
 
