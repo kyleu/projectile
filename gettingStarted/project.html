@@ -150,8 +150,31 @@ KyleU/projectile
     <li><a href="../codegen/database.html" class="page">Database</a></li>
     <li><a href="../codegen/thrift.html" class="page">Thrift</a></li>
     <li><a href="../codegen/graphql.html" class="page">GraphQL</a></li>
-    <li><a href="../codegen/typescript.html" class="page">TypeScript</a></li>
     <li><a href="../codegen/sbt-plugin.html" class="page">SBT Plugin</a></li>
+  </ul></li>
+  <li><a href="../admin/index.html" class="page">Admin Web Application</a>
+  <ul>
+    <li><a href="../admin/features/audit.html" class="page">Auditing</a></li>
+    <li><a href="../admin/features/components.html" class="page">Components</a></li>
+    <li><a href="../admin/features/migrate.html" class="page">Database Migrations</a></li>
+    <li><a href="../admin/features/email.html" class="page">Email</a></li>
+    <li><a href="../admin/features/encrypt.html" class="page">Encryption</a></li>
+    <li><a href="../admin/features/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../admin/features/help.html" class="page">Help</a></li>
+    <li><a href="../admin/features/note.html" class="page">Notes</a></li>
+    <li><a href="../admin/features/permission.html" class="page">Permissions</a></li>
+    <li><a href="../admin/features/profile.html" class="page">Profile</a></li>
+    <li><a href="../admin/features/reporting.html" class="page">Reporting</a></li>
+    <li><a href="../admin/features/sandbox.html" class="page">Sandbox Tasks</a></li>
+    <li><a href="../admin/features/task.html" class="page">Scheduled Tasks</a></li>
+    <li><a href="../admin/features/search.html" class="page">Search</a></li>
+    <li><a href="../admin/features/sitemap.html" class="page">Sitemap</a></li>
+    <li><a href="../admin/features/sql.html" class="page">SQL Prompt</a></li>
+    <li><a href="../admin/features/status.html" class="page">Status/Versions</a></li>
+    <li><a href="../admin/features/rest.html" class="page">Swagger/OpenAPI</a></li>
+    <li><a href="../admin/features/process.html" class="page">System Processes</a></li>
+    <li><a href="../admin/features/user.html" class="page">System Users</a></li>
+    <li><a href="../admin/features/websocket.html" class="page">Websockets</a></li>
   </ul></li>
   <li><a href="../libraries/index.html" class="page">Scala Libraries</a>
   <ul>
@@ -169,16 +192,9 @@ KyleU/projectile
   </ul></li>
   <li><a href="../tutorial/index.html" class="page">Tutorials</a>
   <ul>
-    <li><a href="../tutorial/poker/index.html" class="page">react</a></li>
-    <li><a href="../tutorial/react/index.html" class="page">react</a></li>
+    <li><a href="../tutorial/poker/index.html" class="page">poker</a></li>
     <li><a href="../tutorial/starwars/index.html" class="page">starwars</a></li>
     <li><a href="../tutorial/thrifty/index.html" class="page">thrifty</a></li>
-  </ul></li>
-  <li><a href="../cookbook/index.html" class="page">Cookbook</a>
-  <ul>
-    <li><a href="../cookbook/add.html" class="page">Add Database Types</a></li>
-    <li><a href="../cookbook/remove.html" class="page">Remove Unused Files</a></li>
-    <li><a href="../cookbook/troubleshooting.html" class="page">Troubleshooting</a></li>
   </ul></li>
   <li><a href="../technology.html" class="page">Technology</a></li>
 </ul>
@@ -187,7 +203,11 @@ KyleU/projectile
 <ul>
   <li><a href="../gettingStarted/project.html#creating-a-project" class="header">Creating a Project</a>
   <ul>
-    <li><a href="../gettingStarted/project.html#creating-the-input" class="header">Creating the input</a></li>
+    <li><a href="../gettingStarted/project.html#starting-point" class="header">Starting point</a></li>
+    <li><a href="../gettingStarted/project.html#creating-the-projectile-input" class="header">Creating the Projectile input</a></li>
+    <li><a href="../gettingStarted/project.html#creating-the-projectile-project" class="header">Creating the Projectile project</a></li>
+    <li><a href="../gettingStarted/project.html#exporting" class="header">Exporting</a></li>
+    <li><a href="../gettingStarted/project.html#auditing-optional-" class="header">Auditing (optional)</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -196,7 +216,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.8.2
+<i class="md-icon" title="Version">label_outline</i> 1.10.4
 </label>
 </li>
 </ul>
@@ -211,7 +231,11 @@ KyleU/projectile
 <ul>
   <li><a href="../gettingStarted/project.html#creating-a-project" class="header">Creating a Project</a>
   <ul>
-    <li><a href="../gettingStarted/project.html#creating-the-input" class="header">Creating the input</a></li>
+    <li><a href="../gettingStarted/project.html#starting-point" class="header">Starting point</a></li>
+    <li><a href="../gettingStarted/project.html#creating-the-projectile-input" class="header">Creating the Projectile input</a></li>
+    <li><a href="../gettingStarted/project.html#creating-the-projectile-project" class="header">Creating the Projectile project</a></li>
+    <li><a href="../gettingStarted/project.html#exporting" class="header">Exporting</a></li>
+    <li><a href="../gettingStarted/project.html#auditing-optional-" class="header">Auditing (optional)</a></li>
   </ul></li>
 </ul>
 </nav>
@@ -224,19 +248,27 @@ KyleU/projectile
 <div class="md-content__searchable">
 <h1><a href="#creating-a-project" name="creating-a-project" class="anchor"><span class="anchor-link"></span></a>Creating a Project</h1>
 <p>Using one of the methods described in <a href="installing.html">Installing Projectile</a>, launch the projectile server, and open <a href="http://localhost:20000">http://localhost:20000</a></p>
-<h2><a href="#creating-the-input" name="creating-the-input" class="anchor"><span class="anchor-link"></span></a>Creating the input</h2>
-<p>Before we create our project, we need to make an input pointing to your database, Thrift IDL, or GraphQL schema and queries.</p>
-<p>Either click the &ldquo;Add Input&rdquo; link on the home page, or open <a href="http://localhost:20000/input">http://localhost:20000/input</a> directly.</p>
-<p>##</p>
+<h2><a href="#starting-point" name="starting-point" class="anchor"><span class="anchor-link"></span></a>Starting point</h2>
+<p>This assumes you&rsquo;ve got an existing project that you&rsquo;d like to add Projectile generated code to. If you&rsquo;d prefer to instead start from a brand new project, <a href="asdf">install Projectile</a> and run <code>projectile new</code> in an empty directory.</p>
+<p>Open your project directory, and run <code>projectile server</code> </p>
+<h2><a href="#creating-the-projectile-input" name="creating-the-projectile-input" class="anchor"><span class="anchor-link"></span></a>Creating the Projectile input</h2>
+<p>Now we need to make an input pointing to your database, Thrift IDL, or GraphQL schema and queries.</p>
+<p>Either click the &ldquo;Add Input&rdquo; link on the home page, or open <a href="http://localhost:20000/input">http://localhost:20000/input</a> directly. Fill out the form, making sure to configure your database credentials or file locations. Once complete, you should see all of your models in the input detail (you can also click &ldquo;Refresh&rdquo; to manually update them)</p>
+<h2><a href="#creating-the-projectile-project" name="creating-the-projectile-project" class="anchor"><span class="anchor-link"></span></a>Creating the Projectile project</h2>
+<p>Either click the &ldquo;Add Project&rdquo; link on the home page, or open <a href="http://localhost:20000/project">http://localhost:20000/project</a> directly. Fill out the form, making sure to select the input we just created. at this point, you&rsquo;ll be able to configure the models of the system. Head to &ldquo;Edit Features&rdquo; to see the available options for project features, and select the ones you want. Explore the project detail page, it allows you to configure output paths, object naming and features, output packages, and more</p>
+<h2><a href="#exporting" name="exporting" class="anchor"><span class="anchor-link"></span></a>Exporting</h2>
+<p>The &ldquo;Export&rdquo; button on the home page will export all projects, or you can individually export a project from its detail page. A summary is shown with all results, allowing you to see exactly what was changed</p>
+<h2><a href="#auditing-optional-" name="auditing-optional-" class="anchor"><span class="anchor-link"></span></a>Auditing (optional)</h2>
+<p>On occasion, you&rsquo;ll remove something from your input. Because exporting the project never deletes files, you may need to run Projectile&rsquo;s auditing to clean up the trash. Simply click &ldquo;Audit&rdquo; from the home page, and you&rsquo;ll see a report listing orphaned files (and other project checks). You can click &ldquo;Fix All&rdquo; to clean up the orphaned files and apply other cleanups</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.8.2/doc/src/gettingStarted/project.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.10.4/doc/src/gettingStarted/project.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.8.2
+1.10.4
 </span>
 </div>
 </article>

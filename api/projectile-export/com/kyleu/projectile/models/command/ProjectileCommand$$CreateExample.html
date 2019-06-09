@@ -180,10 +180,6 @@
                         <a href="" title="">CreateExample</a>
                       </li><li class="current-entities indented6">
                         <span class="separator"></span>
-                        <a class="object" href="ProjectileCommand$$Doctor$.html" title=""></a>
-                        <a href="ProjectileCommand$$Doctor$.html" title="">Doctor</a>
-                      </li><li class="current-entities indented6">
-                        <span class="separator"></span>
                         <a class="object" href="ProjectileCommand$$Init$.html" title=""></a>
                         <a href="ProjectileCommand$$Init$.html" title="">Init</a>
                       </li><li class="current-entities indented6">
@@ -297,7 +293,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">CreateExample</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="out">out: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="ProjectileCommand.html" class="extype" name="com.kyleu.projectile.models.command.ProjectileCommand">ProjectileCommand</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">CreateExample</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="template">template: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="force">force: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="ProjectileCommand.html" class="extype" name="com.kyleu.projectile.models.command.ProjectileCommand">ProjectileCommand</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -353,9 +349,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.models.command.ProjectileCommand.CreateExample#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(key:String,out:String):com.kyleu.projectile.models.command.ProjectileCommand.CreateExample"></a><a id="&lt;init&gt;:CreateExample"></a>
+      <a id="&lt;init&gt;(key:String,template:String,force:Boolean):com.kyleu.projectile.models.command.ProjectileCommand.CreateExample"></a><a id="&lt;init&gt;:CreateExample"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/command/ProjectileCommand$$CreateExample.html#&lt;init&gt;(key:String,out:String):com.kyleu.projectile.models.command.ProjectileCommand.CreateExample" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/command/ProjectileCommand$$CreateExample.html#&lt;init&gt;(key:String,template:String,force:Boolean):com.kyleu.projectile.models.command.ProjectileCommand.CreateExample" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -364,7 +360,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">CreateExample</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="out">out: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
+        <span class="name">CreateExample</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="template">template: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="force">force: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       
       
@@ -520,6 +516,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.kyleu.projectile.models.command.ProjectileCommand.CreateExample#force" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="force:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/models/command/ProjectileCommand$$CreateExample.html#force:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">force</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -625,22 +637,6 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="com.kyleu.projectile.models.command.ProjectileCommand.CreateExample#out" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="out:String"></a>
-      <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/command/ProjectileCommand$$CreateExample.html#out:String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">out</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -657,6 +653,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.kyleu.projectile.models.command.ProjectileCommand.CreateExample#template" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="template:String"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/models/command/ProjectileCommand$$CreateExample.html#template:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">template</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">

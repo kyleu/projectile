@@ -151,10 +151,6 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.kyleu.projectile.models">models</a></dd></dl></div>
     </li><li class="current-entities indented5">
-                        <a class="object" href="AuthActions$.html" title=""></a>
-                        <a class="class" href="AuthActions.html" title=""></a>
-                        <a href="AuthActions.html" title="">AuthActions</a>
-                      </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="class" href="AuthEnv.html" title=""></a>
                         <a href="AuthEnv.html" title="">AuthEnv</a>
@@ -163,7 +159,11 @@
                         <a class="class" href="AuthModule.html" title=""></a>
                         <a href="AuthModule.html" title="">AuthModule</a>
                       </li><li class="current-entities indented5">
-                        <span class="separator"></span>
+                        <a class="object" href="Permission$.html" title=""></a>
+                        <a class="class" href="Permission.html" title=""></a>
+                        <a href="Permission.html" title="">Permission</a>
+                      </li><li class="current-entities indented5">
+                        <a class="object" href="ProfileData$.html" title=""></a>
                         <a class="class" href="ProfileData.html" title=""></a>
                         <a href="ProfileData.html" title="">ProfileData</a>
                       </li><li class="current-entities indented5">
@@ -201,7 +201,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">RegistrationData</span><span class="params">(<span name="username">username: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="password">password: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="passwordConfirm">passwordConfirm: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">RegistrationData</span><span class="params">(<span name="username">username: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="password">password: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -257,9 +257,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.models.auth.RegistrationData#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(username:String,email:String,password:String,passwordConfirm:String):com.kyleu.projectile.models.auth.RegistrationData"></a><a id="&lt;init&gt;:RegistrationData"></a>
+      <a id="&lt;init&gt;(username:String,email:String,password:String):com.kyleu.projectile.models.auth.RegistrationData"></a><a id="&lt;init&gt;:RegistrationData"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/auth/RegistrationData.html#&lt;init&gt;(username:String,email:String,password:String,passwordConfirm:String):com.kyleu.projectile.models.auth.RegistrationData" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/auth/RegistrationData.html#&lt;init&gt;(username:String,email:String,password:String):com.kyleu.projectile.models.auth.RegistrationData" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -268,7 +268,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RegistrationData</span><span class="params">(<span name="username">username: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="password">password: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="passwordConfirm">passwordConfirm: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span>
+        <span class="name">RegistrationData</span><span class="params">(<span name="username">username: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="password">password: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span>
       </span>
       
       
@@ -526,22 +526,6 @@
       </span>
       <span class="symbol">
         <span class="name">password</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      
-    </li><li name="com.kyleu.projectile.models.auth.RegistrationData#passwordConfirm" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="passwordConfirm:String"></a>
-      <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/auth/RegistrationData.html#passwordConfirm:String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">passwordConfirm</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
       

@@ -156,28 +156,16 @@
                         <a href="BreadcrumbEntry.html" title="">BreadcrumbEntry</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="trait" href="MenuProvider.html" title=""></a>
-                        <a href="MenuProvider.html" title="">MenuProvider</a>
+                        <a class="class" href="Configuration.html" title=""></a>
+                        <a href="Configuration.html" title="">Configuration</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="class" href="NavHtml.html" title=""></a>
                         <a href="NavHtml.html" title="">NavHtml</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
-                        <a class="class" href="NavMenu.html" title=""></a>
-                        <a href="NavMenu.html" title="">NavMenu</a>
-                      </li><li class="current-entities indented5">
-                        <span class="separator"></span>
                         <a class="class" href="NavUrls.html" title=""></a>
                         <a href="NavUrls.html" title="">NavUrls</a>
-                      </li><li class="current-entities indented5">
-                        <span class="separator"></span>
-                        <a class="class" href="Notification.html" title=""></a>
-                        <a href="Notification.html" title="">Notification</a>
-                      </li><li class="current-entities indented5">
-                        <span class="separator"></span>
-                        <a class="object" href="NotificationService$.html" title=""></a>
-                        <a href="NotificationService$.html" title="">NotificationService</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="class" href="" title=""></a>
@@ -209,7 +197,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">UiConfig</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="menu">menu: <span class="extype" name="scala.Seq">Seq</span>[<a href="NavMenu.html" class="extype" name="com.kyleu.projectile.models.config.NavMenu">NavMenu</a>] = <span class="symbol">Nil</span></span>, <span name="urls">urls: <a href="NavUrls.html" class="extype" name="com.kyleu.projectile.models.config.NavUrls">NavUrls</a> = <span class="symbol">NavUrls()</span></span>, <span name="html">html: <a href="NavHtml.html" class="extype" name="com.kyleu.projectile.models.config.NavHtml">NavHtml</a> = <span class="symbol">NavHtml()</span></span>, <span name="user">user: <a href="UserSettings.html" class="extype" name="com.kyleu.projectile.models.config.UserSettings">UserSettings</a> = <span class="symbol"><span class="name"><a href="UserSettings$.html">UserSettings.empty</a></span></span></span>, <span name="notifications">notifications: <span class="extype" name="scala.Seq">Seq</span>[<a href="Notification.html" class="extype" name="com.kyleu.projectile.models.config.Notification">Notification</a>] = <span class="symbol">Nil</span></span>, <span name="breadcrumbs">breadcrumbs: <span class="extype" name="scala.Seq">Seq</span>[<a href="BreadcrumbEntry.html" class="extype" name="com.kyleu.projectile.models.config.BreadcrumbEntry">BreadcrumbEntry</a>] = <span class="symbol">Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">UiConfig</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userId">userId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.util.UUID">UUID</span>] = <span class="symbol">None</span></span>, <span name="menu">menu: <span class="extype" name="scala.Seq">Seq</span>[<a href="../menu/NavMenu.html" class="extype" name="com.kyleu.projectile.models.menu.NavMenu">NavMenu</a>] = <span class="symbol">Nil</span></span>, <span name="urls">urls: <a href="NavUrls.html" class="extype" name="com.kyleu.projectile.models.config.NavUrls">NavUrls</a> = <span class="symbol">NavUrls()</span></span>, <span name="html">html: <a href="NavHtml.html" class="extype" name="com.kyleu.projectile.models.config.NavHtml">NavHtml</a> = <span class="symbol">NavHtml()</span></span>, <span name="user">user: <a href="UserSettings.html" class="extype" name="com.kyleu.projectile.models.config.UserSettings">UserSettings</a> = <span class="symbol"><span class="name"><a href="UserSettings$.html">UserSettings.empty</a></span></span></span>, <span name="notifications">notifications: <span class="extype" name="scala.Seq">Seq</span>[<a href="../notification/Notification.html" class="extype" name="com.kyleu.projectile.models.notification.Notification">Notification</a>] = <span class="symbol">Nil</span></span>, <span name="breadcrumbs">breadcrumbs: <span class="extype" name="scala.Seq">Seq</span>[<a href="BreadcrumbEntry.html" class="extype" name="com.kyleu.projectile.models.config.BreadcrumbEntry">BreadcrumbEntry</a>] = <span class="symbol">Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -265,9 +253,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.models.config.UiConfig#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(projectName:String,menu:Seq[com.kyleu.projectile.models.config.NavMenu],urls:com.kyleu.projectile.models.config.NavUrls,html:com.kyleu.projectile.models.config.NavHtml,user:com.kyleu.projectile.models.config.UserSettings,notifications:Seq[com.kyleu.projectile.models.config.Notification],breadcrumbs:Seq[com.kyleu.projectile.models.config.BreadcrumbEntry]):com.kyleu.projectile.models.config.UiConfig"></a><a id="&lt;init&gt;:UiConfig"></a>
+      <a id="&lt;init&gt;(projectName:String,userId:Option[java.util.UUID],menu:Seq[com.kyleu.projectile.models.menu.NavMenu],urls:com.kyleu.projectile.models.config.NavUrls,html:com.kyleu.projectile.models.config.NavHtml,user:com.kyleu.projectile.models.config.UserSettings,notifications:Seq[com.kyleu.projectile.models.notification.Notification],breadcrumbs:Seq[com.kyleu.projectile.models.config.BreadcrumbEntry]):com.kyleu.projectile.models.config.UiConfig"></a><a id="&lt;init&gt;:UiConfig"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#&lt;init&gt;(projectName:String,menu:Seq[com.kyleu.projectile.models.config.NavMenu],urls:com.kyleu.projectile.models.config.NavUrls,html:com.kyleu.projectile.models.config.NavHtml,user:com.kyleu.projectile.models.config.UserSettings,notifications:Seq[com.kyleu.projectile.models.config.Notification],breadcrumbs:Seq[com.kyleu.projectile.models.config.BreadcrumbEntry]):com.kyleu.projectile.models.config.UiConfig" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#&lt;init&gt;(projectName:String,userId:Option[java.util.UUID],menu:Seq[com.kyleu.projectile.models.menu.NavMenu],urls:com.kyleu.projectile.models.config.NavUrls,html:com.kyleu.projectile.models.config.NavHtml,user:com.kyleu.projectile.models.config.UserSettings,notifications:Seq[com.kyleu.projectile.models.notification.Notification],breadcrumbs:Seq[com.kyleu.projectile.models.config.BreadcrumbEntry]):com.kyleu.projectile.models.config.UiConfig" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -276,7 +264,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">UiConfig</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="menu">menu: <span class="extype" name="scala.Seq">Seq</span>[<a href="NavMenu.html" class="extype" name="com.kyleu.projectile.models.config.NavMenu">NavMenu</a>] = <span class="symbol">Nil</span></span>, <span name="urls">urls: <a href="NavUrls.html" class="extype" name="com.kyleu.projectile.models.config.NavUrls">NavUrls</a> = <span class="symbol">NavUrls()</span></span>, <span name="html">html: <a href="NavHtml.html" class="extype" name="com.kyleu.projectile.models.config.NavHtml">NavHtml</a> = <span class="symbol">NavHtml()</span></span>, <span name="user">user: <a href="UserSettings.html" class="extype" name="com.kyleu.projectile.models.config.UserSettings">UserSettings</a> = <span class="symbol"><span class="name"><a href="UserSettings$.html">UserSettings.empty</a></span></span></span>, <span name="notifications">notifications: <span class="extype" name="scala.Seq">Seq</span>[<a href="Notification.html" class="extype" name="com.kyleu.projectile.models.config.Notification">Notification</a>] = <span class="symbol">Nil</span></span>, <span name="breadcrumbs">breadcrumbs: <span class="extype" name="scala.Seq">Seq</span>[<a href="BreadcrumbEntry.html" class="extype" name="com.kyleu.projectile.models.config.BreadcrumbEntry">BreadcrumbEntry</a>] = <span class="symbol">Nil</span></span>)</span>
+        <span class="name">UiConfig</span><span class="params">(<span name="projectName">projectName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userId">userId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.util.UUID">UUID</span>] = <span class="symbol">None</span></span>, <span name="menu">menu: <span class="extype" name="scala.Seq">Seq</span>[<a href="../menu/NavMenu.html" class="extype" name="com.kyleu.projectile.models.menu.NavMenu">NavMenu</a>] = <span class="symbol">Nil</span></span>, <span name="urls">urls: <a href="NavUrls.html" class="extype" name="com.kyleu.projectile.models.config.NavUrls">NavUrls</a> = <span class="symbol">NavUrls()</span></span>, <span name="html">html: <a href="NavHtml.html" class="extype" name="com.kyleu.projectile.models.config.NavHtml">NavHtml</a> = <span class="symbol">NavHtml()</span></span>, <span name="user">user: <a href="UserSettings.html" class="extype" name="com.kyleu.projectile.models.config.UserSettings">UserSettings</a> = <span class="symbol"><span class="name"><a href="UserSettings$.html">UserSettings.empty</a></span></span></span>, <span name="notifications">notifications: <span class="extype" name="scala.Seq">Seq</span>[<a href="../notification/Notification.html" class="extype" name="com.kyleu.projectile.models.notification.Notification">Notification</a>] = <span class="symbol">Nil</span></span>, <span name="breadcrumbs">breadcrumbs: <span class="extype" name="scala.Seq">Seq</span>[<a href="BreadcrumbEntry.html" class="extype" name="com.kyleu.projectile.models.config.BreadcrumbEntry">BreadcrumbEntry</a>] = <span class="symbol">Nil</span></span>)</span>
       </span>
       
       
@@ -484,9 +472,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.kyleu.projectile.models.config.UiConfig#menu" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="menu:Seq[com.kyleu.projectile.models.config.NavMenu]"></a><a id="menu:Seq[NavMenu]"></a>
+      <a id="menu:Seq[com.kyleu.projectile.models.menu.NavMenu]"></a><a id="menu:Seq[NavMenu]"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#menu:Seq[com.kyleu.projectile.models.config.NavMenu]" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#menu:Seq[com.kyleu.projectile.models.menu.NavMenu]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -495,7 +483,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">menu</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="NavMenu.html" class="extype" name="com.kyleu.projectile.models.config.NavMenu">NavMenu</a>]</span>
+        <span class="name">menu</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../menu/NavMenu.html" class="extype" name="com.kyleu.projectile.models.menu.NavMenu">NavMenu</a>]</span>
       </span>
       
       
@@ -516,9 +504,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="com.kyleu.projectile.models.config.UiConfig#notifications" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="notifications:Seq[com.kyleu.projectile.models.config.Notification]"></a><a id="notifications:Seq[Notification]"></a>
+      <a id="notifications:Seq[com.kyleu.projectile.models.notification.Notification]"></a><a id="notifications:Seq[Notification]"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#notifications:Seq[com.kyleu.projectile.models.config.Notification]" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#notifications:Seq[com.kyleu.projectile.models.notification.Notification]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -527,7 +515,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">notifications</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="Notification.html" class="extype" name="com.kyleu.projectile.models.config.Notification">Notification</a>]</span>
+        <span class="name">notifications</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../notification/Notification.html" class="extype" name="com.kyleu.projectile.models.notification.Notification">Notification</a>]</span>
       </span>
       
       
@@ -630,6 +618,22 @@
       </span>
       <span class="symbol">
         <span class="name">user</span><span class="result">: <a href="UserSettings.html" class="extype" name="com.kyleu.projectile.models.config.UserSettings">UserSettings</a></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.models.config.UiConfig#userId" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="userId:Option[java.util.UUID]"></a><a id="userId:Option[UUID]"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/models/config/UiConfig.html#userId:Option[java.util.UUID]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">userId</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.util.UUID">UUID</span>]</span>
       </span>
       
       

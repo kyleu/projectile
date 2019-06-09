@@ -150,8 +150,31 @@ KyleU/projectile
     <li><a href="../codegen/database.html" class="page">Database</a></li>
     <li><a href="../codegen/thrift.html" class="page">Thrift</a></li>
     <li><a href="../codegen/graphql.html" class="page">GraphQL</a></li>
-    <li><a href="../codegen/typescript.html" class="page">TypeScript</a></li>
     <li><a href="../codegen/sbt-plugin.html" class="page">SBT Plugin</a></li>
+  </ul></li>
+  <li><a href="../admin/index.html" class="page">Admin Web Application</a>
+  <ul>
+    <li><a href="../admin/features/audit.html" class="page">Auditing</a></li>
+    <li><a href="../admin/features/components.html" class="page">Components</a></li>
+    <li><a href="../admin/features/migrate.html" class="page">Database Migrations</a></li>
+    <li><a href="../admin/features/email.html" class="page">Email</a></li>
+    <li><a href="../admin/features/encrypt.html" class="page">Encryption</a></li>
+    <li><a href="../admin/features/graphql.html" class="page">GraphQL</a></li>
+    <li><a href="../admin/features/help.html" class="page">Help</a></li>
+    <li><a href="../admin/features/note.html" class="page">Notes</a></li>
+    <li><a href="../admin/features/permission.html" class="page">Permissions</a></li>
+    <li><a href="../admin/features/profile.html" class="page">Profile</a></li>
+    <li><a href="../admin/features/reporting.html" class="page">Reporting</a></li>
+    <li><a href="../admin/features/sandbox.html" class="page">Sandbox Tasks</a></li>
+    <li><a href="../admin/features/task.html" class="page">Scheduled Tasks</a></li>
+    <li><a href="../admin/features/search.html" class="page">Search</a></li>
+    <li><a href="../admin/features/sitemap.html" class="page">Sitemap</a></li>
+    <li><a href="../admin/features/sql.html" class="page">SQL Prompt</a></li>
+    <li><a href="../admin/features/status.html" class="page">Status/Versions</a></li>
+    <li><a href="../admin/features/rest.html" class="page">Swagger/OpenAPI</a></li>
+    <li><a href="../admin/features/process.html" class="page">System Processes</a></li>
+    <li><a href="../admin/features/user.html" class="page">System Users</a></li>
+    <li><a href="../admin/features/websocket.html" class="page">Websockets</a></li>
   </ul></li>
   <li><a href="../libraries/index.html" class="page">Scala Libraries</a>
   <ul>
@@ -169,16 +192,9 @@ KyleU/projectile
   </ul></li>
   <li><a href="../tutorial/index.html" class="active page">Tutorials</a>
   <ul>
-    <li><a href="../tutorial/poker/index.html" class="page">react</a></li>
-    <li><a href="../tutorial/react/index.html" class="page">react</a></li>
+    <li><a href="../tutorial/poker/index.html" class="page">poker</a></li>
     <li><a href="../tutorial/starwars/index.html" class="page">starwars</a></li>
     <li><a href="../tutorial/thrifty/index.html" class="page">thrifty</a></li>
-  </ul></li>
-  <li><a href="../cookbook/index.html" class="page">Cookbook</a>
-  <ul>
-    <li><a href="../cookbook/add.html" class="page">Add Database Types</a></li>
-    <li><a href="../cookbook/remove.html" class="page">Remove Unused Files</a></li>
-    <li><a href="../cookbook/troubleshooting.html" class="page">Troubleshooting</a></li>
   </ul></li>
   <li><a href="../technology.html" class="page">Technology</a></li>
 </ul>
@@ -188,7 +204,6 @@ KyleU/projectile
   <li><a href="../tutorial/index.html#tutorials" class="header">Tutorials</a>
   <ul>
     <li><a href="../tutorial/index.html#" class="header"><a href="poker/index.html">estimate.poker</a></a></li>
-    <li><a href="../tutorial/index.html#" class="header"><a href="react/index.html">react</a></a></li>
     <li><a href="../tutorial/index.html#" class="header"><a href="starwars/index.html">starwars</a></a></li>
     <li><a href="../tutorial/index.html#" class="header"><a href="thrifty/index.html">thrifty</a></a></li>
     <li><a href="../tutorial/index.html#table-of-contents" class="header">Table of contents</a></li>
@@ -200,7 +215,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.8.2
+<i class="md-icon" title="Version">label_outline</i> 1.10.4
 </label>
 </li>
 </ul>
@@ -216,7 +231,6 @@ KyleU/projectile
   <li><a href="../tutorial/index.html#tutorials" class="header">Tutorials</a>
   <ul>
     <li><a href="../tutorial/index.html#" class="header"><a href="poker/index.html">estimate.poker</a></a></li>
-    <li><a href="../tutorial/index.html#" class="header"><a href="react/index.html">react</a></a></li>
     <li><a href="../tutorial/index.html#" class="header"><a href="starwars/index.html">starwars</a></a></li>
     <li><a href="../tutorial/index.html#" class="header"><a href="thrifty/index.html">thrifty</a></a></li>
     <li><a href="../tutorial/index.html#table-of-contents" class="header">Table of contents</a></li>
@@ -234,8 +248,6 @@ KyleU/projectile
 <p>The tutorials exist to help you understand and use Projectile effectively.</p>
 <h2><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="poker/index.html">estimate.poker</a></h2>
 <p>This tutorial uses a PostgreSQL database to create a web app providing real-time <a href="https://en.wikipedia.org/wiki/Planning_poker">planning poker</a> estimation sessions. You can see the final result at <a href="https://estimate.poker">estimate.poker</a>, and view the source <a href="https://github.com/KyleU/estimate">here</a>.</p>
-<h2><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="react/index.html">react</a></h2>
-<p>This tutorial uses the React TypeScript definitions to generates a Scala.js project.</p>
 <h2><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="starwars/index.html">starwars</a></h2>
 <p>This tutorial uses the public Star Wars GraphQL schema and generates Scala clients for hand-written queries.</p>
 <h2><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="thrifty/index.html">thrifty</a></h2>
@@ -243,21 +255,20 @@ KyleU/projectile
 <h2><a href="#table-of-contents" name="table-of-contents" class="anchor"><span class="anchor-link"></span></a>Table of contents</h2>
 <div class="toc ">
 <ul>
-  <li><a href="../tutorial/poker/index.html" class="page">react</a></li>
-  <li><a href="../tutorial/react/index.html" class="page">react</a></li>
+  <li><a href="../tutorial/poker/index.html" class="page">poker</a></li>
   <li><a href="../tutorial/starwars/index.html" class="page">starwars</a></li>
   <li><a href="../tutorial/thrifty/index.html" class="page">thrifty</a></li>
 </ul>
 </div>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.8.2/doc/src/tutorial/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.10.4/doc/src/tutorial/index.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.8.2
+1.10.4
 </span>
 </div>
 </article>
@@ -280,13 +291,13 @@ Admin
 </span>
 </div>
 </a>
-<a href="../tutorial/poker/index.html" title="react" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../tutorial/poker/index.html" title="poker" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-react
+poker
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">

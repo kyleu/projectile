@@ -151,14 +151,6 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="com.kyleu.projectile.models">models</a></dd></dl></div>
     </li><li class="current-entities indented5">
-                        <a class="object" href="Permission$.html" title=""></a>
-                        <a class="class" href="Permission.html" title=""></a>
-                        <a href="Permission.html" title="">Permission</a>
-                      </li><li class="current-entities indented5">
-                        <a class="object" href="Role$.html" title=""></a>
-                        <a class="class" href="Role.html" title=""></a>
-                        <a href="Role.html" title="">Role</a>
-                      </li><li class="current-entities indented5">
                         <a class="object" href="SystemUser$.html" title=""></a>
                         <a class="class" href="SystemUser.html" title=""></a>
                         <a href="SystemUser.html" title="">SystemUser</a>
@@ -199,7 +191,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">UserProfile</span><span class="params">(<span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="role">role: <a href="Role.html" class="extype" name="com.kyleu.projectile.models.user.Role">Role</a></span>, <span name="created">created: <span class="extype" name="java.time.LocalDateTime">LocalDateTime</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">UserProfile</span><span class="params">(<span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="role">role: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="created">created: <span class="extype" name="java.time.LocalDateTime">LocalDateTime</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -255,9 +247,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.models.user.UserProfile#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(id:java.util.UUID,username:String,email:String,role:com.kyleu.projectile.models.user.Role,created:java.time.LocalDateTime):com.kyleu.projectile.models.user.UserProfile"></a><a id="&lt;init&gt;:UserProfile"></a>
+      <a id="&lt;init&gt;(id:java.util.UUID,username:String,email:String,role:String,created:java.time.LocalDateTime):com.kyleu.projectile.models.user.UserProfile"></a><a id="&lt;init&gt;:UserProfile"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/user/UserProfile.html#&lt;init&gt;(id:java.util.UUID,username:String,email:String,role:com.kyleu.projectile.models.user.Role,created:java.time.LocalDateTime):com.kyleu.projectile.models.user.UserProfile" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/user/UserProfile.html#&lt;init&gt;(id:java.util.UUID,username:String,email:String,role:String,created:java.time.LocalDateTime):com.kyleu.projectile.models.user.UserProfile" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -266,7 +258,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">UserProfile</span><span class="params">(<span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="role">role: <a href="Role.html" class="extype" name="com.kyleu.projectile.models.user.Role">Role</a></span>, <span name="created">created: <span class="extype" name="java.time.LocalDateTime">LocalDateTime</span></span>)</span>
+        <span class="name">UserProfile</span><span class="params">(<span name="id">id: <span class="extype" name="java.util.UUID">UUID</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="email">email: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="role">role: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="created">created: <span class="extype" name="java.time.LocalDateTime">LocalDateTime</span></span>)</span>
       </span>
       
       
@@ -544,9 +536,9 @@
               
         </dd></dl></div>
     </li><li name="com.kyleu.projectile.models.user.UserProfile#role" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="role:com.kyleu.projectile.models.user.Role"></a><a id="role:Role"></a>
+      <a id="role:String"></a>
       <span class="permalink">
-      <a href="../../../../../com/kyleu/projectile/models/user/UserProfile.html#role:com.kyleu.projectile.models.user.Role" title="Permalink">
+      <a href="../../../../../com/kyleu/projectile/models/user/UserProfile.html#role:String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -555,7 +547,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">role</span><span class="result">: <a href="Role.html" class="extype" name="com.kyleu.projectile.models.user.Role">Role</a></span>
+        <span class="name">role</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
       

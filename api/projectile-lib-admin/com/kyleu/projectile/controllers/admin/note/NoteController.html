@@ -276,9 +276,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.kyleu.projectile.controllers.admin.note.NoteController#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(app:com.kyleu.projectile.models.Application,svc:com.kyleu.projectile.services.note.NoteService)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.controllers.admin.note.NoteController"></a><a id="&lt;init&gt;:NoteController"></a>
+      <a id="&lt;init&gt;(app:com.kyleu.projectile.models.module.Application,svc:com.kyleu.projectile.services.note.NoteService,db:com.kyleu.projectile.services.database.JdbcDatabase)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.controllers.admin.note.NoteController"></a><a id="&lt;init&gt;:NoteController"></a>
       <span class="permalink">
-      <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#&lt;init&gt;(app:com.kyleu.projectile.models.Application,svc:com.kyleu.projectile.services.note.NoteService)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.controllers.admin.note.NoteController" title="Permalink">
+      <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#&lt;init&gt;(app:com.kyleu.projectile.models.module.Application,svc:com.kyleu.projectile.services.note.NoteService,db:com.kyleu.projectile.services.database.JdbcDatabase)(implicitec:scala.concurrent.ExecutionContext):com.kyleu.projectile.controllers.admin.note.NoteController" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -287,7 +287,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">NoteController</span><span class="params">(<span name="app">app: <a href="../../../models/Application.html" class="extype" name="com.kyleu.projectile.models.Application">Application</a></span>, <span name="svc">svc: <a href="../../../services/note/NoteService.html" class="extype" name="com.kyleu.projectile.services.note.NoteService">NoteService</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
+        <span class="name">NoteController</span><span class="params">(<span name="app">app: <a href="../../../models/module/Application.html" class="extype" name="com.kyleu.projectile.models.module.Application">Application</a></span>, <span name="svc">svc: <a href="../../../services/note/NoteService.html" class="extype" name="com.kyleu.projectile.services.note.NoteService">NoteService</a></span>, <span name="db">db: <span class="extype" name="com.kyleu.projectile.services.database.JdbcDatabase">JdbcDatabase</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
@@ -3556,9 +3556,9 @@
       
       
     </li><li name="com.kyleu.projectile.controllers.admin.note.NoteController#app" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="app:com.kyleu.projectile.models.Application"></a><a id="app:Application"></a>
+      <a id="app:com.kyleu.projectile.models.module.Application"></a><a id="app:Application"></a>
       <span class="permalink">
-      <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#app:com.kyleu.projectile.models.Application" title="Permalink">
+      <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#app:com.kyleu.projectile.models.module.Application" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -3567,7 +3567,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">app</span><span class="result">: <a href="../../../models/Application.html" class="extype" name="com.kyleu.projectile.models.Application">Application</a></span>
+        <span class="name">app</span><span class="result">: <a href="../../../models/module/Application.html" class="extype" name="com.kyleu.projectile.models.module.Application">Application</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.kyleu.projectile.controllers.admin.note.NoteController">NoteController</a> → <a href="../../AuthController.html" class="extype" name="com.kyleu.projectile.controllers.AuthController">AuthController</a></dd></dl></div>
@@ -3707,7 +3707,7 @@
       </span>
       
       
-    </li><li name="com.kyleu.projectile.controllers.ServiceAuthController#csvResponse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.kyleu.projectile.controllers.BaseController#csvResponse" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="csvResponse(filename:String,content:String):play.api.mvc.Result"></a><a id="csvResponse(String,String):Result"></a>
       <span class="permalink">
       <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#csvResponse(filename:String,content:String):play.api.mvc.Result" title="Permalink">
@@ -3722,7 +3722,7 @@
         <span class="name">csvResponse</span><span class="params">(<span name="filename">filename: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="content">content: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Result">Result</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../ServiceAuthController.html" class="extype" name="com.kyleu.projectile.controllers.ServiceAuthController">ServiceAuthController</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../BaseController.html" class="extype" name="com.kyleu.projectile.controllers.BaseController">BaseController</a></dd></dl></div>
     </li><li name="play.api.mvc.BaseControllerHelpers#defaultExecutionContext" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="defaultExecutionContext:scala.concurrent.ExecutionContext"></a><a id="defaultExecutionContext:ExecutionContext"></a>
       <span class="permalink">
@@ -4157,7 +4157,7 @@
       </span>
       
       
-    </li><li name="com.kyleu.projectile.controllers.ServiceAuthController#renderChoice" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="com.kyleu.projectile.controllers.BaseController#renderChoice" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="renderChoice(t:Option[String])(f:String=&gt;play.api.mvc.Result)(implicitrequest:play.api.mvc.RequestHeader):play.api.mvc.Result"></a><a id="renderChoice(Option[String])((String)⇒Result)(RequestHeader):Result"></a>
       <span class="permalink">
       <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#renderChoice(t:Option[String])(f:String=&gt;play.api.mvc.Result)(implicitrequest:play.api.mvc.RequestHeader):play.api.mvc.Result" title="Permalink">
@@ -4172,7 +4172,7 @@
         <span class="name">renderChoice</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span name="f">f: (<span class="extype" name="scala.Predef.String">String</span>) ⇒ <span class="extype" name="play.api.mvc.Result">Result</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="request">request: <span class="extype" name="play.api.mvc.RequestHeader">RequestHeader</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Result">Result</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../ServiceAuthController.html" class="extype" name="com.kyleu.projectile.controllers.ServiceAuthController">ServiceAuthController</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../BaseController.html" class="extype" name="com.kyleu.projectile.controllers.BaseController">BaseController</a></dd></dl></div>
     </li><li name="play.api.mvc.RequestImplicits#request2flash" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="request2flash(implicitrequest:play.api.mvc.RequestHeader):play.api.mvc.Flash"></a><a id="request2flash(RequestHeader):Flash"></a>
       <span class="permalink">
@@ -4453,9 +4453,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ContentTypes</dd></dl></div>
     </li><li name="com.kyleu.projectile.controllers.AuthController#withSession" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="withSession(action:String,admin:Boolean)(block:AuthController.this.Req=&gt;(com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[play.api.mvc.Result]))(implicitec:scala.concurrent.ExecutionContext):play.api.mvc.Action[play.api.mvc.AnyContent]"></a><a id="withSession(String,Boolean)((Req)⇒(TraceData)⇒Future[Result])(ExecutionContext):Action[AnyContent]"></a>
+      <a id="withSession(action:String,permissions:(String,String,String)*)(block:AuthController.this.Req=&gt;(com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[play.api.mvc.Result]))(implicitec:scala.concurrent.ExecutionContext):play.api.mvc.Action[play.api.mvc.AnyContent]"></a><a id="withSession(String,(String,String,String)*)((Req)⇒(TraceData)⇒Future[Result])(ExecutionContext):Action[AnyContent]"></a>
       <span class="permalink">
-      <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#withSession(action:String,admin:Boolean)(block:AuthController.this.Req=&gt;(com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[play.api.mvc.Result]))(implicitec:scala.concurrent.ExecutionContext):play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink">
+      <a href="../../../../../../com/kyleu/projectile/controllers/admin/note/NoteController.html#withSession(action:String,permissions:(String,String,String)*)(block:AuthController.this.Req=&gt;(com.kyleu.projectile.util.tracing.TraceData=&gt;scala.concurrent.Future[play.api.mvc.Result]))(implicitec:scala.concurrent.ExecutionContext):play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -4464,7 +4464,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withSession</span><span class="params">(<span name="action">action: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="admin">admin: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="params">(<span name="block">block: (<a href="#Req=com.mohiva.play.silhouette.api.actions.SecuredRequest[com.kyleu.projectile.models.auth.AuthEnv,play.api.mvc.AnyContent]" class="extmbr" name="com.kyleu.projectile.controllers.admin.note.NoteController.Req">Req</a>) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="play.api.mvc.Result">Result</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
+        <span class="name">withSession</span><span class="params">(<span name="action">action: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="permissions">permissions: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)*</span>)</span><span class="params">(<span name="block">block: (<a href="#Req=com.mohiva.play.silhouette.api.actions.SecuredRequest[com.kyleu.projectile.models.auth.AuthEnv,play.api.mvc.AnyContent]" class="extmbr" name="com.kyleu.projectile.controllers.admin.note.NoteController.Req">Req</a>) ⇒ (<span class="extype" name="com.kyleu.projectile.util.tracing.TraceData">TraceData</span>) ⇒ <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="play.api.mvc.Result">Result</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../../AuthController.html" class="extype" name="com.kyleu.projectile.controllers.AuthController">AuthController</a></dd></dl></div>
