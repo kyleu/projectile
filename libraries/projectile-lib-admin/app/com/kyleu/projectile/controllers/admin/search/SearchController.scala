@@ -15,6 +15,7 @@ import com.kyleu.projectile.services.user.SystemUserService
 import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class SearchController @javax.inject.Inject() (
@@ -44,7 +45,7 @@ class SearchController @javax.inject.Inject() (
   }
 
   private[this] def searchInt(creds: UserCredentials, q: String, id: Int)(implicit timing: TraceData) = {
-    val intSearches = provider.intSearches(app, injector, creds)(q, id)(ec, timing)
+    val intSearches = provider.intSearches(app, injector, creds)(q, id)(ec, timing).map(_.recover { case NonFatal(x) => Seq.empty })
     Future.sequence(intSearches).map(_.flatten)
   }
 
@@ -54,7 +55,7 @@ class SearchController @javax.inject.Inject() (
       if (ApplicationFeature.enabled(ApplicationFeature.Audit)) { Seq(injector.getInstance(classOf[AuditService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched [$q]")).toSeq)) } else { Nil },
       if (ApplicationFeature.enabled(ApplicationFeature.User)) { Seq(injector.getInstance(classOf[SystemUserService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id) -> com.kyleu.projectile.views.html.admin.user.systemUserSearchResult(model, s"System User [${model.id}] matched [$q]")).toSeq)) } else { Nil },
       if (ApplicationFeature.enabled(ApplicationFeature.Task)) { Seq(injector.getInstance(classOf[ScheduledTaskRunService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id) -> com.kyleu.projectile.views.html.admin.task.scheduledTaskRunSearchResult(model, s"Scheduled Task Run [${model.id}] matched [$q]")).toSeq)) } else { Nil }
-    ).flatten
+    ).flatten.map(_.recover { case NonFatal(x) => Seq.empty })
 
     Future.sequence(uuidSearches).map(_.flatten)
   }
@@ -65,7 +66,7 @@ class SearchController @javax.inject.Inject() (
       if (ApplicationFeature.enabled(ApplicationFeature.Audit)) { Seq(injector.getInstance(classOf[AuditService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched [$q]")))) } else { Nil },
       if (ApplicationFeature.enabled(ApplicationFeature.User)) { Seq(injector.getInstance(classOf[SystemUserService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id) -> com.kyleu.projectile.views.html.admin.user.systemUserSearchResult(model, s"System User [${model.id}] matched [$q]")))) } else { Nil },
       if (ApplicationFeature.enabled(ApplicationFeature.Task)) { Seq(injector.getInstance(classOf[ScheduledTaskRunService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id) -> com.kyleu.projectile.views.html.admin.task.scheduledTaskRunSearchResult(model, s"Scheduled Task Run [${model.id}] matched [$q]")))) } else { Nil }
-    ).flatten
+    ).flatten.map(_.recover { case NonFatal(x) => Seq.empty })
     Future.sequence(stringSearches).map(_.flatten)
   }
 }

@@ -88,7 +88,9 @@ class SystemUserService @javax.inject.Inject() (
   def countByProvider(creds: Credentials, provider: String)(implicit trace: TraceData) = traceF("count.by.provider") { td =>
     db.queryF(SystemUserQueries.CountByProvider(provider))(td)
   }
-  def getByProvider(creds: Credentials, provider: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = traceF("get.by.provider") { td =>
+  def getByProvider(
+    creds: Credentials, provider: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = traceF("get.by.provider") { td =>
     db.queryF(SystemUserQueries.GetByProvider(provider, orderBys, limit, offset))(td)
   }
   def getByProviderSeq(creds: Credentials, providerSeq: Seq[String])(implicit trace: TraceData) = if (providerSeq.isEmpty) {
@@ -108,7 +110,9 @@ class SystemUserService @javax.inject.Inject() (
   def isUsernameInUse(creds: Credentials, name: String)(implicit trace: TraceData) = tracing.trace("username.in.use") { td =>
     db.queryF(UserSearchQueries.IsUsernameInUse(name))(td)
   }
-  def getByUsername(creds: Credentials, username: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = traceF("get.by.username") { td =>
+  def getByUsername(
+    creds: Credentials, username: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = traceF("get.by.username") { td =>
     db.queryF(SystemUserQueries.GetByUsername(username, orderBys, limit, offset))(td)
   }
   def getByUsernameSeq(creds: Credentials, usernameSeq: Seq[String])(implicit trace: TraceData) = if (usernameSeq.isEmpty) {
@@ -145,6 +149,7 @@ class SystemUserService @javax.inject.Inject() (
     traceF("remove")(td => getByPrimaryKey(creds, id)(td).flatMap {
       case Some(current) =>
         AuditHelper.onRemove("SystemUser", Seq(id.toString), current.toDataFields, creds)
+        UserCache.removeUser(id)
         db.executeF(SystemUserQueries.removeByPrimaryKey(id))(td).map(_ => current)
       case None => throw new IllegalStateException(s"Cannot find SystemUser matching [$id]")
     })
@@ -165,6 +170,7 @@ class SystemUserService @javax.inject.Inject() (
         getByPrimaryKey(creds, id)(td).map {
           case Some(newModel) =>
             AuditHelper.onUpdate("SystemUser", Seq(id.toString), current.toDataFields, fields, creds)
+            UserCache.cacheUser(newModel)
             newModel -> s"Updated [${fields.size}] fields of System User [$id]"
           case None => throw new IllegalStateException(s"Cannot find SystemUser matching [$id]")
         }

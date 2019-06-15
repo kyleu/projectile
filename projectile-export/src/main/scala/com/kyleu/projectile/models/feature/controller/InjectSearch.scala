@@ -31,13 +31,22 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
     def searchIntFieldsFor(s: Seq[String]) = {
       val intModels = markers.getOrElse("int-search", Nil).map { s =>
         InjectSearchParams(config, config.getModel(s, "search ints"))
-      }.sortBy(_.model.className)
-      val newLines = if (intModels.isEmpty) { Nil } else {
-        "Seq(" +: intModels.map { m =>
-          val comma = if (intModels.lastOption.contains(m)) { "" } else { "," }
+      }
+      val longModels = markers.getOrElse("long-search", Nil).map { s =>
+        InjectSearchParams(config, config.getModel(s, "search ints"))
+      }
+      val numModels = (intModels ++ longModels).sortBy(_.model.className)
+      val newLines = if (numModels.isEmpty) { Nil } else {
+        "Seq(" +: numModels.map { m =>
+          val comma = if (numModels.lastOption.contains(m)) { "" } else { "," }
           val cs = m.model.pkFields.map(f => "model." + f.propertyName)
           val route = s"${TwirlHelper.routesClass(config, m.model)}.view(${cs.mkString(", ")})"
-          s"  ${m.model.injectedService(config)}.getByPrimaryKey(creds, id).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          val svc = m.model.injectedService(config)
+          if (longModels.contains(m)) {
+            s"  $svc.getByPrimaryKey(creds, id.toLong).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          } else {
+            s"  $svc.getByPrimaryKey(creds, id).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          }
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "int searches")

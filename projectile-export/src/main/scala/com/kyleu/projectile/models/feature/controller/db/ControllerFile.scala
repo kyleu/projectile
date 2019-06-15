@@ -38,11 +38,12 @@ object ControllerFile {
     file.addImport(model.modelPackage(config), model.className + "Result")
 
     if (model.propertyName != "audit") {
-      if (model.pkFields.nonEmpty) { file.addMarkers("string-search", model.key) }
+      if (model.searchFields.exists(_.t == FieldType.StringType)) { file.addMarkers("string-search", model.key) }
       model.pkFields match {
         case sole :: Nil => sole.t match {
           case FieldType.UuidType => file.addMarkers("uuid-search", model.key)
           case FieldType.IntegerType => file.addMarkers("int-search", model.key)
+          case FieldType.LongType => file.addMarkers("long-search", model.key)
           case _ => // noop
         }
         case _ => // noop

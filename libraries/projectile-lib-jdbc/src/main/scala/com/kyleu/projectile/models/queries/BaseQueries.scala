@@ -8,6 +8,7 @@ abstract class BaseQueries[T <: Product](val key: String, val tableName: String)
 
   protected def pkColumns = Seq.empty[String]
   protected def searchColumns: Seq[String] = Nil
+  protected def stringSearchColumns = searchColumns.flatMap(c => fields.find(_.col == c).filter(_.typ == DatabaseFieldType.StringType)).map(_.col)
   protected def fromRow(row: Row): T
 
   protected def cleanData(any: Any, field: DatabaseField) = any match {
