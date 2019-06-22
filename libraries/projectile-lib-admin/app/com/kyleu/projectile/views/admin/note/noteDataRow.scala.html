@@ -1,4 +1,4 @@
-@(model: com.kyleu.projectile.models.note.Note)<tr>
+@(model: com.kyleu.projectile.models.note.Note, additional: Option[Html])<tr>
   <td>
     <a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(model.id)">@model.id</a>
   </td>
@@ -20,4 +20,5 @@
   <td>
     @model.created
   </td>
+  @additional
 </tr>

@@ -1,6 +1,7 @@
 @(
     cols: Seq[(String, String)], rows: Seq[Html], modelPlural: String,
-    orderByUrl: Option[(Option[String], Boolean) => Call], orderBy: Option[String], orderAsc: Boolean
+    orderByUrl: Option[(Option[String], Boolean) => Call], orderBy: Option[String], orderAsc: Boolean,
+    additionalHeader: Option[Html] = None
 )<table class="bordered highlight responsive-table data-table">
   <thead>
     <tr>
@@ -20,6 +21,7 @@
           <th>@col._2</th>
         }
       }
+      @additionalHeader
     </tr>
   </thead>
   <tbody>

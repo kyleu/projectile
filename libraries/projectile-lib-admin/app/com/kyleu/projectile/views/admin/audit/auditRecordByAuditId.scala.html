@@ -1,28 +1,31 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, auditId: java.util.UUID, modelSeq: Seq[com.kyleu.projectile.models.audit.AuditRecord], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
-    implicit flash: Flash
+    implicit request: Request[AnyContent], flash: Flash
 )
-@com.kyleu.projectile.views.html.admin.explore.list(
-  cfg = cfg,
-  model = "Audit Record",
-  modelPlural = "Audit Records",
-  icon = "storage",
-  cols = Seq(
-    "id" -> "Id",
-    "t" -> "T",
-    "pk" -> "Pk"
-  ),
-  orderBy = orderBy,
-  orderAsc = orderAsc,
-  totalCount = None,
-  rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.audit.auditRecordDataRow(model)),
-  calls = com.kyleu.projectile.models.web.ListCalls(
-    orderBy = Some(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, _, _, Some(limit), Some(0))),
-    search = None,
-    next = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, orderBy, orderAsc, Some(limit), Some(offset + limit)),
-    prev = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, orderBy, orderAsc, Some(limit), Some(offset - limit)),
-  ),
-  limit = limit,
-  offset = offset,
-  q = None,
-  fullUI = false
-)
+@defining(com.kyleu.projectile.services.augment.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>
+  @com.kyleu.projectile.views.html.admin.explore.list(
+    cfg = cfg,
+    model = "Audit Record",
+    modelPlural = "Audit Records",
+    icon = "storage",
+    cols = Seq(
+      "id" -> "Id",
+      "t" -> "T",
+      "pk" -> "Pk"
+    ),
+    orderBy = orderBy,
+    orderAsc = orderAsc,
+    totalCount = None,
+    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.audit.auditRecordDataRow(model, additional = aug._2.get(model).flatten)),
+    calls = com.kyleu.projectile.models.web.ListCalls(
+      orderBy = Some(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, _, _, Some(limit), Some(0))),
+      search = None,
+      next = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+      prev = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.byAuditId(auditId, orderBy, orderAsc, Some(limit), Some(offset - limit)),
+    ),
+    limit = limit,
+    offset = offset,
+    q = None,
+    additionalHeader = aug._1,
+    fullUI = false
+  )
+}

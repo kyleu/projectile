@@ -13,7 +13,8 @@
     offset: Int = 0,
     section: String = "explore",
     q: Option[String] = None,
-    fullUI: Boolean = true
+    fullUI: Boolean = true,
+    additionalHeader: Option[Html] = None
 )(
     implicit flash: Flash
 )@if(fullUI) {
@@ -41,7 +42,7 @@
           </div>
         }
         <div style="overflow: auto;">
-          @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc)
+          @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc, additionalHeader)
         </div>
       </div>
       <div>

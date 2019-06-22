@@ -1,4 +1,4 @@
-@(model: com.kyleu.projectile.models.audit.Audit)<tr>
+@(model: com.kyleu.projectile.models.audit.Audit, additional: Option[Html])<tr>
   <td>
     <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id)">@model.id</a>
   </td>
@@ -22,4 +22,5 @@
       </a>
     }
   </td>
+  @additional
 </tr>

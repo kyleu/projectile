@@ -1,31 +1,34 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.note.Note], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
-    implicit flash: Flash
+    implicit request: Request[AnyContent], flash: Flash
 )
-@com.kyleu.projectile.views.html.admin.explore.list(
-  cfg = cfg,
-  model = "Note",
-  modelPlural = "Notes",
-  icon = com.kyleu.projectile.models.web.InternalIcons.note,
-  cols = Seq(
-    "id" -> "Id",
-    "relType" -> "Rel Type",
-    "relPk" -> "Rel Pk",
-    "text" -> "Text",
-    "author" -> "Author",
-    "created" -> "Created"
-  ),
-  totalCount = totalCount,
-  rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.note.noteDataRow(model)),
-  orderBy = orderBy,
-  orderAsc = orderAsc,
-  calls = com.kyleu.projectile.models.web.ListCalls(
-    newCall = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.createForm()),
-    orderBy = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, _, _, Some(limit), Some(0))),
-    search = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(None, orderBy, orderAsc, Some(limit), None)),
-    next = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, orderBy, orderAsc, Some(limit), Some(offset + limit)),
-    prev = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, orderBy, orderAsc, Some(limit), Some(offset - limit))
-  ),
-  limit = limit,
-  offset = offset,
-  q = q
-)
+@defining(com.kyleu.projectile.services.augment.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>
+  @com.kyleu.projectile.views.html.admin.explore.list(
+    cfg = cfg,
+    model = "Note",
+    modelPlural = "Notes",
+    icon = com.kyleu.projectile.models.web.InternalIcons.note,
+    cols = Seq(
+      "id" -> "Id",
+      "relType" -> "Rel Type",
+      "relPk" -> "Rel Pk",
+      "text" -> "Text",
+      "author" -> "Author",
+      "created" -> "Created"
+    ),
+    totalCount = totalCount,
+    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.note.noteDataRow(model, additional = aug._2.get(model).flatten)),
+    orderBy = orderBy,
+    orderAsc = orderAsc,
+    calls = com.kyleu.projectile.models.web.ListCalls(
+      newCall = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.createForm()),
+      orderBy = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, _, _, Some(limit), Some(0))),
+      search = Some(com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(None, orderBy, orderAsc, Some(limit), None)),
+      next = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+      prev = com.kyleu.projectile.controllers.admin.note.routes.NoteController.list(q, orderBy, orderAsc, Some(limit), Some(offset - limit))
+    ),
+    limit = limit,
+    offset = offset,
+    q = q,
+    additionalHeader = aug._1
+  )
+}

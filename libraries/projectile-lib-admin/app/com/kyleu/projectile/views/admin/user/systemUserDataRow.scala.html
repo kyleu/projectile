@@ -1,4 +1,4 @@
-@(model: com.kyleu.projectile.models.user.SystemUser)<tr>
+@(model: com.kyleu.projectile.models.user.SystemUser, additional: Option[Html])<tr>
   <td>
     <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id)">@model.id</a>
   </td>
@@ -11,4 +11,5 @@
   <td>
     @model.key
   </td>
+  @additional
 </tr>

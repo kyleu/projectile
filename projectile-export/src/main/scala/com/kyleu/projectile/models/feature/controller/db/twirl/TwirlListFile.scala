@@ -14,9 +14,11 @@ object TwirlListFile {
 
     val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     listFile.add(s"@($finalArgs, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
-    listFile.add(s"implicit request: Request[AnyContent], session: Session, flash: Flash")
+    listFile.add(s"implicit request: Request[AnyContent], flash: Flash")
     listFile.add(")", -2)
 
+    val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
+    listFile.add(s"@defining($imp.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>", 1)
     listFile.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.admin.explore.list(", 1)
     listFile.add("cfg = cfg,")
     listFile.add(s"""model = "${model.title}",""")
@@ -30,7 +32,7 @@ object TwirlListFile {
     listFile.add("),", -1)
     listFile.add("totalCount = totalCount,")
     val viewPkg = model.viewHtmlPackage(config).mkString(".")
-    listFile.add(s"rows = modelSeq.map(model => $viewPkg.${model.propertyName}DataRow(model)),")
+    listFile.add(s"rows = modelSeq.map(model => $viewPkg.${model.propertyName}DataRow(model, additional = aug._2.get(model).flatten)),")
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
     listFile.add(s"calls = $listCalls(", 1)
@@ -43,8 +45,10 @@ object TwirlListFile {
     listFile.add("),", -1)
     listFile.add("limit = limit,")
     listFile.add("offset = offset,")
-    listFile.add("q = q")
+    listFile.add("q = q,")
+    listFile.add("additionalHeader = aug._1")
     listFile.add(")", -1)
+    listFile.add("}", -1)
 
     listFile
   }
