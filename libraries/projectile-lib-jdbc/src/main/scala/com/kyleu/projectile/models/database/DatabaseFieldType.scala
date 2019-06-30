@@ -113,19 +113,19 @@ object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[Datab
     override def coerce(x: Any) = binaryCoerce(x)
   }
   case object IntArrayType extends DatabaseFieldType[List[Int]]("intArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].map(intCoerce).toList
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option.apply(x).map(intCoerce)).toList
   }
   case object LongArrayType extends DatabaseFieldType[List[Long]]("longArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Long]].toList
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Long]].flatMap(x => Option.apply(x)).toList
   }
   final case class EnumArrayType[T <: StringEnumEntry](t: StringEnum[T]) extends DatabaseFieldType[List[T]]("enumArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[java.util.UUID]].map(x => t.withValue(x.toString)).toList
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option(x).map(_.toString)).map(t.withValue).toList
   }
   case object StringArrayType extends DatabaseFieldType[List[String]]("stringArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].map(_.toString).toList
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].map(s => Option(s).map(_.toString)).toList.flatten
   }
   case object UuidArrayType extends DatabaseFieldType[List[java.util.UUID]]("uuidArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[java.util.UUID]].toList
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[java.util.UUID]].toList.map(Option.apply).flatten
   }
 
   case object UnknownType extends DatabaseFieldType[String]("unknown") {

@@ -41,16 +41,13 @@ object DateUtils {
   def niceDateTime(dt: LocalDateTime) = s"${niceDate(dt.toLocalDate)} ${niceTime(dt.toLocalTime)} UTC"
   def niceDateTimeZoned(dt: ZonedDateTime) = s"${niceDate(dt.toLocalDate)} ${niceTime(dt.toLocalTime)} ${dt.getZone.getId}"
 
-  private[this] val dFmt = new SimpleDateFormat("yyyy-MM-dd")
-  def sqlDateFromString(s: String) = new java.sql.Date(dFmt.parse(s).getTime)
-
-  private[this] val tFmt = new SimpleDateFormat("hh:mm:ss")
-  def sqlTimeFromString(s: String) = new java.sql.Time(tFmt.parse(s).getTime)
-
   private[this] val dtFmtIso = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+  private[this] val dtFmtMillis = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
   private[this] val dtFmtDefault = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-  private[this] val dtFmtStd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
   private[this] val dtFmtAmPm = new SimpleDateFormat("yyyy-MM-dd hh:mma")
+  private[this] val dtFmtNoSec = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+  private[this] val dtFmtStd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+  private[this] val dtFmts = Seq(dtFmtIso, dtFmtMillis, dtFmtDefault, dtFmtAmPm, dtFmtNoSec, dtFmtStd)
 
   def parseIsoOffsetDateTime(s: String): Option[ZonedDateTime] = {
     try {
@@ -64,15 +61,9 @@ object DateUtils {
     parseIsoOffsetDateTime(s).map(zdt => new java.sql.Timestamp(zdt.toInstant.toEpochMilli))
   }
 
-  def fromString(s: String) = {
-    def parse(sdf: SimpleDateFormat) = try {
-      Some(fromMillis(sdf.parse(s).getTime))
-    } catch {
-      case _: java.text.ParseException => None
-    }
-    parse(dtFmtIso).orElse(parse(dtFmtDefault)).orElse(parse(dtFmtStd)).orElse(parse(dtFmtAmPm))
-      .getOrElse(throw new IllegalStateException(s"Cannot parse date/time from [$s]"))
-  }
+  def fromString(s: String) = dtFmts.foldLeft(Option.empty[LocalDateTime]) { (l, r) =>
+    l.orElse(try { Some(fromMillis(r.parse(s).getTime)) } catch { case _: java.text.ParseException => None })
+  }.getOrElse(throw new IllegalStateException(s"Cannot parse date/time from [$s]"))
 
   def sqlDateTimeFromString(s: String): java.sql.Timestamp = {
     sqlTimestampFromIsoOffsetDateTime(s).getOrElse(new java.sql.Timestamp(toMillis(fromString(s))))
