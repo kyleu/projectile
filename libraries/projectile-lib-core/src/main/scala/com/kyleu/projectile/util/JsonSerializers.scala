@@ -1,7 +1,5 @@
 package com.kyleu.projectile.util
 
-import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
-
 import io.circe.JsonObject
 import io.circe.generic.extras
 import shapeless.Lazy
@@ -15,19 +13,9 @@ object JsonSerializers {
 
   type Json = io.circe.Json
 
-  implicit def encodeZonedDateTime: Encoder[ZonedDateTime] = io.circe.java8.time.encodeZonedDateTime
-  implicit def encodeLocalDateTime: Encoder[LocalDateTime] = io.circe.java8.time.encodeLocalDateTime
-  implicit def encodeLocalDate: Encoder[LocalDate] = io.circe.java8.time.encodeLocalDate
-  implicit def encodeLocalTime: Encoder[LocalTime] = io.circe.java8.time.encodeLocalTime
-
-  implicit def decodeZonedDateTime: Decoder[ZonedDateTime] = io.circe.java8.time.decodeZonedDateTime
-  implicit def decodeLocalDateTime: Decoder[LocalDateTime] = io.circe.java8.time.decodeLocalDateTime
-  implicit def decodeLocalDate: Decoder[LocalDate] = io.circe.java8.time.decodeLocalDate
-  implicit def decodeLocalTime: Decoder[LocalTime] = io.circe.java8.time.decodeLocalTime
-
   implicit val circeConfiguration: extras.Configuration = extras.Configuration.default.withDefaults
   def deriveDecoder[A](implicit decode: Lazy[extras.decoding.ConfiguredDecoder[A]]) = extras.semiauto.deriveDecoder[A]
-  def deriveEncoder[A](implicit encode: Lazy[extras.encoding.ConfiguredObjectEncoder[A]]) = extras.semiauto.deriveEncoder[A]
+  def deriveEncoder[A](implicit encode: Lazy[extras.encoding.ConfiguredAsObjectEncoder[A]]) = extras.semiauto.deriveEncoder[A]
 
   // implicit val magnoliaConfiguration: io.circe.magnolia.configured.Configuration = io.circe.magnolia.configured.Configuration.default.withDefaults
   // def deriveDecoder[A] = io.circe.magnolia.configured.decoder.semiauto.deriveConfiguredMagnoliaDecoder[A]

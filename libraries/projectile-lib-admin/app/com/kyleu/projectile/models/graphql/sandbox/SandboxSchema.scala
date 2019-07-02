@@ -5,6 +5,7 @@ import com.kyleu.projectile.graphql.GraphQLUtils.deriveObjectType
 import com.kyleu.projectile.models.sandbox.SandboxTask
 import sangria.macros.derive.ObjectTypeName
 import sangria.schema.{Argument, Field, ListType, ObjectType, OptionInputType, StringType, fields}
+import com.kyleu.projectile.graphql.GraphQLUtils._
 
 object SandboxSchema {
   val sandboxTaskArg = Argument("task", StringType)

@@ -3,9 +3,7 @@ package com.kyleu.projectile.models.task
 import java.time.LocalDateTime
 
 import com.kyleu.projectile.util.DateUtils
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import io.circe.java8.time._
-import io.circe.{Decoder, Encoder}
+import com.kyleu.projectile.util.JsonSerializers._
 
 object ScheduledTaskOutput {
   implicit val jsonEncoder: Encoder[ScheduledTaskOutput] = deriveEncoder

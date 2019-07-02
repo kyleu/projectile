@@ -7,8 +7,11 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.11.4"
+    val app = "1.11.6"
     val scala = "2.12.8"
+    // val scala = "2.13.0"
+    // Requires:
+    // - enumeratum-circe
   }
 
   private[this] val profilingEnabled = false

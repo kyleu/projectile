@@ -3,4 +3,4 @@
 ## Sandbox Tasks: Mostly a developer tool, this is a framework to run ad-hoc tasks and explore the results
 
 GET        /            com.kyleu.projectile.controllers.admin.sandbox.SandboxController.list
-GET        /:key        com.kyleu.projectile.controllers.admin.sandbox.SandboxController.run(key, arg: Option[String] ?= None)
+GET        /:key        com.kyleu.projectile.controllers.admin.sandbox.SandboxController.run(key, arg: Option[String] ?= None, t: Option[String] ?= None)

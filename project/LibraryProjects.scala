@@ -16,12 +16,12 @@ object LibraryProjects {
   ).settings(Common.settings: _*).settings(
     description := "Classes and utilities shared between Scala and Scala.js",
     libraryDependencies ++= {
-      val enumeratum = "com.beachape" %%% "enumeratum-circe" % Utils.enumeratumCirceVersion
-      val boopickle = "me.chrons" %%% "boopickle" % Utils.booPickleVersion
+      val enumeratum = "com.beachape" %%% "enumeratum-circe" % Serialization.enumeratumCirceVersion
+      val boopickle = "io.suzaku" %%% "boopickle" % Serialization.booPickleVersion
       Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum :+ boopickle
     },
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort, "com.kyleu.projectile.util").taskValue
-  ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-M13").disablePlugins(AssemblyPlugin)
+  ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC3").disablePlugins(AssemblyPlugin)
 
   lazy val `projectile-lib-core-jvm` = `projectile-lib-core`.jvm.withId("projectile-lib-core")
   lazy val `projectile-lib-core-js` = `projectile-lib-core`.js.withId("projectile-lib-core-js")
@@ -68,7 +68,7 @@ object LibraryProjects {
 
   lazy val `projectile-lib-graphql` = libraryProject(project in file("libraries/projectile-lib-graphql")).settings(
     description := "Common GraphQL classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria, Utils.guice)
+    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria)
   ).dependsOn(`projectile-lib-service`)
 
   lazy val `projectile-lib-scalajs` = libraryProject(project in file("libraries/projectile-lib-scalajs")).settings(
@@ -76,7 +76,7 @@ object LibraryProjects {
     libraryDependencies ++= {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.5"
-      val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC2"
+      val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC3"
       val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.7"
       Seq(jQuery, javaTime, jsDom)
     }

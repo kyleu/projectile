@@ -7,7 +7,7 @@ import com.kyleu.projectile.util.tracing.TraceData
 abstract class ServiceAuthController[T](val svc: ModelServiceHelper[T]) extends AuthController(svc.key) {
   protected def search(q: Option[String], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int])(implicit request: Req, traceData: TraceData) = {
     q match {
-      case Some(query) if query.nonEmpty => svc.search(request, q, Nil, orderBys, limit.orElse(Some(100)), offset)
+      case Some(query) if query.trim.nonEmpty => svc.search(request, q.map(_.trim), Nil, orderBys, limit.orElse(Some(100)), offset)
       case _ => svc.getAll(request, Nil, orderBys, limit.orElse(Some(100)), offset)
     }
   }
@@ -16,7 +16,7 @@ abstract class ServiceAuthController[T](val svc: ModelServiceHelper[T]) extends 
     q: Option[String], orderBys: Seq[OrderBy], limit: Option[Int], offset: Option[Int]
   )(implicit request: Req, traceData: TraceData) = {
     q match {
-      case Some(query) if query.nonEmpty => svc.searchWithCount(request, q, Nil, orderBys, limit.orElse(Some(100)), offset)
+      case Some(query) if query.trim.nonEmpty => svc.searchWithCount(request, q.map(_.trim), Nil, orderBys, limit.orElse(Some(100)), offset)
       case _ => svc.getAllWithCount(request, Nil, orderBys, limit.orElse(Some(100)), offset)
     }
   }

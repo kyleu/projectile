@@ -11,6 +11,7 @@ import com.kyleu.projectile.models.sandbox.SandboxTask
 import com.kyleu.projectile.models.web.InternalIcons
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.util.JsonSerializers._
+import play.api.http.MimeTypes
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,14 +31,14 @@ class SandboxController @javax.inject.Inject() (
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.sandbox.sandboxList(cfg)))
   }
 
-  def run(key: String, arg: Option[String]) = withSession(key, ("tools", "Sandbox", "run")) { implicit request => implicit td =>
+  def run(key: String, arg: Option[String], t: Option[String]) = withSession(key, ("tools", "Sandbox", "run")) { implicit request => implicit td =>
     val sandbox = SandboxTask.get(key)
     sandbox.run(SandboxTask.Config(app.tracing, injector, arg)).map { result =>
-      render {
-        case Accepts.Html() =>
+      renderChoice(t) {
+        case MimeTypes.HTML =>
           val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sandbox")
           Ok(com.kyleu.projectile.views.html.admin.sandbox.sandboxRun(cfg, result))
-        case Accepts.Json() => Ok(result.asJson)
+        case MimeTypes.JSON => Ok(result.asJson)
       }
     }
   }

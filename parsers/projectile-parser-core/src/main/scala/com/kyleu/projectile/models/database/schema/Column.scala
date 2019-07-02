@@ -12,7 +12,6 @@ case class Column(
     name: String,
     description: Option[String] = None,
     definition: Option[String] = None,
-    primaryKey: Boolean = false,
     notNull: Boolean = false,
     autoIncrement: Boolean = false,
     columnType: FieldType = FieldType.StringType,

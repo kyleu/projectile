@@ -53,7 +53,7 @@ object ControllerUtils {
         case None => Some(form.getOrElse(f + "-time", throw new IllegalStateException(s"Cannot find value for included field [$f]")))
       }
     }
-    fields.map(f => DataField(f, valFor(f)))
+    fields.map(f => DataField(f, valFor(f).map(_.trim)))
   }
 
   lazy val commonScripts = Seq(Assets.path("vendor/vendors.min.js"), Assets.path("vendor/plugins.min.js"))
