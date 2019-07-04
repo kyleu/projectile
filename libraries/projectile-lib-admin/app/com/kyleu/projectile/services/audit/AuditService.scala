@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.google.inject.name.Named
 import com.kyleu.projectile.models.audit.{Audit, AuditRecord}
+import com.kyleu.projectile.models.module.ApplicationFeature
 import com.kyleu.projectile.models.queries.audit.{AuditQueries, AuditRecordQueries}
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
@@ -21,7 +22,11 @@ class AuditService @javax.inject.Inject() (
     override val tracing: TracingService
 )(implicit ec: ExecutionContext) extends ModelServiceHelper[Audit]("audit") {
   def getByModel(creds: Credentials, model: String, pk: Any*)(implicit trace: TraceData) = {
-    db.queryF(AuditRecordQueries.GetByRelation(model, pk.map(_.toString).toList))
+    if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
+      db.queryF(AuditRecordQueries.GetByRelation(model, pk.map(_.toString).toList))
+    } else {
+      Future.successful(Nil)
+    }
   }
 
   def callback(a: Audit, records: Seq[AuditRecord])(implicit trace: TraceData) = {

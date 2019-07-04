@@ -1,18 +1,20 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, notes: Seq[com.kyleu.projectile.models.note.Note], model: String, title: String, pk: Any*)
-@com.kyleu.projectile.views.html.layout.card(None) {
-  <div class="right"><a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.addForm(model, pk.mkString("/"))">Add Note</a></div>
-  @if(notes.isEmpty) {
-    <i>No notes available for this @{title}.</i>
-  } else {
-    @notes.size @if(notes.lengthCompare(1) == 0) { note } else { notes } available for this @model.
-    <ul class="collection">
-      @notes.map { note =>
-        <li class="collection-item">
-          <div class="right">@com.kyleu.projectile.util.DateUtils.niceDateTime(note.created)</div>
-          <a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(note.id)">@note.id</a>
-          <pre>@note.text</pre>
-        </li>
-      }
-    </ul>
+@if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Note)) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="right"><a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.addForm(model, pk.mkString("/"))">Add Note</a></div>
+    @if(notes.isEmpty) {
+      <i>No notes available for this @{title}.</i>
+    } else {
+      @notes.size @if(notes.lengthCompare(1) == 0) { note } else { notes } available for this @model.
+      <ul class="collection">
+        @notes.map { note =>
+          <li class="collection-item">
+            <div class="right">@com.kyleu.projectile.util.DateUtils.niceDateTime(note.created)</div>
+            <a href="@com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(note.id)">@note.id</a>
+            <pre>@note.text</pre>
+          </li>
+        }
+      </ul>
+    }
   }
 }

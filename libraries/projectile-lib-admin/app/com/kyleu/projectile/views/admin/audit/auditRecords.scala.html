@@ -1,34 +1,36 @@
 @(records: Seq[com.kyleu.projectile.models.audit.AuditRecord], model: String, title: String, pk: Any*)
-@com.kyleu.projectile.views.html.layout.card(None) {
-  @if(records.isEmpty) {
-    <i>
-      No audit records available for this @title
-    </i>
-  } else {
-    @records.size @if(records.lengthCompare(1) == 0) { audit record } else { audit records } available for this @title
-    <ul class="collection">
-      @records.map { record =>
-        <li class="collection-item">
-          <div class="right">
-            Record <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(record.id)">@record.id</a>
-          </div>
-          Audit <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(record.auditId)">@record.auditId</a>
-          <div style="padding: 12px;">
-            @if(record.changes.isEmpty) {
-              <em>No changes</em>
-            } else {
-              @record.changes.map { c =>
-                <div class="chip">
-                  <strong style="font-size: 120%;">@c.k: </strong>
-                  <span style="color: darkred;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
-                  -&gt;
-                  <span style="color: darkgreen;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
-                </div>
+@if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Audit)) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    @if(records.isEmpty) {
+      <i>
+        No audit records available for this @title
+      </i>
+    } else {
+      @records.size @if(records.lengthCompare(1) == 0) { audit record } else { audit records } available for this @title
+      <ul class="collection">
+        @records.map { record =>
+          <li class="collection-item">
+            <div class="right">
+              Record <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(record.id)">@record.id</a>
+            </div>
+            Audit <a href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(record.auditId)">@record.auditId</a>
+            <div style="padding: 12px;">
+              @if(record.changes.isEmpty) {
+                <em>No changes</em>
+              } else {
+                @record.changes.map { c =>
+                  <div class="chip">
+                    <strong style="font-size: 120%;">@c.k: </strong>
+                    <span style="color: darkred;">@c.o.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+                    -&gt;
+                    <span style="color: darkgreen;">@c.n.getOrElse(com.kyleu.projectile.util.NullUtils.str)</span>
+                  </div>
+                }
               }
-            }
-          </div>
-        </li>
-      }
-    </ul>
+            </div>
+          </li>
+        }
+      </ul>
+    }
   }
 }

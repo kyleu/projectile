@@ -2,7 +2,7 @@ scalacOptions ++= Seq( "-unchecked", "-deprecation" )
 
 // Web
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.3")
-addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.4.1")
+addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.4.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.4")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.13")
@@ -31,7 +31,7 @@ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0") // scalastyl
 addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.1") // scalariformFormat
 
 // Documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.4.4" exclude("com.typesafe.akka", "akka-"))
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.6.0" exclude("com.typesafe.akka", "akka-"))
 addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.6.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2" exclude("com.lightbend.paradox", "sbt-paradox"))
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.3")

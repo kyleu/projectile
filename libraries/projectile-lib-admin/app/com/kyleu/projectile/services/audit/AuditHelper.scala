@@ -5,6 +5,7 @@ import java.util.UUID
 
 import com.kyleu.projectile.models.audit.{Audit, AuditField, AuditRecord}
 import com.kyleu.projectile.models.auth.UserCredentials
+import com.kyleu.projectile.models.module.ApplicationFeature
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.util.Logging
@@ -57,7 +58,9 @@ object AuditHelper extends Logging {
   }
 
   private[this] def aud(creds: Credentials, id: UUID, act: String, msg: String, records: Seq[AuditRecord])(implicit trace: TraceData) = {
-    val (remoteAddress, userId) = getInfo(creds)
-    onAudit(Audit(id = id, act = act, client = remoteAddress, server = server, userId = userId, msg = msg), records.toList)
+    if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
+      val (remoteAddress, userId) = getInfo(creds)
+      onAudit(Audit(id = id, act = act, client = remoteAddress, server = server, userId = userId, msg = msg), records.toList)
+    }
   }
 }

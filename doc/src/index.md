@@ -8,6 +8,7 @@
 * [Libraries](libraries/index.md)
 * [Tutorials](tutorial/index.md)
 * [Technology](technology.md)
+* [Troubleshooting](troubleshooting.md)
 
 @@@
 

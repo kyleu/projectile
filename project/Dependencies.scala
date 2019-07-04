@@ -6,7 +6,7 @@ object Dependencies {
     val filters = play.sbt.PlayImport.filters
     val cache = play.sbt.PlayImport.ehcache
     val guice = play.sbt.PlayImport.guice
-    val json = "com.typesafe.play" %% "play-json" % "2.7.3"
+    val json = "com.typesafe.play" %% "play-json" % "2.7.4"
     val mailer = "com.typesafe.play" %% "play-mailer-guice" % "7.0.1"
     val twirl = "com.typesafe.play" %% "twirl-api" % "1.4.2"
     val ws = play.sbt.PlayImport.ws
@@ -20,14 +20,14 @@ object Dependencies {
     val flyway = "org.flywaydb" % "flyway-core" % "5.2.4"
 
     object Slick {
-      val version = "3.3.1"
-      val pgVersion = "0.17.3"
+      val version = "3.3.2"
+      val pgVersion = "0.18.0"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
       val pg = "com.github.tminglei" %% "slick-pg" % pgVersion
       val pgCirce = "com.github.tminglei" %% "slick-pg_circe-json" % pgVersion
-      val slickless = "io.underscore" %% "slickless" % "0.3.4"
+      val slickless = "io.underscore" %% "slickless" % "0.3.5"
 
       val all = Seq(core, hikariCp, pg, pgCirce, slickless)
     }
@@ -50,7 +50,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.12.0-M3"
+    val version = "0.12.0-M4"
 
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.3.1"
@@ -81,7 +81,7 @@ object Dependencies {
   }
 
   object Metrics {
-    val version = "1.1.4"
+    val version = "1.2.0"
     val micrometerCore = "io.micrometer" % "micrometer-core" % version
     val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
     val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
@@ -92,7 +92,7 @@ object Dependencies {
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.28.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.30.0"
   }
 
   object Authentication {
@@ -137,7 +137,7 @@ object Dependencies {
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
 
     val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1" // Do not change
-    val chimney = "io.scalaland" %% "chimney" % "0.3.1"
+    val chimney = "io.scalaland" %% "chimney" % "0.3.2"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"
     val commonsCodec = "commons-codec" % "commons-codec" % "1.12"
@@ -154,6 +154,7 @@ object Dependencies {
   }
 
   object Testing {
-    val scalaTest = "org.scalatest" %% "scalatest" % "3.0.7" % "test"
+    val version = "3.0.8"
+    val scalaTest = "org.scalatest" %% "scalatest" % version % "test"
   }
 }

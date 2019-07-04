@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import com.google.inject.name.Named
+import com.kyleu.projectile.models.module.ApplicationFeature
 import com.kyleu.projectile.models.note.Note
 import com.kyleu.projectile.models.queries.note.NoteQueries
 import com.kyleu.projectile.models.result.data.DataField
@@ -23,8 +24,10 @@ class NoteService @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends ModelServiceHelper[Note]("note") {
 
   def getFor(creds: Credentials, model: String, pk: Any*)(implicit trace: TraceData) = {
-    tracing.trace("get.by.model") { td =>
-      db.queryF(NoteQueries.GetByModel(model, pk.mkString("/")))(td)
+    if (ApplicationFeature.enabled(ApplicationFeature.Note)) {
+      tracing.trace("get.by.model")(td => db.queryF(NoteQueries.GetByModel(model, pk.mkString("/")))(td))
+    } else {
+      Future.successful(Nil)
     }
   }
 
