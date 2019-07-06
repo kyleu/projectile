@@ -1,0 +1,45 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.feedback.Feedback, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = s"Feedback", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.feedback)) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Feedback?')" href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.remove(model.id)">Remove</a></div>
+    <table class="highlight responsive-table">
+      <tbody>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
+          <td>@model.id</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.text.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Text</div></th>
+          <td><pre>@model.text</pre></td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.authorId.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Author Id</div></th>
+          <td>
+            @model.authorId
+            <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.authorId)"><i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i></a>
+          </td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.authorEmail.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Author Email</div></th>
+          <td>@model.authorEmail</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.created.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Created</div></th>
+          <td>@model.created</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.status.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Status</div></th>
+          <td>@model.status</td>
+        </tr>
+      </tbody>
+    </table>
+  }
+
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
+
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Feedback", "Feedback", model.id)
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+}

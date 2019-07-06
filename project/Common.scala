@@ -12,6 +12,7 @@ object Common {
     // val scala = "2.13.0"
     // Requires:
     // - enumeratum-circe
+    // - sangria
   }
 
   private[this] val profilingEnabled = false

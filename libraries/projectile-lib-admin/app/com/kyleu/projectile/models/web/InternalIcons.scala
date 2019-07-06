@@ -20,13 +20,14 @@ object InternalIcons {
   val help = "help_outline"
 
   val connection = "device_hub"
-  val status = "more_horiz"
-  val reporting = "assignment"
-  val process = "track_changes"
   val encryption = "enhanced_encryption"
+  val feedback = "feedback"
+  val process = "track_changes"
+  val reporting = "assignment"
   val sandbox = "widgets"
   val sitemap = "directions"
   val sql = "report_problem"
+  val status = "more_horiz"
 
   val rest = "dialpad"
   val graphql = "brightness_high"

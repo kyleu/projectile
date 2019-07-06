@@ -1,0 +1,24 @@
+@(model: com.kyleu.projectile.models.feedback.Feedback, additional: Option[Html] = None)<tr>
+  <td>
+    <a href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.text
+  </td>
+  <td>
+    @model.authorId
+    <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.authorId)">
+      <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i>
+    </a>
+  </td>
+  <td>
+    @model.authorEmail
+  </td>
+  <td>
+    @model.created
+  </td>
+  <td>
+    @model.status
+  </td>
+  @additional
+</tr>

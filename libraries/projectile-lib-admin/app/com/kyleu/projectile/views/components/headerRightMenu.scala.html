@@ -36,6 +36,11 @@
 }
 
 <ul class="dropdown-content" id="profile-dropdown">
-  <li><a class="grey-text text-darken-1" href="/profile"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.profile</i> Profile</a></li>
-  <li><a class="grey-text text-darken-1" href="/profile/signout"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.signout</i> Sign out</a></li>
+  @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Profile)) {
+    <li><a class="grey-text text-darken-1" href="@com.kyleu.projectile.controllers.auth.routes.ProfileController.view()"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.profile</i> Profile</a></li>
+  }
+  @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Feedback)) {
+    <li><a class="grey-text text-darken-1" href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackFormController.form()"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.feedback</i> Feedback</a></li>
+  }
+  <li><a class="grey-text text-darken-1" href="@com.kyleu.projectile.controllers.auth.routes.AuthenticationController.signOut()"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.signout</i> Sign out</a></li>
 </ul>

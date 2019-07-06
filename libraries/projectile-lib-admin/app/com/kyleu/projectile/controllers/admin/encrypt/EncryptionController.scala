@@ -3,7 +3,6 @@ package com.kyleu.projectile.controllers.admin.encrypt
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.controllers.admin.encrypt.routes.EncryptionController
 import com.kyleu.projectile.models.menu.SystemMenu
-import com.kyleu.projectile.models.module.ApplicationFeature.Encryption.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.web.{ControllerUtils, InternalIcons}
 import com.kyleu.projectile.services.auth.PermissionService
@@ -16,7 +15,7 @@ class EncryptionController @javax.inject.Inject() (override val app: Application
   ApplicationFeature.enable(ApplicationFeature.Encryption)
   PermissionService.registerModel("tools", "Encryption", "Encryption", Some(InternalIcons.encryption), "form", "encrypt", "decrypt")
   val desc = "Allows you to encrypt and decrypt strings using the system keys"
-  SystemMenu.addToolMenu(value, "Encryption", Some(desc), EncryptionController.form(), InternalIcons.encryption)
+  SystemMenu.addToolMenu(ApplicationFeature.Encryption.value, "Encryption", Some(desc), EncryptionController.form(), InternalIcons.encryption)
 
   def form = withSession("form", ("tools", "Encryption", "form")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "encryption")

@@ -1,0 +1,18 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.page(title = cfg.projectName + " Feedback", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.feedback)) {
+  <ul class="collection with-header">
+    <li class="collection-header">
+      <h5>Send a message</h5>
+    </li>
+    <li class="collection-item">
+      <form method="post" action="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackFormController.post">
+        <div class="input-field">
+          <textarea id="msg" name="msg" class="materialize-textarea"></textarea>
+          <label for="msg">Let us have it!</label>
+        </div>
+        <button type="submit" class="btn @cfg.user.buttonColor">Send Feedback</button>
+      </form>
+    </li>
+  </ul>
+  <script>$(function() { $('textarea').trigger('autoresize'); });</script>
+}

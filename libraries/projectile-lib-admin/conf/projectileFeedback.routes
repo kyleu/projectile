@@ -1,0 +1,16 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Feedback: Allows users to submit feedback to the authors
+GET         /                            com.kyleu.projectile.controllers.admin.feedback.FeedbackFormController.form
+POST        /                            com.kyleu.projectile.controllers.admin.feedback.FeedbackFormController.post
+
+# Feedback Routes
+GET         /list                        com.kyleu.projectile.controllers.admin.feedback.FeedbackController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete                com.kyleu.projectile.controllers.admin.feedback.FeedbackController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                        com.kyleu.projectile.controllers.admin.feedback.FeedbackController.createForm
+POST        /save                        com.kyleu.projectile.controllers.admin.feedback.FeedbackController.create
+GET         /byAuthorId/:authorId        com.kyleu.projectile.controllers.admin.feedback.FeedbackController.byAuthorId(authorId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /:id                         com.kyleu.projectile.controllers.admin.feedback.FeedbackController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/form                    com.kyleu.projectile.controllers.admin.feedback.FeedbackController.editForm(id: java.util.UUID)
+POST        /:id                         com.kyleu.projectile.controllers.admin.feedback.FeedbackController.edit(id: java.util.UUID)
+GET         /:id/remove                  com.kyleu.projectile.controllers.admin.feedback.FeedbackController.remove(id: java.util.UUID)

@@ -4,7 +4,7 @@ GET        /testbed                                 controllers.HomeController.t
 
 ### Projectile Features
 ## The following sections are features which, when uncommented, add functionality to the application.
-## See docs for details: 
+## See docs for details:
 ->         /components                              projectileComponents.Routes
 ->         /profile                                 projectileProfile.Routes
 ->         /sitemap                                 projectileSitemap.Routes
@@ -22,6 +22,7 @@ GET        /testbed                                 controllers.HomeController.t
 
 ->         /admin/websocket                         projectileWebsocket.Routes
 ->         /admin/encrypt                           projectileEncrypt.Routes
+->         /admin/feedback                          projectileFeedback.Routes
 ->         /admin/sandbox                           projectileSandbox.Routes
 ->         /admin/reporting                         projectileReporting.Routes
 ->         /admin/migrate                           projectileMigrate.Routes

@@ -1,0 +1,34 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.feedback.Feedback], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
+    implicit request: Request[AnyContent], flash: Flash
+)
+@defining(com.kyleu.projectile.services.augment.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>
+  @com.kyleu.projectile.views.html.admin.explore.list(
+    cfg = cfg,
+    model = "Feedback",
+    modelPlural = "Feedbacks",
+    icon = com.kyleu.projectile.models.web.InternalIcons.feedback,
+    cols = Seq(
+      "id" -> "Id",
+      "text" -> "Text",
+      "authorId" -> "Author Id",
+      "authorEmail" -> "Author Email",
+      "created" -> "Created",
+      "status" -> "Status"
+    ),
+    totalCount = totalCount,
+    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.feedback.feedbackDataRow(model, additional = aug._2.get(model).flatten)),
+    orderBy = orderBy,
+    orderAsc = orderAsc,
+    calls = com.kyleu.projectile.models.web.ListCalls(
+      newCall = Some(com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.createForm()),
+      orderBy = Some(com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.list(q, _, _, Some(limit), Some(0))),
+      search = Some(com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.list(None, orderBy, orderAsc, Some(limit), None)),
+      next = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.list(q, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+      prev = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.list(q, orderBy, orderAsc, Some(limit), Some(offset - limit))
+    ),
+    limit = limit,
+    offset = offset,
+    q = q,
+    additionalHeader = aug._1
+  )
+}

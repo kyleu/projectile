@@ -8,7 +8,6 @@ import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class EmailService @javax.inject.Inject() (client: MailerClient) extends Logging {
-
   def send(email: Email)(implicit td: TraceData) = try {
     Right(client.send(email))
   } catch {

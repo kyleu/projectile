@@ -24,7 +24,7 @@ class ScheduledTaskRunController @javax.inject.Inject() (
     val cancel = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.list()
     val call = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.create()
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunForm(
-      app.cfg(u = Some(request.identity), "task", "scheduled_task_run", "Create"), ScheduledTaskRun.empty(),
+      app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", "Create"), ScheduledTaskRun.empty(),
       "New Scheduled Task Run", cancel, call, isNew = true, debug = app.config.debug
     )))
   }
@@ -44,7 +44,7 @@ class ScheduledTaskRunController @javax.inject.Inject() (
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id))
           case _ => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunList(
-            app.cfg(u = Some(request.identity), "task", "scheduled_task_run"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)
+            app.cfg(u = Some(request.identity), "tools", "scheduled_task_run"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)
           ))
         }
         case MimeTypes.JSON => Ok(ScheduledTaskRunResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -70,7 +70,7 @@ class ScheduledTaskRunController @javax.inject.Inject() (
     notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
       case Some(model) => renderChoice(t) {
         case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunView(
-          app.cfg(u = Some(request.identity), "task", "scheduled_task_run", model.id.toString), model, notes, audits, app.config.debug
+          app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", model.id.toString), model, notes, audits, app.config.debug
         ))
         case MimeTypes.JSON => Ok(model.asJson)
         case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
@@ -85,7 +85,7 @@ class ScheduledTaskRunController @javax.inject.Inject() (
     val call = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.edit(id)
     svc.getByPrimaryKey(request, id).map {
       case Some(model) => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunForm(
-        app.cfg(u = Some(request.identity), "task", "scheduled_task_run", "Edit"), model, s"Scheduled Task Run [$id]", cancel, call, debug = app.config.debug
+        app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", "Edit"), model, s"Scheduled Task Run [$id]", cancel, call, debug = app.config.debug
       ))
       case None => NotFound(s"No ScheduledTaskRun found with id [$id]")
     }

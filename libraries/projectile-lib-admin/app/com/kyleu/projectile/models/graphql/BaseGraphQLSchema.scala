@@ -15,6 +15,7 @@ abstract class BaseGraphQLSchema extends GraphQLSchema {
     if (enabled(Audit)) { Seq(com.kyleu.projectile.models.graphql.audit.AuditRecordSchema.auditRecordByAuditIdFetcher) } else Nil,
     if (enabled(Audit)) { Seq(com.kyleu.projectile.models.graphql.audit.AuditRecordSchema.auditRecordByPrimaryKeyFetcher) } else Nil,
     if (enabled(Audit)) { Seq(com.kyleu.projectile.models.graphql.audit.AuditSchema.auditByPrimaryKeyFetcher) } else Nil,
+    if (enabled(Feedback)) { Seq(com.kyleu.projectile.models.graphql.feedback.FeedbackSchema.feedbackByPrimaryKeyFetcher) } else Nil,
     if (enabled(Note)) { Seq(com.kyleu.projectile.models.graphql.note.NoteSchema.noteByAuthorFetcher) } else Nil,
     if (enabled(Note)) { Seq(com.kyleu.projectile.models.graphql.note.NoteSchema.noteByPrimaryKeyFetcher) } else Nil,
     if (enabled(Task)) { Seq(com.kyleu.projectile.models.graphql.task.ScheduledTaskRunSchema.scheduledTaskRunByPrimaryKeyFetcher) } else Nil
@@ -27,6 +28,7 @@ abstract class BaseGraphQLSchema extends GraphQLSchema {
     if (enabled(User)) { com.kyleu.projectile.models.graphql.user.SystemUserSchema.queryFields } else Nil,
     if (enabled(Audit)) { com.kyleu.projectile.models.graphql.audit.AuditRecordSchema.queryFields } else Nil,
     if (enabled(Audit)) { com.kyleu.projectile.models.graphql.audit.AuditSchema.queryFields } else Nil,
+    if (enabled(Feedback)) { com.kyleu.projectile.models.graphql.feedback.FeedbackSchema.queryFields } else Nil,
     if (enabled(Note)) { com.kyleu.projectile.models.graphql.note.NoteSchema.queryFields } else Nil,
     if (enabled(Task)) { com.kyleu.projectile.models.graphql.task.ScheduledTaskRunSchema.queryFields } else Nil,
     if (enabled(Sandbox)) { com.kyleu.projectile.models.graphql.sandbox.SandboxSchema.queryFields } else Nil
@@ -39,6 +41,7 @@ abstract class BaseGraphQLSchema extends GraphQLSchema {
     if (enabled(User)) { com.kyleu.projectile.models.graphql.user.SystemUserSchema.mutationFields } else Nil,
     if (enabled(Audit)) { com.kyleu.projectile.models.graphql.audit.AuditRecordSchema.mutationFields } else Nil,
     if (enabled(Audit)) { com.kyleu.projectile.models.graphql.audit.AuditSchema.mutationFields } else Nil,
+    if (enabled(Feedback)) { com.kyleu.projectile.models.graphql.feedback.FeedbackSchema.mutationFields } else Nil,
     if (enabled(Note)) { com.kyleu.projectile.models.graphql.note.NoteSchema.mutationFields } else Nil,
     if (enabled(Task)) { com.kyleu.projectile.models.graphql.task.ScheduledTaskRunSchema.mutationFields } else Nil,
     if (enabled(Sandbox)) { com.kyleu.projectile.models.graphql.sandbox.SandboxSchema.mutationFields } else Nil

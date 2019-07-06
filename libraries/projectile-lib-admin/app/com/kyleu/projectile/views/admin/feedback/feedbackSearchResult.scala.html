@@ -1,0 +1,16 @@
+@(model: com.kyleu.projectile.models.feedback.Feedback, hit: String)<div class="search-result">
+  <div class="right">
+    <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.feedback</i> Feedback
+  </div>
+  <div>
+    <a href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id)">@model.id</a>
+  </div>
+  <em>@hit</em>
+  <div style="margin-top: 12px;">
+    <div class="chip">Text: @model.text</div>
+    <div class="chip">Author Id: @model.authorId</div>
+    <div class="chip">Author Email: @model.authorEmail</div>
+    <div class="chip">Created: @model.created</div>
+    <div class="chip">Status: @model.status</div>
+  </div>
+</div>

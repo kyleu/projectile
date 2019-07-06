@@ -14,7 +14,8 @@ import io.scalaland.chimney.dsl._
 object ProjectLoadService {
   object Provided {
     val models = Set(
-      "audit", "audit_record", "flyway_schema_history", "note", "oauth2_info", "password_info", "scheduled_task_run", "system_permission", "system_user"
+      "audit", "audit_record", "feedback", "flyway_schema_history", "note", "oauth2_info", "password_info",
+      "scheduled_task_run", "system_permission", "system_user"
     )
   }
 }

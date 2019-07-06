@@ -20,6 +20,7 @@ GET        /                                        controllers.HomeController.h
 
 ->         /admin/websocket                         projectileWebsocket.Routes
 ->         /admin/encrypt                           projectileEncrypt.Routes
+->         /admin/feedback                          projectileFeedback.Routes
 ->         /admin/sandbox                           projectileSandbox.Routes
 ->         /admin/reporting                         projectileReporting.Routes
 ->         /admin/migrate                           projectileMigrate.Routes
