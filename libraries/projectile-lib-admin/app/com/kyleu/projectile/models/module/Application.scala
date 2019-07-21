@@ -5,7 +5,7 @@ import java.util.TimeZone
 import akka.actor.ActorSystem
 import com.google.inject.Injector
 import com.kyleu.projectile.models.auth.AuthEnv
-import com.kyleu.projectile.models.config.{Configuration, UiConfig}
+import com.kyleu.projectile.models.config.{Configuration, UiConfig, UserSettings}
 import com.kyleu.projectile.models.notification.Notification
 import com.kyleu.projectile.models.queries.permission.PermissionQueries
 import com.kyleu.projectile.models.user.SystemUser
@@ -17,8 +17,9 @@ import com.kyleu.projectile.services.notification.NotificationService
 import com.kyleu.projectile.services.status.StatusProvider
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
-import com.kyleu.projectile.util.{EncryptionUtils, Logging}
+import com.kyleu.projectile.util.{EncryptionUtils, JsonSerializers, Logging}
 import com.mohiva.play.silhouette.api.Silhouette
+import io.circe.Json
 import play.api.inject.ApplicationLifecycle
 
 import scala.concurrent.duration._
@@ -30,6 +31,7 @@ object Application {
     def configForUser(su: Option[SystemUser], notifications: Seq[Notification], breadcrumbs: String*): UiConfig
     def allowRegistration: Boolean = true
     def defaultRole: String = "admin"
+    def defaultSettings: Json = JsonSerializers.encoderOps(UserSettings()).asJson
   }
 }
 
@@ -52,20 +54,20 @@ class Application @javax.inject.Inject() (
     uiConfigProvider.configForUser(u, NotificationService.getNotifications(u), breadcrumbs: _*)
   }
 
-  def reload() = {
+  def reload(td: TraceData) = {
     try { stop() } catch { case _: Throwable => () }
-    errors.clear()
+    errors.clear(td)
     Await.result(start(restart = true), 20.seconds)
-    errors.checkTables()
+    errors.checkTables(td)
     if (ApplicationFeature.enabled(ApplicationFeature.Permission)) {
-      try { PermissionService.initialize(db.query(PermissionQueries.getAll())(TraceData.noop)) } catch { case _: Throwable => () }
+      try { PermissionService.initialize(db.query(PermissionQueries.getAll())(td))(td) } catch { case _: Throwable => () }
     }
     !errors.hasErrors
   }
 
   Await.result(start(), 20.seconds)
 
-  private[this] def start(restart: Boolean = false) = tracing.topLevelTrace("application.start") { _ =>
+  private[this] def start(restart: Boolean = false) = tracing.topLevelTrace("application.start") { implicit td =>
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
     System.setProperty("user.timezone", "UTC")
     EncryptionUtils.setKey(config.secretKey)

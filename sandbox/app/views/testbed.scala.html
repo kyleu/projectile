@@ -1,10 +1,12 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, debug: Boolean = false)(implicit flash: Flash)
 @defining("page") { key =>
   @if(key == "page") {
-    @com.kyleu.projectile.views.html.layout.page("Testbed", cfg) {
+    @com.kyleu.projectile.views.html.layout.page(title = "Testbed", cfg = cfg) {
       @com.kyleu.projectile.views.html.layout.card(None) {
         <div>Content</div>
+        @com.kyleu.projectile.views.html.components.form.sortableField("x", Seq("1" -> Html("Item 1"), "2" -> Html("Item 2"), "3" -> Html("Item 3")))
       }
+      @com.kyleu.projectile.models.web.ControllerUtils.nestableIncludeSnippet
     }
   }
   @if(key == "fullscreen") {

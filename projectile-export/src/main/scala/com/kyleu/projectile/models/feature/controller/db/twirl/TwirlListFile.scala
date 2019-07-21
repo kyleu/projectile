@@ -14,7 +14,8 @@ object TwirlListFile {
 
     val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
     listFile.add(s"@($finalArgs, totalCount: Option[Int], modelSeq: Seq[${model.fullClassPath(config)}], $viewArgs)(", 2)
-    listFile.add(s"implicit request: Request[AnyContent], flash: Flash")
+    val tdi = CommonImportHelper.get(config, "TraceData")._1.mkString(".")
+    listFile.add(s"implicit request: Request[AnyContent], flash: Flash, td: $tdi.TraceData")
     listFile.add(")", -2)
 
     val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")

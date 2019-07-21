@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.database.query.Query
 import com.kyleu.projectile.models.database.schema.EnumType
 import com.kyleu.projectile.services.database.query.{JdbcRow, QueryExecutor}
 import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.tracing.TraceData
 
 object MetadataEnums extends Logging {
   case object EnumQuery extends Query[Seq[EnumType]] {
@@ -21,5 +22,5 @@ object MetadataEnums extends Logging {
     }.toSeq.groupBy(_._1).map(e => EnumType(e._1, e._2.map(_._2))).toSeq
   }
 
-  def getEnums(conn: Connection) = new QueryExecutor(conn)(EnumQuery)
+  def getEnums(conn: Connection)(implicit td: TraceData) = new QueryExecutor(conn)(EnumQuery)
 }

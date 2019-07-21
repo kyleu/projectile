@@ -18,7 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class ScheduledTaskRunController @javax.inject.Inject() (
-    override val app: Application, svc: ScheduledTaskRunService, noteSvc: NoteService, auditRecordSvc: AuditService
+    override val app: Application, svc: ScheduledTaskRunService, noteSvc: NoteService, auditSvc: AuditService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   def createForm = withSession("create.form", ("tools", "ScheduledTaskRun", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.list()
@@ -64,7 +64,7 @@ class ScheduledTaskRunController @javax.inject.Inject() (
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", ("tools", "ScheduledTaskRun", "view")) { implicit request => implicit td =>
     val modelF = svc.getByPrimaryKey(request, id)
-    val auditsF = auditRecordSvc.getByModel(request, "ScheduledTaskRun", id)
+    val auditsF = auditSvc.getByModel(request, "ScheduledTaskRun", id)
     val notesF = noteSvc.getFor(request, "ScheduledTaskRun", id)
 
     notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {

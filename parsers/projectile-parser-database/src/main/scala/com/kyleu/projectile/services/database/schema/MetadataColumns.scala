@@ -3,9 +3,9 @@ package com.kyleu.projectile.services.database.schema
 import java.sql.DatabaseMetaData
 
 import com.kyleu.projectile.models.database.schema.{Column, EnumType}
-import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.services.database.query.{JdbcHelper, JdbcRow, QueryTranslations}
 import com.kyleu.projectile.util.NullUtils
+import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.util.control.NonFatal
 
@@ -30,7 +30,7 @@ object MetadataColumns {
     val colTypeName = row.asOpt[Any]("TYPE_NAME").map(x => JdbcHelper.stringVal(x)).getOrElse("")
     val colSize = row.asOpt[Any]("COLUMN_SIZE").map(JdbcHelper.intVal)
     val position = JdbcHelper.intVal(row.as[Any]("ORDINAL_POSITION"))
-    val t = QueryTranslations.forType(colType, colTypeName, colSize, enums)
+    val t = QueryTranslations.forType(colType, colTypeName, colSize, enums)(TraceData.noop)
     position -> Column(
       name = row.as[String]("COLUMN_NAME"),
       description = row.asOpt[String]("REMARKS"),

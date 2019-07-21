@@ -25,8 +25,8 @@ trait Queryable extends Logging {
     }
   }
 
-  def apply[A](connection: Connection, query: RawQuery[A]): A = {
-    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")(TraceData.noop)
+  def apply[A](connection: Connection, query: RawQuery[A])(implicit td: TraceData): A = {
+    log.debug(s"${query.sql} with ${query.values.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       prepare(stmt, query.values)
@@ -41,7 +41,7 @@ trait Queryable extends Logging {
     }
   }
 
-  def apply[A](query: RawQuery[A]): A
+  def apply[A](query: RawQuery[A])(implicit td: TraceData): A
 
-  def query[A](q: RawQuery[A]): A = apply(q)
+  def query[A](q: RawQuery[A])(implicit td: TraceData): A = apply(q)
 }

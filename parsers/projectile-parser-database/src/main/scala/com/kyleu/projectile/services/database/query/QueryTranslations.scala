@@ -7,7 +7,9 @@ import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData
 
 object QueryTranslations extends Logging {
-  def forType(i: Int, n: String, colSize: Option[Int] = None, enums: Seq[com.kyleu.projectile.models.database.schema.EnumType]) = i match {
+  def forType(
+    i: Int, n: String, colSize: Option[Int] = None, enums: Seq[com.kyleu.projectile.models.database.schema.EnumType]
+  )(implicit td: TraceData) = i match {
     case CHAR | VARCHAR | LONGVARCHAR | CLOB | NCHAR | NVARCHAR | LONGNVARCHAR | NCLOB => enums.find(_.key == n) match {
       case Some(_) => EnumType(n)
       case _ => StringType
@@ -43,15 +45,15 @@ object QueryTranslations extends Logging {
     }
 
     case JAVA_OBJECT =>
-      log.warn(s"Encountered object type [$i:$n]")(TraceData.noop)
+      log.warn(s"Encountered object type [$i:$n]")
       StringType
 
     case _ =>
-      log.warn(s"Encountered unknown column type [$i]")(TraceData.noop)
+      log.warn(s"Encountered unknown column type [$i]")
       StringType
   }
 
-  private[this] def matchOther(n: String) = n match {
+  private[this] def matchOther(n: String)(implicit td: TraceData) = n match {
     case "uuid" => UuidType
     case "json" => JsonType
     case "jsonb" => JsonType
@@ -70,7 +72,7 @@ object QueryTranslations extends Logging {
     case "varbit" => StringType
     case x if x.startsWith("gbtreekey") => StringType
     case x =>
-      log.warn(s"Encountered unknown field type [$x]. ")(TraceData.noop)
+      log.warn(s"Encountered unknown field type [$x]. ")
       StringType
   }
 }

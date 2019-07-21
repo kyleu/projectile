@@ -13,7 +13,6 @@ import com.kyleu.projectile.services.feedback.FeedbackService
 import com.kyleu.projectile.services.notification.EmailService
 import com.kyleu.projectile.util.DateUtils
 import play.api.libs.mailer.Email
-import com.kyleu.projectile.services.Credentials
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -54,7 +53,7 @@ class FeedbackFormController @javax.inject.Inject() (
       case Left(x) => log.error("Error sending feedback email", x)
     }
 
-    feedbackSvc.insert(Credentials.noop, Feedback.empty(text = msg, authorId = sender._1, authorEmail = sender._2, status = "OK")).map { _ =>
+    feedbackSvc.insert(request, Feedback.empty(text = msg, authorId = sender._1, authorEmail = sender._2, status = "OK")).map { _ =>
       Redirect("/").flashing("success" -> "Thanks for submitting your feedback, we'll respond soon")
     }
   }

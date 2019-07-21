@@ -23,7 +23,7 @@ object Instrumented extends Logging {
   def reg = registry.getOrElse(throw new IllegalStateException("Not started"))
   def regOpt = registry
 
-  def start(engine: String, serviceName: String, hostAddress: String) = {
+  def start(engine: String, serviceName: String, hostAddress: String)(implicit td: TraceData) = {
     val r = engine match {
       case "datadog" | "statsd" =>
         val config = new StatsdConfig() {
@@ -37,11 +37,11 @@ object Instrumented extends Logging {
 
         val registry = new StatsdMeterRegistry(config, Clock.SYSTEM)
         registry.config.commonTags("service", s"coco-$serviceName")
-        log.info(s"Datadog metrics started using host [$hostAddress]")(TraceData.noop)
+        log.info(s"Datadog metrics started using host [$hostAddress]")
         registry
 
       case "prometheus" =>
-        log.info("Prometheus metrics started")(TraceData.noop)
+        log.info("Prometheus metrics started")
         new PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
       case _ => throw new IllegalStateException(s"Invalid metrics engine [$engine]")

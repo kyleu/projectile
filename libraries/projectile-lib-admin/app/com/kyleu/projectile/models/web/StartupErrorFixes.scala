@@ -5,7 +5,6 @@ import com.kyleu.projectile.models.database.Statement
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.queries.SqlParser
 import com.kyleu.projectile.util.Logging
-import com.kyleu.projectile.util.tracing.TraceData
 import play.twirl.api.Html
 
 import scala.util.Random
@@ -61,8 +60,7 @@ object StartupErrorFixes extends Logging {
     case Some(schema) => sqlError(s"""The "$table" table doesn't exist. You can""", schema)
   }
 
-  private[this] def applySql(app: Application, sql: String) = {
-    implicit val td: TraceData = TraceData.noop
+  private[this] def applySql(app: Application, sql: String) = app.tracing.topLevelTraceBlocking("applysql") { implicit td =>
     val statements = SqlParser.split(sql)
     app.db.transaction { (_, conn) =>
       statements.map { s =>

@@ -11,7 +11,8 @@ object DatabaseConfig {
       port = get("port").toInt,
       username = get("username"),
       password = Some(get("password")),
-      database = Some(get("database"))
+      database = Some(get("database")),
+      runMigrations = Option(cfg.getBoolean(section + ".runMigrations"))
     )
   }
 }
@@ -21,7 +22,8 @@ final case class DatabaseConfig(
     port: Int = 5432,
     username: String,
     password: Option[String] = None,
-    database: Option[String] = None
+    database: Option[String] = None,
+    runMigrations: Option[Boolean] = None
 ) {
   val url: String = s"jdbc:postgresql://$host:$port/${database.getOrElse("")}?stringtype=unspecified"
 }

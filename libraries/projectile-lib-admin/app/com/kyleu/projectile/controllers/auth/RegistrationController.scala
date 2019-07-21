@@ -57,7 +57,8 @@ class RegistrationController @javax.inject.Inject() (
               id = UUID.randomUUID,
               username = data.username,
               profile = loginInfo,
-              role = role
+              role = role,
+              settings = configProvider.defaultSettings
             )
             val creds = UserCredentials(user, request.remoteAddress)
             userService.insert(creds, user).flatMap { userSaved =>

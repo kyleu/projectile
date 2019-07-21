@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.StartupErrorFixes
+import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.TraceData
@@ -20,6 +21,11 @@ abstract class AuthController(name: String) extends BaseController(name) {
   override def tracing = app.tracing
 
   private[this] def appErrorsOr(f: () => Action[AnyContent]): Action[AnyContent] = if (app.errors.hasErrors) { appErrors() } else { f() }
+
+  protected implicit def toCredentials(request: SecuredRequest[AuthEnv, _]): UserCredentials = UserCredentials.fromRequest(request)
+  protected implicit def toOptionalCredentials(r: UserAwareRequest[AuthEnv, _]): Credentials = {
+    UserCredentials.fromInsecureRequest(r).getOrElse(Credentials.anonymous)
+  }
 
   protected def withoutSession(action: String)(block: UserAwareRequest[AuthEnv, AnyContent] => TraceData => Future[Result])(implicit ec: ExecutionContext) = {
     appErrorsOr { () =>
@@ -58,8 +64,6 @@ abstract class AuthController(name: String) extends BaseController(name) {
     }
   }
 
-  protected implicit def toCredentials(request: SecuredRequest[AuthEnv, _]): UserCredentials = UserCredentials.fromRequest(request)
-
   protected def failRequest(request: UserAwareRequest[AuthEnv, AnyContent]) = {
     val msg = request.identity match {
       case Some(_) => "You do not have sufficient permissions to access that"
@@ -80,19 +84,21 @@ abstract class AuthController(name: String) extends BaseController(name) {
   }
 
   private[this] def appErrors() = Action.async { implicit r =>
-    def reload() = if (app.reload()) {
+    def reload(td: TraceData) = if (app.reload(td)) {
       Future.successful(Redirect("/"))
     } else {
       Future.successful(Ok(com.kyleu.projectile.views.html.error.startupError(app)))
     }
-    if (r.queryString.get("errors").exists(_.headOption.contains("reset"))) {
-      reload()
-    } else {
-      r.queryString.get("fix").map(_.head) match {
-        case Some(fix) =>
-          StartupErrorFixes.fix(app, fix)
-          reload()
-        case None => Future.successful(Ok(com.kyleu.projectile.views.html.error.startupError(app)))
+    app.tracing.topLevelTraceBlocking("reload") { td =>
+      if (r.queryString.get("errors").exists(_.headOption.contains("reset"))) {
+        reload(td)
+      } else {
+        r.queryString.get("fix").map(_.head) match {
+          case Some(fix) =>
+            StartupErrorFixes.fix(app, fix)
+            reload(td)
+          case None => Future.successful(Ok(com.kyleu.projectile.views.html.error.startupError(app)))
+        }
       }
     }
   }

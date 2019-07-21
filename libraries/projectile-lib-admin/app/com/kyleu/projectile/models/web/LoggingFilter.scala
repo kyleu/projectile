@@ -33,7 +33,7 @@ class LoggingFilter @Inject() (override implicit val mat: Materializer)(implicit
           logCompleted(result)
           val requestTime = System.nanoTime - startNanos
           Instrumented.regOpt.foreach(_.timer(metricsName, "result", result.getClass.getSimpleName).record(requestTime, TimeUnit.NANOSECONDS))
-          log.info(s"${result.header.status} (${requestTime / 1000000000.0}s): ${request.method} ${request.uri}")(TraceData.noop)
+          // log.info(s"${result.header.status} (${requestTime / 1000000000.0}s): ${request.method} ${request.uri}")(TraceData.noop)
           result.withHeaders("X-Request-Time-Ms" -> (requestTime * 1000000).toInt.toString)
         }
       },

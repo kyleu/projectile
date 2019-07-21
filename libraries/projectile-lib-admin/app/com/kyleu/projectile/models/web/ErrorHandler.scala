@@ -33,12 +33,14 @@ class ErrorHandler @Inject() (
 ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with Rendering with AcceptExtractors with Logging {
 
   override protected def onDevServerError(request: RequestHeader, ex: UsefulException) = tracing.topLevelTrace("error.dev") { td =>
+    val sessionData = request.session.data
     td.tag("error.type", ex.getClass.getSimpleName)
     td.tag("error.message", ex.getMessage)
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
     render.async {
       case Accepts.Json() => jsonError(request, ex)
-      case _ => super.onDevServerError(request, ex)
+      case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.flash)))
+      // case _ => super.onDevServerError(request, ex)
     }(request)
   }
 

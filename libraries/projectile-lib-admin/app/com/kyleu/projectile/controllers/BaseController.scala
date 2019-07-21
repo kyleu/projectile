@@ -43,9 +43,8 @@ abstract class BaseController(val name: String) extends InjectedController with 
 
   protected def getTraceData(implicit requestHeader: RequestHeader) = requestHeader.attrs.get(TracingFilter.traceKey).getOrElse(TraceData.noop)
 
-  private[this] val defaultPrinter = Printer.spaces2
   protected implicit val contentTypeOfJson: ContentTypeOf[Json] = ContentTypeOf(Some("application/json"))
-  protected implicit def writableOfJson(implicit codec: Codec, printer: Printer = defaultPrinter): Writeable[Json] = {
+  protected implicit def writableOfJson(implicit codec: Codec, printer: Printer = Printer.spaces2): Writeable[Json] = {
     Writeable(a => codec.encode(a.pretty(printer)))
   }
 

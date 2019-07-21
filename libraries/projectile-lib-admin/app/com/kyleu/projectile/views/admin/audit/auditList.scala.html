@@ -1,5 +1,5 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.audit.Audit], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
-    implicit request: Request[AnyContent], flash: Flash
+    implicit request: Request[AnyContent], flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )
 @defining(com.kyleu.projectile.services.augment.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>
   @com.kyleu.projectile.views.html.admin.explore.list(

@@ -20,7 +20,7 @@ class RequestHandler @Inject() (
 
   override def routeRequest(request: RequestHeader) = {
     if (!Option(request.path).exists(LoggingFilter.skipPath)) {
-      log.info(s"Request from [${request.remoteAddress}]: ${request.toString()}")(TraceData.noop)
+      // log.info(s"Request from [${request.remoteAddress}]: ${request.toString()}")(TraceData.noop)
     }
     super.routeRequest(request)
   }

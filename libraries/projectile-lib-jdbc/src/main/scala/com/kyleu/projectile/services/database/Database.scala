@@ -25,10 +25,7 @@ trait Database[Conn] extends Logging {
   }
 
   private[this] var tracingServiceOpt: Option[TracingService] = None
-  protected def tracing = tracingServiceOpt.getOrElse {
-    // throw new IllegalStateException("Tracing service not configured. Did you forget to call \"open\"?")
-    TracingService.noop
-  }
+  protected def tracing = tracingServiceOpt.getOrElse(TracingService.noop)
 
   private[this] var config: Option[DatabaseConfig] = None
   def getConfig = config.getOrElse(throw new IllegalStateException("Database not open"))
@@ -41,7 +38,7 @@ trait Database[Conn] extends Logging {
     started = true
   }
 
-  def doesTableExist(name: String): Boolean = (!isStarted) || query(CommonQueries.DoesTableExist(name))(TraceData.noop)
+  def doesTableExist(name: String)(implicit td: TraceData): Boolean = (!isStarted) || query(CommonQueries.DoesTableExist(name))
 
   protected[this] def prependComment(obj: Object, sql: String) = s"/* ${obj.getClass.getSimpleName.replace("$", "")} */ $sql"
 

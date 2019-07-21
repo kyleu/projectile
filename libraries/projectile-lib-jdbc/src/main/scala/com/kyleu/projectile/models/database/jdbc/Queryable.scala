@@ -42,16 +42,16 @@ trait Queryable extends Logging {
 
   def valsForJdbc(conn: Connection, vals: Seq[Any]) = vals.map(v => valForJdbc(conn, v)).toIndexedSeq
 
-  def apply[A](connection: Connection, query: RawQuery[A]): A = {
+  def apply[A](connection: Connection, query: RawQuery[A])(implicit td: TraceData): A = {
     val actualValues = valsForJdbc(connection, query.values)
-    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")(TraceData.noop)
+    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       try {
         prepare(stmt, actualValues)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to prepare query for [${query.sql}]", x)(TraceData.noop)
+          log.error(s"Unable to prepare query for [${query.sql}]", x)
           throw x
       }
       val results = stmt.executeQuery()
@@ -59,7 +59,7 @@ trait Queryable extends Logging {
         query.handle(results)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to handle query results for [${query.sql}]", x)(TraceData.noop)
+          log.error(s"Unable to handle query results for [${query.sql}]", x)
           throw x
       } finally {
         results.close()
@@ -69,39 +69,39 @@ trait Queryable extends Logging {
     }
   }
 
-  def executeUpdate(connection: Connection, statement: Statement): Int = {
+  def executeUpdate(connection: Connection, statement: Statement)(implicit td: TraceData): Int = {
     val actualValues = valsForJdbc(connection, statement.values)
-    log.debug(s"${statement.sql} with ${actualValues.mkString("(", ", ", ")")}")(TraceData.noop)
+    log.debug(s"${statement.sql} with ${actualValues.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(statement.sql)
     try {
       prepare(stmt, actualValues)
     } catch {
       case NonFatal(x) =>
         stmt.close()
-        log.error(s"Unable to prepare statement [${statement.sql}]", x)(TraceData.noop)
+        log.error(s"Unable to prepare statement [${statement.sql}]", x)
         throw x
     }
     try {
       stmt.executeUpdate()
     } catch {
       case NonFatal(x) =>
-        log.error(s"Unable to execute statement [${statement.sql}]", x)(TraceData.noop)
+        log.error(s"Unable to execute statement [${statement.sql}]", x)
         throw x
     } finally {
       stmt.close()
     }
   }
 
-  def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID]): Either[A, Int] = {
+  def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID])(implicit td: TraceData): Either[A, Int] = {
     val actualValues = valsForJdbc(connection, query.values)
-    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")(TraceData.noop)
+    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       try {
         prepare(stmt, actualValues)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to prepare raw query [${query.sql}]", x)(TraceData.noop)
+          log.error(s"Unable to prepare raw query [${query.sql}]", x)
           throw x
       }
       val isResultset = stmt.execute()
@@ -111,7 +111,7 @@ trait Queryable extends Logging {
           Left(query.handle(res))
         } catch {
           case NonFatal(x) =>
-            log.error(s"Unable to handle query results for [${query.sql}]", x)(TraceData.noop)
+            log.error(s"Unable to handle query results for [${query.sql}]", x)
             throw x
         } finally {
           res.close()

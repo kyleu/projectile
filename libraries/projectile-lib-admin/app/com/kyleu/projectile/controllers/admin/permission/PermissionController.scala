@@ -24,7 +24,9 @@ class PermissionController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Permission)
   app.errors.checkTable("system_permission")
 
-  try { reload() } catch { case NonFatal(x) => log.warn(s"Error loading permissions: ${x.getMessage}")(TraceData.noop) }
+  app.tracing.topLevelTraceBlocking("permissions") { td =>
+    try { reload(td) } catch { case NonFatal(x) => log.warn(s"Error loading permissions: ${x.getMessage}")(td) }
+  }
   PermissionService.registerModel("tools", "Permission", "Permission", Some(InternalIcons.permission), "view", "edit", "refresh")
   SystemMenu.addToolMenu(value, "Permissions", Some("Configure roles and permissions"), PermissionController.list(), InternalIcons.permission)
 
@@ -33,8 +35,8 @@ class PermissionController @javax.inject.Inject() (
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.permission.permissionList(cfg, PermissionService.roles(), PermissionService.packages())))
   }
 
-  def refresh() = withSession("refresh", ("tools", "Permission", "refresh")) { _ => _ =>
-    reload()
+  def refresh() = withSession("refresh", ("tools", "Permission", "refresh")) { _ => td =>
+    reload(td)
     val msg = "Refreshed permissions"
     Future.successful(Redirect(com.kyleu.projectile.controllers.admin.permission.routes.PermissionController.list()).flashing("success" -> msg))
   }
@@ -49,7 +51,7 @@ class PermissionController @javax.inject.Inject() (
     withSession("delete", ("tools", "Permission", "edit")) { _ => implicit td =>
       val (p, m, a) = (pkg.getOrElse(""), model.getOrElse(""), action.getOrElse(""))
       db.execute(PermissionQueries.removeByPrimaryKey(role, p, m, a))
-      reload()
+      reload(td)
       listRedirFlashing("Deleted permission from database")
     }
   }
@@ -68,7 +70,7 @@ class PermissionController @javax.inject.Inject() (
           db.execute(PermissionQueries.update(perm.role, perm.pkg.getOrElse(""), perm.model.getOrElse(""), perm.action.getOrElse(""), fields))
         case None => db.execute(PermissionQueries.insert(perm))
       }
-      reload()
+      reload(td)
       val msg = s"Set ${perm.key} for role [$role] to [${perm.allow}]"
       Future.successful(Redirect(com.kyleu.projectile.controllers.admin.permission.routes.PermissionController.list()).flashing("success" -> msg))
     } catch {
@@ -83,5 +85,5 @@ class PermissionController @javax.inject.Inject() (
     Future.successful(rsp.flashing((if (success) { "success" } else { "error" }, msg)))
   }
 
-  private[this] def reload() = PermissionService.initialize(db.query(PermissionQueries.getAll())(TraceData.noop))
+  private[this] def reload(td: TraceData) = PermissionService.initialize(db.query(PermissionQueries.getAll())(td))(td)
 }

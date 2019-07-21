@@ -57,7 +57,7 @@ object ControllerFile {
 
     val extraSvcs = {
       val n = if (model.features(ModelFeature.Notes)) { ", noteSvc: NoteService" } else { "" }
-      val a = if (model.features(ModelFeature.Audit)) { ", auditRecordSvc: AuditService" } else { "" }
+      val a = if (model.features(ModelFeature.Audit)) { ", auditSvc: AuditService" } else { "" }
       n + a
     }
 

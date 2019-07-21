@@ -6,6 +6,7 @@ import com.kyleu.projectile.util.JsonSerializers.Json
 import com.kyleu.projectile.util.{JsonSerializers, NullUtils}
 import play.api.data.FormError
 import play.api.mvc.AnyContent
+import play.twirl.api.Html
 
 object ControllerUtils {
   def getForm(body: AnyContent, prefix: Option[String] = None) = body.asFormUrlEncoded match {
@@ -67,4 +68,13 @@ object ControllerUtils {
 
   lazy val dataTableScripts = Seq(Assets.path("vendor/dataTables/dataTables.min.js"))
   lazy val dataTableStylesheets = Seq(Assets.path("vendor/dataTables/dataTables.min.css"))
+
+  lazy val nestableScripts = Seq(Assets.path("vendor/nestable/nestable.js"))
+  lazy val nestableStylesheets = Seq(Assets.path("vendor/nestable/nestable.css"))
+  lazy val nestableIncludeSnippet = snippet(nestableScripts, nestableStylesheets)
+  def nestableData(json: Json) = json.asArray.get.map(_.asObject.get.apply("id").get.asString.get)
+
+  private[this] def snippet(scripts: Seq[String], stylesheets: Seq[String]) = {
+    Html((scripts.map(s => s"""<script src="$s"></script>""") ++ stylesheets.map(s => s"""<link rel="stylesheet" media="screen" href="$s" />""")).mkString("\n"))
+  }
 }

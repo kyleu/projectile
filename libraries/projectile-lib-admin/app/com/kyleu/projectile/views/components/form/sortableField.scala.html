@@ -1,0 +1,26 @@
+@(key: String, options: Seq[(String, Html)])
+<div id="nestable-@{key}" class="dd">
+  <ol class="dd-list">
+    @options.map { v =>
+      <li class="dd-item" data-id="@v._1">
+        <div class="dd-handle">@v._2</div>
+      </li>
+    }
+  </ol>
+</div>
+<div>
+  <textarea id="@{key}-output"></textarea>
+</div>
+<script>
+  $(function() {
+    function updateOutput(e) {
+      var list = e.length ? e : $(e.target);
+      var json = JSON.stringify(list.nestable('serialize'), null, 2);
+      $("#@{key}-output").val(json)
+    }
+
+    $("#nestable-@{key}").nestable({
+      group: 1
+    }).on('change', updateOutput);
+  });
+</script>

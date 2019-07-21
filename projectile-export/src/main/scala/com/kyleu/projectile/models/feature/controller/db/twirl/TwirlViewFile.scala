@@ -14,7 +14,8 @@ object TwirlViewFile {
     val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.AuditRecord]" } else { "" }
     val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
     file.add(s"@($finalArgs, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
+    val tdi = CommonImportHelper.get(config, "TraceData")._1.mkString(".")
+    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, td: $tdi.TraceData")
     addContent(config, model, file)
     file
   }

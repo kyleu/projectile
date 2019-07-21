@@ -9,6 +9,7 @@ import com.kyleu.projectile.models.typescript.input.{TypeScriptInput, TypeScript
 import com.kyleu.projectile.services.config.ConfigService
 import com.kyleu.projectile.services.database.schema.SchemaHelper
 import com.kyleu.projectile.util.JsonFileLoader
+import com.kyleu.projectile.util.tracing.TraceData
 
 class InputService(val cfg: ConfigService) {
   private[this] val dir = cfg.inputDirectory
@@ -83,7 +84,7 @@ class InputService(val cfg: ConfigService) {
   def refresh(key: String) = load(key) match {
     case pg: PostgresInput =>
       val conn = pg.newConnection()
-      val s = SchemaHelper.calculateSchema(conn)
+      val s = SchemaHelper.calculateSchema(conn)(TraceData.noop)
       conn.close()
       val pgi = pg.copy(enumTypes = s.enums, tables = s.tables, views = s.views)
       PostgresInputService.savePostgres(cfg, pgi)

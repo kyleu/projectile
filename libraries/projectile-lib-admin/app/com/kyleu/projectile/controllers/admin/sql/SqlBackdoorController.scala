@@ -92,17 +92,17 @@ class SqlBackdoorController @javax.inject.Inject() (
     }
   }
 
-  def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID]): Either[(Seq[String], A), Int] = {
+  def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID])(implicit td: TraceData): Either[(Seq[String], A), Int] = {
     val q = new com.kyleu.projectile.models.database.jdbc.Queryable {}
     val actualValues = q.valsForJdbc(connection, query.values)
-    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")(TraceData.noop)
+    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")
     val stmt = connection.prepareStatement(query.sql)
     try {
       try {
         prepare(stmt, actualValues)
       } catch {
         case NonFatal(x) =>
-          log.error(s"Unable to prepare raw query [${query.sql}]", x)(TraceData.noop)
+          log.error(s"Unable to prepare raw query [${query.sql}]", x)
           throw x
       }
       val isResultset = stmt.execute()
@@ -114,7 +114,7 @@ class SqlBackdoorController @javax.inject.Inject() (
           Left(columns -> query.handle(res))
         } catch {
           case NonFatal(x) =>
-            log.error(s"Unable to handle query results for [${query.sql}]", x)(TraceData.noop)
+            log.error(s"Unable to handle query results for [${query.sql}]", x)
             throw x
         } finally {
           res.close()

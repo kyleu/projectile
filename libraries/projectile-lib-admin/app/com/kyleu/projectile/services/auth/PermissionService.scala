@@ -8,13 +8,13 @@ object PermissionService extends Logging {
   case class ModelInfo(key: String, title: String, icon: Option[String], actions: Seq[String])
   case class PackageInfo(key: String, title: String, icon: String, models: Seq[ModelInfo] = Nil)
 
-  def initialize(perms: Seq[Permission]) = {
+  def initialize(perms: Seq[Permission])(implicit td: TraceData) = {
     registerRole("admin", "Administrator", "A superuser that can do anything")
     registerRole("user", "User", "A normal system user")
 
     services.clear()
     perms.groupBy(_.role).foreach { case (role, p) => services(role) = PermissionService(p.toSet) }
-    log.info(s"Permissions service loaded with [${perms.size}] database rows")(TraceData.noop)
+    log.info(s"Permissions service loaded with [${perms.size}] database rows")
   }
 
   def check(role: String, pkg: String, model: String, action: String) = services.get(role) match {

@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.module
 
 import com.kyleu.projectile.models.database.DatabaseConfig
+import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.util.control.NonFatal
 
@@ -36,13 +37,13 @@ class ApplicationErrors(app: Application) {
     }
   }
 
-  def checkTable(name: String) = {
+  def checkTable(name: String)(implicit td: TraceData = TraceData.noop) = {
     tables = tables + name
     if (!app.db.doesTableExist(name)) { addError("table." + name, "Missing [" + name + "] table") }
   }
-  def checkTables() = tables.foreach(checkTable)
+  def checkTables(implicit td: TraceData) = tables.foreach(checkTable)
 
-  def clear() = {
+  def clear(implicit td: TraceData) = {
     errors = Nil
     tables.foreach(checkTable)
   }

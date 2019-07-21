@@ -13,7 +13,7 @@ class AugmentRegistry @javax.inject.Inject() () {
   val creds = Credentials.system
   implicit val td: TraceData = TraceData.noop
 
-  AugmentService.lists.register[SystemUser]((models, args, cfg) => {
+  AugmentService.lists.register[SystemUser]((models, args, cfg, td) => {
     val additional = models.map(m => m -> Some(Html(s"<td>${m.role}</td>"))).toMap
     Future.successful(Some(Html("<td>role</td>")) -> additional)
   })

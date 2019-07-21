@@ -17,7 +17,9 @@ import com.kyleu.projectile.services.search.SearchProvider
 import com.kyleu.projectile.services.status.StatusProvider
 import com.kyleu.projectile.services.websocket.ConnectionSupervisor
 import com.kyleu.projectile.util.metrics.MetricsConfig
+import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.tracing.{OpenTracingService, TracingService}
+import io.circe.JsonObject
 import net.codingwell.scalaguice.ScalaModule
 
 import scala.concurrent.ExecutionContext
@@ -26,6 +28,7 @@ abstract class AdminModule(
     val projectName: String,
     val allowSignup: Boolean,
     val initialRole: String,
+    val initialSettings: Json = JsonObject.empty.asJson,
     val oauthProviders: Seq[String] = Nil,
     val menuProvider: MenuProvider
 ) extends AbstractModule with ScalaModule {
@@ -56,6 +59,7 @@ abstract class AdminModule(
   protected[this] def uiConfigProvider: Application.UiConfigProvider = new Application.UiConfigProvider {
     override def allowRegistration = allowSignup
     override def defaultRole = initialRole
+    override def defaultSettings = initialSettings
     override def configForUser(su: Option[SystemUser], notifications: Seq[Notification], breadcrumbs: String*) = su match {
       case None => UiConfig(projectName = projectName, menu = menuProvider.guestMenu, urls = navUrls)
       case Some(u) =>

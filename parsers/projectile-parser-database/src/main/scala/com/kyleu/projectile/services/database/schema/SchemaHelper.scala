@@ -4,9 +4,10 @@ import java.sql.Connection
 
 import com.kyleu.projectile.models.database.schema.Schema
 import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.tracing.TraceData
 
 object SchemaHelper extends Logging {
-  def calculateSchema(conn: Connection) = {
+  def calculateSchema(conn: Connection)(implicit td: TraceData) = {
     val catalogName = Option(conn.getCatalog)
     val schemaName = try {
       Option(conn.getSchema)
