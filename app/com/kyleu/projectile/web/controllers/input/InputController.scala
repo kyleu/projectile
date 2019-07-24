@@ -49,21 +49,21 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
   def save() = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = InputSummary(template = InputTemplate.withValue(form("template")), key = form("key"), description = form("description"))
-    lazy val files = form("files").split("\n").map(_.trim).filter(_.nonEmpty)
+    lazy val files = form.getOrElse("files", "").split("\n").map(_.trim).filter(_.nonEmpty)
+    val input = projectile.addInput(summary)
+    val msg = "success" -> s"Saved input [${input.key}]"
     summary.template match {
       case InputTemplate.Postgres => projectile.setPostgresOptions(summary.key, PostgresConnection(
-        host = form("host"),
-        port = form("port").toInt,
-        username = form("username"),
-        password = Some(form("password")).filter(_ != "-unchanged-").getOrElse(PostgresInputService.loadConnection(projectile.rootCfg, summary.key).password),
-        db = form("db")
+        host = form.getOrElse("host", "localhost"),
+        port = form.getOrElse("port", "5432").toInt,
+        username = form.getOrElse("username", "postgres"),
+        password = Some(form.getOrElse("password", "password")).filter(_ != "-unchanged-").getOrElse(PostgresInputService.loadConnection(projectile.rootCfg, summary.key).password),
+        db = form.getOrElse("db", "")
       ))
       case InputTemplate.GraphQL => // projectile.setGraphQLOptions(summary.key, GraphQLOptions(???))
       case InputTemplate.Thrift => projectile.setThriftOptions(summary.key, ThriftOptions(files = files))
       case InputTemplate.TypeScript => projectile.setTypeScriptOptions(summary.key, TypeScriptOptions(files = files))
     }
-    val input = projectile.addInput(summary)
-    val msg = "success" -> s"Saved input [${input.key}]"
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)).flashing(msg))
   }
 

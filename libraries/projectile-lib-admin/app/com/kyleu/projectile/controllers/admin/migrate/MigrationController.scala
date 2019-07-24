@@ -23,7 +23,7 @@ class MigrationController @javax.inject.Inject() (
   val msg = "Flyway database migrations, to evolve your database"
   SystemMenu.addToolMenu(ApplicationFeature.Migrate.value, "Database Migrations", Some(msg), MigrationController.list(), InternalIcons.migration)
 
-  if (!app.db.getConfig.runMigrations.contains(false)) {
+  if (app.db.getConfig.runMigrations) {
     app.tracing.topLevelTraceBlocking("migrations") { td =>
       try {
         MigrateTask.migrate(app.db.source)(td)

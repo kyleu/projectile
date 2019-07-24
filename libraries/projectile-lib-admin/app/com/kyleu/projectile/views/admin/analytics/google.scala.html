@@ -1,0 +1,17 @@
+@(ua: String, cfg: com.kyleu.projectile.models.config.UiConfig, params: Seq[(String, String)])
+<script async src="https://www.googletagmanager.com/gtag/js?id=@ua"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', '@ua');
+  @cfg.userId.map { u =>
+    gtag('user', '@u');
+  }
+  gtag('breadcrumbs', '@cfg.breadcrumbs.map(_.key).mkString(", ")');
+  @params.map { p =>
+  gtag('@p._1', '@p._2');
+  }
+</script>

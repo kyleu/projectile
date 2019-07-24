@@ -1,0 +1,4 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Analytics: Currently supports Google Analytics
+GET         /                                 com.kyleu.projectile.controllers.admin.analytics.AnalyticsController.redir()

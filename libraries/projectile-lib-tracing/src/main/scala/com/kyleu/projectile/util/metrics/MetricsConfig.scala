@@ -19,5 +19,7 @@ class MetricsConfig @javax.inject.Inject() (cnf: Config) {
     case _ => cnf.getInt("metrics.tracing.port")
   }
   val tracingSampleRate = cnf.getDouble("metrics.tracing.sampleRate").toFloat
+
+  val analyticsGoogleUa = Option(cnf.getString("metrics.analytics.google.ua").trim).filter(_.nonEmpty)
 }
 

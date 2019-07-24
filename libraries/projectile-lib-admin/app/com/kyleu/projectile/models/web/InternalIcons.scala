@@ -19,6 +19,7 @@ object InternalIcons {
   val permission = "fingerprint"
   val help = "help_outline"
 
+  val analytics = "insert_chart"
   val connection = "device_hub"
   val encryption = "enhanced_encryption"
   val feedback = "feedback"

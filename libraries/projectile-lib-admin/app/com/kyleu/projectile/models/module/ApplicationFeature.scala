@@ -12,6 +12,7 @@ object ApplicationFeature extends StringEnum[ApplicationFeature] with StringCirc
   PermissionService.registerPackage("tools", "System Tools", InternalIcons.tools)
   PermissionService.registerPackage("models", "System Models", InternalIcons.models)
 
+  case object Analytics extends ApplicationFeature("analytics")
   case object Audit extends ApplicationFeature("audit")
   case object Connection extends ApplicationFeature("connection")
   case object Encryption extends ApplicationFeature("encryption")
