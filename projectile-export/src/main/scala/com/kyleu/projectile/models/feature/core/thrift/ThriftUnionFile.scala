@@ -46,8 +46,8 @@ object ThriftUnionFile {
     val cn = FieldTypeImports.imports(config, t.t, isThrift = true).headOption.map(_.mkString(".")).getOrElse {
       FieldTypeAsScala.asScala(config, t.t, isThrift = true)
     }
-    file.add(s"""case class ${ExportHelper.toClassName(t.className)}(v: $cn) extends ${union.className} {""", 1)
-    file.add(s"override def asThrift = $tc.${t.className}(v.asThrift)")
+    file.add(s"""case class ${ExportHelper.toClassName(t.className)}(${t.propertyName}: $cn) extends ${union.className} {""", 1)
+    file.add(s"override def asThrift = $tc.${t.className}(${t.propertyName}.asThrift)")
     file.add("}", -1)
   }
 }

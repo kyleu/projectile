@@ -24,14 +24,14 @@ import net.codingwell.scalaguice.ScalaModule
 
 import scala.concurrent.ExecutionContext
 
-abstract class AdminModule(
-    val projectName: String,
-    val allowSignup: Boolean,
-    val initialRole: String,
-    val initialSettings: Json = JsonObject.empty.asJson,
-    val oauthProviders: Seq[String] = Nil,
-    val menuProvider: MenuProvider
-) extends AbstractModule with ScalaModule {
+abstract class AdminModule() extends AbstractModule with ScalaModule {
+  def projectName: String
+  def allowSignup: Boolean
+  def initialRole: String
+  def initialSettings: Json = JsonObject.empty.asJson
+  def oauthProviders: Seq[String] = Nil
+  def menuProvider: MenuProvider
+
   // System
   protected[this] def onStartup(app: Application, injector: Injector) = {}
   protected[this] def appStatus(app: Application, injector: Injector) = AppStatus(name = projectName)

@@ -5,7 +5,6 @@ import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 import java.util.UUID
 
 import com.kyleu.projectile.util.{DateUtils, Logging}
-import com.kyleu.projectile.util.tracing.TraceData
 import io.circe.Json
 import reftree.core._
 import reftree.diagram.Diagram

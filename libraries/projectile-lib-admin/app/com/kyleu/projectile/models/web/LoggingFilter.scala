@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit
 import akka.stream.Materializer
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.metrics.Instrumented
-import com.kyleu.projectile.util.tracing.TraceData
 import javax.inject.Inject
 import play.api.mvc._
 

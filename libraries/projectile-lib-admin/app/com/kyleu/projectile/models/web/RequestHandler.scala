@@ -1,7 +1,6 @@
 package com.kyleu.projectile.models.web
 
 import com.kyleu.projectile.util.Logging
-import com.kyleu.projectile.util.tracing.TraceData
 import javax.inject.Inject
 import play.api.OptionalDevContext
 import play.api.http._

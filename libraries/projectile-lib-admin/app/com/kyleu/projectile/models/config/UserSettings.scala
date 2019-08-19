@@ -30,4 +30,6 @@ case class UserSettings(
 
   val logo = if (menuDark) { "/assets/images/logo-white.svg" } else { "/assets/images/logo-black.svg" }
   val navbarDarkClass = if (navbarDark) { "navbar-dark" } else { "navbar-light" }
+
+  val textColor = accentColor.map(_ + "-text").getOrElse("")
 }

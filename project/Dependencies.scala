@@ -111,7 +111,7 @@ object Dependencies {
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialIcons = "org.webjars" % "material-design-icons" % "3.0.1"
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.22.2" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.23.5" intransitive()
 
     val all = Seq(autocomplete, jquery, materialIcons, materialize, swaggerUi)
   }
@@ -119,14 +119,15 @@ object Dependencies {
   object Logging {
     val logback = "ch.qos.logback" % "logback-core" % "1.2.3"
     val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
-    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.28"
 
     val all = Seq(logback, logbackClassic, slf4j)
   }
 
   object Compiler {
-    val silencerPlugin = compilerPlugin("com.github.ghik" %% "silencer-plugin" % "1.4.1")
-    val silencerLib = "com.github.ghik" %% "silencer-lib" % "1.4.1" % Provided
+    private[this] val version = "1.4.2"
+    val silencerPlugin = compilerPlugin("com.github.ghik" %% "silencer-plugin" % version)
+    val silencerLib = "com.github.ghik" %% "silencer-lib" % version % Provided
 
     val all = Seq(silencerPlugin, silencerLib)
   }
@@ -140,7 +141,7 @@ object Dependencies {
     val chimney = "io.scalaland" %% "chimney" % "0.3.2"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"
-    val commonsCodec = "commons-codec" % "commons-codec" % "1.12"
+    val commonsCodec = "commons-codec" % "commons-codec" % "1.13"
     val commonsIo = "commons-io" % "commons-io" % "2.6"
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.9"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.6"
@@ -148,7 +149,7 @@ object Dependencies {
     val guava = "com.google.guava" % "guava" % "27.1-jre"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val reftree = "io.github.stanch" %% "reftree" % "1.4.0"
-    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.5"
+    val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.6"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.4"
   }

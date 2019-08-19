@@ -1,4 +1,4 @@
-@(key: String, options: Seq[(String, Html)])
+@(key: String, options: Seq[(String, Html)], group: Int = 0)
 <div id="nestable-@key" class="dd">
   <ol class="dd-list">
     @options.map { v =>
@@ -18,7 +18,7 @@
     }
 
     $("#nestable-@{key}").nestable({
-      group: 1
+      group: @group
     }).on('change', updateOutput);
   });
 </script>
