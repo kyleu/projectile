@@ -100,7 +100,7 @@ object LibraryProjects {
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
-    `projectile-lib-scala`, `projectile-lib-tracing`, // `projectile-lib-thrift`,
+    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
     `projectile-lib-admin`

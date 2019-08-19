@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import scala.util.control.NonFatal
 
-import scala.collection.parallel.CollectionConverters._
+// import scala.collection.parallel.CollectionConverters._
 
 object CollectionUtils {
   def parLoop[T, U](

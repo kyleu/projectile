@@ -10,7 +10,7 @@ object Common {
     val app = "1.14.0"
     val scala212 = "2.12.9"
     val scala213 = "2.13.0"
-    val scala = scala213
+    val scala = scala212
   }
 
   private[this] val profilingEnabled = false

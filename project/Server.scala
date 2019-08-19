@@ -79,5 +79,5 @@ object Server {
   lazy val `projectile-server` = withProjects(
     Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     ProjectileExport.`projectile-export`
-  ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*) // .aggregate(SbtExportPlugin.allReferences: _*)
+  ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*).aggregate(SbtExportPlugin.allReferences: _*)
 }
