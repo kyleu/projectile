@@ -45,8 +45,8 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.3"
-    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.2"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
+    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
   }
 
   object Serialization {
