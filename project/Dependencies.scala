@@ -27,7 +27,7 @@ object Dependencies {
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
       val pg = "com.github.tminglei" %% "slick-pg" % pgVersion
       val pgCirce = "com.github.tminglei" %% "slick-pg_circe-json" % pgVersion
-      val slickless = "io.underscore" %% "slickless" % "0.3.5"
+      val slickless = "io.underscore" %% "slickless" % "0.3.6"
 
       val all = Seq(core, hikariCp, pg, pgCirce, slickless)
     }
@@ -45,12 +45,12 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
-    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
+    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.3"
+    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.2"
   }
 
   object Serialization {
-    val version = "0.12.0-M4"
+    val version = "0.12.0-RC3"
 
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.3.1"
@@ -88,15 +88,15 @@ object Dependencies {
   }
 
   object Tracing {
-    val version = "0.35.5"
+    val version = "1.0.0"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.30.0"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.31.2"
   }
 
   object Authentication {
-    private[this] val version = "6.0.0"
+    private[this] val version = "6.1.0"
     val silhouette = "com.mohiva" %% "play-silhouette" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")

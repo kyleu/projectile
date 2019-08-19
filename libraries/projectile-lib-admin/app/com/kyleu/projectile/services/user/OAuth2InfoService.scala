@@ -15,6 +15,8 @@ class OAuth2InfoService @javax.inject.Inject() (
     @Named("system") db: JdbcDatabase,
     tracingService: OpenTracingService
 )(implicit ec: ExecutionContext) extends DelegableAuthInfoDAO[OAuth2Info] {
+  override val classTag = scala.reflect.ClassTag(classOf[OAuth2Info])
+
   override def find(loginInfo: LoginInfo) = tracingService.noopTrace("oauth2.find") { implicit td =>
     Future.successful(db.query(OAuth2InfoQueries.getByPrimaryKey(loginInfo.providerID, loginInfo.providerKey)))
   }

@@ -156,8 +156,7 @@ class SystemUserService @javax.inject.Inject() (
   }
 
   def updateUser(creds: Credentials, model: SystemUser)(implicit trace: TraceData) = tracing.trace("update") { td =>
-    db.executeF(SystemUserQueries.UpdateUser(model))(td).map { rowsAffected =>
-      if (rowsAffected != 1) { throw new IllegalStateException(s"Attempt to update user [${model.id}] affected [$rowsAffected}] rows") }
+    update(creds, model.id, model.toDataFields)(td).map { _ =>
       UserCache.cacheUser(model)
       model
     }

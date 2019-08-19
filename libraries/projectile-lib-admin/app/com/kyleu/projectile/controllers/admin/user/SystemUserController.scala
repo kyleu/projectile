@@ -22,6 +22,8 @@ import play.api.http.MimeTypes
 import scala.concurrent.{ExecutionContext, Future}
 import com.kyleu.projectile.services.user.SystemUserService
 
+import scala.util.control.NonFatal
+
 @javax.inject.Singleton
 class SystemUserController @javax.inject.Inject() (
     override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService, db: JdbcDatabase
@@ -76,20 +78,22 @@ class SystemUserController @javax.inject.Inject() (
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", ("models", "SystemUser", "view")) { implicit request => implicit td =>
     val modelF = svc.getByPrimaryKey(request, id)
-    val auditsF = auditRecordSvc.getByModel(request, "SystemUser", id)
-    val notesF = noteSvc.getFor(request, "SystemUser", id)
+    val notesF = noteSvc.getFor(request, "SystemUser", id).recover { case NonFatal(x) => Nil }
+    val modelNotesF = noteSvc.getByAuthor(request, id, limit = Some(100)).recover { case NonFatal(x) => Nil }
+    val auditsF = auditRecordSvc.getByModel(request, "SystemUser", id).recover { case NonFatal(x) => Nil }
+    val modelAuditsF = auditRecordSvc.getByUserId(request, id, limit = Some(100)).recover { case NonFatal(x) => Nil }
 
-    notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
+    notesF.flatMap(notes => modelNotesF.flatMap(modelNotes => auditsF.flatMap(audits => modelAuditsF.flatMap(modelAudits => modelF.map {
       case Some(model) => renderChoice(t) {
         case MimeTypes.HTML =>
           val cfg = app.cfg(u = Some(request.identity), "system", "models", "user", model.id.toString)
-          Ok(com.kyleu.projectile.views.html.admin.user.systemUserView(cfg, model, notes, audits, app.config.debug))
+          Ok(com.kyleu.projectile.views.html.admin.user.systemUserView(cfg, model, notes, modelNotes, audits, modelAudits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
         case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
         case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
       }
       case None => NotFound(s"No SystemUser found with id [$id]")
-    }))
+    }))))
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("models", "SystemUser", "edit")) { implicit request => implicit td =>

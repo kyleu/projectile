@@ -15,6 +15,8 @@ class PasswordInfoService @javax.inject.Inject() (
     @Named("system") db: JdbcDatabase,
     tracingService: OpenTracingService
 )(implicit ec: ExecutionContext) extends DelegableAuthInfoDAO[PasswordInfo] {
+  override val classTag = scala.reflect.ClassTag(classOf[PasswordInfo])
+
   override def find(loginInfo: LoginInfo) = tracingService.noopTrace("password.find") { implicit td =>
     Future.successful(db.query(PasswordInfoQueries.getByPrimaryKey(loginInfo.providerID, loginInfo.providerKey)))
   }

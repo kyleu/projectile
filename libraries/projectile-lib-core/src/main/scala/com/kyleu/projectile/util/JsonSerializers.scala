@@ -14,8 +14,8 @@ object JsonSerializers {
   type Json = io.circe.Json
 
   implicit val circeConfiguration: extras.Configuration = extras.Configuration.default.withDefaults
-  def deriveDecoder[A](implicit decode: Lazy[extras.decoding.ConfiguredDecoder[A]]) = extras.semiauto.deriveDecoder[A]
-  def deriveEncoder[A](implicit encode: Lazy[extras.encoding.ConfiguredAsObjectEncoder[A]]) = extras.semiauto.deriveEncoder[A]
+  def deriveDecoder[A](implicit decode: Lazy[extras.decoding.ConfiguredDecoder[A]]) = extras.semiauto.deriveConfiguredDecoder[A]
+  def deriveEncoder[A](implicit encode: Lazy[extras.encoding.ConfiguredAsObjectEncoder[A]]) = extras.semiauto.deriveConfiguredEncoder[A]
 
   // implicit val magnoliaConfiguration: io.circe.magnolia.configured.Configuration = io.circe.magnolia.configured.Configuration.default.withDefaults
   // def deriveDecoder[A] = io.circe.magnolia.configured.decoder.semiauto.deriveConfiguredMagnoliaDecoder[A]
@@ -32,6 +32,7 @@ object JsonSerializers {
     case Left(x) => throw x
   }
 
+  @scala.annotation.tailrec
   def extractObj[T: Decoder](obj: JsonObject, key: String): T = key.split('.').toList match {
     case h :: Nil => obj.apply(h).map(extract[T]).getOrElse(throw new IllegalStateException(s"No [$key] field among candidates [${obj.keys.mkString(", ")}]"))
     case h :: x =>
