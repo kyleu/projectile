@@ -46,6 +46,7 @@ object GraphQLTypeParser {
     case o: OptionInputType[_] => false -> getInputType(ctx, schema, o.ofType)._2
     case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)
     case s: ScalarType[_] => true -> getScalarType(s.name)
+    case x => throw new IllegalStateException(s"Unhandled type $x")
   }
 
   def getOutputType(ctx: String, schema: Schema[_, _], doc: Document, t: OutputType[_], selections: Seq[Selection]): (Boolean, FieldType) = t match {
@@ -65,6 +66,7 @@ object GraphQLTypeParser {
     case e: EnumType[_] => true -> FieldType.EnumType(e.name)
     case s: ScalarAlias[_, _] => true -> getScalarType(s.aliasFor.name)
     case s: ScalarType[_] => true -> getScalarType(s.name)
+    case x => throw new IllegalStateException(s"Unhandled GraphQL type [$x] for type [$ctx]")
   }
 
   def getScalarType(name: String) = name match {

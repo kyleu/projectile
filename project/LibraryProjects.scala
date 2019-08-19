@@ -20,7 +20,13 @@ object LibraryProjects {
       val boopickle = "io.suzaku" %%% "boopickle" % Serialization.booPickleVersion
       Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum :+ boopickle
     },
-    (sourceGenerators in Compile) += ProjectVersion.writeConfig(Common.projectId, Common.projectName, Common.projectPort, "com.kyleu.projectile.util").taskValue
+    libraryDependencies ++= {CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, major)) if major >= 13 => Seq()
+      case _ => Seq("org.scala-lang.modules" %%% "scala-collection-compat" % "2.1.2")
+    }},
+    (sourceGenerators in Compile) += ProjectVersion.writeConfig(
+      projectId = Common.projectId, projectName = Common.projectName, projectPort = Common.projectPort, pkg = "com.kyleu.projectile.util"
+    ).taskValue
   ).jsSettings(libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC3").disablePlugins(AssemblyPlugin)
 
   lazy val `projectile-lib-core-jvm` = `projectile-lib-core`.jvm.withId("projectile-lib-core")
@@ -57,6 +63,8 @@ object LibraryProjects {
   ).dependsOn(`projectile-lib-jdbc`)
 
   lazy val `projectile-lib-thrift` = libraryProject(project in file("libraries/projectile-lib-thrift")).settings(
+    scalaVersion := Common.Versions.scala212,
+    crossScalaVersions := Seq(Common.Versions.scala212),
     description := "Common Thrift classes used by code generated from Projectile",
     libraryDependencies ++= Thrift.all
   ).dependsOn(`projectile-lib-tracing`)
@@ -85,18 +93,17 @@ object LibraryProjects {
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
-      Play.cache, Play.filters, Play.guice, Play.json, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang, Utils.reftree
+      Play.cache, Play.filters, Play.guice, Play.json, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang // , Utils.reftree
     ) ++ Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes"))
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
-    `projectile-lib-scala`, `projectile-lib-tracing`, `projectile-lib-thrift`,
+    `projectile-lib-scala`, `projectile-lib-tracing`, // `projectile-lib-thrift`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
     `projectile-lib-admin`
   )
-
   lazy val allReferences = all.map(_.project)
 }

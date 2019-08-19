@@ -72,14 +72,14 @@ object GraphQLObjectHelper {
 
     val objs = fields.map(_.t).collect {
       case o: FieldType.ObjectType => getObjects(o)
-    }.flatten.groupBy(_._1).mapValues(_.map(_._2))
+    }.flatten.groupBy(_._1).map(x => x._1 -> x._2.map(_._2))
 
     val dupes = objs.filter(o => o._2.distinct.size > 1).keys.toSeq.sorted
     if (dupes.nonEmpty) {
       throw new IllegalStateException(s"Duplicate conflicting references [${dupes.mkString(", ")}] for [$ctx]")
     }
 
-    objs.mapValues(_.headOption.getOrElse(throw new IllegalStateException())).foreach { o =>
+    objs.map(x => x._1 -> x._2.headOption.getOrElse(throw new IllegalStateException())).foreach { o =>
       val cn = ExportHelper.toClassName(o._1)
       file.add(s"object $cn {", 1)
 

@@ -8,7 +8,7 @@ object CLI {
     val result = if (args.headOption.contains("batch")) {
       ProjectileCLI.runBatch(args).flatMap(_._2)
     } else {
-      ProjectileCLI.runArgs(args).toSeq
+      ProjectileCLI.runArgs(args.toIndexedSeq).toSeq
     }
     println(s"${Version.projectName} ${Version.version} completed successfully in [${System.currentTimeMillis - startMs}ms]")
     result.foreach(CommandLineOutput.logResponse)

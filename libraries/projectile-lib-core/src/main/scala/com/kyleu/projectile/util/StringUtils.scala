@@ -19,5 +19,5 @@ object StringUtils {
   def toMap(s: String, delim: Char = ',') = toTags(s, delim).map(t => t.k -> t.v).toMap[String, String]
 
   def fromTags(s: Seq[Tag]) = s.map(t => t.k + "=" + t.v).mkString(",")
-  def fromMap(m: Map[_, _]) = m.map(v => v._1 + "=" + v._2).mkString(",")
+  def fromMap(m: Map[Any, Any]) = m.map(v => v._1.toString + "=" + v._2).mkString(",")
 }

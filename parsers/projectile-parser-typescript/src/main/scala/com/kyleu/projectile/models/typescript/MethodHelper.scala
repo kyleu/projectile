@@ -31,7 +31,7 @@ object MethodHelper {
     }
   }
 
-  def getName(o: JsonObject): String = o.apply("escapedText").orElse(o.apply("text")).map(_.as[String].right.get).getOrElse {
+  def getName(o: JsonObject): String = o.apply("escapedText").orElse(o.apply("text")).map(_.as[String].getOrElse("???")).getOrElse {
     o.apply("right") match {
       case Some(r) => o.apply("left").map(l => getName(asObj(l))).map(_ + ".").getOrElse("") + getName(asObj(r))
       case None => o.apply("expression") match {

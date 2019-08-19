@@ -15,7 +15,7 @@ object Tag {
   def toMap(seq: Seq[Tag]) = seq.map(x => x.k -> x.v).toMap
 
   def fromJavaMap(m: java.util.HashMap[_, _]) = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     fromMap(m.asScala.toMap)
   }
 

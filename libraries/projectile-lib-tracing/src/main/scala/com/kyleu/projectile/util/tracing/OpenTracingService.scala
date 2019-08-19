@@ -7,7 +7,7 @@ import io.opentracing.noop.NoopTracerFactory
 import io.opentracing.propagation.{Format, TextMapExtract, TextMapExtractAdapter, TextMapInject, TextMapInjectAdapter}
 import io.opentracing.{Span, Tracer}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}

@@ -46,7 +46,7 @@ class ScheduledTaskService @javax.inject.Inject() (
         Future.successful(Nil)
       } else {
         log.debug(s"Running scheduled tasks [${tasks.map(_.key).mkString(", ")}].")
-        Future.sequence(tasks.map { task =>
+        Future.sequence(tasks.toIndexedSeq.map { task =>
           go(id, creds, args, task, trace).map { o =>
             ScheduledTaskRun(id = id, task = task.key, arguments = args.toList, status = o.status, output = o.asJson, started = o.start, completed = o.end)
           }
@@ -79,7 +79,7 @@ class ScheduledTaskService @javax.inject.Inject() (
     def fin(status: String) = {
       val ret = ScheduledTaskOutput(
         userId = creds.id, username = creds.name,
-        status = status, logs = logs,
+        status = status, logs = logs.toIndexedSeq,
         start = start, end = DateUtils.now
       )
       log.debug(s"Completed scheduled task [${task.key}] with args [${args.mkString(", ")}] in [${ret.durationMs}ms].")(td)

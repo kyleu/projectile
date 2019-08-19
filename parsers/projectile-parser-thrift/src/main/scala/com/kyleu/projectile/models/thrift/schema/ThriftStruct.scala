@@ -2,11 +2,11 @@ package com.kyleu.projectile.models.thrift.schema
 
 import com.facebook.swift.parser.model.Struct
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object ThriftStruct {
   def fromStruct(s: Struct, pkg: Seq[String]) = {
-    ThriftStruct(key = s.getName, pkg = pkg, fields = s.getFields.asScala.map(ThriftStructField.fromThrift))
+    ThriftStruct(key = s.getName, pkg = pkg, fields = s.getFields.asScala.toIndexedSeq.map(ThriftStructField.fromThrift))
   }
 }
 

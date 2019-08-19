@@ -19,7 +19,7 @@ case class ScalaFile(
     val importString = if (imports.isEmpty) {
       ""
     } else {
-      imports.toSeq.groupBy(_._1).mapValues(_.map(_._2)).toList.sortBy(_._1).map { i =>
+      imports.toSeq.groupBy(_._1).map(x => x._1 -> x._2.map(_._2)).toList.sortBy(_._1).map { i =>
         i._2.size match {
           case 1 => s"import ${i._1}.${i._2.headOption.getOrElse(throw new IllegalStateException())}"
           case _ => s"import ${i._1}.{${i._2.sorted.mkString(", ")}}"

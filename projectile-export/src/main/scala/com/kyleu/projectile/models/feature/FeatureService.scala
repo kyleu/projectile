@@ -53,7 +53,7 @@ object FeatureService {
     val injections = logic.map(_.inject(config = config, projectRoot = projectRoot, markers = markers, info = info, debug = debug)).getOrElse(Nil)
     val duration = System.currentTimeMillis - startMs
     info(s"Feature [${feature.title}] produced [${files.length}] files in [${duration}ms]")
-    FeatureOutput(feature = feature, files = files, injections = injections, logs = logs, duration = duration)
+    FeatureOutput(feature = feature, files = files, injections = injections, logs = logs.toIndexedSeq, duration = duration)
   }
 
 }

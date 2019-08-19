@@ -45,7 +45,7 @@ object OutputHelper {
       jsDoc.deprecated.headOption.foreach(h => file.add(s"""@deprecated("$h", "0")"""))
   }
 
-  def keywords(node: TypeScriptNode) = node.ctx.modifiers.map(_ + " ").mkString
+  def keywords(node: TypeScriptNode) = node.ctx.modifiers.map(_.toString + " ").mkString
 
   def tParams(tParams: Seq[TypeParam]) = tParams.toList match {
     case Nil => ""

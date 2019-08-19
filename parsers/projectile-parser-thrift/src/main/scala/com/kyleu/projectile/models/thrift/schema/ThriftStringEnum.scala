@@ -2,10 +2,10 @@ package com.kyleu.projectile.models.thrift.schema
 
 import com.facebook.swift.parser.model.StringEnum
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object ThriftStringEnum {
-  def fromStringEnum(e: StringEnum, pkg: Seq[String]) = ThriftStringEnum(e.getName, pkg, e.getValues.asScala)
+  def fromStringEnum(e: StringEnum, pkg: Seq[String]) = ThriftStringEnum(e.getName, pkg, e.getValues.asScala.toIndexedSeq)
 }
 
 case class ThriftStringEnum(

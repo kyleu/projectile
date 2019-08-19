@@ -14,7 +14,7 @@ import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 
-abstract class AuthController(name: String) extends BaseController(name) {
+abstract class AuthController(name: String) extends com.kyleu.projectile.controllers.BaseController(name) {
   type Req = SecuredRequest[AuthEnv, AnyContent]
 
   def app: Application

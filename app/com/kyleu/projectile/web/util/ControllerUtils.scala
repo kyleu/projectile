@@ -9,8 +9,8 @@ import play.api.mvc.AnyContent
 object ControllerUtils {
   def getForm(body: AnyContent, prefix: Option[String] = None) = body.asFormUrlEncoded match {
     case Some(f) =>
-      val fullMap = f.mapValues(_.mkString(","))
-      prefix.map(p => fullMap.filterKeys(_.startsWith(p)).map(x => x._1.stripPrefix(p) -> x._2)).getOrElse(fullMap)
+      val fullMap = f.map(x => x._1 -> x._2.mkString(","))
+      prefix.map(p => fullMap.filter(_._1.startsWith(p)).map(x => x._1.stripPrefix(p) -> x._2)).getOrElse(fullMap).toMap
     case None => throw new IllegalStateException("Missing form post")
   }
 
@@ -42,7 +42,7 @@ object ControllerUtils {
   }
 
   def modelForm(rawForm: Map[String, Seq[String]]) = {
-    val form = rawForm.mapValues(_.headOption.getOrElse(throw new IllegalStateException("Empty form field")))
+    val form = rawForm.map(x => x._1 -> x._2.headOption.getOrElse(throw new IllegalStateException("Empty form field")))
     val fields = form.toSeq.filter(x => x._1.endsWith("-include") && x._2 == "true").map(_._1.stripSuffix("-include"))
     def valFor(f: String) = form.get(f) match {
       case Some(x) if x == NullUtils.str => None

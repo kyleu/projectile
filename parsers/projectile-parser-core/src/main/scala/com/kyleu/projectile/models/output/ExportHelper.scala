@@ -18,7 +18,7 @@ object ExportHelper {
   } else {
     converterFor(getSource(s), CaseFormat.UPPER_CAMEL).convert(s.replaceAllLiterally(" ", "").replaceAllLiterally(".", ""))
   }
-  def toDefaultTitle(s: String) = toClassName(s).flatMap(c => if (c.isUpper) { Seq(' ', c) } else { Seq(c) }).trim
+  def toDefaultTitle(s: String) = toClassName(s).flatMap(c => if (c.isUpper) { Seq(' ', c) } else { Seq(c) }).toString.trim
 
   def toDefaultPlural(str: String) = str match {
     case x if x.endsWith("s") => x

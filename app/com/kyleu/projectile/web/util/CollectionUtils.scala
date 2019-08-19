@@ -4,6 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import scala.util.control.NonFatal
 
+import scala.collection.parallel.CollectionConverters._
+
 object CollectionUtils {
   def parLoop[T, U](
     seq: Seq[T],
@@ -24,7 +26,7 @@ object CollectionUtils {
 
     if (includeProgress) {
       val inProgress = {
-        import scala.collection.JavaConverters._
+        import scala.jdk.CollectionConverters._
         java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap[T, java.lang.Boolean]).asScala
       }
       seq.par.map { x =>

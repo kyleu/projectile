@@ -15,7 +15,7 @@ object InjectComponentMenu extends FeatureLogic.Inject(path = OutputPath.ServerS
     val roots = filtered.filter(_.pkg.isEmpty).sortBy(_.title)
     val pkgGroups = filtered.filterNot(_.pkg.isEmpty).groupBy(_.pkg.headOption.getOrElse(
       throw new IllegalStateException()
-    )).mapValues(_.sortBy(_.title)).toSeq.sortBy(_._1)
+    )).map(x => x._1 -> x._2.sortBy(_.title)).toSeq.sortBy(_._1)
     roots -> pkgGroups
   }
 

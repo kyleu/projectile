@@ -86,6 +86,6 @@ object AuditRecordQueries extends BaseQueries[AuditRecord]("auditRecordRow", "au
     auditId = UuidType(row, "audit_id"),
     t = StringType(row, "t"),
     pk = StringArrayType(row, "pk"),
-    changes = JsonType(row, "changes").as[Seq[AuditField]].right.get
+    changes = JsonType(row, "changes").as[Seq[AuditField]].getOrElse(throw new IllegalStateException("Invalid JSON"))
   )
 }

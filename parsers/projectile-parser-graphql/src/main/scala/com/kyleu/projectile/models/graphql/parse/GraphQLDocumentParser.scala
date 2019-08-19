@@ -41,7 +41,7 @@ object GraphQLDocumentParser extends Logging {
 
   private[this] def parseFragment(pkg: Seq[String], schema: Schema[_, _], doc: Document, f: FragmentDefinition) = {
     val result = GraphQLSelectionParser.fieldsForSelections(s"fragment:${f.name}", schema, doc, schema.allTypes(f.typeCondition.name), f.selections)
-    val fields = result.right.getOrElse(throw new IllegalStateException("Cannot currently support fragments with a single spread"))
+    val fields = result.getOrElse(throw new IllegalStateException("Cannot currently support fragments with a single spread"))
     GraphQLDocumentHelper.modelFor(pkg, f.name, InputType.Model.GraphQLFragment, Nil, fields, Some(f.renderPretty))
   }
 
@@ -66,7 +66,7 @@ object GraphQLDocumentParser extends Logging {
       case _ => throw new IllegalStateException(s"Unsupported operation [${o.operationType}]")
     }
     val result = GraphQLSelectionParser.fieldsForSelections(s"$it:$key", schema, doc, typ, o.selections)
-    val fields = result.right.getOrElse(throw new IllegalStateException("Cannot currently support fragments with a single spread"))
+    val fields = result.getOrElse(throw new IllegalStateException("Cannot currently support fragments with a single spread"))
     val vars = GraphQLDocumentHelper.parseVariables(schema, doc, o.variables)
     GraphQLDocumentHelper.modelFor(pkg, key, it, vars, fields, Some(o.renderPretty))
   }

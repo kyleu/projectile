@@ -2,11 +2,11 @@ package com.kyleu.projectile.models.thrift.schema
 
 import com.facebook.swift.parser.model.Union
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object ThriftUnion {
   def fromStruct(s: Union, pkg: Seq[String]) = {
-    ThriftUnion(key = s.getName, pkg = pkg, types = s.getFields.asScala.map(ThriftUnionMember.fromThrift))
+    ThriftUnion(key = s.getName, pkg = pkg, types = s.getFields.asScala.toIndexedSeq.map(ThriftUnionMember.fromThrift))
   }
 }
 

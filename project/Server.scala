@@ -16,7 +16,12 @@ object Server {
     name := Common.projectId,
     description := Common.projectName,
 
-    libraryDependencies ++= Play.all ++ Seq(WebJars.jquery, WebJars.materialize, WebJars.fontAwesome) ++ Compiler.all,
+    libraryDependencies ++= Play.all ++ Seq(WebJars.jquery, WebJars.materialize, WebJars.fontAwesome) ++ Compiler.all ++ {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, major)) if major >= 13 => Seq("org.scala-lang.modules" %% "scala-parallel-collections" % "0.2.0")
+        case _ => Seq()
+      }
+    },
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes")),
 
     // Play
@@ -74,5 +79,5 @@ object Server {
   lazy val `projectile-server` = withProjects(
     Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
     ProjectileExport.`projectile-export`
-  ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*).aggregate(SbtExportPlugin.allReferences: _*)
+  ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*) // .aggregate(SbtExportPlugin.allReferences: _*)
 }

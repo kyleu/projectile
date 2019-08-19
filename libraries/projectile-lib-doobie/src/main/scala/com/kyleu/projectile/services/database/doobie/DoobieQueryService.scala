@@ -4,7 +4,7 @@ import java.sql.Timestamp
 import java.time.{LocalDateTime, ZoneOffset, ZonedDateTime}
 
 import cats.Reducible
-import cats.effect.{ContextShift, IO}
+import cats.effect.{Blocker, ContextShift, IO}
 import com.kyleu.projectile.models.tag.Tag
 import com.kyleu.projectile.util.JsonSerializers
 import doobie.free._
@@ -46,7 +46,7 @@ object DoobieQueryService {
 class DoobieQueryService(dataSource: DataSource)(implicit ec: ExecutionContext) {
   implicit val cs: ContextShift[IO] = IO.contextShift(ec)
 
-  val db = Transactor.fromDataSource[IO](dataSource, ec, ec)
+  val db = Transactor.fromDataSource[IO](dataSource, ec, Blocker.liftExecutionContext(ec))
 
   def runSync[T](x: doobie.ConnectionIO[T]) = x.transact(db).unsafeRunSync
 }

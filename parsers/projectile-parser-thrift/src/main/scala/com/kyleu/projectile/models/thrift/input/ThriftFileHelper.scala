@@ -61,7 +61,7 @@ object ThriftFileHelper {
       case Some(m) => m.className + "()"
       case None => throw new IllegalStateException(s"No model with key [$k]")
     }
-    case x => x + "()"
+    case x => x.toString + "()"
   }
 
   private[this] def propDefault(config: ExportConfiguration, colType: FieldType, required: Boolean, value: Option[String]) = value match {

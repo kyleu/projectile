@@ -10,7 +10,7 @@ import sangria.marshalling.queryAst._
 import sangria.renderer.SchemaRenderer
 import sangria.schema.Context
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object TracingExtension extends Middleware[Any] with MiddlewareExtension[Any] with MiddlewareAfterField[Any] with MiddlewareErrorField[Any] {
   final case class QueryTrace(startTime: Instant, startNanos: Long, fieldData: ConcurrentLinkedQueue[Value])

@@ -17,7 +17,7 @@ object SandboxTask {
   final case class Result(task: SandboxTask, arg: Option[String], status: String = "OK", result: Json, elapsed: Int)
 
   implicit val jsonEncoder: Encoder[SandboxTask] = (r: SandboxTask) => io.circe.Json.fromString(r.id)
-  implicit val jsonDecoder: Decoder[SandboxTask] = (c: io.circe.HCursor) => Right(get(c.as[String].right.get))
+  implicit val jsonDecoder: Decoder[SandboxTask] = (c: io.circe.HCursor) => Right(get(c.as[String].getOrElse(throw new IllegalStateException("Invalid JSON"))))
 
   private[this] var tasks = Set.empty[SandboxTask]
 

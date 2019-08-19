@@ -31,7 +31,7 @@ class ProcessController @javax.inject.Inject() (
     if (cmdSplit.isEmpty) {
       throw new IllegalStateException("Please provide a command to run by passing the \"cmd\" query string parameter.")
     }
-    val proc = ProcessService.start(request, cmdSplit, o => println(o), (e, d) => log.info(d + ": " + e))
+    val proc = ProcessService.start(request, cmdSplit.toIndexedSeq, o => println(o), (e, d) => log.info(d.toString + ": " + e))
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "process")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.process.procDetail(cfg, proc)))
   }

@@ -7,12 +7,10 @@ object Common {
   val projectPort = 20000
 
   object Versions {
-    val app = "1.13.4"
-    val scala = "2.12.9"
-    // val scala = "2.13.0"
-    // Requires:
-    // - enumeratum-circe
-    // - sangria
+    val app = "1.14.0"
+    val scala212 = "2.12.9"
+    val scala213 = "2.13.0"
+    val scala = scala213
   }
 
   private[this] val profilingEnabled = false
@@ -22,15 +20,15 @@ object Common {
 
   val compileOptions = Seq(
     "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-    /* "-Xfatal-warnings", */ "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Xfuture",
-    "-Yrangepos", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-dead-code",
-    "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-numeric-widen", "-Ywarn-infer-any"
+    /* "-Xfatal-warnings", */ "–Xcheck-null", "-Xlint", "-Xcheckinit", /* "-Xfuture", */
+    "-Yrangepos", /* "-Ypartial-unification", */ /* "-Yno-adapted-args", */ "-Ywarn-dead-code",
+    /* "-Ywarn-inaccessible", */ /* "-Ywarn-nullary-override", */ "-Ywarn-numeric-widen" /* , "-Ywarn-infer-any" */
   ) ++ profileOptions
 
   lazy val settings = Seq(
     version := Common.Versions.app,
     scalaVersion := Common.Versions.scala,
-    crossScalaVersions := Seq("2.12.9", "2.13.0"),
+    crossScalaVersions := Seq(Common.Versions.scala212, Common.Versions.scala213),
     organization := "com.kyleu",
 
     licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0")),

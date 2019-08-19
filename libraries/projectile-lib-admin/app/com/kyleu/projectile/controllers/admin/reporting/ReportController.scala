@@ -37,12 +37,12 @@ class ReportController @javax.inject.Inject() (
   }
 
   def run(key: String, t: Option[String]) = withSession(key, ("tools", "Reporting", "run")) { implicit request => implicit td =>
-    val args = request.queryString.mapValues(_.headOption.getOrElse("")).filterKeys {
-      case "t" => false
-      case "sort" => false
+    val args = request.queryString.map(x => x._1 -> x._2.headOption.getOrElse("")).filter {
+      case x if x._1 == "t" => false
+      case x if x._1 == "sort" => false
       case _ => true
     }
-    ReportService.run(key, args, request.identity.id, request.identity.role, injector).map { result =>
+    ReportService.run(key, args.toMap, request.identity.id, request.identity.role, injector).map { result =>
       // Redirect(com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.cached(result.id))
       response(result, t)
     }

@@ -61,8 +61,8 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
         db = form.getOrElse("db", "")
       ))
       case InputTemplate.GraphQL => // projectile.setGraphQLOptions(summary.key, GraphQLOptions(???))
-      case InputTemplate.Thrift => projectile.setThriftOptions(summary.key, ThriftOptions(files = files))
-      case InputTemplate.TypeScript => projectile.setTypeScriptOptions(summary.key, TypeScriptOptions(files = files))
+      case InputTemplate.Thrift => projectile.setThriftOptions(summary.key, ThriftOptions(files = files.toIndexedSeq))
+      case InputTemplate.TypeScript => projectile.setTypeScriptOptions(summary.key, TypeScriptOptions(files = files.toIndexedSeq))
     }
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.input.routes.InputController.detail(input.key)).flashing(msg))
   }

@@ -36,7 +36,7 @@ object ThriftParseService {
   }
 
   private[this] def parse(reference: Boolean, file: File): ThriftParseResult = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
 
     val src = Files.asByteSource(file.toJava).asCharSource(Charsets.UTF_8)
     val doc = ThriftIdlParser.parseThriftIdl(src)
@@ -56,6 +56,13 @@ object ThriftParseService {
         parse(reference = true, file = other)
       }
     }
-    ThriftParseResult(filename = file.name, reference = reference, pkg = pkg.split('.'), decls = d, includes = included, lines = file.lines.toSeq)
+    ThriftParseResult(
+      filename = file.name,
+      reference = reference,
+      pkg = pkg.split('.').toIndexedSeq,
+      decls = d.toIndexedSeq,
+      includes = included.toIndexedSeq,
+      lines = file.lines.toIndexedSeq
+    )
   }
 }

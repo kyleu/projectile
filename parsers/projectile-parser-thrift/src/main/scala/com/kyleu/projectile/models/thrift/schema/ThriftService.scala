@@ -2,11 +2,11 @@ package com.kyleu.projectile.models.thrift.schema
 
 import com.facebook.swift.parser.model.Service
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object ThriftService {
   def fromThrift(s: Service, pkg: Seq[String]) = {
-    val methods = s.getMethods.asScala.map(ThriftServiceMethod.fromThrift)
+    val methods = s.getMethods.asScala.toIndexedSeq.map(ThriftServiceMethod.fromThrift)
     ThriftService(key = s.getName, pkg = pkg, methods = methods)
   }
 }

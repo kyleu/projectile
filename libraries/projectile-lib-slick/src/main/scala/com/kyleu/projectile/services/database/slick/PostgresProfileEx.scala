@@ -6,7 +6,7 @@ import com.github.tminglei.slickpg._
 import com.kyleu.projectile.models.tag.Tag
 import org.postgresql.util.HStoreConverter
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait PostgresProfileEx extends ExPostgresProfile
   with PgArraySupport with PgDate2Support /* with PgRangeSupport */ with PgHStoreSupport
