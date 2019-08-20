@@ -27,11 +27,11 @@ object ThriftUnionFile {
 
     file.add(s"def fromThrift(t: $tc) = t match {", 1)
     union.types.foreach { t =>
-      val s = FieldTypeAsScala.asScala(config, t.t, isThrift = true)
+      val s = t.scalaTypeFull(config, isThrift = true).mkString(".")
       val cn = FieldTypeImports.imports(config, t.t, isThrift = true).headOption.map(_.mkString(".")).getOrElse {
         FieldTypeAsScala.asScala(config, t.t, isThrift = true)
       }
-      file.add(s"case $tc.${t.className}(x) => $s($cn.fromThrift(x))")
+      file.add(s"case $tc.${t.className}(x) => ${t.className}($cn.fromThrift(x))")
     }
     file.add(s"""case $tc.UnknownUnionField(_) => throw new IllegalStateException("Unknown union field")""")
     file.add("}", -1)

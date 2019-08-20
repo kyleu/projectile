@@ -29,7 +29,7 @@ object StructModelFile {
   private[this] def exportEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val thriftModel = model.pkg.dropRight(1) :+ model.key
     file.add(s"object ${model.className} {", 1)
-    ModelHelper.addJson(config, file, model)
+    ModelHelper.addJsonEmpty(config, file, model)
     file.add(s"def fromThrift(t: ${thriftModel.mkString(".")}) = ${model.className}()")
     file.add("}", -1)
     file.add()

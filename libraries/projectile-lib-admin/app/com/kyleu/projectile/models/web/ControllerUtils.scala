@@ -54,7 +54,12 @@ object ControllerUtils {
         case None => Some(form.getOrElse(f + "-time", throw new IllegalStateException(s"Cannot find value for included field [$f]")))
       }
     }
-    fields.map(f => DataField(f, valFor(f).map(_.trim)))
+    fields.map(f => DataField(f, valFor(f).map { x =>
+      x.trim match {
+        case trimmed if trimmed.isEmpty => x
+        case trimmed => trimmed
+      }
+    }))
   }
 
   lazy val commonScripts = Seq(Assets.path("vendor/vendors.min.js"), Assets.path("vendor/plugins.min.js"))

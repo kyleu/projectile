@@ -5,12 +5,13 @@ object Common {
   val projectId = "projectile"
   val projectName = "Projectile"
   val projectPort = 20000
+  val useLatest = false
 
   object Versions {
-    val app = "1.14.0"
+    val app = "1.15.0"
     val scala212 = "2.12.9"
     val scala213 = "2.13.0"
-    val scala = scala212
+    val scala = if(useLatest) { scala213 } else { scala212 }
   }
 
   private[this] val profilingEnabled = false
@@ -20,10 +21,10 @@ object Common {
 
   val compileOptions = Seq(
     "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-    /* "-Xfatal-warnings", */ "–Xcheck-null", "-Xlint", "-Xcheckinit", /* "-Xfuture", */
-    "-Yrangepos", /* "-Ypartial-unification", */ /* "-Yno-adapted-args", */ "-Ywarn-dead-code",
-    /* "-Ywarn-inaccessible", */ /* "-Ywarn-nullary-override", */ "-Ywarn-numeric-widen" /* , "-Ywarn-infer-any" */
-  ) ++ profileOptions
+    "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Yrangepos", "-Ywarn-dead-code", "-Ywarn-numeric-widen"
+  ) ++ (if(useLatest) { Nil } else { Seq(
+    "-Xfatal-warnings", "-Xfuture", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-infer-any"
+  ) }) ++ profileOptions
 
   lazy val settings = Seq(
     version := Common.Versions.app,
@@ -42,7 +43,7 @@ object Common {
 
     publishMavenStyle := true,
 
-    publishTo := xerial.sbt.Sonatype.SonatypeKeys.sonatypePublishTo.value
+    publishTo := Some(MavenRepository("sonatype-staging", "https://oss.sonatype.org/service/local/staging/deploy/maven2"))
   ) ++ (if(profilingEnabled) { Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0")) } else { Nil })
 
   def silencerOptions(path: String, pathFilters: Seq[String] = Nil, messageFilters: Seq[String] = Nil) = {

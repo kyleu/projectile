@@ -45,8 +45,8 @@ object Dependencies {
   }
 
   object GraphQL {
-    val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2" // "1.4.3"
-    val circe = "org.sangria-graphql" %% "sangria-circe" % "1.2.1" // "1.2.2"
+    val sangria = "com.kyleu" %% "sangria" % "1.4.2"
+    val circe = "com.kyleu" %% "sangria-circe" % "1.2.1"
   }
 
   object Serialization {
@@ -137,7 +137,7 @@ object Dependencies {
     val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.8.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1" // "3.8.0"
     val chimney = "io.scalaland" %% "chimney" % "0.3.2"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"
@@ -148,7 +148,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-circe" % Serialization.enumeratumCirceVersion
     val guava = "com.google.guava" % "guava" % "27.1-jre"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
-    // Someday... val reftree = "io.github.stanch" %% "reftree" % "1.4.0"
+    val reftree = "io.github.stanch" %% "reftree" % "1.4.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.6"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.4"

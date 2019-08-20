@@ -2,7 +2,6 @@ package com.kyleu.projectile.models.web
 
 import com.kyleu.projectile.util.Logging
 
-/*
 import java.nio.file.Files
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZonedDateTime}
 import java.util.UUID
@@ -12,10 +11,8 @@ import io.circe.Json
 import reftree.core._
 import reftree.diagram.Diagram
 import reftree.render.{Renderer, RenderingOptions}
-*/
 
 object ReftreeUtils extends Logging {
-  /*
   implicit def stringRefTree: ToRefTree[String] = reftree.contrib.SimplifiedInstances.string
   implicit def bdRefTree: ToRefTree[BigDecimal] = ToRefTree[BigDecimal](bd => RefTree.Ref(bd, Nil).rename(bd.toString))
   implicit def uuidRefTree: ToRefTree[UUID] = ToRefTree[UUID](uuid => RefTree.Ref(uuid, Nil).rename(uuid.toString))
@@ -58,8 +55,7 @@ object ReftreeUtils extends Logging {
     Files.delete(out)
     bytes
   }
-  */
-
+  /*
   // Temp methods
   def renderToPng[A](v: A) = {
     Array.empty[Byte]
@@ -68,4 +64,5 @@ object ReftreeUtils extends Logging {
   def renderToSvg[A](v: A) = {
     Array.empty[Byte]
   }
+  */
 }

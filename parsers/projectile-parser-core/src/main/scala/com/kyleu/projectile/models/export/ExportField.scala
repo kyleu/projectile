@@ -60,7 +60,9 @@ case class ExportField(
   val className = ExportHelper.toClassName(propertyName)
 
   def scalaType(config: ExportConfiguration) = FieldTypeAsScala.asScala(config, t)
-  def scalaTypeFull(config: ExportConfiguration) = FieldTypeImports.imports(config, t).headOption.getOrElse(Seq(scalaType(config)))
+  def scalaTypeFull(config: ExportConfiguration, isThrift: Boolean = false) = {
+    FieldTypeImports.imports(config, t, isThrift).headOption.getOrElse(Seq(scalaType(config)))
+  }
 
   def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String], isJs: Boolean = false, isThrift: Boolean = false) = {
     FieldTypeImports.imports(config = config, t = t, isJs = isJs, isThrift = isThrift).foreach { pkg =>

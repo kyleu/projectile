@@ -45,7 +45,11 @@ object ThriftFieldScalaHelper {
         s"$root.$name.map(x => x$mapped.toSet)"
       }
 
-    case FieldType.UnionType(key, _) => s"$key.fromThrift($root.$name)"
+    case FieldType.UnionType(key, _) => if (required) {
+      s"$key.fromThrift($root.$name)"
+    } else {
+      s"$root.$name.map($key.fromThrift)"
+    }
     case _ if FieldType.scalars.apply(t) => s"$root.$name"
 
     case FieldType.EnumType(key) if required => s"$key.fromThrift($root.$name)"

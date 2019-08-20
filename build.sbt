@@ -1,7 +1,3 @@
-// Publishing Hack
-useGpg := true
-pgpSecretRing := file("/Users/kyle/.gnupg/pubring.kbx")
-
 // Library Projects
 lazy val `projectile-lib-core-jvm` = LibraryProjects.`projectile-lib-core-jvm`
 lazy val `projectile-lib-core-js` = LibraryProjects.`projectile-lib-core-js`

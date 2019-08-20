@@ -25,7 +25,7 @@ object SbtExportPlugin {
     ).taskValue
   ).enablePlugins(SbtPlugin).dependsOn(`projectile-sbt`).disablePlugins(sbtassembly.AssemblyPlugin)
 
-  lazy val all = Seq(`projectile-sbt`, `projectile-sbt-admin`)
+  lazy val all = if(Common.useLatest) { Nil } else { Seq(`projectile-sbt`, `projectile-sbt-admin`) }
 
   lazy val allReferences = all.map(_.project)
 }
