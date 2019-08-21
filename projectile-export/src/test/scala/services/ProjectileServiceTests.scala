@@ -1,9 +1,6 @@
 package services
 
-import com.kyleu.projectile.models.database.input.{PostgresConnection, PostgresInput}
-import com.kyleu.projectile.models.feature.ProjectFeature
-import com.kyleu.projectile.models.input.{InputSummary, InputTemplate}
-import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
+import com.kyleu.projectile.models.database.input.PostgresConnection
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 import org.scalatest._
@@ -16,7 +13,7 @@ class ProjectileServiceTests extends FlatSpec with Matchers {
 
   lazy val svc = new ProjectileService(cfg)
   val db = "boilerplay"
-  lazy val conn = PostgresConnection(host = "localhost", username = db, password = db, db = db)
+  lazy val conn = PostgresConnection(username = db, password = db, db = db)
 
   /*
   "ProjectileService" should "initialize correctly" in {

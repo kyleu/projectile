@@ -34,7 +34,7 @@
 
   @result.map { res =>
     @res.zipWithIndex.map { x =>
-      @com.kyleu.projectile.views.html.layout.card(Some(s"Result ${x._2 + 1} (${x._1._1} ms, ${res.size} rows)")) {
+      @com.kyleu.projectile.views.html.layout.card(Some(s"Result ${x._2 + 1} (${x._1._1} ms, ${x._1._4.size} rows)")) {
         <pre>@x._1._2</pre>
         <table class="highlight">
           <thead>

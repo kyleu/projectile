@@ -148,7 +148,7 @@ object Dependencies {
     val enumeratum = "com.beachape" %% "enumeratum-circe" % Serialization.enumeratumCirceVersion
     val guava = "com.google.guava" % "guava" % "27.1-jre"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
-    val reftree = "io.github.stanch" %% "reftree" % "1.4.0"
+    val reftree = "com.kyleu" %% "reftree" % "1.4.0"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.6"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
     val typesafeConfig = "com.typesafe" % "config" % "1.3.4"

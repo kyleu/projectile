@@ -8,7 +8,7 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.15.0"
+    val app = "1.15.3"
     val scala212 = "2.12.9"
     val scala213 = "2.13.0"
     val scala = if(useLatest) { scala213 } else { scala212 }
@@ -42,7 +42,6 @@ object Common {
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
     publishMavenStyle := true,
-
     publishTo := Some(MavenRepository("sonatype-staging", "https://oss.sonatype.org/service/local/staging/deploy/maven2"))
   ) ++ (if(profilingEnabled) { Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0")) } else { Nil })
 

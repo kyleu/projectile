@@ -27,7 +27,6 @@ object ThriftUnionFile {
 
     file.add(s"def fromThrift(t: $tc) = t match {", 1)
     union.types.foreach { t =>
-      val s = t.scalaTypeFull(config, isThrift = true).mkString(".")
       val cn = FieldTypeImports.imports(config, t.t, isThrift = true).headOption.map(_.mkString(".")).getOrElse {
         FieldTypeAsScala.asScala(config, t.t, isThrift = true)
       }

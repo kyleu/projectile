@@ -118,16 +118,16 @@ object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[Datab
     override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option.apply(x).map(intCoerce)).toList
   }
   case object LongArrayType extends DatabaseFieldType[List[Long]]("longArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Long]].flatMap(x => Option.apply(x)).toList
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option.apply(x)).map(LongType.coerce).toList
   }
   final case class EnumArrayType[T <: StringEnumEntry](t: StringEnum[T])(implicit tag: ClassTag[T]) extends DatabaseFieldType[List[T]]("enumArray", isList = true) {
     override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option(x).map(_.toString)).map(t.withValue).toList
   }
   case object StringArrayType extends DatabaseFieldType[List[String]]("stringArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].map(s => Option(s).map(_.toString)).toList.flatten
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(s => Option(s).map(_.toString)).toList
   }
   case object UuidArrayType extends DatabaseFieldType[List[java.util.UUID]]("uuidArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[java.util.UUID]].toList.map(Option.apply).flatten
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option(x).map(UuidType.coerce)).toList
   }
 
   case object UnknownType extends DatabaseFieldType[String]("unknown") {
