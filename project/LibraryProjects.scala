@@ -93,8 +93,8 @@ object LibraryProjects {
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
-      Play.cache, Play.filters, Play.guice, Play.json, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang
-    ) ++ (if(Common.useLatest) { Nil } else { Seq(Utils.reftree) }) ++ Compiler.all,
+      Play.cache, Play.filters, Play.guice, Play.json, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang, Utils.reftree
+    ) ++ Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes"))
   ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)
 

@@ -5,6 +5,8 @@ object Common {
   val projectId = "projectile"
   val projectName = "Projectile"
   val projectPort = 20000
+
+  // After settings, switch `.par` in CollectionUtils, and upgrade better-files
   val useLatest = false
 
   object Versions {
