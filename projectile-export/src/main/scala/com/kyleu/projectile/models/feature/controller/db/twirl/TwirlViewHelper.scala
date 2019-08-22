@@ -83,6 +83,9 @@ object TwirlViewHelper {
   }
 
   private[this] def forField(config: ExportConfiguration, field: ExportField) = field.t match {
+    case FieldType.BooleanType if field.required => s"@com.kyleu.projectile.views.html.components.form.booleanDisplay(model.${field.propertyName})"
+    case FieldType.BooleanType => s"@model.${field.propertyName}.map(x => com.kyleu.projectile.views.html.components.form.booleanDisplay(x))"
+
     case FieldType.ListType(_) if field.required => s"""@model.${field.propertyName}.mkString(", ")"""
     case FieldType.ListType(_) => s"""@model.${field.propertyName}.map(_.mkString(", "))"""
     case FieldType.SetType(_) if field.required => s"""@model.${field.propertyName}.mkString(", ")"""

@@ -23,6 +23,7 @@ object TwirlDataRowFile {
       } else {
         field.t match {
           case FieldType.CodeType => file.add(s"<pre>@model.${field.propertyName}</pre>")
+          case FieldType.BooleanType => file.add(s"@com.kyleu.projectile.views.html.components.form.booleanDisplay(model.${field.propertyName})")
           case _ => file.add(s"@model.${field.propertyName}")
         }
       }
