@@ -13,13 +13,14 @@ import com.kyleu.projectile.models.web.{ControllerUtils, InternalIcons}
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.util.tracing.TraceData
+import javax.inject.Named
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class PermissionController @javax.inject.Inject() (
-    override val app: Application, db: JdbcDatabase
+    override val app: Application, @Named("system") db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends AuthController("admin.permission") {
   ApplicationFeature.enable(ApplicationFeature.Permission)
   app.errors.checkTable("system_permission")

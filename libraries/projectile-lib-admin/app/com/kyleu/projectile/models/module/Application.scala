@@ -4,6 +4,7 @@ import java.util.TimeZone
 
 import akka.actor.ActorSystem
 import com.google.inject.Injector
+import com.google.inject.name.Named
 import com.kyleu.projectile.models.auth.AuthEnv
 import com.kyleu.projectile.models.config.{Configuration, UiConfig, UserSettings}
 import com.kyleu.projectile.models.notification.Notification
@@ -44,6 +45,7 @@ class Application @javax.inject.Inject() (
     val ws: TracingWSClient,
     val tracing: TracingService,
     val db: JdbcDatabase,
+    @Named("system") val systemDb: JdbcDatabase,
     statusProvider: StatusProvider,
     injector: Injector,
     uiConfigProvider: Application.UiConfigProvider
@@ -60,7 +62,7 @@ class Application @javax.inject.Inject() (
     Await.result(start(restart = true), 20.seconds)
     errors.checkTables(td)
     if (ApplicationFeature.enabled(ApplicationFeature.Permission)) {
-      try { PermissionService.initialize(db.query(PermissionQueries.getAll())(td))(td) } catch { case _: Throwable => () }
+      try { PermissionService.initialize(systemDb.query(PermissionQueries.getAll())(td))(td) } catch { case _: Throwable => () }
     }
     !errors.hasErrors
   }

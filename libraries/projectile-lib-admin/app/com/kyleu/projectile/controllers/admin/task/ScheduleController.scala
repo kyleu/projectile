@@ -12,12 +12,13 @@ import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.task.{ScheduledTaskRegistry, ScheduledTaskService}
 import com.kyleu.projectile.util.tracing.TraceData
+import javax.inject.Named
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class ScheduleController @javax.inject.Inject() (
-    override val app: Application, svc: ScheduledTaskService, db: JdbcDatabase, system: ActorSystem
+    override val app: Application, svc: ScheduledTaskService, @Named("system") db: JdbcDatabase, system: ActorSystem
 )(implicit ec: ExecutionContext) extends AuthController("schedule") {
   ApplicationFeature.enable(ApplicationFeature.Task)
   app.errors.checkTable("scheduled_task_run")

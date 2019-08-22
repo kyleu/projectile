@@ -10,12 +10,17 @@ import com.kyleu.projectile.util.CsvUtils
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import java.time.LocalDateTime
 import java.util.UUID
+
 import com.kyleu.projectile.models.queries.task.ScheduledTaskRunQueries
 import com.kyleu.projectile.models.task.ScheduledTaskRun
+import javax.inject.Named
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
-class ScheduledTaskRunService @javax.inject.Inject() (val db: JdbcDatabase, override val tracing: TracingService)(implicit ec: ExecutionContext) extends ModelServiceHelper[ScheduledTaskRun]("scheduledTaskRun") {
+class ScheduledTaskRunService @javax.inject.Inject() (
+    override val tracing: TracingService, @Named("system") db: JdbcDatabase
+)(implicit ec: ExecutionContext) extends ModelServiceHelper[ScheduledTaskRun]("scheduledTaskRun") {
   def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = {
     traceF("get.by.primary.key")(td => db.queryF(ScheduledTaskRunQueries.getByPrimaryKey(id))(td))
   }

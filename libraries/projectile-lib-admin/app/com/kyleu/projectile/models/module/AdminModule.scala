@@ -47,9 +47,10 @@ abstract class AdminModule() extends AbstractModule with ScalaModule {
     db = Some(d)
     d
   }
-  protected[this] def systemDatabase(ec: ExecutionContext): JdbcDatabase = db.getOrElse {
-    val d = new JdbcDatabase("application", "database.application")(ec)
-    db = Some(d)
+  private[this] var systemDb: Option[JdbcDatabase] = None
+  protected[this] def systemDatabase(ec: ExecutionContext): JdbcDatabase = systemDb.getOrElse {
+    val d = new JdbcDatabase("application", "database.system")(ec)
+    systemDb = Some(d)
     d
   }
 

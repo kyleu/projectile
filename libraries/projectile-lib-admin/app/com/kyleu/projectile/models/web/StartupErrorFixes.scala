@@ -22,8 +22,9 @@ object StartupErrorFixes extends Logging {
       case _ if msg.contains("database") && msg.contains("does not exist") =>
         val u = params.getOrElse("username", "{{USERNAME}}")
         val db = params.getOrElse("database", "{{DATABASE}}")
-        val sql = s"create database $db with owner = $u encoding = 'utf8' connection limit = -1;"
-        None -> sqlError("The database doesn't exist. Either set <code>database.application.local.database</code> in application.conf, or", sql)
+        val sql = s"""create database "$db" with owner = "$u" encoding = 'utf8' connection limit = -1;"""
+        def rsp(k: String) = s"The $k database doesn't exist. Either set <code>database.$k.local.database</code> in application.conf, or"
+        None -> (if (msg.contains("application database")) { sqlError(rsp("application"), sql) } else { sqlError(rsp("system"), sql) })
       case _ => None -> Html("<p>See the error logs for more information</p>")
     }
     case _ if key.startsWith("table.") => Some("Create Tables") -> tableError(key.stripPrefix("table."))
@@ -62,10 +63,10 @@ object StartupErrorFixes extends Logging {
 
   private[this] def applySql(app: Application, sql: String) = app.tracing.topLevelTraceBlocking("applysql") { implicit td =>
     val statements = SqlParser.split(sql)
-    app.db.transaction { (_, conn) =>
+    app.systemDb.transaction { (_, conn) =>
       statements.map { s =>
         log.info("Running the following SQL:\n" + s._1)
-        app.db.execute(Statement.adhoc(s._1), Some(conn))
+        app.systemDb.execute(Statement.adhoc(s._1), Some(conn))
       }
     }(td)
   }

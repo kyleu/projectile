@@ -21,12 +21,13 @@ import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
 import com.kyleu.projectile.services.user.SystemUserService
+import javax.inject.Named
 
 import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class SystemUserController @javax.inject.Inject() (
-    override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService, db: JdbcDatabase
+    override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService, @Named("system") db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeature.enable(ApplicationFeature.User)
   PermissionService.registerModel("models", "SystemUser", "System User", Some(InternalIcons.systemUser), "view", "edit")

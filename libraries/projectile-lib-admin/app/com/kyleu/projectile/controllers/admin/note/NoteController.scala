@@ -17,13 +17,14 @@ import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.models.web.ReftreeUtils._
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
+import javax.inject.Named
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class NoteController @javax.inject.Inject() (
-    override val app: Application, svc: NoteService, db: JdbcDatabase
+    override val app: Application, svc: NoteService, @Named("system") db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeature.enable(ApplicationFeature.Note)
   app.errors.checkTable("note")

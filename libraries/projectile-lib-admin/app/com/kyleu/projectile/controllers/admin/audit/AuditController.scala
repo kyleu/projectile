@@ -17,13 +17,14 @@ import com.kyleu.projectile.models.web.InternalIcons
 import com.kyleu.projectile.services.audit.{AuditHelper, AuditRecordService, AuditService}
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
+import javax.inject.Named
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class AuditController @javax.inject.Inject() (
-    override val app: Application, svc: AuditService, recordSvc: AuditRecordService, noteSvc: NoteService, db: JdbcDatabase
+    override val app: Application, svc: AuditService, recordSvc: AuditRecordService, noteSvc: NoteService, @Named("system") db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeature.enable(ApplicationFeature.Audit)
   app.errors.checkTable("audit")

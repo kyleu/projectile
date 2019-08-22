@@ -26,20 +26,34 @@ class ApplicationErrors(app: Application) {
 
   def getErrors = errors.map(e => idx(e.key) -> e).sortBy(_._1).map(_._2)
 
-  def checkDatabase() = if (!app.db.isStarted) {
-    try {
-      app.db.open(app.config.cnf.underlying, app.tracing)
-    } catch {
-      case NonFatal(x) =>
-        val c = DatabaseConfig.fromConfig(app.config.cnf.underlying, "database.application")
-        val params = Map("username" -> c.username, "database" -> c.database.getOrElse(""))
-        addError("database", s"Cannot connect to [${c.database.getOrElse("")}/${c.host}]: ${x.getMessage}", params, Some(x))
+  def checkDatabase() = {
+    if (!app.db.isStarted) {
+      try {
+        app.db.open(app.config.cnf.underlying, app.tracing)
+      } catch {
+        case NonFatal(x) =>
+          val c = DatabaseConfig.fromConfig(app.config.cnf.underlying, "database.application")
+          val params = Map("username" -> c.username, "database" -> c.database.getOrElse(""))
+          val msg = s"Cannot connect to application database at [${c.database.getOrElse("")}/${c.host}]: ${x.getMessage}"
+          addError("database", msg, params, Some(x))
+      }
+    }
+    if (!app.systemDb.isStarted) {
+      try {
+        app.systemDb.open(app.config.cnf.underlying, app.tracing)
+      } catch {
+        case NonFatal(x) =>
+          val c = DatabaseConfig.fromConfig(app.config.cnf.underlying, "database.system")
+          val params = Map("username" -> c.username, "database" -> c.database.getOrElse(""))
+          val msg = s"Cannot connect to system database at [${c.database.getOrElse("")}/${c.host}]: ${x.getMessage}"
+          addError("database", msg, params, Some(x))
+      }
     }
   }
 
   def checkTable(name: String)(implicit td: TraceData = TraceData.noop) = {
     tables = tables + name
-    if (!app.db.doesTableExist(name)) { addError("table." + name, "Missing [" + name + "] table") }
+    if (!app.systemDb.doesTableExist(name)) { addError("table." + name, "Missing [" + name + "] table") }
   }
   def checkTables(implicit td: TraceData) = tables.foreach(checkTable)
 
