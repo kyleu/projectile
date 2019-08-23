@@ -3,9 +3,7 @@
   <h6>500 Internal Server Error</h6>
   <p>An <span onclick="$('#stack').toggle(); return false;">error</span> has occurred, and has been logged. We're very sorry.</p>
   @ex.map { x =>
-    @if(x.isInstanceOf[IllegalStateException]) {
-      <p>@x.getMessage</p>
-    }
+    <p>@x.getMessage</p>
     <div id="stack" style="display: none;">
       <pre style="overflow: auto;">@com.kyleu.projectile.util.ExceptionUtils.print(x)</pre>
     </div>
