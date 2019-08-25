@@ -139,6 +139,7 @@ KyleU/projectile
   <ul>
     <li><a href="gettingStarted/installing.html" class="page">Installing Projectile</a></li>
     <li><a href="gettingStarted/project.html" class="page">Creating a Project</a></li>
+    <li><a href="gettingStarted/cli.html" class="page">Command Line Interface</a></li>
   </ul></li>
   <li><a href="codegen/index.html" class="page">Code Generation</a>
   <ul>
@@ -193,6 +194,13 @@ KyleU/projectile
   </ul></li>
   <li><a href="technology.html" class="page">Technology</a></li>
   <li><a href="troubleshooting.html" class="page">Troubleshooting</a></li>
+  <li><a href="faq/index.html" class="page">Fequently Asked Questions</a>
+  <ul>
+    <li><a href="faq/gui.html" class="page">Accessing the Projectile GUI</a></li>
+    <li><a href="faq/newenum.html" class="page">Adding New Enums to a Projectile Application</a></li>
+    <li><a href="faq/newtable.html" class="page">Adding New Tables to a Projectile Application</a></li>
+    <li><a href="faq/audit.html" class="page">Removing Unused Files from a Projectile Application</a></li>
+  </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
@@ -200,6 +208,7 @@ KyleU/projectile
   <li><a href="index.html#projectile" class="header">Projectile</a>
   <ul>
     <li><a href="index.html#" class="header"><a href="codegen/index.html">Code Generation</a></a></li>
+    <li><a href="index.html#" class="header"><a href="faq/index.html">FAQ</a></a></li>
     <li><a href="index.html#license" class="header">License</a></li>
   </ul></li>
 </ul>
@@ -209,7 +218,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.13.4
+<i class="md-icon" title="Version">label_outline</i> 1.16.2
 </label>
 </li>
 </ul>
@@ -225,6 +234,7 @@ KyleU/projectile
   <li><a href="index.html#projectile" class="header">Projectile</a>
   <ul>
     <li><a href="index.html#" class="header"><a href="codegen/index.html">Code Generation</a></a></li>
+    <li><a href="index.html#" class="header"><a href="faq/index.html">FAQ</a></a></li>
     <li><a href="index.html#license" class="header">License</a></li>
   </ul></li>
 </ul>
@@ -237,9 +247,9 @@ KyleU/projectile
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
 <h1><a href="#projectile" name="projectile" class="anchor"><span class="anchor-link"></span></a>Projectile</h1>
-<p>Projectile creates and manages beautiful Scala code from your Postgres database, GraphQL queries, or Thrift IDL.</p>
-<p>With a command line interface or web UI, Projectile lets you extend your project as your API grows and changes.</p>
-<p>For Postgres schemata, a full featured web application can be managed and grown, including authentication, GraphQL, Swagger, csv/svg exports, and more.</p>
+<p>Projectile creates and manages beautiful Scala code from your Postgres database, GraphQL queries, or Thrift IDL</p>
+<p>With a command line interface or web UI, Projectile lets you extend your project as your API grows and changes</p>
+<p>For Postgres schemata, a full featured web application can be managed and grown, including authentication, GraphQL, Swagger, csv/svg exports, authentication, auditing, and more</p>
 <p><a href="https://kyleu.com/projectile">https://kyleu.com/projectile</a></p>
 <p><a href="https://github.com/KyleU/projectile">https://github.com/KyleU/projectile</a></p>
 <h2><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="codegen/index.html">Code Generation</a></h2>
@@ -259,18 +269,27 @@ KyleU/projectile
 <h3><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="codegen/thrift.html">Thrift IDL</a></h3>
 <p>Projectile monitors your Thrift IDL and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures</p>
 <p>You can start a new GraphQL project with <code>projectile new thrift</code>, or view the <a href="tutorial/thrifty/index.html">example project</a>.</p>
+<h2><a href="#" name="" class="anchor"><span class="anchor-link"></span></a><a href="faq/index.html">FAQ</a></h2>
+<h3><a href="#how-does-my-generated-project-work-" name="how-does-my-generated-project-work-" class="anchor"><span class="anchor-link"></span></a>How does my generated project work?</h3>
+<p>You may have had a project that was built with Projectile dumped in your lap. You may have followed the tutorials and now feel a little lost. It&rsquo;s all good, this section should help you handle some common tasks.</p>
+<ul>
+  <li><a href="faq/gui.html">Running the GUI</a></li>
+  <li><a href="faq/newenum.html">Adding a new enum type</a></li>
+  <li><a href="faq/newtable.html">Adding a new table</a></li>
+  <li><a href="faq/audit.html">Removing unused files</a></li>
+</ul>
 <h2><a href="#license" name="license" class="anchor"><span class="anchor-link"></span></a>License</h2>
 <p>The code is licensed under <a href="https://raw.githubusercontent.com/KyleU/projectile/master/license">CC0-1.0</a></p>
 <p>You can basically do whatever you want with the code, no attribution required. Make it your own! </p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.13.4/doc/src/index.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.16.2/doc/src/index.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.13.4
+1.16.2
 </span>
 </div>
 </article>

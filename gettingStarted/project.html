@@ -144,6 +144,7 @@ KyleU/projectile
   <ul>
     <li><a href="../gettingStarted/installing.html" class="page">Installing Projectile</a></li>
     <li><a href="../gettingStarted/project.html" class="active page">Creating a Project</a></li>
+    <li><a href="../gettingStarted/cli.html" class="page">Command Line Interface</a></li>
   </ul></li>
   <li><a href="../codegen/index.html" class="page">Code Generation</a>
   <ul>
@@ -198,6 +199,13 @@ KyleU/projectile
   </ul></li>
   <li><a href="../technology.html" class="page">Technology</a></li>
   <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
+  <li><a href="../faq/index.html" class="page">Fequently Asked Questions</a>
+  <ul>
+    <li><a href="../faq/gui.html" class="page">Accessing the Projectile GUI</a></li>
+    <li><a href="../faq/newenum.html" class="page">Adding New Enums to a Projectile Application</a></li>
+    <li><a href="../faq/newtable.html" class="page">Adding New Tables to a Projectile Application</a></li>
+    <li><a href="../faq/audit.html" class="page">Removing Unused Files from a Projectile Application</a></li>
+  </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
@@ -217,7 +225,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.13.4
+<i class="md-icon" title="Version">label_outline</i> 1.16.2
 </label>
 </li>
 </ul>
@@ -247,29 +255,37 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#creating-a-project" name="creating-a-project" class="anchor"><span class="anchor-link"></span></a>Creating a Project</h1>
-<p>Using one of the methods described in <a href="installing.html">Installing Projectile</a>, launch the projectile server, and open <a href="http://localhost:20000">http://localhost:20000</a></p>
+<h1><a href="#creating-a-project" name="creating-a-project" class="anchor"><span class="anchor-link"></span></a>Creating a Project</h1><div class="callout note tip"><div class="callout-title">An assumption</div>
+<p>We&rsquo;re hoping you&rsquo;ve installed Projectile using one of the methods described in <a href="installing.html">Installing Projectile</a></p></div>
 <h2><a href="#starting-point" name="starting-point" class="anchor"><span class="anchor-link"></span></a>Starting point</h2>
-<p>This assumes you&rsquo;ve got an existing project that you&rsquo;d like to add Projectile generated code to. If you&rsquo;d prefer to instead start from a brand new project, <a href="asdf">install Projectile</a> and run <code>projectile new</code> in an empty directory.</p>
-<p>Open your project directory, and run <code>projectile server</code> </p>
+<p>This assumes you&rsquo;ve got an existing project that you&rsquo;d like to add Projectile generated code to. If you&rsquo;d prefer to instead start from a brand new project, <a href="installing.html">install Projectile</a> and run <code>projectile new</code> in an empty directory</p>
+<p>GUI: Run <code>projectile server</code> from your project&rsquo;s directory, and open <a href="http://localhost:20000">http://localhost:20000</a></p>
+<p>CLI: If you&rsquo;re using the <a href="../codegen/sbt-plugin.html">SBT plugin</a>, run <code>projectile init</code> from your project&rsquo;s prompt. If you&rsquo;re using the installed version, run <code>projectile init</code> from your project&rsquo;s directory. </p>
 <h2><a href="#creating-the-projectile-input" name="creating-the-projectile-input" class="anchor"><span class="anchor-link"></span></a>Creating the Projectile input</h2>
-<p>Now we need to make an input pointing to your database, Thrift IDL, or GraphQL schema and queries.</p>
-<p>Either click the &ldquo;Add Input&rdquo; link on the home page, or open <a href="http://localhost:20000/input">http://localhost:20000/input</a> directly. Fill out the form, making sure to configure your database credentials or file locations. Once complete, you should see all of your models in the input detail (you can also click &ldquo;Refresh&rdquo; to manually update them)</p>
+<p>Now we need to make an input pointing to your database, Thrift IDL, or GraphQL schema and queries</p>
+<p>GUI: Either click the &ldquo;Add Input&rdquo; link on the home page, or open <a href="http://localhost:20000/input">http://localhost:20000/input</a> directly. Fill out the form, making sure to configure your database credentials or file locations. Once complete, you should see all of your models in the input detail (you can also click &ldquo;Refresh&rdquo; to manually update them)</p>
+<p>CLI: Run <code>projectile input-add</code>, follow the prompts. Once complete, running <code>projectile input</code> should show your input in the list </p>
 <h2><a href="#creating-the-projectile-project" name="creating-the-projectile-project" class="anchor"><span class="anchor-link"></span></a>Creating the Projectile project</h2>
-<p>Either click the &ldquo;Add Project&rdquo; link on the home page, or open <a href="http://localhost:20000/project">http://localhost:20000/project</a> directly. Fill out the form, making sure to select the input we just created. at this point, you&rsquo;ll be able to configure the models of the system. Head to &ldquo;Edit Features&rdquo; to see the available options for project features, and select the ones you want. Explore the project detail page, it allows you to configure output paths, object naming and features, output packages, and more</p>
+<p>It&rsquo;s time to actually create your project</p>
+<p>GUI: Either click the &ldquo;Add Project&rdquo; link on the home page, or open <a href="http://localhost:20000/project">http://localhost:20000/project</a> directly. Fill out the form, making sure to select the input we just created. at this point, you&rsquo;ll be able to configure the models of the system. Head to &ldquo;Edit Features&rdquo; to see the available options for project features, and select the ones you want. Explore the project detail page, it allows you to configure output paths, object naming and features, output packages, and more</p>
+<p>CLI: Run <code>projectile project-add</code>, follow the prompts. Once complete, running <code>projectile project</code> should show your project in the list </p>
 <h2><a href="#exporting" name="exporting" class="anchor"><span class="anchor-link"></span></a>Exporting</h2>
-<p>The &ldquo;Export&rdquo; button on the home page will export all projects, or you can individually export a project from its detail page. A summary is shown with all results, allowing you to see exactly what was changed</p>
+<p>Now we export your new project, creating all sorts of code</p>
+<p>GUI: The &ldquo;Export&rdquo; button on the home page will export all projects, or you can individually export a project from its detail page. A summary is shown with all results, allowing you to see exactly what was changed</p>
+<p>CLI: Run <code>projectile export</code>, and hope for the best :) </p>
 <h2><a href="#auditing-optional-" name="auditing-optional-" class="anchor"><span class="anchor-link"></span></a>Auditing (optional)</h2>
-<p>On occasion, you&rsquo;ll remove something from your input. Because exporting the project never deletes files, you may need to run Projectile&rsquo;s auditing to clean up the trash. Simply click &ldquo;Audit&rdquo; from the home page, and you&rsquo;ll see a report listing orphaned files (and other project checks). You can click &ldquo;Fix All&rdquo; to clean up the orphaned files and apply other cleanups</p>
+<p>On occasion, you&rsquo;ll remove something from your input. Because exporting the project never deletes files, you may need to run Projectile&rsquo;s auditing to clean up the trash.</p>
+<p>GUI: Simply click &ldquo;Audit&rdquo; from the home page, and you&rsquo;ll see a report listing orphaned files (and other project checks). You can click &ldquo;Fix All&rdquo; to clean up the orphaned files and apply other cleanups</p>
+<p>CLI: Run <code>projectile audit</code>, and you&rsquo;ll see a report listing orphaned files (and other project checks). You can run <code>projectile audit --fix</code> to clean up the orphaned files and apply other cleanups.</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.13.4/doc/src/gettingStarted/project.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.16.2/doc/src/gettingStarted/project.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.13.4
+1.16.2
 </span>
 </div>
 </article>
@@ -292,13 +308,13 @@ Installing Projectile
 </span>
 </div>
 </a>
-<a href="../codegen/index.html" title="Code Generation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../gettingStarted/cli.html" title="Command Line Interface" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Code Generation
+Command Line Interface
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
