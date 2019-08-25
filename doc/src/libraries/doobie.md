@@ -1,6 +1,7 @@
 # Doobie
 
-Supporting classes for Doobie queries ([API Documentation](../api/projectile-lib-doobie/com/kyleu/projectile/index.html))
+Supporting classes for Doobie queries
+([API Documentation](../api/projectile-lib-doobie/com/kyleu/projectile/index.html))
 
 ### Usage
 

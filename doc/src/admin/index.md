@@ -28,7 +28,9 @@
 
 ## Overview
 
-TODO
+Projectile admin web applications are projects built from your database, providing a bunch of useful (and optional) features.
+While the generated application is useful on its own, the project is designed to be extended with your own logic and rendering.
+
 
 ## Features 
 

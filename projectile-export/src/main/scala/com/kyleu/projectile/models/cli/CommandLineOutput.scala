@@ -26,7 +26,7 @@ object CommandLineOutput {
 
     case ProjectUpdateResult(key, resp) => s"[$key] Updated:" +: resp.map(" - " + _)
     case ProjectExportResult(output, files) => logForExportResult(output, files)
-    case ProjectAuditResult(result) => logForAuditResult(result)
+    case ProjectAuditResult(result, fixed) => logForAuditResult(result, fixed)
     case ProjectCodegenResult(result) => logForCodegenResult(result)
     case CompositeResult(results) => logForCompositeResult(results)
   }
@@ -35,7 +35,18 @@ object CommandLineOutput {
   private[this] def logForInput(input: Input) = s"[${input.key}]: $input"
 
   private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.template.title}"
-  private[this] def logForProject(project: Project) = s"[${project.key}]: $project"
+  private[this] def logForProject(project: Project) = {
+    val enums = if (project.enums.isEmpty) { Nil } else {
+      s"  [${project.enums.size}] enums:" +: project.enums.map(e => "  - " + e.key + (if (e.pkg.isEmpty) { "" } else { ": " + e.pkg.mkString(", ") }))
+    }
+    val models = if (project.models.isEmpty) { Nil } else {
+      s"  [${project.models.size}] models:" +: project.models.map(m => "  - " + m.key + (if (m.pkg.isEmpty) { "" } else { ": " + m.pkg.mkString(", ") }))
+    }
+    val services = if (project.services.isEmpty) { Nil } else {
+      s"  [${project.services.size}] services:" +: project.services.map(s => "  - " + s.key + (if (s.pkg.isEmpty) { "" } else { ": " + s.pkg.mkString(", ") }))
+    }
+    (Seq(s"[${project.key}]: $project") ++ enums ++ models ++ services).mkString("\n")
+  }
 
   def logForExportResult(output: ProjectOutput, files: Seq[OutputWriteResult]) = {
     val filesFiltered = files.filter(_.logs.nonEmpty)
@@ -47,7 +58,12 @@ object CommandLineOutput {
     s"[${output.project.key}] Exported:" +: fileMessages
   }
 
-  private[this] def logForAuditResult(result: AuditResult) = {
+  private[this] def logForAuditResult(result: AuditResult, fixed: Seq[String]) = {
+    val fixMsgs = if (fixed.isEmpty) {
+      Nil
+    } else {
+      s" - [${fixed.size}] Issues Fixed:" +: fixed.map(m => s"   - $m")
+    }
     val cfgMsgs = if (result.configMessages.isEmpty) {
       Nil
     } else {
@@ -58,7 +74,7 @@ object CommandLineOutput {
     } else {
       s" - [${result.outputMessages.size}] Output Messages:" +: result.outputMessages.map(m => s"   - ${m.tgt}: ${m.message}")
     }
-    "Audit Result:" +: (cfgMsgs ++ outputMsgs)
+    "Audit Result:" +: (fixMsgs ++ cfgMsgs ++ outputMsgs)
   }
 
   private[this] def logForCodegenResult(result: CodegenResult) = {

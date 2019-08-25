@@ -1,6 +1,7 @@
 # Scala
 
-Common classes relating to core models and utilities ([API Documentation](../api/projectile-lib-scala/com/kyleu/projectile/index.html)) 
+Common classes relating to core models and utilities
+([API Documentation](../api/projectile-lib-scala/com/kyleu/projectile/index.html)) 
 
 ### Usage
 

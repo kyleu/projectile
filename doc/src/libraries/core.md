@@ -1,6 +1,7 @@
 # Core
 
-Classes and utilities shared between Scala and Scala.js ([API Documentation](../api/projectile-lib-core/com/kyleu/projectile/index.html)) 
+Classes and utilities shared between Scala and Scala.js
+([API Documentation](../api/projectile-lib-core/com/kyleu/projectile/index.html)) 
 
 ### Usage
 

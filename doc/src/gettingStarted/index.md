@@ -4,6 +4,7 @@
 
 * [Installing Projectile](installing.md)
 * [Creating a Project](project.md)
+* [Command Line Interface](cli.md)
 
 @@@
 

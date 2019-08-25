@@ -1,6 +1,7 @@
 # Scala.js
 
-Scala.js helpers ([API Documentation](../api/projectile-lib-scalajs/com/kyleu/projectile/index.html))
+Scala.js helpers
+([API Documentation](../api/projectile-lib-scalajs/com/kyleu/projectile/index.html))
 
 ### Usage
 

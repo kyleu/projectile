@@ -9,14 +9,15 @@
 * [Tutorials](tutorial/index.md)
 * [Technology](technology.md)
 * [Troubleshooting](troubleshooting.md)
+* [FAQ](faq/index.md)
 
 @@@
 
-Projectile creates and manages beautiful Scala code from your Postgres database, GraphQL queries, or Thrift IDL.
+Projectile creates and manages beautiful Scala code from your Postgres database, GraphQL queries, or Thrift IDL
 
-With a command line interface or web UI, Projectile lets you extend your project as your API grows and changes.
+With a command line interface or web UI, Projectile lets you extend your project as your API grows and changes
 
-For Postgres schemata, a full featured web application can be managed and grown, including authentication, GraphQL, Swagger, csv/svg exports, and more.
+For Postgres schemata, a full featured web application can be managed and grown, including authentication, GraphQL, Swagger, csv/svg exports, authentication, auditing, and more
 
 https://kyleu.com/projectile
 
@@ -48,6 +49,19 @@ You can start a new GraphQL project with `projectile new graphql`, or view the @
 Projectile monitors your Thrift IDL and works with Scrooge to create wrapper classes that support serialization, tracing, and Scala Futures
 
 You can start a new GraphQL project with `projectile new thrift`, or view the @ref[example project](tutorial/thrifty/index.md).
+
+## @ref[FAQ](faq/index.md)
+
+### How does my generated project work?
+
+You may have had a project that was built with Projectile dumped in your lap. 
+You may have followed the tutorials and now feel a little lost.
+It's all good, this section should help you handle some common tasks.
+
+* @ref[Running the GUI](faq/gui.md)
+* @ref[Adding a new enum type](faq/newenum.md)
+* @ref[Adding a new table](faq/newtable.md)
+* @ref[Removing unused files](faq/audit.md)
 
 
 ## License

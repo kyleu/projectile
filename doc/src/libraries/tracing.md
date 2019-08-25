@@ -1,6 +1,7 @@
 # Tracing
 
-Helper classes for OpenTracing and Micrometer ([API Documentation](../api/projectile-lib-tracing/com/kyleu/projectile/index.html))
+Helper classes for OpenTracing and Micrometer
+([API Documentation](../api/projectile-lib-tracing/com/kyleu/projectile/index.html))
 
 ### Usage
 

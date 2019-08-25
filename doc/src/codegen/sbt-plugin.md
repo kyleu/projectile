@@ -2,6 +2,9 @@
 
 Projectile provides a (completely optional) sbt plugin
 
+The plugin provides the command-line version of Projectile inside your application's build. 
+If you've installed Projectile via homebrew or one of the other methods, you don't need the sbt plugin. 
+
 To enable it, add the following to your `plugins.sbt`: 
 
 @@@vars

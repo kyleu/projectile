@@ -34,7 +34,8 @@ object CommandLineAction extends Enum[CommandLineAction] {
     override def toCommand = ProjectileCommand.ProjectExport(key)
   }
   object Audit extends Command(name = "audit", description = "Audits the provided project (or all)") with CommandLineAction {
-    override def toCommand = ProjectileCommand.Audit
+    var fix = opt[Boolean](description = "Fix found errors automatically when possible")
+    override def toCommand = ProjectileCommand.Audit(fix)
   }
   object Codegen extends Command(name = "codegen", description = "Generates code for the provided projects (or all)") with CommandLineAction {
     var key = arg[Option[String]](required = false)
@@ -55,7 +56,7 @@ object CommandLineAction extends Enum[CommandLineAction] {
 
   // Examples
   private[this] val newMsg = s"Creates a new project from a template, one of [${ProjectExampleService.projects.map(_.key).mkString(", ")}]"
-  object New extends Command(name = "new", description = newMsg) with CommandLineAction {
+  object New extends Command(name = "project-new", description = newMsg) with CommandLineAction {
     var key = arg[String]()
     var template = arg[String]()
     var force = opt[Option[Boolean]](description = "When set, overwrites files")

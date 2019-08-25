@@ -1,30 +1,43 @@
 {
-  "name" : "audit",
+  "name" : "flyway_schema_history",
   "catalog" : null,
   "schema" : "public",
   "description" : null,
   "definition" : null,
   "columns" : [ {
-    "name" : "id",
+    "name" : "installed_rank",
     "description" : null,
     "definition" : null,
-    "primaryKey" : false,
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
-      "t" : "uuid"
+      "t" : "long"
     },
-    "sqlTypeCode" : 1111,
-    "sqlTypeName" : "uuid",
-    "size" : "2147483647",
-    "sizeAsInt" : 2147483647,
+    "sqlTypeCode" : 4,
+    "sqlTypeName" : "int4",
+    "size" : "10",
+    "sizeAsInt" : 10,
     "scale" : 0,
     "defaultValue" : null
   }, {
-    "name" : "act",
+    "name" : "version",
     "description" : null,
     "definition" : null,
-    "primaryKey" : false,
+    "notNull" : false,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "string"
+    },
+    "sqlTypeCode" : 12,
+    "sqlTypeName" : "varchar",
+    "size" : "50",
+    "sizeAsInt" : 50,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "description",
+    "description" : null,
+    "definition" : null,
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
@@ -32,15 +45,14 @@
     },
     "sqlTypeCode" : 12,
     "sqlTypeName" : "varchar",
-    "size" : "32",
-    "sizeAsInt" : 32,
+    "size" : "200",
+    "sizeAsInt" : 200,
     "scale" : 0,
     "defaultValue" : null
   }, {
-    "name" : "app",
+    "name" : "type",
     "description" : null,
     "definition" : null,
-    "primaryKey" : false,
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
@@ -48,15 +60,14 @@
     },
     "sqlTypeCode" : 12,
     "sqlTypeName" : "varchar",
-    "size" : "64",
-    "sizeAsInt" : 64,
+    "size" : "20",
+    "sizeAsInt" : 20,
     "scale" : 0,
     "defaultValue" : null
   }, {
-    "name" : "client",
+    "name" : "script",
     "description" : null,
     "definition" : null,
-    "primaryKey" : false,
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
@@ -64,15 +75,29 @@
     },
     "sqlTypeCode" : 12,
     "sqlTypeName" : "varchar",
-    "size" : "32",
-    "sizeAsInt" : 32,
+    "size" : "1000",
+    "sizeAsInt" : 1000,
     "scale" : 0,
     "defaultValue" : null
   }, {
-    "name" : "server",
+    "name" : "checksum",
     "description" : null,
     "definition" : null,
-    "primaryKey" : false,
+    "notNull" : false,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "long"
+    },
+    "sqlTypeCode" : 4,
+    "sqlTypeName" : "int4",
+    "size" : "10",
+    "sizeAsInt" : 10,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "installed_by",
+    "description" : null,
+    "definition" : null,
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
@@ -80,63 +105,14 @@
     },
     "sqlTypeCode" : 12,
     "sqlTypeName" : "varchar",
-    "size" : "32",
-    "sizeAsInt" : 32,
+    "size" : "100",
+    "sizeAsInt" : 100,
     "scale" : 0,
     "defaultValue" : null
   }, {
-    "name" : "user_id",
+    "name" : "installed_on",
     "description" : null,
-    "definition" : null,
-    "primaryKey" : false,
-    "notNull" : true,
-    "autoIncrement" : false,
-    "columnType" : {
-      "t" : "uuid"
-    },
-    "sqlTypeCode" : 1111,
-    "sqlTypeName" : "uuid",
-    "size" : "2147483647",
-    "sizeAsInt" : 2147483647,
-    "scale" : 0,
-    "defaultValue" : null
-  }, {
-    "name" : "tags",
-    "description" : null,
-    "definition" : null,
-    "primaryKey" : false,
-    "notNull" : true,
-    "autoIncrement" : false,
-    "columnType" : {
-      "t" : "json"
-    },
-    "sqlTypeCode" : 1111,
-    "sqlTypeName" : "json",
-    "size" : "2147483647",
-    "sizeAsInt" : 2147483647,
-    "scale" : 0,
-    "defaultValue" : null
-  }, {
-    "name" : "msg",
-    "description" : null,
-    "definition" : null,
-    "primaryKey" : false,
-    "notNull" : true,
-    "autoIncrement" : false,
-    "columnType" : {
-      "t" : "string"
-    },
-    "sqlTypeCode" : 12,
-    "sqlTypeName" : "text",
-    "size" : "2147483647",
-    "sizeAsInt" : 2147483647,
-    "scale" : 0,
-    "defaultValue" : null
-  }, {
-    "name" : "started",
-    "description" : null,
-    "definition" : null,
-    "primaryKey" : false,
+    "definition" : "now()",
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
@@ -147,76 +123,58 @@
     "size" : "29",
     "sizeAsInt" : 29,
     "scale" : 0,
-    "defaultValue" : null
+    "defaultValue" : "now()"
   }, {
-    "name" : "completed",
+    "name" : "execution_time",
     "description" : null,
     "definition" : null,
-    "primaryKey" : false,
     "notNull" : true,
     "autoIncrement" : false,
     "columnType" : {
-      "t" : "timestamp"
+      "t" : "long"
     },
-    "sqlTypeCode" : 93,
-    "sqlTypeName" : "timestamp",
-    "size" : "29",
-    "sizeAsInt" : 29,
+    "sqlTypeCode" : 4,
+    "sqlTypeName" : "int4",
+    "size" : "10",
+    "sizeAsInt" : 10,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "success",
+    "description" : null,
+    "definition" : null,
+    "notNull" : true,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "boolean"
+    },
+    "sqlTypeCode" : -7,
+    "sqlTypeName" : "bool",
+    "size" : "1",
+    "sizeAsInt" : 1,
     "scale" : 0,
     "defaultValue" : null
   } ],
-  "rowIdentifier" : [ "id" ],
+  "rowIdentifier" : [ "installed_rank" ],
   "primaryKey" : {
-    "name" : "audit_pkey",
-    "columns" : [ "id" ]
+    "name" : "flyway_schema_history_pk",
+    "columns" : [ "installed_rank" ]
   },
   "foreignKeys" : [ ],
   "indexes" : [ {
-    "name" : "audit_act",
-    "unique" : false,
-    "indexType" : "other",
-    "columns" : [ {
-      "name" : "act",
-      "ascending" : true
-    } ]
-  }, {
-    "name" : "audit_app",
-    "unique" : false,
-    "indexType" : "other",
-    "columns" : [ {
-      "name" : "app",
-      "ascending" : true
-    } ]
-  }, {
-    "name" : "audit_client",
-    "unique" : false,
-    "indexType" : "other",
-    "columns" : [ {
-      "name" : "client",
-      "ascending" : true
-    } ]
-  }, {
-    "name" : "audit_pkey",
+    "name" : "flyway_schema_history_pk",
     "unique" : true,
     "indexType" : "other",
     "columns" : [ {
-      "name" : "id",
+      "name" : "installed_rank",
       "ascending" : true
     } ]
   }, {
-    "name" : "audit_server",
+    "name" : "flyway_schema_history_s_idx",
     "unique" : false,
     "indexType" : "other",
     "columns" : [ {
-      "name" : "server",
-      "ascending" : true
-    } ]
-  }, {
-    "name" : "audit_user_id",
-    "unique" : false,
-    "indexType" : "other",
-    "columns" : [ {
-      "name" : "user_id",
+      "name" : "success",
       "ascending" : true
     } ]
   } ]

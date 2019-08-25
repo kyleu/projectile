@@ -1,6 +1,7 @@
 # GraphQL
 
-GraphQL utilities and helpers ([API Documentation](../api/projectile-lib-graphql/com/kyleu/projectile/index.html))
+GraphQL utilities and helpers
+([API Documentation](../api/projectile-lib-graphql/com/kyleu/projectile/index.html))
 
 ### Usage
 

@@ -30,7 +30,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class InputThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
 
   // Audit
-  case object Audit extends ProjectileCommand
+  case class Audit(fix: Boolean) extends ProjectileCommand
 
   // Examples
   case class CreateExample(key: String, template: String, force: Boolean) extends ProjectileCommand
