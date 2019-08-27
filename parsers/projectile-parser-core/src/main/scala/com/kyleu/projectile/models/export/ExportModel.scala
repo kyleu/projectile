@@ -104,7 +104,8 @@ case class ExportModel(
   def viewPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "admin") ++ pkg
   def viewHtmlPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "html", "admin") ++ pkg
 
-  def injectedService(config: ExportConfiguration) = s"injector.getInstance(classOf[${(servicePackage(config) :+ className).mkString(".")}Service])"
+  def fullServicePath(config: ExportConfiguration) = s"${(servicePackage(config) :+ className).mkString(".")}Service"
+  def injectedService(config: ExportConfiguration) = s"injector.getInstance(classOf[${fullServicePath(config)}])"
 
   def getField(k: String) = getFieldOpt(k).getOrElse {
     throw new IllegalStateException(s"No field for model [$className] with name [$k]. Available fields: [${fields.map(_.propertyName).mkString(", ")}]")

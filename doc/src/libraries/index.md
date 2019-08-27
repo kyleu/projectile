@@ -10,7 +10,6 @@
 * [Doobie](doobie.md)
 * [Thrift](thrift.md)
 * [GraphQL](graphql.md)
-* [Service](service.md)
 * [Scala.js](scalajs.md)
 * [Admin](admin.md)
 

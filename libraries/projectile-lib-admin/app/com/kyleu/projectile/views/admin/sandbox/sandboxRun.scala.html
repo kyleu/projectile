@@ -9,10 +9,20 @@
           <em>@result.status: @{result.elapsed}ms</em>
         </div>
         <div class="collection-item">
-          <form action="@com.kyleu.projectile.controllers.admin.sandbox.routes.SandboxController.run(result.task.id)">
-            <input name="arg" value="@result.arg" placeholder="Argument" />
-            <button class="btn @cfg.user.buttonColor" type="submit">Run Again</button>
-          </form>
+          <div class="row">
+            <div class="col s12 m6">
+              <form action="@com.kyleu.projectile.controllers.admin.sandbox.routes.SandboxController.run(result.task.id)">
+                <input name="arg" value="@result.arg" placeholder="Argument" />
+                <button class="btn @cfg.user.buttonColor" type="submit">Run Again</button>
+              </form>
+            </div>
+            <div class="col s12 m6">
+              <form action="@com.kyleu.projectile.controllers.admin.sandbox.routes.SandboxController.upload(result.task.id)" method="POST" enctype="multipart/form-data">
+                <div><input name="arg" type="file" style="margin: 15px 0;" /></div>
+                <button class="btn @cfg.user.buttonColor" type="submit">Upload File</button>
+              </form>
+            </div>
+          </div>
         </div>
         <div class="collection-item">
           <pre class="sandbox-result" style="margin: 20px 0;">@result.result.spaces2</pre>

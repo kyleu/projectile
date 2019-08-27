@@ -2,7 +2,8 @@
     title: String,
     scripts: Seq[String] = Nil,
     stylesheets: Seq[String] = Nil,
-    bodyClasses: String = ""
+    bodyClasses: String = "",
+    additionalContent: Option[Html] = None
 )(content: Html)<!DOCTYPE html>
 <html>
   <head>
@@ -22,6 +23,7 @@
     <script src="@script"></script>}
     @for(stylesheet <- stylesheets) {
     <link rel="stylesheet" media="screen" href="@stylesheet" />}
+    @additionalContent
   </head>
   @content
 </html>

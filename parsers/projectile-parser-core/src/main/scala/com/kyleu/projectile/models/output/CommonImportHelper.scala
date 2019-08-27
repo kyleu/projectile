@@ -17,7 +17,7 @@ object CommonImportHelper {
       case "BaseResult" => c.resultsPackage
       case "CommonSchema" => c.systemPackage :+ "graphql"
       case "ControllerUtils" => c.systemPackage ++ Seq("models", "web")
-      case "Credentials" => c.systemPackage ++ Seq("services")
+      case "Credentials" => c.utilitiesPackage
       case "CsvUtils" => c.utilitiesPackage
       case "DatabaseField" => c.systemPackage ++ Seq("models", "database")
       case "DatabaseFieldType" => c.systemPackage ++ Seq("models", "database")

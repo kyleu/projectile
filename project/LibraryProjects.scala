@@ -69,15 +69,10 @@ object LibraryProjects {
     libraryDependencies ++= Thrift.all
   ).dependsOn(`projectile-lib-tracing`)
 
-  lazy val `projectile-lib-service` = libraryProject(project in file("libraries/projectile-lib-service")).settings(
-    description := "Common service classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(Utils.csv, Utils.javaxInject, Utils.scalaGuice)
-  ).dependsOn(`projectile-lib-jdbc`, `projectile-lib-tracing`)
-
   lazy val `projectile-lib-graphql` = libraryProject(project in file("libraries/projectile-lib-graphql")).settings(
     description := "Common GraphQL classes used by code generated from Projectile",
-    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria)
-  ).dependsOn(`projectile-lib-service`)
+    libraryDependencies ++= Seq(GraphQL.circe, GraphQL.sangria, Utils.javaxInject, Utils.scalaGuice)
+  ).dependsOn(`projectile-lib-tracing`)
 
   lazy val `projectile-lib-scalajs` = libraryProject(project in file("libraries/projectile-lib-scalajs")).settings(
     description := "Common Scala.js classes used by code generated from Projectile",
@@ -93,16 +88,16 @@ object LibraryProjects {
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
-      Play.cache, Play.filters, Play.guice, Play.json, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang, Utils.reftree
+      Play.cache, Play.filters, Play.guice, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang, Utils.csv, Utils.reftree
     ) ++ Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes"))
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-service`)
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-jdbc`)
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
     `projectile-lib-scala`, `projectile-lib-tracing`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
-    `projectile-lib-service`, `projectile-lib-graphql`, `projectile-lib-scalajs`,
+    `projectile-lib-graphql`, `projectile-lib-scalajs`,
     `projectile-lib-admin`
   ) ++ (if(Common.useLatest) { Nil } else { Seq(`projectile-lib-thrift`) })
   lazy val allReferences = all.map(_.project)

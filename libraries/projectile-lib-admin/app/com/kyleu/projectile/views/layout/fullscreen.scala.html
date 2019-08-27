@@ -2,12 +2,14 @@
 @com.kyleu.projectile.views.html.layout.core(
   title = title,
   scripts = com.kyleu.projectile.models.web.ControllerUtils.commonScripts ++ scripts,
-  stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets
+  stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets,
+  additionalContent = cfg.content.head
 ) {
   @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
     <body class="@theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
       @com.kyleu.projectile.views.html.layout.pageHeader(cfg, theme)
       @com.kyleu.projectile.views.html.layout.pageNav(cfg, theme)
+      @cfg.content.header
       <div id="main" @if(cfg.user.menuCollapsed) { class="main-full" }>
         @content
       </div>
@@ -19,6 +21,7 @@
         });
       </script>
     }
+    @cfg.content.footer
     @com.kyleu.projectile.controllers.admin.analytics.AnalyticsController.injectHtml(cfg)
   }
 }

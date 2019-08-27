@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.websocket
 import java.util.UUID
 
 import akka.actor.ActorRef
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import io.circe.Json
 
 sealed trait ConnectionMessage

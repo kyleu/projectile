@@ -1,7 +1,7 @@
 package com.kyleu.projectile.services.task
 
 import com.kyleu.projectile.models.task.ScheduledTask
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.tracing.TraceData
 

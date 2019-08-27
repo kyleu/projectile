@@ -11,6 +11,7 @@ case class UiConfig(
     menu: Seq[NavMenu] = Nil,
     urls: NavUrls = NavUrls(),
     html: NavHtml = NavHtml(),
+    content: NavContent = NavContent(),
     user: UserSettings = UserSettings.empty,
     notifications: Seq[Notification] = Nil,
     breadcrumbs: Seq[BreadcrumbEntry] = Nil

@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import com.kyleu.projectile.models.config.Configuration
 import com.kyleu.projectile.models.task.ScheduledTaskRun
 import com.kyleu.projectile.models.task.{ScheduledTask, ScheduledTaskOutput}
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.{DateUtils, Logging}
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}

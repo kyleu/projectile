@@ -4,9 +4,13 @@ import java.io.ByteArrayOutputStream
 
 import com.kyleu.projectile.models.database.DatabaseField
 import com.kyleu.projectile.util.tracing.TraceData
-import com.github.tototoshi.csv.CSVWriter
+import com.github.tototoshi.csv.{CSVReader, CSVWriter}
+
+import scala.io.Source
 
 object CsvUtils {
+  def readCsv(src: Source) = CSVReader.open(src).all()
+
   def csvFor(name: Option[String], totalCount: Int, records: Seq[Product], fields: Seq[DatabaseField])(trace: TraceData): String = {
     csvForRows(name, totalCount, records.map(_.productIterator.toSeq.map {
       case o: Option[_] => o.getOrElse(NullUtils.inst)

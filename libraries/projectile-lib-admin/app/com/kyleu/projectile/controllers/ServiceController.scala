@@ -1,7 +1,8 @@
 package com.kyleu.projectile.controllers
 
 import com.kyleu.projectile.models.result.orderBy.OrderBy
-import com.kyleu.projectile.services.{Credentials, ModelServiceHelper}
+import com.kyleu.projectile.services.ModelServiceHelper
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.tracing.TraceData
 
 abstract class ServiceController[T](val svc: ModelServiceHelper[T]) extends BaseController(svc.key) {

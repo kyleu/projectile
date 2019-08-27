@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.task
 
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.concurrent.Future

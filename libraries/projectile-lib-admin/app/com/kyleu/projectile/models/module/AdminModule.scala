@@ -56,13 +56,14 @@ abstract class AdminModule() extends AbstractModule with ScalaModule {
 
   // UI
   protected[this] def navUrls: NavUrls = NavUrls(signupAllowed = allowSignup, oauthProviders = oauthProviders)
+  protected[this] def navContent: NavContent = NavContent()
   protected[this] def errorActions = new ErrorHandler.Actions()
   protected[this] def uiConfigProvider: Application.UiConfigProvider = new Application.UiConfigProvider {
     override def allowRegistration = allowSignup
     override def defaultRole = initialRole
     override def defaultSettings = initialSettings
     override def configForUser(su: Option[SystemUser], notifications: Seq[Notification], breadcrumbs: String*) = su match {
-      case None => UiConfig(projectName = projectName, menu = menuProvider.guestMenu, urls = navUrls)
+      case None => UiConfig(projectName = projectName, menu = menuProvider.guestMenu, urls = navUrls, content = navContent)
       case Some(u) =>
         val menu = menuProvider.menuFor(Some(u))
         val user = u.settingsObj.copy(avatarUrl = Some(GravatarUrl(u.email)))
@@ -73,6 +74,7 @@ abstract class AdminModule() extends AbstractModule with ScalaModule {
           menu = menu,
           urls = navUrls,
           html = html,
+          content = navContent,
           user = user,
           notifications = notifications,
           breadcrumbs = MenuProvider.breadcrumbs(menu, breadcrumbs)

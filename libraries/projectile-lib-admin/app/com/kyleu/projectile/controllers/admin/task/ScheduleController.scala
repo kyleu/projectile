@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.menu.SystemMenu
 import com.kyleu.projectile.models.module.ApplicationFeature.Task.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.web.InternalIcons
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.task.{ScheduledTaskRegistry, ScheduledTaskService}

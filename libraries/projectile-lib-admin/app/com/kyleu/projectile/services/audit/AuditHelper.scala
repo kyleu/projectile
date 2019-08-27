@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.audit.{Audit, AuditField, AuditRecord}
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.module.ApplicationFeature
 import com.kyleu.projectile.models.result.data.DataField
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData
 

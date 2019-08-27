@@ -4,7 +4,7 @@ import java.util.UUID
 
 import akka.actor.{ActorRef, Props}
 import com.kyleu.projectile.models.websocket.ConnectionMessage._
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import io.circe.Json
 
 object EchoConnectionService {

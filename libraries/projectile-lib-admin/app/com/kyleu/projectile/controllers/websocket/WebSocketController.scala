@@ -6,7 +6,7 @@ import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.stream.Materializer
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.auth.UserCredentials
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.BinarySerializers.Pickler
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.models.web.WebSocketUtils

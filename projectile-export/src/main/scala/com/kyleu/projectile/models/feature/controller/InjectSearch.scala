@@ -18,10 +18,11 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       val newLines = if (stringModels.isEmpty) { Nil } else {
         "Seq(" +: stringModels.map { m =>
           val comma = if (stringModels.lastOption.contains(m)) { "" } else { "," }
-          val se = "searchExact(creds, q = q, limit = Some(5)"
           val cs = m.model.pkFields.map(f => "model." + f.propertyName)
           val route = s"${TwirlHelper.routesClass(config, m.model)}.view(${cs.mkString(", ")})"
-          s"  ${m.model.injectedService(config)}.$se).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})))$comma"
+          val actArgs = s"""injector = injector, creds = creds, perm = ("${m.model.pkg.headOption.getOrElse("system")}", "${m.model.className}", "view")"""
+          val fArgs = s"""f = _.searchExact(creds, q = q, limit = Some(5)), v = model => $route, s = model => ${m.viewClass}(model, ${m.message})""".stripMargin
+          s"  act[${m.model.fullServicePath(config)}, ${m.model.fullClassPath(config)}]($actArgs, $fArgs)$comma"
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "string searches")
@@ -41,12 +42,12 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
           val comma = if (numModels.lastOption.contains(m)) { "" } else { "," }
           val cs = m.model.pkFields.map(f => "model." + f.propertyName)
           val route = s"${TwirlHelper.routesClass(config, m.model)}.view(${cs.mkString(", ")})"
-          val svc = m.model.injectedService(config)
-          if (longModels.contains(m)) {
-            s"  $svc.getByPrimaryKey(creds, id.toLong).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})).toSeq)$comma"
-          } else {
-            s"  $svc.getByPrimaryKey(creds, id).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          val actArgs = s"""injector = injector, creds = creds, perm = ("${m.model.pkg.headOption.getOrElse("system")}", "${m.model.className}", "view")"""
+          def call(id: String = "id") = {
+            val fArgs = s"""f = _.getByPrimaryKey(creds, $id).map(_.toSeq), v = model => $route, s = model => ${m.viewClass}(model, ${m.message})""".stripMargin
+            s"  act[${m.model.fullServicePath(config)}, ${m.model.fullClassPath(config)}]($actArgs, $fArgs)$comma"
           }
+          if (longModels.contains(m)) { call("id.toLong") } else { call() }
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "int searches")
@@ -62,7 +63,9 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
           val comma = if (uuidModels.lastOption.contains(m)) { "" } else { "," }
           val cs = m.model.pkFields.map(f => "model." + f.propertyName)
           val route = s"${TwirlHelper.routesClass(config, m.model)}.view(${cs.mkString(", ")})"
-          s"  ${m.model.injectedService(config)}.getByPrimaryKey(creds, id).map(_.map(model => $route -> ${m.viewClass}(model, ${m.message})).toSeq)$comma"
+          val actArgs = s"""injector = injector, creds = creds, perm = ("${m.model.pkg.headOption.getOrElse("system")}", "${m.model.className}", "view")"""
+          val fArgs = s"""f = _.getByPrimaryKey(creds, id).map(_.toSeq), v = model => $route, s = model => ${m.viewClass}(model, ${m.message})""".stripMargin
+          s"  act[${m.model.fullServicePath(config)}, ${m.model.fullClassPath(config)}]($actArgs, $fArgs)$comma"
         } :+ ") ++"
       }
       val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "uuid searches")

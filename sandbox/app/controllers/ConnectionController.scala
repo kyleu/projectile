@@ -6,7 +6,7 @@ import akka.actor.{ActorRef, ActorSystem}
 import akka.stream.Materializer
 import com.kyleu.projectile.controllers.websocket.WebSocketController
 import com.kyleu.projectile.models.module.Application
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.services.websocket.EchoConnectionService
 import io.circe.Json
 import play.api.mvc.RequestHeader

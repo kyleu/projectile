@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.auth
 
 import com.kyleu.projectile.models.user.SystemUser
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.NullUtils
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
@@ -9,6 +9,7 @@ import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 final case class UserCredentials(user: SystemUser, remoteAddress: String = NullUtils.str, tags: Map[String, String] = Map.empty) extends Credentials {
   override def id = "user:" + user.id.toString
   override def name = user.username
+  override def role = user.role
 }
 
 object UserCredentials {

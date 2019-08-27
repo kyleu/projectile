@@ -4,13 +4,14 @@ import java.util.UUID
 
 import com.google.inject.Injector
 import com.kyleu.projectile.models.module.Application
-import com.kyleu.projectile.services.Credentials
 import com.kyleu.projectile.services.search.SearchProvider
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.concurrent.ExecutionContext
 
 class SearchHelper extends SearchProvider {
+
   override def intSearches(app: Application, injector: Injector, creds: Credentials)(q: String, id: Int)(implicit ec: ExecutionContext, td: TraceData) = {
     /* Start int searches */
     /* End int searches */

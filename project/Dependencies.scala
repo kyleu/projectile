@@ -6,7 +6,6 @@ object Dependencies {
     val filters = play.sbt.PlayImport.filters
     val cache = play.sbt.PlayImport.ehcache
     val guice = play.sbt.PlayImport.guice
-    val json = "com.typesafe.play" %% "play-json" % "2.7.4"
     val mailer = "com.typesafe.play" %% "play-mailer-guice" % "7.0.1"
     val twirl = "com.typesafe.play" %% "twirl-api" % "1.4.2"
     val ws = play.sbt.PlayImport.ws

@@ -4,7 +4,7 @@ import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.user.SystemUser
 import com.kyleu.projectile.models.web.StartupErrorFixes
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.TraceData

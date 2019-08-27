@@ -3,10 +3,10 @@ package com.kyleu.projectile.services.user
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
-import com.kyleu.projectile.services.{Credentials, ModelServiceHelper}
+import com.kyleu.projectile.services.ModelServiceHelper
 import com.kyleu.projectile.services.audit.AuditHelper
 import com.kyleu.projectile.services.database.JdbcDatabase
-import com.kyleu.projectile.util.CsvUtils
+import com.kyleu.projectile.util.{Credentials, CsvUtils}
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import java.util.UUID
 
@@ -21,88 +21,112 @@ import scala.concurrent.{ExecutionContext, Future}
 class SystemUserService @javax.inject.Inject() (
     @Named("system") val db: JdbcDatabase,
     override val tracing: TracingService
-)(implicit ec: ExecutionContext) extends ModelServiceHelper[SystemUser]("systemUser") {
-  def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = {
+)(implicit ec: ExecutionContext) extends ModelServiceHelper[SystemUser]("systemUser", "models" -> "SystemUser") {
+  def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.primary.key")(td => db.queryF(SystemUserQueries.getByPrimaryKey(id))(td))
   }
-  def getByPrimaryKeyRequired(creds: Credentials, id: UUID)(implicit trace: TraceData) = getByPrimaryKey(creds, id).map { opt =>
-    opt.getOrElse(throw new IllegalStateException(s"Cannot load systemUser with id [$id]"))
+  def getByPrimaryKeyRequired(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    getByPrimaryKey(creds, id).map { opt =>
+      opt.getOrElse(throw new IllegalStateException(s"Cannot load systemUser with id [$id]"))
+    }
   }
-  def getByPrimaryKeySeq(creds: Credentials, idSeq: Seq[UUID])(implicit trace: TraceData) = if (idSeq.isEmpty) {
-    Future.successful(Nil)
-  } else {
-    traceF("get.by.primary.key.seq")(td => db.queryF(SystemUserQueries.getByPrimaryKeySeq(idSeq))(td))
+  def getByPrimaryKeySeq(creds: Credentials, idSeq: Seq[UUID])(implicit trace: TraceData) = checkPerm(creds, "view") {
+    if (idSeq.isEmpty) {
+      Future.successful(Nil)
+    } else {
+      traceF("get.by.primary.key.seq")(td => db.queryF(SystemUserQueries.getByPrimaryKeySeq(idSeq))(td))
+    }
   }
 
-  override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = {
+  override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all.count")(td => db.queryF(SystemUserQueries.countAll(filters))(td))
   }
-  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = {
+  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all")(td => db.queryF(SystemUserQueries.getAll(filters, orderBys, limit, offset))(td))
   }
 
   // Search
-  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = {
+  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("search.count")(td => db.queryF(SystemUserQueries.searchCount(q, filters))(td))
   }
   override def search(
     creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
-  )(implicit trace: TraceData) = {
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("search")(td => db.queryF(SystemUserQueries.search(q, filters, orderBys, limit, offset))(td))
   }
 
   def searchExact(
     creds: Credentials, q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
-  )(implicit trace: TraceData) = {
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("search.exact")(td => db.queryF(SystemUserQueries.searchExact(q, orderBys, limit, offset))(td))
   }
 
-  def countById(creds: Credentials, id: UUID)(implicit trace: TraceData) = traceF("count.by.id") { td =>
-    db.queryF(SystemUserQueries.CountById(id))(td)
+  def countById(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.id") { td =>
+      db.queryF(SystemUserQueries.CountById(id))(td)
+    }
   }
-  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = traceF("get.by.id") { td =>
-    db.queryF(SystemUserQueries.GetById(id, orderBys, limit, offset))(td)
+  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.id") { td =>
+      db.queryF(SystemUserQueries.GetById(id, orderBys, limit, offset))(td)
+    }
   }
-  def getByIdSeq(creds: Credentials, idSeq: Seq[UUID])(implicit trace: TraceData) = if (idSeq.isEmpty) {
-    Future.successful(Nil)
-  } else {
-    traceF("get.by.id.seq") { td =>
-      db.queryF(SystemUserQueries.GetByIdSeq(idSeq))(td)
+  def getByIdSeq(creds: Credentials, idSeq: Seq[UUID])(implicit trace: TraceData) = checkPerm(creds, "view") {
+    if (idSeq.isEmpty) {
+      Future.successful(Nil)
+    } else {
+      traceF("get.by.id.seq") { td =>
+        db.queryF(SystemUserQueries.GetByIdSeq(idSeq))(td)
+      }
     }
   }
 
-  def countByKey(creds: Credentials, key: String)(implicit trace: TraceData) = traceF("count.by.key") { td =>
-    db.queryF(SystemUserQueries.CountByKey(key))(td)
+  def countByKey(creds: Credentials, key: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.key") { td =>
+      db.queryF(SystemUserQueries.CountByKey(key))(td)
+    }
   }
-  def getByKey(creds: Credentials, key: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = traceF("get.by.key") { td =>
-    db.queryF(SystemUserQueries.GetByKey(key, orderBys, limit, offset))(td)
+  def getByKey(creds: Credentials, key: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.key") { td =>
+      db.queryF(SystemUserQueries.GetByKey(key, orderBys, limit, offset))(td)
+    }
   }
-  def getByKeySeq(creds: Credentials, keySeq: Seq[String])(implicit trace: TraceData) = if (keySeq.isEmpty) {
-    Future.successful(Nil)
-  } else {
-    traceF("get.by.key.seq") { td =>
-      db.queryF(SystemUserQueries.GetByKeySeq(keySeq))(td)
+  def getByKeySeq(creds: Credentials, keySeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+    if (keySeq.isEmpty) {
+      Future.successful(Nil)
+    } else {
+      traceF("get.by.key.seq") { td =>
+        db.queryF(SystemUserQueries.GetByKeySeq(keySeq))(td)
+      }
     }
   }
 
-  def countByProvider(creds: Credentials, provider: String)(implicit trace: TraceData) = traceF("count.by.provider") { td =>
-    db.queryF(SystemUserQueries.CountByProvider(provider))(td)
+  def countByProvider(creds: Credentials, provider: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.provider") { td =>
+      db.queryF(SystemUserQueries.CountByProvider(provider))(td)
+    }
   }
   def getByProvider(
     creds: Credentials, provider: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
-  )(implicit trace: TraceData) = traceF("get.by.provider") { td =>
-    db.queryF(SystemUserQueries.GetByProvider(provider, orderBys, limit, offset))(td)
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.provider") { td =>
+      db.queryF(SystemUserQueries.GetByProvider(provider, orderBys, limit, offset))(td)
+    }
   }
-  def getByProviderSeq(creds: Credentials, providerSeq: Seq[String])(implicit trace: TraceData) = if (providerSeq.isEmpty) {
-    Future.successful(Nil)
-  } else {
-    traceF("get.by.provider.seq") { td =>
-      db.queryF(SystemUserQueries.GetByProviderSeq(providerSeq))(td)
+  def getByProviderSeq(creds: Credentials, providerSeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+    if (providerSeq.isEmpty) {
+      Future.successful(Nil)
+    } else {
+      traceF("get.by.provider.seq") { td =>
+        db.queryF(SystemUserQueries.GetByProviderSeq(providerSeq))(td)
+      }
     }
   }
 
-  def countByUsername(creds: Credentials, username: String)(implicit trace: TraceData) = traceF("count.by.username") { td =>
-    db.queryF(SystemUserQueries.CountByUsername(username))(td)
+  def countByUsername(creds: Credentials, username: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.username") { td =>
+      db.queryF(SystemUserQueries.CountByUsername(username))(td)
+    }
   }
   def findByUsername(creds: Credentials, username: String)(implicit trace: TraceData) = tracing.trace("get.by.username") { td =>
     db.queryF(SystemUserQueries.FindUserByUsername(username))(td)

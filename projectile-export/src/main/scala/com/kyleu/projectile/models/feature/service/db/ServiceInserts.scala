@@ -9,8 +9,8 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object ServiceInserts {
   def insertsFor(config: ExportConfiguration, model: ExportModel, queriesFilename: String, file: ScalaFile) = {
     file.add("// Mutations")
-    file.add(s"""def insert(creds: Credentials, model: ${model.className})(implicit trace: TraceData) = traceF("insert") { td =>""", 1)
-    file.add(s"""db.executeF($queriesFilename.insert(model))(td).flatMap {""", 1)
+    file.add(s"""def insert(creds: Credentials, model: ${model.className})(implicit trace: TraceData) = checkPerm(creds, "edit") {""", 1)
+    file.add(s"""traceF("insert")(td => db.executeF($queriesFilename.insert(model))(td).flatMap {""", 1)
     if (model.pkFields.isEmpty) {
       file.add(s"case _ => scala.concurrent.Future.successful(None: Option[${model.className}])")
     } else {
@@ -26,15 +26,15 @@ object ServiceInserts {
       }
       file.add(s"""case _ => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
     }
-    file.add("}", -1)
+    file.add("})", -1)
     file.add("}", -1)
 
-    file.add(s"def insertBatch(creds: Credentials, models: Seq[${model.className}])(implicit trace: TraceData) = {", 1)
+    file.add(s"""def insertBatch(creds: Credentials, models: Seq[${model.className}])(implicit trace: TraceData) = checkPerm(creds, "edit") {""", 1)
     file.add(s"""traceF("insertBatch")(td => db.executeF($queriesFilename.insertBatch(models))(td))""")
     file.add("}", -1)
 
-    file.add("""def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = traceF("create") { td =>""", 1)
-    file.add(s"""db.executeF($queriesFilename.create(fields))(td).flatMap { _ =>""", 1)
+    file.add("""def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {""", 1)
+    file.add(s"""traceF("create")(td => db.executeF($queriesFilename.create(fields))(td).flatMap { _ =>""", 1)
     model.pkFields match {
       case Nil => file.add(s"Future.successful(None: Option[${model.className}])")
       case pk =>
@@ -45,7 +45,7 @@ object ServiceInserts {
         }
         file.add(s"getByPrimaryKey(creds, $lookup)")
     }
-    file.add("}", -1)
+    file.add("})", -1)
     file.add("}", -1)
   }
 }

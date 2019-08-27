@@ -17,7 +17,7 @@ object ServiceMutations {
       val interp = model.pkFields.map("$" + _.propertyName).mkString(", ")
       file.addImport(Seq("scala", "concurrent"), "Future")
       file.add()
-      file.add(s"def remove(creds: Credentials, $sig)$trace = {", 1)
+      file.add(s"""def remove(creds: Credentials, $sig)$trace = checkPerm(creds, "edit") {""", 1)
       file.add(s"""traceF("remove")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add("case Some(current) =>", 1)
       if (model.features(ModelFeature.Audit)) {
@@ -32,7 +32,7 @@ object ServiceMutations {
       file.add("}", -1)
       file.add()
 
-      file.add(s"def update(creds: Credentials, $sig, fields: Seq[DataField])$trace = {", 1)
+      file.add(s"""def update(creds: Credentials, $sig, fields: Seq[DataField])$trace = checkPerm(creds, "edit") {""", 1)
       file.add(s"""traceF("update")(td => getByPrimaryKey(creds, $call)(td).flatMap {""", 1)
       file.add(s"""case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for ${model.title} [$interp]")""")
       val currName = if (model.features(ModelFeature.Audit)) { "current" } else { "_" }

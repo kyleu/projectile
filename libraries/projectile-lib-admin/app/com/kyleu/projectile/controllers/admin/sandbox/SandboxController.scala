@@ -15,6 +15,7 @@ import play.api.http.MimeTypes
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.io.Source
 
 @javax.inject.Singleton
 class SandboxController @javax.inject.Inject() (
@@ -32,14 +33,24 @@ class SandboxController @javax.inject.Inject() (
   }
 
   def run(key: String, arg: Option[String], t: Option[String]) = withSession(key, ("tools", "Sandbox", "run")) { implicit request => implicit td =>
-    val sandbox = SandboxTask.get(key)
-    sandbox.run(SandboxTask.Config(app.tracing, injector, arg)).map { result =>
+    SandboxTask.get(key).run(SandboxTask.Config(app.tracing, injector, arg)).map { result =>
       renderChoice(t) {
         case MimeTypes.HTML =>
           val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sandbox")
           Ok(com.kyleu.projectile.views.html.admin.sandbox.sandboxRun(cfg, result))
         case MimeTypes.JSON => Ok(result.asJson)
       }
+    }
+  }
+
+  def upload(key: String) = withSession(key, ("tools", "Sandbox", "run")) { implicit request => implicit td =>
+    val f = request.body.asMultipartFormData.map(_.file("arg").getOrElse(throw new IllegalStateException("No file available in [arg]"))).get.ref
+    val s = Source.fromFile(f.path.toFile)
+    val arg = Some(s.getLines.mkString("\n"))
+    s.close()
+    SandboxTask.get(key).run(SandboxTask.Config(app.tracing, injector, arg)).map { result =>
+      val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sandbox")
+      Ok(com.kyleu.projectile.views.html.admin.sandbox.sandboxRun(cfg, result))
     }
   }
 }

@@ -1,6 +1,6 @@
 package services.augment
 
-import com.kyleu.projectile.services.Credentials
+import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.tracing.TraceData
 
 @javax.inject.Singleton

@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.result.filter.{Filter, FilterSchema}
 import com.kyleu.projectile.models.result.orderBy.{OrderBy, OrderBySchema}
 import com.kyleu.projectile.models.result.paging.PagingOptions
 import sangria.schema.{Args, Argument, Context, Field, OutputType}
-import com.kyleu.projectile.services.ModelServiceHelper
+import com.kyleu.projectile.services.ModelService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.tracing.TraceData
 
@@ -51,7 +51,7 @@ abstract class GraphQLSchemaHelper(val name: String)(implicit ec: ExecutionConte
     offset = args.arg(CommonSchema.offsetArg)
   )
 
-  protected def runSearch[T](svc: ModelServiceHelper[T], c: Context[GraphQLContext, Unit], td: TraceData) = {
+  protected def runSearch[T](svc: ModelService[T], c: Context[GraphQLContext, Unit], td: TraceData) = {
     val args = argsFor(c.args)
     val f = c.arg(CommonSchema.queryArg) match {
       case Some(q) if q.nonEmpty => svc.searchWithCount(c.ctx.creds, Some(q), args.filters, args.orderBys, args.limit, args.offset)(td)
