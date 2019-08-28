@@ -161,7 +161,7 @@ class ScheduledTaskRunService @javax.inject.Inject() (
   }
 
   // Mutations
-  def insert(creds: Credentials, model: ScheduledTaskRun)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insert(creds: Credentials, model: ScheduledTaskRun)(implicit trace: TraceData) = {
     traceF("insert") { td =>
       db.executeF(ScheduledTaskRunQueries.insert(model))(td).flatMap {
         case 1 => getByPrimaryKey(creds, model.id)(td).map(_.map { n =>
@@ -172,10 +172,10 @@ class ScheduledTaskRunService @javax.inject.Inject() (
       }
     }
   }
-  def insertBatch(creds: Credentials, models: Seq[ScheduledTaskRun])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insertBatch(creds: Credentials, models: Seq[ScheduledTaskRun])(implicit trace: TraceData) = {
     traceF("insertBatch")(td => db.executeF(ScheduledTaskRunQueries.insertBatch(models))(td))
   }
-  def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = {
     traceF("create") { td =>
       db.executeF(ScheduledTaskRunQueries.create(fields))(td).flatMap { _ =>
         AuditHelper.onInsert("ScheduledTaskRun", Seq(fieldVal(fields, "id")), fields, creds)

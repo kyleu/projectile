@@ -14,11 +14,13 @@
     section: String = "explore",
     q: Option[String] = None,
     fullUI: Boolean = true,
-    additionalHeader: Option[Html] = None
+    additionalHeader: Option[Html] = None,
+    additionalColumns: Option[Html] = None
 )(
     implicit flash: Flash
 )@if(fullUI) {
   @com.kyleu.projectile.views.html.layout.page(title = s"$model Management", cfg = cfg, icon = Some(icon)) {
+    @additionalHeader
     @com.kyleu.projectile.views.html.layout.card(None) {
       <div>
         <div>
@@ -42,7 +44,7 @@
           </div>
         }
         <div style="overflow: auto;">
-          @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc, additionalHeader)
+          @com.kyleu.projectile.views.html.admin.explore.listTable(cols, rows, modelPlural, calls.orderBy, orderBy, orderAsc, additionalColumns)
         </div>
       </div>
       <div>

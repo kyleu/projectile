@@ -15,7 +15,7 @@
       "started" -> "Started"
     ),
     totalCount = totalCount,
-    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.task.scheduledTaskRunDataRow(model, additional = aug._2.get(model).flatten)),
+    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.task.scheduledTaskRunDataRow(model, additional = aug._3.get(model).flatten)),
     orderBy = orderBy,
     orderAsc = orderAsc,
     calls = com.kyleu.projectile.models.web.ListCalls(
@@ -28,6 +28,7 @@
     limit = limit,
     offset = offset,
     q = q,
-    additionalHeader = aug._1
+    additionalHeader = aug._1,
+    additionalColumns = aug._2
   )
 }

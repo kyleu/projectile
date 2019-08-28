@@ -207,7 +207,7 @@ class AuditService @javax.inject.Inject() (
   }
 
   // Mutations
-  def insert(creds: Credentials, model: Audit)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insert(creds: Credentials, model: Audit)(implicit trace: TraceData) = {
     traceF("insert") { td =>
       db.executeF(AuditQueries.insert(model))(td).flatMap {
         case 1 => getByPrimaryKey(creds, model.id)(td)
@@ -215,7 +215,7 @@ class AuditService @javax.inject.Inject() (
       }
     }
   }
-  def insertBatch(creds: Credentials, models: Seq[Audit])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insertBatch(creds: Credentials, models: Seq[Audit])(implicit trace: TraceData) = {
     traceF("insertBatch")(td => db.executeF(AuditQueries.insertBatch(models))(td))
   }
   def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {

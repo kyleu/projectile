@@ -44,7 +44,7 @@ abstract class ModelServiceHelper[T](val key: String, val perm: (String, String)
   protected def fieldVal(fields: Seq[DataField], k: String) = fields.find(_.k == k).flatMap(_.v).getOrElse(NullUtils.str)
 
   def checkPerm[Ret](creds: Credentials, key: String)(f: => Ret): Ret = PermissionService.check(creds.role, perm._1, perm._2, key) match {
-    case (false, msg) => throw new IllegalStateException(msg)
+    case (false, msg) => throw new IllegalStateException(s"Insufficent permissions to access this page: $msg")
     case (true, _) => f
   }
 }

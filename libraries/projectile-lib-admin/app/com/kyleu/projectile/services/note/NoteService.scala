@@ -185,7 +185,7 @@ class NoteService @javax.inject.Inject() (
   }
 
   // Mutations
-  def insert(creds: Credentials, model: Note)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insert(creds: Credentials, model: Note)(implicit trace: TraceData) = {
     traceF("insert") { td =>
       db.executeF(NoteQueries.insert(model))(td).flatMap {
         case 1 => getByPrimaryKey(creds, model.id)(td)
@@ -193,7 +193,7 @@ class NoteService @javax.inject.Inject() (
       }
     }
   }
-  def insertBatch(creds: Credentials, models: Seq[Note])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insertBatch(creds: Credentials, models: Seq[Note])(implicit trace: TraceData) = {
     traceF("insertBatch")(td => db.executeF(NoteQueries.insertBatch(models))(td))
   }
   def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {

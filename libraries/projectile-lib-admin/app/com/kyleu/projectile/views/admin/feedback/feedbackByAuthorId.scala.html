@@ -18,7 +18,7 @@
     orderBy = orderBy,
     orderAsc = orderAsc,
     totalCount = None,
-    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.feedback.feedbackDataRow(model, additional = aug._2.get(model).flatten)),
+    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.feedback.feedbackDataRow(model, additional = aug._3.get(model).flatten)),
     calls = com.kyleu.projectile.models.web.ListCalls(
       orderBy = Some(com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.byAuthorId(authorId, _, _, Some(limit), Some(0))),
       search = None,
@@ -29,6 +29,7 @@
     offset = offset,
     q = None,
     additionalHeader = aug._1,
+    additionalColumns = aug._2,
     fullUI = false
   )
 }

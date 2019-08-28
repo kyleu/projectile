@@ -178,7 +178,7 @@ class FeedbackService @javax.inject.Inject() (
   }
 
   // Mutations
-  def insert(creds: Credentials, model: Feedback)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insert(creds: Credentials, model: Feedback)(implicit trace: TraceData) = {
     traceF("insert") { td =>
       db.executeF(FeedbackQueries.insert(model))(td).flatMap {
         case 1 => getByPrimaryKey(creds, model.id)(td)
@@ -186,10 +186,10 @@ class FeedbackService @javax.inject.Inject() (
       }
     }
   }
-  def insertBatch(creds: Credentials, models: Seq[Feedback])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insertBatch(creds: Credentials, models: Seq[Feedback])(implicit trace: TraceData) = {
     traceF("insertBatch")(td => db.executeF(FeedbackQueries.insertBatch(models))(td))
   }
-  def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = {
     traceF("create") { td =>
       db.executeF(FeedbackQueries.create(fields))(td).flatMap { _ =>
         getByPrimaryKey(creds, UUID.fromString(fieldVal(fields, "id")))

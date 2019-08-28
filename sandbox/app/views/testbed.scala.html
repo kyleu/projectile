@@ -1,24 +1,9 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, debug: Boolean = false)(implicit flash: Flash)
-@defining("page") { key =>
-  @if(key == "page") {
-    @com.kyleu.projectile.views.html.layout.page(title = "Testbed", cfg = cfg) {
-      @com.kyleu.projectile.views.html.layout.card(None) {
-        <div>Content</div>
-        @com.kyleu.projectile.views.html.components.form.sortableField("x", Seq("1" -> Html("Item 1"), "2" -> Html("Item 2"), "3" -> Html("Item 3")))
-      }
-      @com.kyleu.projectile.models.web.ControllerUtils.nestableIncludeSnippet
-    }
+@com.kyleu.projectile.views.html.layout.page(title = "Testbed", cfg = cfg) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div>Content</div>
+    @com.kyleu.projectile.views.html.components.form.sortableField("x", Seq("1" -> Html("Item 1"), "2" -> Html("Item 2"), "3" -> Html("Item 3")))
   }
-  @if(key == "fullscreen") {
-    @com.kyleu.projectile.views.html.layout.fullscreen("Testbed", cfg) {
-      <div>Content</div>
-    }
-  }
-  @if(key == "fullscreenCard") {
-    @com.kyleu.projectile.views.html.layout.fullscreenCard("Testbed", cfg) {
-      <div class="card-title">Content</div>
-
-    }
-  }
-  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+  @com.kyleu.projectile.models.web.ControllerUtils.nestableIncludeSnippet
 }
+@com.kyleu.projectile.views.html.components.includeScalaJs(debug)
