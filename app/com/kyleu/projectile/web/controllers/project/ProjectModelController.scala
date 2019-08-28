@@ -93,6 +93,10 @@ class ProjectModelController @javax.inject.Inject() () extends ProjectileControl
           case x if x.nonEmpty && x != f.t.value => Some(MemberOverride(s"${f.key}.type", x))
           case _ => None
         },
+        form.getOrElse(s"field-${f.key}-summary", "false") match {
+          case x if x.toBoolean != f.inSummary => Some(MemberOverride(s"${f.key}.summary", x))
+          case _ => None
+        },
         form.getOrElse(s"field-${f.key}-search", "false") match {
           case x if x.toBoolean != f.inSearch => Some(MemberOverride(s"${f.key}.search", x))
           case _ => None

@@ -35,6 +35,7 @@ object TableExportModel {
     val inIndex = idxs.nonEmpty
     val unique = idxs.exists(_._2)
     val inSearch = inPk || inIndex
-    ExportConfigurationDefault.loadField(col, inIndex, unique, inSearch, enums)
+    val inSummary = inPk || inIndex
+    ExportConfigurationDefault.loadField(col, inIndex, unique, inSearch, inSummary, enums)
   }
 }

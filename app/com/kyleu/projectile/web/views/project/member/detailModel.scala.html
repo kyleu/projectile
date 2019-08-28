@@ -53,6 +53,7 @@
               <th>Title</th>
               <th>Type</th>
               <th>Search</th>
+              <th>Summary</th>
               <th>Ignored</th>
             </tr>
           </thead>
@@ -72,6 +73,12 @@
                 <td>
                   <label>
                     <input name="field-@f.key-search" value="true" type="checkbox" @if(f.inSearch) { checked="checked" } />
+                    <span></span>
+                  </label>
+                </td>
+                <td>
+                  <label>
+                    <input name="field-@f.key-summary" value="true" type="checkbox" @if(f.inSummary) { checked="checked" } />
                     <span></span>
                   </label>
                 </td>
