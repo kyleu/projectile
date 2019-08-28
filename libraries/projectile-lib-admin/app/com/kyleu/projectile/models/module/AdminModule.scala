@@ -67,7 +67,7 @@ abstract class AdminModule() extends AbstractModule with ScalaModule {
       case Some(u) =>
         val menu = menuProvider.menuFor(Some(u))
         val user = u.settingsObj.copy(avatarUrl = Some(GravatarUrl(u.email)))
-        val html = NavHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, GravatarUrl(u.email), notifications))
+        val html = NavHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, GravatarUrl(u.email), breadcrumbs, notifications))
         UiConfig(
           projectName = projectName,
           userId = Some(u.id),

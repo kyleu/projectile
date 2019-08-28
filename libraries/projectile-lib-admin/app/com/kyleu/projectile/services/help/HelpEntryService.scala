@@ -5,7 +5,12 @@ import com.kyleu.projectile.util.Logging
 
 object HelpEntryService extends Logging {
   def contentFor(path: String*) = {
-    val fn = ("help" +: (if (path.isEmpty) { Seq("index") } else { path })).mkString("/") + ".html"
+    val trimmed = path.map(_.trim).filter(_.nonEmpty)
+    val fn = ("help" +: (if (trimmed.isEmpty) { Seq("index") } else { trimmed })).mkString("/") + ".html"
     Resource.asString(fn)
+  }
+
+  def hasHelp(path: String*): Option[Seq[String]] = contentFor(path: _*).map(_ => path).orElse {
+    if (path.size == 1) { None } else { hasHelp(path.dropRight(1): _*) }
   }
 }

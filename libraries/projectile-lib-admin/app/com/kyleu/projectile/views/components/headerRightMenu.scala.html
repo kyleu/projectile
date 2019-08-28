@@ -1,20 +1,46 @@
-@(name: String, avatarUrl: String, notifications: Seq[com.kyleu.projectile.models.notification.Notification])
+@(name: String, avatarUrl: String, breadcrumbs: Seq[String], notifications: Seq[com.kyleu.projectile.models.notification.Notification])
 <ul class="navbar-list right">
-  <li class="hide-on-med-and-down"><a class="waves-effect waves-block waves-light toggle-fullscreen" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.fullscreen</i></a></li>
+  <li class="hide-on-med-and-down">
+    <a class="waves-effect waves-block waves-light toggle-fullscreen" href="" onclick="return false;">
+      <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.fullscreen</i>
+    </a>
+  </li>
   @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Search)) {
-    <li class="hide-on-large-only"><a class="waves-effect waves-block waves-light search-button" href="" onclick="return false;"><i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i></a></li>
+    <li class="hide-on-large-only">
+      <a class="waves-effect waves-block waves-light search-button" href="" onclick="return false;">
+        <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.search</i>
+      </a>
+    </li>
   }
   @if(notifications.nonEmpty) {
-    <li><a class="waves-effect waves-block waves-light notification-button" href="" onclick="return false;" data-target="notifications-dropdown">
-      <small class="notification-badge" style="right: -22px;">@notifications.size</small>
-      <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.notifications</i></a></li>
+    <li>
+      <a class="waves-effect waves-block waves-light notification-button" href="" onclick="return false;" data-target="notifications-dropdown" title="You have [@notifications.size] notifications">
+        <small class="notification-badge" style="right: -22px;">@notifications.size</small>
+        <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.notifications</i>
+      </a>
+    </li>
   }
-  <li><a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);" data-target="profile-dropdown">
-    <span class="avatar-status avatar-online" title="@name">
-      <img src="@avatarUrl" alt="" />
-      <i></i>
-    </span>
-  </a></li>
+  @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Help)) {
+    <!-- Help Context: [@breadcrumbs.mkString("/")] -->
+    @com.kyleu.projectile.services.help.HelpEntryService.hasHelp(breadcrumbs: _*).map { help =>
+      <!-- Matched help file for @help.mkString("/") -->
+      <li>
+        @defining(if(breadcrumbs.isEmpty) { com.kyleu.projectile.controllers.help.routes.HelpEntryController.root() } else { com.kyleu.projectile.controllers.help.routes.HelpEntryController.entry(breadcrumbs.mkString("/")) }) { url =>
+          <a class="waves-effect waves-block waves-light help-button" style="line-height: 1;" href="@url" title="Help for this page">
+            <i class="material-icons">@com.kyleu.projectile.models.web.InternalIcons.help</i>
+          </a>
+        }
+      </li>
+    }
+  }
+  <li>
+    <a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);" data-target="profile-dropdown" title="User profile">
+      <span class="avatar-status avatar-online" title="@name">
+        <img src="@avatarUrl" alt="" />
+        <i></i>
+      </span>
+    </a>
+  </li>
 </ul>
 
 @if(notifications.nonEmpty) {

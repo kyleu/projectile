@@ -21,14 +21,19 @@ class HelpEntryController @javax.inject.Inject() (override val app: Application)
     val segments = path.split("/").map(_.trim).filter(_.nonEmpty).toList
     val cfg = app.cfg(request.identity, (if (segments.isEmpty) { Seq("system", "help") } else { segments }): _*)
     val root = NavMenu(key = "_root", title = cfg.projectName, description = Some("The home page of this application"), url = Some("/"), children = cfg.menu)
-    val result = segments.foldLeft((Seq.empty[String], root)) { (l, r) =>
+    def calc(s: Seq[String]): (Seq[String], NavMenu) = s.foldLeft((Seq.empty[String], root)) { (l, r) =>
       l._2.children.find(_.key == r) match {
         case Some(item) => (l._1 :+ r, item)
-        case None => throw new IllegalStateException(s"Cannot load menu with path [$path], possible permissions problem")
+        case None => if (l._2.children.isEmpty) {
+          calc(s.dropRight(1))
+        } else {
+          throw new IllegalStateException(s"Cannot load menu with path [$path], possible permissions problem")
+        }
       }
     }
+    val result = calc(segments)
 
-    val entry = toHelpEntry(result._2, segments, HelpEntryService.contentFor(segments: _*))
+    val entry = toHelpEntry(result._2, result._1.toList, HelpEntryService.contentFor(result._1: _*))
 
     Future.successful(render {
       case Accepts.Html() => Ok(com.kyleu.projectile.views.html.help.help(cfg, entry))
