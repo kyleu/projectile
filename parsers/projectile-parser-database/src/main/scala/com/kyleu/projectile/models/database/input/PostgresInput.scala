@@ -49,7 +49,7 @@ case class PostgresInput(
     t ++ v
   }
 
-  def newConnection() = {
+  def newConnection() = PostgresInputDataSourceOverrides.get(key).map(_().getConnection()).getOrElse {
     Class.forName("org.postgresql.Driver")
     val props = new Properties()
     props.setProperty("user", username)

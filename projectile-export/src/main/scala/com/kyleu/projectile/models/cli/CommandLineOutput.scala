@@ -28,19 +28,34 @@ object CommandLineOutput {
   }
 
   private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.template.title}"
-  private[this] def logForInput(input: Input) = s"[${input.key}]: $input"
+  private[this] def logForInput(input: Input) = {
+    def process(keySingle: String, keyPlural: String, xs: Seq[String]) = if (xs.isEmpty) {
+      Nil
+    } else {
+      s"  [${xs.size}] ${if (xs.size == 1) { keySingle } else { keyPlural }}:" +: xs.map("    " + _)
+    }
+    val enums = process("enum", "enums", input.enums.map(_.key))
+    val models = process("model", "models", input.models.map(_.key))
+    val services = process("service", "services", input.services.map(_.key))
+    val unions = process("union", "unions", input.unions.map(_.key))
+    (Seq(s"[${input.key}]: $input") ++ enums ++ models ++ services ++ unions).mkString("\n")
+  }
   private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.template.title}"
   private[this] def logForProject(project: Project) = {
-    val enums = if (project.enums.isEmpty) { Nil } else {
-      s"  [${project.enums.size}] enums:" +: project.enums.map(e => "  - " + e.key + (if (e.pkg.isEmpty) { "" } else { ": " + e.pkg.mkString(", ") }))
+    def process(keySingle: String, keyPlural: String, xs: Seq[(Seq[String], String)]) = if (xs.isEmpty) {
+      Nil
+    } else {
+      s"  [${xs.size}] ${if (xs.size == 1) { keySingle } else { keyPlural }}:" +: {
+        xs.groupBy(_._1.mkString(".")).mapValues(_.map(_._2).sorted).toSeq.sortBy(_._1).map { v =>
+          "  - [" + (if (v._1.isEmpty) { "root package" } else { v._1 }) + "]: " + v._2.mkString(", ")
+        }
+      }
     }
-    val models = if (project.models.isEmpty) { Nil } else {
-      s"  [${project.models.size}] models:" +: project.models.map(m => "  - " + m.key + (if (m.pkg.isEmpty) { "" } else { ": " + m.pkg.mkString(", ") }))
-    }
-    val services = if (project.services.isEmpty) { Nil } else {
-      s"  [${project.services.size}] services:" +: project.services.map(s => "  - " + s.key + (if (s.pkg.isEmpty) { "" } else { ": " + s.pkg.mkString(", ") }))
-    }
-    (Seq(s"[${project.key}]: $project") ++ enums ++ models ++ services).mkString("\n")
+    val enums = process("enum", "enums", project.enums.map(e => e.pkg -> e.key))
+    val models = process("model", "models", project.models.map(m => m.pkg -> m.key))
+    val services = process("service", "services", project.services.map(s => s.pkg -> s.key))
+    val unions = process("union", "unions", project.unions.map(u => u.pkg -> u.key))
+    (Seq(s"[${project.key}]: $project") ++ enums ++ models ++ services ++ unions).mkString("\n")
   }
 
   def logForExportResult(output: ProjectOutput, files: Seq[OutputWriteResult]) = {
