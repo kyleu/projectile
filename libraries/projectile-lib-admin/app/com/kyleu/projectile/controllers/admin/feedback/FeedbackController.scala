@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.feedback
 
 import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
@@ -28,7 +29,13 @@ class FeedbackController @javax.inject.Inject() (
     val cancel = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.list()
     val call = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.create()
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackForm(
-      app.cfg(u = Some(request.identity), "feedback", "feedback", "Create"), Feedback.empty(), "New Feedback", cancel, call, isNew = true, debug = app.config.debug
+      app.cfg(u = Some(request.identity), "feedback", "feedback", "Create"),
+      Feedback.empty(),
+      "New Feedback",
+      cancel,
+      call,
+      isNew = true,
+      debug = app.config.debug
     )))
   }
 
@@ -46,7 +53,16 @@ class FeedbackController @javax.inject.Inject() (
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id))
-          case _ => Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackList(app.cfg(u = Some(request.identity), "system", "tools", "feedback"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)))
+          case _ => Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackList(
+            app.cfg(u = Some(request.identity), "system", "tools", "feedback"),
+            Some(r._1),
+            r._2,
+            q,
+            orderBy,
+            orderAsc,
+            limit.getOrElse(100),
+            offset.getOrElse(0)
+          ))
         }
         case MimeTypes.JSON => Ok(FeedbackResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case BaseController.MimeTypes.csv => csvResponse("Feedback", svc.csvFor(r._1, r._2))
@@ -63,13 +79,17 @@ class FeedbackController @javax.inject.Inject() (
     }
   }
 
-  def byAuthorId(authorId: UUID, orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false) = {
+  def byAuthorId(
+    authorId: UUID, orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false
+  ) = {
     withSession("get.by.authorId", ("tools", "Feedback", "view")) { implicit request => implicit td =>
       val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
       svc.getByAuthorId(request, authorId, orderBys, limit, offset).map(models => renderChoice(t) {
         case MimeTypes.HTML =>
           val cfg = app.cfg(Some(request.identity), "system", "tools", "feedback", "Author Id")
-          val list = com.kyleu.projectile.views.html.admin.feedback.feedbackByAuthorId(cfg, authorId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0))
+          val list = com.kyleu.projectile.views.html.admin.feedback.feedbackByAuthorId(
+            cfg, authorId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)
+          )
           if (embedded) { Ok(list) } else { Ok(page(s"Feedbacks by Author Id [$authorId]", cfg)(card(None)(list))) }
         case MimeTypes.JSON => Ok(models.asJson)
         case BaseController.MimeTypes.csv => csvResponse("Feedback by authorId", svc.csvFor(0, models))
@@ -79,28 +99,40 @@ class FeedbackController @javax.inject.Inject() (
     }
   }
 
-  def view(id: UUID, t: Option[String] = None) = withSession("view", ("tools", "Feedback", "view")) { implicit request => implicit td =>
-    val modelF = svc.getByPrimaryKey(request, id)
-    val notesF = noteSvc.getFor(request, "Feedback", id)
+  def view(id: UUID, t: Option[String] = None) = {
+    withSession("view", ("tools", "Feedback", "view")) { implicit request => implicit td =>
+      val modelF = svc.getByPrimaryKey(request, id)
+      val notesF = noteSvc.getFor(request, "Feedback", id)
 
-    notesF.flatMap(notes => modelF.map {
-      case Some(model) => renderChoice(t) {
-        case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackView(app.cfg(u = Some(request.identity), "system", "tools", "feedback", model.id.toString), model, notes, app.config.debug))
-        case MimeTypes.JSON => Ok(model.asJson)
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
-      }
-      case None => NotFound(s"No Feedback found with id [$id]")
-    })
+      notesF.flatMap(notes => modelF.map {
+        case Some(model) => renderChoice(t) {
+          case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackView(
+            app.cfg(u = Some(request.identity), "system", "tools", "feedback", model.id.toString),
+            model,
+            notes,
+            app.config.debug
+          ))
+          case MimeTypes.JSON => Ok(model.asJson)
+          case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
+          case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
+        }
+        case None => NotFound(s"No Feedback found with id [$id]")
+      })
+    }
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("tools", "Feedback", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(id)
     val call = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.edit(id)
     svc.getByPrimaryKey(request, id).map {
-      case Some(model) => Ok(
-        com.kyleu.projectile.views.html.admin.feedback.feedbackForm(app.cfg(Some(request.identity), "system", "tools", "feedback", "Edit"), model, s"Feedback [$id]", cancel, call, debug = app.config.debug)
-      )
+      case Some(model) => Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackForm(
+        app.cfg(Some(request.identity), "system", "tools", "feedback", "Edit"),
+        model,
+        s"Feedback [$id]",
+        cancel,
+        call,
+        debug = app.config.debug
+      ))
       case None => NotFound(s"No Feedback found with id [$id]")
     }
   }

@@ -2,15 +2,13 @@ package com.kyleu.projectile.services.socket
 
 import java.nio.ByteBuffer
 
+import com.kyleu.projectile.util.ArrayBufferOps
 import com.kyleu.projectile.util.BinarySerializers.Pickler
-import com.kyleu.projectile.util.{ArrayBufferOps, BinarySerializers}
 import com.kyleu.projectile.util.JsonSerializers.Decoder
-import com.kyleu.projectile.util.JsonSerializers.decodeJson
 import org.scalajs.dom.raw._
 
-import scala.scalajs.js.typedarray.{ArrayBuffer, TypedArrayBuffer}
-
 class NetworkSocket[T: Decoder: Pickler](handler: EventHandler[T]) {
+  private[this] val msgHandler = new NetworkHandler[T](process)
   private[this] var connecting = false
   private[this] var connected = false
 
@@ -20,7 +18,6 @@ class NetworkSocket[T: Decoder: Pickler](handler: EventHandler[T]) {
   private[this] var sentBytes = 0
 
   private[this] var receivedMessageCount = 0
-  private[this] var receivedBytes = 0
 
   def open(url: String) = if (connected) {
     throw new IllegalStateException("Already connected")
@@ -51,7 +48,7 @@ class NetworkSocket[T: Decoder: Pickler](handler: EventHandler[T]) {
     val socket = new WebSocket(url)
     socket.onopen = { event: Event => onConnectEvent(event) }
     socket.onerror = { event: Event => onErrorEvent(event) }
-    socket.onmessage = { event: MessageEvent => onMessageEvent(event) }
+    socket.onmessage = { event: MessageEvent => msgHandler.onMessageEvent(event) }
     socket.onclose = { event: Event => onCloseEvent(event) }
     ws = Some(socket)
   }
@@ -71,31 +68,6 @@ class NetworkSocket[T: Decoder: Pickler](handler: EventHandler[T]) {
   private[this] def process(msg: T) = {
     receivedMessageCount += 1
     handler.onMessage(msg)
-  }
-
-  private[this] def onMessageEvent(event: MessageEvent): Unit = event.data match {
-    case s: String =>
-      receivedBytes += s.getBytes.length
-      process(decodeJson[T](s) match {
-        case Right(x) => x
-        case Left(err) => throw err
-      })
-    case b: Blob =>
-      val reader = new FileReader()
-      def onLoadEnd(ev: ProgressEvent) = {
-        val buff = reader.result
-        val ab = buff.asInstanceOf[ArrayBuffer]
-        val data = TypedArrayBuffer.wrap(ab)
-        receivedBytes += ab.byteLength
-        val msg = BinarySerializers.read(data)
-        process(msg)
-      }
-      reader.onloadend = onLoadEnd _
-      reader.readAsArrayBuffer(b)
-    case buff: ArrayBuffer =>
-      val data = TypedArrayBuffer.wrap(buff)
-      process(BinarySerializers.read(data))
-    case x => throw new IllegalStateException(s"Unhandled message data of type [$x]")
   }
 
   private[this] def onCloseEvent(event: Event) = {

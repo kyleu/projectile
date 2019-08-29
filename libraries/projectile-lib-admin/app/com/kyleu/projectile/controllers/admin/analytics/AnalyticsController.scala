@@ -22,8 +22,9 @@ object AnalyticsController {
 class AnalyticsController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("analytics") {
   ApplicationFeature.enable(ApplicationFeature.Analytics)
   PermissionService.registerModel("tools", "Analytics", "Analytics", Some(InternalIcons.analytics), "view")
+  val feature = ApplicationFeature.Analytics.value
   val desc = "Sends you to the analytics dashboard for this application"
-  SystemMenu.addToolMenu(ApplicationFeature.Analytics.value, "Analytics", Some(desc), routes.AnalyticsController.redir(), InternalIcons.analytics)
+  SystemMenu.addToolMenu(feature, "Analytics", Some(desc), routes.AnalyticsController.redir(), InternalIcons.analytics, ("tools", "Analytics", "view"))
 
   val googleUa = app.config.metrics.analyticsGoogleUa
   googleUa.foreach(AnalyticsController.init)

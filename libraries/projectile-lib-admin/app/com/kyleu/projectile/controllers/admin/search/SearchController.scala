@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.search
 
 import java.util.UUID
@@ -52,11 +53,36 @@ class SearchController @javax.inject.Inject() (
 
   private[this] def searchUuid(creds: UserCredentials, q: String, id: UUID)(implicit timing: TraceData) = {
     val uuidSearches = provider.uuidSearches(app, injector, creds)(q, id)(ec, timing) ++ List(
-      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) { Seq(injector.getInstance(classOf[AuditRecordService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id) -> com.kyleu.projectile.views.html.admin.audit.auditRecordSearchResult(model, s"Audit Record [${model.id}] matched [$q]")).toSeq)) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) { Seq(injector.getInstance(classOf[AuditService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched [$q]")).toSeq)) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.Feedback)) { Seq(injector.getInstance(classOf[FeedbackService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id) -> com.kyleu.projectile.views.html.admin.feedback.feedbackSearchResult(model, s"Feedback [${model.id}] matched [$q]")).toSeq)) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.User)) { Seq(injector.getInstance(classOf[SystemUserService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id) -> com.kyleu.projectile.views.html.admin.user.systemUserSearchResult(model, s"System User [${model.id}] matched [$q]")).toSeq)) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.Task)) { Seq(injector.getInstance(classOf[ScheduledTaskRunService]).getByPrimaryKey(creds, id).map(_.map(model => com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id) -> com.kyleu.projectile.views.html.admin.task.scheduledTaskRunSearchResult(model, s"Scheduled Task Run [${model.id}] matched [$q]")).toSeq)) } else { Nil }
+      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
+        Seq(injector.getInstance(classOf[AuditRecordService]).getByPrimaryKey(creds, id).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.audit.auditRecordSearchResult(model, s"Audit Record [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id) -> r
+        }.toSeq))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
+        Seq(injector.getInstance(classOf[AuditService]).getByPrimaryKey(creds, id).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> r
+        }.toSeq))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.Feedback)) {
+        Seq(injector.getInstance(classOf[FeedbackService]).getByPrimaryKey(creds, id).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.feedback.feedbackSearchResult(model, s"Feedback [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id) -> r
+        }.toSeq))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.User)) {
+        Seq(injector.getInstance(classOf[SystemUserService]).getByPrimaryKey(creds, id).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.user.systemUserSearchResult(model, s"System User [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id) -> r
+        }.toSeq))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.Task)) {
+        Seq(injector.getInstance(classOf[ScheduledTaskRunService]).getByPrimaryKey(creds, id).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.task.scheduledTaskRunSearchResult(model, s"Scheduled Task Run [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id) -> r
+        }.toSeq))
+      } else { Nil }
     ).flatten.map(_.recover { case NonFatal(x) => Seq.empty })
 
     Future.sequence(uuidSearches).map(_.flatten)
@@ -64,11 +90,36 @@ class SearchController @javax.inject.Inject() (
 
   private[this] def searchString(creds: UserCredentials, q: String)(implicit timing: TraceData) = {
     val stringSearches = provider.stringSearches(app, injector, creds)(q)(ec, timing) ++ List(
-      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) { Seq(injector.getInstance(classOf[AuditRecordService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id) -> com.kyleu.projectile.views.html.admin.audit.auditRecordSearchResult(model, s"Audit Record [${model.id}] matched [$q]")))) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) { Seq(injector.getInstance(classOf[AuditService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched [$q]")))) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.Feedback)) { Seq(injector.getInstance(classOf[FeedbackService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id) -> com.kyleu.projectile.views.html.admin.feedback.feedbackSearchResult(model, s"Feedback [${model.id}] matched [$q]")))) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.User)) { Seq(injector.getInstance(classOf[SystemUserService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id) -> com.kyleu.projectile.views.html.admin.user.systemUserSearchResult(model, s"System User [${model.id}] matched [$q]")))) } else { Nil },
-      if (ApplicationFeature.enabled(ApplicationFeature.Task)) { Seq(injector.getInstance(classOf[ScheduledTaskRunService]).searchExact(creds, q = q, limit = Some(5)).map(_.map(model => com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id) -> com.kyleu.projectile.views.html.admin.task.scheduledTaskRunSearchResult(model, s"Scheduled Task Run [${model.id}] matched [$q]")))) } else { Nil }
+      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
+        Seq(injector.getInstance(classOf[AuditRecordService]).searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.audit.auditRecordSearchResult(model, s"Audit Record [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id) -> r
+        }))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
+        Seq(injector.getInstance(classOf[AuditService]).searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> r
+        }))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.Feedback)) {
+        Seq(injector.getInstance(classOf[FeedbackService]).searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.feedback.feedbackSearchResult(model, s"Feedback [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id) -> r
+        }))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.User)) {
+        Seq(injector.getInstance(classOf[SystemUserService]).searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.user.systemUserSearchResult(model, s"System User [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id) -> r
+        }))
+      } else { Nil },
+      if (ApplicationFeature.enabled(ApplicationFeature.Task)) {
+        Seq(injector.getInstance(classOf[ScheduledTaskRunService]).searchExact(creds, q = q, limit = Some(5)).map(_.map { model =>
+          val r = com.kyleu.projectile.views.html.admin.task.scheduledTaskRunSearchResult(model, s"Scheduled Task Run [${model.id}] matched [$q]")
+          com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id) -> r
+        }))
+      } else { Nil }
     ).flatten.map(_.recover { case NonFatal(x) => Seq.empty })
     Future.sequence(stringSearches).map(_.flatten)
   }

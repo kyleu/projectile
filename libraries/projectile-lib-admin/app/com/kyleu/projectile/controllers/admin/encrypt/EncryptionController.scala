@@ -14,15 +14,16 @@ import scala.concurrent.{ExecutionContext, Future}
 class EncryptionController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("encryption") {
   ApplicationFeature.enable(ApplicationFeature.Encryption)
   PermissionService.registerModel("tools", "Encryption", "Encryption", Some(InternalIcons.encryption), "form", "encrypt", "decrypt")
+  val feature = ApplicationFeature.Encryption.value
   val desc = "Allows you to encrypt and decrypt strings using the system keys"
-  SystemMenu.addToolMenu(ApplicationFeature.Encryption.value, "Encryption", Some(desc), EncryptionController.form(), InternalIcons.encryption)
+  SystemMenu.addToolMenu(feature, "Encryption", Some(desc), EncryptionController.form(), InternalIcons.encryption, ("tools", "Encryption", "form"))
 
   def form = withSession("form", ("tools", "Encryption", "form")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "encryption")
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.encrypt.encryption(cfg)))
   }
 
-  def post() = withSession("post", ("audit", "Connection", "encrypt"), ("tools", "Connection", "decrypt")) { implicit request => implicit td =>
+  def post() = withSession("post", ("tools", "Connection", "encrypt")) { implicit request => implicit td =>
     val form = ControllerUtils.getForm(request.body)
     val action = form.get("action")
     val (unenc, enc) = action match {

@@ -16,7 +16,7 @@ import util.Version
 class ProjectileModule extends AdminModule() {
   override def projectName = Version.projectName
   override def allowSignup = true
-  override def initialRole = "admin"
+  override def initialRole = "user"
   override def menuProvider = UserMenu
 
   override protected def onStartup(app: Application, injector: Injector) = {

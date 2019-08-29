@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.export.typ
 
 import com.kyleu.projectile.models.export.typ.FieldType._

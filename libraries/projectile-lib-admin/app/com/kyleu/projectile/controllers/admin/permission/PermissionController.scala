@@ -29,7 +29,8 @@ class PermissionController @javax.inject.Inject() (
     try { reload(td) } catch { case NonFatal(x) => log.warn(s"Error loading permissions: ${x.getMessage}")(td) }
   }
   PermissionService.registerModel("tools", "Permission", "Permission", Some(InternalIcons.permission), "view", "edit", "refresh")
-  SystemMenu.addToolMenu(value, "Permissions", Some("Configure roles and permissions"), PermissionController.list(), InternalIcons.permission)
+  val desc = "Configure roles and permissions"
+  SystemMenu.addToolMenu(value, "Permissions", Some(desc), PermissionController.list(), InternalIcons.permission, ("models", "Permission", "view"))
 
   def list() = withSession("list", ("tools", "Permission", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "permission")

@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.queries.auth
 
 import java.util.UUID

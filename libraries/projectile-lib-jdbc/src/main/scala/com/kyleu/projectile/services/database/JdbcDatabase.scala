@@ -13,9 +13,7 @@ import scala.util.control.NonFatal
 
 class JdbcDatabase(override val key: String, configPrefix: String)(implicit val ec: ExecutionContext) extends Database[Connection] with Queryable {
   protected val metricsId = s"${key}_database"
-
   private[this] def time[A](method: String, name: String)(f: => A) = f
-
   private[this] var ds: Option[HikariDataSource] = None
   def source = ds.getOrElse(throw new IllegalStateException("Database not initialized"))
 
@@ -38,9 +36,7 @@ class JdbcDatabase(override val key: String, configPrefix: String)(implicit val 
     }
 
     val poolDataSource = new HikariDataSource(poolConfig)
-
     ds = Some(poolDataSource)
-
     start(config, tracing)
   }
 

@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.sbt
 
 import com.typesafe.sbt.packager.Keys._
@@ -31,12 +32,11 @@ object ProjectilePlayProject extends AutoPlugin {
     libraryDependencies += autoImport.projectileLib("admin"),
 
     // Scala
-    scalaVersion := "2.12.8",
+    scalaVersion := "2.12.9",
 
     scalacOptions ++= Seq(
       "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-      "–Xcheck-null", /* "-Xfatal-warnings", */ /* "-Xlint", */ "-Xcheckinit", /* "-Xfuture", */ "-Yrangepos", /* "-Ypartial-unification", */
-      /* "-Yno-adapted-args", */ "-Ywarn-dead-code", /* "-Ywarn-inaccessible" , */ /* "-Ywarn-nullary-override", */ "-Ywarn-numeric-widen" /* , "-Ywarn-infer-any" */
+      "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Yrangepos", "-Ywarn-dead-code", "-Ywarn-numeric-widen"
     ),
 
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),

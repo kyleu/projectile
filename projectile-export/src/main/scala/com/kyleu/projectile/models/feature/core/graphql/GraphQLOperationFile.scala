@@ -25,7 +25,7 @@ object GraphQLOperationFile {
 
     GraphQLObjectHelper.addArguments(config, file, model.arguments)
 
-    GraphQLObjectHelper.writeObjects(s"operation:${model.className}", config, file, model.fields)
+    GraphQLObjectWriter.writeObjects(s"operation:${model.className}", config, file, model.fields)
 
     file.add("object Data {", 1)
     file.add("implicit val jsonDecoder: Decoder[Data] = deriveDecoder")

@@ -1,7 +1,7 @@
 package com.kyleu.projectile.web.controllers.project
 
 import com.kyleu.projectile.models.feature.ModelFeature
-import com.kyleu.projectile.models.project.member.{MemberOverride, ModelMember}
+import com.kyleu.projectile.models.project.member.ModelMember
 import com.kyleu.projectile.util.StringUtils
 import com.kyleu.projectile.web.controllers.ProjectileController
 import com.kyleu.projectile.web.util.ControllerUtils
@@ -52,80 +52,8 @@ class ProjectModelController @javax.inject.Inject() () extends ProjectileControl
   }
 
   def save(key: String, modelKey: String) = Action.async { implicit request =>
-    val p = projectile.getProject(key)
-    val m = p.getModel(modelKey)
-
-    val i = p.getInput
-    val model = i.model(m.key)
-
     val form = ControllerUtils.getForm(request.body)
-
-    val nameOverrides = Seq(
-      form("propertyName") match {
-        case x if x.nonEmpty && x != model.propertyName => Some(MemberOverride("propertyName", x))
-        case _ => None
-      },
-      form("className") match {
-        case x if x.nonEmpty && x != model.className => Some(MemberOverride("className", x))
-        case _ => None
-      },
-      form("title") match {
-        case x if x.nonEmpty && x != model.title => Some(MemberOverride("title", x))
-        case _ => None
-      },
-      form("plural") match {
-        case x if x.nonEmpty && x != model.plural => Some(MemberOverride("plural", x))
-        case _ => None
-      }
-    ).flatten
-
-    val fieldOverrides = model.fields.flatMap { f =>
-      Seq(
-        form.getOrElse(s"field-${f.key}-propertyName", "") match {
-          case x if x.nonEmpty && x != f.propertyName => Some(MemberOverride(s"${f.key}.propertyName", x))
-          case _ => None
-        },
-        form.getOrElse(s"field-${f.key}-title", "") match {
-          case x if x.nonEmpty && x != f.title => Some(MemberOverride(s"${f.key}.title", x))
-          case _ => None
-        },
-        form.getOrElse(s"field-${f.key}-type", "") match {
-          case x if x.nonEmpty && x != f.t.value => Some(MemberOverride(s"${f.key}.type", x))
-          case _ => None
-        },
-        form.getOrElse(s"field-${f.key}-summary", "false") match {
-          case x if x.toBoolean != f.inSummary => Some(MemberOverride(s"${f.key}.summary", x))
-          case _ => None
-        },
-        form.getOrElse(s"field-${f.key}-search", "false") match {
-          case x if x.toBoolean != f.inSearch => Some(MemberOverride(s"${f.key}.search", x))
-          case _ => None
-        }
-      ).flatten
-    }
-
-    val foreignKeyOverrides = model.foreignKeys.flatMap { fk =>
-      form.getOrElse(s"fk-${fk.name}-propertyName", "") match {
-        case x if x.nonEmpty && x != fk.name => Some(MemberOverride(s"fk.${fk.name}.propertyName", x))
-        case _ => None
-      }
-    }
-
-    val referenceOverrides = model.references.flatMap { r =>
-      form.getOrElse(s"reference-${r.name}-propertyName", "") match {
-        case x if x.nonEmpty && x != r.name => Some(MemberOverride(s"reference.${r.name}.propertyName", x))
-        case _ => None
-      }
-    }
-
-    val newMember = m.copy(
-      pkg = StringUtils.toList(form("package"), '.'),
-      features = StringUtils.toList(form.getOrElse("features", "")).map(ModelFeature.withValue).toSet,
-      ignored = StringUtils.toList(form.getOrElse("ignored", "")).toSet,
-      overrides = nameOverrides ++ fieldOverrides ++ foreignKeyOverrides ++ referenceOverrides
-    )
-
-    projectile.saveModelMembers(key, Seq(newMember))
+    ProjectModelSaveHelper.save(projectile, key, modelKey, form)
     val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.detail(key, modelKey))
     Future.successful(redir.flashing("success" -> s"Saved model [$modelKey]"))
   }

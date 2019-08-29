@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.services.task
 
 import com.kyleu.projectile.models.result.data.DataField
@@ -40,7 +41,9 @@ class ScheduledTaskRunService @javax.inject.Inject() (
   override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all.count")(td => db.queryF(ScheduledTaskRunQueries.countAll(filters))(td))
   }
-  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  override def getAll(
+    creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all")(td => db.queryF(ScheduledTaskRunQueries.getAll(filters, orderBys, limit, offset))(td))
   }
 
@@ -65,7 +68,9 @@ class ScheduledTaskRunService @javax.inject.Inject() (
       db.queryF(ScheduledTaskRunQueries.CountByArguments(arguments))(td)
     }
   }
-  def getByArguments(creds: Credentials, arguments: List[String], orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByArguments(
+    creds: Credentials, arguments: List[String], orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.arguments") { td =>
       db.queryF(ScheduledTaskRunQueries.GetByArguments(arguments, orderBys, limit, offset))(td)
     }
@@ -85,7 +90,9 @@ class ScheduledTaskRunService @javax.inject.Inject() (
       db.queryF(ScheduledTaskRunQueries.CountById(id))(td)
     }
   }
-  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getById(
+    creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.id") { td =>
       db.queryF(ScheduledTaskRunQueries.GetById(id, orderBys, limit, offset))(td)
     }
@@ -105,7 +112,9 @@ class ScheduledTaskRunService @javax.inject.Inject() (
       db.queryF(ScheduledTaskRunQueries.CountByStarted(started))(td)
     }
   }
-  def getByStarted(creds: Credentials, started: LocalDateTime, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByStarted(
+    creds: Credentials, started: LocalDateTime, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.started") { td =>
       db.queryF(ScheduledTaskRunQueries.GetByStarted(started, orderBys, limit, offset))(td)
     }
@@ -125,7 +134,9 @@ class ScheduledTaskRunService @javax.inject.Inject() (
       db.queryF(ScheduledTaskRunQueries.CountByStatus(status))(td)
     }
   }
-  def getByStatus(creds: Credentials, status: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByStatus(
+    creds: Credentials, status: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.status") { td =>
       db.queryF(ScheduledTaskRunQueries.GetByStatus(status, orderBys, limit, offset))(td)
     }
@@ -145,7 +156,9 @@ class ScheduledTaskRunService @javax.inject.Inject() (
       db.queryF(ScheduledTaskRunQueries.CountByTask(task))(td)
     }
   }
-  def getByTask(creds: Credentials, task: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByTask(
+    creds: Credentials, task: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.task") { td =>
       db.queryF(ScheduledTaskRunQueries.GetByTask(task, orderBys, limit, offset))(td)
     }

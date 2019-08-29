@@ -10,20 +10,16 @@ import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSumma
 import com.kyleu.projectile.util.JacksonUtils.printJackson
 
 object CommandLineOutput {
-  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => println(s))
-
+  def logResponse(r: ProjectileResponse) = logsFor(r).foreach(s => println(s)) // scalastyle:ignore
   def logsFor(r: ProjectileResponse): Seq[String] = r match {
     case OK(msg) => Seq(s"Success: $msg")
     case Error(msg) => Seq(s"Error: $msg")
     case JsonResponse(json) => Seq(printJackson(json))
-
     case InputList(inputs) => inputs.map(logForInputSummary)
     case InputDetail(input) => Seq(logForInput(input))
     case InputResults(results) => results.map(r => logForInput(r.input))
-
     case ProjectList(projects) => projects.map(logForProjectSummary)
     case ProjectDetail(p) => Seq(logForProject(p))
-
     case ProjectUpdateResult(key, resp) => s"[$key] Updated:" +: resp.map(" - " + _)
     case ProjectExportResult(output, files) => logForExportResult(output, files)
     case ProjectAuditResult(result, fixed) => logForAuditResult(result, fixed)
@@ -33,7 +29,6 @@ object CommandLineOutput {
 
   private[this] def logForInputSummary(is: InputSummary) = s"[${is.key}]: ${is.template.title}"
   private[this] def logForInput(input: Input) = s"[${input.key}]: $input"
-
   private[this] def logForProjectSummary(ps: ProjectSummary) = s"[${ps.key}]: ${ps.template.title}"
   private[this] def logForProject(project: Project) = {
     val enums = if (project.enums.isEmpty) { Nil } else {
@@ -96,7 +91,6 @@ object CommandLineOutput {
     }
     result.updates ++ exportMessages ++ auditMessages
   }
-
   def logForCompositeResult(results: Seq[ProjectileResponse]): Seq[String] = results.size match {
     case 0 => Seq("No results")
     case 1 => logsFor(results.headOption.getOrElse(throw new IllegalStateException()))

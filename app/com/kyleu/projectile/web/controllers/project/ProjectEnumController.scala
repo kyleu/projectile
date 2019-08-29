@@ -14,18 +14,15 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
   def detail(key: String, enum: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val m = p.getEnum(enum)
-
     val i = p.getInput
     val ee = i.enum(enum)
     val fin = ee.apply(m).copy(values = ee.values)
-
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.detailEnum(projectile, key, p.toSummary, m, fin)))
   }
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = p.getInput
-
     val inputEnums = i.enums.map(e => (e.key, p.enums.exists(x => x.key == e.key)))
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewEnum(projectile, key, inputEnums)))
   }
@@ -54,7 +51,6 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
   def save(key: String, enumKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = p.getInput
-
     val m = p.getEnum(enumKey)
     val e = i.enum(m.key)
 
@@ -74,7 +70,6 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
         }
       ).flatten
     )
-
     projectile.saveEnumMembers(key, Seq(newMember))
     val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectEnumController.detail(key, enumKey))
     Future.successful(redir.flashing("success" -> s"Saved enum [$enumKey]"))
@@ -90,13 +85,11 @@ class ProjectEnumController @javax.inject.Inject() () extends ProjectileControll
   def formFeatures(key: String) = Action.async { implicit request =>
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formEnumFeatures(projectile, projectile.getProjectSummary(key))))
   }
-
   def saveFeatures(key: String) = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = projectile.getProjectSummary(key)
     val features = StringUtils.toList(form("features")).map(EnumFeature.withValue).map(_.value).toSet
     projectile.saveProject(summary.copy(defaultEnumFeatures = features))
-
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(summary.key)).flashing(
       "success" -> s"Saved default enum features for project [${summary.key}]"
     ))

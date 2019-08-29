@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.services.audit
 
 import java.util.UUID
@@ -66,7 +67,9 @@ class AuditService @javax.inject.Inject() (
   override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all.count")(td => db.queryF(AuditQueries.countAll(filters))(td))
   }
-  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  override def getAll(
+    creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all")(td => db.queryF(AuditQueries.getAll(filters, orderBys, limit, offset))(td))
   }
 
@@ -91,7 +94,9 @@ class AuditService @javax.inject.Inject() (
       db.queryF(AuditQueries.CountByAct(act))(td)
     }
   }
-  def getByAct(creds: Credentials, act: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByAct(
+    creds: Credentials, act: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.act") { td =>
       db.queryF(AuditQueries.GetByAct(act, orderBys, limit, offset))(td)
     }
@@ -111,7 +116,9 @@ class AuditService @javax.inject.Inject() (
       db.queryF(AuditQueries.CountByApp(app))(td)
     }
   }
-  def getByApp(creds: Credentials, app: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByApp(
+    creds: Credentials, app: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.app") { td =>
       db.queryF(AuditQueries.GetByApp(app, orderBys, limit, offset))(td)
     }
@@ -131,7 +138,9 @@ class AuditService @javax.inject.Inject() (
       db.queryF(AuditQueries.CountByClient(client))(td)
     }
   }
-  def getByClient(creds: Credentials, client: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByClient(
+    creds: Credentials, client: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.client") { td =>
       db.queryF(AuditQueries.GetByClient(client, orderBys, limit, offset))(td)
     }
@@ -151,7 +160,9 @@ class AuditService @javax.inject.Inject() (
       db.queryF(AuditQueries.CountById(id))(td)
     }
   }
-  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getById(
+    creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.id") { td =>
       db.queryF(AuditQueries.GetById(id, orderBys, limit, offset))(td)
     }
@@ -171,7 +182,9 @@ class AuditService @javax.inject.Inject() (
       db.queryF(AuditQueries.CountByServer(server))(td)
     }
   }
-  def getByServer(creds: Credentials, server: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByServer(
+    creds: Credentials, server: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.server") { td =>
       db.queryF(AuditQueries.GetByServer(server, orderBys, limit, offset))(td)
     }
@@ -191,7 +204,9 @@ class AuditService @javax.inject.Inject() (
       db.queryF(AuditQueries.CountByUserId(userId))(td)
     }
   }
-  def getByUserId(creds: Credentials, userId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByUserId(
+    creds: Credentials, userId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.userId") { td =>
       db.queryF(AuditQueries.GetByUserId(userId, orderBys, limit, offset))(td)
     }

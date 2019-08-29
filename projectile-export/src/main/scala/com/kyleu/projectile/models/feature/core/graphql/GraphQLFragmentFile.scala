@@ -19,7 +19,7 @@ object GraphQLFragmentFile {
 
     file.add(s"object ${model.className} {", 1)
 
-    val objCount = GraphQLObjectHelper.writeObjects(s"fragment:${model.className}", config, file, model.fields)
+    val objCount = GraphQLObjectWriter.writeObjects(s"fragment:${model.className}", config, file, model.fields)
 
     ModelHelper.addJson(config, file, model)
 

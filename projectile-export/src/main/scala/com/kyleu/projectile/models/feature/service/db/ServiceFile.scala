@@ -35,7 +35,8 @@ object ServiceFile {
     model.pkFields.foreach(_.addImport(config, file, Nil))
 
     file.add("@javax.inject.Singleton")
-    file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}", "${model.firstPackage}" -> "${model.className}") {""", 1)
+    val perm = s""""${model.firstPackage}" -> "${model.className}""""
+    file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}", $perm) {""", 1)
     ServiceHelper.addGetters(config, model, file)
 
     ServiceHelper.writeSearchFields(model, file, queriesFilename, "(implicit trace: TraceData)", searchArgs)

@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.user
 
 import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
@@ -31,7 +32,8 @@ class SystemUserController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeature.enable(ApplicationFeature.User)
   PermissionService.registerModel("models", "SystemUser", "System User", Some(InternalIcons.systemUser), "view", "edit")
-  SystemMenu.addModelMenu(value, "System Users", Some("Manage the users of this application"), SystemUserController.list(), InternalIcons.systemUser)
+  val desc = "Manage the users of this application"
+  SystemMenu.addModelMenu(value, "System Users", Some(desc), SystemUserController.list(), InternalIcons.systemUser, ("models", "SystemUser", "view"))
 
   def createForm = withSession("create.form", ("models", "SystemUser", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.list()

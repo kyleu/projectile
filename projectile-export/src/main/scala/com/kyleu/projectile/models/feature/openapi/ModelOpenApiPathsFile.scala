@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.feature.openapi
 
 import com.kyleu.projectile.models.database.schema.ForeignKey

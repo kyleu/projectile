@@ -50,7 +50,7 @@ object AstExportService {
     s"Compiled [$f] in [${NumberUtils.withCommas(System.currentTimeMillis - startMs)}ms]"
   }
 
-  private[this] def log(s: String) = println(s)
+  private[this] def log(s: String) = println(s) // scalastyle:ignore
 
   def main(args: Array[String]): Unit = {
     import better.files.File

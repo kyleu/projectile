@@ -20,8 +20,9 @@ class MigrationController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("migrate") {
   ApplicationFeature.enable(ApplicationFeature.Migrate)
   PermissionService.registerModel("tools", "Migrate", "Database Migrations", Some(InternalIcons.migration), "view")
+  val feature = ApplicationFeature.Migrate.value
   val msg = "Flyway database migrations, to evolve your database"
-  SystemMenu.addToolMenu(ApplicationFeature.Migrate.value, "Database Migrations", Some(msg), MigrationController.list(), InternalIcons.migration)
+  SystemMenu.addToolMenu(feature, "Database Migrations", Some(msg), MigrationController.list(), InternalIcons.migration, ("tools", "Migrate", "view"))
 
   if (app.db.getConfig.runMigrations) {
     app.tracing.topLevelTraceBlocking("migrations") { td =>

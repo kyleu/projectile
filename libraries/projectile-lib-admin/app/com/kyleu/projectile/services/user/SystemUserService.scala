@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.services.user
 
 import com.kyleu.projectile.models.result.data.DataField
@@ -22,10 +23,10 @@ class SystemUserService @javax.inject.Inject() (
     @Named("system") val db: JdbcDatabase,
     override val tracing: TracingService
 )(implicit ec: ExecutionContext) extends ModelServiceHelper[SystemUser]("systemUser", "models" -> "SystemUser") {
-  def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = {
     traceF("get.by.primary.key")(td => db.queryF(SystemUserQueries.getByPrimaryKey(id))(td))
   }
-  def getByPrimaryKeyRequired(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByPrimaryKeyRequired(creds: Credentials, id: UUID)(implicit trace: TraceData) = {
     getByPrimaryKey(creds, id).map { opt =>
       opt.getOrElse(throw new IllegalStateException(s"Cannot load systemUser with id [$id]"))
     }
@@ -41,12 +42,15 @@ class SystemUserService @javax.inject.Inject() (
   override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all.count")(td => db.queryF(SystemUserQueries.countAll(filters))(td))
   }
-  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  override def getAll(
+    creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all")(td => db.queryF(SystemUserQueries.getAll(filters, orderBys, limit, offset))(td))
   }
 
   // Search
-  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  override def searchCount(
+    creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("search.count")(td => db.queryF(SystemUserQueries.searchCount(q, filters))(td))
   }
   override def search(
@@ -66,7 +70,9 @@ class SystemUserService @javax.inject.Inject() (
       db.queryF(SystemUserQueries.CountById(id))(td)
     }
   }
-  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getById(
+    creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.id") { td =>
       db.queryF(SystemUserQueries.GetById(id, orderBys, limit, offset))(td)
     }
@@ -86,7 +92,9 @@ class SystemUserService @javax.inject.Inject() (
       db.queryF(SystemUserQueries.CountByKey(key))(td)
     }
   }
-  def getByKey(creds: Credentials, key: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByKey(
+    creds: Credentials, key: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.key") { td =>
       db.queryF(SystemUserQueries.GetByKey(key, orderBys, limit, offset))(td)
     }
@@ -123,7 +131,7 @@ class SystemUserService @javax.inject.Inject() (
     }
   }
 
-  def countByUsername(creds: Credentials, username: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def countByUsername(creds: Credentials, username: String)(implicit trace: TraceData) = {
     traceF("count.by.username") { td =>
       db.queryF(SystemUserQueries.CountByUsername(username))(td)
     }

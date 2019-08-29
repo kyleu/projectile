@@ -18,7 +18,8 @@ import scala.util.control.NonFatal
 class OpenApiController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("rest") {
   ApplicationFeature.enable(ApplicationFeature.Rest)
   PermissionService.registerModel("tools", "Rest", "Swagger UI", Some(InternalIcons.rest), "ide")
-  SystemMenu.addRootMenu(value, "Swagger UI", Some("OpenAPI IDE for exploring the system"), OpenApiController.ui(), InternalIcons.rest)
+  val desc = "OpenAPI IDE for exploring the system"
+  SystemMenu.addRootMenu(value, "Swagger UI", Some(desc), OpenApiController.ui(), InternalIcons.rest, ("tools", "Rest", "ide"))
 
   private[this] def loadJson(key: String) = {
     val resource = Option(getClass.getClassLoader.getResourceAsStream(key)).getOrElse(throw new IllegalStateException(s"Cannot load [$key] from classpath."))

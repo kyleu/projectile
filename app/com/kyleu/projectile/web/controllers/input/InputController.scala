@@ -57,7 +57,9 @@ class InputController @javax.inject.Inject() () extends ProjectileController {
         host = form.getOrElse("host", "localhost"),
         port = form.getOrElse("port", "5432").toInt,
         username = form.getOrElse("username", "postgres"),
-        password = Some(form.getOrElse("password", "password")).filter(_ != "-unchanged-").getOrElse(PostgresInputService.loadConnection(projectile.rootCfg, summary.key).password),
+        password = Some(form.getOrElse("password", "password")).filter(_ != "-unchanged-").getOrElse {
+          PostgresInputService.loadConnection(projectile.rootCfg, summary.key).password
+        },
         db = form.getOrElse("db", "")
       ))
       case InputTemplate.GraphQL => // projectile.setGraphQLOptions(summary.key, GraphQLOptions(???))

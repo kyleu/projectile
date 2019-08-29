@@ -33,10 +33,13 @@ class AugmentService[Rsp](errResponse: Throwable => Option[Rsp]) extends Logging
 }
 
 class AugmentListService[Rsp](errResponse: Throwable => Option[Rsp]) extends Logging {
-  private[this] var map = Map.empty[Class[_], (Seq[Any], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[Any, Option[Rsp]])]]
+  type Typ = (Seq[Any], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[Any, Option[Rsp]])]
+  private[this] var map = Map.empty[Class[_], Typ]
 
-  def register[T](f: (Seq[T], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])])(implicit tag: ClassTag[T]) = {
-    map = map + (tag.runtimeClass -> f.asInstanceOf[(Seq[Any], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[Any, Option[Rsp]])]])
+  def register[T](
+    f: (Seq[T], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])]
+  )(implicit tag: ClassTag[T]) = {
+    map = map + (tag.runtimeClass -> f.asInstanceOf[Typ])
   }
 
   def augment[T](models: Seq[T], args: Map[String, Seq[String]], cfg: UiConfig)(implicit td: TraceData): (Option[Rsp], Option[Rsp], Map[T, Option[Rsp]]) = {
@@ -48,7 +51,9 @@ class AugmentListService[Rsp](errResponse: Throwable => Option[Rsp]) extends Log
     }
   }
 
-  private[this] def extract[T](f: Future[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])]) = try { Await.result(f, 15.seconds) } catch {
+  private[this] def extract[T](f: Future[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])]) = try {
+    Await.result(f, 15.seconds)
+  } catch {
     case NonFatal(x) => (errResponse(x), None, Map.empty)
   }
 }

@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.export
 
 import com.kyleu.projectile.models.database.schema.{Column, ForeignKey}

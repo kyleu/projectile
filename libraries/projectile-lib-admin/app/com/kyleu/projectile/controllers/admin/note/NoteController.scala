@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.note
 
 import java.util.UUID
@@ -29,7 +30,8 @@ class NoteController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Note)
   app.errors.checkTable("note")
   PermissionService.registerModel("models", "Note", "Note", Some(InternalIcons.note), "view", "edit")
-  SystemMenu.addModelMenu(value, "Notes", Some("You can log notes on most pages, this lets you manage them"), NoteController.list(), InternalIcons.note)
+  val desc = "You can log notes on most pages, this lets you manage them"
+  SystemMenu.addModelMenu(value, "Notes", Some(desc), NoteController.list(), InternalIcons.note, ("models", "Note", "view"))
 
   def addForm(model: String, pk: String) = withSession("add.form", ("models", "Note", "edit")) { implicit request => implicit td =>
     val note = Note.empty(relType = Some(model), relPk = Some(pk), author = request.identity.id)

@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.database
 
 import java.time.{ZoneOffset, ZonedDateTime}
@@ -120,8 +121,12 @@ object DatabaseFieldType extends Enum[DatabaseFieldType[_]] with CirceEnum[Datab
   case object LongArrayType extends DatabaseFieldType[List[Long]]("longArray", isList = true) {
     override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option.apply(x)).map(LongType.coerce).toList
   }
-  final case class EnumArrayType[T <: StringEnumEntry](t: StringEnum[T])(implicit tag: ClassTag[T]) extends DatabaseFieldType[List[T]]("enumArray", isList = true) {
-    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(x => Option(x).map(_.toString)).map(t.withValue).toList
+  final case class EnumArrayType[T <: StringEnumEntry](
+      t: StringEnum[T]
+  )(implicit tag: ClassTag[T]) extends DatabaseFieldType[List[T]]("enumArray", isList = true) {
+    override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap { x =>
+      Option(x).map(_.toString)
+    }.map(t.withValue).toList
   }
   case object StringArrayType extends DatabaseFieldType[List[String]]("stringArray", isList = true) {
     override def coerce(x: Any) = x.asInstanceOf[PgArray].getArray.asInstanceOf[Array[Any]].flatMap(s => Option(s).map(_.toString)).toList

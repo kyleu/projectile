@@ -15,9 +15,7 @@ object StructModelFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val path = if (model.features(ModelFeature.Shared)) { OutputPath.SharedSource } else { OutputPath.ServerSource }
     val file = ScalaFile(path = path, dir = model.pkg, key = model.className)
-    if (model.features(ModelFeature.Json)) {
-      config.addCommonImport(file, "JsonSerializers", "_")
-    }
+    if (model.features(ModelFeature.Json)) { config.addCommonImport(file, "JsonSerializers", "_") }
     if (model.features(ModelFeature.DataModel)) {
       config.addCommonImport(file, "DataField")
       config.addCommonImport(file, "DataFieldModel")
@@ -92,13 +90,10 @@ object StructModelFile {
     }
     file.add("}", -1)
   }
-
-  private[this] def addFields(config: ExportConfiguration, pkg: Seq[String], fields: Seq[ExportField], file: ScalaFile) = {
-    fields.foreach { field =>
-      field.addImport(config, file, pkg, isThrift = true)
-      val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
-      val decl = ThriftFileHelper.declarationFor(config, field.required, field.propertyName, field.defaultValue, field.t)
-      file.add(decl + comma)
-    }
+  private[this] def addFields(config: ExportConfiguration, pkg: Seq[String], fields: Seq[ExportField], file: ScalaFile) = fields.foreach { field =>
+    field.addImport(config, file, pkg, isThrift = true)
+    val comma = if (fields.lastOption.contains(field)) { "" } else { "," }
+    val decl = ThriftFileHelper.declarationFor(config, field.required, field.propertyName, field.defaultValue, field.t)
+    file.add(decl + comma)
   }
 }

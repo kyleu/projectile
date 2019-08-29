@@ -23,7 +23,8 @@ class SandboxController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("sandbox") {
   ApplicationFeature.enable(ApplicationFeature.Sandbox)
   PermissionService.registerModel("tools", "Sandbox", "Sandbox Actions", Some(InternalIcons.sandbox), "view", "run")
-  SystemMenu.addToolMenu(value, "Sandbox Tasks", Some("Simple one-off tasks that can be run through this UI"), SandboxController.list(), InternalIcons.sandbox)
+  val desc = "Simple one-off tasks that can be run through this UI"
+  SystemMenu.addToolMenu(value, "Sandbox Tasks", Some(desc), SandboxController.list(), InternalIcons.sandbox, ("tools", "Sandbox", "view"))
 
   implicit val timeout: Timeout = Timeout(10.seconds)
 

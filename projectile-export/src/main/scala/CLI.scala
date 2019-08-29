@@ -10,7 +10,7 @@ object CLI {
     } else {
       ProjectileCLI.runArgs(args.toIndexedSeq).toSeq
     }
-    println(s"${Version.projectName} ${Version.version} completed successfully in [${System.currentTimeMillis - startMs}ms]")
+    println(s"${Version.projectName} ${Version.version} completed successfully in [${System.currentTimeMillis - startMs}ms]") // scalastyle:ignore
     result.foreach(CommandLineOutput.logResponse)
   }
 }

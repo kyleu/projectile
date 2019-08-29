@@ -1,4 +1,4 @@
-/* Generated File */
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.graphql.feedback
 
 import com.kyleu.projectile.graphql.{GraphQLContext, GraphQLSchemaHelper}

@@ -59,7 +59,6 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
     val p = projectile.getProject(key)
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formModelMembers(projectile, p)))
   }
-
   def modelBulkEdit(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val form = ControllerUtils.getForm(request.body)
@@ -79,7 +78,6 @@ class BulkProjectController @javax.inject.Inject() () extends ProjectileControll
     val p = projectile.getProject(key)
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formServiceMembers(projectile, p)))
   }
-
   def serviceBulkEdit(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val form = ControllerUtils.getForm(request.body)

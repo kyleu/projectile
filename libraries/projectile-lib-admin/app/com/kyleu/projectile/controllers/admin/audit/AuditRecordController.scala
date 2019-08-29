@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.audit
 
 import com.kyleu.projectile.views.html.layout.{card, page}

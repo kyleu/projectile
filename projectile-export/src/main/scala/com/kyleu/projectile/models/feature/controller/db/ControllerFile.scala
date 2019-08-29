@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.ExportModel
@@ -13,29 +14,7 @@ object ControllerFile {
     val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
     val routesClass = (model.routesPackage(config) :+ (model.className + "Controller")).mkString(".")
 
-    file.addImport(model.modelPackage(config), model.className)
-    config.addCommonImport(file, "Application")
-
-    config.addCommonImport(file, "BaseController")
-    if (model.features(ModelFeature.Auth)) {
-      config.addCommonImport(file, "ServiceAuthController")
-    } else {
-      config.addCommonImport(file, "ServiceController")
-    }
-    if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditService") }
-
-    config.addCommonImport(file, "OrderBy")
-
-    config.addCommonImport(file, "JsonSerializers", "_")
-    config.addCommonImport(file, "DateUtils")
-    config.addCommonImport(file, "ExecutionContext")
-    config.addCommonImport(file, "ReftreeUtils", "_")
-
-    file.addImport(Seq("scala", "concurrent"), "Future")
-    file.addImport(Seq("play", "api", "http"), "MimeTypes")
-
-    file.addImport(model.servicePackage(config), model.className + "Service")
-    file.addImport(model.modelPackage(config), model.className + "Result")
+    addImports(config, file, model)
 
     if (model.propertyName != "audit") {
       if (model.searchFields.exists(_.t == FieldType.StringType)) { file.addMarkers("string-search", model.key) }
@@ -90,6 +69,33 @@ object ControllerFile {
     ControllerReferences.write(config, model, file)
     file.add("}", -1)
     file
+  }
+
+  private[this] def addImports(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
+    file.addImport(model.modelPackage(config), model.className)
+    config.addCommonImport(file, "Application")
+
+    config.addCommonImport(file, "BaseController")
+    if (model.features(ModelFeature.Auth)) {
+      config.addCommonImport(file, "ServiceAuthController")
+    } else {
+      config.addCommonImport(file, "ServiceController")
+    }
+    if (model.features(ModelFeature.Audit)) { config.addCommonImport(file, "AuditService") }
+
+    config.addCommonImport(file, "OrderBy")
+
+    config.addCommonImport(file, "JsonSerializers", "_")
+    config.addCommonImport(file, "DateUtils")
+    config.addCommonImport(file, "ExecutionContext")
+    config.addCommonImport(file, "ReftreeUtils", "_")
+
+    file.addImport(Seq("scala", "concurrent"), "Future")
+    file.addImport(Seq("play", "api", "http"), "MimeTypes")
+
+    file.addImport(model.servicePackage(config), model.className + "Service")
+    file.addImport(model.modelPackage(config), model.className + "Result")
+
   }
 
   private[this] def addListAction(config: ExportConfiguration, file: ScalaFile, model: ExportModel, viewHtmlPackage: String) = {

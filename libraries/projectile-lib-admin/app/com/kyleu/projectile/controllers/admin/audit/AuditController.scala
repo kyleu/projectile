@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.audit
 
 import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
@@ -29,7 +30,8 @@ class AuditController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Audit)
   app.errors.checkTable("audit")
   PermissionService.registerModel("models", "Audit", "Audit", Some(InternalIcons.audit), "view", "edit")
-  SystemMenu.addModelMenu("audit", "Audits", Some("System audits provide detailed change logging"), AuditController.list(), InternalIcons.audit)
+  val desc = "System audits provide detailed change logging"
+  SystemMenu.addModelMenu("audit", "Audits", Some(desc), AuditController.list(), InternalIcons.audit, ("models", "Audit", "view"))
   AuditHelper.init(appName = app.config.projectName, service = svc)
 
   def createForm = withSession("create.form", ("models", "Audit", "edit")) { implicit request => implicit td =>

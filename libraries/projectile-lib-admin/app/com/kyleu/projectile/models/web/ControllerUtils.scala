@@ -80,6 +80,8 @@ object ControllerUtils {
   def nestableData(json: Json) = json.asArray.get.map(_.asObject.get.apply("id").get.asString.get)
 
   private[this] def snippet(scripts: Seq[String], stylesheets: Seq[String]) = {
-    Html((scripts.map(s => s"""<script src="$s"></script>""") ++ stylesheets.map(s => s"""<link rel="stylesheet" media="screen" href="$s" />""")).mkString("\n"))
+    Html((scripts.map(s => s"""<script src="$s"></script>""") ++ stylesheets.map { s =>
+      s"""<link rel="stylesheet" media="screen" href="$s" />"""
+    }).mkString("\n"))
   }
 }

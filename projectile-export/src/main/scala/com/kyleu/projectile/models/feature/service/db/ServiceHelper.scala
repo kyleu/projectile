@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.feature.service.db
 
 import com.kyleu.projectile.models.export.ExportModel
@@ -43,7 +44,8 @@ object ServiceHelper {
         file.add(s"""traceF("get.by.primary.key")(td => db.queryF(${model.className}Queries.getByPrimaryKey($colProp))(td))""")
         file.add("}", -1)
 
-        file.add(s"""def getByPrimaryKeyRequired(creds: Credentials, $colProp: ${field.scalaType(config)})$td = getByPrimaryKey(creds, $colProp).map { opt =>""", 1)
+        val call = s"getByPrimaryKey(creds, $colProp)"
+        file.add(s"""def getByPrimaryKeyRequired(creds: Credentials, $colProp: ${field.scalaType(config)})$td = $call.map { opt =>""", 1)
         file.add(s"""opt.getOrElse(throw new IllegalStateException(s"Cannot load ${model.propertyName} with $colProp [$$$colProp]"))""")
         file.add("}", -1)
 

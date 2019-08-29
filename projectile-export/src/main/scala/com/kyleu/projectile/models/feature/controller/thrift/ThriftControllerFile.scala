@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.feature.controller.thrift
 
 import com.kyleu.projectile.models.export.{ExportMethod, ExportService}

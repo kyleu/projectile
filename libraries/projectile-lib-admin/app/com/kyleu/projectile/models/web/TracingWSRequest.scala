@@ -28,7 +28,7 @@ private class TracingWSRequest(
 
   override def execute() = tracer.trace(spanName) { data =>
     annotate(data, "execute")
-    request.addHttpHeaders(tracer.toMap(data).toSeq: _*).execute().map { rsp =>
+    request.addHttpHeaders(tracer.ct.toMap(data).toSeq: _*).execute().map { rsp =>
       data.tag("http.status.code", rsp.status.toString)
       data.tag("http.response.size", rsp.bodyAsBytes.size.toString)
       rsp
@@ -36,7 +36,7 @@ private class TracingWSRequest(
   }(traceData)
   override def stream() = tracer.trace(spanName) { data =>
     annotate(data, "stream")
-    request.addHttpHeaders(tracer.toMap(data).toSeq: _*).stream()
+    request.addHttpHeaders(tracer.ct.toMap(data).toSeq: _*).stream()
   }(traceData)
 
   override def execute(method: String) = withMethod(method).execute()

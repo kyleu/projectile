@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.services.feedback
 
 import com.kyleu.projectile.models.result.data.DataField
@@ -37,13 +38,15 @@ class FeedbackService @javax.inject.Inject() (
   override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all.count")(td => db.queryF(FeedbackQueries.countAll(filters))(td))
   }
-  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  override def getAll(
+    creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.all")(td => db.queryF(FeedbackQueries.getAll(filters, orderBys, limit, offset))(td))
   }
 
   // Search
-  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("search.count")(td => db.queryF(FeedbackQueries.searchCount(q, filters))(td))
+  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = {
+    checkPerm(creds, "view") { traceF("search.count")(td => db.queryF(FeedbackQueries.searchCount(q, filters))(td)) }
   }
   override def search(
     creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
@@ -62,7 +65,9 @@ class FeedbackService @javax.inject.Inject() (
       db.queryF(FeedbackQueries.CountByAuthorEmail(authorEmail))(td)
     }
   }
-  def getByAuthorEmail(creds: Credentials, authorEmail: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByAuthorEmail(
+    creds: Credentials, authorEmail: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.authorEmail") { td =>
       db.queryF(FeedbackQueries.GetByAuthorEmail(authorEmail, orderBys, limit, offset))(td)
     }
@@ -82,7 +87,9 @@ class FeedbackService @javax.inject.Inject() (
       db.queryF(FeedbackQueries.CountByAuthorId(authorId))(td)
     }
   }
-  def getByAuthorId(creds: Credentials, authorId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByAuthorId(
+    creds: Credentials, authorId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.authorId") { td =>
       db.queryF(FeedbackQueries.GetByAuthorId(authorId, orderBys, limit, offset))(td)
     }
@@ -102,7 +109,9 @@ class FeedbackService @javax.inject.Inject() (
       db.queryF(FeedbackQueries.CountByCreated(created))(td)
     }
   }
-  def getByCreated(creds: Credentials, created: LocalDateTime, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByCreated(
+    creds: Credentials, created: LocalDateTime, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.created") { td =>
       db.queryF(FeedbackQueries.GetByCreated(created, orderBys, limit, offset))(td)
     }
@@ -122,7 +131,9 @@ class FeedbackService @javax.inject.Inject() (
       db.queryF(FeedbackQueries.CountById(id))(td)
     }
   }
-  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getById(
+    creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.id") { td =>
       db.queryF(FeedbackQueries.GetById(id, orderBys, limit, offset))(td)
     }
@@ -142,7 +153,9 @@ class FeedbackService @javax.inject.Inject() (
       db.queryF(FeedbackQueries.CountByStatus(status))(td)
     }
   }
-  def getByStatus(creds: Credentials, status: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByStatus(
+    creds: Credentials, status: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.status") { td =>
       db.queryF(FeedbackQueries.GetByStatus(status, orderBys, limit, offset))(td)
     }
@@ -162,7 +175,9 @@ class FeedbackService @javax.inject.Inject() (
       db.queryF(FeedbackQueries.CountByText(text))(td)
     }
   }
-  def getByText(creds: Credentials, text: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByText(
+    creds: Credentials, text: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  )(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("get.by.text") { td =>
       db.queryF(FeedbackQueries.GetByText(text, orderBys, limit, offset))(td)
     }

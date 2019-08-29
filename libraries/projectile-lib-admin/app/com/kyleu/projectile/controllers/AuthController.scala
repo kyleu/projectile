@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers
 
 import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}

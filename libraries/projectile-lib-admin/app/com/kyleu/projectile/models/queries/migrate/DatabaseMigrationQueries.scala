@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.queries.migrate
 
 import java.time.LocalDateTime
@@ -48,14 +49,18 @@ object DatabaseMigrationQueries extends BaseQueries[DatabaseMigration]("database
   final case class GetByDescriptionSeq(descriptionSeq: Seq[String]) extends ColSeqQuery(column = "description", values = descriptionSeq)
 
   final case class CountByInstalledOn(installedOn: LocalDateTime) extends ColCount(column = "installed_on", values = Seq(installedOn))
-  final case class GetByInstalledOn(installedOn: LocalDateTime, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) extends SeqQuery(
+  final case class GetByInstalledOn(
+      installedOn: LocalDateTime, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  ) extends SeqQuery(
     whereClause = Some(quote("installed_on") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),
     limit = limit, offset = offset, values = Seq(installedOn)
   )
   final case class GetByInstalledOnSeq(installedOnSeq: Seq[LocalDateTime]) extends ColSeqQuery(column = "installed_on", values = installedOnSeq)
 
   final case class CountByInstalledRank(installedRank: Long) extends ColCount(column = "installed_rank", values = Seq(installedRank))
-  final case class GetByInstalledRank(installedRank: Long, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) extends SeqQuery(
+  final case class GetByInstalledRank(
+      installedRank: Long, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  ) extends SeqQuery(
     whereClause = Some(quote("installed_rank") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),
     limit = limit, offset = offset, values = Seq(installedRank)
   )

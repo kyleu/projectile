@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.graphql.note
 
 import com.kyleu.projectile.graphql.GraphQLUtils.deriveObjectType

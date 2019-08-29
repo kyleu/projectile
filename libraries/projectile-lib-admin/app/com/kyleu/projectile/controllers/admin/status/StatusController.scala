@@ -20,7 +20,8 @@ class StatusController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("status") {
   ApplicationFeature.enable(ApplicationFeature.Status)
   PermissionService.registerModel("tools", "Status", "System Status", Some(InternalIcons.status), "view")
-  SystemMenu.addToolMenu(value, "App Status", Some("View the status of this application"), StatusController.status(), InternalIcons.status)
+  val desc = "View the status of this application"
+  SystemMenu.addToolMenu(value, "App Status", Some(desc), StatusController.status(), InternalIcons.status, ("tools", "Status", "view"))
 
   def status = withSession("status", ("tools", "Status", "view")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "status")

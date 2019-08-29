@@ -13,19 +13,16 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
   def detail(key: String, service: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = p.getInput
-
     val s = p.getService(service)
     val em = i.service(service)
     val updated = em.apply(s)
     val fin = updated.copy(methods = em.methods.map(m => updated.getMethodOpt(m.key).getOrElse(m)))
-
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.detailService(projectile, key, p.toSummary, s, fin)))
   }
 
   def formNew(key: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = p.getInput
-
     val inputServices = i.services.map(s => (s.key, p.services.exists(x => x.key == s.key)))
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.member.formNewService(projectile, key, inputServices)))
   }
@@ -54,12 +51,9 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
   def save(key: String, serviceKey: String) = Action.async { implicit request =>
     val p = projectile.getProject(key)
     val i = p.getInput
-
     val m = p.getService(serviceKey)
     val svc = i.service(m.key)
-
     val form = ControllerUtils.getForm(request.body)
-
     val nameOverrides = Seq(
       form("propertyName") match {
         case x if x.nonEmpty && x != svc.propertyName => Some(MemberOverride("propertyName", x))
@@ -71,17 +65,13 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
       }
     ).flatten
 
-    val methodOverrides = svc.methods.flatMap { _ =>
-      Nil // TODO
-    }
-
+    val methodOverrides = svc.methods.flatMap(_ => Nil)
     val newMember = m.copy(
       pkg = StringUtils.toList(form("package"), '.'),
       features = StringUtils.toList(form.getOrElse("features", "")).map(ServiceFeature.withValue).toSet,
       ignored = StringUtils.toList(form.getOrElse("ignored", "")).toSet,
       overrides = nameOverrides ++ methodOverrides
     )
-
     projectile.saveServiceMembers(key, Seq(newMember))
     val redir = Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectServiceController.detail(key, serviceKey))
     Future.successful(redir.flashing("success" -> s"Saved service [$serviceKey]"))
@@ -97,13 +87,11 @@ class ProjectServiceController @javax.inject.Inject() () extends ProjectileContr
   def formFeatures(key: String) = Action.async { implicit request =>
     Future.successful(Ok(com.kyleu.projectile.web.views.html.project.form.formServiceFeatures(projectile, projectile.getProjectSummary(key))))
   }
-
   def saveFeatures(key: String) = Action.async { implicit request =>
     val form = ControllerUtils.getForm(request.body)
     val summary = projectile.getProjectSummary(key)
     val features = StringUtils.toList(form("features")).map(ServiceFeature.withValue).map(_.value).toSet
     projectile.saveProject(summary.copy(defaultServiceFeatures = features))
-
     Future.successful(Redirect(com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(summary.key)).flashing(
       "success" -> s"Saved default service features for project [${summary.key}]"
     ))

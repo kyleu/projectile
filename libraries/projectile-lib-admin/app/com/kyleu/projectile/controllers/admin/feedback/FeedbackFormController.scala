@@ -23,9 +23,16 @@ class FeedbackFormController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Feedback)
   app.errors.checkTable("feedback")
 
-  val desc = "Allows you to submit feedback to the authors of this application"
-  SystemMenu.addToolMenu(ApplicationFeature.Feedback.value, "Feedback", Some(desc), FeedbackController.list(), InternalIcons.feedback)
   PermissionService.registerModel("tools", "Feedback", "Feedback", Some(InternalIcons.feedback), "view")
+  val desc = "Allows you to submit feedback to the authors of this application"
+  SystemMenu.addToolMenu(
+    ApplicationFeature.Feedback.value,
+    "Feedback",
+    Some(desc),
+    FeedbackController.list(),
+    InternalIcons.feedback,
+    ("tools", "Feedback", "view")
+  )
 
   def form = withoutSession("form") { implicit request => implicit td =>
     val cfg = app.cfg(u = request.identity, "Send Feedback")

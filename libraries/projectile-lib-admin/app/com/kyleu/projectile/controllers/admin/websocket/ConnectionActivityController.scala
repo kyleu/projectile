@@ -28,7 +28,8 @@ class ConnectionActivityController @javax.inject.Inject() (
     title = "WebSockets",
     desc = Some("Lists and manages WebSocket connections"),
     call = ConnectionActivityController.connectionList(),
-    icon = InternalIcons.connection
+    icon = InternalIcons.connection,
+    ("tools", "WebSocket", "view")
   )
 
   def connectionList = withSession("list", ("tools", "WebSocket", "view")) { implicit request => implicit td =>

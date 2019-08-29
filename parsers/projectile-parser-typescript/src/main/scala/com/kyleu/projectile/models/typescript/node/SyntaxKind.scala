@@ -1,3 +1,4 @@
+// scalastyle:off
 package com.kyleu.projectile.models.typescript.node
 
 import enumeratum.values.{IntCirceEnum, IntEnum, IntEnumEntry}

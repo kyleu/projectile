@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.sql
 
 import java.io.ByteArrayOutputStream
@@ -29,7 +30,8 @@ class SqlBackdoorController @javax.inject.Inject() (
 )(implicit ec: ExecutionContext) extends AuthController("sql") {
   ApplicationFeature.enable(ApplicationFeature.Sql)
   PermissionService.registerModel("tools", "SQL", "SQL Access", Some(InternalIcons.sql), "prompt", "commit")
-  SystemMenu.addToolMenu(value, "SQL Access", Some("A SQL prompt for the application database (dangerous)"), SqlBackdoorController.sql(), InternalIcons.sql)
+  val desc = "A SQL prompt for the application database (dangerous)"
+  SystemMenu.addToolMenu(value, "SQL Access", Some(desc), SqlBackdoorController.sql(), InternalIcons.sql, ("tools", "SQL", "prompt"))
 
   def sql = withSession("form", ("tools", "SQL", "prompt")) { implicit request => implicit td =>
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sql")

@@ -28,7 +28,8 @@ class ReportController @javax.inject.Inject() (
     title = "Reporting",
     desc = Some("Run the reports that have been configured"),
     call = com.kyleu.projectile.controllers.admin.reporting.routes.ReportController.list(),
-    icon = InternalIcons.reporting
+    icon = InternalIcons.reporting,
+    ("tools", "Reporting", "view")
   )
 
   def list = withSession("list", ("tools", "Reporting", "view")) { implicit request => implicit td =>

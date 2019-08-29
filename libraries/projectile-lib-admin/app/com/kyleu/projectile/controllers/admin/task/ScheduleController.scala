@@ -23,9 +23,9 @@ class ScheduleController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Task)
   app.errors.checkTable("scheduled_task_run")
 
-  val desc = "View the history and configuration of scheduled tasks"
-  SystemMenu.addToolMenu(value, "Scheduled Task", Some(desc), ScheduleController.list(), InternalIcons.scheduledTaskRun)
   PermissionService.registerModel("tools", "ScheduledTaskRun", "Scheduled Task Run", Some(InternalIcons.scheduledTaskRun), "view", "edit", "run")
+  val desc = "View the history and configuration of scheduled tasks"
+  SystemMenu.addToolMenu(value, "Scheduled Task", Some(desc), ScheduleController.list(), InternalIcons.scheduledTaskRun, ("tools", "ScheduledTaskRun", "view"))
 
   svc.initSchedule(system = system, creds = Credentials.system, args = Nil)(TraceData.noop)
 

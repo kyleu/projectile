@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.controllers.admin.task
 
 import java.util.UUID
@@ -44,7 +45,14 @@ class ScheduledTaskRunController @javax.inject.Inject() (
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.view(model.id))
           case _ => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunList(
-            app.cfg(u = Some(request.identity), "tools", "scheduled_task_run"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)
+            cfg = app.cfg(u = Some(request.identity), "tools", "scheduled_task_run"),
+            totalCount = Some(r._1),
+            modelSeq = r._2,
+            q = q,
+            orderBy = orderBy,
+            orderAsc = orderAsc,
+            limit = limit.getOrElse(100),
+            offset = offset.getOrElse(0)
           ))
         }
         case MimeTypes.JSON => Ok(ScheduledTaskRunResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -62,22 +70,24 @@ class ScheduledTaskRunController @javax.inject.Inject() (
     }
   }
 
-  def view(id: UUID, t: Option[String] = None) = withSession("view", ("tools", "ScheduledTaskRun", "view")) { implicit request => implicit td =>
-    val modelF = svc.getByPrimaryKey(request, id)
-    val auditsF = auditSvc.getByModel(request, "ScheduledTaskRun", id)
-    val notesF = noteSvc.getFor(request, "ScheduledTaskRun", id)
+  def view(id: UUID, t: Option[String] = None) = {
+    withSession("view", ("tools", "ScheduledTaskRun", "view")) { implicit request => implicit td =>
+      val modelF = svc.getByPrimaryKey(request, id)
+      val auditsF = auditSvc.getByModel(request, "ScheduledTaskRun", id)
+      val notesF = noteSvc.getFor(request, "ScheduledTaskRun", id)
 
-    notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
-      case Some(model) => renderChoice(t) {
-        case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunView(
-          app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", model.id.toString), model, notes, audits, app.config.debug
-        ))
-        case MimeTypes.JSON => Ok(model.asJson)
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
-      }
-      case None => NotFound(s"No ScheduledTaskRun found with id [$id]")
-    }))
+      notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
+        case Some(model) => renderChoice(t) {
+          case MimeTypes.HTML => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunView(
+            app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", model.id.toString), model, notes, audits, app.config.debug
+          ))
+          case MimeTypes.JSON => Ok(model.asJson)
+          case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
+          case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
+        }
+        case None => NotFound(s"No ScheduledTaskRun found with id [$id]")
+      }))
+    }
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("tools", "ScheduledTaskRun", "edit")) { implicit request => implicit td =>
@@ -85,7 +95,12 @@ class ScheduledTaskRunController @javax.inject.Inject() (
     val call = com.kyleu.projectile.controllers.admin.task.routes.ScheduledTaskRunController.edit(id)
     svc.getByPrimaryKey(request, id).map {
       case Some(model) => Ok(com.kyleu.projectile.views.html.admin.task.scheduledTaskRunForm(
-        app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", "Edit"), model, s"Scheduled Task Run [$id]", cancel, call, debug = app.config.debug
+        cfg = app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", "Edit"),
+        model = model,
+        title = s"Scheduled Task Run [$id]",
+        cancel = cancel,
+        act = call,
+        debug = app.config.debug
       ))
       case None => NotFound(s"No ScheduledTaskRun found with id [$id]")
     }

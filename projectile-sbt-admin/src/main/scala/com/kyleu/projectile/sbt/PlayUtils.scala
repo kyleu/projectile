@@ -14,7 +14,7 @@ object PlayUtils {
     }
 
     private[this] var runningServers: Set[Closeable] = scala.collection.immutable.HashSet.empty
-    private[this] def log(s: String) = println(s)
+    private[this] def log(s: String) = println(s) // scalastyle:ignore
 
     override def start(server: => Closeable): Unit = synchronized {
       val theServer = server

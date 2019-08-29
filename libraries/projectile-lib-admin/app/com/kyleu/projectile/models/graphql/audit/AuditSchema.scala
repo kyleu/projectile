@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.graphql.audit
 
 import com.kyleu.projectile.graphql.{GraphQLContext, GraphQLSchemaHelper}

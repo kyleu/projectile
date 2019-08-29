@@ -39,7 +39,9 @@ object ScheduledTaskRunQueries extends BaseQueries[ScheduledTaskRun]("scheduledT
   def getByPrimaryKeySeq(idSeq: Seq[UUID]) = new ColSeqQuery(column = "id", values = idSeq)
 
   final case class CountByArguments(arguments: List[String]) extends ColCount(column = "arguments", values = Seq(arguments))
-  final case class GetByArguments(arguments: List[String], orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) extends SeqQuery(
+  final case class GetByArguments(
+      arguments: List[String], orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+  ) extends SeqQuery(
     whereClause = Some(quote("arguments") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),
     limit = limit, offset = offset, values = Seq(arguments)
   )

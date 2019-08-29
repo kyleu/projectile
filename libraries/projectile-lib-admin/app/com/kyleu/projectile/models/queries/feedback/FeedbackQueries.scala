@@ -1,4 +1,3 @@
-/* Generated File */
 package com.kyleu.projectile.models.queries.feedback
 
 import com.kyleu.projectile.models.database.{DatabaseField, Row}

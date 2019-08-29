@@ -15,18 +15,14 @@ import scala.util.control.NonFatal
 trait Queryable extends Logging {
   @tailrec
   @SuppressWarnings(Array("AsInstanceOf"))
-  private[this] def prepare(stmt: PreparedStatement, values: Seq[Any], index: Int = 1): Unit = {
-    if (values.nonEmpty) {
-      values.headOption.getOrElse(throw new IllegalStateException()) match {
-        case v if NullUtils.isNull(v) => stmt.setNull(index, Types.NULL)
-
-        case Some(x) => stmt.setObject(index, Conversions.convert(x.asInstanceOf[AnyRef]))
-        case None => stmt.setNull(index, Types.NULL)
-
-        case v => stmt.setObject(index, Conversions.convert(v.asInstanceOf[AnyRef]))
-      }
-      prepare(stmt, values.tail, index + 1)
+  private[this] def prepare(stmt: PreparedStatement, values: Seq[Any], index: Int = 1): Unit = if (values.nonEmpty) {
+    values.headOption.getOrElse(throw new IllegalStateException()) match {
+      case v if NullUtils.isNull(v) => stmt.setNull(index, Types.NULL)
+      case Some(x) => stmt.setObject(index, Conversions.convert(x.asInstanceOf[AnyRef]))
+      case None => stmt.setNull(index, Types.NULL)
+      case v => stmt.setObject(index, Conversions.convert(v.asInstanceOf[AnyRef]))
     }
+    prepare(stmt, values.tail, index + 1)
   }
 
   def valForJdbc(conn: Connection, v: Any): Any = v match {
@@ -39,25 +35,25 @@ trait Queryable extends Logging {
     case lt: java.time.LocalTime => java.sql.Time.valueOf(lt)
     case x => x
   }
-
   def valsForJdbc(conn: Connection, vals: Seq[Any]) = vals.map(v => valForJdbc(conn, v)).toIndexedSeq
 
+  private[this] def getStatement(connection: Connection, sql: String, values: Seq[Any])(implicit td: TraceData) = {
+    val actualValues = valsForJdbc(connection, values)
+    log.debug(s"${sql} with ${actualValues.mkString("(", ", ", ")")}")
+    val stmt = connection.prepareStatement(sql)
+    try { prepare(stmt, actualValues) } catch {
+      case NonFatal(x) =>
+        log.error(s"Unable to prepare query for [${sql}]", x)
+        throw x
+    }
+    stmt
+  }
+
   def apply[A](connection: Connection, query: RawQuery[A])(implicit td: TraceData): A = {
-    val actualValues = valsForJdbc(connection, query.values)
-    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")
-    val stmt = connection.prepareStatement(query.sql)
+    val stmt = getStatement(connection, query.sql, query.values)
     try {
-      try {
-        prepare(stmt, actualValues)
-      } catch {
-        case NonFatal(x) =>
-          log.error(s"Unable to prepare query for [${query.sql}]", x)
-          throw x
-      }
       val results = stmt.executeQuery()
-      try {
-        query.handle(results)
-      } catch {
+      try { query.handle(results) } catch {
         case NonFatal(x) =>
           log.error(s"Unable to handle query results for [${query.sql}]", x)
           throw x
@@ -70,20 +66,8 @@ trait Queryable extends Logging {
   }
 
   def executeUpdate(connection: Connection, statement: Statement)(implicit td: TraceData): Int = {
-    val actualValues = valsForJdbc(connection, statement.values)
-    log.debug(s"${statement.sql} with ${actualValues.mkString("(", ", ", ")")}")
-    val stmt = connection.prepareStatement(statement.sql)
-    try {
-      prepare(stmt, actualValues)
-    } catch {
-      case NonFatal(x) =>
-        stmt.close()
-        log.error(s"Unable to prepare statement [${statement.sql}]", x)
-        throw x
-    }
-    try {
-      stmt.executeUpdate()
-    } catch {
+    val stmt = getStatement(connection, statement.sql, statement.values)
+    try { stmt.executeUpdate() } catch {
       case NonFatal(x) =>
         log.error(s"Unable to execute statement [${statement.sql}]", x)
         throw x
@@ -93,23 +77,12 @@ trait Queryable extends Logging {
   }
 
   def executeUnknown[A](connection: Connection, query: Query[A], resultId: Option[UUID])(implicit td: TraceData): Either[A, Int] = {
-    val actualValues = valsForJdbc(connection, query.values)
-    log.debug(s"${query.sql} with ${actualValues.mkString("(", ", ", ")")}")
-    val stmt = connection.prepareStatement(query.sql)
+    val stmt = getStatement(connection, query.sql, query.values)
     try {
-      try {
-        prepare(stmt, actualValues)
-      } catch {
-        case NonFatal(x) =>
-          log.error(s"Unable to prepare raw query [${query.sql}]", x)
-          throw x
-      }
       val isResultset = stmt.execute()
       if (isResultset) {
         val res = stmt.getResultSet
-        try {
-          Left(query.handle(res))
-        } catch {
+        try { Left(query.handle(res)) } catch {
           case NonFatal(x) =>
             log.error(s"Unable to handle query results for [${query.sql}]", x)
             throw x

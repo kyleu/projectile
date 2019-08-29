@@ -1,3 +1,4 @@
+// scalastyle:off file.size.limit
 package com.kyleu.projectile.models.feature.service.db
 
 import com.kyleu.projectile.models.export.ExportModel
