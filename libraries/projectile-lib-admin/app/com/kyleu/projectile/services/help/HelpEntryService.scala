@@ -11,6 +11,6 @@ object HelpEntryService extends Logging {
   }
 
   def hasHelp(path: String*): Option[Seq[String]] = contentFor(path: _*).map(_ => path).orElse {
-    if (path.size == 1) { None } else { hasHelp(path.dropRight(1): _*) }
+    if (path.size > 1) { hasHelp(path.dropRight(1): _*) } else { None }
   }
 }
