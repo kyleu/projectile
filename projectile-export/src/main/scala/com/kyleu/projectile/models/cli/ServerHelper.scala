@@ -13,10 +13,7 @@ object ServerHelper {
     case x: ClassNotFoundException => None
   }
 
-  val sbtError = """
-    |The server code can't be run from sbt. To run the server, use the bash script [projectile.sh] or run through Ammonite with [projectile.sc].
-    |Both are available at [https://github.com/KyleU/projectile/tree/master/bin]
-  """.trim.stripMargin
+  val sbtError = "The server code can't be run from sbt. To run the server, use the GitHub release or run [homebrew install kyleu/kyleu/projectile]."
 }
 
 trait ServerHelper {
