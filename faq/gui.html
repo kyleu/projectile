@@ -21,7 +21,7 @@
 <meta name="description" content="doc">
 <meta name="author" content="">
 <link rel="shortcut icon" href="../assets/images/favicon.png">
-<title>Accessing the Projectile GUI · Projectile</title>
+<title>Accessing the GUI · Projectile</title>
 <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
 <link rel="stylesheet" href="../assets/stylesheets/application-palette.22915126.css">
 <link rel="stylesheet" href="../lib/material__tabs/dist/mdc.tabs.min.css">
@@ -61,7 +61,7 @@ data-md-color-accent="blue-grey"
 Projectile
 </span>
 <span class="md-header-nav__topic">
-Accessing the Projectile GUI
+Accessing the GUI
 </span>
 </div>
 </div>
@@ -187,7 +187,6 @@ KyleU/projectile
     <li><a href="../libraries/doobie.html" class="page">Doobie</a></li>
     <li><a href="../libraries/thrift.html" class="page">Thrift</a></li>
     <li><a href="../libraries/graphql.html" class="page">GraphQL</a></li>
-    <li><a href="../libraries/service.html" class="page">Service</a></li>
     <li><a href="../libraries/scalajs.html" class="page">Scala.js</a></li>
     <li><a href="../libraries/admin.html" class="page">Admin</a></li>
   </ul></li>
@@ -201,16 +200,18 @@ KyleU/projectile
   <li><a href="../troubleshooting.html" class="page">Troubleshooting</a></li>
   <li><a href="../faq/index.html" class="page">Fequently Asked Questions</a>
   <ul>
-    <li><a href="../faq/gui.html" class="active page">Accessing the Projectile GUI</a></li>
-    <li><a href="../faq/newenum.html" class="page">Adding New Enums to a Projectile Application</a></li>
-    <li><a href="../faq/newtable.html" class="page">Adding New Tables to a Projectile Application</a></li>
-    <li><a href="../faq/audit.html" class="page">Removing Unused Files from a Projectile Application</a></li>
+    <li><a href="../faq/gui.html" class="active page">Accessing the GUI</a></li>
+    <li><a href="../faq/feature.html" class="page">Enabling Features</a></li>
+    <li><a href="../faq/newenum.html" class="page">Adding New Enums</a></li>
+    <li><a href="../faq/newtable.html" class="page">Adding New Tables</a></li>
+    <li><a href="../faq/package.html" class="page">Setting Model Packages</a></li>
+    <li><a href="../faq/audit.html" class="page">Removing Unused Files</a></li>
   </ul></li>
 </ul>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../faq/gui.html#accessing-the-projectile-gui" class="header">Accessing the Projectile GUI</a>
+  <li><a href="../faq/gui.html#accessing-the-gui" class="header">Accessing the GUI</a>
   <ul>
     <li><a href="../faq/gui.html#installing" class="header">Installing</a></li>
     <li><a href="../faq/gui.html#run-the-gui" class="header">Run the GUI</a></li>
@@ -222,7 +223,7 @@ KyleU/projectile
 <ul style="display: none">
 <li class="md-nav__item md-version" id="project.version">
 <label class="md-nav__link" for="__version">
-<i class="md-icon" title="Version">label_outline</i> 1.16.2
+<i class="md-icon" title="Version">label_outline</i> 1.19.1
 </label>
 </li>
 </ul>
@@ -235,7 +236,7 @@ KyleU/projectile
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
 <ul>
-  <li><a href="../faq/gui.html#accessing-the-projectile-gui" class="header">Accessing the Projectile GUI</a>
+  <li><a href="../faq/gui.html#accessing-the-gui" class="header">Accessing the GUI</a>
   <ul>
     <li><a href="../faq/gui.html#installing" class="header">Installing</a></li>
     <li><a href="../faq/gui.html#run-the-gui" class="header">Run the GUI</a></li>
@@ -249,20 +250,20 @@ KyleU/projectile
 <div class="md-content">
 <article class="md-content__inner md-typeset">
 <div class="md-content__searchable">
-<h1><a href="#accessing-the-projectile-gui" name="accessing-the-projectile-gui" class="anchor"><span class="anchor-link"></span></a>Accessing the Projectile GUI</h1>
+<h1><a href="#accessing-the-gui" name="accessing-the-gui" class="anchor"><span class="anchor-link"></span></a>Accessing the GUI</h1>
 <h2><a href="#installing" name="installing" class="anchor"><span class="anchor-link"></span></a>Installing</h2>
 <p>First, install Projectile using one of the methods described in <a href="../gettingStarted/installing.html">Installing Projectile</a>. Note that the SBT plugin can&rsquo;t provide the GUI, so one of the other methods (usually homebrew) is required.</p>
 <h2><a href="#run-the-gui" name="run-the-gui" class="anchor"><span class="anchor-link"></span></a>Run the GUI</h2>
 <p>From your project&rsquo;s directory, run <code>projectile server</code>. That&rsquo;s it.</p>
 </div>
 <div>
-<a href="https://github.com/KyleU/projectile/tree/v1.16.2/doc/src/faq/gui.md" title="Edit this page" class="md-source-file md-edit">
+<a href="https://github.com/KyleU/projectile/tree/v1.19.1/doc/src/faq/gui.md" title="Edit this page" class="md-source-file md-edit">
 Edit this page
 </a>
 </div>
 <div class="print-only">
 <span class="md-source-file md-version">
-1.16.2
+1.19.1
 </span>
 </div>
 </article>
@@ -285,13 +286,13 @@ Fequently Asked Questions
 </span>
 </div>
 </a>
-<a href="../faq/newenum.html" title="Adding New Enums to a Projectile Application" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+<a href="../faq/feature.html" title="Enabling Features" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
 Next
 </span>
-Adding New Enums to a Projectile Application
+Enabling Features
 </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
