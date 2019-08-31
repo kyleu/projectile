@@ -1,4 +1,4 @@
-# Accessing the Projectile GUI
+# Accessing the GUI
 
 ## Installing
 

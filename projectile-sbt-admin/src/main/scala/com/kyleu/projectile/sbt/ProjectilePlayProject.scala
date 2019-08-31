@@ -31,19 +31,6 @@ object ProjectilePlayProject extends AutoPlugin {
     // Projectile
     libraryDependencies += autoImport.projectileLib("admin"),
 
-    // Scala
-    scalaVersion := "2.12.9",
-
-    scalacOptions ++= Seq(
-      "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
-      "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Yrangepos", "-Ywarn-dead-code", "-Ywarn-numeric-widen"
-    ),
-
-    scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
-    scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
-
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false).withWarnDirectEvictions(false),
-
     // Packaging
     topLevelDirectory in Universal := None,
     packageSummary := description.value,
