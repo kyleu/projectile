@@ -28,7 +28,7 @@ object SchemaFile {
     }
 
     if (model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)) {
-      config.addCommonImport(file, "NoteSchema")
+      // config.addCommonImport(file, "NoteSchema")
     }
     SchemaHelper.addImports(config, file)
 

@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.feature.core
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala, FieldTypeImports, FieldTypeRestrictions}
+import com.kyleu.projectile.models.export.typ.{FieldType, FieldTypeAsScala}
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
@@ -10,10 +10,6 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 object ModelHelper {
   def addFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.fields.foreach { field =>
     field.addImport(config, file, model.modelPackage(config))
-
-    if (FieldTypeRestrictions.isDate(field.t)) {
-      config.addCommonImport(file, "DateUtils")
-    }
 
     val scalaJsPrefix = if (model.features(ModelFeature.ScalaJS)) { "@JSExport " } else { "" }
 
@@ -32,17 +28,16 @@ object ModelHelper {
 
   def addEmpty(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val fieldStrings = model.fields.map { field =>
-      FieldTypeImports.imports(config, field.t).foreach {
-        case x if x == Seq("java", "time") => config.addCommonImport(file, "DateUtils")
-        case _ => //noop
-      }
-
       val colScala = field.t match {
         case _ => field.scalaType(config)
       }
       val propType = if (field.required) { colScala } else { "Option[" + colScala + "]" }
       val propDefault = if (field.required) {
-        " = " + field.defaultString(config)
+        val dv = field.defaultString(config)
+        if (dv.contains("DateUtils")) {
+          config.addCommonImport(file, "DateUtils")
+        }
+        " = " + dv
       } else {
         " = None"
       }

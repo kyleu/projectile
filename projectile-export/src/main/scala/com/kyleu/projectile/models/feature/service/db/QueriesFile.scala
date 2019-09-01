@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.feature.service.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType.EnumType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -22,7 +23,9 @@ object QueriesFile {
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.key}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      f.addImport(config, file, Nil)
+      if (f.inSearch || f.indexed || model.pkFields.contains(f) || f.t.isInstanceOf[EnumType]) {
+        f.addImport(config, file, Nil)
+      }
       val ftyp = QueriesHelper.classNameForSqlType(f.t, config)
       val field = s"""DatabaseField(title = "${f.title}", prop = "${f.propertyName}", col = "${f.key}", typ = $ftyp)"""
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
