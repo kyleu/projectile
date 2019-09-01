@@ -1,3 +1,4 @@
+import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.sbt.PlayImport.PlayKeys
@@ -17,6 +18,10 @@ object Sandbox {
     val scala = "2.12.8"
   }
 
+  val client = (project in file("sandbox/client")).dependsOn(
+    LibraryProjects.`projectile-lib-scalajs`
+  ).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
+
   val sandbox = Project(id = projectId, base = file(projectId)).settings(Common.settings: _*).settings(
     RoutesKeys.routesImport ++= Seq("com.kyleu.projectile.models.web.QueryStringUtils._"),
     PlayKeys.externalizeResources := false,
@@ -32,8 +37,15 @@ object Sandbox {
     libraryDependencies ++= Dependencies.Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes")),
 
-    (sourceGenerators in Compile) += ProjectVersion.writeConfig(projectId, projectName, projectPort).taskValue
+    (sourceGenerators in Compile) += ProjectVersion.writeConfig(projectId, projectName, projectPort).taskValue,
+
+    // Sbt-Web
+    JsEngineKeys.engineType := JsEngineKeys.EngineType.Node,
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+
+    // Scala.js
+    scalaJSProjects := Seq(client)
   ).disablePlugins(PlayFilters).enablePlugins(SbtWeb, PlayScala).dependsOn(
     LibraryProjects.`projectile-lib-admin`, ProjectileExport.`projectile-export`
-  )
+  ).aggregate(client)
 }

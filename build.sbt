@@ -35,6 +35,7 @@ lazy val `projectile-server` = Server.`projectile-server`
 
 // Sandbox App
 lazy val sandbox = Sandbox.sandbox
+lazy val client = Sandbox.client
 
 // Paradox documentation
 lazy val doc = Documentation.doc

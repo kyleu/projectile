@@ -61,6 +61,9 @@ class ProjectileService(val rootCfg: ConfigService = new ConfigService(".")) ext
     case ProjectAdd(p) => ProjectDetail(saveProject(p))
     case ProjectRemove(key) => removeProject(key)
 
+    case SetFeature(p, feature) => OK(s"Turned ${(if (setFeature(p, feature)) { "on" } else { "off" })} feature [$feature] for project [$p]")
+    case SetPackage(p, item, pkg) => OK(setPackage(p, item, pkg))
+
     case SaveEnumMembers(p, members) => JsonResponse(saveEnumMembers(p, members).asJson)
     case RemoveEnumMember(p, member) => JsonResponse(removeEnumMember(p, member).asJson)
 

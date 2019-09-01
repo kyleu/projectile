@@ -47,6 +47,7 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case class ProjectSave(project: Project) extends ProjectileCommand
   case class ProjectRemove(key: String) extends ProjectileCommand
 
+  case class SetFeature(project: String, feature: String) extends ProjectileCommand
   case class SetPackage(project: String, item: String, pkg: String) extends ProjectileCommand
 
   case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand

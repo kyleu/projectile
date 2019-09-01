@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.cli
 
 import enumeratum.{Enum, EnumEntry}
 import com.kyleu.projectile.models.command.ProjectileCommand
+import com.kyleu.projectile.models.feature.ProjectFeature
 import com.kyleu.projectile.models.input.InputSummary
 import com.kyleu.projectile.models.project.{ProjectSummary, ProjectTemplate}
 import com.kyleu.projectile.services.project.ProjectExampleService
@@ -77,10 +78,15 @@ object CommandLineAction extends Enum[CommandLineAction] {
     def t = template.flatMap(ProjectTemplate.withValueOpt).getOrElse(ProjectTemplate.Custom)
     override def toCommand = ProjectileCommand.ProjectAdd(ProjectSummary.newObj(key = key).copy(template = t, input = input, description = desc.getOrElse("")))
   }
+  object FeatureSet extends Command(name = "feature-set", description = s"Enables or disables the features of the project") with CommandLineAction {
+    var project = arg[String](description = "Project key to use")
+    var feature = arg[String](description = s"Feature to toggle, one of [${ProjectFeature.values.map(_.value).mkString(", ")}]")
+    override def toCommand = ProjectileCommand.SetFeature(project, feature)
+  }
   object PackageSet extends Command(name = "package-set", description = s"Sets the export package for the provided item") with CommandLineAction {
-    var project = arg[String](description = "Project key for the newly-created project")
-    var item = arg[String]()
-    var pkg = arg[String]()
+    var project = arg[String](description = "Project key to use")
+    var item = arg[String](description = "Model or Enum to set the package of")
+    var pkg = arg[String](description = "Package to set")
     override def toCommand = ProjectileCommand.SetPackage(project, item, pkg)
   }
 

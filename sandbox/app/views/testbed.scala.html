@@ -1,9 +1,20 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, debug: Boolean = false)(implicit flash: Flash)
 @com.kyleu.projectile.views.html.layout.page(title = "Testbed", cfg = cfg) {
-  @com.kyleu.projectile.views.html.layout.card(None) {
-    <div>Content</div>
+  @com.kyleu.projectile.views.html.layout.card(Some("WebSocket")) {
+    <div>Status: <div id="conn-status">Connecting...</div></div>
+    <div>
+      <a class="btn @cfg.user.buttonColor" onclick="ep.send('Test Message!'); return false;">Send Message</a>
+    </div>
+    <script>
+      var ep = null;
+      $(function() { ep = new Entrypoint(@{!debug}); });
+    </script>
+  }
+  @com.kyleu.projectile.views.html.layout.card(Some("Sortable")) {
     @com.kyleu.projectile.views.html.components.form.sortableField("x", Seq("1" -> Html("Item 1"), "2" -> Html("Item 2"), "3" -> Html("Item 3")))
   }
   @com.kyleu.projectile.models.web.ControllerUtils.nestableIncludeSnippet
 }
+
+
 @com.kyleu.projectile.views.html.components.includeScalaJs(debug)

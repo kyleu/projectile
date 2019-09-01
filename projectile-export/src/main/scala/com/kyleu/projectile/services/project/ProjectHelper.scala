@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, Serv
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
 
-trait ProjectHelper { this: ProjectileService =>
+trait ProjectHelper extends ProjectFeatureHelper with ProjectPackageHelper { this: ProjectileService =>
   private[this] lazy val summarySvc = new ProjectSummaryService(rootCfg)
 
   private[this] lazy val enumSvc = new EnumMemberService(this)
@@ -32,6 +32,9 @@ trait ProjectHelper { this: ProjectileService =>
 
   def saveProject(summary: ProjectSummary) = summarySvc.add(summary)
   def removeProject(key: String) = removeProjectFiles(key)
+
+  def setFeature(key: String, feature: String) = toggleFeature(key, feature)
+  def setPackage(key: String, item: String, pkg: String) = togglePackage(key, item, pkg)
 
   def saveEnumMembers(key: String, members: Seq[EnumMember]) = enumSvc.saveEnums(key, members)
   def saveEnumMember(key: String, member: EnumMember) = saveEnumMembers(key, Seq(member)).headOption.getOrElse(throw new IllegalStateException())

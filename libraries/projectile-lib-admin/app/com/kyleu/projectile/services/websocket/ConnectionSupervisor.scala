@@ -8,6 +8,7 @@ import com.kyleu.projectile.models.websocket.ConnectionMessage._
 import com.kyleu.projectile.models.websocket.{ConnectionDescription, ConnectionMessage}
 import com.kyleu.projectile.util.tracing.TraceData
 import com.kyleu.projectile.util.{DateUtils, Logging}
+import com.kyleu.projectile.util.JsonSerializers._
 
 object ConnectionSupervisor {
   protected var initialized = false
@@ -53,7 +54,7 @@ class ConnectionSupervisor(err: (String, String) => AnyRef) extends Actor with L
     case GetConnectionStatus => handleGetConnectionStatus()
     case sst: ConnectionTraceRequest => handleSendConnectionTrace(sst)
 
-    case b: ConnectionSupervisor.Broadcast => connections.foreach(_._2.actorRef.tell(b.msg, self))
+    case b: ConnectionSupervisor.Broadcast => connections.foreach(_._2.actorRef.tell(b.msg.asJson, self))
 
     case cm: ConnectionMessage => log.warn(s"Unhandled connection message [${cm.getClass.getSimpleName}]")
     case x => log.warn(s"ConnectionSupervisor encountered unknown message: ${x.toString}")

@@ -37,6 +37,4 @@ GET        /testbed                                 controllers.HomeController.t
 # End model route files
 
 ### Assets
-GET        /assets/client-fastopt.js                controllers.HomeController.redir(file = "projectile-lib-scalajs-fastopt.js")
-GET        /assets/client-opt.js                    controllers.HomeController.redir(file = "projectile-lib-scalajs-opt.js")
 GET        /assets/*file                            controllers.Assets.versioned(file)
