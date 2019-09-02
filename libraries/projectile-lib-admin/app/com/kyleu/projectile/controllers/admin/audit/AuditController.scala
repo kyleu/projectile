@@ -6,7 +6,6 @@ import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.models.web.ReftreeUtils._
 import java.util.UUID
 
 import com.kyleu.projectile.controllers.admin.audit.routes.AuditController
@@ -63,8 +62,6 @@ class AuditController @javax.inject.Inject() (
         }
         case MimeTypes.JSON => Ok(AuditResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case BaseController.MimeTypes.csv => csvResponse("Audit", svc.csvFor(r._1, r._2))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -87,8 +84,6 @@ class AuditController @javax.inject.Inject() (
           val cfg = app.cfg(u = Some(request.identity), "system", "models", "audit", model.id.toString)
           Ok(com.kyleu.projectile.views.html.admin.audit.auditView(cfg, model, records, notes, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
       }
       case None => NotFound(s"No Audit found with id [$id]")
     }))

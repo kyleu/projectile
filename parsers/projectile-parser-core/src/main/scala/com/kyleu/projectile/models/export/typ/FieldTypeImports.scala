@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.export.typ
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType._
+import com.kyleu.projectile.models.output.CommonImportHelper
 // import com.kyleu.projectile.models.output.CommonImportHelper
 
 object FieldTypeImports {
@@ -13,7 +14,7 @@ object FieldTypeImports {
     case UuidType => Seq(Seq("java", "util") :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift))
     case DateType | TimeType | TimestampType | TimestampZonedType => Seq(Seq("java", "time") :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift))
     case JsonType => Seq(Seq("io", "circe") :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift))
-    // case TagsType => Seq(CommonImportHelper.get(config, "Tag")._1 :+ CommonImportHelper.get(config, "Tag")._2)
+    case TagsType => Seq(CommonImportHelper.get(config, "Tag")._1 :+ CommonImportHelper.get(config, "Tag")._2)
     case EnumType(key) => config.getEnumOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift)).toSeq
     case StructType(key, tp) =>
       config.getModelOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift)).toSeq ++ tp.flatMap { x =>

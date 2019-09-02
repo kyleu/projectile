@@ -88,7 +88,7 @@ object ControllerFile {
     config.addCommonImport(file, "JsonSerializers", "_")
     config.addCommonImport(file, "DateUtils")
     config.addCommonImport(file, "ExecutionContext")
-    config.addCommonImport(file, "ReftreeUtils", "_")
+    // config.addCommonImport(file, "ReftreeUtils", "_")
 
     file.addImport(Seq("scala", "concurrent"), "Future")
     file.addImport(Seq("play", "api", "http"), "MimeTypes")
@@ -120,8 +120,6 @@ object ControllerFile {
 
     file.add(s"case MimeTypes.JSON => Ok(${model.className}Result.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)")
     file.add(s"""case BaseController.MimeTypes.csv => csvResponse("${model.className}", svc.csvFor(r._1, r._2))""")
-    file.add("case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)")
-    file.add("case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)")
     file.add("})", -1)
     file.add("}", -1)
     file.add("}", -1)

@@ -71,8 +71,6 @@ object ControllerReferences {
 
         file.add("case MimeTypes.JSON => Ok(models.asJson)")
         file.add(s"""case BaseController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")
-        file.add("case BaseController.MimeTypes.png => Ok(renderToPng(v = models)).as(BaseController.MimeTypes.png)")
-        file.add("case BaseController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(BaseController.MimeTypes.svg)")
 
         file.add("})", -1)
         file.add("}", -1)

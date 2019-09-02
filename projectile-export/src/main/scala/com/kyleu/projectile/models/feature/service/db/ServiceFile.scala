@@ -2,6 +2,7 @@ package com.kyleu.projectile.models.feature.service.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -35,12 +36,13 @@ object ServiceFile {
     model.pkFields.foreach(_.addImport(config, file, Nil))
 
     file.add("@javax.inject.Singleton")
-    val perm = s""""${model.firstPackage}" -> "${model.className}""""
-    file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}", $perm) {""", 1)
-    ServiceHelper.addGetters(config, model, file)
+    val perm = if (model.features(ModelFeature.Auth)) { s"""", ${model.firstPackage}" -> "${model.className}"""" } else { "" }
+    file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}"$perm) {""", 1)
 
-    ServiceHelper.writeSearchFields(model, file, queriesFilename, "(implicit trace: TraceData)", searchArgs)
-    ServiceHelper.writeForeignKeys(config, model, file)
+    val viewCheck = if (model.features(ModelFeature.Auth)) { """checkPerm(creds, "view") """ } else { "" }
+    ServiceHelper.addGetters(config, model, file, viewCheck)
+    ServiceHelper.writeSearchFields(model, file, queriesFilename, "(implicit trace: TraceData)", searchArgs, viewCheck)
+    ServiceHelper.writeForeignKeys(config, model, file, viewCheck)
 
     if (!model.readOnly) {
       ServiceInserts.insertsFor(config, model, queriesFilename, file)

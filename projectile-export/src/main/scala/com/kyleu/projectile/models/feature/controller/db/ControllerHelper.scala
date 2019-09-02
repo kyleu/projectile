@@ -34,8 +34,6 @@ object ControllerHelper {
 
     file.add(s"case MimeTypes.HTML => $viewArg")
     file.add("case MimeTypes.JSON => Ok(model.asJson)")
-    file.add("case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)")
-    file.add("case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)")
 
     file.add("}", -1)
     file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs]")""")

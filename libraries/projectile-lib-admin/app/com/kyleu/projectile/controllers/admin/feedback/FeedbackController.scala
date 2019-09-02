@@ -4,7 +4,6 @@ package com.kyleu.projectile.controllers.admin.feedback
 import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
-import com.kyleu.projectile.models.web.ReftreeUtils._
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
@@ -66,8 +65,6 @@ class FeedbackController @javax.inject.Inject() (
         }
         case MimeTypes.JSON => Ok(FeedbackResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case BaseController.MimeTypes.csv => csvResponse("Feedback", svc.csvFor(r._1, r._2))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -93,8 +90,6 @@ class FeedbackController @javax.inject.Inject() (
           if (embedded) { Ok(list) } else { Ok(page(s"Feedbacks by Author Id [$authorId]", cfg)(card(None)(list))) }
         case MimeTypes.JSON => Ok(models.asJson)
         case BaseController.MimeTypes.csv => csvResponse("Feedback by authorId", svc.csvFor(0, models))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = models)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -113,8 +108,6 @@ class FeedbackController @javax.inject.Inject() (
             app.config.debug
           ))
           case MimeTypes.JSON => Ok(model.asJson)
-          case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-          case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
         }
         case None => NotFound(s"No Feedback found with id [$id]")
       })

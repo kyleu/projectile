@@ -7,7 +7,6 @@ import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.models.task.{ScheduledTaskRun, ScheduledTaskRunResult}
-import com.kyleu.projectile.models.web.ReftreeUtils._
 import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.services.task.ScheduledTaskRunService
@@ -57,8 +56,6 @@ class ScheduledTaskRunController @javax.inject.Inject() (
         }
         case MimeTypes.JSON => Ok(ScheduledTaskRunResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case BaseController.MimeTypes.csv => csvResponse("ScheduledTaskRun", svc.csvFor(r._1, r._2))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -82,8 +79,6 @@ class ScheduledTaskRunController @javax.inject.Inject() (
             app.cfg(u = Some(request.identity), "tools", "scheduled_task_run", model.id.toString), model, notes, audits, app.config.debug
           ))
           case MimeTypes.JSON => Ok(model.asJson)
-          case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-          case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
         }
         case None => NotFound(s"No ScheduledTaskRun found with id [$id]")
       }))

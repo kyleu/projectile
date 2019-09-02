@@ -15,7 +15,6 @@ import com.kyleu.projectile.models.web.InternalIcons
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.models.web.ReftreeUtils._
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import javax.inject.Named
@@ -78,8 +77,6 @@ class NoteController @javax.inject.Inject() (
         }
         case MimeTypes.JSON => Ok(NoteResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case BaseController.MimeTypes.csv => csvResponse("Note", svc.csvFor(r._1, r._2))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -103,8 +100,6 @@ class NoteController @javax.inject.Inject() (
           if (embedded) { Ok(list) } else { Ok(page(s"Notes by Author [$author]", cfg)(card(None)(list))) }
         case MimeTypes.JSON => Ok(models.asJson)
         case BaseController.MimeTypes.csv => csvResponse("Note by author", svc.csvFor(0, models))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = models)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = models)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -122,8 +117,6 @@ class NoteController @javax.inject.Inject() (
           app.config.debug)
         )
         case MimeTypes.JSON => Ok(model.asJson)
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
       }
       case None => NotFound(s"No Note found with id [$id]")
     })

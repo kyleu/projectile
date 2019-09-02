@@ -14,7 +14,7 @@ object ModelHelper {
     val scalaJsPrefix = if (model.features(ModelFeature.ScalaJS)) { "@JSExport " } else { "" }
 
     val colScala = field.t match {
-      case FieldType.TagsType =>
+      case FieldType.TagsType | FieldType.ListType(FieldType.TagsType) | FieldType.MapType(_, FieldType.TagsType) =>
         config.addCommonImport(file, "Tag")
         field.scalaType(config)
       case _ => field.scalaType(config)

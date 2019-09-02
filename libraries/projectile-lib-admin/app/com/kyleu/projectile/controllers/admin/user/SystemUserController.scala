@@ -7,7 +7,6 @@ import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
-import com.kyleu.projectile.models.web.ReftreeUtils._
 import java.util.UUID
 
 import com.kyleu.projectile.controllers.admin.user.routes.SystemUserController
@@ -66,8 +65,6 @@ class SystemUserController @javax.inject.Inject() (
         }
         case MimeTypes.JSON => Ok(SystemUserResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
         case BaseController.MimeTypes.csv => csvResponse("SystemUser", svc.csvFor(r._1, r._2))
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = r._2)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = r._2)).as(BaseController.MimeTypes.svg)
       })
     }
   }
@@ -92,8 +89,6 @@ class SystemUserController @javax.inject.Inject() (
           val cfg = app.cfg(u = Some(request.identity), "system", "models", "user", model.id.toString)
           Ok(com.kyleu.projectile.views.html.admin.user.systemUserView(cfg, model, notes, modelNotes, audits, modelAudits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
-        case BaseController.MimeTypes.png => Ok(renderToPng(v = model)).as(BaseController.MimeTypes.png)
-        case BaseController.MimeTypes.svg => Ok(renderToSvg(v = model)).as(BaseController.MimeTypes.svg)
       }
       case None => NotFound(s"No SystemUser found with id [$id]")
     }))))

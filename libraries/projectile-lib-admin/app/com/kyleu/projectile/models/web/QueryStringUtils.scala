@@ -6,6 +6,15 @@ import com.kyleu.projectile.util.DateUtils
 import play.api.mvc.{PathBindable, QueryStringBindable}
 
 object QueryStringUtils {
+  implicit def optStringPathBindable(implicit stringBinder: PathBindable[String]): PathBindable[Option[String]] = new PathBindable[Option[String]] {
+    override def bind(key: String, value: String) = stringBinder.bind(key, value) match {
+      case Right(s) if s.isEmpty => Right(None)
+      case Right(s) => Right(Some(s))
+      case Left(x) => throw new IllegalStateException(x)
+    }
+    override def unbind(key: String, s: Option[String]) = s.getOrElse("")
+  }
+
   implicit def localDateTimePathBindable(implicit stringBinder: PathBindable[String]): PathBindable[LocalDateTime] = new PathBindable[LocalDateTime] {
     override def bind(key: String, value: String) = stringBinder.bind(key, value) match {
       case Right(s) => Right(DateUtils.fromIsoString(s))
