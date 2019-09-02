@@ -36,7 +36,7 @@ object ServiceFile {
     model.pkFields.foreach(_.addImport(config, file, Nil))
 
     file.add("@javax.inject.Singleton")
-    val perm = if (model.features(ModelFeature.Auth)) { s"""", ${model.firstPackage}" -> "${model.className}"""" } else { "" }
+    val perm = if (model.features(ModelFeature.Auth)) { s""", "${model.firstPackage}" -> "${model.className}"""" } else { "" }
     file.add(s"""class ${model.className}Service $inject extends ModelServiceHelper[${model.className}]("${model.propertyName}"$perm) {""", 1)
 
     val viewCheck = if (model.features(ModelFeature.Auth)) { """checkPerm(creds, "view") """ } else { "" }

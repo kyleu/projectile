@@ -23,7 +23,7 @@ object QueriesFile {
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.key}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      if (f.inSearch || f.indexed || model.pkFields.contains(f) || f.t.isInstanceOf[EnumType]) {
+      if (f.inSearch || model.pkFields.contains(f) || f.t.isInstanceOf[EnumType]) {
         f.addImport(config, file, Nil)
       }
       val ftyp = QueriesHelper.classNameForSqlType(f.t, config)
