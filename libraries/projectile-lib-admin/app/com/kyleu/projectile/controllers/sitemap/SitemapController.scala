@@ -1,15 +1,16 @@
 package com.kyleu.projectile.controllers.sitemap
 
 import com.kyleu.projectile.controllers.AuthController
-import com.kyleu.projectile.models.menu.NavMenu
+import com.kyleu.projectile.models.menu.{NavMenu, SystemMenu}
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
+import com.kyleu.projectile.models.web.InternalIcons
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @javax.inject.Singleton
 class SitemapController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("sitemap") {
   ApplicationFeature.enable(ApplicationFeature.Sitemap)
-  // SystemMenu.addRootMenu(key, "Sitemap", Some("The sitemap of this application"), SitemapController.sitemap(), InternalIcons.sitemap)
+  SystemMenu.addToolMenu("sitemap", "Sitemap", Some("The sitemap of this application"), routes.SitemapController.sitemap(), InternalIcons.sitemap)
 
   def sitemap() = menu("")
 

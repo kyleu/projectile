@@ -27,7 +27,7 @@ class GraphQLController @javax.inject.Inject() (
   ApplicationFeature.enable(ApplicationFeature.Graphql)
   PermissionService.registerModel("tools", "GraphQL", "GraphQL", Some(InternalIcons.graphql), "post", "ide", "visualize")
   val description = "A full GraphQL IDE and schema visualizer"
-  SystemMenu.addRootMenu(value, "GraphQL", Some(description), GraphQLController.iframe(), InternalIcons.graphql, ("tools", "GraphQL", "ide"))
+  SystemMenu.addToolMenu(value, "GraphQL", Some(description), GraphQLController.iframe(), InternalIcons.graphql, ("tools", "GraphQL", "ide"))
 
   private[this] val secretKey = "GraphTastesBad"
 

@@ -13,7 +13,12 @@
   })) { url =>
     @if(i.flatSection) {
       <li id="nav-@i.key" class="navigation-header">
-        <a @url.map { u => href="@u" } onclick="return false;" class="navigation-header-text" style="cursor: default;">@i.title</a>
+        @url.map { u =>
+          <a href="@u" class="navigation-header-text" style="cursor: default;">@i.title</a>
+        }
+        @if(url.isEmpty) {
+          <a href="" onclick="return false;" class="navigation-header-text" style="cursor: default;">@i.title</a>
+        }
         <i class="navigation-header-icon material-icons">@com.kyleu.projectile.models.web.InternalIcons.section</i>
       </li>
       @i.children.map { child =>
