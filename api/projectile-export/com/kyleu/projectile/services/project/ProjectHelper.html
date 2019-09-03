@@ -204,12 +204,20 @@
                         <a href="ProjectExportService.html" title="">ProjectExportService</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="trait" href="ProjectFeatureHelper.html" title=""></a>
+                        <a href="ProjectFeatureHelper.html" title="">ProjectFeatureHelper</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="trait" href="" title=""></a>
                         <a href="" title="">ProjectHelper</a>
                       </li><li class="current-entities indented5">
                         <a class="object" href="ProjectLoadService$.html" title=""></a>
                         <a class="class" href="ProjectLoadService.html" title=""></a>
                         <a href="ProjectLoadService.html" title="">ProjectLoadService</a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="trait" href="ProjectPackageHelper.html" title=""></a>
+                        <a href="ProjectPackageHelper.html" title="">ProjectPackageHelper</a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="object" href="ProjectStatusService$.html" title=""></a>
@@ -253,7 +261,7 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">ProjectHelper</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">ProjectHelper</span><span class="result"> extends <a href="ProjectFeatureHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectFeatureHelper">ProjectFeatureHelper</a> with <a href="ProjectPackageHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectPackageHelper">ProjectPackageHelper</a></span>
       </span>
       </h4>
 
@@ -262,7 +270,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="ProjectPackageHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectPackageHelper">ProjectPackageHelper</a>, <a href="ProjectFeatureHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectFeatureHelper">ProjectFeatureHelper</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
             <span class="toggle">
               Known Subclasses
@@ -293,7 +301,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="com.kyleu.projectile.services.project.ProjectHelper"><span>ProjectHelper</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="com.kyleu.projectile.services.project.ProjectHelper"><span>ProjectHelper</span></li><li class="in" name="com.kyleu.projectile.services.project.ProjectPackageHelper"><span>ProjectPackageHelper</span></li><li class="in" name="com.kyleu.projectile.services.project.ProjectFeatureHelper"><span>ProjectFeatureHelper</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -954,6 +962,38 @@
       </span>
       
       
+    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#setFeature" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="setFeature(key:String,feature:String):Boolean"></a><a id="setFeature(String,String):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/project/ProjectHelper.html#setFeature(key:String,feature:String):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setFeature</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="feature">feature: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
+    </li><li name="com.kyleu.projectile.services.project.ProjectHelper#setPackage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="setPackage(key:String,item:String,pkg:String):String"></a><a id="setPackage(String,String,String):String"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/project/ProjectHelper.html#setPackage(key:String,item:String,pkg:String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setPackage</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="item">item: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pkg">pkg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -986,6 +1026,38 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.ProjectFeatureHelper#toggleFeature" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toggleFeature(key:String,feature:String):Boolean"></a><a id="toggleFeature(String,String):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/project/ProjectHelper.html#toggleFeature(key:String,feature:String):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toggleFeature</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="feature">feature: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProjectFeatureHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectFeatureHelper">ProjectFeatureHelper</a></dd></dl></div>
+    </li><li name="com.kyleu.projectile.services.project.ProjectPackageHelper#togglePackage" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="togglePackage(key:String,item:String,pkg:String):String"></a><a id="togglePackage(String,String,String):String"></a>
+      <span class="permalink">
+      <a href="../../../../../com/kyleu/projectile/services/project/ProjectHelper.html#togglePackage(key:String,item:String,pkg:String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">togglePackage</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="item">item: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pkg">pkg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ProjectPackageHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectPackageHelper">ProjectPackageHelper</a></dd></dl></div>
     </li><li name="com.kyleu.projectile.services.project.ProjectHelper#updateAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="updateAll():Seq[String]"></a>
       <span class="permalink">
@@ -1096,7 +1168,11 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="com.kyleu.projectile.services.project.ProjectPackageHelper">
+              <h3>Inherited from <a href="ProjectPackageHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectPackageHelper">ProjectPackageHelper</a></h3>
+            </div><div class="parent" name="com.kyleu.projectile.services.project.ProjectFeatureHelper">
+              <h3>Inherited from <a href="ProjectFeatureHelper.html" class="extype" name="com.kyleu.projectile.services.project.ProjectFeatureHelper">ProjectFeatureHelper</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
