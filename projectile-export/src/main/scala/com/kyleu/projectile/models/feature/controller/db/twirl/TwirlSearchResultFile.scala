@@ -11,7 +11,7 @@ object TwirlSearchResultFile {
     file.add(s"""@(model: ${model.fullClassPath(config)}, hit: String)<div class="search-result">""", 1)
 
     file.add(s"""<div class="right">""", 1)
-    file.add(TwirlHelper.iconHtml(config = config, propertyName = model.propertyName) + " " + model.title)
+    file.add(TwirlHelper.iconHtml(config = config, propertyName = model.propertyName, provided = model.provided) + " " + model.title)
     file.add(s"</div>", -1)
 
     file.add("<div>", 1)

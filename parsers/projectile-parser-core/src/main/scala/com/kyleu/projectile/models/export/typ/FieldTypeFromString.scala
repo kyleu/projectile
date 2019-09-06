@@ -16,10 +16,10 @@ object FieldTypeFromString {
     case DoubleType => s + ".toDouble"
     case BigDecimalType => s"BigDecimal($s)"
 
-    case DateType => s + s"DateUtils.fromDateString($s)"
-    case TimeType => s + s"DateUtils.fromTimeString($s)"
-    case TimestampType => s + s"DateUtils.fromIsoString($s)"
-    case TimestampZonedType => s + s"DateUtils.fromIsoStringZoned($s)"
+    case DateType => s"DateUtils.fromDateString($s)"
+    case TimeType => s"DateUtils.fromTimeString($s)"
+    case TimestampType => s"DateUtils.fromIsoString($s)"
+    case TimestampZonedType => s"DateUtils.fromIsoStringZoned($s)"
 
     case UuidType => s"UUID.fromString($s)"
 

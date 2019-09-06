@@ -46,7 +46,7 @@ abstract class WebSocketController[ClientMsg: Decoder: Pickler, ServerMsg: Encod
     app.silhouette.UserAwareRequestHandler { ua => Future.successful(HandlerResult(Ok, ua.identity)) }.map {
       case HandlerResult(_, user) => Right(WebSocketUtils.actorRef(connectionId) { out =>
         val creds = user match {
-          case Some(u) => UserCredentials(u, request.remoteAddress)
+          case Some(u) => UserCredentials(u.user, request.remoteAddress)
           case None => Credentials.anonymous
         }
         onConnect(connectionId = connectionId, request = request, creds = creds, out = out)

@@ -1,0 +1,13 @@
+{
+  "key" : "audit_record",
+  "pkg" : [ "internal" ],
+  "features" : [ "audit", "shared", "datamodel", "auth", "graphql", "service", "slick", "controller", "scalajs", "notes", "json", "core" ],
+  "ignored" : [ ],
+  "overrides" : [ {
+    "k" : "propertyName",
+    "v" : "auditRecord"
+  }, {
+    "k" : "className",
+    "v" : "AuditRecord"
+  } ]
+}

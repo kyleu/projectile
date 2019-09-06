@@ -22,7 +22,6 @@ object ClassParser {
       title = title,
       description = None,
       plural = ExportHelper.toDefaultPlural(title),
-      arguments = Nil,
       fields = Nil
     )
     ctx -> out.withModels(model)

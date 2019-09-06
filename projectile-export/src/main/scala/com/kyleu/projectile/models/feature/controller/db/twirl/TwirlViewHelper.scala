@@ -33,7 +33,7 @@ object TwirlViewHelper {
       val linkUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName})"
       file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
       file.add("""<div class="collapsible-header">""", 1)
-      file.add(TwirlHelper.iconHtml(config = config, propertyName = src.propertyName))
+      file.add(TwirlHelper.iconHtml(config = config, propertyName = src.propertyName, provided = src.provided))
       file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
       file.add(s"""<span class="badge"><a href="@$linkUrl"><i class="material-icons">insert_link</i></a></span>""")
       file.add("</div>", -1)
@@ -65,7 +65,7 @@ object TwirlViewHelper {
             throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
           }
           file.add(forField(config, field))
-          val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName)
+          val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName, provided = tgt.provided)
           if (field.required) {
             file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
           } else {

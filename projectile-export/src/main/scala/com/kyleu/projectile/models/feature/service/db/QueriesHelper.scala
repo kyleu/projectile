@@ -52,6 +52,7 @@ object QueriesHelper {
       case _ => // noop
     }
     val ft = field.scalaType(config)
+    field.addImport(config, file, pkg = model.modelPackage(config))
     file.add(s"""final case class CountBy$propCls($propId: $ft) extends ColCount(column = "${field.key}", values = Seq($propId))""")
     val searchArgs = "orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None"
     file.add(s"""final case class GetBy$propCls($propId: $ft, $searchArgs) extends SeqQuery(""", 1)

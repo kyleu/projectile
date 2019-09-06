@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldTypeFromString
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ServiceInserts {
@@ -39,6 +40,9 @@ object ServiceInserts {
     model.pkFields match {
       case Nil => file.add(s"Future.successful(None: Option[${model.className}])")
       case pk =>
+        if (pk.exists(x => x.t.isDate)) {
+          file.addImport(CommonImportHelper.get(config, "DateUtils")._1, "DateUtils")
+        }
         val lookup = pk.map(k => FieldTypeFromString.fromString(config, k.t, s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
         if (model.features(ModelFeature.Audit)) {
           val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")

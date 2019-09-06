@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.queries.{BaseQueries, ResultFieldHelper}
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
-import com.kyleu.projectile.models.user.SystemUser
+import com.kyleu.projectile.models.user.{LoginCredentials, SystemUser}
 import com.mohiva.play.silhouette.api.LoginInfo
 
 object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_user") {
@@ -98,7 +98,7 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
   override protected def fromRow(row: Row) = {
     val id = UuidType(row, "id")
     val username = StringType(row, "username")
-    val profile = LoginInfo(StringType(row, "provider"), StringType(row, "key"))
+    val profile = LoginCredentials(StringType(row, "provider"), StringType(row, "key"))
     val role = StringType(row, "role")
     val settings = JsonType(row, "settings")
     val created = TimestampType(row, "created")

@@ -2,5 +2,8 @@
 
 ## SQL Prompt: Allows execution of arbitrary sql, with a UI that adds a small safety net (still quite dangerous!)
 
-GET         /            com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sql
-POST        /            com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sqlPost
+GET         /                     com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sql(t: Option[String] ?= None)
+POST        /                     com.kyleu.projectile.controllers.admin.sql.SqlBackdoorController.sqlPost
+
+GET         /tables               com.kyleu.projectile.controllers.admin.sql.SqlTableController.list
+# GET         /export/:table        com.kyleu.projectile.controllers.admin.sql.SqlTableController.export(table)

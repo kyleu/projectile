@@ -46,7 +46,7 @@ object CommandLineOutput {
       Nil
     } else {
       s"  [${xs.size}] ${if (xs.size == 1) { keySingle } else { keyPlural }}:" +: {
-        xs.groupBy(_._1.mkString(".")).mapValues(_.map(_._2).sorted).toSeq.sortBy(_._1).map { v =>
+        xs.groupBy(_._1.mkString(".")).map(x => x._1 -> x._2.map(_._2).sorted).toSeq.sortBy(_._1).map { v =>
           "  - [" + (if (v._1.isEmpty) { "root package" } else { v._1 }) + "]: " + v._2.mkString(", ")
         }
       }

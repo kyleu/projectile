@@ -5,7 +5,7 @@ import java.util.UUID
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.auth.{AuthEnv, UserCredentials}
 import com.kyleu.projectile.models.module.Application
-import com.kyleu.projectile.models.user.SystemUser
+import com.kyleu.projectile.models.user.{LoginCredentials, SystemUser, SystemUserIdentity}
 import com.kyleu.projectile.services.user.{SystemUserSearchService, SystemUserService}
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
@@ -45,7 +45,7 @@ class SocialAuthController @javax.inject.Inject() (
                   val newUser = SystemUser(
                     id = UUID.randomUUID,
                     username = if (existing.isDefined) { username + "-" + scala.util.Random.alphanumeric.take(4).mkString } else { username },
-                    profile = profile.loginInfo,
+                    profile = LoginCredentials(profile.loginInfo.providerID, profile.loginInfo.providerKey),
                     role = configProvider.defaultRole,
                     settings = configProvider.defaultSettings
                   )
@@ -60,7 +60,7 @@ class SocialAuthController @javax.inject.Inject() (
               value <- silhouette.env.authenticatorService.init(authenticator)
               result <- silhouette.env.authenticatorService.embed(value, Redirect("/"))
             } yield {
-              silhouette.env.eventBus.publish(LoginEvent(user, request))
+              silhouette.env.eventBus.publish(LoginEvent(SystemUserIdentity.from(user), request))
               result
             }
           }

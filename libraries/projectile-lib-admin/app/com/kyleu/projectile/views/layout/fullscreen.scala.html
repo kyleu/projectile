@@ -1,8 +1,8 @@
 @(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, scripts: Seq[String] = Nil, stylesheets: Seq[String] = Nil)(content: Html)
 @com.kyleu.projectile.views.html.layout.core(
   title = title,
-  scripts = com.kyleu.projectile.models.web.ControllerUtils.commonScripts ++ scripts,
-  stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets,
+  scripts = com.kyleu.projectile.models.web.ControllerUtils.commonScripts ++ scripts ++ cfg.html.additionalScripts,
+  stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets ++ cfg.html.additionalStylesheets,
   additionalContent = cfg.content.head
 ) {
   @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>

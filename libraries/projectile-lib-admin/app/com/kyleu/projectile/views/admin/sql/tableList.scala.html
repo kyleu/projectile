@@ -1,0 +1,18 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, tables: Seq[String])(
+    implicit flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Database Tables", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.sql)) {
+  <ul class="collection with-header">
+    <div class="collection-header">
+      <h5>Database Tables</h5>
+    </div>
+    @tables.map { t =>
+      <li class="collection-item">
+        <div class="right">
+          <a href="@com.kyleu.projectile.controllers.admin.sql.routes.SqlBackdoorController.sql(Some(t))" class="btn @cfg.user.buttonColor">Query</a>
+        </div>
+        <h6>@t</h6>
+        <div class="clear"></div>
+      </li>
+    }
+  </ul>
+}

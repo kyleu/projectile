@@ -27,3 +27,8 @@ trait FlatSingleRowQuery[A] extends Query[Option[A]] {
   def flatMap(row: Row): Option[A]
   override final def reduce(rows: Iterator[Row]) = if (rows.hasNext) { flatMap(rows.next()) } else { None }
 }
+
+trait ListQuery[A] extends Query[List[A]] {
+  def map(row: Row): A
+  override final def reduce(rows: Iterator[Row]) = rows.map(map).toList
+}

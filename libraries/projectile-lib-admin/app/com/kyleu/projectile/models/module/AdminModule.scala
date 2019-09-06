@@ -22,6 +22,7 @@ import com.kyleu.projectile.util.JsonSerializers._
 import com.kyleu.projectile.util.tracing.{OpenTracingService, TracingService}
 import io.circe.JsonObject
 import net.codingwell.scalaguice.ScalaModule
+import play.twirl.api.HtmlFormat
 
 import scala.concurrent.ExecutionContext
 
@@ -58,23 +59,25 @@ abstract class AdminModule() extends AbstractModule with ScalaModule {
   // UI
   protected[this] def navUrls: NavUrls = NavUrls(signupAllowed = allowSignup, oauthProviders = oauthProviders)
   protected[this] def navContent: NavContent = NavContent()
+  protected[this] def navHtml(menu: HtmlFormat.Appendable) = NavHtml(menu = menu)
   protected[this] def errorActions = new ErrorHandler.Actions()
+
   protected[this] def uiConfigProvider: Application.UiConfigProvider = new Application.UiConfigProvider {
     override def allowRegistration = allowSignup
     override def defaultRole = initialRole
     override def defaultSettings = initialSettings
+
     override def configForUser(su: Option[SystemUser], notifications: Seq[Notification], breadcrumbs: String*) = su match {
       case None => UiConfig(projectName = projectName, menu = menuProvider.guestMenu, urls = navUrls, content = navContent)
       case Some(u) =>
         val menu = menuProvider.menuFor(Some(u))
         val user = u.settingsObj.copy(avatarUrl = Some(GravatarUrl(u.email)))
-        val html = NavHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, GravatarUrl(u.email), breadcrumbs, notifications))
         UiConfig(
           projectName = projectName,
           userId = Some(u.id),
           menu = menu,
           urls = navUrls,
-          html = html,
+          html = navHtml(com.kyleu.projectile.views.html.components.headerRightMenu(u.username, GravatarUrl(u.email), breadcrumbs, notifications)),
           content = navContent,
           user = user,
           notifications = notifications,

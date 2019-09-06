@@ -24,7 +24,7 @@ case class ExportModel(
     title: String,
     description: Option[String],
     plural: String,
-    arguments: List[ExportField],
+    arguments: List[ExportField] = Nil,
     fields: List[ExportField],
     pkColumns: List[Column] = Nil,
     foreignKeys: List[ForeignKey] = Nil,
@@ -33,6 +33,7 @@ case class ExportModel(
     extendsClass: Option[String] = None,
     icon: Option[String] = None,
     readOnly: Boolean = false,
+    provided: Boolean = false,
     source: Option[String] = None
 ) {
   def apply(m: ModelMember) = copy(
@@ -57,7 +58,8 @@ case class ExportModel(
     },
     references = references.filterNot(r => m.ignored.contains("reference." + r.name)).map { r =>
       r.copy(propertyName = m.getOverride(s"reference.${r.name}.propertyName", r.propertyName))
-    }
+    },
+    provided = m.getOverride("provided", provided.toString) == "true"
   )
 
   val fullClassName = (pkg :+ className).mkString(".")
@@ -81,8 +83,9 @@ case class ExportModel(
     case _ => None
   }) ++ searchFields.map(_.key)).distinct.sorted
 
+  private[this] def p(cfg: ExportConfiguration) = if (provided) { cfg.systemPackage } else { cfg.applicationPackage }
   def modelPackage(config: ExportConfiguration) = {
-    val prelude = if (inputType.isThrift) { Nil } else { config.applicationPackage }
+    val prelude = if (inputType.isThrift) { Nil } else { p(config) }
     prelude ++ (pkg.lastOption match {
       case Some("models") => pkg
       case Some("fragment") => pkg
@@ -93,18 +96,17 @@ case class ExportModel(
       case _ => "models" +: pkg
     })
   }
-
-  def queriesPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "queries") ++ pkg
-  def graphqlPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "graphql") ++ pkg
-  def slickPackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "table") ++ pkg
-  def doobiePackage(config: ExportConfiguration) = config.applicationPackage ++ List("models", "doobie") ++ pkg
-  def servicePackage(config: ExportConfiguration) = config.applicationPackage ++ List("services") ++ pkg
+  def queriesPackage(config: ExportConfiguration) = p(config) ++ List("models", "queries") ++ pkg
+  def graphqlPackage(config: ExportConfiguration) = p(config) ++ List("models", "graphql") ++ pkg
+  def slickPackage(config: ExportConfiguration) = p(config) ++ List("models", "table") ++ pkg
+  def doobiePackage(config: ExportConfiguration) = p(config) ++ List("models", "doobie") ++ pkg
+  def servicePackage(config: ExportConfiguration) = p(config) ++ List("services") ++ pkg
   def controllerPackage(config: ExportConfiguration) = {
-    config.applicationPackage ++ List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
+    p(config) ++ List("controllers", "admin") ++ (if (pkg.isEmpty) { List("system") } else { pkg })
   }
   def routesPackage(config: ExportConfiguration) = controllerPackage(config) :+ "routes"
-  def viewPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "admin") ++ pkg
-  def viewHtmlPackage(config: ExportConfiguration) = config.applicationPackage ++ Seq("views", "html", "admin") ++ pkg
+  def viewPackage(config: ExportConfiguration) = p(config) ++ Seq("views", "admin") ++ pkg
+  def viewHtmlPackage(config: ExportConfiguration) = p(config) ++ Seq("views", "html", "admin") ++ pkg
 
   def fullServicePath(config: ExportConfiguration) = s"${(servicePackage(config) :+ className).mkString(".")}Service"
   def injectedService(config: ExportConfiguration) = s"injector.getInstance(classOf[${fullServicePath(config)}])"
@@ -114,4 +116,10 @@ case class ExportModel(
   }
   def getFieldOpt(k: String) = fields.find(f => f.key == k || f.propertyName == k)
   def perm(act: String) = s"""("${pkg.headOption.getOrElse("system")}", "$className", "$act")"""
+
+  def iconRef(config: ExportConfiguration) = if (provided) {
+    s"${(config.systemPackage :+ "models" :+ "web").mkString(".")}.InternalIcons.$propertyName"
+  } else {
+    s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.$propertyName"
+  }
 }

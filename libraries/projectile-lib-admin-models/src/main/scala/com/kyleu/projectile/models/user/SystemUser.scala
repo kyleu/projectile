@@ -4,44 +4,40 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import com.kyleu.projectile.models.config.UserSettings
-import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import com.kyleu.projectile.models.result.data.{DataField, DataFieldModel, DataSummary}
 import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import io.circe.JsonObject
 
 object SystemUser {
-  implicit val jsonLoginInfoEncoder: Encoder[LoginInfo] = deriveEncoder
-  implicit val jsonLoginInfoDecoder: Decoder[LoginInfo] = deriveDecoder
-
   implicit val jsonEncoder: Encoder[SystemUser] = deriveEncoder
   implicit val jsonDecoder: Decoder[SystemUser] = deriveDecoder
 
   def empty() = SystemUser(
     id = UUID.randomUUID,
     username = "",
-    profile = LoginInfo("anonymous", "guest"),
+    profile = LoginCredentials("anonymous", "guest"),
     role = "user"
   )
 
   val system = SystemUser(
     id = UUID.fromString("88888888-8888-8888-8888-888888888888"),
     username = "",
-    profile = LoginInfo("anonymous", "system"),
+    profile = LoginCredentials("anonymous", "system"),
     role = "admin"
   )
 
   val guest = SystemUser(
     id = UUID.fromString("77777777-7777-7777-7777-777777777777"),
     username = "guest",
-    profile = LoginInfo("anonymous", "guest"),
+    profile = LoginCredentials("anonymous", "guest"),
     role = "user"
   )
 
   val api = SystemUser(
     id = UUID.fromString("44444444-4444-4444-4444-444444444444"),
     username = "api",
-    profile = LoginInfo("anonymous", "api"),
+    profile = LoginCredentials("anonymous", "api"),
     role = "admin"
   )
 }
@@ -49,11 +45,11 @@ object SystemUser {
 final case class SystemUser(
     id: UUID,
     username: String,
-    profile: LoginInfo,
+    profile: LoginCredentials,
     role: String,
     settings: Json = JsonObject.empty.asJson,
     created: LocalDateTime = DateUtils.now
-) extends Identity with DataFieldModel {
+) extends DataFieldModel {
 
   val email = profile.providerKey
   val provider = profile.providerID

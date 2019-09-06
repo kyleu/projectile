@@ -14,7 +14,7 @@
   @project.models.sortBy(_.key).map { m =>
     <div class="collection-item">
       <div class="right">
-        @if(m.pkg.isEmpty && com.kyleu.projectile.services.project.ProjectLoadService.Provided.models(m.key)) {
+        @if(com.kyleu.projectile.services.project.ProjectLoadService.Provided.models.isDefinedAt(m.key)) {
           <em>provided</em>
         } else {
           @m.pkg.mkString(".")

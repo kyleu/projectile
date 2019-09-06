@@ -41,8 +41,7 @@ object InjectComponentMenu extends FeatureLogic.Inject(path = OutputPath.ServerS
             val lastMember = models.lastOption.contains(model)
             val commaMember = if (lastMember) { "" } else { "," }
             val url = s"${TwirlHelper.routesClass(config, model)}.list().url"
-            val icon = s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.${model.propertyName}"
-            s"""  NavMenu(key = "${model.key}", title = "${model.plural}", url = Some($url), icon = Some($icon))$commaMember"""
+            s"""  NavMenu(key = "${model.key}", title = "${model.plural}", url = Some($url), icon = Some(${model.iconRef(config)}))$commaMember"""
           } :+ t
 
           Some(section -> memberLines)

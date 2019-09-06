@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.export.typ
 import com.kyleu.projectile.util.JsonSerializers._
 import enumeratum.values.{StringEnum, StringEnumEntry}
 
-sealed abstract class FieldType(override val value: String) extends StringEnumEntry {
+sealed abstract class FieldType(override val value: String, val isDate: Boolean = false) extends StringEnumEntry {
   val className = getClass.getSimpleName.stripSuffix("$")
   override def toString = value
 }
@@ -30,10 +30,10 @@ object FieldType extends StringEnum[FieldType] {
   case object DoubleType extends FieldType("double")
   case object BigDecimalType extends FieldType("decimal")
 
-  case object DateType extends FieldType("date")
-  case object TimeType extends FieldType("time")
-  case object TimestampType extends FieldType("timestamp")
-  case object TimestampZonedType extends FieldType("timestamptz")
+  case object DateType extends FieldType("date", isDate = true)
+  case object TimeType extends FieldType("time", isDate = true)
+  case object TimestampType extends FieldType("timestamp", isDate = true)
+  case object TimestampZonedType extends FieldType("timestamptz", isDate = true)
 
   case object RefType extends FieldType("ref")
   case object XmlType extends FieldType("xml")

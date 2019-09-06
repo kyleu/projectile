@@ -3,7 +3,8 @@ package com.kyleu.projectile.services.project
 import better.files.File
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ServiceFeature}
 import com.kyleu.projectile.models.input.Input
-import com.kyleu.projectile.models.project.member.{EnumMember, ModelMember, ServiceMember, UnionMember}
+import com.kyleu.projectile.models.output.OutputPackage
+import com.kyleu.projectile.models.project.member.{EnumMember, MemberOverride, ModelMember, ServiceMember, UnionMember}
 import com.kyleu.projectile.models.project.{Project, ProjectSummary}
 import com.kyleu.projectile.services.ProjectileService
 import com.kyleu.projectile.services.config.ConfigService
@@ -13,9 +14,17 @@ import io.scalaland.chimney.dsl._
 
 object ProjectLoadService {
   object Provided {
-    val models = Set(
-      "audit", "audit_record", "feedback", "flyway_schema_history", "note", "oauth2_info", "password_info",
-      "scheduled_task_run", "system_permission", "system_user"
+    val models = Map(
+      "audit" -> (("audit", "audit", "Audit")),
+      "audit_record" -> (("audit", "auditRecord", "AuditRecord")),
+      "feedback" -> (("feedback", "feedback", "Feedback")),
+      "flyway_schema_history" -> (("migrate", "migration", "Migration")),
+      "note" -> (("note", "note", "Note")),
+      "oauth2_info" -> (("auth", "oAuth2Info", "OAuth2Info")),
+      "password_info" -> (("auth", "passwordInfo", "PasswordInfo")),
+      "scheduled_task_run" -> (("task", "scheduledTaskRun", "ScheduledTaskRun")),
+      "system_permission" -> (("permission", "permission", "Permission")),
+      "system_user" -> (("user", "systemUser", "SystemUser"))
     )
   }
 }
@@ -41,9 +50,13 @@ class ProjectLoadService(p: ProjectileService) {
 
     val customModels = loadDir[ModelMember](dir, s"${summary.key}/model")
     val models = (customModels.map(_.key) ++ input.models.map(_.key)).distinct.sorted.map(key => customModels.find(_.key == key).getOrElse {
-      val features = if (ProjectLoadService.Provided.models(key)) { Set.empty[ModelFeature] } else { summary.defaultModelFeatures.map(ModelFeature.withValue) }
       input.models.find(_.key == key) match {
-        case Some(im) => ModelMember(pkg = im.pkg, key = key, features = features)
+        case Some(im) => ProjectLoadService.Provided.models.get(key) match {
+          case Some(opts) => ModelMember(pkg = summary.packages(OutputPackage.System) :+ opts._1, key = key, features = Set.empty, overrides = Seq(
+            MemberOverride(k = "propertyName", v = opts._2), MemberOverride(k = "className", v = opts._3), MemberOverride(k = "provided", v = "true")
+          ))
+          case None => ModelMember(pkg = im.pkg, key = key, features = summary.defaultModelFeatures.map(ModelFeature.withValue))
+        }
         case None => throw new IllegalStateException("Inconceivable!")
       }
     })

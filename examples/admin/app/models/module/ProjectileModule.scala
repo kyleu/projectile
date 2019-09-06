@@ -11,7 +11,12 @@ import models.search.SearchHelper
 import models.template.UserMenu
 import util.Version
 
-class ProjectileModule extends AdminModule(projectName = Version.projectName, allowSignup = true, initialRole = "admin", menuProvider = UserMenu) {
+class ProjectileModule extends AdminModule {
+  override def projectName = Version.projectName
+  override def allowSignup = true
+  override def initialRole = "admin"
+  override def menuProvider = UserMenu
+
   override protected def onStartup(app: Application, injector: Injector) = {
     AuditCallbackProvider.init(new AuditCallbacks(injector))
 

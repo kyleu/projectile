@@ -136,7 +136,7 @@ object Dependencies {
     val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
 
-    val betterFiles = "com.github.pathikrit" %% "better-files" % "3.7.1" // "3.8.0"
+    val betterFiles = "com.github.pathikrit" %% "better-files" % (if(Common.useLatest) { "3.8.0" } else { "3.7.1" })
     val chimney = "io.scalaland" %% "chimney" % "0.3.2"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"

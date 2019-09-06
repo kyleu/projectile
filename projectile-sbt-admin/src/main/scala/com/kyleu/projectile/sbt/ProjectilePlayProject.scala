@@ -22,7 +22,7 @@ object ProjectilePlayProject extends AutoPlugin {
     val projectileProjectTitle = settingKey[String]("The title of your project, used in logs and user interfaces")
     val projectileProjectPort = settingKey[Int]("The http port for your project")
 
-    def projectileLib(k: String) = "com.kyleu" %% s"projectile-lib-$k" % com.kyleu.projectile.sbt.util.Version.version
+    def projectileLib(k: String) = ProjectileScalaSettings.projectileLib(k)
   }
 
   override def requires = SbtProjectile && PlayScala && JavaAppPackaging && UniversalPlugin && DockerPlugin

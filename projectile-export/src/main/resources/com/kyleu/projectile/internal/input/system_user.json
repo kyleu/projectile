@@ -1,0 +1,145 @@
+{
+  "name" : "system_user",
+  "catalog" : null,
+  "schema" : "public",
+  "description" : null,
+  "definition" : null,
+  "columns" : [ {
+    "name" : "id",
+    "description" : null,
+    "definition" : null,
+    "notNull" : true,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "uuid"
+    },
+    "sqlTypeCode" : 1111,
+    "sqlTypeName" : "uuid",
+    "size" : "2147483647",
+    "sizeAsInt" : 2147483647,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "username",
+    "description" : null,
+    "definition" : null,
+    "notNull" : false,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "string"
+    },
+    "sqlTypeCode" : 12,
+    "sqlTypeName" : "varchar",
+    "size" : "256",
+    "sizeAsInt" : 256,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "prefs",
+    "description" : null,
+    "definition" : null,
+    "notNull" : true,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "string"
+    },
+    "sqlTypeCode" : 12,
+    "sqlTypeName" : "varchar",
+    "size" : "4096",
+    "sizeAsInt" : 4096,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "email",
+    "description" : null,
+    "definition" : null,
+    "notNull" : true,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "string"
+    },
+    "sqlTypeCode" : 12,
+    "sqlTypeName" : "varchar",
+    "size" : "1024",
+    "sizeAsInt" : 1024,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "role",
+    "description" : null,
+    "definition" : null,
+    "notNull" : true,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "string"
+    },
+    "sqlTypeCode" : 12,
+    "sqlTypeName" : "varchar",
+    "size" : "64",
+    "sizeAsInt" : 64,
+    "scale" : 0,
+    "defaultValue" : null
+  }, {
+    "name" : "created",
+    "description" : null,
+    "definition" : null,
+    "notNull" : true,
+    "autoIncrement" : false,
+    "columnType" : {
+      "t" : "timestamp"
+    },
+    "sqlTypeCode" : 93,
+    "sqlTypeName" : "timestamp",
+    "size" : "29",
+    "sizeAsInt" : 29,
+    "scale" : 0,
+    "defaultValue" : null
+  } ],
+  "rowIdentifier" : [ "id" ],
+  "primaryKey" : {
+    "name" : "users_pkey",
+    "columns" : [ "id" ]
+  },
+  "foreignKeys" : [ ],
+  "indexes" : [ {
+    "name" : "users_email_idx",
+    "unique" : true,
+    "indexType" : "other",
+    "columns" : [ {
+      "name" : "email",
+      "ascending" : true
+    } ]
+  }, {
+    "name" : "users_email_key",
+    "unique" : true,
+    "indexType" : "other",
+    "columns" : [ {
+      "name" : "email",
+      "ascending" : true
+    } ]
+  }, {
+    "name" : "users_pkey",
+    "unique" : true,
+    "indexType" : "other",
+    "columns" : [ {
+      "name" : "id",
+      "ascending" : true
+    } ]
+  }, {
+    "name" : "users_username_idx",
+    "unique" : true,
+    "indexType" : "other",
+    "columns" : [ {
+      "name" : "username",
+      "ascending" : true
+    } ]
+  }, {
+    "name" : "users_username_key",
+    "unique" : true,
+    "indexType" : "other",
+    "columns" : [ {
+      "name" : "username",
+      "ascending" : true
+    } ]
+  } ]
+}

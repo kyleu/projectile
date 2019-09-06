@@ -9,6 +9,8 @@ object ProjectileScalaSettings {
     val scala213 = "2.13.0"
   }
 
+  def projectileLib(k: String) = "com.kyleu" %% s"projectile-lib-$k" % com.kyleu.projectile.sbt.util.Version.version
+
   private[this] val compileOptionsScala213 = Seq(
     "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
     "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Yrangepos", "-Ywarn-dead-code", "-Ywarn-numeric-widen"

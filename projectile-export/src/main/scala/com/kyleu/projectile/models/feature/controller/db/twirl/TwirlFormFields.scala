@@ -54,8 +54,7 @@ object TwirlFormFields {
         file.add(s"@$formPkg.autocompleteField(", 1)
         file.add(s"""$argsString, dataType = "${field.t}",""")
         val url = s"${TwirlHelper.routesClass(config, ac._2)}.autocomplete()"
-        val icon = (config.applicationPackage :+ "models" :+ "template").mkString(".") + s".Icons.${ac._2.propertyName}"
-        file.add(s"""call = $url, acType = ("${ac._2.propertyName}", "${ac._2.title}"), icon = $icon""")
+        file.add(s"""call = $url, acType = ("${ac._2.propertyName}", "${ac._2.title}"), icon = ${ac._2.iconRef(config)}""")
         file.add(")", -1)
 
       case _ =>

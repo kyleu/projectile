@@ -33,7 +33,7 @@ abstract class AuthController(name: String) extends com.kyleu.projectile.control
       app.silhouette.UserAwareAction.async { implicit request =>
         Instrumented.timeFuture(metricsName + "_request", "action", name + "_" + action) {
           app.tracing.trace(name + ".controller." + action) { td =>
-            enhanceRequest(request, request.identity, td)
+            enhanceRequest(request, request.identity.map(_.user), td)
             block(request)(td)
           }(getTraceData)
         }
@@ -50,7 +50,7 @@ abstract class AuthController(name: String) extends com.kyleu.projectile.control
           case Some(u) => permissions.map(p => PermissionService.check(u.role, p._1, p._2, p._3)).filter(!_._1).map(_._2).toList match {
             case Nil => Instrumented.timeFuture(metricsName + "_request", "action", name + "_" + action) {
               app.tracing.trace(name + ".controller." + action) { td =>
-                enhanceRequest(request, Some(u), td)
+                enhanceRequest(request, Some(u.user), td)
                 val auth = request.authenticator.getOrElse(throw new IllegalStateException("No auth!"))
                 block(SecuredRequest(u, auth, request))(td)
               }(getTraceData)

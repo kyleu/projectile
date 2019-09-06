@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldTypeFromString
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ServiceMutations {
@@ -41,6 +42,9 @@ object ServiceMutations {
       file.add(s"case Some($currName) => db.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
 
       val newCall = model.pkFields.map { f =>
+        if (f.t.isDate) {
+          file.addImport(CommonImportHelper.get(config, "DateUtils")._1, "DateUtils")
+        }
         s"""fields.find(_.k == "${f.propertyName}").flatMap(_.v).map(s => ${FieldTypeFromString.fromString(config, f.t, "s")}).getOrElse(${f.propertyName})"""
       }.mkString(", ")
       file.add(s"getByPrimaryKey(creds, $newCall)(td).map {", 1)

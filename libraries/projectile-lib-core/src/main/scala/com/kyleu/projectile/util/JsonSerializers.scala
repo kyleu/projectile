@@ -24,6 +24,10 @@ object JsonSerializers {
   implicit def encoderOps[A](a: A): io.circe.syntax.EncoderOps[A] = io.circe.syntax.EncoderOps[A](a)
 
   def parseJson(s: String) = io.circe.parser.parse(s)
+  def readJson(s: String) = parseJson(s) match {
+    case Right(json) => json
+    case Left(x) => throw x.underlying
+  }
   def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
   def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
 

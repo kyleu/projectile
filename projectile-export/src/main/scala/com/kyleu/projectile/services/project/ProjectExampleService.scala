@@ -22,6 +22,8 @@ object ProjectExampleService {
       throw new IllegalStateException(s"Project key [$name] may not contain punctuation")
     }
 
+    log(s"Extracting example project to [${to.pathAsString}/$name]")
+
     val is = Resource.getAsStream(s"$dir/$project.zip")
 
     val f = File.newTemporaryFile()
@@ -29,10 +31,14 @@ object ProjectExampleService {
     f.unzipTo(to)
     f.delete()
 
+    log(s"Performing replacements to [${to.pathAsString}]")
+
     val replacements = Map("_PROJECT_NAME" -> name, "_PROJECTILE_VERSION" -> Version.version)
     def replaceToken(f: File): Unit = if (!ExportValidation.badBoys(f.name)) {
       if (f.isDirectory) {
-        f.children.foreach(replaceToken)
+        if (!ExportValidation.badBoys(f.name)) {
+          f.children.foreach(replaceToken)
+        }
       } else if (ExportValidation.extensions.exists(f.name.endsWith)) {
         val orig = f.contentAsString
         val n = replacements.foldLeft(orig)((l, r) => l.replaceAllLiterally(r._1, r._2))
@@ -42,4 +48,6 @@ object ProjectExampleService {
     replaceToken(to)
     true
   }
+
+  private[this] def log(s: String) = println(s) // scalastyle:ignore
 }

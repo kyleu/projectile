@@ -34,7 +34,7 @@ class ProfileController @javax.inject.Inject() (
       case Accepts.Html() =>
         val cfg = app.cfg(u = Some(request.identity), "system", "profile", request.identity.profile.providerKey)
         Ok(com.kyleu.projectile.views.html.auth.profile(request.identity.username, cfg.copy(user = cfg.user.copy(theme = thm.getOrElse(cfg.user.theme))), Nil))
-      case Accepts.Json() => Ok(UserProfile.fromUser(request.identity).asJson)
+      case Accepts.Json() => Ok(UserProfile.fromUser(request.identity.user).asJson)
     })
   }
 
@@ -47,8 +47,8 @@ class ProfileController @javax.inject.Inject() (
       },
       profileData => {
         val settings = profileData.settings.asJson
-        val newUser = request.identity.copy(username = profileData.username, settings = settings)
-        userService.updateUser(request, newUser).map { _ =>
+        val newUser = request.identity.copy(user = request.identity.user.copy(username = profileData.username, settings = settings))
+        userService.updateUser(request, newUser.user).map { _ =>
           Redirect(com.kyleu.projectile.controllers.auth.routes.ProfileController.view())
           // throw new IllegalStateException(settings.spaces2)
         }

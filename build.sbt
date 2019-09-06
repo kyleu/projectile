@@ -29,6 +29,8 @@ lazy val `projectile-export` = ProjectileExport.`projectile-export`
 // SBT Plugin
 lazy val `projectile-sbt` = SbtExportPlugin.`projectile-sbt`
 lazy val `projectile-sbt-admin` = SbtExportPlugin.`projectile-sbt-admin`
+lazy val `projectile-lib-admin-models-jvm` = LibraryProjects.`projectile-lib-admin-models-jvm`
+lazy val `projectile-lib-admin-models-js` = LibraryProjects.`projectile-lib-admin-models-js`
 
 // Play Web Application
 lazy val `projectile-server` = Server.`projectile-server`

@@ -4,6 +4,7 @@ import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.auth.UserForms
 import com.kyleu.projectile.models.config.UiConfig
 import com.kyleu.projectile.models.module.Application
+import com.kyleu.projectile.models.user.SystemUserIdentity
 import com.kyleu.projectile.services.user.SystemUserSearchService
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.util.Credentials
@@ -40,7 +41,7 @@ class AuthenticationController @javax.inject.Inject() (
           }
           userSearchService.getByLoginInfo(loginInfo).flatMap {
             case Some(user) => app.silhouette.env.authenticatorService.create(loginInfo).flatMap { authenticator =>
-              app.silhouette.env.eventBus.publish(LoginEvent(user, request))
+              app.silhouette.env.eventBus.publish(LoginEvent(SystemUserIdentity.from(user), request))
               app.silhouette.env.authenticatorService.init(authenticator).flatMap { v =>
                 app.silhouette.env.authenticatorService.embed(v, result).map { x =>
                   log.info(s"Successful sign in for [${credentials.identifier}]")

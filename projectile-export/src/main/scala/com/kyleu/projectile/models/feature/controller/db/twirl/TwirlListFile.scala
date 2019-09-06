@@ -24,7 +24,11 @@ object TwirlListFile {
     listFile.add("cfg = cfg,")
     listFile.add(s"""model = "${model.title}",""")
     listFile.add(s"""modelPlural = "${model.plural}",""")
-    listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")
+    if (model.provided) {
+      listFile.add(s"icon = $modelPkg.web.InternalIcons.${model.propertyName},")
+    } else {
+      listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")
+    }
     listFile.add("cols = Seq(", 1)
     model.searchFields.foreach {
       case c if model.searchFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")

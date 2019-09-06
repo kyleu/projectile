@@ -5,7 +5,7 @@ import java.util.UUID
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.models.auth.{UserCredentials, UserForms}
 import com.kyleu.projectile.models.module.Application
-import com.kyleu.projectile.models.user.SystemUser
+import com.kyleu.projectile.models.user.{LoginCredentials, SystemUser, SystemUserIdentity}
 import com.kyleu.projectile.services.user.{SystemUserSearchService, SystemUserService}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordHasher
@@ -56,7 +56,7 @@ class RegistrationController @javax.inject.Inject() (
             val user = SystemUser(
               id = UUID.randomUUID,
               username = data.username,
-              profile = loginInfo,
+              profile = LoginCredentials(loginInfo.providerID, loginInfo.providerKey),
               role = role,
               settings = configProvider.defaultSettings
             )
@@ -72,8 +72,9 @@ class RegistrationController @javax.inject.Inject() (
                 value <- app.silhouette.env.authenticatorService.init(authenticator)
                 result <- app.silhouette.env.authenticatorService.embed(value, result)
               } yield {
-                app.silhouette.env.eventBus.publish(SignUpEvent(userSaved, request))
-                app.silhouette.env.eventBus.publish(LoginEvent(userSaved, request))
+                val id = SystemUserIdentity.from(userSaved)
+                app.silhouette.env.eventBus.publish(SignUpEvent(id, request))
+                app.silhouette.env.eventBus.publish(LoginEvent(id, request))
                 result.flashing("success" -> "You're all set!")
               }
             }

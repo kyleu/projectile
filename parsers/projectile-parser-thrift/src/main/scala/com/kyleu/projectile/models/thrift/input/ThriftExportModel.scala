@@ -23,7 +23,6 @@ object ThriftExportModel {
       title = title,
       description = None,
       plural = ExportHelper.toDefaultPlural(title),
-      arguments = Nil,
       fields = fields
     )
   }

@@ -1,0 +1,13 @@
+{
+  "key" : "audit",
+  "pkg" : [ "audit" ],
+  "features" : [ "audit", "shared", "datamodel", "auth", "graphql", "service", "slick", "controller", "scalajs", "notes", "json", "core" ],
+  "ignored" : [ ],
+  "overrides" : [ {
+    "k" : "propertyName",
+    "v" : "audit"
+  }, {
+    "k" : "className",
+    "v" : "Audit"
+  } ]
+}

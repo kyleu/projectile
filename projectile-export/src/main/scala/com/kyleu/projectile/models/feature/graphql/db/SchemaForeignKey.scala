@@ -57,7 +57,9 @@ object SchemaForeignKey {
             throw new IllegalStateException(s"Missing target column [${h.target}]")
           })
           fields.foreach(f => f.addImport(config, file, model.pkg))
-          if (targetTable.pkg != model.pkg) { file.addImport(targetTable.graphqlPackage(config), targetTable.className + "Schema") }
+          if (targetTable.pkg != model.pkg) {
+            file.addImport(targetTable.graphqlPackage(config), targetTable.className + "Schema")
+          }
 
           file.add("Field(", 1)
 

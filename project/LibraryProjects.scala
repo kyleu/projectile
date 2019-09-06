@@ -18,12 +18,9 @@ object LibraryProjects {
     libraryDependencies ++= {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Serialization.enumeratumCirceVersion
       val boopickle = "io.suzaku" %%% "boopickle" % Serialization.booPickleVersion
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum :+ boopickle
+      val collectionCompat = "org.scala-lang.modules" %%% "scala-collection-compat" % "2.1.2"
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum :+ boopickle :+ collectionCompat
     },
-    libraryDependencies ++= {CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, major)) if major >= 13 => Seq()
-      case _ => Seq("org.scala-lang.modules" %%% "scala-collection-compat" % "2.1.2")
-    }},
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(
       projectId = Common.projectId, projectName = Common.projectName, projectPort = Common.projectPort, pkg = "com.kyleu.projectile.util"
     ).taskValue
@@ -85,20 +82,29 @@ object LibraryProjects {
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)
 
+  private[this] lazy val `projectile-lib-admin-models` = crossProject(JSPlatform, JVMPlatform).withoutSuffixFor(JVMPlatform).crossType(CrossType.Pure).in(
+    file("libraries/projectile-lib-admin-models")
+  ).settings(Common.settings: _*).settings(
+    description := "Models used by the admin library, cross-published for Scala.js"
+  ).jvmConfigure(_.dependsOn(`projectile-lib-core-jvm`)).jsConfigure(_.dependsOn(`projectile-lib-core-js`)).disablePlugins(AssemblyPlugin)
+
+  lazy val `projectile-lib-admin-models-jvm` = `projectile-lib-admin-models`.jvm.withId("projectile-lib-admin-models")
+  lazy val `projectile-lib-admin-models-js` = `projectile-lib-admin-models`.js.withId("projectile-lib-admin-models-js")
+
   lazy val `projectile-lib-admin` = libraryProject(project in file("libraries/projectile-lib-admin")).settings(
     description := "A full-featured admin web app with a lovely UI",
     libraryDependencies ++= Authentication.all ++ WebJars.all ++ Seq(
       Play.cache, Play.filters, Play.guice, Play.mailer, Play.twirl, Play.ws, Utils.betterFiles, Utils.commonsLang, Utils.csv
     ) ++ Compiler.all,
     scalacOptions ++= Common.silencerOptions(baseDirectory.value.getCanonicalPath, pathFilters = Seq(".*html", ".*routes"))
-  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-jdbc`)
+  ).enablePlugins(play.sbt.PlayScala).dependsOn(`projectile-lib-graphql`, `projectile-lib-jdbc`, `projectile-lib-admin-models-jvm`)
 
   lazy val all = Seq(
     `projectile-lib-core-jvm`, `projectile-lib-core-js`,
     `projectile-lib-scala`, `projectile-lib-tracing`,
     `projectile-lib-jdbc`, `projectile-lib-doobie`, `projectile-lib-slick`,
     `projectile-lib-graphql`, `projectile-lib-scalajs`,
-    `projectile-lib-admin`
+    `projectile-lib-admin`, `projectile-lib-admin-models-jvm`, `projectile-lib-admin-models-js`
   ) ++ (if(Common.useLatest) { Nil } else { Seq(`projectile-lib-thrift`) })
   lazy val allReferences = all.map(_.project)
 }

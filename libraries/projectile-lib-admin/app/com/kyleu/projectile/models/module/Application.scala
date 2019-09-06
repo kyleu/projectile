@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.auth.AuthEnv
 import com.kyleu.projectile.models.config.{Configuration, UiConfig, UserSettings}
 import com.kyleu.projectile.models.notification.Notification
 import com.kyleu.projectile.models.queries.permission.PermissionQueries
-import com.kyleu.projectile.models.user.SystemUser
+import com.kyleu.projectile.models.user.{SystemUser, SystemUserIdentity}
 import com.kyleu.projectile.models.web.TracingWSClient
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.cache.CacheService
@@ -52,8 +52,8 @@ class Application @javax.inject.Inject() (
 ) extends Logging {
   val errors = new ApplicationErrors(this)
 
-  def cfg(u: Option[SystemUser], breadcrumbs: String*)(implicit td: TraceData) = {
-    uiConfigProvider.configForUser(u, NotificationService.getNotifications(u), breadcrumbs: _*)
+  def cfg(u: Option[SystemUserIdentity], breadcrumbs: String*)(implicit td: TraceData) = {
+    uiConfigProvider.configForUser(u.map(_.user), NotificationService.getNotifications(u.map(_.user)), breadcrumbs: _*)
   }
 
   def reload(td: TraceData) = {

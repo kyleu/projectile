@@ -18,8 +18,7 @@ object TwirlFormFile {
     file.add(s"@(cfg: $uc, model: ${model.fullClassPath(config)}, $extraArgs)(")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
 
-    val icon = s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.${model.propertyName}"
-    file.add(s""")@$systemViewPkg.layout.page(title = title, cfg = cfg, icon = Some($icon)) {""", 1)
+    file.add(s""")@$systemViewPkg.layout.page(title = title, cfg = cfg, icon = Some(${model.iconRef(config)})) {""", 1)
 
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     addContent(config, model, file)

@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.database.input
 
-import com.kyleu.projectile.models.database.schema.Table
+import com.kyleu.projectile.models.database.schema.{ProvidedModels, Table}
 import com.kyleu.projectile.models.export.config.{ExportConfigurationDefault, ExportConfigurationHelper}
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel}
 import com.kyleu.projectile.models.output.ExportHelper.{toClassName, toDefaultTitle, toIdentifier}
@@ -21,11 +21,11 @@ object TableExportModel {
       title = title,
       description = t.description,
       plural = ExportHelper.toDefaultPlural(title),
-      arguments = Nil,
       fields = loadTableFields(t, enums),
       pkColumns = ExportConfigurationHelper.pkColumns(t),
       foreignKeys = t.foreignKeys.groupBy(x => x.references).map(_._2.headOption.getOrElse(throw new IllegalStateException())).toList,
-      references = ExportConfigurationHelper.references(tables, t, Map.empty)
+      references = ExportConfigurationHelper.references(tables, t, Map.empty),
+      provided = ProvidedModels.models.isDefinedAt(t.name)
     )
   }
 
