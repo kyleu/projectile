@@ -31,7 +31,7 @@ object CsvUtils {
       val amt = NumberUtils.withCommas(rows.size)
       val totes = NumberUtils.withCommas(totalCount)
       writer.writeRow(Seq(
-        s"# $n export with $amt out of $totes results, generated ${DateUtils.niceDateTime(DateUtils.now)}."
+        s"# $n export with $amt out of $totes results, generated ${DateUtils.niceNow}."
       ))
     }
     trace.annotate("exported")

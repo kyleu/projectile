@@ -32,7 +32,11 @@ object ServiceInserts {
     file.add("}", -1)
 
     file.add(s"""def insertBatch(creds: Credentials, models: Seq[${model.className}])(implicit trace: TraceData) = $editCheck{""", 1)
-    file.add(s"""traceF("insertBatch")(td => db.executeF($queriesFilename.insertBatch(models))(td))""")
+    file.add(s"""traceF("insertBatch")(td => if(models.isEmpty) {""")
+    file.add(s"  Future.successful(Nil)")
+    file.add(s"} else {")
+    file.add(s"  db.executeF($queriesFilename.insertBatch(models))(td)")
+    file.add("})")
     file.add("}", -1)
 
     file.add(s"""def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = $editCheck{""", 1)

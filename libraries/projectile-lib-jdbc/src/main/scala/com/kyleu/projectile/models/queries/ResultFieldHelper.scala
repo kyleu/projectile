@@ -46,6 +46,8 @@ object ResultFieldHelper {
         case FilterOp.Like => "(" + filter.v.map(_ => s"$col like ?").mkString(" or ") + ")"
         case FilterOp.GreaterThanOrEqual => "(" + vals.map(_ => s"$col >= ?").mkString(" or ") + ")"
         case FilterOp.LessThanOrEqual => "(" + vals.map(_ => s"$col <= ?").mkString(" or ") + ")"
+        case FilterOp.IsNull => s"$col is null"
+        case FilterOp.IsNotNull => s"$col is not null"
         case x => throw new IllegalStateException(s"Operation [$x] is not currently supported")
       }
     }

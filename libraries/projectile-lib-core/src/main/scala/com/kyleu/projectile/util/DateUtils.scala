@@ -40,6 +40,7 @@ object DateUtils {
   def niceTime(t: LocalTime) = timeFmt.format(t)
   def niceDateTime(dt: LocalDateTime) = s"${niceDate(dt.toLocalDate)} ${niceTime(dt.toLocalTime)} UTC"
   def niceDateTimeZoned(dt: ZonedDateTime) = s"${niceDate(dt.toLocalDate)} ${niceTime(dt.toLocalTime)} ${dt.getZone.getId}"
+  def niceNow() = niceDateTime(now)
 
   private[this] val dtFmtIso = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
   private[this] val dtFmtMillis = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")

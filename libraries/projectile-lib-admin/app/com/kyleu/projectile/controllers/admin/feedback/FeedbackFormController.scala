@@ -47,7 +47,7 @@ class FeedbackFormController @javax.inject.Inject() (
 
     val from = "kyle@kyleu.com"
     val to = "kyle@kyleu.com"
-    val dt = DateUtils.niceDateTime(DateUtils.now)
+    val dt = DateUtils.niceNow
     val author = s"${sender._2} [${sender._1}]"
 
     val email = Email(
