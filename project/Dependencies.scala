@@ -49,7 +49,7 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.12.0-RC3"
+    val version = "0.12.0-RC4"
 
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.3.1"
@@ -80,7 +80,7 @@ object Dependencies {
   }
 
   object Metrics {
-    val version = "1.2.0"
+    val version = "1.2.1"
     val micrometerCore = "io.micrometer" % "micrometer-core" % version
     val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
     val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
@@ -145,7 +145,7 @@ object Dependencies {
     val commonsLang = "org.apache.commons" % "commons-lang3" % "3.9"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.6"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % Serialization.enumeratumCirceVersion
-    val guava = "com.google.guava" % "guava" % "27.1-jre"
+    val guava = "com.google.guava" % "guava" % "28.1-jre"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.6"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"

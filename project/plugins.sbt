@@ -16,7 +16,7 @@ addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.9-0.6" exclude("org.scala-
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
 
 // App Packaging
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.25")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.4.1")
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
 
 // Publishing
@@ -30,7 +30,7 @@ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0") // scalastyl
 addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.1") // scalariformFormat
 
 // Documentation
-addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.6.0" exclude("com.typesafe.akka", "akka-"))
+addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.6.4")
 addSbtPlugin("io.github.jonas" % "sbt-paradox-material-theme" % "0.6.0")
-addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.2" exclude("com.lightbend.paradox", "sbt-paradox"))
+addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.3" exclude("com.lightbend.paradox", "sbt-paradox"))
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.3")

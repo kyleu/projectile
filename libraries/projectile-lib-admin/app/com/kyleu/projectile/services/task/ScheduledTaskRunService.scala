@@ -181,7 +181,7 @@ class ScheduledTaskRunService @javax.inject.Inject() (
           AuditHelper.onInsert("ScheduledTaskRun", Seq(n.id.toString), n.toDataFields, creds)
           n
         })
-        case _ => throw new IllegalStateException("Unable to find newly-inserted Scheduled Task Run.")
+        case _ => throw new IllegalStateException("Unable to find newly-inserted Scheduled Task Run")
       }
     }
   }

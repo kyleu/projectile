@@ -162,9 +162,9 @@ class SystemUserService @javax.inject.Inject() (
         case Some(n) =>
           AuditHelper.onInsert("SystemUser", Seq(n.id.toString), n.toDataFields, creds)
           model
-        case None => throw new IllegalStateException("Unable to find System User.")
+        case None => throw new IllegalStateException(s"Unable to find System User with id [${model.id}]")
       }
-      case _ => throw new IllegalStateException("Unable to find newly-inserted System User.")
+      case _ => throw new IllegalStateException(s"Unable to find newly-inserted System User with id [${model.id}]")
     }
   }
   def insertBatch(creds: Credentials, models: Seq[SystemUser])(implicit trace: TraceData) = {

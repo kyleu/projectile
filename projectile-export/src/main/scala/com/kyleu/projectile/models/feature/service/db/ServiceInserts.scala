@@ -26,7 +26,7 @@ object ServiceInserts {
       } else {
         file.add(s"case 1 => getByPrimaryKey(creds, ${model.pkFields.map(f => "model." + f.propertyName).mkString(", ")})(td)")
       }
-      file.add(s"""case _ => throw new IllegalStateException("Unable to find newly-inserted ${model.title}.")""")
+      file.add(s"""case _ => throw new IllegalStateException("Unable to find newly-inserted ${model.title}")""")
     }
     file.add("})", -1)
     file.add("}", -1)

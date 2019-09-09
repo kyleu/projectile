@@ -35,7 +35,7 @@ class AuditService @javax.inject.Inject() (
       persist(a, records)
       log.info(a.changeLog)
     } else {
-      log.info(s"Ignoring audit [${a.id}], as it has no changes.")
+      log.info(s"Ignoring audit [${a.id}], as it has no changes")
     }
   }
 
@@ -43,7 +43,7 @@ class AuditService @javax.inject.Inject() (
     log.debug(s"Persisting audit [${a.id}]...")
     val ret = db.executeF(AuditQueries.insert(a.asInstanceOf[Audit])).flatMap { _ =>
       db.executeF(AuditRecordQueries.insertBatch(records)).map { _ =>
-        log.debug(s"Persisted audit [${a.id}] with [${records.size}] records.")
+        log.debug(s"Persisted audit [${a.id}] with [${records.size}] records")
       }
     }
     ret.failed.foreach(x => log.warn(s"Unable to persist audit [${a.id}].", x))
@@ -226,7 +226,7 @@ class AuditService @javax.inject.Inject() (
     traceF("insert") { td =>
       db.executeF(AuditQueries.insert(model))(td).flatMap {
         case 1 => getByPrimaryKey(creds, model.id)(td)
-        case _ => throw new IllegalStateException("Unable to find newly-inserted Audit.")
+        case _ => throw new IllegalStateException("Unable to find newly-inserted Audit")
       }
     }
   }

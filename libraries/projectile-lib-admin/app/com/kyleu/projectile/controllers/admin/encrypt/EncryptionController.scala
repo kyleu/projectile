@@ -28,12 +28,12 @@ class EncryptionController @javax.inject.Inject() (override val app: Application
     val action = form.get("action")
     val (unenc, enc) = action match {
       case Some("encrypt") =>
-        val u = form.getOrElse("unenc", throw new IllegalStateException("Must provide [unenc] value when action is [encrypt]."))
+        val u = form.getOrElse("unenc", throw new IllegalStateException("Must provide [unenc] value when action is [encrypt]"))
         u -> EncryptionUtils.encrypt(u)
       case Some("decrypt") =>
-        val e = form.getOrElse("enc", throw new IllegalStateException("Must provide [enc] value when action is [decrypt]."))
+        val e = form.getOrElse("enc", throw new IllegalStateException("Must provide [enc] value when action is [decrypt]"))
         EncryptionUtils.decrypt(e) -> e
-      case _ => throw new IllegalStateException("Must provide [action] value of \"encrypt\" or \"decrypt\".")
+      case _ => throw new IllegalStateException("Must provide [action] value of \"encrypt\" or \"decrypt\"")
     }
 
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "encryption")

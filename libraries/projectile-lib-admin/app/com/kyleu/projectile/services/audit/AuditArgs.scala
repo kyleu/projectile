@@ -7,7 +7,7 @@ import enumeratum.values.{StringEnum, StringEnumEntry}
 
 object AuditArgs {
   def getArg(id: IndexedSeq[String], i: Int) = {
-    if (id.lengthCompare(i) <= 0) { throw new IllegalStateException(s"Needed at least [${i + 1}] id arguments, only have [${id.length}].") }
+    if (id.lengthCompare(i) <= 0) { throw new IllegalStateException(s"Needed at least [${i + 1}] id arguments, only have [${id.length}]") }
     id(i)
   }
 

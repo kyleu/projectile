@@ -17,7 +17,7 @@ case class Proc(cmd: Seq[String], out: String => Unit, err: String => Unit, log:
     ))
     val exitCode = p.exitValue()
     val dur = System.currentTimeMillis - startMs
-    log(s"Ran [${cmd.mkString(" ")}] in [${dur}ms] with exit code [$exitCode].")
+    log(s"Ran [${cmd.mkString(" ")}] in [${dur}ms] with exit code [$exitCode]")
     exitCode -> dur
   }
 

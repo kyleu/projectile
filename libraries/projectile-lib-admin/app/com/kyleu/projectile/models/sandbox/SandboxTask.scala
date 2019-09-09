@@ -46,7 +46,7 @@ abstract class SandboxTask(val id: String, val name: String, val description: St
       val startMs = System.currentTimeMillis
       val result = call(cfg)(sandboxTrace).map { r =>
         val res = SandboxTask.Result(this, cfg.argument, "OK", r, (System.currentTimeMillis - startMs).toInt)
-        log.info(s"Completed sandbox task [$id] with status [${res.status}] in [${res.elapsed}ms].")
+        log.info(s"Completed sandbox task [$id] with status [${res.status}] in [${res.elapsed}ms]")
         res
       }
       result

@@ -82,7 +82,7 @@ class ProfileController @javax.inject.Inject() (
               result <- app.silhouette.env.authenticatorService.renew(authenticator, okResponse)
             } yield result
           }.recover {
-            case e: ProviderException => errorResponse(s"Old password does not match (${e.getMessage}).")
+            case e: ProviderException => errorResponse(s"Old password does not match (${e.getMessage})")
           }
         }
       }

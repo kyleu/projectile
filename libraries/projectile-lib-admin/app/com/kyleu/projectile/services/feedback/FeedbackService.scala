@@ -197,7 +197,7 @@ class FeedbackService @javax.inject.Inject() (
     traceF("insert") { td =>
       db.executeF(FeedbackQueries.insert(model))(td).flatMap {
         case 1 => getByPrimaryKey(creds, model.id)(td)
-        case _ => throw new IllegalStateException("Unable to find newly-inserted Feedback.")
+        case _ => throw new IllegalStateException("Unable to find newly-inserted Feedback")
       }
     }
   }

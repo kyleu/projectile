@@ -1,6 +1,9 @@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, tasks: Seq[com.kyleu.projectile.models.task.ScheduledTask])(
-    implicit flash: Flash
-)@com.kyleu.projectile.views.html.layout.page(title = "Scheduled Tasks", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.scheduledTaskRun)) {
+@(
+    cfg: com.kyleu.projectile.models.config.UiConfig,
+    tasks: Seq[com.kyleu.projectile.models.task.ScheduledTask],
+    runs: Map[String, com.kyleu.projectile.models.task.ScheduledTaskRun]
+)(implicit flash: Flash)
+@com.kyleu.projectile.views.html.layout.page(title = "Scheduled Tasks", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.scheduledTaskRun)) {
   <ul class="collection with-header">
     <li class="collection-header">
       <div class="right"><a href="@com.kyleu.projectile.controllers.admin.task.routes.ScheduleController.run("all")">Run All</a></div>
@@ -17,6 +20,14 @@
         @task.description.map { desc =>
           <em>@desc</em>
         }
+        <div>
+          @runs.get(task.key).map { r =>
+            Last run on @com.kyleu.projectile.util.DateUtils.niceDateTime(r.started)
+          }
+          @if(!runs.isDefinedAt(task.key)) {
+            Never run
+          }
+        </div>
       </li>
     }
   </ul>

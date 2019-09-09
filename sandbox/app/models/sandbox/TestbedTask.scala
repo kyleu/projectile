@@ -1,4 +1,4 @@
-package models.module
+package models.sandbox
 
 import com.kyleu.projectile.models.sandbox.SandboxTask
 import com.kyleu.projectile.util.CsvUtils

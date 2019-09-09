@@ -1,5 +1,6 @@
 package com.kyleu.projectile.services.task
 
+import com.google.inject.Injector
 import com.kyleu.projectile.models.task.ScheduledTask
 import com.kyleu.projectile.util.Credentials
 import com.kyleu.projectile.util.DateUtils
@@ -15,15 +16,15 @@ object ScheduledTaskRegistry {
   def register(task: ScheduledTask) = all = all :+ task
   def getAll = all
 
-  def byKey(key: String) = all.find(_.key == key).getOrElse(throw new IllegalStateException(s"No task with key [$key]."))
+  def byKey(key: String) = all.find(_.key == key).getOrElse(throw new IllegalStateException(s"No task with key [$key]"))
 
-  def runAll(creds: Credentials, tasks: Seq[ScheduledTask], log: String => Unit)(implicit td: TraceData) = {
-    Future.sequence(tasks.map(t => run(creds, t, log).map(t -> _))).map(_.toMap)
+  def runAll(creds: Credentials, tasks: Seq[ScheduledTask], injector: Injector, log: String => Unit)(implicit td: TraceData) = {
+    Future.sequence(tasks.map(t => run(creds, t, injector, log).map(t -> _))).map(_.toMap)
   }
 
-  def run(creds: Credentials, task: ScheduledTask, log: String => Unit)(implicit td: TraceData) = {
+  def run(creds: Credentials, task: ScheduledTask, injector: Injector, log: String => Unit)(implicit td: TraceData) = {
     val start = DateUtils.nowMillis
-    Try(task.run(creds, log)) match {
+    Try(task.run(creds, injector, log)) match {
       case Success(r) => r.map { ret =>
         val msg = s"Completed task [${task.key}] in [${DateUtils.nowMillis - start}ms]."
         log(msg)

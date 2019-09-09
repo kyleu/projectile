@@ -22,7 +22,7 @@ class OpenApiController @javax.inject.Inject() (override val app: Application)(i
   SystemMenu.addToolMenu(value, "Swagger UI", Some(desc), OpenApiController.ui(), InternalIcons.rest, ("tools", "Rest", "ide"))
 
   private[this] def loadJson(key: String) = {
-    val resource = Option(getClass.getClassLoader.getResourceAsStream(key)).getOrElse(throw new IllegalStateException(s"Cannot load [$key] from classpath."))
+    val resource = Option(getClass.getClassLoader.getResourceAsStream(key)).getOrElse(throw new IllegalStateException(s"Cannot load [$key] from classpath"))
     val content = Source.fromInputStream(resource).getLines.filterNot(_.trim.startsWith("//")).mkString("\n")
     JsonSerializers.parseJson(content) match {
       case Left(x) => throw new IllegalStateException(s"Cannot parse json from [$key].", x)

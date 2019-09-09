@@ -6,8 +6,11 @@ import com.kyleu.projectile.models.module.{AdminModule, Application}
 import com.kyleu.projectile.models.sandbox.SandboxTask
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.status.AppVersions
+import com.kyleu.projectile.services.task.ScheduledTaskRegistry
 import models.graphql.Schema
+import models.sandbox.TestbedTask
 import models.search.SearchHelper
+import models.task.TestTask
 import models.template.UserMenu
 import services.audit.AuditCallbacks
 import services.augment.AugmentRegistry
@@ -28,6 +31,8 @@ class ProjectileModule extends AdminModule() {
     SandboxTask.register(TestbedTask)
 
     inj(injector, classOf[AugmentRegistry])
+
+    ScheduledTaskRegistry.register(TestTask)
 
     /* Start injected startup code */
     /* End injected startup code */

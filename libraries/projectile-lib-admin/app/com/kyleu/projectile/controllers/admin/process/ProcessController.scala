@@ -30,7 +30,7 @@ class ProcessController @javax.inject.Inject() (
   def run(cmd: Option[String]) = withSession("run", ("tools", "Process", "run")) { implicit request => implicit td =>
     val cmdSplit = cmd.getOrElse("").split(' ').filter(_.nonEmpty)
     if (cmdSplit.isEmpty) {
-      throw new IllegalStateException("Please provide a command to run by passing the \"cmd\" query string parameter.")
+      throw new IllegalStateException("Please provide a command to run by passing the \"cmd\" query string parameter")
     }
     val proc = ProcessService.start(request, cmdSplit.toIndexedSeq, o => println(o), (e, d) => log.info(d.toString + ": " + e)) // scalastyle:ignore
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "process")

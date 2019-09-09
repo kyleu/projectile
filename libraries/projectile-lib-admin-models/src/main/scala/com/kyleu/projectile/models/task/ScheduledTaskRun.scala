@@ -61,6 +61,8 @@ final case class ScheduledTaskRun(
     DataField("completed", Some(completed.toString))
   )
 
+  lazy val taskOutput = extract[ScheduledTaskOutput](output)
+
   def toSummary = DataSummary(
     model = "scheduledTaskRunRow",
     pk = id.toString,
