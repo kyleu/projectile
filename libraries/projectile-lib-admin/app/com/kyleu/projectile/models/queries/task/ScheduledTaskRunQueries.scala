@@ -90,6 +90,6 @@ object ScheduledTaskRunQueries extends BaseQueries[ScheduledTaskRun]("scheduledT
     status = StringType(row, "status"),
     output = JsonType(row, "output"),
     started = TimestampType(row, "started"),
-    completed = TimestampType(row, "completed")
+    completed = TimestampType.opt(row, "completed")
   )
 }

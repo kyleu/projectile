@@ -13,7 +13,7 @@
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "app", title = "App", value = Some(model.app), nullable = false)
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "client", title = "Client", value = Some(model.client), nullable = false)
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "server", title = "Server", value = Some(model.server), nullable = false)
-          @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "userId", title = "User Id", value = model.userId.map(_.toString), nullable = false, dataType = "uuid")
+          @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "userId", title = "User Id", value = Some(model.userId.toString), nullable = false, dataType = "uuid")
           @* com.kyleu.projectile.views.html.components.form.tagsField(selected = isNew, key = "tags", title = "Tags", value = Some(model.tags), nullable = false) *@
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "msg", title = "Msg", value = Some(model.msg), nullable = false)
           @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = isNew, key = "started", title = "Started", value = Some(model.started), nullable = false)

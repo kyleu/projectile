@@ -31,6 +31,7 @@ class NoteController @javax.inject.Inject() (
   PermissionService.registerModel("models", "Note", "Note", Some(InternalIcons.note), "view", "edit")
   val desc = "You can log notes on most pages, this lets you manage them"
   SystemMenu.addModelMenu(value, "Notes", Some(desc), NoteController.list(), InternalIcons.note, ("models", "Note", "view"))
+  private[this] val defaultOrderBy = Some("created" -> false)
 
   def addForm(model: String, pk: String) = withSession("add.form", ("models", "Note", "edit")) { implicit request => implicit td =>
     val note = Note.empty(relType = Some(model), relPk = Some(pk), author = request.identity.id)
@@ -60,19 +61,19 @@ class NoteController @javax.inject.Inject() (
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
     withSession("list", ("models", "Note", "view")) { implicit request => implicit td =>
       val startMs = DateUtils.nowMillis
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.note.routes.NoteController.view(model.id))
           case _ => Ok(com.kyleu.projectile.views.html.admin.note.noteList(
-            app.cfg(u = Some(request.identity), "system", "models", "note"),
-            Some(r._1),
-            r._2,
-            q,
-            orderBy,
-            orderAsc,
-            limit.getOrElse(100),
-            offset.getOrElse(0))
+            cfg = app.cfg(u = Some(request.identity), "system", "models", "note"),
+            totalCount = Some(r._1),
+            modelSeq = r._2,
+            q = q,
+            orderBy = orderBys.headOption.map(_.col),
+            orderAsc = orderBys.exists(_.dir.asBool),
+            limit = limit.getOrElse(100),
+            offset = offset.getOrElse(0))
           )
         }
         case MimeTypes.JSON => Ok(NoteResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -83,7 +84,7 @@ class NoteController @javax.inject.Inject() (
 
   def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {
     withSession("autocomplete", ("models", "Note", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))
     }
   }
@@ -92,7 +93,7 @@ class NoteController @javax.inject.Inject() (
     author: UUID, orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false
   ) = {
     withSession("get.by.author", ("models", "Note", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       svc.getByAuthor(request, author, orderBys, limit, offset).map(models => renderChoice(t) {
         case MimeTypes.HTML =>
           val cfg = app.cfg(u = Some(request.identity), "system", "models", "note", "By Author")

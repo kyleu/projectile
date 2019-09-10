@@ -7,17 +7,21 @@ object OrderBy {
   implicit val jsonEncoder: Encoder[OrderBy] = deriveEncoder
   implicit val jsonDecoder: Decoder[OrderBy] = deriveDecoder
 
-  sealed abstract class Direction(val sql: String) extends EnumEntry
+  sealed abstract class Direction(val sql: String, val asBool: Boolean) extends EnumEntry
 
   object Direction extends Enum[Direction] with CirceEnum[Direction] {
-    case object Ascending extends Direction("asc")
-    case object Descending extends Direction("desc")
+    case object Ascending extends Direction("asc", true)
+    case object Descending extends Direction("desc", false)
 
     def fromBoolAsc(b: Boolean) = if (b) { Ascending } else { Descending }
     override val values = findValues
   }
 
-  def forVals(col: Option[String], asc: Boolean) = col.map(c => OrderBy(col = c, dir = OrderBy.Direction.fromBoolAsc(asc)))
+  def forVals(col: Option[String], asc: Boolean, default: Option[(String, Boolean)]) = {
+    col.map(c => OrderBy(col = c, dir = OrderBy.Direction.fromBoolAsc(asc))).orElse(default.map {
+      case (c, a) => OrderBy(col = c, dir = OrderBy.Direction.fromBoolAsc(a))
+    })
+  }
 }
 
 case class OrderBy(

@@ -12,14 +12,12 @@
     <table class="highlight responsive-table">
       <tbody>
         <tr>
-          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.userId.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">User ID</div></th>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.userId.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">User ID</div></th>
           <td>
             @model.userId
-            @model.userId.map { uid =>
-              <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(uid)">
-                <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i>
-              </a>
-            }
+            <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.userId)">
+              <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i>
+            </a>
           </td>
         </tr>
         <tr>

@@ -25,7 +25,7 @@ class ScheduledTaskService @javax.inject.Inject() (
   private[this] val runner = new ScheduledTaskRunner(runService, tracingService)
 
   def initSchedule(
-    system: ActorSystem, creds: Credentials, injector: Injector, args: Seq[String], delaySecs: Int = 5, intervalSecs: Int = 15
+    system: ActorSystem, creds: Credentials, injector: Injector, args: Seq[String], delaySecs: Int = 5, intervalSecs: Int = 5
   )(implicit td: TraceData): Unit = {
     enabled = config.scheduledTaskEnabled
     if (enabled) {

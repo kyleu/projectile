@@ -14,7 +14,7 @@
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "status", title = "Status", value = Some(model.status), nullable = false)
           @com.kyleu.projectile.views.html.components.form.jsonField(selected = isNew, key = "output", title = "Output", value = Some(model.output), nullable = false)
           @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = isNew, key = "started", title = "Started", value = Some(model.started), nullable = false)
-          @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = isNew, key = "completed", title = "Completed", value = Some(model.completed), nullable = false)
+          @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = isNew, key = "completed", title = "Completed", value = model.completed, nullable = false)
         </tbody>
       </table>
     }

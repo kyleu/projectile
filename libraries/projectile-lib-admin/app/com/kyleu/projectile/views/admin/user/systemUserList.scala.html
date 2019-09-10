@@ -12,7 +12,8 @@
       "username" -> "Username",
       "provider" -> "Provider",
       "role" -> "Role",
-      "key" -> "Key"
+      "key" -> "Key",
+      "created" -> "Created"
     ),
     totalCount = totalCount,
     rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.user.systemUserDataRow(model, additional = aug._3.get(model).flatten)),

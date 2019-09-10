@@ -52,9 +52,11 @@ class ProjectLoadService(p: ProjectileService) {
     val models = (customModels.map(_.key) ++ input.models.map(_.key)).distinct.sorted.map(key => customModels.find(_.key == key).getOrElse {
       input.models.find(_.key == key) match {
         case Some(im) => ProjectLoadService.Provided.models.get(key) match {
-          case Some(opts) => ModelMember(pkg = summary.packages(OutputPackage.System) :+ opts._1, key = key, features = Set.empty, overrides = Seq(
-            MemberOverride(k = "propertyName", v = opts._2), MemberOverride(k = "className", v = opts._3), MemberOverride(k = "provided", v = "true")
-          ))
+          case Some(opts) =>
+            val pkg = summary.packages.getOrElse(OutputPackage.System, OutputPackage.System.defaultVal)
+            ModelMember(pkg = pkg :+ opts._1, key = key, features = Set.empty, overrides = Seq(
+              MemberOverride(k = "propertyName", v = opts._2), MemberOverride(k = "className", v = opts._3), MemberOverride(k = "provided", v = "true")
+            ))
           case None => ModelMember(pkg = im.pkg, key = key, features = summary.defaultModelFeatures.map(ModelFeature.withValue))
         }
         case None => throw new IllegalStateException("Inconceivable!")

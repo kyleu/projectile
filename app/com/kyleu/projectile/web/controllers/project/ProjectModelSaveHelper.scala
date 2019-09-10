@@ -58,11 +58,16 @@ object ProjectModelSaveHelper {
       }
     }
 
+    val sortOverrides = form.getOrElse(s"defaultOrder", "") match {
+      case x if x.nonEmpty => Some(MemberOverride("defaultOrder", x))
+      case _ => None
+    }
+
     val newMember = m.copy(
       pkg = StringUtils.toList(form("package"), '.'),
       features = StringUtils.toList(form.getOrElse("features", "")).map(ModelFeature.withValue).toSet,
       ignored = StringUtils.toList(form.getOrElse("ignored", "")).toSet,
-      overrides = nameOverrides ++ fieldOverrides ++ foreignKeyOverrides ++ referenceOverrides
+      overrides = nameOverrides ++ fieldOverrides ++ foreignKeyOverrides ++ referenceOverrides ++ sortOverrides
     )
 
     projectile.saveModelMembers(key, Seq(newMember))

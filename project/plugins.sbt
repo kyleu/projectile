@@ -1,4 +1,5 @@
-scalacOptions ++= Seq( "-unchecked", "-deprecation" )
+scalacOptions ++= Seq("-unchecked", "-deprecation")
+evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false)
 
 // Web
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.3")

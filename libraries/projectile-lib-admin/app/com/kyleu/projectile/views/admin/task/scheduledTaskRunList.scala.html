@@ -12,7 +12,8 @@
       "task" -> "Task",
       "arguments" -> "Arguments",
       "status" -> "Status",
-      "started" -> "Started"
+      "started" -> "Started",
+      "completed" -> "Completed"
     ),
     totalCount = totalCount,
     rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.task.scheduledTaskRunDataRow(model, additional = aug._3.get(model).flatten)),

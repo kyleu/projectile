@@ -7,8 +7,7 @@ import com.kyleu.projectile.models.audit.{Audit, AuditField, AuditRecord}
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.module.ApplicationFeature
 import com.kyleu.projectile.models.result.data.DataField
-import com.kyleu.projectile.util.Credentials
-import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.{Credentials, Logging}
 import com.kyleu.projectile.util.tracing.TraceData
 
 object AuditHelper extends Logging {
@@ -60,7 +59,9 @@ object AuditHelper extends Logging {
   private[this] def aud(creds: Credentials, id: UUID, act: String, msg: String, records: Seq[AuditRecord])(implicit trace: TraceData) = {
     if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
       val (remoteAddress, userId) = getInfo(creds)
-      onAudit(Audit(id = id, act = act, client = remoteAddress, server = server, userId = userId, msg = msg), records.toList)
+      userId.map { u =>
+        onAudit(Audit(id = id, act = act, client = remoteAddress, server = server, userId = u, msg = msg), records.toList)
+      }
     }
   }
 }

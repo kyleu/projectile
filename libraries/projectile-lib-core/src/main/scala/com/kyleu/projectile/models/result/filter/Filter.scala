@@ -5,6 +5,8 @@ import com.kyleu.projectile.util.JsonSerializers._
 object Filter {
   implicit val jsonEncoder: Encoder[Filter] = deriveEncoder
   implicit val jsonDecoder: Decoder[Filter] = deriveDecoder
+
+  def strEq(k: String, v: String) = Filter(k = k, v = Seq(v))
 }
 
 case class Filter(

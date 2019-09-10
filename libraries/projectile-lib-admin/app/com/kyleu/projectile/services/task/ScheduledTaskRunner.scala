@@ -50,9 +50,9 @@ class ScheduledTaskRunner(runService: ScheduledTaskRunService, tracingService: T
       val ret = ScheduledTaskOutput(
         userId = creds.id, username = creds.name,
         status = status, logs = logs.toIndexedSeq,
-        start = start, end = DateUtils.now
+        start = start, end = Some(DateUtils.now)
       )
-      log.debug(s"Completed scheduled task [${task.key}] with args [${args.mkString(", ")}] in [${ret.durationMs}ms]")(td)
+      log.debug(s"Completed scheduled task [${task.key}] with args [${args.mkString(", ")}] in [${ret.elapsedMs}ms]")(td)
       ret
     }
     ScheduledTaskRegistry.run(creds, task, injector, addLog)(td).map { ok =>

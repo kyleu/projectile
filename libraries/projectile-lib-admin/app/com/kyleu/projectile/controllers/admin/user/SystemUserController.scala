@@ -33,6 +33,7 @@ class SystemUserController @javax.inject.Inject() (
   PermissionService.registerModel("models", "SystemUser", "System User", Some(InternalIcons.systemUser), "view", "edit")
   val desc = "Manage the users of this application"
   SystemMenu.addModelMenu(value, "System Users", Some(desc), SystemUserController.list(), InternalIcons.systemUser, ("models", "SystemUser", "view"))
+  private[this] val defaultOrderBy = Some("username" -> true)
 
   def createForm = withSession("create.form", ("models", "SystemUser", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.list()
@@ -53,14 +54,21 @@ class SystemUserController @javax.inject.Inject() (
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
     withSession("list", ("models", "SystemUser", "view")) { implicit request => implicit td =>
       val startMs = DateUtils.nowMillis
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(model.id))
           case _ =>
             val cfg = app.cfg(u = Some(request.identity), "system", "models", "user")
             Ok(com.kyleu.projectile.views.html.admin.user.systemUserList(
-              cfg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)
+              cfg = cfg,
+              totalCount = Some(r._1),
+              modelSeq = r._2,
+              q = q,
+              orderBy = orderBys.headOption.map(_.col),
+              orderAsc = orderBys.exists(_.dir.asBool),
+              limit = limit.getOrElse(100),
+              offset = offset.getOrElse(0)
             ))
         }
         case MimeTypes.JSON => Ok(SystemUserResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -71,7 +79,7 @@ class SystemUserController @javax.inject.Inject() (
 
   def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {
     withSession("autocomplete", ("models", "SystemUser", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))
     }
   }

@@ -23,6 +23,7 @@ class AuditRecordController @javax.inject.Inject() (
     override val app: Application, svc: AuditRecordService, noteSvc: NoteService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("models", "AuditRecord", "Audit Record", Some(InternalIcons.auditRecord), "view", "edit")
+  private[this] val defaultOrderBy = None
 
   def createForm = withSession("create.form", ("models", "AuditRecord", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.list()
@@ -43,12 +44,19 @@ class AuditRecordController @javax.inject.Inject() (
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
     withSession("list", ("models", "AuditRecord", "view")) { implicit request => implicit td =>
       val startMs = DateUtils.nowMillis
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id))
           case _ => Ok(com.kyleu.projectile.views.html.admin.audit.auditRecordList(
-            app.cfg(u = Some(request.identity), "audit", "Record"), Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)
+            cfg = app.cfg(u = Some(request.identity), "audit", "Record"),
+            totalCount = Some(r._1),
+            modelSeq = r._2,
+            q = q,
+            orderBy = orderBys.headOption.map(_.col),
+            orderAsc = orderBys.exists(_.dir.asBool),
+            limit = limit.getOrElse(100),
+            offset = offset.getOrElse(0)
           ))
         }
         case MimeTypes.JSON => Ok(AuditRecordResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -59,7 +67,7 @@ class AuditRecordController @javax.inject.Inject() (
 
   def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {
     withSession("autocomplete", ("models", "AuditRecord", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))
     }
   }
@@ -68,7 +76,7 @@ class AuditRecordController @javax.inject.Inject() (
     auditId: UUID, orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false
   ) = {
     withSession("get.by.auditId", ("models", "AuditRecord", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       svc.getByAuditId(request, auditId, orderBys, limit, offset).map(models => renderChoice(t) {
         case MimeTypes.HTML =>
           val cfg = app.cfg(u = Some(request.identity), "audit", "Record", "Audit Id")

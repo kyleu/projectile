@@ -26,7 +26,7 @@ object ScheduledTaskRun {
     status <- c.downField("status").as[String]
     output <- c.downField("output").as[Json]
     started <- c.downField("started").as[LocalDateTime]
-    completed <- c.downField("completed").as[LocalDateTime]
+    completed <- c.downField("completed").as[Option[LocalDateTime]]
   } yield ScheduledTaskRun(id, task, arguments, status, output, started, completed)
 
   def empty(
@@ -36,7 +36,7 @@ object ScheduledTaskRun {
     status: String = "",
     output: Json = Json.obj(),
     started: LocalDateTime = DateUtils.now,
-    completed: LocalDateTime = DateUtils.now
+    completed: Option[LocalDateTime] = None
   ) = {
     ScheduledTaskRun(id, task, arguments, status, output, started, completed)
   }
@@ -49,7 +49,7 @@ final case class ScheduledTaskRun(
     status: String,
     output: Json,
     started: LocalDateTime,
-    completed: LocalDateTime
+    completed: Option[LocalDateTime]
 ) extends DataFieldModel {
   override def toDataFields = Seq(
     DataField("id", Some(id.toString)),
@@ -58,7 +58,7 @@ final case class ScheduledTaskRun(
     DataField("status", Some(status)),
     DataField("output", Some(output.toString)),
     DataField("started", Some(started.toString)),
-    DataField("completed", Some(completed.toString))
+    DataField("completed", completed.map(_.toString))
   )
 
   lazy val taskOutput = extract[ScheduledTaskOutput](output)
@@ -66,6 +66,6 @@ final case class ScheduledTaskRun(
   def toSummary = DataSummary(
     model = "scheduledTaskRunRow",
     pk = id.toString,
-    title = s"task: $task, arguments: $arguments, status: $status, started: $started"
+    title = s"task: $task, arguments: $arguments, status: $status, started: $started, completed: ${completed.getOrElse("-")}"
   )
 }

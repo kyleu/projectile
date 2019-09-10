@@ -16,7 +16,7 @@ class ModelMemberService(val svc: ProjectileService) {
   def removeModel(p: String, member: String) = {
     val dir = svc.configForProject(p).projectDir(p)
     val f = fileFor(dir, member)
-    f.delete(true)
+    f.delete(swallowIOExceptions = true)
     s"Removed model [$member]"
   }
 

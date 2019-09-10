@@ -9,7 +9,7 @@
       <div class="collection-header">
         <div class="right">@com.kyleu.projectile.util.DateUtils.niceDateTime(result.started)</div>
         <h5>[@result.task] Scheduled Task Result</h5>
-        <em>@result.status: @{com.kyleu.projectile.util.DateUtils.toMillis(result.completed) - com.kyleu.projectile.util.DateUtils.toMillis(result.started)}ms</em>
+        <em>@result.status: @{com.kyleu.projectile.util.DateUtils.toMillis(result.completed.getOrElse(com.kyleu.projectile.util.DateUtils.now)) - com.kyleu.projectile.util.DateUtils.toMillis(result.started)}ms</em>
       </div>
       <div class="collection-item">
         <pre>@io.circe.syntax.EncoderOps(result).asJson.spaces2</pre>

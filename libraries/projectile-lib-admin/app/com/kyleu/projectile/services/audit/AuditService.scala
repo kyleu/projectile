@@ -41,7 +41,7 @@ class AuditService @javax.inject.Inject() (
 
   protected[this] def persist(a: Audit, records: Seq[AuditRecord])(implicit trace: TraceData) = {
     log.debug(s"Persisting audit [${a.id}]...")
-    val ret = db.executeF(AuditQueries.insert(a.asInstanceOf[Audit])).flatMap { _ =>
+    val ret = db.executeF(AuditQueries.insert(a)).flatMap { _ =>
       db.executeF(AuditRecordQueries.insertBatch(records)).map { _ =>
         log.debug(s"Persisted audit [${a.id}] with [${records.size}] records")
       }

@@ -23,6 +23,7 @@ class FeedbackController @javax.inject.Inject() (
     override val app: Application, svc: FeedbackService, noteSvc: NoteService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("feedback", "Feedback", "Feedback", Some(InternalIcons.feedback), "view", "edit")
+  private[this] val defaultOrderBy = Some("created" -> false)
 
   def createForm = withSession("create.form", ("tools", "Feedback", "edit")) { implicit request => implicit td =>
     val cancel = com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.list()
@@ -48,19 +49,19 @@ class FeedbackController @javax.inject.Inject() (
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
     withSession("view", ("tools", "Feedback", "view")) { implicit request => implicit td =>
       val startMs = DateUtils.nowMillis
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {
         case MimeTypes.HTML => r._2.toList match {
           case model :: Nil if q.nonEmpty => Redirect(com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.view(model.id))
           case _ => Ok(com.kyleu.projectile.views.html.admin.feedback.feedbackList(
-            app.cfg(u = Some(request.identity), "system", "tools", "feedback"),
-            Some(r._1),
-            r._2,
-            q,
-            orderBy,
-            orderAsc,
-            limit.getOrElse(100),
-            offset.getOrElse(0)
+            cfg = app.cfg(u = Some(request.identity), "system", "tools", "feedback"),
+            totalCount = Some(r._1),
+            modelSeq = r._2,
+            q = q,
+            orderBy = orderBys.headOption.map(_.col),
+            orderAsc = orderBys.exists(_.dir.asBool),
+            limit = limit.getOrElse(100),
+            offset = offset.getOrElse(0)
           ))
         }
         case MimeTypes.JSON => Ok(FeedbackResult.fromRecords(q, Nil, orderBys, limit, offset, startMs, r._1, r._2).asJson)
@@ -71,7 +72,7 @@ class FeedbackController @javax.inject.Inject() (
 
   def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {
     withSession("autocomplete", ("tools", "Feedback", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))
     }
   }
@@ -80,7 +81,7 @@ class FeedbackController @javax.inject.Inject() (
     authorId: UUID, orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false
   ) = {
     withSession("get.by.authorId", ("tools", "Feedback", "view")) { implicit request => implicit td =>
-      val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq
+      val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       svc.getByAuthorId(request, authorId, orderBys, limit, offset).map(models => renderChoice(t) {
         case MimeTypes.HTML =>
           val cfg = app.cfg(Some(request.identity), "system", "tools", "feedback", "Author Id")

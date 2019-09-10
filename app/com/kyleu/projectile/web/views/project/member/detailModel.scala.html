@@ -55,6 +55,7 @@
               <th>Search</th>
               <th>Summary</th>
               <th>Ignored</th>
+              <th colspan="2">Default Sort</th>
             </tr>
           </thead>
           <tbody>
@@ -88,8 +89,26 @@
                     <span></span>
                   </label>
                 </td>
+                <td>
+                  @defining(if(m.defaultOrder.exists(o => o.col == f.key && o.dir.asBool)) { "checked" } else { "" }) { checked =>
+                    <label><input name="defaultOrder" type="radio" value="asc-@f.key" @checked /><span>Asc</span></label>
+                  }
+                </td>
+                <td>
+                  @defining(if(m.defaultOrder.exists(o => o.col == f.key && (!o.dir.asBool))) { "checked" } else { "" }) { checked =>
+                    <label><input name="defaultOrder" type="radio" value="desc-@f.key" @checked /><span>Desc</span></label>
+                  }
+                </td>
               </tr>
             }
+            <tr>
+              <td colspan="7"></td>
+              <td>
+                @defining(if(m.defaultOrder.isEmpty) { "checked" } else { "" }) { checked =>
+                  <label><input name="defaultOrder" type="radio" value="none" @checked /><span>None</span></label>
+                }
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

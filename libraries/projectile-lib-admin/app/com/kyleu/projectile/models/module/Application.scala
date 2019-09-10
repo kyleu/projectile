@@ -16,6 +16,7 @@ import com.kyleu.projectile.services.cache.CacheService
 import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.services.notification.NotificationService
 import com.kyleu.projectile.services.status.StatusProvider
+import com.kyleu.projectile.services.task.ScheduledTaskService
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import com.kyleu.projectile.util.{EncryptionUtils, JsonSerializers, Logging}
@@ -86,6 +87,10 @@ class Application @javax.inject.Inject() (
   }
 
   private[this] def stop() = {
+    if (ApplicationFeature.enabled(ApplicationFeature.Task)) {
+      injector.getInstance(classOf[ScheduledTaskService]).stopSchedule()
+    }
+    actorSystem.terminate()
     db.close()
     CacheService.close()
     if (config.metrics.tracingEnabled) { tracing.close() }

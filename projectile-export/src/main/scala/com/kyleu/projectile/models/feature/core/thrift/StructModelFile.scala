@@ -38,7 +38,7 @@ object StructModelFile {
 
   private[this] def exportFields(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     file.add(s"object ${model.className} {", 1)
-    ModelHelper.addJson(config, file, model)
+    ModelHelper.addJson(config, file, model, isThrift = true)
     val thriftModel = model.pkg.dropRight(1) :+ model.key
     file.add(s"def fromThrift(t: ${thriftModel.mkString(".")}) = ${model.className}(", 1)
     model.fields.foreach { field =>

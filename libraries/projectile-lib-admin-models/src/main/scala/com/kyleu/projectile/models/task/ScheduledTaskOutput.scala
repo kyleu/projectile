@@ -23,7 +23,7 @@ final case class ScheduledTaskOutput(
     status: String,
     logs: Seq[ScheduledTaskOutput.Log],
     start: LocalDateTime,
-    end: LocalDateTime
+    end: Option[LocalDateTime]
 ) {
-  val durationMs = (DateUtils.toMillis(end) - DateUtils.toMillis(start)).toInt
+  val elapsedMs = (DateUtils.toMillis(end.getOrElse(DateUtils.now)) - DateUtils.toMillis(start)).toInt
 }

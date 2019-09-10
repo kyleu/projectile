@@ -10,7 +10,7 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.21.2"
+    val app = "1.22.3"
     val scala212 = "2.12.9"
     val scala213 = "2.13.0"
     val scala = if(useLatest) { scala213 } else { scala212 }
@@ -42,6 +42,8 @@ object Common {
     scalacOptions ++= compileOptions,
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
+
+    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false),
 
     publishMavenStyle := true,
     publishTo := Some(MavenRepository("sonatype-staging", "https://oss.sonatype.org/service/local/staging/deploy/maven2"))

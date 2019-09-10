@@ -8,6 +8,7 @@ import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.project.member.ModelMember
 import com.kyleu.projectile.models.input.InputType
+import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.util.JsonSerializers._
 
 object ExportModel {
@@ -26,6 +27,7 @@ case class ExportModel(
     plural: String,
     arguments: List[ExportField] = Nil,
     fields: List[ExportField],
+    defaultOrder: Option[OrderBy] = None,
     pkColumns: List[Column] = Nil,
     foreignKeys: List[ForeignKey] = Nil,
     references: List[ExportModelReference] = Nil,
@@ -53,6 +55,13 @@ case class ExportModel(
       inSearch = m.getOverride(s"${f.key}.search", f.inSearch.toString).toBoolean,
       inSummary = m.getOverride(s"${f.key}.summary", f.inSearch.toString).toBoolean
     )),
+    defaultOrder = m.getOverride("defaultOrder", "none") match {
+      case "none" => None
+      case o => o.split("-").toList match {
+        case asc :: col :: Nil => Some(OrderBy(col, OrderBy.Direction.fromBoolAsc(asc == "asc")))
+        case _ => throw new IllegalStateException(s"Cannot parse [${o}] as default order")
+      }
+    },
     foreignKeys = foreignKeys.filterNot(fk => m.ignored.contains("fk." + fk.name)).map { fk =>
       fk.copy(propertyName = m.getOverride(s"fk.${fk.name}.propertyName", fk.propertyName))
     },

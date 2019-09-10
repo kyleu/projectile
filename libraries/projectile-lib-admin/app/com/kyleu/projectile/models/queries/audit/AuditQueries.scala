@@ -98,7 +98,7 @@ object AuditQueries extends BaseQueries[Audit]("audit", "audit") {
     app = StringType(row, "app"),
     client = StringType(row, "client"),
     server = StringType(row, "server"),
-    userId = UuidType.opt(row, "user_id"),
+    userId = UuidType(row, "user_id"),
     tags = JsonType(row, "tags").as[Seq[Tag]] match {
       case Right(x) => x
       case Left(x) => Nil

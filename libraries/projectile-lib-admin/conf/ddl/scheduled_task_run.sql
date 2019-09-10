@@ -5,7 +5,7 @@ create table if not exists "scheduled_task_run" (
   "status" varchar(64) not null,
   "output" json not null,
   "started" timestamp without time zone not null,
-  "completed" timestamp without time zone not null
+  "completed" timestamp without time zone
 );
 
 create index if not exists "scheduled_task_run_task" on "scheduled_task_run" using btree ("task" asc);

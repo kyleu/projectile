@@ -54,7 +54,7 @@ object ModelHelper {
     file.add("}", -1)
   }
 
-  def addJson(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.features(ModelFeature.Json)) {
+  def addJson(config: ExportConfiguration, file: ScalaFile, model: ExportModel, isThrift: Boolean = false) = if (model.features(ModelFeature.Json)) {
     file.add(s"implicit val jsonEncoder: Encoder[${model.className}] = (r: ${model.className}) => io.circe.Json.obj(", 1)
     model.fields.foreach { f =>
       val comma = if (model.fields.lastOption.contains(f)) { "" } else { "," }
@@ -65,7 +65,7 @@ object ModelHelper {
 
     file.add(s"implicit val jsonDecoder: Decoder[${model.className}] = (c: io.circe.HCursor) => for {", 1)
     model.fields.foreach { f =>
-      val ts = FieldTypeAsScala.asScala(config = config, t = f.t, isThrift = true)
+      val ts = FieldTypeAsScala.asScala(config = config, t = f.t, isThrift = isThrift)
       val typ = if (f.required) { ts } else { "Option[" + ts + "]" }
       file.add(s"""${ExportHelper.escapeKeyword(f.propertyName)} <- c.downField("${f.propertyName}").as[$typ]""")
     }

@@ -54,13 +54,16 @@ object ControllerFile {
     val firstPkg = model.pkg.headOption.getOrElse("system")
     val ico = s"""Some(${(config.applicationPackage :+ "models").mkString(".")}.template.Icons.${model.propertyName})"""
     file.add(s"""PermissionService.registerModel("$firstPkg", "${model.className}", "${model.title}", $ico, "view", "edit")""")
-
+    model.defaultOrder match {
+      case Some(o) => file.add(s"""private[this] val defaultOrderBy = Some("${o.col}" -> ${o.dir.asBool})""")
+      case None => file.add(s"""private[this] val defaultOrderBy = None""")
+    }
     file.add()
     addMutations(config, file, model, routesClass, viewHtmlPackage)
     addListAction(config, file, model, viewHtmlPackage)
     file.add("""def autocomplete(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int]) = {""", 1)
     file.add(s"""withSession("autocomplete", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
-    file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
+    file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq")
     file.add("search(q, orderBys, limit, None).map(r => Ok(r.map(_.toSummary).asJson))")
     file.add("}", -1)
     file.add("}", -1)
@@ -104,7 +107,7 @@ object ControllerFile {
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
     file.add(s"""withSession("view", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
     file.add("val startMs = DateUtils.nowMillis")
-    file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc).toSeq")
+    file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq")
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)
 
     file.add(s"case MimeTypes.HTML => r._2.toList match {", 1)
@@ -113,7 +116,7 @@ object ControllerFile {
     file.add(s"case model :: Nil if q.nonEmpty => Redirect($routesClass.view($redirArgs))")
 
     val cfgArg = s"""app.cfg(u = Some(request.identity), "${model.firstPackage}", "${model.key}")"""
-    val args = s"$cfgArg, Some(r._1), r._2, q, orderBy, orderAsc, limit.getOrElse(100), offset.getOrElse(0)"
+    val args = s"$cfgArg, Some(r._1), r._2, q, orderBys.headOption.map(_.col), orderBys.exists(_.dir.asBool), limit.getOrElse(100), offset.getOrElse(0)"
     file.add(s"case _ => Ok($viewHtmlPackage.${model.propertyName}List($args))")
 
     file.add("}", -1)
