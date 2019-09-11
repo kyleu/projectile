@@ -8,8 +8,6 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ControllerMutations {
   def addBulkEdit(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
-    file.add()
-
     file.add(s"""def bulkEdit = withSession("bulk.edit", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
     config.addCommonImport(file, "ControllerUtils")
     file.add("""val form = ControllerUtils.getForm(request.body)""")

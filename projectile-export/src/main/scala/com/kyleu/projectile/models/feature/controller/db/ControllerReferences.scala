@@ -15,7 +15,6 @@ object ControllerReferences {
       val pkRefs = model.pkFields.map(_.propertyName).mkString(", ")
       val pkArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
 
-      file.add()
       file.add(s"""def relationCounts($pkArgs) = withSession("relation.counts", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
 
       references.foreach { r =>
