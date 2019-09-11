@@ -20,8 +20,13 @@ class SearchHelper extends SearchProvider {
 
   override def uuidSearches(app: Application, injector: Injector, creds: Credentials)(q: String, id: UUID)(implicit ec: ExecutionContext, td: TraceData) = {
     /* Start uuid searches */
-    /* End uuid searches */
-    Nil
+    /* Projectile export section [sandbox] */
+    Seq(
+      act[services.BottomRowService, models.BottomRow](injector = injector, creds = creds, perm = ("system", "BottomRow", "view"), f = _.getByPrimaryKey(creds, id).map(_.toSeq), v = model => controllers.admin.system.routes.BottomRowController.view(model.id), s = model => views.html.admin.bottomRowSearchResult(model, s"Bottom [${model.id}] matched [$q]")),
+      act[services.TopRowService, models.TopRow](injector = injector, creds = creds, perm = ("system", "TopRow", "view"), f = _.getByPrimaryKey(creds, id).map(_.toSeq), v = model => controllers.admin.system.routes.TopRowController.view(model.id), s = model => views.html.admin.topRowSearchResult(model, s"Top [${model.id}] matched [$q]"))
+    ) ++
+      /* End uuid searches */
+      Nil
   }
 
   override def stringSearches(app: Application, injector: Injector, creds: Credentials)(q: String)(implicit ec: ExecutionContext, td: TraceData) = {

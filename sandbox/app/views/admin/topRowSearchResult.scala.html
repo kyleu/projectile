@@ -1,0 +1,10 @@
+@* Generated File *@
+@(model: models.TopRow, hit: String)<div class="search-result">
+  <div class="right">
+    <i class="material-icons small">@models.template.Icons.topRow</i> Top
+  </div>
+  <div>
+    <a href="@controllers.admin.system.routes.TopRowController.view(model.id)">@model.id</a>
+  </div>
+  <em>@hit</em>
+</div>

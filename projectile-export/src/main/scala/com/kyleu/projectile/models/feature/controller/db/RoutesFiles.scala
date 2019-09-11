@@ -36,53 +36,57 @@ object RoutesFiles {
 
   def routesContentFor(config: ExportConfiguration, model: ExportModel, solo: Boolean = false) = {
     val controllerClass = (model.controllerPackage(config) :+ (model.className + "Controller")).mkString(".")
-
+    val wsLength = 56
     val prefix = if (solo) { "" } else { s"/${model.propertyName}" }
     val root = if (solo) { "/" } else { s"/${model.propertyName}" }
+    val pkArgs = model.pkFields.map(x => s"${x.propertyName}: ${x.scalaTypeFull(config).mkString(".")}").mkString(", ")
+    val urlArgs = model.pkFields.map(f => ":" + f.propertyName).mkString("/")
 
     val comment = s"# ${model.title} Routes"
-    val listWs = (0 until (56 - root.length)).map(_ => " ").mkString
+    val listWs = (0 until (wsLength - root.length)).map(_ => " ").mkString
     val list = s"GET         $root $listWs $controllerClass.list($listArgs)"
     val autocomplete = s"GET         $prefix/autocomplete ${listWs.drop(13)} $controllerClass.autocomplete($autocompleteArgs)"
     val createForm = s"GET         $prefix/form ${listWs.drop(5)} $controllerClass.createForm"
     val createAct = s"POST        $root $listWs $controllerClass.create"
+    val bulkEditAct = if (model.foreignKeys.isEmpty) {
+      Nil
+    } else {
+      Seq(s"POST        $root/bulk ${listWs.drop(5)} $controllerClass.bulkEdit")
+    }
+    val detail = if (model.pkFields.isEmpty) {
+      Nil
+    } else {
+      val detailUrl = prefix + "/" + urlArgs
+      val detailWs = (0 until (wsLength - detailUrl.length)).map(_ => " ").mkString
+
+      val view = s"GET         $detailUrl $detailWs $controllerClass.view($pkArgs, t: Option[String] ?= None)"
+      val counts = if (ExportModelReference.validReferences(config, model).isEmpty) {
+        Nil
+      } else {
+        Seq(s"GET         $detailUrl/counts ${detailWs.drop(7)} $controllerClass.relationCounts($pkArgs)")
+      }
+      val extras = Seq(
+        s"GET         $detailUrl/form ${detailWs.drop(5)} $controllerClass.editForm($pkArgs)",
+        s"POST        $detailUrl $detailWs $controllerClass.edit($pkArgs)",
+        s"GET         $detailUrl/remove ${detailWs.drop(7)} $controllerClass.remove($pkArgs)"
+      )
+      view +: (counts ++ extras)
+    }
     val fks = model.foreignKeys.flatMap { fk =>
       fk.references match {
         case h :: Nil =>
-          val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
-          val urlArgs = s"by${col.className}/:${col.propertyName}"
-          val detailUrl = prefix + "/" + urlArgs
-          val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
+          val col = model.getField(h.source)
+          val url = prefix + s"/by${col.className}/:${col.propertyName}"
+          val ws = (0 until (wsLength - url.length)).map(_ => " ").mkString
           val t = col.scalaTypeFull(config).mkString(".")
-          Some(s"GET         $detailUrl $detailWs $controllerClass.by${col.className}(${col.propertyName}: $t, $relationArgs)")
-        case _ => None
+          Seq(
+            s"GET         $url $ws $controllerClass.by${col.className}(${col.propertyName}: $t, $relationArgs)",
+            s"GET         $url/bulk ${ws.drop(5)} $controllerClass.by${col.className}BulkForm(${col.propertyName}: $t)"
+          )
+        case _ => Nil
       }
     }
-    val detail = model.pkFields match {
-      case Nil => Nil
-      case pkFields =>
-        val args = pkFields.map { x =>
-          s"${x.propertyName}: ${x.scalaTypeFull(config).mkString(".")}"
-        }.mkString(", ")
-        val urlArgs = pkFields.map(f => ":" + f.propertyName).mkString("/")
-
-        val detailUrl = prefix + "/" + urlArgs
-        val detailWs = (0 until (56 - detailUrl.length)).map(_ => " ").mkString
-
-        val view = s"GET         $detailUrl $detailWs $controllerClass.view($args, t: Option[String] ?= None)"
-        val counts = if (ExportModelReference.validReferences(config, model).isEmpty) {
-          Nil
-        } else {
-          Seq(s"GET         $detailUrl/counts ${detailWs.drop(7)} $controllerClass.relationCounts($args)")
-        }
-        val extras = Seq(
-          s"GET         $detailUrl/form ${detailWs.drop(5)} $controllerClass.editForm($args)",
-          s"POST        $detailUrl $detailWs $controllerClass.edit($args)",
-          s"GET         $detailUrl/remove ${detailWs.drop(7)} $controllerClass.remove($args)"
-        )
-        view +: (counts ++ extras)
-    }
-    "" +: comment +: list +: autocomplete +: createForm +: createAct +: (fks ++ detail)
+    "" +: comment +: list +: autocomplete +: createForm +: createAct +: (bulkEditAct ++ detail ++ fks)
   }
 
   private[this] def enumRoutesContentFor(config: ExportConfiguration, e: ExportEnum) = {

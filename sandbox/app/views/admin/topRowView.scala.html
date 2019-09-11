@@ -1,0 +1,42 @@
+@* Generated File *@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.TopRow, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.views.html.layout.page(title = s"Top", cfg = cfg, icon = Some(models.template.Icons.topRow)) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@controllers.admin.system.routes.TopRowController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Top?')" href="@controllers.admin.system.routes.TopRowController.remove(model.id)">Remove</a></div>
+    <table class="highlight responsive-table">
+      <tbody>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
+          <td>@model.id</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">T</div></th>
+          <td>@model.t.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+        </tr>
+      </tbody>
+    </table>
+  }
+
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
+
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "TopRow", "Top", model.id)
+
+  <ul id="model-relations" class="collapsible" data-collapsible="expandable">
+    <li id="relation-bottomRow-topId" data-table="bottomRow" data-field="topId" data-singular="Bottom" data-plural="Bottoms" data-url="@controllers.admin.system.routes.BottomRowController.byTopId(model.id, limit = Some(5), embedded = true)">
+      <div class="collapsible-header">
+        <i class="material-icons small">@models.template.Icons.bottomRow</i>
+        <span class="title">Bottoms</span>&nbsp;by Top Id
+        <span class="badge">
+          <a title="Bulk edit" href="@controllers.admin.system.routes.BottomRowController.byTopIdBulkForm(model.id)"><i class="material-icons" style="margin-right: 0;">edit</i></a>
+          <a title="View these Bottoms" href="@controllers.admin.system.routes.BottomRowController.byTopId(model.id)"><i class="material-icons" style="margin-right: 0;">insert_link</i></a>
+        </span>
+      </div>
+      <div class="collapsible-body"><span>Loading...</span></div>
+    </li>
+  </ul>
+  <script>$(function() { new RelationService('@controllers.admin.system.routes.TopRowController.relationCounts(model.id)') });</script>
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+}

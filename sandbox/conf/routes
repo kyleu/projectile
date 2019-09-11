@@ -2,6 +2,8 @@ GET        /                                        controllers.HomeController.h
 GET        /connect                                 controllers.ConnectionController.connect(binary: Boolean ?= false)
 GET        /testbed                                 controllers.HomeController.testbed
 
+->         /admin/system                            system.Routes
+
 ### Projectile Features
 ## The following sections are features which, when uncommented, add functionality to the application.
 ## See docs for details:

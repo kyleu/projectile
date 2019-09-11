@@ -73,10 +73,11 @@ case class ExportModel(
 
   val fullClassName = (pkg :+ className).mkString(".")
   def fullClassPath(config: ExportConfiguration) = (modelPackage(config) :+ className).mkString(".")
-  val firstPackage = pkg.headOption.getOrElse("")
+  val firstPackage = pkg.headOption.getOrElse("system")
   val propertyPlural = ExportHelper.toIdentifier(plural)
 
   val pkFields = pkColumns.flatMap(c => getFieldOpt(c.name))
+  val nonPkFields = fields.filterNot(pkFields.contains)
   def pkType(config: ExportConfiguration) = pkFields match {
     case Nil => "???"
     case h :: Nil => h.scalaType(config)

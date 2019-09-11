@@ -7,14 +7,22 @@ import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.file.OutputFile
 
 object TwirlFormFields {
-  def fieldFor(config: ExportConfiguration, model: ExportModel, field: ExportField, file: OutputFile, autocomplete: Option[(ForeignKey, ExportModel)]) = {
+  def fieldFor(
+      config: ExportConfiguration,
+      model: ExportModel,
+      field: ExportField,
+      file: OutputFile,
+      autocomplete: Option[(ForeignKey, ExportModel)],
+      isNewOverride: Option[String] = None,
+      vOverride: Option[String] = None,
+  ) = {
     val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
-    val selected = if (model.pkFields.contains(field) || field.required) { "isNew" } else { "false" }
+    val selected = isNewOverride.getOrElse(if (model.pkFields.contains(field) || field.required) { "isNew" } else { "false" })
 
     val prop = field.propertyName
     def getArgs(extra: Option[String] = None) = {
       val v = if (field.required) { s"Some(model.$prop${extra.getOrElse("")})" } else { s"model.$prop${extra.map(".map(_" + _ + ")").getOrElse("")}" }
-      s"""selected = $selected, key = "$prop", title = "${field.title}", value = $v, nullable = ${field.optional}"""
+      s"""selected = $selected, key = "$prop", title = "${field.title}", value = ${vOverride.getOrElse(v)}, nullable = ${field.optional}"""
     }
 
     val args = getArgs()

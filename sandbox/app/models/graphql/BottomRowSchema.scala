@@ -1,0 +1,68 @@
+/* Generated File */
+package models.graphql
+
+import com.kyleu.projectile.graphql.{GraphQLContext, GraphQLSchemaHelper}
+import com.kyleu.projectile.graphql.GraphQLUtils._
+import java.util.UUID
+import models.{BottomRow, BottomRowResult}
+import sangria.execution.deferred.{Fetcher, HasId, Relation}
+import sangria.schema._
+
+object BottomRowSchema extends GraphQLSchemaHelper("bottomRow") {
+  implicit val bottomRowPrimaryKeyId: HasId[BottomRow, UUID] = HasId[BottomRow, UUID](_.id)
+  private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[UUID]) = c.getInstance[services.BottomRowService].getByPrimaryKeySeq(c.creds, idSeq)(c.trace)
+  val bottomRowByPrimaryKeyFetcher = Fetcher(getByPrimaryKeySeq)
+
+  val bottomRowIdArg = Argument("id", uuidType)
+  val bottomRowIdSeqArg = Argument("ids", ListInputType(uuidType))
+
+  val bottomRowByTopIdRelation = Relation[BottomRow, UUID]("byTopId", x => Seq(x.topId))
+  val bottomRowByTopIdFetcher = Fetcher.rel[GraphQLContext, BottomRow, BottomRow, UUID](
+    getByPrimaryKeySeq, (c, rels) => c.injector.getInstance(classOf[services.BottomRowService]).getByTopIdSeq(c.creds, rels(bottomRowByTopIdRelation))(c.trace)
+  )
+
+  implicit lazy val bottomRowType: sangria.schema.ObjectType[GraphQLContext, BottomRow] = deriveObjectType(
+    sangria.macros.derive.AddFields(
+      Field(
+        name = "bottomTopIdFkeyRel",
+        fieldType = TopRowSchema.topRowType,
+        resolve = ctx => TopRowSchema.topRowByPrimaryKeyFetcher.defer(ctx.value.topId)
+      )
+    )
+  )
+
+  implicit lazy val bottomRowResultType: sangria.schema.ObjectType[GraphQLContext, BottomRowResult] = deriveObjectType()
+
+  val queryFields = fields(
+    unitField(name = "bottomRow", desc = None, t = OptionType(bottomRowType), f = (c, td) => {
+      c.ctx.getInstance[services.BottomRowService].getByPrimaryKey(c.ctx.creds, c.arg(bottomRowIdArg))(td)
+    }, bottomRowIdArg),
+    unitField(name = "bottomRowSeq", desc = None, t = ListType(bottomRowType), f = (c, td) => {
+      c.ctx.getInstance[services.BottomRowService].getByPrimaryKeySeq(c.ctx.creds, c.arg(bottomRowIdSeqArg))(td)
+    }, bottomRowIdSeqArg),
+    unitField(name = "bottomRowSearch", desc = None, t = bottomRowResultType, f = (c, td) => {
+      runSearch(c.ctx.getInstance[services.BottomRowService], c, td).map(toResult)
+    }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)
+  )
+
+  val bottomRowMutationType = ObjectType(
+    name = "BottomRowMutations",
+    fields = fields(
+      unitField(name = "create", desc = None, t = OptionType(bottomRowType), f = (c, td) => {
+        c.ctx.getInstance[services.BottomRowService].create(c.ctx.creds, c.arg(dataFieldsArg))(td)
+      }, dataFieldsArg),
+      unitField(name = "update", desc = None, t = OptionType(bottomRowType), f = (c, td) => {
+        c.ctx.getInstance[services.BottomRowService].update(c.ctx.creds, c.arg(bottomRowIdArg), c.arg(dataFieldsArg))(td).map(_._1)
+      }, bottomRowIdArg, dataFieldsArg),
+      unitField(name = "remove", desc = None, t = bottomRowType, f = (c, td) => {
+        c.ctx.getInstance[services.BottomRowService].remove(c.ctx.creds, c.arg(bottomRowIdArg))(td)
+      }, bottomRowIdArg)
+    )
+  )
+
+  val mutationFields = fields(unitField(name = "bottomRow", desc = None, t = bottomRowMutationType, f = (_, _) => scala.concurrent.Future.successful(())))
+
+  private[this] def toResult(r: GraphQLSchemaHelper.SearchResult[BottomRow]) = {
+    BottomRowResult(paging = r.paging, filters = r.args.filters, orderBys = r.args.orderBys, totalCount = r.count, results = r.results, durationMs = r.dur)
+  }
+}

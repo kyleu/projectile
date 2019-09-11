@@ -24,7 +24,7 @@ class FormService(id: String) extends Entrypoint("form") {
     dropdownOptions = js.Dynamic.literal(container = dom.document.body)
   ))
 
-  Logging.info(s"Form service started. [${fields.length}] fields")
+  Logging.info(s"Form service started with [${fields.length}] fields")
 
   private[this] def wireField(checkbox: JQuery) = {
     val name = checkbox.data("name").toString

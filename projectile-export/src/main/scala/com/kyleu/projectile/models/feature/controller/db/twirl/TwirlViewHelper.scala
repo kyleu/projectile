@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.feature.controller.db.twirl
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
-import com.kyleu.projectile.models.export.{ExportField, ExportModel, ExportModelReference}
+import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
@@ -11,38 +11,13 @@ object TwirlViewHelper {
   def addButtons(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
     if (model.pkFields.nonEmpty) {
-      file.add(s"""<div class="right"><a class="btn @cfg.user.buttonColor" href="@${TwirlHelper.routesClass(config, model)}.editForm($args)">Edit</a></div>""")
+      val url = TwirlHelper.routesClass(config, model)
+      file.add(s"""<div class="right"><a class="btn @cfg.user.buttonColor" href="@$url.editForm($args)">Edit</a></div>""")
       val rc = TwirlHelper.routesClass(config, model)
 
       val onClick = s"""onclick="return confirm('Are you sure you want to remove this ${model.title}?')""""
       file.add(s"""<div class="right"><a class="btn-flat remove-link" $onClick href="@$rc.remove($args)">Remove</a></div>""")
     }
-  }
-
-  def addReferences(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (ExportModelReference.validReferences(config, model).nonEmpty) {
-    val args = model.pkFields.map(field => s"model.${field.propertyName}").mkString(", ")
-    file.add()
-    file.add("""<ul id="model-relations" class="collapsible" data-collapsible="expandable">""", 1)
-    ExportModelReference.transformedReferences(config, model).foreach { r =>
-      val src = r.src
-      val srcField = r.tf
-      val tgtField = r.f
-      val relArgs = s"""data-table="${src.propertyName}" data-field="${srcField.propertyName}" data-singular="${src.title}" data-plural="${src.plural}""""
-      val relAttrs = s"""id="relation-${src.propertyName}-${srcField.propertyName}" $relArgs"""
-      val relUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName}, limit = Some(5), embedded = true)"
-      val linkUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName})"
-      file.add(s"""<li $relAttrs data-url="@$relUrl">""", 1)
-      file.add("""<div class="collapsible-header">""", 1)
-      file.add(TwirlHelper.iconHtml(config = config, propertyName = src.propertyName, provided = src.provided))
-      file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
-      file.add(s"""<span class="badge"><a href="@$linkUrl"><i class="material-icons">insert_link</i></a></span>""")
-      file.add("</div>", -1)
-      file.add("""<div class="collapsible-body"><span>Loading...</span></div>""")
-      file.add("</li>", -1)
-    }
-    file.add("</ul>", -1)
-    // file.add(s"@${(config.systemViewPackage ++ Seq("html", "components")).mkString(".")}.includeScalaJs(debug)")
-    file.add(s"""<script>$$(function() { new RelationService('@${TwirlHelper.routesClass(config, model)}.relationCounts($args)') });</script>""")
   }
 
   def addFields(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {

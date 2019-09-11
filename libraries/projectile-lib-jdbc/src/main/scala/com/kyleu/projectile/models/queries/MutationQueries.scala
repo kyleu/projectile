@@ -37,4 +37,12 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     override val sql = s"""update ${quote(tableName)} set ${cols.map(_ + " = ?").mkString(", ")} where $pkWhereClause"""
     override val values = dataFields.map(f => ResultFieldHelper.valueForField("update", f.k, f.v, fields)) ++ pks
   }
+
+  protected class UpdateFieldsBulk(pks: Seq[Seq[Any]], dataFields: Seq[DataField]) extends Statement {
+    override val name = s"$key.update.fields"
+    private[this] val cols = dataFields.map(f => ResultFieldHelper.sqlForField("update", f.k, fields))
+    private[this] val whereClause = pks.map(_ => "(" + pkWhereClause + ")").mkString(" or ")
+    override val sql = s"""update ${quote(tableName)} set ${cols.map(_ + " = ?").mkString(", ")} where $whereClause"""
+    override val values = dataFields.map(f => ResultFieldHelper.valueForField("update", f.k, f.v, fields)) ++ pks.flatten
+  }
 }

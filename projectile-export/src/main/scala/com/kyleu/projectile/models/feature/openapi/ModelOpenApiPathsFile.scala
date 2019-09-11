@@ -142,7 +142,7 @@ object ModelOpenApiPathsFile {
 
   private[this] def addForeignKey(model: ExportModel, fk: ForeignKey, enums: Seq[ExportEnum], file: JsonFile, route: String) = fk.references match {
     case h :: Nil =>
-      val field = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
+      val field = model.getField(h.source)
       file.add(s""""$route/by${field.className}/{${field.propertyName}}": {""", 1)
       file.add("\"get\": {", 1)
       file.add(s""""summary": "Finds the ${model.className} entities associated to the provided [${field.propertyName}]",""")

@@ -1,0 +1,34 @@
+@* Generated File *@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.BottomRow, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.views.html.layout.page(title = s"Bottom", cfg = cfg, icon = Some(models.template.Icons.bottomRow)) {
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@controllers.admin.system.routes.BottomRowController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Bottom?')" href="@controllers.admin.system.routes.BottomRowController.remove(model.id)">Remove</a></div>
+    <table class="highlight responsive-table">
+      <tbody>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
+          <td>@model.id</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.topId.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Top Id</div></th>
+          <td>
+            @model.topId
+            <a href="@controllers.admin.system.routes.TopRowController.view(model.topId)"><i class="material-icons small">@models.template.Icons.topRow</i></a>
+          </td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">T</div></th>
+          <td>@model.t.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+        </tr>
+      </tbody>
+    </table>
+  }
+
+  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
+
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "BottomRow", "Bottom", model.id)
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+}

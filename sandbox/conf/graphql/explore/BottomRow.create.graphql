@@ -1,0 +1,11 @@
+# Generated File
+# Creates a new BottomRow entity
+mutation BottomRowCreate {
+  bottomRow {
+    create(fields: [{k: "", v: ""}]) {
+      id
+      topId
+      t
+    }
+  }
+}

@@ -28,7 +28,7 @@ object TwirlViewFile {
     TwirlViewHelper.addFields(config, model, file)
     file.add("}", -1)
     addModelFeatures(config, model, file)
-    TwirlViewHelper.addReferences(config, model, file)
+    TwirlViewReferences.addReferences(config, model, file)
     file.add()
     file.add(s"@$systemViewPkg.components.includeScalaJs(debug)")
     file.add("}", -1)

@@ -73,7 +73,7 @@ object DoobieFile {
         case h :: Nil =>
           file.addImport(Seq("cats", "data"), "NonEmptyList")
 
-          val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
+          val col = model.getField(h.source)
           col.addImport(config = config, file = file, pkg = model.doobiePackage(config))
           val propId = col.propertyName
           val propCls = col.className

@@ -1,0 +1,10 @@
+# Generated File
+# Updates a single TopRow entity using the provided fields
+mutation TopRowUpdate {
+  topRow {
+    update(id: "00000000-0000-0000-0000-000000000000", fields: [{k: "", v: ""}]) {
+      id
+      t
+    }
+  }
+}

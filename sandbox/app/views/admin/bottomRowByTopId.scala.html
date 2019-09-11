@@ -1,0 +1,31 @@
+@* Generated File *@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, topId: java.util.UUID, modelSeq: Seq[models.BottomRow], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
+    implicit request: Request[AnyContent], flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)
+@defining(com.kyleu.projectile.services.augment.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>
+  @com.kyleu.projectile.views.html.admin.explore.list(
+    cfg = cfg,
+    model = "Bottom",
+    modelPlural = "Bottoms",
+    icon = models.template.Icons.bottomRow,
+    cols = Seq(
+      "id" -> "Id"
+    ),
+    orderBy = orderBy,
+    orderAsc = orderAsc,
+    totalCount = None,
+    rows = modelSeq.map(model => views.html.admin.bottomRowDataRow(model, additional = aug._3.get(model).flatten)),
+    calls = com.kyleu.projectile.models.web.ListCalls(
+      orderBy = Some(controllers.admin.system.routes.BottomRowController.byTopId(topId, _, _, Some(limit), Some(0))),
+      search = None,
+      next = controllers.admin.system.routes.BottomRowController.byTopId(topId, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+      prev = controllers.admin.system.routes.BottomRowController.byTopId(topId, orderBy, orderAsc, Some(limit), Some(offset - limit)),
+    ),
+    limit = limit,
+    offset = offset,
+    q = None,
+    additionalHeader = aug._1,
+    additionalColumns = aug._2,
+    fullUI = false
+  )
+}

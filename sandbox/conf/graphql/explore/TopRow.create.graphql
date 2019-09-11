@@ -1,0 +1,10 @@
+# Generated File
+# Creates a new TopRow entity
+mutation TopRowCreate {
+  topRow {
+    create(fields: [{k: "", v: ""}]) {
+      id
+      t
+    }
+  }
+}

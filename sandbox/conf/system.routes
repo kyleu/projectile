@@ -1,0 +1,27 @@
+# Start model routes
+# Projectile export section [sandbox]
+
+# Bottom Routes
+GET         /bottomRow                                                controllers.admin.system.BottomRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /bottomRow/autocomplete                                   controllers.admin.system.BottomRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /bottomRow/form                                           controllers.admin.system.BottomRowController.createForm
+POST        /bottomRow                                                controllers.admin.system.BottomRowController.create
+POST        /bottomRow/bulk                                           controllers.admin.system.BottomRowController.bulkEdit
+GET         /bottomRow/:id                                            controllers.admin.system.BottomRowController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /bottomRow/:id/form                                       controllers.admin.system.BottomRowController.editForm(id: java.util.UUID)
+POST        /bottomRow/:id                                            controllers.admin.system.BottomRowController.edit(id: java.util.UUID)
+GET         /bottomRow/:id/remove                                     controllers.admin.system.BottomRowController.remove(id: java.util.UUID)
+GET         /bottomRow/byTopId/:topId                                 controllers.admin.system.BottomRowController.byTopId(topId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /bottomRow/byTopId/:topId/bulk                            controllers.admin.system.BottomRowController.byTopIdBulkForm(topId: java.util.UUID)
+
+# Top Routes
+GET         /topRow                                                   controllers.admin.system.TopRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /topRow/autocomplete                                      controllers.admin.system.TopRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /topRow/form                                              controllers.admin.system.TopRowController.createForm
+POST        /topRow                                                   controllers.admin.system.TopRowController.create
+GET         /topRow/:id                                               controllers.admin.system.TopRowController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /topRow/:id/counts                                        controllers.admin.system.TopRowController.relationCounts(id: java.util.UUID)
+GET         /topRow/:id/form                                          controllers.admin.system.TopRowController.editForm(id: java.util.UUID)
+POST        /topRow/:id                                               controllers.admin.system.TopRowController.edit(id: java.util.UUID)
+GET         /topRow/:id/remove                                        controllers.admin.system.TopRowController.remove(id: java.util.UUID)
+# End model routes

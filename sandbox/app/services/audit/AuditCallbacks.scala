@@ -12,6 +12,9 @@ class AuditCallbacks(override val injector: Injector) extends AuditCallbackProvi
 
   private[this] def routeFor(key: String, arg: Int => String): Call = key.toLowerCase match {
     /* Start audit calls */
+    /* Projectile export section [sandbox] */
+    case "bottomrow" => controllers.admin.system.routes.BottomRowController.view(uuidArg(arg(0)))
+    case "toprow" => controllers.admin.system.routes.TopRowController.view(uuidArg(arg(0)))
     /* End audit calls */
     case _ =>
       log.warn(s"Invalid model key [$key].")(TraceData.noop)

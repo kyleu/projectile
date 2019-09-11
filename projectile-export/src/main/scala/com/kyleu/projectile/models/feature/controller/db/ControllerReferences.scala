@@ -42,10 +42,10 @@ object ControllerReferences {
     refServices.map(s => s.propertyName + "S: " + s.className + "Service").mkString(", ")
   }
 
-  def writeForeignKeys(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = model.foreignKeys.foreach { fk =>
+  def writeForeignKeys(config: ExportConfiguration, model: ExportModel, file: ScalaFile, viewHtmlPackage: String) = model.foreignKeys.foreach { fk =>
     fk.references match {
       case h :: Nil =>
-        val col = model.fields.find(_.key == h.source).getOrElse(throw new IllegalStateException(s"Missing column [${h.source}]"))
+        val col = model.getField(h.source)
         col.addImport(config, file, Nil)
         val propId = col.propertyName
         val propCls = col.className
@@ -56,14 +56,14 @@ object ControllerReferences {
         file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq")
         file.add(s"svc.getBy$propCls(request, $propId, orderBys, limit, offset).map(models => renderChoice(t) {", 1)
 
-        val cfgArg = s"""app.cfg(Some(request.identity), "${model.firstPackage}", "${model.key}", "${col.title}")"""
+        def cfgArg(s: String) = s"""app.cfg(Some(request.identity), "${model.firstPackage}", "${model.key}", "$s")"""
         val args = s"""$propId, models, orderBy, orderAsc, limit.getOrElse(5), offset.getOrElse(0)"""
         val call = s"${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}By$propCls"
 
         file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "page")
         file.addImport(config.systemPackage ++ Seq("views", "html", "layout"), "card")
         file.add("case MimeTypes.HTML =>", 1)
-        file.add(s"val cfg = $cfgArg")
+        file.add(s"val cfg = ${cfgArg(col.title)}")
         file.add(s"val list = $call(cfg, $args)")
         val fullCall = s"""Ok(page(s"${model.plural} by ${col.title} [$$$propId]", cfg)(card(None)(list)))"""
         file.add(s"""if (embedded) { Ok(list) } else { $fullCall }""")
@@ -73,6 +73,15 @@ object ControllerReferences {
         file.add(s"""case BaseController.MimeTypes.csv => csvResponse("${model.className} by $propId", svc.csvFor(0, models))""")
 
         file.add("})", -1)
+        file.add("}", -1)
+        file.add("}", -1)
+        file.add()
+        file.add(s"""def by${propCls}BulkForm($propId: ${col.scalaType(config)}) = {""", 1)
+        file.add(s"""withSession("get.by.$propId", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
+        file.add(s"svc.getBy$propCls(request, $propId).map { modelSeq =>", 1)
+        file.add(s"val act = ${model.routesPackage(config).mkString(".")}.${model.className}Controller.bulkEdit()")
+        file.add(s"Ok($viewHtmlPackage.${model.propertyName}BulkForm(${cfgArg("Bulk Edit")}, modelSeq, act, debug = app.config.debug))")
+        file.add("}", -1)
         file.add("}", -1)
         file.add("}", -1)
       case _ => // noop

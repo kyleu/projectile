@@ -10,19 +10,31 @@ import scala.concurrent.Future
 object Schema extends BaseGraphQLSchema {
   override protected def additionalFetchers = Nil ++
     /* Start model fetchers */
-    /* End model fetchers */
-    Nil
+    /* Projectile export section [sandbox] */
+    Seq(
+      models.graphql.BottomRowSchema.bottomRowByPrimaryKeyFetcher,
+      models.graphql.BottomRowSchema.bottomRowByTopIdFetcher,
+      models.graphql.TopRowSchema.topRowByPrimaryKeyFetcher
+    ) ++
+      /* End model fetchers */
+      Nil
 
   override protected def additionalQueryFields = fields[GraphQLContext, Unit](
     Field(name = "status", fieldType = StringType, resolve = c => Future.successful("OK")),
     Field(name = "version", fieldType = StringType, resolve = _ => Future.successful(Version.version))
   ) ++
     /* Start query fields */
+    /* Projectile export section [sandbox] */
+    models.graphql.BottomRowSchema.queryFields ++
+    models.graphql.TopRowSchema.queryFields ++
     /* End query fields */
     Nil
 
   override protected def additionalMutationFields = Nil ++
     /* Start mutation fields */
+    /* Projectile export section [sandbox] */
+    models.graphql.BottomRowSchema.mutationFields ++
+    models.graphql.TopRowSchema.mutationFields ++
     /* End mutation fields */
     Nil
 }

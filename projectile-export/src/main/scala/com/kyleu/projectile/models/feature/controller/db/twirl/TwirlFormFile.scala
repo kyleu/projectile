@@ -1,12 +1,27 @@
 package com.kyleu.projectile.models.feature.controller.db.twirl
 
-import com.kyleu.projectile.models.export.ExportModel
+import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlFormFile {
+  def addScripts(config: ExportConfiguration, file: TwirlFile, model: ExportModel, systemViewPkg: String) = {
+    file.add(s"@$systemViewPkg.components.includeScalaJs(debug)")
+    if (model.fields.exists(field => model.foreignKeys.exists(_.references.forall(_.source == field.key)))) {
+      file.add(s"@$systemViewPkg.components.includeAutocomplete(debug)")
+    }
+    val hasTagEditor = model.fields.exists(_.t match {
+      case FieldType.ListType(_) | FieldType.SetType(_) => true
+      case FieldType.MapType(_, _) | FieldType.TagsType => true
+      case _ => false
+    })
+    if (hasTagEditor) {
+      file.add(s"@$systemViewPkg.components.includeTagEditor(debug)")
+    }
+  }
+
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "Form")
 
@@ -26,23 +41,8 @@ object TwirlFormFile {
 
     file.add("}", -1)
 
-    file.add(s"@$systemViewPkg.components.includeScalaJs(debug)")
-
-    if (model.fields.exists(field => model.foreignKeys.exists(_.references.forall(_.source == field.key)))) {
-      file.add(s"@$systemViewPkg.components.includeAutocomplete(debug)")
-    }
-
-    val hasTagEditor = model.fields.exists(_.t match {
-      case FieldType.ListType(_) | FieldType.SetType(_) => true
-      case FieldType.MapType(_, _) | FieldType.TagsType => true
-      case _ => false
-    })
-    if (hasTagEditor) {
-      file.add(s"@$systemViewPkg.components.includeTagEditor(debug)")
-    }
-
+    addScripts(config, file, model, systemViewPkg)
     file.add(s"""<script>$$(function() { new FormService('form-edit-${model.propertyName}'); })</script>""")
-
     file
   }
 
@@ -55,15 +55,16 @@ object TwirlFormFile {
     file.add("}", -1)
   }
 
+  def autocomplete(config: ExportConfiguration, file: TwirlFile, model: ExportModel, field: ExportField) = {
+    model.foreignKeys.find(_.references.forall(_.source == field.key)).map { fk =>
+      fk -> config.getModel(fk.targetTable, s"foreign key ${fk.name}")
+    }
+  }
+
   private[this] def table(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
     file.add("<table>", 1)
     file.add("<tbody>", 1)
-    model.fields.foreach { field =>
-      val autocomplete = model.foreignKeys.find(_.references.forall(_.source == field.key)).map { fk =>
-        fk -> config.getModel(fk.targetTable, s"foreign key ${fk.name}")
-      }
-      TwirlFormFields.fieldFor(config, model, field, file, autocomplete)
-    }
+    model.fields.foreach(field => TwirlFormFields.fieldFor(config, model, field, file, autocomplete(config, file, model, field)))
     file.add("</tbody>", -1)
     file.add("</table>", -1)
   }

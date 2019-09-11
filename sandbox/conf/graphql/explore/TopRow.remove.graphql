@@ -1,0 +1,10 @@
+# Generated File
+# Remove a single TopRow entity from the system
+mutation TopRowRemove {
+  topRow {
+    remove(id: "00000000-0000-0000-0000-000000000000") {
+      id
+      t
+    }
+  }
+}

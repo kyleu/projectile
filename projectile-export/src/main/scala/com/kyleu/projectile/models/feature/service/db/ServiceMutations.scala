@@ -40,7 +40,6 @@ object ServiceMutations {
       file.add(s"""case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for ${model.title} [$interp]")""")
       val currName = if (model.features(ModelFeature.Audit)) { "current" } else { "_" }
       file.add(s"case Some($currName) => db.executeF(${model.className}Queries.update($call, fields))(td).flatMap { _ =>", 1)
-
       val newCall = model.pkFields.map { f =>
         if (f.t.isDate) {
           file.addImport(CommonImportHelper.get(config, "DateUtils")._1, "DateUtils")
@@ -64,6 +63,15 @@ object ServiceMutations {
       file.add(s"""case None => throw new IllegalStateException(s"Cannot find ${model.className} matching [$interp]")""")
       file.add("})", -1)
       file.add("}", -1)
+
+      if (model.foreignKeys.nonEmpty) {
+        file.add()
+        file.add(s"""def updateBulk(creds: Credentials, pks: Seq[Seq[Any]], fields: Seq[DataField])$trace = $editCheck{""", 1)
+        file.add(s"db.executeF(${model.className}Queries.updateBulk(pks, fields))(trace).map { x =>", 1)
+        file.add(s"""s"Updated [$${fields.size}] fields for [$$x of $${pks.size}] ${model.plural}"""")
+        file.add("}", -1)
+        file.add("}", -1)
+      }
     }
   }
 }
