@@ -30,7 +30,7 @@ object DoobieFile {
     file.add()
 
     file.add(s"""override val columns = Seq(${cols.map("\"" + _ + "\"").mkString(", ")})""")
-    file.add(s"override val searchColumns = Seq(${model.searchFields.map("\"" + _.key + "\"").mkString(", ")})")
+    file.add(s"override val searchColumns = Seq(${model.localSearchFields.map("\"" + _.key + "\"").mkString(", ")})")
     file.add()
 
     file.add("override def searchFragment(q: String) = {", 1)

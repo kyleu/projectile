@@ -9,7 +9,7 @@ object InjectOpenApiPaths extends FeatureLogic.Inject(path = OutputPath.ServerRe
   override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.inputType.isDatabase)
   override def dir(config: ExportConfiguration) = Seq("openapi", "paths")
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val models = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase).sortBy { x =>
       x.pkg.mkString("/") + "/" + x.propertyName
     }

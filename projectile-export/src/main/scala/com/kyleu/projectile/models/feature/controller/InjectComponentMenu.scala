@@ -19,7 +19,7 @@ object InjectComponentMenu extends FeatureLogic.Inject(path = OutputPath.ServerS
     roots -> pkgGroups
   }
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val (roots, pkgGroups) = modelsFor(config)
 
     val rootGroup = if (roots.isEmpty) { Nil } else { Seq("system" -> roots) }

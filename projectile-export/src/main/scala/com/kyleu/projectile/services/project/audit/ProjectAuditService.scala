@@ -2,6 +2,7 @@ package com.kyleu.projectile.services.project.audit
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
 import com.kyleu.projectile.models.project.ProjectOutput
 import com.kyleu.projectile.models.project.audit.{AuditMessage, AuditResult}
@@ -62,7 +63,7 @@ object ProjectAuditService {
 
   private[this] def getUnindexed(cfgs: Seq[ExportConfiguration]) = cfgs.flatMap { cfg =>
     cfg.models.flatMap { m =>
-      m.fields.filter(f => f.inSearch && !f.indexed).map { f =>
+      m.fields.filter(f => f.inGlobalSearch && (!f.indexed) && (f.t != FieldType.JsonType)).map { f =>
         AuditMessage(project = cfg.project.key, srcModel = m.key, src = m.key, t = "unindexed", tgt = f.key, message = "Unindexed search field")
       }
     }

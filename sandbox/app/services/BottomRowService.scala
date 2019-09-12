@@ -68,6 +68,22 @@ class BottomRowService @javax.inject.Inject() (val db: JdbcDatabase, override va
     }
   }
 
+  def countByT(creds: Credentials, t: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.t")(td => db.queryF(BottomRowQueries.CountByT(t))(td))
+  }
+  def getByT(creds: Credentials, t: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.t")(td => db.queryF(BottomRowQueries.GetByT(t, orderBys, limit, offset))(td))
+  }
+  def getByTSeq(creds: Credentials, tSeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+    if (tSeq.isEmpty) {
+      Future.successful(Nil)
+    } else {
+      traceF("get.by.t.seq") { td =>
+        db.queryF(BottomRowQueries.GetByTSeq(tSeq))(td)
+      }
+    }
+  }
+
   def countByTopId(creds: Credentials, topId: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
     traceF("count.by.topId")(td => db.queryF(BottomRowQueries.CountByTopId(topId))(td))
   }

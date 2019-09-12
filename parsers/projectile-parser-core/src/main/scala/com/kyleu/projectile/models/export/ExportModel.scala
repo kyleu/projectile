@@ -52,8 +52,9 @@ case class ExportModel(
         case "" => f.t
         case x => FieldType.withValue(x)
       },
-      inSearch = m.getOverride(s"${f.key}.search", f.inSearch.toString).toBoolean,
-      inSummary = m.getOverride(s"${f.key}.summary", f.inSearch.toString).toBoolean
+      inLocalSearch = m.getOverride(s"${f.key}.localSearch", m.getOverride(s"${f.key}.search", f.inLocalSearch.toString)).toBoolean,
+      inGlobalSearch = m.getOverride(s"${f.key}.globalSearch", f.inGlobalSearch.toString).toBoolean,
+      inSummary = m.getOverride(s"${f.key}.summary", f.inSummary.toString).toBoolean
     )),
     defaultOrder = m.getOverride("defaultOrder", "none") match {
       case "none" => None
@@ -85,13 +86,14 @@ case class ExportModel(
   }
 
   val indexedFields = fields.filter(_.indexed).filterNot(_.t == FieldType.TagsType)
-  val searchFields = fields.filter(_.inSearch)
+  val globalSearchFields = fields.filter(_.inGlobalSearch)
+  val localSearchFields = fields.filter(_.inLocalSearch)
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
   def searchCols = (foreignKeys.flatMap(_.references match {
     case ref :: Nil => Some(ref.source)
     case _ => None
-  }) ++ searchFields.map(_.key)).distinct.sorted
+  }) ++ localSearchFields.map(_.key)).distinct.sorted
 
   private[this] def p(cfg: ExportConfiguration) = if (provided) { cfg.systemPackage } else { cfg.applicationPackage }
   def modelPackage(config: ExportConfiguration) = {

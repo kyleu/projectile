@@ -10,7 +10,7 @@ object InjectSystemRoutes extends FeatureLogic.Inject(path = OutputPath.ServerRe
   override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.pkg.isEmpty)
   override def dir(config: ExportConfiguration) = Nil
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val systemModels = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase).filter(_.pkg.isEmpty)
     val newLines = systemModels.flatMap(m => RoutesFiles.routesContentFor(config, m))
 

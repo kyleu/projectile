@@ -16,7 +16,7 @@ import com.kyleu.projectile.services.cache.CacheService
 import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.services.notification.NotificationService
 import com.kyleu.projectile.services.status.StatusProvider
-import com.kyleu.projectile.services.task.ScheduledTaskService
+import com.kyleu.projectile.services.task.{ScheduledTaskRegistry, ScheduledTaskService}
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import com.kyleu.projectile.util.{EncryptionUtils, JsonSerializers, Logging}
@@ -66,7 +66,6 @@ class Application @javax.inject.Inject() (
     }
     !errors.hasErrors
   }
-
   Await.result(start(), 20.seconds)
 
   private[this] def start(restart: Boolean = false) = tracing.topLevelTrace("application.start") { implicit td =>
@@ -84,7 +83,6 @@ class Application @javax.inject.Inject() (
     } catch {
       case NonFatal(x) => errors.addError("app", s"Error running application startup code: ${x.getMessage}", Map(), Some(x))
     }
-
     Future.successful(!errors.hasErrors)
   }
 
@@ -92,9 +90,11 @@ class Application @javax.inject.Inject() (
     if (ApplicationFeature.enabled(ApplicationFeature.Task)) {
       injector.getInstance(classOf[ScheduledTaskService]).stopSchedule()
     }
-    actorSystem.terminate()
+    ScheduledTaskRegistry.clear()
     db.close()
     CacheService.close()
+    log.info("Stopping application...")(TraceData.noop)
+    Await.result(actorSystem.terminate(), 15.seconds)
     if (config.metrics.tracingEnabled) { tracing.close() }
     if (config.metrics.micrometerEnabled) { Instrumented.stop() }
   }

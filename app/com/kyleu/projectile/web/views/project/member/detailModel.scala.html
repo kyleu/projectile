@@ -52,7 +52,8 @@
               <th>Property</th>
               <th>Title</th>
               <th>Type</th>
-              <th>Search</th>
+              <th>Global Search</th>
+              <th>Local Search</th>
               <th>Summary</th>
               <th>Ignored</th>
               <th colspan="2">Default Sort</th>
@@ -73,7 +74,13 @@
                 </td>
                 <td>
                   <label>
-                    <input name="field-@f.key-search" value="true" type="checkbox" @if(f.inSearch) { checked="checked" } />
+                    <input name="field-@f.key-globalSearch" value="true" type="checkbox" @if(f.inGlobalSearch) { checked="checked" } />
+                    <span></span>
+                  </label>
+                </td>
+                <td>
+                  <label>
+                    <input name="field-@f.key-localSearch" value="true" type="checkbox" @if(f.inLocalSearch) { checked="checked" } />
                     <span></span>
                   </label>
                 </td>

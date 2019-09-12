@@ -11,7 +11,7 @@ object InjectBindables extends FeatureLogic.Inject(path = OutputPath.ServerSourc
   override def applies(config: ExportConfiguration) = config.enums.exists(_.features(EnumFeature.Controller))
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "module"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val enums = config.enums.filter(_.features(EnumFeature.Controller))
     enumLogic(enums, config, original)
   }

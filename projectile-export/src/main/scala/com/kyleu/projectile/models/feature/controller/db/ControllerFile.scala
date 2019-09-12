@@ -14,15 +14,13 @@ object ControllerFile {
     val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
     val routesClass = (model.routesPackage(config) :+ (model.className + "Controller")).mkString(".")
     ControllerMutations.addImports(config, file, model)
-    if (model.propertyName != "audit") {
-      if (model.searchFields.exists(_.t == FieldType.StringType)) { file.addMarkers("string-search", model.key) }
-      model.pkFields match {
-        case sole :: Nil => sole.t match {
-          case FieldType.UuidType => file.addMarkers("uuid-search", model.key)
-          case FieldType.IntegerType => file.addMarkers("int-search", model.key)
-          case FieldType.LongType => file.addMarkers("long-search", model.key)
-          case _ => // noop
-        }
+    model.globalSearchFields.foreach { gsf =>
+      val m = model.key -> gsf.propertyName
+      gsf.t match {
+        case FieldType.StringType => file.addMarkers("string-search", m)
+        case FieldType.UuidType => file.addMarkers("uuid-search", m)
+        case FieldType.IntegerType => file.addMarkers("int-search", m)
+        case FieldType.LongType => file.addMarkers("long-search", m)
         case _ => // noop
       }
     }

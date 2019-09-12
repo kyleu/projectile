@@ -23,7 +23,7 @@ object QueriesFile {
     file.add(s"""object ${model.className}Queries extends BaseQueries[${model.className}]("${model.propertyName}", "${model.key}") {""", 1)
     file.add("override val fields = Seq(", 1)
     model.fields.foreach { f =>
-      if (f.inSearch || model.pkFields.contains(f) || f.t.isInstanceOf[EnumType]) {
+      if (f.inGlobalSearch || f.inLocalSearch || model.pkFields.contains(f) || f.t.isInstanceOf[EnumType]) {
         f.addImport(config, file, Nil)
       }
       val ftyp = QueriesHelper.classNameForSqlType(f.t, config)
@@ -35,7 +35,7 @@ object QueriesFile {
 
     if (model.pkFields.nonEmpty) {
       file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.key + "\"").mkString(", ") + ")")
-      file.add(s"override protected val searchColumns = Seq(${model.searchFields.map("\"" + _.key + "\"").mkString(", ")})")
+      file.add(s"override protected val searchColumns = Seq(${model.localSearchFields.map("\"" + _.key + "\"").mkString(", ")})")
     }
     file.add()
 

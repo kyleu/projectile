@@ -9,7 +9,7 @@
     modelPlural = "Tops",
     icon = models.template.Icons.topRow,
     cols = Seq(
-      "id" -> "Id"
+      "t" -> "T"
     ),
     totalCount = totalCount,
     rows = modelSeq.map(model => views.html.admin.topRowDataRow(model, additional = aug._3.get(model).flatten)),

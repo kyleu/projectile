@@ -50,7 +50,8 @@ case class ExportField(
     required: Boolean = false,
     indexed: Boolean = false,
     unique: Boolean = false,
-    inSearch: Boolean = false,
+    inGlobalSearch: Boolean = false,
+    inLocalSearch: Boolean = false,
     inView: Boolean = true,
     inSummary: Boolean = false,
     ignored: Boolean = false

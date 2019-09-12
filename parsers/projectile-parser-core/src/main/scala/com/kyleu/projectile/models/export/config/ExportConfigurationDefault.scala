@@ -22,7 +22,10 @@ object ExportConfigurationDefault {
     case _ => Some(v)
   }
 
-  def loadField(col: Column, indexed: Boolean, unique: Boolean, inSearch: Boolean = false, inSummary: Boolean = false, enums: Seq[ExportEnum]) = ExportField(
+  def loadField(
+    col: Column, indexed: Boolean, unique: Boolean,
+    inGlobalSearch: Boolean = false, inLocalSearch: Boolean = false, inSummary: Boolean = false, enums: Seq[ExportEnum]
+  ) = ExportField(
     key = col.name,
     propertyName = clean(toIdentifier(col.name)),
     title = toDefaultTitle(col.name),
@@ -32,7 +35,8 @@ object ExportConfigurationDefault {
     required = col.notNull,
     indexed = indexed,
     unique = unique,
-    inSearch = inSearch,
+    inGlobalSearch = inGlobalSearch,
+    inLocalSearch = inLocalSearch,
     inSummary = inSummary
   )
 }

@@ -34,8 +34,11 @@ object TableExportModel {
     val idxs = t.indexes.filter(i => i.columns.exists(_.name == col.name)).map(i => i.name -> i.unique)
     val inIndex = idxs.nonEmpty
     val unique = idxs.exists(_._2)
-    val inSearch = inPk || inIndex
+    val inGlobalSearch = inPk
+    val inLocalSearch = inPk || inIndex
     val inSummary = inPk || inIndex
-    ExportConfigurationDefault.loadField(col, inIndex, unique, inSearch, inSummary, enums)
+    ExportConfigurationDefault.loadField(
+      col = col, indexed = inIndex, unique = unique, inGlobalSearch = inGlobalSearch, inLocalSearch = inLocalSearch, inSummary = inSummary, enums = enums
+    )
   }
 }

@@ -41,7 +41,7 @@ object TwirlBulkEditFile {
     file.add("<table>", 1)
     file.add("<thead>", 1)
     file.add("<tr>", 1)
-    model.searchFields.foreach(f => file.add(s"<th>${f.title}</th>"))
+    model.summaryFields.foreach(f => file.add(s"<th>${f.title}</th>"))
     file.add("</tr>", -1)
     file.add("</thead>", -1)
     file.add("<tbody>", 1)

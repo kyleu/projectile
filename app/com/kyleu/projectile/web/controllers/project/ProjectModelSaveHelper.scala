@@ -37,8 +37,12 @@ object ProjectModelSaveHelper {
           case x if x.toBoolean != f.inSummary => Some(MemberOverride(s"${f.key}.summary", x))
           case _ => None
         },
-        form.getOrElse(s"field-${f.key}-search", "false") match {
-          case x if x.toBoolean != f.inSearch => Some(MemberOverride(s"${f.key}.search", x))
+        form.getOrElse(s"field-${f.key}-globalSearch", "false") match {
+          case x if x.toBoolean != f.inGlobalSearch => Some(MemberOverride(s"${f.key}.globalSearch", x))
+          case _ => None
+        },
+        form.getOrElse(s"field-${f.key}-localSearch", form.getOrElse(s"field-${f.key}-search", "false")) match {
+          case x if x.toBoolean != f.inLocalSearch => Some(MemberOverride(s"${f.key}.localSearch", x))
           case _ => None
         }
       ).flatten

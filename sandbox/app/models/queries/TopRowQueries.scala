@@ -16,7 +16,7 @@ object TopRowQueries extends BaseQueries[TopRow]("topRow", "top") {
     DatabaseField(title = "T", prop = "t", col = "t", typ = StringType)
   )
   override protected val pkColumns = Seq("id")
-  override protected val searchColumns = Seq("id")
+  override protected val searchColumns = Seq("id", "t")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)
   def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {
@@ -38,6 +38,13 @@ object TopRowQueries extends BaseQueries[TopRow]("topRow", "top") {
     limit = limit, offset = offset, values = Seq(id)
   )
   final case class GetByIdSeq(idSeq: Seq[UUID]) extends ColSeqQuery(column = "id", values = idSeq)
+
+  final case class CountByT(t: String) extends ColCount(column = "t", values = Seq(t))
+  final case class GetByT(t: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) extends SeqQuery(
+    whereClause = Some(quote("t") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),
+    limit = limit, offset = offset, values = Seq(t)
+  )
+  final case class GetByTSeq(tSeq: Seq[String]) extends ColSeqQuery(column = "t", values = tSeq)
 
   def insert(model: TopRow) = new Insert(model)
   def insertBatch(models: Seq[TopRow]) = new InsertBatch(models)

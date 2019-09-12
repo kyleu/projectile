@@ -40,6 +40,12 @@ class ScheduledTaskRunner(runService: ScheduledTaskRunService, tracingService: T
     }
   }
 
+  def setStatus(creds: Credentials, run: ScheduledTaskRun, msg: String)(implicit td: TraceData) = {
+    val newLog = ScheduledTaskOutput.Log(msg, (DateUtils.nowMillis - DateUtils.toMillis(run.started)).toInt)
+    val newOutput = run.taskOutput.copy(logs = run.taskOutput.logs :+ newLog)
+    runService.update(creds, run.id, run.copy(output = newOutput.asJson).toDataFields)
+  }
+
   private[this] def go(id: UUID, creds: Credentials, args: Seq[String], task: ScheduledTask, injector: Injector, td: TraceData) = {
     val start = DateUtils.now
     val startMs = DateUtils.toMillis(start)

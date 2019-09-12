@@ -47,6 +47,11 @@ class RelationService(url: String) extends Entrypoint("relation") {
     if (jq.length != 1) {
       throw new IllegalStateException(s"Missing relation section for [$model:$field]")
     }
+    if (count == 0) {
+      $(".badge", jq).hide()
+    } else {
+      $(".badge", jq).show()
+    }
     if (count == 1) {
       val singular = jq.data("singular").toString
       title.text(NumberUtils.withCommas(count) + " " + singular)

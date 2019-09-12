@@ -1,12 +1,16 @@
 @(q: String, results: Seq[Html], cfg: com.kyleu.projectile.models.config.UiConfig)(
     implicit flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = "Search Results", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.search)) {
-  @com.kyleu.projectile.views.html.layout.card(None) {
+  <ul class="collection with-header">
     @if(results.isEmpty) {
-      <h6>No search results for [@q]</h6>
+      <li class="collection-item">
+        <h6>No search results for [@q]</h6>
+      </li>
     }
     @results.map { result =>
-      <div>@result</div>
+      <li class="collection-item">
+        <div>@result</div>
+      </li>
     }
-  }
+  </ul>
 }

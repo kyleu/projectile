@@ -16,6 +16,11 @@ object BottomRowSchema extends GraphQLSchemaHelper("bottomRow") {
   val bottomRowIdArg = Argument("id", uuidType)
   val bottomRowIdSeqArg = Argument("ids", ListInputType(uuidType))
 
+  val bottomRowTopIdArg = Argument("topId", uuidType)
+  val bottomRowTopIdSeqArg = Argument("topIds", ListInputType(uuidType))
+  val bottomRowTArg = Argument("t", StringType)
+  val bottomRowTSeqArg = Argument("ts", ListInputType(StringType))
+
   val bottomRowByTopIdRelation = Relation[BottomRow, UUID]("byTopId", x => Seq(x.topId))
   val bottomRowByTopIdFetcher = Fetcher.rel[GraphQLContext, BottomRow, BottomRow, UUID](
     getByPrimaryKeySeq, (c, rels) => c.injector.getInstance(classOf[services.BottomRowService]).getByTopIdSeq(c.creds, rels(bottomRowByTopIdRelation))(c.trace)
@@ -42,7 +47,19 @@ object BottomRowSchema extends GraphQLSchemaHelper("bottomRow") {
     }, bottomRowIdSeqArg),
     unitField(name = "bottomRowSearch", desc = None, t = bottomRowResultType, f = (c, td) => {
       runSearch(c.ctx.getInstance[services.BottomRowService], c, td).map(toResult)
-    }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)
+    }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg),
+    unitField(name = "bottomsByTopId", desc = None, t = ListType(bottomRowType), f = (c, td) => {
+      c.ctx.getInstance[services.BottomRowService].getByTopId(c.ctx.creds, c.arg(bottomRowTopIdArg))(td)
+    }, bottomRowTopIdArg),
+    unitField(name = "bottomsByTopIdSeq", desc = None, t = ListType(bottomRowType), f = (c, td) => {
+      c.ctx.getInstance[services.BottomRowService].getByTopIdSeq(c.ctx.creds, c.arg(bottomRowTopIdSeqArg))(td)
+    }, bottomRowTopIdSeqArg),
+    unitField(name = "bottomsByT", desc = None, t = ListType(bottomRowType), f = (c, td) => {
+      c.ctx.getInstance[services.BottomRowService].getByT(c.ctx.creds, c.arg(bottomRowTArg))(td)
+    }, bottomRowTArg),
+    unitField(name = "bottomsByTSeq", desc = None, t = ListType(bottomRowType), f = (c, td) => {
+      c.ctx.getInstance[services.BottomRowService].getByTSeq(c.ctx.creds, c.arg(bottomRowTSeqArg))(td)
+    }, bottomRowTSeqArg)
   )
 
   val bottomRowMutationType = ObjectType(

@@ -27,7 +27,7 @@ object TwirlSearchResultFile {
 
     file.add("<em>@hit</em>")
 
-    val searches = model.searchFields.filterNot(model.pkFields.contains)
+    val searches = model.localSearchFields.filterNot(model.pkFields.contains)
     if (searches.nonEmpty) {
       file.add("""<div style="margin-top: 12px;">""", 1)
       searches.foreach { f =>

@@ -22,13 +22,13 @@ object TwirlViewReferences {
         file.add("""<div class="collapsible-header">""", 1)
         file.add(TwirlHelper.iconHtml(config = config, propertyName = src.propertyName, provided = src.provided))
         file.add(s"""<span class="title">${src.plural}</span>&nbsp;by ${srcField.title}""")
-        file.add(s"""<span class="badge">""", 1)
+        file.add(s"""<span class="badge" style="display: none;">""", 1)
         def icon(s: String) = s"""<i class="material-icons" style="margin-right: 0;">$s</i>"""
 
         val editUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}BulkForm(model.${tgtField.propertyName})"
-        file.add(s"""<a title="Bulk edit" href="@$editUrl">${icon("edit")}</a>""")
+        file.add(s"""<a class="bulk-edit-link" title="Bulk edit" href="@$editUrl">${icon("edit")}</a>""")
         val linkUrl = TwirlHelper.routesClass(config, src) + s".by${srcField.className}(model.${tgtField.propertyName})"
-        file.add(s"""<a title="View these ${src.plural}" href="@$linkUrl">${icon("insert_link")}</a>""")
+        file.add(s"""<a class="view-relation-link" title="View these ${src.plural}" href="@$linkUrl">${icon("insert_link")}</a>""")
 
         file.add(s"""</span>""", -1)
         file.add("</div>", -1)

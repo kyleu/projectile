@@ -9,7 +9,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
   override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.GraphQL))
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "graphql"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val enums = config.enums.filter(e => e.features(EnumFeature.GraphQL) && e.inputType.isDatabase).sortBy(e => e.modelPackage(config).mkString + e.className)
     val models = config.models.filter { m =>
       m.features(ModelFeature.GraphQL) && m.inputType.isDatabase
@@ -23,7 +23,7 @@ object InjectSchema extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
       } else {
         val newLines = "Seq(" +: fetchers.map { f =>
           val concat = if (fetchers.lastOption.contains(f)) { "" } else ","
-          "  " + f.trim() + concat
+          "  " + f._1.trim() + concat
         } :+ ") ++"
 
         val params = TextSectionHelper.Params(commentProvider = CommentProvider.Scala, key = "model fetchers")

@@ -1,0 +1,37 @@
+{
+  "key" : "bottom",
+  "pkg" : [ ],
+  "features" : [ "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core" ],
+  "ignored" : [ ],
+  "overrides" : [ {
+    "k" : "className",
+    "v" : "BottomRow"
+  }, {
+    "k" : "title",
+    "v" : "Bottom"
+  }, {
+    "k" : "plural",
+    "v" : "Bottoms"
+  }, {
+    "k" : "top_id.summary",
+    "v" : "true"
+  }, {
+    "k" : "top_id.localSearch",
+    "v" : "true"
+  }, {
+    "k" : "t.summary",
+    "v" : "true"
+  }, {
+    "k" : "t.globalSearch",
+    "v" : "true"
+  }, {
+    "k" : "t.localSearch",
+    "v" : "true"
+  }, {
+    "k" : "fk.bottom_top_id_fkey.propertyName",
+    "v" : "bottomTopIdFkeyRel"
+  }, {
+    "k" : "defaultOrder",
+    "v" : "asc-t"
+  } ]
+}

@@ -10,7 +10,7 @@ object InjectStartup extends FeatureLogic.Inject(path = OutputPath.ServerSource,
   override def applies(config: ExportConfiguration) = config.models.exists(m => m.features(ModelFeature.Controller) && m.inputType.isDatabase)
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "models" :+ "module"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
     val packages = filtered.flatMap(_.pkg.headOption).distinct
 

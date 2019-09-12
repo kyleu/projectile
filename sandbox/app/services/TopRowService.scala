@@ -68,6 +68,22 @@ class TopRowService @javax.inject.Inject() (val db: JdbcDatabase, override val t
     }
   }
 
+  def countByT(creds: Credentials, t: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.t")(td => db.queryF(TopRowQueries.CountByT(t))(td))
+  }
+  def getByT(creds: Credentials, t: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.t")(td => db.queryF(TopRowQueries.GetByT(t, orderBys, limit, offset))(td))
+  }
+  def getByTSeq(creds: Credentials, tSeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+    if (tSeq.isEmpty) {
+      Future.successful(Nil)
+    } else {
+      traceF("get.by.t.seq") { td =>
+        db.queryF(TopRowQueries.GetByTSeq(tSeq))(td)
+      }
+    }
+  }
+
   // Mutations
   def insert(creds: Credentials, model: TopRow)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("insert")(td => db.executeF(TopRowQueries.insert(model))(td).flatMap {

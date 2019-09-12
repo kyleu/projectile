@@ -10,7 +10,7 @@ object TwirlDataRowFile {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "DataRow")
     file.add(s"@(model: ${model.fullClassPath(config)}, additional: Option[Html] = None)<tr>", 1)
 
-    model.searchFields.foreach { field =>
+    model.summaryFields.foreach { field =>
       val href = model.pkFields match {
         case Nil => ""
         case fields =>

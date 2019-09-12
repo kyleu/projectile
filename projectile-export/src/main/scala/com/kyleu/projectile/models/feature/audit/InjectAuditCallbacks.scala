@@ -11,7 +11,7 @@ object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.Server
   override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.Service))
   override def dir(config: ExportConfiguration) = config.applicationPackage :+ "services" :+ "audit"
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     if (original.exists(_.contains("registry lookups"))) {
       routesLogic(config, markers, lookupLogic(config, markers, original))
     } else {
@@ -19,7 +19,7 @@ object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.Server
     }
   }
 
-  private[this] def lookupLogic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  private[this] def lookupLogic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val newLines = config.models.filter(_.features(ModelFeature.Service)).filterNot(_.propertyName == "audit").filter(_.pkFields.nonEmpty).map { model =>
       val svc = model.injectedService(config)
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
@@ -36,7 +36,7 @@ object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.Server
     TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)
   }
 
-  private[this] def routesLogic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  private[this] def routesLogic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val newLines = config.models.filter(_.features(ModelFeature.Controller)).filter(_.pkFields.nonEmpty).map { model =>
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
         case FieldType.EnumType(key) =>

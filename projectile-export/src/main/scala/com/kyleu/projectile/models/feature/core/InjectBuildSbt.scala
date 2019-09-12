@@ -11,7 +11,7 @@ object InjectBuildSbt extends FeatureLogic.Inject(path = OutputPath.Root, filena
 
   override def dir(config: ExportConfiguration) = Nil
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val r = markers.getOrElse("dependencies", Nil)
     val newLines = if (r.isEmpty) {
       Nil

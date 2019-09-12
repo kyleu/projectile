@@ -7,12 +7,12 @@ GET         /bottomRow/autocomplete                                   controller
 GET         /bottomRow/form                                           controllers.admin.system.BottomRowController.createForm
 POST        /bottomRow                                                controllers.admin.system.BottomRowController.create
 POST        /bottomRow/bulk                                           controllers.admin.system.BottomRowController.bulkEdit
+GET         /bottomRow/byTopId/:topId                                 controllers.admin.system.BottomRowController.byTopId(topId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /bottomRow/byTopId/:topId/bulk                            controllers.admin.system.BottomRowController.byTopIdBulkForm(topId: java.util.UUID)
 GET         /bottomRow/:id                                            controllers.admin.system.BottomRowController.view(id: java.util.UUID, t: Option[String] ?= None)
 GET         /bottomRow/:id/form                                       controllers.admin.system.BottomRowController.editForm(id: java.util.UUID)
 POST        /bottomRow/:id                                            controllers.admin.system.BottomRowController.edit(id: java.util.UUID)
 GET         /bottomRow/:id/remove                                     controllers.admin.system.BottomRowController.remove(id: java.util.UUID)
-GET         /bottomRow/byTopId/:topId                                 controllers.admin.system.BottomRowController.byTopId(topId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
-GET         /bottomRow/byTopId/:topId/bulk                            controllers.admin.system.BottomRowController.byTopIdBulkForm(topId: java.util.UUID)
 
 # Top Routes
 GET         /topRow                                                   controllers.admin.system.TopRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)

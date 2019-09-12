@@ -9,7 +9,7 @@ object InjectThriftModel extends FeatureLogic.Inject(path = OutputPath.ThriftOut
   override def applies(config: ExportConfiguration) = config.models.exists(_.features(ModelFeature.Thrift))
   override def dir(config: ExportConfiguration) = Nil
 
-  override def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]) = {
+  override def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val newLines = config.models.filter(_.features(ModelFeature.Thrift)).map { m =>
       s"""include "${("models" +: m.pkg).mkString("/")}/${m.className}.thrift""""
     }.sorted

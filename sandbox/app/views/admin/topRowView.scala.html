@@ -28,9 +28,9 @@
       <div class="collapsible-header">
         <i class="material-icons small">@models.template.Icons.bottomRow</i>
         <span class="title">Bottoms</span>&nbsp;by Top Id
-        <span class="badge">
-          <a title="Bulk edit" href="@controllers.admin.system.routes.BottomRowController.byTopIdBulkForm(model.id)"><i class="material-icons" style="margin-right: 0;">edit</i></a>
-          <a title="View these Bottoms" href="@controllers.admin.system.routes.BottomRowController.byTopId(model.id)"><i class="material-icons" style="margin-right: 0;">insert_link</i></a>
+        <span class="badge" style="display: none;">
+          <a class="bulk-edit-link" title="Bulk edit" href="@controllers.admin.system.routes.BottomRowController.byTopIdBulkForm(model.id)"><i class="material-icons" style="margin-right: 0;">edit</i></a>
+          <a class="view-relation-link" title="View these Bottoms" href="@controllers.admin.system.routes.BottomRowController.byTopId(model.id)"><i class="material-icons" style="margin-right: 0;">insert_link</i></a>
         </span>
       </div>
       <div class="collapsible-body"><span>Loading...</span></div>

@@ -15,6 +15,7 @@ object ScheduledTaskRegistry {
   private[this] var all = List.empty[ScheduledTask]
   def register(task: ScheduledTask) = all = all :+ task
   def getAll = all
+  def clear() = all = Nil
 
   def byKey(key: String) = all.find(_.key == key).getOrElse(throw new IllegalStateException(s"No task with key [$key]"))
 

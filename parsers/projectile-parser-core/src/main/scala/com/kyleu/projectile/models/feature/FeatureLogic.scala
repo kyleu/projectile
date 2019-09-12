@@ -12,9 +12,9 @@ object FeatureLogic {
   abstract class Inject(val path: OutputPath, val filename: String) {
     def applies(config: ExportConfiguration): Boolean
     def dir(config: ExportConfiguration): Seq[String]
-    def logic(config: ExportConfiguration, markers: Map[String, Seq[String]], original: Seq[String]): Seq[String]
+    def logic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]): Seq[String]
 
-    def inject(config: ExportConfiguration, markers: Map[String, Seq[String]], projectRoot: File, info: String => Unit, debug: String => Unit) = {
+    def inject(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], projectRoot: File, info: String => Unit, debug: String => Unit) = {
       if (applies(config)) {
         val projectPath = projectRoot / config.project.getPath(path)
         val d = dir(config).mkString("/")
@@ -58,7 +58,7 @@ trait FeatureLogic {
   final def inject(
     config: ExportConfiguration,
     projectRoot: File,
-    markers: Map[String, Seq[String]],
+    markers: Map[String, Seq[(String, String)]],
     info: String => Unit,
     debug: String => Unit
   ): Seq[InjectResult] = injections.flatMap(_.inject(config, markers, projectRoot, info, debug))

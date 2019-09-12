@@ -32,7 +32,7 @@ class ScheduledTaskService @javax.inject.Inject() (
       import scala.concurrent.duration._
       log.info(s"Scheduling task to run every [$intervalSecs] seconds, after an initial [$delaySecs] second delay")
       scheduled.foreach(_ => stopSchedule())
-      scheduled = Some(system.scheduler.schedule(delaySecs.seconds, intervalSecs.seconds, (() => runAll(creds, injector, args)): Runnable))
+      scheduled = Some(system.scheduler.schedule(delaySecs.seconds, intervalSecs.seconds, (() => tick(creds, injector, args)): Runnable))
     } else {
       log.info("Scheduled task is disabled, skipping timed schedule")
       log.info("To enable, set [scheduled.task.enabled] in application.conf")
@@ -40,7 +40,11 @@ class ScheduledTaskService @javax.inject.Inject() (
   }
 
   def stopSchedule() = {
-    scheduled.foreach(_.cancel())
+    scheduled.foreach { s =>
+      val ok = s.cancel()
+      log.info(s"Stopped scheduled tasks: $ok")(TraceData.noop)
+    }
+    enabled = false
     scheduled = None
   }
 
@@ -64,25 +68,29 @@ class ScheduledTaskService @javax.inject.Inject() (
         tasks.filter(t => runs.get(t.key) match {
           case Some(_) if args.contains("merge") => false
           case Some(_) if args.contains("concurrent") => true
-          case Some(r) if r.status == "Running" =>
+          case Some(r) if r.completed.isEmpty || r.status == "Running" =>
             val last = DateUtils.toMillis(r.started)
-            val diffMinutes = (DateUtils.nowMillis - last) / 1000 / 60
-            if (diffMinutes > 60) {
-              log.warn(s"Resetting scheduled task [${t.key}] as it has been running for over an hour")
-              // runner.setStatus(creds, r.copy(status = "Reset", completed = DateUtils.now), "Timed out running task")
+            val elapsedMs = (DateUtils.nowMillis - last)
+            if (elapsedMs > (t.expectedRuntimeMs * 2)) {
+              log.warn(s"Resetting scheduled task [${t.key}] as it has been running for over ${t.expectedRuntimeMs * 2}ms")
+              runner.setStatus(creds, r.copy(status = "Reset", completed = Some(DateUtils.now)), "Timed out running task")
             } else {
               log.debug(s"Already running scheduled task [${t.key}], and [concurrent] or [merge] was not provided")
             }
             false
-          case Some(r) if r.started.plusSeconds(t.runFrequencySeconds.toLong).isBefore(now) => true
+          case Some(r) if r.started.plusNanos(t.runFrequencyMs.toLong * 1000000).isBefore(now) => true
           case Some(r) =>
-            log.debug(s"Skipping task [${t.key}], as it was run at [${r.started}], which is within [${t.runFrequencySeconds}] seconds")
+            log.debug(s"Skipping task [${t.key}], as it was run at [${r.started}], which is within [${t.runFrequencyMs}ms]")
             false
           case None => true
         })
       }
       runner.start(creds, tasksToRun, injector, args)
     }
+  }
+
+  private[this] def tick(creds: Credentials, injector: Injector, args: Seq[String])(implicit td: TraceData) = {
+    runAll(creds, injector, args)
   }
 
   private[this] val statusQuery = new ListQuery[ScheduledTaskRun] {

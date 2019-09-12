@@ -34,7 +34,9 @@ object SourceFileParser {
     nodes.foreach(node => file.add(s"  - ${ctx.root.relativize(File(node.path)).toString}"))
 
     if (typesReferences.nonEmpty) {
-      file.addMarkers("dependencies", typesReferences.map(_.ref): _*)
+      typesReferences.foreach { tr =>
+        file.addMarkers("dependencies", tr.ref -> "n/a")
+      }
       file.add()
       file.add("## Dependencies")
       file.add()

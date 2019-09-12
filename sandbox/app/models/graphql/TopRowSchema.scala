@@ -16,6 +16,9 @@ object TopRowSchema extends GraphQLSchemaHelper("topRow") {
   val topRowIdArg = Argument("id", uuidType)
   val topRowIdSeqArg = Argument("ids", ListInputType(uuidType))
 
+  val topRowTArg = Argument("t", StringType)
+  val topRowTSeqArg = Argument("ts", ListInputType(StringType))
+
   implicit lazy val topRowType: sangria.schema.ObjectType[GraphQLContext, TopRow] = deriveObjectType(
     sangria.macros.derive.AddFields(
       Field(
@@ -39,7 +42,13 @@ object TopRowSchema extends GraphQLSchemaHelper("topRow") {
     }, topRowIdSeqArg),
     unitField(name = "topRowSearch", desc = None, t = topRowResultType, f = (c, td) => {
       runSearch(c.ctx.getInstance[services.TopRowService], c, td).map(toResult)
-    }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg)
+    }, queryArg, reportFiltersArg, orderBysArg, limitArg, offsetArg),
+    unitField(name = "topsByT", desc = None, t = ListType(topRowType), f = (c, td) => {
+      c.ctx.getInstance[services.TopRowService].getByT(c.ctx.creds, c.arg(topRowTArg))(td)
+    }, topRowTArg),
+    unitField(name = "topsByTSeq", desc = None, t = ListType(topRowType), f = (c, td) => {
+      c.ctx.getInstance[services.TopRowService].getByTSeq(c.ctx.creds, c.arg(topRowTSeqArg))(td)
+    }, topRowTSeqArg)
   )
 
   val topRowMutationType = ObjectType(

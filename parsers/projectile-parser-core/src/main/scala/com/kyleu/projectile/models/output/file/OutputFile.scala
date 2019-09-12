@@ -9,7 +9,7 @@ object OutputFile {
     implicit val jsonDecoder: Decoder[Rendered] = deriveDecoder
   }
 
-  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String, markers: Map[String, Seq[String]]) {
+  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String, markers: Map[String, Seq[(String, String)]]) {
     val filePath = s"${dir.map(_ + "/").mkString}$filename"
     override val toString = s"$path:$filePath"
   }
@@ -22,9 +22,9 @@ abstract class OutputFile(val path: OutputPath, val dir: Seq[String], val key: S
 
   protected def icon: String
 
-  private[this] val markers = collection.mutable.HashMap.empty[String, Seq[String]]
+  private[this] val markers = collection.mutable.HashMap.empty[String, Seq[(String, String)]]
   def markersFor(key: String) = markers.getOrElseUpdate(key, Nil)
-  def addMarkers(key: String, v: String*) = markers(key) = markersFor(key) ++ v
+  def addMarkers(key: String, v: (String, String)*) = markers(key) = markersFor(key) ++ v
 
   def indent(indentDelta: Int = 1): Unit = currentIndent += indentDelta
 

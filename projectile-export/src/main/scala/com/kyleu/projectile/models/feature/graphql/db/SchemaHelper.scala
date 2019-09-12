@@ -32,7 +32,8 @@ object SchemaHelper {
     file.add(s"private[this] def getByPrimaryKeySeq(c: GraphQLContext, idSeq: Seq[${model.pkType(config)}]) = $getByPriKey")
     file.addImport(Seq("sangria", "execution", "deferred"), "Fetcher")
     val fetcherName = s"${model.propertyName}ByPrimaryKeyFetcher"
-    file.addMarkers("fetcher", (model.graphqlPackage(config) :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
+    val mark = ((model.graphqlPackage(config) :+ (model.className + "Schema")).mkString(".") + "." + fetcherName)
+    file.addMarkers("fetcher", mark -> "n/a")
     file.add(s"val $fetcherName = Fetcher(getByPrimaryKeySeq)")
     file.add()
   }

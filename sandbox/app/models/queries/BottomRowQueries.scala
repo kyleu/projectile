@@ -17,7 +17,7 @@ object BottomRowQueries extends BaseQueries[BottomRow]("bottomRow", "bottom") {
     DatabaseField(title = "T", prop = "t", col = "t", typ = StringType)
   )
   override protected val pkColumns = Seq("id")
-  override protected val searchColumns = Seq("id")
+  override protected val searchColumns = Seq("id", "top_id", "t")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)
   def getAll(filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) = {
@@ -39,6 +39,13 @@ object BottomRowQueries extends BaseQueries[BottomRow]("bottomRow", "bottom") {
     limit = limit, offset = offset, values = Seq(id)
   )
   final case class GetByIdSeq(idSeq: Seq[UUID]) extends ColSeqQuery(column = "id", values = idSeq)
+
+  final case class CountByT(t: String) extends ColCount(column = "t", values = Seq(t))
+  final case class GetByT(t: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) extends SeqQuery(
+    whereClause = Some(quote("t") + "  = ?"), orderBy = ResultFieldHelper.orderClause(fields, orderBys: _*),
+    limit = limit, offset = offset, values = Seq(t)
+  )
+  final case class GetByTSeq(tSeq: Seq[String]) extends ColSeqQuery(column = "t", values = tSeq)
 
   final case class CountByTopId(topId: UUID) extends ColCount(column = "top_id", values = Seq(topId))
   final case class GetByTopId(topId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None) extends SeqQuery(

@@ -21,7 +21,7 @@ class BottomRowController @javax.inject.Inject() (
     override val app: Application, svc: BottomRowService, noteSvc: NoteService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("system", "BottomRow", "Bottom", Some(models.template.Icons.bottomRow), "view", "edit")
-  private[this] val defaultOrderBy = None
+  private[this] val defaultOrderBy = Some("t" -> true)
 
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
     withSession("view", ("system", "BottomRow", "view")) { implicit request => implicit td =>

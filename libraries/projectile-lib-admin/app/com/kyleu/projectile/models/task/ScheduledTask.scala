@@ -6,6 +6,6 @@ import com.kyleu.projectile.util.tracing.TraceData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class ScheduledTask(val key: String, val title: String, val description: Option[String], val runFrequencySeconds: Int) {
+abstract class ScheduledTask(val key: String, val title: String, val description: Option[String], val runFrequencyMs: Int, val expectedRuntimeMs: Int) {
   def run(creds: Credentials, injector: Injector, log: String => Unit)(implicit td: TraceData, ec: ExecutionContext): Future[Boolean]
 }

@@ -86,7 +86,7 @@ object RoutesFiles {
         case _ => Nil
       }
     }
-    "" +: comment +: list +: autocomplete +: createForm +: createAct +: (bulkEditAct ++ detail ++ fks)
+    "" +: comment +: list +: autocomplete +: createForm +: createAct +: (bulkEditAct ++ fks ++ detail)
   }
 
   private[this] def enumRoutesContentFor(config: ExportConfiguration, e: ExportEnum) = {

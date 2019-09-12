@@ -28,7 +28,7 @@
       if(result === null || result === undefined) {
         result = ".";
       }
-      return result.split("||").filter(function(e) { return e.length > 0 });
+      return result.split("||").filter(function(e) { return e.length > 0 }).sort();
     }
 
     function addToHistory(s) {

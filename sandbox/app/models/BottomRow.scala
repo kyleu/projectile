@@ -38,5 +38,5 @@ final case class BottomRow(
     DataField("t", t)
   )
 
-  def toSummary = DataSummary(model = "bottomRow", pk = id.toString, title = s"id: $id")
+  def toSummary = DataSummary(model = "bottomRow", pk = id.toString, title = s"topId: $topId, t: ${t.map(_.toString).getOrElse("∅")}")
 }

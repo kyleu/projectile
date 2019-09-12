@@ -81,7 +81,7 @@ object SchemaFile {
     file.add(")", -1)
   }
 
-  def extraFields(model: ExportModel) = model.searchFields.filterNot(model.pkFields.contains).filter {
+  def extraFields(model: ExportModel) = model.localSearchFields.filterNot(model.pkFields.contains).filter {
     case x if x.t == FieldType.TagsType => false
     case _ => true
   }

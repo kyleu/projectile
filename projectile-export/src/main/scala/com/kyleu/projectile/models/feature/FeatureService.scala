@@ -47,7 +47,7 @@ object FeatureService {
     val logic = getLogic(feature)
 
     val files = logic.map(_.export(config = config, info = info, debug = debug)).getOrElse(Nil)
-    val markers = files.map(_.markers).foldLeft(Map.empty[String, Seq[String]]) { (l, r) =>
+    val markers = files.map(_.markers).foldLeft(Map.empty[String, Seq[(String, String)]]) { (l, r) =>
       (l.keys.toSeq ++ r.keys.toSeq).distinct.map(k => k -> (l.getOrElse(k, Nil) ++ r.getOrElse(k, Nil))).toMap
     }
     val injections = logic.map(_.inject(config = config, projectRoot = projectRoot, markers = markers, info = info, debug = debug)).getOrElse(Nil)

@@ -21,7 +21,7 @@ class TopRowController @javax.inject.Inject() (
     bottomRowS: BottomRowService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("system", "TopRow", "Top", Some(models.template.Icons.topRow), "view", "edit")
-  private[this] val defaultOrderBy = None
+  private[this] val defaultOrderBy = Some("t" -> true)
 
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
     withSession("view", ("system", "TopRow", "view")) { implicit request => implicit td =>
