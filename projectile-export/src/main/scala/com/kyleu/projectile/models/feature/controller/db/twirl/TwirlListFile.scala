@@ -30,7 +30,7 @@ object TwirlListFile {
       listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")
     }
     listFile.add("cols = Seq(", 1)
-    model.summaryFields.foreach {
+    (model.pkFields ++ model.summaryFields).foreach {
       case c if model.summaryFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
       case c => listFile.add(s""""${c.propertyName}" -> "${c.title}",""")
     }

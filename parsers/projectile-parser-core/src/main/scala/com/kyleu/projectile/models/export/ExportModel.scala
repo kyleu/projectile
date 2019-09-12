@@ -85,7 +85,6 @@ case class ExportModel(
     case cols => "(" + cols.map(_.scalaType(config)).mkString(", ") + ")"
   }
 
-  val indexedFields = fields.filter(_.indexed).filterNot(_.t == FieldType.TagsType)
   val globalSearchFields = fields.filter(_.inGlobalSearch)
   val localSearchFields = fields.filter(_.inLocalSearch)
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))

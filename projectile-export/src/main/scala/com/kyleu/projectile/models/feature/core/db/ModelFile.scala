@@ -71,7 +71,7 @@ object ModelFile {
   }
 
   private[this] def getTitle(model: ExportModel) = {
-    val fields = if (model.summaryFields.isEmpty) { model.pkFields } else { model.summaryFields }
+    val fields = model.pkFields ++ model.summaryFields
     fields.map {
       case f if f.required => s"""${f.propertyName}: $$${f.propertyName}"""
       case f => s"""${f.propertyName}: $${${f.propertyName}.map(_.toString).getOrElse("${NullUtils.str}")}"""

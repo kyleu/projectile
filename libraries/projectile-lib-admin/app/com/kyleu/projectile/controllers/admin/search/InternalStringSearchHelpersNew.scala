@@ -19,10 +19,6 @@ object InternalStringSearchHelpersNew {
         svc.getByT(creds, q, limit = Some(5)).map(_.map { model =>
           val r = com.kyleu.projectile.views.html.admin.audit.auditRecordSearchResult(model, s"Audit Record [${model.id}] matched type [$q]")
           com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id) -> r
-        }),
-        svc.getByPk(creds, q.split("/").toList, limit = Some(5)).map(_.map { model =>
-          val r = com.kyleu.projectile.views.html.admin.audit.auditRecordSearchResult(model, s"Audit Record [${model.id}] matched PK [$q]")
-          com.kyleu.projectile.controllers.admin.audit.routes.AuditRecordController.view(model.id) -> r
         })
       )
     } else { Nil },
