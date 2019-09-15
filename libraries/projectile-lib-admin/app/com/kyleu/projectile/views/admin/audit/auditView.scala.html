@@ -1,6 +1,7 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.audit.Audit, records: Seq[com.kyleu.projectile.models.audit.AuditRecord], notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.views.html.layout.page(title = s"Audit", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.audit)) {
+  @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Audit?')" href="@com.kyleu.projectile.controllers.admin.audit.routes.AuditController.remove(model.id)">Remove</a></div>
@@ -40,7 +41,7 @@
     </table>
   }
 
-  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
+  @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
 
   @records.map { record =>
     @com.kyleu.projectile.views.html.layout.card(None) {
@@ -66,6 +67,5 @@
   }
 
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Audit", "Audit", model.id)
-
   @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

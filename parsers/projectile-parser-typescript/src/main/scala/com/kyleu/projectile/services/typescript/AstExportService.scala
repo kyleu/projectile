@@ -26,10 +26,7 @@ object AstExportService {
     val out = cache / f.replaceAllLiterally(".ts", ".json")
     if (out.isDirectory) { throw new IllegalStateException(s"Output file [${out.pathAsString}] is a directory") }
     val compilationResult = if (out.exists && !forceCompile) { None } else { Some(compile(root, f, out)) }
-    compilationResult -> (parseJson(out.contentAsString) match {
-      case Right(json) => json
-      case Left(x) => throw x
-    })
+    compilationResult -> readJson(out.contentAsString)
   }
 
   def compile(root: File, f: String, out: File) = {

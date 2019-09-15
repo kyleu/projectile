@@ -13,7 +13,7 @@ object TwirlBulkEditFile {
 
     val uc = CommonImportHelper.getString(config, "UiConfig")
     file.add(s"@(cfg: $uc, modelSeq: Seq[${model.fullClassPath(config)}], act: Call, debug: Boolean)(")
-    file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash")
+    file.add(s"    implicit flash: Flash")
 
     file.add(s""")@$systemViewPkg.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(${model.iconRef(config)})) {""", 1)
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)

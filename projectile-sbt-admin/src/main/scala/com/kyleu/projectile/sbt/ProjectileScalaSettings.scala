@@ -5,7 +5,7 @@ import sbt._
 
 object ProjectileScalaSettings {
   object Versions {
-    val scala212 = "2.12.9"
+    val scala212 = "2.12.10"
     val scala213 = "2.13.0"
   }
 
@@ -39,6 +39,8 @@ object ProjectileScalaSettings {
 
     scalacOptions ++= (if (useLatest) { compileOptionsScala213 } else { compileOptionsScala212 }) ++ (if (profilingEnabled) { profileOptions } else { Nil }),
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
-    scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8")
+    scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
+
+    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false)
   ) ++ (if (profilingEnabled) { Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0")) } else { Nil })
 }

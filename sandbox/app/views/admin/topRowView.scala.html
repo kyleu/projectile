@@ -2,6 +2,7 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.TopRow, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.views.html.layout.page(title = s"Top", cfg = cfg, icon = Some(models.template.Icons.topRow)) {
+  @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn @cfg.user.buttonColor" href="@controllers.admin.system.routes.TopRowController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Top?')" href="@controllers.admin.system.routes.TopRowController.remove(model.id)">Remove</a></div>
@@ -18,9 +19,7 @@
       </tbody>
     </table>
   }
-
-  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
-
+  @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "TopRow", "Top", model.id)
 
   <ul id="model-relations" class="collapsible" data-collapsible="expandable">

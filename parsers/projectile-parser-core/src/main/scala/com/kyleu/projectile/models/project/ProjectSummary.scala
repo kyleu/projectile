@@ -17,7 +17,7 @@ case class ProjectSummary(
     input: String = "invalid",
     description: String = "...",
     features: Set[ProjectFeature] = Set(ProjectFeature.Core),
-    flags: Set[String] = Set.empty,
+    flags: Set[ProjectFlag] = Set.empty,
     paths: Map[OutputPath, String] = Map.empty,
     packages: Map[OutputPackage, Seq[String]] = Map.empty,
     classOverrides: Map[String, String] = Map.empty,

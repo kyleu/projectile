@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType.EnumType
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
+import com.kyleu.projectile.models.project.ProjectFlag
 
 object QueriesFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
@@ -74,7 +75,7 @@ object QueriesFile {
       file.add(s"def removeByPrimaryKey($sig) = new RemoveByPrimaryKey(Seq[Any]($call))")
       file.add()
       file.add(s"def update($sig, fields: Seq[DataField]) = new UpdateFields(Seq[Any]($call), fields)")
-      if (model.foreignKeys.nonEmpty) {
+      if (model.foreignKeys.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
         file.add(s"def updateBulk(pks: Seq[Seq[Any]], fields: Seq[DataField]) = new UpdateFieldsBulk(pks, fields)")
       }
     }

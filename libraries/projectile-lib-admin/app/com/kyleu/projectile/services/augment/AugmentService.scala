@@ -1,7 +1,7 @@
 package com.kyleu.projectile.services.augment
 
 import com.kyleu.projectile.models.config.UiConfig
-import com.kyleu.projectile.util.Logging
+import com.kyleu.projectile.util.{ExceptionUtils, Logging}
 import com.kyleu.projectile.util.tracing.TraceData
 import play.twirl.api.Html
 
@@ -10,10 +10,16 @@ import scala.concurrent.{Await, Future}
 import scala.reflect.ClassTag
 import scala.util.control.NonFatal
 
-object AugmentService {
-  private[this] def htmlErr(x: Throwable) = Some(com.kyleu.projectile.views.html.layout.card(Some("Augmentation Error"))(Html(s"<em>${x.getMessage}</em>")))
+object AugmentService extends Logging {
+  private[this] def htmlErr(ex: Throwable) = {
+    log.warn(s"Error running augmentation", ex)(TraceData.noop)
+    Some(com.kyleu.projectile.views.html.layout.card(Some("Augmentation Error")) {
+      Html(s"<em>${ex.getMessage}</em>\n<!--\n\n${ExceptionUtils.print(ex)}\n\n-->")
+    })
+  }
   val lists = new AugmentListService[Html](htmlErr)
-  val views = new AugmentService[Html](htmlErr)
+  val viewHeaders = new AugmentService[Html](htmlErr)
+  val viewDetails = new AugmentService[Html](htmlErr)
 }
 
 class AugmentService[Rsp](errResponse: Throwable => Option[Rsp]) extends Logging {

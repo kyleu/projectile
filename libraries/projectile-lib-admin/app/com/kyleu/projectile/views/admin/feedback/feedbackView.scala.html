@@ -1,6 +1,7 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.feedback.Feedback, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.views.html.layout.page(title = s"Feedback", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.feedback)) {
+  @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.layout.card(None) {
     <div class="right"><a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.editForm(model.id)">Edit</a></div>
     <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Feedback?')" href="@com.kyleu.projectile.controllers.admin.feedback.routes.FeedbackController.remove(model.id)">Remove</a></div>
@@ -37,9 +38,7 @@
     </table>
   }
 
-  @com.kyleu.projectile.services.augment.AugmentService.views.augment(model, request.queryString, cfg)
-
+  @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "Feedback", "Feedback", model.id)
-
   @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

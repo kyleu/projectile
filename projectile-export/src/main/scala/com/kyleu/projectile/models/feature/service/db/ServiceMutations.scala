@@ -6,6 +6,7 @@ import com.kyleu.projectile.models.export.typ.FieldTypeFromString
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
+import com.kyleu.projectile.models.project.ProjectFlag
 
 object ServiceMutations {
   private[this] val trace = "(implicit trace: TraceData)"
@@ -64,7 +65,7 @@ object ServiceMutations {
       file.add("})", -1)
       file.add("}", -1)
 
-      if (model.foreignKeys.nonEmpty) {
+      if (model.foreignKeys.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
         file.add()
         file.add(s"""def updateBulk(creds: Credentials, pks: Seq[Seq[Any]], fields: Seq[DataField])$trace = $editCheck{""", 1)
         file.add(s"db.executeF(${model.className}Queries.updateBulk(pks, fields))(trace).map { x =>", 1)

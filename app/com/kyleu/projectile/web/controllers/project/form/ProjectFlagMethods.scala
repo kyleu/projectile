@@ -1,5 +1,7 @@
 package com.kyleu.projectile.web.controllers.project.form
 
+import com.kyleu.projectile.models.project.ProjectFlag
+
 import scala.concurrent.Future
 
 @javax.inject.Singleton
@@ -10,7 +12,8 @@ trait ProjectFlagMethods { this: ProjectFormController =>
 
   def saveFlags() = Action.async { implicit request =>
     val (summary, form) = getSummary(request)
-    val project = projectile.saveProject(summary.copy(flags = form.getOrElse("flags", "").split(',').map(_.trim).toSet))
+    val flags = form.getOrElse("flags", "").split(',').map(_.trim).filter(_.nonEmpty).map(ProjectFlag.withValue).toSet
+    val project = projectile.saveProject(summary.copy(flags = flags))
     Future.successful(redir(project.key).flashing("success" -> s"Saved flags for project [${project.key}]"))
   }
 }

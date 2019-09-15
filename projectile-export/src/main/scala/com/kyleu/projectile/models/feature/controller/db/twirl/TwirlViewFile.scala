@@ -21,8 +21,10 @@ object TwirlViewFile {
   }
 
   private[this] def addContent(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = {
+    val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
     val systemViewPkg = (config.systemViewPackage ++ Seq("html")).mkString(".")
     file.add(s""")@$systemViewPkg.layout.page(title = s"${model.title}", cfg = cfg, icon = Some(${model.iconRef(config)})) {""", 1)
+    file.add(s"""@$imp.AugmentService.viewHeaders.augment(model, request.queryString, cfg)""")
     file.add("@com.kyleu.projectile.views.html.layout.card(None) {", 1)
     TwirlViewHelper.addButtons(config, model, file)
     TwirlViewHelper.addFields(config, model, file)
@@ -36,16 +38,13 @@ object TwirlViewFile {
 
   private[this] def addModelFeatures(config: ExportConfiguration, model: ExportModel, file: TwirlFile) = if (model.pkFields.nonEmpty) {
     val imp = CommonImportHelper.get(config, "AugmentService")._1.mkString(".")
-    file.add()
-    file.add(s"""@$imp.AugmentService.views.augment(model, request.queryString, cfg)""")
+    file.add(s"""@$imp.AugmentService.viewDetails.augment(model, request.queryString, cfg)""")
     val modelPks = model.pkFields.map(f => s"model.${f.propertyName}").mkString(", ")
     if (model.features(ModelFeature.Notes)) {
-      file.add()
       val viewPkg = (config.systemPackage ++ Seq("views", "html", "admin", "note")).mkString(".")
       file.add(s"""@$viewPkg.notes(cfg, notes, "${model.className}", "${model.title}", $modelPks)""")
     }
     if (model.features(ModelFeature.Audit)) {
-      file.add()
       val viewPkg = (config.systemPackage ++ Seq("views", "html", "admin", "audit")).mkString(".")
       file.add(s"""@$viewPkg.auditRecords(auditRecords, "${model.className}", "${model.title}", $modelPks)""")
     }

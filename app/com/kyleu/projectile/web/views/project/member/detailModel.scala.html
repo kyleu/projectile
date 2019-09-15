@@ -8,7 +8,14 @@
           <a class="btn-flat theme-text" href="@com.kyleu.projectile.web.controllers.routes.FileController.viewFile(s"project/$key/model/${m.key}.json")">Edit Json</a>
           <input class="theme btn" type="submit" value="Save" />
         </div>
-        <h5><i class=" @com.kyleu.projectile.models.template.Icons.model"></i> @m.title</h5>
+        <h5>
+          <i class=" @com.kyleu.projectile.models.template.Icons.model"></i>
+          @if(m.isJoinTable) {
+            @m.title<span title="This is a join table">*</span>
+          } else {
+            @m.title
+          }
+        </h5>
         <em><a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectController.detail(p.key)">@p.key</a> Model</em>
         (<a href="@com.kyleu.projectile.web.controllers.project.routes.ProjectModelController.remove(p.key, member.key)">Remove</a>)
       </div>
@@ -109,7 +116,7 @@
               </tr>
             }
             <tr>
-              <td colspan="7"></td>
+              <td colspan="9"></td>
               <td>
                 @defining(if(m.defaultOrder.isEmpty) { "checked" } else { "" }) { checked =>
                   <label><input name="defaultOrder" type="radio" value="none" @checked /><span>None</span></label>

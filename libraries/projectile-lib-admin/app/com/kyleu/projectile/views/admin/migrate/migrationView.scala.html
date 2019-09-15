@@ -1,11 +1,12 @@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, m: com.kyleu.projectile.models.migrate.DatabaseMigration)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.migrate.DatabaseMigration)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
-)@com.kyleu.projectile.views.html.layout.page(title = s"Database Migration ${m.version.map("v" + _).getOrElse(m.installedRank)}", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.migration)) {
-  @com.kyleu.projectile.views.html.layout.card(Some(m.description)) {
-    <pre>@m.script</pre>
+)@com.kyleu.projectile.views.html.layout.page(title = s"Database Migration ${model.version.map("v" + _).getOrElse(model.installedRank)}", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.migration)) {
+  @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
+  @com.kyleu.projectile.views.html.layout.card(Some(model.description)) {
+    <pre>@model.script</pre>
   }
   @com.kyleu.projectile.views.html.layout.card(Some("Database Migration")) {
-    <pre>@com.kyleu.projectile.util.JsonSerializers.encoderOps(m).asJson.spaces2</pre>
+    <pre>@com.kyleu.projectile.util.JsonSerializers.encoderOps(model).asJson.spaces2</pre>
   }
-  @com.kyleu.projectile.services.augment.AugmentService.views.augment(m, request.queryString, cfg)
+  @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
 }

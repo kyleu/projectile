@@ -133,4 +133,9 @@ case class ExportModel(
   } else {
     s"${(config.applicationPackage :+ "models" :+ "template").mkString(".")}.Icons.$propertyName"
   }
+
+  lazy val isJoinTable = {
+    val fkFields = foreignKeys.filter(_.references.size == 1).flatMap(_.references.map(_.source)).distinct
+    pkFields.forall(pk => fkFields.contains(pk.key))
+  }
 }

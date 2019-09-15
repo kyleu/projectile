@@ -24,31 +24,25 @@ object AuditHelper extends Logging {
   }
 
   def onInsert(t: String, pk: Seq[String], fields: Seq[DataField], creds: Credentials)(implicit trace: TraceData) = {
-    val msg = s"Inserted new [$t] with [${fields.size}] fields:"
-    val auditId = UUID.randomUUID
-    val records = Seq(AuditRecord(auditId = auditId, t = t, pk = pk.toList, changes = fields.map(f => AuditField(f.k, None, f.v))))
-    aud(creds, auditId, "insert", msg, records)
+    onAction("insert", t, pk, fields.map(f => AuditField(f.k, None, f.v)), creds)
   }
 
-  def onUpdate(
-    t: String, pk: Seq[String], originalFields: Seq[DataField], newFields: Seq[DataField], creds: Credentials
-  )(implicit trace: TraceData) = {
-    def changeFor(f: DataField) = originalFields.find(_.k == f.k).flatMap {
+  def onUpdate(t: String, pk: Seq[String], origF: Seq[DataField], newF: Seq[DataField], creds: Credentials)(implicit trace: TraceData) = {
+    onAction("update", t, pk, newF.flatMap(f => origF.find(_.k == f.k).flatMap {
       case o if f.v != o.v => Some(AuditField(f.k, o.v, f.v))
       case _ => None
-    }
-    val changes = newFields.flatMap(changeFor)
-    val msg = s"Updated [${changes.size}] fields of $t[${pk.mkString(", ")}]"
-    val auditId = UUID.randomUUID
-    val records = Seq(AuditRecord(auditId = auditId, t = t, pk = pk.toList, changes = changes))
-    aud(creds, auditId, "update", msg, records)
+    }), creds)
   }
 
   def onRemove(t: String, pk: Seq[String], fields: Seq[DataField], creds: Credentials)(implicit trace: TraceData) = {
-    val msg = s"Removed [$t] with [${fields.size}] fields:"
+    onAction("remove", t, pk, fields.map(f => AuditField(f.k, f.v, None)), creds)
+  }
+
+  def onAction(act: String, t: String, pk: Seq[String], changes: Seq[AuditField], creds: Credentials)(implicit trace: TraceData) = {
+    val msg = s"Added audit of type [$act] for [$t] with [${changes.size}] changes:"
     val auditId = UUID.randomUUID
-    val records = Seq(AuditRecord(auditId = auditId, t = t, pk = pk.toList, changes = fields.map(f => AuditField(f.k, None, f.v))))
-    aud(creds, auditId, "remove", msg, records)
+    val records = Seq(AuditRecord(auditId = auditId, t = t, pk = pk.toList, changes = changes))
+    aud(creds, auditId, act, msg, records)
   }
 
   private[this] def getInfo(creds: Credentials) = creds match {
@@ -59,9 +53,14 @@ object AuditHelper extends Logging {
   private[this] def aud(creds: Credentials, id: UUID, act: String, msg: String, records: Seq[AuditRecord])(implicit trace: TraceData) = {
     if (ApplicationFeature.enabled(ApplicationFeature.Audit)) {
       val (remoteAddress, userId) = getInfo(creds)
-      userId.map { u =>
-        onAudit(Audit(id = id, act = act, client = remoteAddress, server = server, userId = u, msg = msg), records.toList)
+      userId match {
+        case Some(u) =>
+          onAudit(Audit(id = id, act = act, client = remoteAddress, server = server, userId = u, msg = msg), records.toList)
+          true
+        case None => false
       }
+    } else {
+      false
     }
   }
 }

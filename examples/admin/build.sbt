@@ -2,14 +2,18 @@ import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 val projectVersion = "0.0.1"
 
-lazy val shared = projectileCrossProject(crossProject(JSPlatform, JVMPlatform), "shared").settings(version := projectVersion)
+val useLatest = false
+val profilingEnabled = false
 
-lazy val client = project.in(file("client")).settings(Seq(version := projectVersion)).dependsOn(shared.js).enablePlugins(ProjectileScalaJSProject)
+val commonSettings = Seq(version := projectVersion) ++ projectSettings(profilingEnabled = profilingEnabled, useLatest = useLatest)
 
-lazy val _PROJECT_NAME = Project(id = "_PROJECT_NAME", base = file(".")).settings(
+lazy val shared = projectileCrossProject(crossProject(JSPlatform, JVMPlatform), "shared").settings(commonSettings)
+
+lazy val client = project.in(file("client")).settings(commonSettings).dependsOn(shared.js).enablePlugins(ProjectileScalaJSProject)
+
+lazy val _PROJECT_NAME = Project(id = "_PROJECT_NAME", base = file(".")).settings(commonSettings).settings(
   projectileProjectTitle := "_PROJECT_NAME",
   projectileProjectPort := 9000,
-  version := projectVersion,
 
   play.sbt.routes.RoutesKeys.routesImport += "models.module.ModelBindables._",
 

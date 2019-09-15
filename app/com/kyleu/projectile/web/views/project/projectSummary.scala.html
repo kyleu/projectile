@@ -24,8 +24,8 @@
       @if(project.flags.isEmpty) {
         <div>No flags</div>
       }
-      @project.flags.toList.sorted.map { flag =>
-        <div>@flag</div>
+      @project.flags.toList.sortBy(_.title).map { flag =>
+        <div>@flag.title</div>
       }
     </div>
   </div>

@@ -5,17 +5,20 @@ import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
+import com.kyleu.projectile.models.project.ProjectFlag
 
 object ControllerMutations {
-  def addBulkEdit(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
-    file.add(s"""def bulkEdit = withSession("bulk.edit", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
-    config.addCommonImport(file, "ControllerUtils")
-    file.add("""val form = ControllerUtils.getForm(request.body)""")
-    val split = """_.split("---").map(_.trim).filter(_.nonEmpty).toList"""
-    file.add(s"""val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map($split).toList""")
-    file.add("""val changes = modelForm(request.body)""")
-    file.add("""svc.updateBulk(request, pks, changes).map(msg => Ok("OK: " + msg))""")
-    file.add("}", -1)
+  def addBulkEdit(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
+    if (model.foreignKeys.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
+      file.add(s"""def bulkEdit = withSession("bulk.edit", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
+      config.addCommonImport(file, "ControllerUtils")
+      file.add("""val form = ControllerUtils.getForm(request.body)""")
+      val split = """_.split("---").map(_.trim).filter(_.nonEmpty).toList"""
+      file.add(s"""val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map($split).toList""")
+      file.add("""val changes = modelForm(request.body)""")
+      file.add("""svc.updateBulk(request, pks, changes).map(msg => Ok("OK: " + msg))""")
+      file.add("}", -1)
+    }
   }
 
   def addMutations(config: ExportConfiguration, file: ScalaFile, model: ExportModel, routesClass: String, viewHtmlPackage: String) = {
