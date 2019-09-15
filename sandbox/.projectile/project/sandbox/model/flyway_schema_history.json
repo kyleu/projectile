@@ -1,0 +1,16 @@
+{
+  "key" : "flyway_schema_history",
+  "pkg" : [ "com", "kyleu", "projectile", "migrate" ],
+  "features" : [ ],
+  "ignored" : [ ],
+  "overrides" : [ {
+    "k" : "provided",
+    "v" : "true"
+  }, {
+    "k" : "propertyName",
+    "v" : "migration"
+  }, {
+    "k" : "className",
+    "v" : "Migration"
+  } ]
+}

@@ -47,7 +47,7 @@ class FeedbackController @javax.inject.Inject() (
   }
 
   def list(q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None) = {
-    withSession("view", ("tools", "Feedback", "view")) { implicit request => implicit td =>
+    withSession("list", ("tools", "Feedback", "view")) { implicit request => implicit td =>
       val startMs = DateUtils.nowMillis
       val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq
       searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {

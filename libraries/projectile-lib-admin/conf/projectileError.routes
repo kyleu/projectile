@@ -1,0 +1,15 @@
+# Projectile Feature: Enabled automatically by adding a reference to this in your project's `routes` file
+
+## Error: Logs encountered exceptions as they happen
+
+GET         /                             com.kyleu.projectile.controllers.admin.error.SystemErrorController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete                 com.kyleu.projectile.controllers.admin.error.SystemErrorController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                         com.kyleu.projectile.controllers.admin.error.SystemErrorController.createForm
+POST        /                             com.kyleu.projectile.controllers.admin.error.SystemErrorController.create
+POST        /bulk                         com.kyleu.projectile.controllers.admin.error.SystemErrorController.bulkEdit
+GET         /byUserId/:userId             com.kyleu.projectile.controllers.admin.error.SystemErrorController.byUserId(userId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /byUserId/:userId/bulk        com.kyleu.projectile.controllers.admin.error.SystemErrorController.byUserIdBulkForm(userId: java.util.UUID)
+GET         /:id                          com.kyleu.projectile.controllers.admin.error.SystemErrorController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/form                     com.kyleu.projectile.controllers.admin.error.SystemErrorController.editForm(id: java.util.UUID)
+POST        /:id                          com.kyleu.projectile.controllers.admin.error.SystemErrorController.edit(id: java.util.UUID)
+GET         /:id/remove                   com.kyleu.projectile.controllers.admin.error.SystemErrorController.remove(id: java.util.UUID)

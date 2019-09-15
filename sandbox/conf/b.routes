@@ -1,0 +1,14 @@
+# Generated File
+
+# Bottom Routes
+GET         /                                                         controllers.admin.b.BottomRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete                                            controllers.admin.b.BottomRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                                                    controllers.admin.b.BottomRowController.createForm
+POST        /                                                         controllers.admin.b.BottomRowController.create
+POST        //bulk                                                    controllers.admin.b.BottomRowController.bulkEdit
+GET         /byTopId/:topId                                           controllers.admin.b.BottomRowController.byTopId(topId: java.util.UUID, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /byTopId/:topId/bulk                                      controllers.admin.b.BottomRowController.byTopIdBulkForm(topId: java.util.UUID)
+GET         /:id                                                      controllers.admin.b.BottomRowController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/form                                                 controllers.admin.b.BottomRowController.editForm(id: java.util.UUID)
+POST        /:id                                                      controllers.admin.b.BottomRowController.edit(id: java.util.UUID)
+GET         /:id/remove                                               controllers.admin.b.BottomRowController.remove(id: java.util.UUID)

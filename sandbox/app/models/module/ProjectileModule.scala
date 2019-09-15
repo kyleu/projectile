@@ -35,6 +35,9 @@ class ProjectileModule extends AdminModule() {
     ScheduledTaskRegistry.register(TestTask)
 
     /* Start injected startup code */
+    /* Projectile export section [sandbox] */
+    com.kyleu.projectile.services.auth.PermissionService.registerPackage("b", "B", models.template.Icons.pkg_b)
+    com.kyleu.projectile.services.auth.PermissionService.registerPackage("t", "T", models.template.Icons.pkg_t)
     /* End injected startup code */
   }
 

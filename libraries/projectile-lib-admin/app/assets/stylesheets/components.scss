@@ -20,6 +20,10 @@ html {
   font-size: 1rem;
 }
 
+.sidenav li .collapsible-body a {
+  margin-left: 6px;
+}
+
 // Splash page
 .splash-bg {
   background-image: url('/components/images/flat-bg.jpg');

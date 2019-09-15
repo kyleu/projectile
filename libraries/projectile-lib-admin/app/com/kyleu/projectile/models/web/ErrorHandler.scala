@@ -1,9 +1,9 @@
 package com.kyleu.projectile.models.web
 
+import com.kyleu.projectile.services.error.ErrorLoggingService
 import com.kyleu.projectile.util.Logging
-import com.kyleu.projectile.util.tracing.TracingService
+import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
 import io.circe.Json
-import javax.inject._
 import play.api._
 import play.api.http.{DefaultHttpErrorHandler, MimeTypes}
 import play.api.mvc._
@@ -27,15 +27,16 @@ object ErrorHandler {
 }
 
 @javax.inject.Singleton
-class ErrorHandler @Inject() (
-    actions: ErrorHandler.Actions, env: Environment, config: Configuration,
-    sourceMapper: OptionalSourceMapper, router: Provider[Router], tracing: TracingService
+class ErrorHandler @javax.inject.Inject() (
+    actions: ErrorHandler.Actions, env: Environment, config: Configuration, errorLoggingService: ErrorLoggingService,
+    sourceMapper: OptionalSourceMapper, router: javax.inject.Provider[Router], tracing: TracingService
 ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with Rendering with AcceptExtractors with Logging {
 
   override protected def onDevServerError(request: RequestHeader, ex: UsefulException) = tracing.topLevelTrace("error.dev") { td =>
     td.tag("error.type", ex.getClass.getSimpleName)
     td.tag("error.message", ex.getMessage)
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
+    errorLoggingService.record(None, "unknown", ex)(TraceData.noop)
     render.async {
       case Accepts.Json() => jsonError(request, ex)
       case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.flash)))
@@ -47,6 +48,7 @@ class ErrorHandler @Inject() (
     td.tag("error.type", ex.getClass.getSimpleName)
     td.tag("error.message", ex.getMessage)
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
+    errorLoggingService.record(None, "unknown", ex)(TraceData.noop)
     render.async {
       case Accepts.Json() => jsonError(request, ex)
       case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.flash)))

@@ -19,6 +19,7 @@ GET        /                                        controllers.HomeController.h
 ->         /admin/audit                             projectileAudit.Routes
 ->         /admin/note                              projectileNote.Routes
 ->         /admin/systemUser                        projectileUser.Routes
+->         /admin/error                             projectileError.Routes
 
 ->         /admin/websocket                         projectileWebsocket.Routes
 ->         /admin/encrypt                           projectileEncrypt.Routes

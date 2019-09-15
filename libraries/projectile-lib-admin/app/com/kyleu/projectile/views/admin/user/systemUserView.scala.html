@@ -45,5 +45,22 @@
   @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "SystemUser", "System User", model.id)
   @com.kyleu.projectile.views.html.admin.audit.auditRecords(auditRecords, "SystemUser", "System User", model.id)
+
+  @if(com.kyleu.projectile.models.module.ApplicationFeature.enabled(com.kyleu.projectile.models.module.ApplicationFeature.Error)) {
+    <ul id="model-relations" class="collapsible" data-collapsible="expandable">
+      <li id="relation-systemError-userId" data-table="systemError" data-field="userId" data-singular="System Error" data-plural="System Errors" data-url="@com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.byUserId(model.id, limit = Some(5), embedded = true)">
+        <div class="collapsible-header">
+          <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.error</i>
+          <span class="title">System Errors</span>&nbsp;by User Id
+          <span class="badge" style="display: none;">
+            <a class="bulk-edit-link" title="Bulk edit" href="@com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.byUserIdBulkForm(model.id)"><i class="material-icons" style="margin-right: 0;">edit</i></a>
+            <a class="view-relation-link" title="View these System Errors" href="@com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.byUserId(model.id)"><i class="material-icons" style="margin-right: 0;">insert_link</i></a>
+          </span>
+        </div>
+        <div class="collapsible-body"><span>Loading...</span></div>
+      </li>
+    </ul>
+    <script>$(function() { new RelationService('@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.relationCounts(model.id)') });</script>
+  }
   @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

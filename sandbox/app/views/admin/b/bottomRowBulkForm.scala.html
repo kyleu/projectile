@@ -1,0 +1,43 @@
+@* Generated File *@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, modelSeq: Seq[models.b.BottomRow], act: Call, debug: Boolean)(
+    implicit flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(models.template.Icons.bottomRow)) {
+  <form id="form-edit-bottomRow" action="@act" method="post">
+    <input type="hidden" class="primaryKeys" name="primaryKeys" value="@modelSeq.map(m => m.id).mkString("//")" />
+    @com.kyleu.projectile.views.html.layout.card(Some("Selected Bottoms")) {
+      <div class="right"><button type="submit" class="btn @cfg.user.buttonColor">Save <span>@modelSeq.size</span> Bottoms</button></div>
+      <div class="right"><a href="" onclick="window.history.go(-1);return false;" class="btn-flat cancel-link">Cancel</a></div>
+      <div class="clear"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Top Id</th>
+            <th>T</th>
+          </tr>
+        </thead>
+        <tbody>
+          @modelSeq.map { model =>
+            @bottomRowDataRow(model, Some(Html(s"<td style='text-align: right;'><a class='remove-pk' data-pk='${model.id}' href='' title='Remove from editing'><i class='material-icons'>close</i></a></td>")))
+          }
+        </tbody>
+      </table>
+    }
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <table>
+        <tbody>
+          @com.kyleu.projectile.views.html.components.form.autocompleteField(
+            selected = false, key = "topId", title = "Top Id", value = None, nullable = false, dataType = "uuid",
+            call = controllers.admin.t.routes.TopRowController.autocomplete(), acType = ("topRow", "Top"), icon = models.template.Icons.topRow
+          )
+          @com.kyleu.projectile.views.html.components.form.textField(selected = false, key = "t", title = "T", value = None, nullable = true)
+        </tbody>
+      </table>
+    }
+  </form>
+}
+@com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+@com.kyleu.projectile.views.html.components.includeAutocomplete(debug)
+<script>
+  $(function() { new FormService('form-edit-bottomRow'); });
+  $(function() { new BulkEditService('form-edit-bottomRow'); });
+</script>

@@ -1,8 +1,14 @@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.migrate.DatabaseMigration)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
-)@com.kyleu.projectile.views.html.layout.page(title = s"Database Migration ${model.version.map("v" + _).getOrElse(model.installedRank)}", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.migration)) {
+)
+
+@remove() = {
+  <a href="@com.kyleu.projectile.controllers.admin.migrate.routes.MigrationController.remove(model.installedRank)" class="btn @cfg.user.buttonColor">Remove History</a>
+}
+
+@com.kyleu.projectile.views.html.layout.page(title = s"Database Migration ${model.version.map("v" + _).getOrElse(model.installedRank)}", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.migration)) {
   @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
-  @com.kyleu.projectile.views.html.layout.card(Some(model.description)) {
+  @com.kyleu.projectile.views.html.layout.card(Some(model.description), right = Some(remove())) {
     <pre>@model.script</pre>
   }
   @com.kyleu.projectile.views.html.layout.card(Some("Database Migration")) {

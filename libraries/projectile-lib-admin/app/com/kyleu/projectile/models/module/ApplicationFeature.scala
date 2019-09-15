@@ -16,6 +16,7 @@ object ApplicationFeature extends StringEnum[ApplicationFeature] with StringCirc
   case object Audit extends ApplicationFeature("audit")
   case object Connection extends ApplicationFeature("connection")
   case object Encryption extends ApplicationFeature("encryption")
+  case object Error extends ApplicationFeature("error")
   case object Feedback extends ApplicationFeature("feedback")
   case object Graphql extends ApplicationFeature("graphql")
   case object Help extends ApplicationFeature("help")

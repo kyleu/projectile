@@ -1,0 +1,50 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: com.kyleu.projectile.models.error.SystemError, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.views.html.layout.page(title = s"System Error", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.error)) {
+  @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this System Error?')" href="@com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.remove(model.id)">Remove</a></div>
+    <table class="highlight responsive-table">
+      <tbody>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
+          <td>@model.id</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.context.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Context</div></th>
+          <td>@model.context</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.userId.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">User Id</div></th>
+          <td>
+            @model.userId.getOrElse(com.kyleu.projectile.util.NullUtils.str)
+            @model.userId.map { userId =>
+              <a href="@com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.view(userId)"><i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.systemUser</i></a>
+            }
+          </td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.cls.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Cls</div></th>
+          <td>@model.cls</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.message.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Message</div></th>
+          <td>@model.message</td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.stacktrace.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">Stacktrace</div></th>
+          <td><pre>@model.stacktrace.getOrElse(com.kyleu.projectile.util.NullUtils.str)</pre></td>
+        </tr>
+        <tr>
+          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.occurred.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Occurred</div></th>
+          <td>@model.occurred</td>
+        </tr>
+      </tbody>
+    </table>
+  }
+  @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "SystemError", "System Error", model.id)
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+}

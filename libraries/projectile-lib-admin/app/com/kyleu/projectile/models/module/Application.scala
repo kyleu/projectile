@@ -93,8 +93,7 @@ class Application @javax.inject.Inject() (
     ScheduledTaskRegistry.clear()
     db.close()
     CacheService.close()
-    log.info("Stopping application...")(TraceData.noop)
-    Await.result(actorSystem.terminate(), 15.seconds)
+    // Await.result(actorSystem.terminate(), 15.seconds)
     if (config.metrics.tracingEnabled) { tracing.close() }
     if (config.metrics.micrometerEnabled) { Instrumented.stop() }
   }

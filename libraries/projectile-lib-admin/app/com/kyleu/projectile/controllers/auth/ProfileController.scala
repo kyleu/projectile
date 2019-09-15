@@ -38,7 +38,7 @@ class ProfileController @javax.inject.Inject() (
     })
   }
 
-  def save = withSession("view") { implicit request => implicit td =>
+  def save = withSession("save") { implicit request => implicit td =>
     UserForms.profileForm.bindFromRequest.fold(
       form => Future.successful {
         val cfg = app.cfg(u = Some(request.identity), "system", "profile", request.identity.profile.providerKey)

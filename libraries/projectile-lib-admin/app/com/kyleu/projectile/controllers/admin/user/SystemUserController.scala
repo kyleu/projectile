@@ -11,12 +11,13 @@ import java.util.UUID
 
 import com.kyleu.projectile.controllers.admin.user.routes.SystemUserController
 import com.kyleu.projectile.models.menu.SystemMenu
-import com.kyleu.projectile.models.module.ApplicationFeature.User.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
+import com.kyleu.projectile.models.result.RelationCount
 import com.kyleu.projectile.models.user.{SystemUser, SystemUserResult}
 import com.kyleu.projectile.models.web.InternalIcons
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
+import com.kyleu.projectile.services.error.SystemErrorService
 import play.api.http.MimeTypes
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -27,12 +28,14 @@ import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class SystemUserController @javax.inject.Inject() (
-    override val app: Application, svc: SystemUserService, noteSvc: NoteService, auditRecordSvc: AuditService, @Named("system") db: JdbcDatabase
+    override val app: Application, svc: SystemUserService,
+    errorSvc: SystemErrorService,
+    noteSvc: NoteService, auditRecordSvc: AuditService, @Named("system") db: JdbcDatabase
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   ApplicationFeature.enable(ApplicationFeature.User)
   PermissionService.registerModel("models", "SystemUser", "System User", Some(InternalIcons.systemUser), "view", "edit")
   val desc = "Manage the users of this application"
-  SystemMenu.addModelMenu(value, "System Users", Some(desc), SystemUserController.list(), InternalIcons.systemUser, ("models", "SystemUser", "view"))
+  SystemMenu.addModelMenu(ApplicationFeature.User.value, "System Users", Some(desc), SystemUserController.list(), InternalIcons.systemUser, ("models", "SystemUser", "view"))
   private[this] val defaultOrderBy = Some("username" -> true)
 
   def createForm = withSession("create.form", ("models", "SystemUser", "edit")) { implicit request => implicit td =>
@@ -125,5 +128,18 @@ class SystemUserController @javax.inject.Inject() (
       case Accepts.Html() => Redirect(com.kyleu.projectile.controllers.admin.user.routes.SystemUserController.list())
       case Accepts.Json() => Ok(io.circe.Json.obj("status" -> io.circe.Json.fromString("removed")))
     })
+  }
+
+  def relationCounts(id: UUID) = withSession("relation.counts", ("models", "SystemUser", "view")) { implicit request => implicit td =>
+    val errorsByUserF = if (ApplicationFeature.enabled(ApplicationFeature.Error)) {
+      errorSvc.countByUserId(request, id)
+    } else {
+      Future.successful(0)
+    }
+    for (errorsByUserC <- errorsByUserF) yield {
+      Ok(Seq(
+        RelationCount(model = "systemError", field = "userId", count = errorsByUserC)
+      ).asJson)
+    }
   }
 }

@@ -8,14 +8,14 @@ object TestModelSupport {
   private[this] implicit val td: TraceData = TraceData.noop
 
   def insert(m: DataFieldModel) = m match {
-    case model: models.BottomRow => TestServices.bottomRowService.insert(creds, model)
-    case model: models.TopRow => TestServices.topRowService.insert(creds, model)
+    case model: models.b.BottomRow => TestServices.bottomRowService.insert(creds, model)
+    case model: models.t.TopRow => TestServices.topRowService.insert(creds, model)
     case model => throw new IllegalStateException(s"Unable to insert unhandled model [$model]")
   }
 
   def remove(m: DataFieldModel) = m match {
-    case model: models.BottomRow => TestServices.bottomRowService.remove(creds, model.id)
-    case model: models.TopRow => TestServices.topRowService.remove(creds, model.id)
+    case model: models.b.BottomRow => TestServices.bottomRowService.remove(creds, model.id)
+    case model: models.t.TopRow => TestServices.topRowService.remove(creds, model.id)
     case model => throw new IllegalStateException(s"Unable to remove unhandled model [$model]")
   }
 }

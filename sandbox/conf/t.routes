@@ -1,0 +1,12 @@
+# Generated File
+
+# Top Routes
+GET         /                                                         controllers.admin.t.TopRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /autocomplete                                            controllers.admin.t.TopRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                                                    controllers.admin.t.TopRowController.createForm
+POST        /                                                         controllers.admin.t.TopRowController.create
+GET         /:id                                                      controllers.admin.t.TopRowController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/counts                                               controllers.admin.t.TopRowController.relationCounts(id: java.util.UUID)
+GET         /:id/form                                                 controllers.admin.t.TopRowController.editForm(id: java.util.UUID)
+POST        /:id                                                      controllers.admin.t.TopRowController.edit(id: java.util.UUID)
+GET         /:id/remove                                               controllers.admin.t.TopRowController.remove(id: java.util.UUID)

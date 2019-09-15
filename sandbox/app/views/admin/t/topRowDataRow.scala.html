@@ -1,0 +1,10 @@
+@* Generated File *@
+@(model: models.t.TopRow, additional: Option[Html] = None)<tr>
+  <td>
+    <a href="@controllers.admin.t.routes.TopRowController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.t
+  </td>
+  @additional
+</tr>

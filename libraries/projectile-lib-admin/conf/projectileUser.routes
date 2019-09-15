@@ -7,6 +7,7 @@ GET         /autocomplete        com.kyleu.projectile.controllers.admin.user.Sys
 GET         /form                com.kyleu.projectile.controllers.admin.user.SystemUserController.createForm
 POST        /                    com.kyleu.projectile.controllers.admin.user.SystemUserController.create
 GET         /:id                 com.kyleu.projectile.controllers.admin.user.SystemUserController.view(id: java.util.UUID, t: Option[String] ?= None)
+GET         /:id/counts          com.kyleu.projectile.controllers.admin.user.SystemUserController.relationCounts(id: java.util.UUID)
 GET         /:id/form            com.kyleu.projectile.controllers.admin.user.SystemUserController.editForm(id: java.util.UUID)
 POST        /:id                 com.kyleu.projectile.controllers.admin.user.SystemUserController.edit(id: java.util.UUID)
 GET         /:id/remove          com.kyleu.projectile.controllers.admin.user.SystemUserController.remove(id: java.util.UUID)

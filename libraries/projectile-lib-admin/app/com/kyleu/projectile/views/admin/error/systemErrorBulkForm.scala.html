@@ -1,0 +1,50 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, modelSeq: Seq[com.kyleu.projectile.models.error.SystemError], act: Call, debug: Boolean)(
+    implicit flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(com.kyleu.projectile.models.web.InternalIcons.error)) {
+  <form id="form-edit-systemError" action="@act" method="post">
+    <input type="hidden" class="primaryKeys" name="primaryKeys" value="@modelSeq.map(m => m.id).mkString("//")" />
+    @com.kyleu.projectile.views.html.layout.card(Some("Selected System Errors")) {
+      <div class="right"><button type="submit" class="btn @cfg.user.buttonColor">Save <span>@modelSeq.size</span> System Errors</button></div>
+      <div class="right"><a href="" onclick="window.history.go(-1);return false;" class="btn-flat cancel-link">Cancel</a></div>
+      <div class="clear"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Context</th>
+            <th>User Id</th>
+            <th>Class</th>
+            <th>Message</th>
+            <th>Occurred</th>
+          </tr>
+        </thead>
+        <tbody>
+          @modelSeq.map { model =>
+            @systemErrorDataRow(model, Some(Html(s"<td style='text-align: right;'><a class='remove-pk' data-pk='${model.id}' href='' title='Remove from editing'><i class='material-icons'>close</i></a></td>")))
+          }
+        </tbody>
+      </table>
+    }
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <table>
+        <tbody>
+          @com.kyleu.projectile.views.html.components.form.textField(selected = false, key = "context", title = "Context", value = None, nullable = false)
+          @com.kyleu.projectile.views.html.components.form.autocompleteField(
+            selected = false, key = "userId", title = "User Id", value = None, nullable = true, dataType = "uuid",
+            call = Call("get", "/admin/systemUser/autocomplete"), acType = ("systemUser", "System User"), icon = "user"
+          )
+          @com.kyleu.projectile.views.html.components.form.textField(selected = false, key = "cls", title = "Cls", value = None, nullable = false)
+          @com.kyleu.projectile.views.html.components.form.textField(selected = false, key = "message", title = "Message", value = None, nullable = false)
+          @com.kyleu.projectile.views.html.components.form.textField(selected = false, key = "stacktrace", title = "Stacktrace", value = None, nullable = true)
+          @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = false, key = "occurred", title = "Occurred", value = None, nullable = false)
+        </tbody>
+      </table>
+    }
+  </form>
+}
+@com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+@com.kyleu.projectile.views.html.components.includeAutocomplete(debug)
+<script>
+  $(function() { new FormService('form-edit-systemError'); });
+  $(function() { new BulkEditService('form-edit-systemError'); });
+</script>

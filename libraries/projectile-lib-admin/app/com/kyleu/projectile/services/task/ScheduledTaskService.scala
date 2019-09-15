@@ -40,10 +40,7 @@ class ScheduledTaskService @javax.inject.Inject() (
   }
 
   def stopSchedule() = {
-    scheduled.foreach { s =>
-      val ok = s.cancel()
-      log.info(s"Stopped scheduled tasks: $ok")(TraceData.noop)
-    }
+    scheduled.foreach(_.cancel())
     enabled = false
     scheduled = None
   }

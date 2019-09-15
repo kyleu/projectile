@@ -14,7 +14,7 @@
         @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "text", title = "Text", value = Some(model.text), nullable = false)
         @com.kyleu.projectile.views.html.components.form.autocompleteField(
           selected = isNew, key = "author", title = "Author", value = Some(model.author.toString), nullable = false, dataType = "uuid",
-          call = Call("get", "/admin/user/systemUser/autocomplete"), acType = ("systemUser", "System User"), icon = "user"
+          call = Call("get", "/admin/systemUser/autocomplete"), acType = ("systemUser", "System User"), icon = "user"
         )
         @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = isNew, key = "created", title = "Created", value = Some(model.created), nullable = false)
       </tbody>

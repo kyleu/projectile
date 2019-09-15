@@ -6,6 +6,7 @@ import com.google.inject.Injector
 import com.kyleu.projectile.models.auth.UserCredentials
 import com.kyleu.projectile.models.module.ApplicationFeature
 import com.kyleu.projectile.services.audit.{AuditRecordService, AuditService}
+import com.kyleu.projectile.services.error.SystemErrorService
 import com.kyleu.projectile.services.feedback.FeedbackService
 import com.kyleu.projectile.services.task.ScheduledTaskRunService
 import com.kyleu.projectile.services.user.SystemUserService
@@ -25,6 +26,12 @@ object InternalUuidSearchHelpers {
       Seq(injector.getInstance(classOf[AuditService]).getByPrimaryKey(creds, id).map(_.map { model =>
         val r = com.kyleu.projectile.views.html.admin.audit.auditSearchResult(model, s"Audit [${model.id}] matched id [$q]")
         com.kyleu.projectile.controllers.admin.audit.routes.AuditController.view(model.id) -> r
+      }.toSeq))
+    } else { Nil },
+    if (ApplicationFeature.enabled(ApplicationFeature.Error)) {
+      Seq(injector.getInstance(classOf[SystemErrorService]).getByPrimaryKey(creds, id).map(_.map { model =>
+        val r = com.kyleu.projectile.views.html.admin.error.systemErrorSearchResult(model, s"System Error [${model.id}] matched id [$q]")
+        com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.view(model.id) -> r
       }.toSeq))
     } else { Nil },
     if (ApplicationFeature.enabled(ApplicationFeature.Feedback)) {

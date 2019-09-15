@@ -1,0 +1,35 @@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, totalCount: Option[Int], modelSeq: Seq[com.kyleu.projectile.models.error.SystemError], q: Option[String], orderBy: Option[String], orderAsc: Boolean, limit: Int, offset: Int)(
+    implicit request: Request[AnyContent], flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)
+@defining(com.kyleu.projectile.services.augment.AugmentService.lists.augment(models = modelSeq, args = request.queryString, cfg = cfg)) { aug =>
+  @com.kyleu.projectile.views.html.admin.explore.list(
+    cfg = cfg,
+    model = "System Error",
+    modelPlural = "System Errors",
+    icon = com.kyleu.projectile.models.web.InternalIcons.error,
+    cols = Seq(
+      "id" -> "Id",
+      "context" -> "Context",
+      "userId" -> "User Id",
+      "cls" -> "Cls",
+      "message" -> "Message",
+      "occurred" -> "Occurred"
+    ),
+    totalCount = totalCount,
+    rows = modelSeq.map(model => com.kyleu.projectile.views.html.admin.error.systemErrorDataRow(model, additional = aug._3.get(model).flatten)),
+    orderBy = orderBy,
+    orderAsc = orderAsc,
+    calls = com.kyleu.projectile.models.web.ListCalls(
+      newCall = Some(com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.createForm()),
+      orderBy = Some(com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.list(q, _, _, Some(limit), Some(0))),
+      search = Some(com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.list(None, orderBy, orderAsc, Some(limit), None)),
+      next = com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.list(q, orderBy, orderAsc, Some(limit), Some(offset + limit)),
+      prev = com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.list(q, orderBy, orderAsc, Some(limit), Some(offset - limit))
+    ),
+    limit = limit,
+    offset = offset,
+    q = q,
+    additionalHeader = aug._1,
+    additionalColumns = aug._2
+  )
+}

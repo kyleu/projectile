@@ -22,8 +22,8 @@ class SearchHelper extends SearchProvider {
     /* Start uuid searches */
     /* Projectile export section [sandbox] */
     Seq(
-      act[services.BottomRowService, models.BottomRow](injector = injector, creds = creds, perm = ("system", "BottomRow", "view"), f = _.getById(creds, id), v = model => controllers.admin.system.routes.BottomRowController.view(model.id), s = model => views.html.admin.bottomRowSearchResult(model, s"Bottom [${model.id}] matched id [$q]")),
-      act[services.TopRowService, models.TopRow](injector = injector, creds = creds, perm = ("system", "TopRow", "view"), f = _.getById(creds, id), v = model => controllers.admin.system.routes.TopRowController.view(model.id), s = model => views.html.admin.topRowSearchResult(model, s"Top [${model.id}] matched id [$q]"))
+      act[services.b.BottomRowService, models.b.BottomRow](injector = injector, creds = creds, perm = ("b", "BottomRow", "view"), f = _.getById(creds, id), v = model => controllers.admin.b.routes.BottomRowController.view(model.id), s = model => views.html.admin.b.bottomRowSearchResult(model, s"Bottom [${model.id}] matched id [$q]")),
+      act[services.t.TopRowService, models.t.TopRow](injector = injector, creds = creds, perm = ("t", "TopRow", "view"), f = _.getById(creds, id), v = model => controllers.admin.t.routes.TopRowController.view(model.id), s = model => views.html.admin.t.topRowSearchResult(model, s"Top [${model.id}] matched id [$q]"))
     ) ++
       /* End uuid searches */
       Nil
@@ -33,8 +33,8 @@ class SearchHelper extends SearchProvider {
     /* Start string searches */
     /* Projectile export section [sandbox] */
     Seq(
-      act[services.BottomRowService, models.BottomRow](injector = injector, creds = creds, perm = ("system", "BottomRow", "view"), f = _.searchExact(creds, q = q, limit = Some(5)), v = model => controllers.admin.system.routes.BottomRowController.view(model.id), s = model => views.html.admin.bottomRowSearchResult(model, s"Bottom [${model.id}] matched t [$q]")),
-      act[services.TopRowService, models.TopRow](injector = injector, creds = creds, perm = ("system", "TopRow", "view"), f = _.searchExact(creds, q = q, limit = Some(5)), v = model => controllers.admin.system.routes.TopRowController.view(model.id), s = model => views.html.admin.topRowSearchResult(model, s"Top [${model.id}] matched t [$q]"))
+      act[services.b.BottomRowService, models.b.BottomRow](injector = injector, creds = creds, perm = ("b", "BottomRow", "view"), f = _.searchExact(creds, q = q, limit = Some(5)), v = model => controllers.admin.b.routes.BottomRowController.view(model.id), s = model => views.html.admin.b.bottomRowSearchResult(model, s"Bottom [${model.id}] matched t [$q]")),
+      act[services.t.TopRowService, models.t.TopRow](injector = injector, creds = creds, perm = ("t", "TopRow", "view"), f = _.searchExact(creds, q = q, limit = Some(5)), v = model => controllers.admin.t.routes.TopRowController.view(model.id), s = model => views.html.admin.t.topRowSearchResult(model, s"Top [${model.id}] matched t [$q]"))
     ) ++
       /* End string searches */
       Nil

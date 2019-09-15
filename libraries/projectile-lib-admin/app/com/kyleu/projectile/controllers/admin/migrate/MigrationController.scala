@@ -1,6 +1,5 @@
 package com.kyleu.projectile.controllers.admin.migrate
 
-import com.google.inject.Injector
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.controllers.admin.migrate.routes.MigrationController
 import com.kyleu.projectile.models.menu.SystemMenu
@@ -15,11 +14,9 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 @javax.inject.Singleton
-class MigrationController @javax.inject.Inject() (
-    override val app: Application, injector: Injector
-)(implicit ec: ExecutionContext) extends AuthController("migrate") {
+class MigrationController @javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext) extends AuthController("migrate") {
   ApplicationFeature.enable(ApplicationFeature.Migrate)
-  PermissionService.registerModel("tools", "Migrate", "Database Migrations", Some(InternalIcons.migration), "view")
+  PermissionService.registerModel("tools", "Migrate", "Database Migrations", Some(InternalIcons.migration), "view", "edit")
   val feature = ApplicationFeature.Migrate.value
   val msg = "Flyway database migrations, to evolve your database"
   SystemMenu.addToolMenu(feature, "Database Migrations", Some(msg), MigrationController.list(), InternalIcons.migration, ("tools", "Migrate", "view"))
@@ -44,5 +41,10 @@ class MigrationController @javax.inject.Inject() (
     val m = app.db.query(DatabaseMigrationQueries.getByPrimaryKey(rank)).getOrElse(throw new IllegalStateException(s"No migration with rank [$rank]"))
     val cfg = app.cfg(u = Some(request.identity), "system", "tools", "migrate", m.version.map("v" + _).getOrElse(m.installedRank.toString))
     Future.successful(Ok(com.kyleu.projectile.views.html.admin.migrate.migrationView(cfg, m)))
+  }
+
+  def remove(rank: Long) = withSession("remove", ("tools", "Migrate", "edit")) { _ => implicit td =>
+    app.db.execute(DatabaseMigrationQueries.removeByPrimaryKey(rank))
+    Future.successful(Redirect(com.kyleu.projectile.controllers.admin.migrate.routes.MigrationController.list()))
   }
 }

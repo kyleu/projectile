@@ -73,7 +73,7 @@ object ControllerFile {
     val routesClass = (model.routesPackage(config) :+ (model.className + "Controller")).mkString(".")
     val listArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None"
     file.add(s"""def list(q: Option[String], $listArgs) = {""", 1)
-    file.add(s"""withSession("view", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
+    file.add(s"""withSession("list", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
     file.add("val startMs = DateUtils.nowMillis")
     file.add("val orderBys = OrderBy.forVals(orderBy, orderAsc, defaultOrderBy).toSeq")
     file.add("searchWithCount(q, orderBys, limit, offset).map(r => renderChoice(t) {", 1)

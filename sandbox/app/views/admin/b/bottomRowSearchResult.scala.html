@@ -1,0 +1,14 @@
+@* Generated File *@
+@(model: models.b.BottomRow, hit: String)<div class="search-result">
+  <div class="right">
+    <i class="material-icons small">@models.template.Icons.bottomRow</i> Bottom
+  </div>
+  <div>
+    <a href="@controllers.admin.b.routes.BottomRowController.view(model.id)">@model.id</a>
+  </div>
+  <em>@hit</em>
+  <div style="margin-top: 12px;">
+    <div class="chip">Top Id: @model.topId</div>
+    <div class="chip">T: @model.t</div>
+  </div>
+</div>

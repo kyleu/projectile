@@ -1,0 +1,16 @@
+@* Generated File *@
+@(model: models.b.BottomRow, additional: Option[Html] = None)<tr>
+  <td>
+    <a href="@controllers.admin.b.routes.BottomRowController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.topId
+    <a href="@controllers.admin.t.routes.TopRowController.view(model.topId)">
+      <i class="material-icons small">@models.template.Icons.topRow</i>
+    </a>
+  </td>
+  <td>
+    @model.t
+  </td>
+  @additional
+</tr>

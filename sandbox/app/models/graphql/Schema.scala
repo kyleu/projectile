@@ -12,9 +12,9 @@ object Schema extends BaseGraphQLSchema {
     /* Start model fetchers */
     /* Projectile export section [sandbox] */
     Seq(
-      models.graphql.BottomRowSchema.bottomRowByPrimaryKeyFetcher,
-      models.graphql.BottomRowSchema.bottomRowByTopIdFetcher,
-      models.graphql.TopRowSchema.topRowByPrimaryKeyFetcher
+      models.graphql.b.BottomRowSchema.bottomRowByPrimaryKeyFetcher,
+      models.graphql.b.BottomRowSchema.bottomRowByTopIdFetcher,
+      models.graphql.t.TopRowSchema.topRowByPrimaryKeyFetcher
     ) ++
       /* End model fetchers */
       Nil
@@ -25,16 +25,16 @@ object Schema extends BaseGraphQLSchema {
   ) ++
     /* Start query fields */
     /* Projectile export section [sandbox] */
-    models.graphql.BottomRowSchema.queryFields ++
-    models.graphql.TopRowSchema.queryFields ++
+    models.graphql.b.BottomRowSchema.queryFields ++
+    models.graphql.t.TopRowSchema.queryFields ++
     /* End query fields */
     Nil
 
   override protected def additionalMutationFields = Nil ++
     /* Start mutation fields */
     /* Projectile export section [sandbox] */
-    models.graphql.BottomRowSchema.mutationFields ++
-    models.graphql.TopRowSchema.mutationFields ++
+    models.graphql.b.BottomRowSchema.mutationFields ++
+    models.graphql.t.TopRowSchema.mutationFields ++
     /* End mutation fields */
     Nil
 }

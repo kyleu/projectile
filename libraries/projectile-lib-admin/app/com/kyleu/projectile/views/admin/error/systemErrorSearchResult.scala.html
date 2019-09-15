@@ -1,0 +1,15 @@
+@(model: com.kyleu.projectile.models.error.SystemError, hit: String)<div class="search-result">
+  <div class="right">
+    <i class="material-icons small">@com.kyleu.projectile.models.web.InternalIcons.error</i> System Error
+  </div>
+  <div>
+    <a href="@com.kyleu.projectile.controllers.admin.error.routes.SystemErrorController.view(model.id)">@model.id</a>
+  </div>
+  <em>@hit</em>
+  <div style="margin-top: 12px;">
+    <div class="chip">Context: @model.context</div>
+    <div class="chip">User Id: @model.userId</div>
+    <div class="chip">Cls: @model.cls</div>
+    <div class="chip">Message: @model.message</div>
+  </div>
+</div>
