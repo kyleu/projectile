@@ -17,6 +17,7 @@ object ServiceFile {
     file.addImport(model.modelPackage(config), model.className)
     file.addImport(model.queriesPackage(config), model.className + "Queries")
     file.addImport(Seq("scala", "concurrent"), "Future")
+    file.addImport(Seq("java", "sql"), "Connection")
 
     config.addCommonImport(file, "JdbcDatabase")
     config.addCommonImport(file, "ExecutionContext")

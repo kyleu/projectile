@@ -1,5 +1,7 @@
 package com.kyleu.projectile.services.error
 
+import java.sql.Connection
+
 import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
@@ -20,156 +22,156 @@ class SystemErrorService @javax.inject.Inject() (
     @Named("system") val db: JdbcDatabase,
     override val tracing: TracingService
 )(implicit ec: ExecutionContext) extends ModelServiceHelper[SystemError]("systemError", "error" -> "SystemError") {
-  def getByPrimaryKey(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.by.primary.key")(td => db.queryF(SystemErrorQueries.getByPrimaryKey(id))(td))
+  def getByPrimaryKey(creds: Credentials, id: UUID, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.primary.key")(td => db.queryF(SystemErrorQueries.getByPrimaryKey(id), conn)(td))
   }
-  def getByPrimaryKeyRequired(creds: Credentials, id: UUID)(implicit trace: TraceData) = getByPrimaryKey(creds, id).map { opt =>
+  def getByPrimaryKeyRequired(creds: Credentials, id: UUID, conn: Option[Connection] = None)(implicit trace: TraceData) = getByPrimaryKey(creds, id).map { opt =>
     opt.getOrElse(throw new IllegalStateException(s"Cannot load systemError with id [$id]"))
   }
-  def getByPrimaryKeySeq(creds: Credentials, idSeq: Seq[UUID])(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByPrimaryKeySeq(creds: Credentials, idSeq: Seq[UUID], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     if (idSeq.isEmpty) {
       Future.successful(Nil)
     } else {
-      traceF("get.by.primary.key.seq")(td => db.queryF(SystemErrorQueries.getByPrimaryKeySeq(idSeq))(td))
+      traceF("get.by.primary.key.seq")(td => db.queryF(SystemErrorQueries.getByPrimaryKeySeq(idSeq), conn)(td))
     }
   }
 
-  override def countAll(creds: Credentials, filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.all.count")(td => db.queryF(SystemErrorQueries.countAll(filters))(td))
+  override def countAll(creds: Credentials, filters: Seq[Filter] = Nil, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.all.count")(td => db.queryF(SystemErrorQueries.countAll(filters), conn)(td))
   }
-  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.all")(td => db.queryF(SystemErrorQueries.getAll(filters, orderBys, limit, offset))(td))
+  override def getAll(creds: Credentials, filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.all")(td => db.queryF(SystemErrorQueries.getAll(filters, orderBys, limit, offset), conn)(td))
   }
 
   // Search
-  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("search.count")(td => db.queryF(SystemErrorQueries.searchCount(q, filters))(td))
+  override def searchCount(creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("search.count")(td => db.queryF(SystemErrorQueries.searchCount(q, filters), conn)(td))
   }
   override def search(
-    creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+    creds: Credentials, q: Option[String], filters: Seq[Filter] = Nil, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None
   )(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("search")(td => db.queryF(SystemErrorQueries.search(q, filters, orderBys, limit, offset))(td))
+    traceF("search")(td => db.queryF(SystemErrorQueries.search(q, filters, orderBys, limit, offset), conn)(td))
   }
 
   def searchExact(
-    creds: Credentials, q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None
+    creds: Credentials, q: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None
   )(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("search.exact")(td => db.queryF(SystemErrorQueries.searchExact(q, orderBys, limit, offset))(td))
+    traceF("search.exact")(td => db.queryF(SystemErrorQueries.searchExact(q, orderBys, limit, offset), conn)(td))
   }
 
-  def countByCls(creds: Credentials, cls: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("count.by.cls")(td => db.queryF(SystemErrorQueries.CountByCls(cls))(td))
+  def countByCls(creds: Credentials, cls: String, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.cls")(td => db.queryF(SystemErrorQueries.CountByCls(cls), conn)(td))
   }
-  def getByCls(creds: Credentials, cls: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.by.cls")(td => db.queryF(SystemErrorQueries.GetByCls(cls, orderBys, limit, offset))(td))
+  def getByCls(creds: Credentials, cls: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.cls")(td => db.queryF(SystemErrorQueries.GetByCls(cls, orderBys, limit, offset), conn)(td))
   }
-  def getByClsSeq(creds: Credentials, clsSeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByClsSeq(creds: Credentials, clsSeq: Seq[String], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     if (clsSeq.isEmpty) {
       Future.successful(Nil)
     } else {
       traceF("get.by.cls.seq") { td =>
-        db.queryF(SystemErrorQueries.GetByClsSeq(clsSeq))(td)
+        db.queryF(SystemErrorQueries.GetByClsSeq(clsSeq), conn)(td)
       }
     }
   }
 
-  def countByContext(creds: Credentials, context: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("count.by.context")(td => db.queryF(SystemErrorQueries.CountByContext(context))(td))
+  def countByContext(creds: Credentials, context: String, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.context")(td => db.queryF(SystemErrorQueries.CountByContext(context), conn)(td))
   }
-  def getByContext(creds: Credentials, context: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.by.context")(td => db.queryF(SystemErrorQueries.GetByContext(context, orderBys, limit, offset))(td))
+  def getByContext(creds: Credentials, context: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.context")(td => db.queryF(SystemErrorQueries.GetByContext(context, orderBys, limit, offset), conn)(td))
   }
-  def getByContextSeq(creds: Credentials, contextSeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByContextSeq(creds: Credentials, contextSeq: Seq[String], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     if (contextSeq.isEmpty) {
       Future.successful(Nil)
     } else {
       traceF("get.by.context.seq") { td =>
-        db.queryF(SystemErrorQueries.GetByContextSeq(contextSeq))(td)
+        db.queryF(SystemErrorQueries.GetByContextSeq(contextSeq), conn)(td)
       }
     }
   }
 
-  def countById(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("count.by.id")(td => db.queryF(SystemErrorQueries.CountById(id))(td))
+  def countById(creds: Credentials, id: UUID, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.id")(td => db.queryF(SystemErrorQueries.CountById(id), conn)(td))
   }
-  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.by.id")(td => db.queryF(SystemErrorQueries.GetById(id, orderBys, limit, offset))(td))
+  def getById(creds: Credentials, id: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.id")(td => db.queryF(SystemErrorQueries.GetById(id, orderBys, limit, offset), conn)(td))
   }
-  def getByIdSeq(creds: Credentials, idSeq: Seq[UUID])(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByIdSeq(creds: Credentials, idSeq: Seq[UUID], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     if (idSeq.isEmpty) {
       Future.successful(Nil)
     } else {
       traceF("get.by.id.seq") { td =>
-        db.queryF(SystemErrorQueries.GetByIdSeq(idSeq))(td)
+        db.queryF(SystemErrorQueries.GetByIdSeq(idSeq), conn)(td)
       }
     }
   }
 
-  def countByMessage(creds: Credentials, message: String)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("count.by.message")(td => db.queryF(SystemErrorQueries.CountByMessage(message))(td))
+  def countByMessage(creds: Credentials, message: String, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.message")(td => db.queryF(SystemErrorQueries.CountByMessage(message), conn)(td))
   }
-  def getByMessage(creds: Credentials, message: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.by.message")(td => db.queryF(SystemErrorQueries.GetByMessage(message, orderBys, limit, offset))(td))
+  def getByMessage(creds: Credentials, message: String, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.message")(td => db.queryF(SystemErrorQueries.GetByMessage(message, orderBys, limit, offset), conn)(td))
   }
-  def getByMessageSeq(creds: Credentials, messageSeq: Seq[String])(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByMessageSeq(creds: Credentials, messageSeq: Seq[String], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     if (messageSeq.isEmpty) {
       Future.successful(Nil)
     } else {
       traceF("get.by.message.seq") { td =>
-        db.queryF(SystemErrorQueries.GetByMessageSeq(messageSeq))(td)
+        db.queryF(SystemErrorQueries.GetByMessageSeq(messageSeq), conn)(td)
       }
     }
   }
 
-  def countByUserId(creds: Credentials, userId: UUID)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("count.by.userId")(td => db.queryF(SystemErrorQueries.CountByUserId(userId))(td))
+  def countByUserId(creds: Credentials, userId: UUID, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("count.by.userId")(td => db.queryF(SystemErrorQueries.CountByUserId(userId), conn)(td))
   }
-  def getByUserId(creds: Credentials, userId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
-    traceF("get.by.userId")(td => db.queryF(SystemErrorQueries.GetByUserId(userId, orderBys, limit, offset))(td))
+  def getByUserId(creds: Credentials, userId: UUID, orderBys: Seq[OrderBy] = Nil, limit: Option[Int] = None, offset: Option[Int] = None, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
+    traceF("get.by.userId")(td => db.queryF(SystemErrorQueries.GetByUserId(userId, orderBys, limit, offset), conn)(td))
   }
-  def getByUserIdSeq(creds: Credentials, userIdSeq: Seq[UUID])(implicit trace: TraceData) = checkPerm(creds, "view") {
+  def getByUserIdSeq(creds: Credentials, userIdSeq: Seq[UUID], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "view") {
     if (userIdSeq.isEmpty) {
       Future.successful(Nil)
     } else {
       traceF("get.by.userId.seq") { td =>
-        db.queryF(SystemErrorQueries.GetByUserIdSeq(userIdSeq))(td)
+        db.queryF(SystemErrorQueries.GetByUserIdSeq(userIdSeq), conn)(td)
       }
     }
   }
 
   // Mutations
-  def insert(creds: Credentials, model: SystemError)(implicit trace: TraceData) = checkPerm(creds, "edit") {
-    traceF("insert")(td => db.executeF(SystemErrorQueries.insert(model))(td).flatMap {
-      case 1 => getByPrimaryKey(creds, model.id)(td)
+  def insert(creds: Credentials, model: SystemError, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+    traceF("insert")(td => db.executeF(SystemErrorQueries.insert(model), conn)(td).flatMap {
+      case 1 => getByPrimaryKey(creds, model.id, conn)(td)
       case _ => throw new IllegalStateException("Unable to find newly-inserted System Error")
     })
   }
-  def insertBatch(creds: Credentials, models: Seq[SystemError])(implicit trace: TraceData) = checkPerm(creds, "edit") {
+  def insertBatch(creds: Credentials, models: Seq[SystemError], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("insertBatch")(td => if (models.isEmpty) {
       Future.successful(0)
     } else {
-      db.executeF(SystemErrorQueries.insertBatch(models))(td)
+      db.executeF(SystemErrorQueries.insertBatch(models), conn)(td)
     })
   }
-  def create(creds: Credentials, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {
-    traceF("create")(td => db.executeF(SystemErrorQueries.create(fields))(td).flatMap { _ =>
+  def create(creds: Credentials, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+    traceF("create")(td => db.executeF(SystemErrorQueries.create(fields), conn)(td).flatMap { _ =>
       getByPrimaryKey(creds, UUID.fromString(fieldVal(fields, "id")))
     })
   }
 
-  def remove(creds: Credentials, id: UUID)(implicit trace: TraceData) = checkPerm(creds, "edit") {
-    traceF("remove")(td => getByPrimaryKey(creds, id)(td).flatMap {
+  def remove(creds: Credentials, id: UUID, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+    traceF("remove")(td => getByPrimaryKey(creds, id, conn)(td).flatMap {
       case Some(current) =>
-        db.executeF(SystemErrorQueries.removeByPrimaryKey(id))(td).map(_ => current)
+        db.executeF(SystemErrorQueries.removeByPrimaryKey(id), conn)(td).map(_ => current)
       case None => throw new IllegalStateException(s"Cannot find SystemError matching [$id]")
     })
   }
 
-  def update(creds: Credentials, id: UUID, fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {
-    traceF("update")(td => getByPrimaryKey(creds, id)(td).flatMap {
+  def update(creds: Credentials, id: UUID, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+    traceF("update")(td => getByPrimaryKey(creds, id, conn)(td).flatMap {
       case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for System Error [$id]")
-      case Some(_) => db.executeF(SystemErrorQueries.update(id, fields))(td).flatMap { _ =>
-        getByPrimaryKey(creds, fields.find(_.k == "id").flatMap(_.v).map(s => UUID.fromString(s)).getOrElse(id))(td).map {
+      case Some(_) => db.executeF(SystemErrorQueries.update(id, fields), conn)(td).flatMap { _ =>
+        getByPrimaryKey(creds, fields.find(_.k == "id").flatMap(_.v).map(s => UUID.fromString(s)).getOrElse(id), conn)(td).map {
           case Some(newModel) =>
             newModel -> s"Updated [${fields.size}] fields of System Error [$id]"
           case None => throw new IllegalStateException(s"Cannot find SystemError matching [$id]")
@@ -179,8 +181,8 @@ class SystemErrorService @javax.inject.Inject() (
     })
   }
 
-  def updateBulk(creds: Credentials, pks: Seq[Seq[Any]], fields: Seq[DataField])(implicit trace: TraceData) = checkPerm(creds, "edit") {
-    db.executeF(SystemErrorQueries.updateBulk(pks, fields))(trace).map { x =>
+  def updateBulk(creds: Credentials, pks: Seq[Seq[Any]], fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+    db.executeF(SystemErrorQueries.updateBulk(pks, fields), conn)(trace).map { x =>
       s"Updated [${fields.size}] fields for [$x of ${pks.size}] System Errors"
     }
   }
