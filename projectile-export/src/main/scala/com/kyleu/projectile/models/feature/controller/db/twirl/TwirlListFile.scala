@@ -37,7 +37,7 @@ object TwirlListFile {
     listFile.add("),", -1)
     listFile.add("totalCount = totalCount,")
     val viewPkg = model.viewHtmlPackage(config).mkString(".")
-    listFile.add(s"rows = modelSeq.map(model => $viewPkg.${model.propertyName}DataRow(model, additional = aug._3.get(model).flatten)),")
+    listFile.add(s"rows = modelSeq.map(model => $viewPkg.${model.propertyName}DataRow(model, additional = aug._2.get(model).flatten)),")
     listFile.add("orderBy = orderBy,")
     listFile.add("orderAsc = orderAsc,")
     listFile.add(s"calls = $listCalls(", 1)
@@ -51,8 +51,9 @@ object TwirlListFile {
     listFile.add("limit = limit,")
     listFile.add("offset = offset,")
     listFile.add("q = q,")
-    listFile.add("additionalHeader = aug._1,")
-    listFile.add("additionalColumns = aug._2")
+    val augArgs = s"cls = classOf[${model.fullClassPath(config)}], args = request.queryString, cfg = cfg"
+    listFile.add(s"additionalHeader = $imp.AugmentService.listHeaders.augment($augArgs),")
+    listFile.add("additionalColumns = aug._1")
     listFile.add(")", -1)
     listFile.add("}", -1)
 

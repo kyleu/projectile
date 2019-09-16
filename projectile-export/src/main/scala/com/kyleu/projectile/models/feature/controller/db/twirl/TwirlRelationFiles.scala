@@ -39,7 +39,7 @@ object TwirlRelationFiles {
     listFile.add("orderAsc = orderAsc,")
     listFile.add("totalCount = None,")
     val datarow = s"${model.viewHtmlPackage(config).mkString(".")}.${model.propertyName}DataRow"
-    listFile.add(s"rows = modelSeq.map(model => $datarow(model, additional = aug._3.get(model).flatten)),")
+    listFile.add(s"rows = modelSeq.map(model => $datarow(model, additional = aug._2.get(model).flatten)),")
     listFile.add(s"calls = $listCalls(", 1)
     listFile.add(s"orderBy = Some($viewCall($refProps, _, _, Some(limit), Some(0))),")
     listFile.add("search = None,")
@@ -49,8 +49,9 @@ object TwirlRelationFiles {
     listFile.add("limit = limit,")
     listFile.add("offset = offset,")
     listFile.add("q = None,")
-    listFile.add("additionalHeader = aug._1,")
-    listFile.add("additionalColumns = aug._2,")
+    val augArgs = s"cls = classOf[${model.fullClassPath(config)}], args = request.queryString, cfg = cfg"
+    listFile.add(s"additionalHeader = $imp.AugmentService.listHeaders.augment($augArgs),")
+    listFile.add("additionalColumns = aug._1,")
     listFile.add("fullUI = false")
     listFile.add(")", -1)
     listFile.add("}", -1)

@@ -17,6 +17,7 @@ object AugmentService extends Logging {
       Html(s"<em>${ex.getMessage}</em>\n<!--\n\n${ExceptionUtils.print(ex)}\n\n-->")
     })
   }
+  val listHeaders = new AugmentClassService[Html](htmlErr)
   val lists = new AugmentListService[Html](htmlErr)
   val viewHeaders = new AugmentService[Html](htmlErr)
   val viewDetails = new AugmentService[Html](htmlErr)
@@ -38,28 +39,44 @@ class AugmentService[Rsp](errResponse: Throwable => Option[Rsp]) extends Logging
   }
 }
 
+class AugmentClassService[Rsp](errResponse: Throwable => Option[Rsp]) extends Logging {
+  private[this] var map = Map.empty[Class[_], (Any, Map[String, Seq[String]], UiConfig, TraceData) => Future[Option[Rsp]]]
+
+  def register(cls: Class[_], f: (Class[_], Map[String, Seq[String]], UiConfig, TraceData) => Future[Option[Rsp]]) = {
+    map = map + (cls -> f.asInstanceOf[(Any, Map[String, Seq[String]], UiConfig, TraceData) => Future[Option[Rsp]]])
+  }
+
+  def augment(cls: Class[_], args: Map[String, Seq[String]], cfg: UiConfig)(implicit td: TraceData): Option[Rsp] = {
+    map.get(cls).flatMap(f => extract(f(cls, args, cfg, td)))
+  }
+
+  private[this] def extract(f: Future[Option[Rsp]]) = try { Await.result(f, 15.seconds) } catch {
+    case NonFatal(x) => errResponse(x)
+  }
+}
+
 class AugmentListService[Rsp](errResponse: Throwable => Option[Rsp]) extends Logging {
-  type Typ = (Seq[Any], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[Any, Option[Rsp]])]
+  type Typ = (Seq[Any], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Map[Any, Option[Rsp]])]
   private[this] var map = Map.empty[Class[_], Typ]
 
   def register[T](
-    f: (Seq[T], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])]
+    f: (Seq[T], Map[String, Seq[String]], UiConfig, TraceData) => Future[(Option[Rsp], Map[T, Option[Rsp]])]
   )(implicit tag: ClassTag[T]) = {
     map = map + (tag.runtimeClass -> f.asInstanceOf[Typ])
   }
 
-  def augment[T](models: Seq[T], args: Map[String, Seq[String]], cfg: UiConfig)(implicit td: TraceData): (Option[Rsp], Option[Rsp], Map[T, Option[Rsp]]) = {
+  def augment[T](models: Seq[T], args: Map[String, Seq[String]], cfg: UiConfig)(implicit td: TraceData): (Option[Rsp], Map[T, Option[Rsp]]) = {
     models.headOption match {
       case Some(head) => map.get(head.getClass).map { f =>
         extract(f(models, args, cfg, td))
-      }.getOrElse((None, None, Map.empty)).asInstanceOf[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])]
-      case None => (None, None, Map.empty)
+      }.getOrElse((None, Map.empty)).asInstanceOf[(Option[Rsp], Map[T, Option[Rsp]])]
+      case None => (None, Map.empty)
     }
   }
 
-  private[this] def extract[T](f: Future[(Option[Rsp], Option[Rsp], Map[T, Option[Rsp]])]) = try {
+  private[this] def extract[T](f: Future[(Option[Rsp], Map[T, Option[Rsp]])]) = try {
     Await.result(f, 15.seconds)
   } catch {
-    case NonFatal(x) => (errResponse(x), None, Map.empty)
+    case NonFatal(x) => (errResponse(x), Map.empty)
   }
 }
