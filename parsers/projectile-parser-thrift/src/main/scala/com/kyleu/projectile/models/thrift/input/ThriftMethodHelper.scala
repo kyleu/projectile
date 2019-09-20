@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.export.typ.FieldType
 
 object ThriftMethodHelper {
   def getReturnMapping(t: FieldType): String = t match {
-    case _ if FieldType.scalars(t) => ""
+    case _ if t.isScalar => ""
     case FieldType.MapType(_, v) => getReturnSubMapping(v) match {
       case r if r.isEmpty => ".map(_.toMap)"
       case r => s".map(_.mapValues($r).toMap)"
@@ -27,7 +27,7 @@ object ThriftMethodHelper {
   def getArgCall(field: ExportField) = parse(field.propertyName, field.t, field.required)
 
   private[this] def getReturnSubMapping(t: FieldType): String = t match {
-    case _ if FieldType.scalars(t) => ""
+    case _ if t.isScalar => ""
     case FieldType.MapType(_, v) => getReturnSubMapping(v) match {
       case r if r.isEmpty => "_.toMap"
       case r => s"_.mapValues($r).toMap"
@@ -67,7 +67,7 @@ object ThriftMethodHelper {
       } else {
         s"$name.map(_$mapped)"
       }
-    case _ if FieldType.scalars(t) => s"$name"
+    case _ if t.isScalar => s"$name"
     case _ if required => s"$name.asThrift"
     case _ => s"$name.map(_.asThrift)"
   }
@@ -76,7 +76,7 @@ object ThriftMethodHelper {
     case FieldType.MapType(_, _) => throw new IllegalStateException(s"Unhandled [$ctx] child Map")
     case FieldType.ListType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Seq")
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
-    case _ if FieldType.scalars(t) => ""
+    case _ if t.isScalar => ""
     case _ => ".asThrift"
   }
 }

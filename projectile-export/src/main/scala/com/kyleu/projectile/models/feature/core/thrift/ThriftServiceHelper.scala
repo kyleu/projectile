@@ -55,7 +55,7 @@ object ThriftServiceHelper {
     file.add(s"""new ${svc.className}(svc, options.copy(traceDataSerializer = Some(traceDataSerializer)))""")
     file.add("}", -1)
     file.add(s"""def healthcheck(implicit td: TraceData): Future[String] = {""", 1)
-    file.add(s"""Future.successful("${svc.className}: OK")""")
+    file.add(s"""Future.successful(s"${svc.className}: OK ($$td)")""")
     file.add("}", -1)
   }
 }

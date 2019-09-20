@@ -50,7 +50,7 @@ object ThriftFieldScalaHelper {
     } else {
       s"$root.$name.map($key.fromThrift)"
     }
-    case _ if FieldType.scalars.apply(t) => s"$root.$name"
+    case _ if t.isScalar => s"$root.$name"
 
     case FieldType.EnumType(key) if required => s"$key.fromThrift($root.$name)"
     case FieldType.EnumType(key) => s"$root.$name.map($key.fromThrift)"
@@ -58,7 +58,7 @@ object ThriftFieldScalaHelper {
     case FieldType.StructType(key, _) if required => s"$key.fromThrift($root.$name)"
     case FieldType.StructType(key, _) => s"$root.$name.map($key.fromThrift)"
 
-    case _ => throw new IllegalStateException(s"Unhandled type [${t.toString}")
+    case _ => throw new IllegalStateException(s"Unhandled type [$t]")
   }
 
   private[this] def parseMapped(t: FieldType, ctx: String, key: String = "map"): String = t match {
@@ -75,7 +75,7 @@ object ThriftFieldScalaHelper {
       case x => s".$key(_$x.toSet)"
     }
     case FieldType.UnionType(_, _) => ""
-    case _ if FieldType.scalars.apply(t) => ""
+    case _ if t.isScalar => ""
     case FieldType.EnumType(k) => s".$key($k.fromThrift)"
     case FieldType.StructType(k, _) => s".$key($k.fromThrift)"
     case _ => throw new IllegalStateException(s"Unhandled nested type [${t.toString}")

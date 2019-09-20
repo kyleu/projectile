@@ -67,7 +67,7 @@ object Dependencies {
     }
 
     object Finagle {
-      val version = "18.12.0"
+      val version = "19.9.0"
 
       val core = "com.twitter" %% "finagle-core" % version
       val thrift = "com.twitter" %% "finagle-thrift" % version

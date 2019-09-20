@@ -45,7 +45,7 @@ object ControllerLogic extends FeatureLogic {
     TwirlFormFile.export(config, model).rendered,
     TwirlSearchResultFile.export(config, model).rendered
   ) ++ TwirlRelationFiles.export(config, model).map(_.rendered) ++
-    (if (model.foreignKeys.isEmpty) { Nil } else { Seq(TwirlBulkEditFile.export(config, model).rendered) })
+    (if (model.foreignKeys.isEmpty || model.pkFields.isEmpty) { Nil } else { Seq(TwirlBulkEditFile.export(config, model).rendered) })
 
   private[this] def thriftServiceFiles(config: ExportConfiguration, service: ExportService) = Seq(
     ThriftControllerFile.export(config, service).rendered,

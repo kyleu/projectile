@@ -12,6 +12,7 @@ import com.kyleu.projectile.models.feature.graphql.GraphQLLogic
 import com.kyleu.projectile.models.feature.openapi.OpenApiLogic
 import com.kyleu.projectile.models.feature.service.ServiceLogic
 import com.kyleu.projectile.models.feature.slick.SlickLogic
+import com.kyleu.projectile.models.feature.test.TestLogic
 import com.kyleu.projectile.models.feature.thrift.ThriftLogic
 import com.kyleu.projectile.models.feature.wiki.WikiLogic
 import com.kyleu.projectile.models.output.OutputLog
@@ -28,7 +29,7 @@ object FeatureService {
     case Controller => Some(ControllerLogic)
     case Audit => Some(AuditLogic)
     case Notes => None
-    case Tests => None
+    case Tests => Some(TestLogic)
     case Thrift => Some(ThriftLogic)
     case OpenAPI => Some(OpenApiLogic)
     case Wiki => Some(WikiLogic)

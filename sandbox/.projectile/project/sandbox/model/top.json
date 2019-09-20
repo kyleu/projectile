@@ -1,7 +1,7 @@
 {
   "key" : "top",
   "pkg" : [ "t" ],
-  "features" : [ "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core" ],
+  "features" : [ "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core", "tests" ],
   "ignored" : [ ],
   "overrides" : [ {
     "k" : "title",

@@ -49,8 +49,9 @@ object ThriftSchemaInputHelper {
   }
 
   def addImports(pkg: Seq[String], types: Seq[FieldType], config: ExportConfiguration, file: ScalaFile) = {
-    types.foreach { colType =>
-      getImportType(config, colType).foreach { impType =>
+    types.foreach {
+      case colType if colType.isInstanceOf[FieldType.MapType] => // noop?
+      case colType => getImportType(config, colType).foreach { impType =>
         config.enums.find(_.key == impType) match {
           case Some(e) => file.addImport(e.pkg :+ s"${impType}Schema", s"${e.propertyName}EnumType")
           case None => config.models.find(_.key == impType) match {
@@ -67,14 +68,18 @@ object ThriftSchemaInputHelper {
       getImportType(config, colType).foreach { impType =>
         config.models.find(_.key == impType) match {
           case Some(m) => file.addImport(m.pkg :+ s"${impType}Schema", s"${m.propertyName}InputType")
-          case None => // noop?
+          case None => config.enums.find(_.key == impType) match {
+            case Some(e) => file.addImport(e.pkg :+ s"${impType}Schema", s"${e.propertyName}EnumType")
+            case None => // noop?
+          }
         }
       }
     }
   }
 
+  @scala.annotation.tailrec
   private[this] def getImportType(config: ExportConfiguration, t: FieldType): Option[String] = t match {
-    case _ if FieldType.scalars(t) => None
+    case _ if t.isScalar => None
     case FieldType.MapType(_, v) => getImportType(config, v)
     case FieldType.ListType(typ) => getImportType(config, typ)
     case FieldType.SetType(typ) => getImportType(config, typ)

@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportModelReference}
-import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature}
+import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature}
 import com.kyleu.projectile.models.output.file.RoutesFile
 
 object RoutesFiles {
@@ -13,17 +13,30 @@ object RoutesFiles {
 
   def export(config: ExportConfiguration) = {
     val filtered = config.models.filter(_.features(ModelFeature.Controller)).filter(_.inputType.isDatabase)
+
     val packages = filtered.flatMap(_.pkg.headOption).distinct
 
-    val routesContent = packages.map { p =>
+    val testRoute = if ((!packages.contains("test")) && config.project.features(ProjectFeature.Tests)) { Seq("test") } else { Nil }
+
+    val routesContent = (packages ++ testRoute).map { p =>
       val ms = config.models.filter(_.features(ModelFeature.Controller)).filter(_.pkg.headOption.contains(p))
       val es = config.enums.filter(_.features(EnumFeature.Controller)).filter(_.pkg.headOption.contains(p))
       val solo = es.isEmpty && ms.size == 1
 
-      if (solo) {
-        p -> routesContentFor(config, ms.headOption.getOrElse(throw new IllegalStateException()), solo = true)
+      val extra = if (p == "test" && config.project.features(ProjectFeature.Tests)) {
+        if (solo) {
+          Seq(s"GET   /test   ${(config.applicationPackage :+ "controllers" :+ "admin").mkString(".")}.test.TestController.test()")
+        } else {
+          Seq(s"GET   /       ${(config.applicationPackage :+ "controllers" :+ "admin").mkString(".")}.test.TestController.test()")
+        }
       } else {
-        p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(config, e)))
+        Nil
+      }
+
+      if (solo) {
+        p -> (routesContentFor(config, ms.headOption.getOrElse(throw new IllegalStateException()), solo = true) ++ extra)
+      } else {
+        p -> (ms.flatMap(m => routesContentFor(config, m)) ++ es.flatMap(e => enumRoutesContentFor(config, e)) ++ extra)
       }
     }
 
@@ -48,7 +61,7 @@ object RoutesFiles {
     val autocomplete = s"GET         $prefix/autocomplete ${listWs.drop(13)} $controllerClass.autocomplete($autocompleteArgs)"
     val createForm = s"GET         $prefix/form ${listWs.drop(5)} $controllerClass.createForm"
     val createAct = s"POST        $root $listWs $controllerClass.create"
-    val bulkEditAct = if (model.foreignKeys.isEmpty) {
+    val bulkEditAct = if (model.foreignKeys.isEmpty || model.pkFields.isEmpty) {
       Nil
     } else {
       Seq(s"POST        $root/bulk ${listWs.drop(5)} $controllerClass.bulkEdit")

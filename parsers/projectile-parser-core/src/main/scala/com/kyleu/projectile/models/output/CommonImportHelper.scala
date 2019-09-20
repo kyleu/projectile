@@ -59,7 +59,7 @@ object CommonImportHelper {
       case "ThriftFutureUtils" => c.utilitiesPackage :+ "thrift"
       case "ThriftService" => c.utilitiesPackage :+ "thrift"
       case "ThriftServiceHelper" => c.utilitiesPackage :+ "thrift"
-      case "ThriftServiceRegistry" => c.applicationPackage :+ "util" :+ "thrift"
+      case "ThriftServiceRegistry" => c.applicationPackage :+ "models" :+ "thrift"
       case "TraceData" => c.utilitiesPackage :+ "tracing"
       case "TracingService" => c.utilitiesPackage :+ "tracing"
       case "UiConfig" => c.systemPackage :+ "models" :+ "config"

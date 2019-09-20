@@ -3,12 +3,12 @@
   "template" : "play",
   "input" : "sandbox-db",
   "description" : "Sandbox Project",
-  "features" : [ "audit", "datamodel", "graphql", "service", "controller", "notes", "core" ],
+  "features" : [ "audit", "datamodel", "graphql", "service", "controller", "notes", "core", "tests" ],
   "flags" : [ ],
   "paths" : { },
   "packages" : { },
   "classOverrides" : { },
   "defaultEnumFeatures" : [ "auth", "shared", "controller", "core", "graphql" ],
-  "defaultModelFeatures" : [ "auth", "shared", "json", "datamodel", "service", "controller", "notes", "core", "graphql" ],
+  "defaultModelFeatures" : [ "auth", "shared", "json", "datamodel", "tests", "service", "controller", "notes", "core", "graphql" ],
   "defaultServiceFeatures" : [ "core", "graphql", "controller", "auth" ]
 }

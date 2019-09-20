@@ -34,6 +34,7 @@ object ThriftControllerFile {
     config.addCommonImport(file, "DateUtils")
     config.addCommonImport(file, "ExecutionContext")
     config.addCommonImport(file, "JsonSerializers", "_")
+    config.addCommonImport(file, "PermissionService")
     config.addCommonImport(file, "ThriftServiceRegistry")
     config.addCommonImport(file, "TraceData")
     file.addImport(Seq("io", "circe"), "Json")
@@ -44,6 +45,9 @@ object ThriftControllerFile {
     val inject = "@javax.inject.Inject() (override val app: Application)(implicit ec: ExecutionContext)"
     val controller = if (service.features(ServiceFeature.Auth)) { "AuthController" } else { "BaseController" }
     file.add(s"""class ${service.className}Controller $inject extends $controller("${service.className}") {""", 1)
+
+    file.add(s"""PermissionService.registerModel("thrift", "${service.className}", "${service.className}", None, "run")""")
+    file.add()
     file.add(s"def svc = ThriftServiceRegistry.${service.propertyName}")
     file.add(s"""private[this] val rc = ${(service.pkg :+ "controllers").mkString(".")}.${service.propertyName}.routes.${service.className}Controller""")
     file.add()
@@ -86,7 +90,7 @@ object ThriftControllerFile {
   private[this] def addHelpers(svc: ExportService, file: ScalaFile, config: ExportConfiguration) = {
     file.add()
     file.add(s"""private[this] val listCall = ("${svc.className}", rc.list())""")
-    val cfg = s"""app.cfg(u = Some(request.identity), "thrift", "${svc.key}")"""
+    val cfg = s"""app.cfg(u = Some(request.identity), "thrift", "${svc.key}", title)"""
 
     val args = "title: String, act: Call, args: Json"
     file.add(s"""private[this] def getHelper($args) = withSession(title, ${svc.perm("run")}) { implicit request => implicit td =>""", 1)

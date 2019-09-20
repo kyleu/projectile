@@ -37,7 +37,7 @@ object ThriftServiceSchemaFile {
   }
 
   private[this] def addMethodField(pkg: Seq[String], m: ExportMethod, config: ExportConfiguration, file: ScalaFile) = {
-    ThriftSchemaInputHelper.addImports(pkg = pkg, types = m.args.map(_.t) :+ m.returnType, config = config, file = file)
+    ThriftSchemaInputHelper.addImports(pkg = pkg, types = Seq(m.returnType), config = config, file = file)
 
     val retGraphQlType = ThriftSchemaHelper.graphQlTypeFor(m.returnType, config)
 

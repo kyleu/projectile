@@ -32,6 +32,7 @@ object ThriftControllerArgumentHelper {
       val k = e.firstVal.className
       s"${e.className}.$k.value"
     case FieldType.StructType(key, _) => config.getModel(key, "field default").className + "()"
+    case FieldType.UnionType(key, _) => config.getUnion(key, "field default").className + "()"
 
     case x => throw new IllegalStateException(s"Unhandled field type [$x]")
   }

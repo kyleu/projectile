@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.feature.graphql.thrift
 
-import com.kyleu.projectile.models.export.ExportModel
+import com.kyleu.projectile.models.export.{ExportField, ExportModel}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.output.OutputPath
@@ -20,25 +20,28 @@ object ThriftModelSchemaFile {
     file.addImport(Seq("sangria", "macros", "derive"), "deriveObjectType")
     file.addImport(Seq("sangria", "macros", "derive"), "deriveInputObjectType")
     file.addImport(Seq("sangria", "schema"), "_")
-    file.addImport(Seq("sangria", "marshalling", "circe"), "_")
 
-    ThriftSchemaInputHelper.addImports(pkg = model.pkg, types = model.fields.map(_.t), config = config, file = file)
-    ThriftSchemaInputHelper.addInputImports(pkg = model.pkg, types = model.fields.map(_.t), config = config, file = file)
+    val importFields = model.fields.filterNot(f => f.t.isInstanceOf[FieldType.MapType])
+    if (importFields.nonEmpty) {
+      file.addImport(Seq("sangria", "marshalling", "circe"), "_")
+    }
+
+    ThriftSchemaInputHelper.addImports(pkg = model.pkg, types = importFields.map(_.t), config = config, file = file)
+    ThriftSchemaInputHelper.addInputImports(pkg = model.pkg, types = importFields.map(_.t), config = config, file = file)
 
     file.add(s"""object ${model.className}Schema {""", 1)
 
     val deriveInput = s"deriveInputObjectType[${model.className}]"
     file.add(s"implicit lazy val ${model.propertyName}InputType: InputType[${model.className}] = $deriveInput(", 1)
+    def replace(f: ExportField) = {
+      file.addImport(Seq("sangria", "macros", "derive"), "ReplaceInputField")
+      val t = ThriftSchemaInputHelper.graphQlInputTypeFor(f.t, config)
+      file.add(s"""ReplaceInputField("${f.propertyName}", InputField("${f.propertyName}", $t)),""")
+    }
     model.fields.foreach { f =>
       f.t match {
-        case FieldType.MapType(_, _) =>
-          file.addImport(Seq("sangria", "macros", "derive"), "ReplaceInputField")
-          val t = ThriftSchemaInputHelper.graphQlInputTypeFor(f.t, config)
-          file.add(s"""ReplaceInputField("${f.propertyName}", InputField("${f.propertyName}", $t)),""")
-        case FieldType.SetType(_) =>
-          file.addImport(Seq("sangria", "macros", "derive"), "ReplaceInputField")
-          val t = ThriftSchemaInputHelper.graphQlInputTypeFor(f.t, config)
-          file.add(s"""ReplaceInputField("${f.propertyName}", InputField("${f.propertyName}", $t)),""")
+        case FieldType.MapType(_, _) => replace(f)
+        case FieldType.SetType(_) => replace(f)
         case _ => // noop
       }
     }

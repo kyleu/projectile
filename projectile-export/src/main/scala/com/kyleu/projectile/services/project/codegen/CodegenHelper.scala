@@ -39,7 +39,7 @@ trait CodegenHelper { this: ProjectileService =>
     val aud = if (ret.isEmpty) {
       None
     } else {
-      Some(auditKeys(ret.map(_._1.project.key), verbose = verbose))
+      Some(auditAll(verbose = verbose))
     }
 
     CodegenResult(updates, ret, aud, (System.currentTimeMillis - startMs).toInt)

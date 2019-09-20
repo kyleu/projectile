@@ -1,7 +1,7 @@
 package com.kyleu.projectile.models.feature.controller
 
 import com.kyleu.projectile.models.export.config.ExportConfiguration
-import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature}
+import com.kyleu.projectile.models.feature.{FeatureLogic, ModelFeature, ProjectFeature}
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.inject.{CommentProvider, TextSectionHelper}
 
@@ -19,7 +19,13 @@ object InjectRoutes extends FeatureLogic.Inject(path = OutputPath.ServerResource
       s"->          $detailUrl $detailWs $pkg.Routes"
     }
 
-    val newLines = packages.sorted.map(routeFor)
+    val testRoute = if ((!packages.contains("test")) && config.project.features(ProjectFeature.Tests) && config.project.features(ProjectFeature.Controller)) {
+      Seq(routeFor("test"))
+    } else {
+      Nil
+    }
+
+    val newLines = packages.sorted.map(routeFor) ++ testRoute
 
     val params = TextSectionHelper.Params(commentProvider = CommentProvider.Routes, key = "model route files")
     TextSectionHelper.replaceBetween(filename = filename, original = original, p = params, newLines = newLines, project = config.project.key)

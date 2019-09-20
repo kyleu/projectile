@@ -44,7 +44,7 @@ object ThriftFieldThriftHelper {
       } else {
         s"$name.map(x => x$mapped.toSet)"
       }
-    case _ if FieldType.scalars.apply(t) => name
+    case _ if t.isScalar => name
     case _ if required => s"$name.asThrift"
     case _ => s"$name.map(_.asThrift)"
   }
@@ -57,7 +57,7 @@ object ThriftFieldThriftHelper {
       case _ => ""
     }
     case FieldType.SetType(_) => throw new IllegalStateException(s"Unhandled [$ctx] child Set")
-    case _ if FieldType.scalars.apply(t) => ""
+    case _ if t.isScalar => ""
     case _ => s".$key(_.asThrift)"
   }
 }

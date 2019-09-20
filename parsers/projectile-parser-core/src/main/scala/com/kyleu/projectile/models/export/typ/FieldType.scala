@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.export.typ
 import com.kyleu.projectile.util.JsonSerializers._
 import enumeratum.values.{StringEnum, StringEnumEntry}
 
-sealed abstract class FieldType(override val value: String, val isDate: Boolean = false) extends StringEnumEntry {
+sealed abstract class FieldType(override val value: String, val isScalar: Boolean = false, val isDate: Boolean = false) extends StringEnumEntry {
   val className = getClass.getSimpleName.stripSuffix("$")
   override def toString = value
 }
@@ -14,20 +14,20 @@ object FieldType extends StringEnum[FieldType] {
 
   case object UnitType extends FieldType("unit")
 
-  case object StringType extends FieldType("string")
-  case object EncryptedStringType extends FieldType("encrypted")
+  case object StringType extends FieldType("string", isScalar = true)
+  case object EncryptedStringType extends FieldType("encrypted", isScalar = true)
 
   case object NothingType extends FieldType("nothing")
   case object AnyType extends FieldType("any")
   case object ThisType extends FieldType("this")
 
-  case object BooleanType extends FieldType("boolean")
-  case object ByteType extends FieldType("byte")
-  case object ShortType extends FieldType("short")
-  case object IntegerType extends FieldType("integer")
-  case object LongType extends FieldType("long")
-  case object FloatType extends FieldType("float")
-  case object DoubleType extends FieldType("double")
+  case object BooleanType extends FieldType("boolean", isScalar = true)
+  case object ByteType extends FieldType("byte", isScalar = true)
+  case object ShortType extends FieldType("short", isScalar = true)
+  case object IntegerType extends FieldType("integer", isScalar = true)
+  case object LongType extends FieldType("long", isScalar = true)
+  case object FloatType extends FieldType("float", isScalar = true)
+  case object DoubleType extends FieldType("double", isScalar = true)
   case object BigDecimalType extends FieldType("decimal")
 
   case object DateType extends FieldType("date", isDate = true)
@@ -61,5 +61,4 @@ object FieldType extends StringEnum[FieldType] {
   case object ByteArrayType extends FieldType("byteArray")
 
   override def values = findValues
-  val scalars: Set[FieldType] = Set(BooleanType, StringType, IntegerType, LongType, DoubleType)
 }
