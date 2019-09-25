@@ -28,32 +28,32 @@
       </div>
     }
   }
-    @defining(com.kyleu.projectile.services.status.AppVersions.getVersions) { versions =>
-      @if(versions.nonEmpty) {
-        @com.kyleu.projectile.views.html.layout.card(title = Some("Version History")) {
-          <ul class="collection">
-            @versions.reverse.map { v =>
-              <li class="collection-item">
-                <div class="right">@v.on</div>
-                <h6>@v.v - @v.title</h6>
-                @v.desc.map { d => <em>@d</em>}
-                @if(v.features.nonEmpty) {
-                  <ul class="browser-default">
-                    @v.features.map { f =>
-                      <li>
-                        @if(f._3().isDefined) {
-                          <a href="@f._3()">@f._1</a>: @f._2
-                        } else {
-                          @f._1: @f._2
-                        }
-                      </li>
-                    }
-                  </ul>
-                }
-              </li>
-            }
-          </ul>
-        }
+  @defining(com.kyleu.projectile.services.status.AppVersions.getVersions) { versions =>
+    @if(versions.nonEmpty) {
+      @com.kyleu.projectile.views.html.layout.card(title = Some("Version History")) {
+        <ul class="collection">
+          @versions.reverse.map { v =>
+            <li class="collection-item">
+              <div class="right">@v.on</div>
+              <h6>@{v.v._1}.@{v.v._2}.@{v.v._3} - @v.title</h6>
+              @v.desc.map { d => <em>@d</em>}
+              @if(v.features.nonEmpty) {
+                <ul class="browser-default">
+                  @v.features.map { f =>
+                    <li>
+                      @if(f._3().isDefined) {
+                        <a href="@f._3()">@f._1</a>: @f._2
+                      } else {
+                        @f._1: @f._2
+                      }
+                    </li>
+                  }
+                </ul>
+              }
+            </li>
+          }
+        </ul>
       }
     }
+  }
 }

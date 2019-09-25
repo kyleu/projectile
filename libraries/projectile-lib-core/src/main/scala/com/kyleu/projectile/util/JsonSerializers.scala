@@ -29,7 +29,7 @@ object JsonSerializers {
     case Left(x) => throw x.underlying
   }
   def decodeJson[A](s: String)(implicit decoder: Decoder[A]) = io.circe.parser.decode[A](s)
-  def printJson(j: Json) = io.circe.Printer.spaces2.pretty(j)
+  def printJson(j: Json) = io.circe.Printer.spaces2.print(j)
 
   def extract[T: Decoder](json: Json) = json.as[T] match {
     case Right(x) => x

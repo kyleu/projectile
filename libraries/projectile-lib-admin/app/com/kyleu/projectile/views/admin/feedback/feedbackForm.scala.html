@@ -8,7 +8,7 @@
       <div class="clear"></div>
       <table>
         <tbody>
-          @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "id", title = "Id", value = Some(model.id.toString), nullable = false, dataType = "uuid")
+          @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "id", title = "Id", value = Some(model.id.toString), nullable = false, dataType = "uuid", isPk = true)
           @com.kyleu.projectile.views.html.components.form.codeField(selected = isNew, key = "text", title = "Text", value = Some(model.text), nullable = false)
           @com.kyleu.projectile.views.html.components.form.autocompleteField(
             selected = isNew, key = "authorId", title = "Author Id", value = Some(model.authorId.toString), nullable = false, dataType = "uuid",

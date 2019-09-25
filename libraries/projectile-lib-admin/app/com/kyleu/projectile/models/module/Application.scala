@@ -15,7 +15,7 @@ import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.cache.CacheService
 import com.kyleu.projectile.services.database._
 import com.kyleu.projectile.services.notification.NotificationService
-import com.kyleu.projectile.services.status.StatusProvider
+import com.kyleu.projectile.services.status.{AppVersions, StatusProvider}
 import com.kyleu.projectile.services.task.{ScheduledTaskRegistry, ScheduledTaskService}
 import com.kyleu.projectile.util.metrics.Instrumented
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
@@ -81,7 +81,9 @@ class Application @javax.inject.Inject() (
     try {
       statusProvider.onAppStartup(this, injector)
     } catch {
-      case NonFatal(x) => errors.addError("app", s"Error running application startup code: ${x.getMessage}", Map(), Some(x))
+      case NonFatal(x) =>
+        x.printStackTrace()
+        errors.addError("app", s"Error running application startup code: ${x.getMessage}", Map(), Some(x))
     }
     Future.successful(!errors.hasErrors)
   }
@@ -90,6 +92,7 @@ class Application @javax.inject.Inject() (
     if (ApplicationFeature.enabled(ApplicationFeature.Task)) {
       injector.getInstance(classOf[ScheduledTaskService]).stopSchedule()
     }
+    AppVersions.clear()
     ScheduledTaskRegistry.clear()
     db.close()
     CacheService.close()

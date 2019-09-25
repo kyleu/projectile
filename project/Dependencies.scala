@@ -14,8 +14,8 @@ object Dependencies {
   }
 
   object Database {
-    val postgres = "org.postgresql" % "postgresql" % "42.2.6"
-    val hikariCp = "com.zaxxer" % "HikariCP" % "3.3.1"
+    val postgres = "org.postgresql" % "postgresql" % "42.2.8"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "3.4.1"
     val flyway = "org.flywaydb" % "flyway-core" % "5.2.4"
 
     object Slick {
@@ -32,7 +32,7 @@ object Dependencies {
     }
 
     object Doobie {
-      val version = "0.8.0-RC1"
+      val version = "0.8.2"
 
       val core = "org.tpolecat" %% "doobie-core" % version
       val hikariCp = "org.tpolecat" %% "doobie-hikari" % version
@@ -49,13 +49,13 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.12.0-RC4"
+    val version = "0.12.1"
 
     val enumeratumCirceVersion = "1.5.21"
     val booPickleVersion = "1.3.1"
 
     val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser")
-    val jackson = "io.circe" %% "circe-jackson29" % "0.12.0-RC2"
+    val jackson = "io.circe" %% "circe-jackson29" % "0.12.0"
   }
 
   object Thrift {
@@ -95,7 +95,7 @@ object Dependencies {
   }
 
   object Authentication {
-    private[this] val version = "6.1.0"
+    private[this] val version = "6.1.1"
     val silhouette = "com.mohiva" %% "play-silhouette" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val hasher = "com.mohiva" %% "play-silhouette-password-bcrypt" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
     val persistence = "com.mohiva" %% "play-silhouette-persistence" % version excludeAll ExclusionRule(organization = "com.atlassian.jwt")
@@ -110,7 +110,7 @@ object Dependencies {
     val jquery = "org.webjars" % "jquery" % "2.2.4" intransitive()
     val materialIcons = "org.webjars" % "material-design-icons" % "3.0.1"
     val materialize = "org.webjars" % "materializecss" % "1.0.0" intransitive()
-    val swaggerUi = "org.webjars" % "swagger-ui" % "3.23.5" intransitive()
+    val swaggerUi = "org.webjars" % "swagger-ui" % "3.23.8" intransitive()
 
     val all = Seq(autocomplete, jquery, materialIcons, materialize, swaggerUi)
   }

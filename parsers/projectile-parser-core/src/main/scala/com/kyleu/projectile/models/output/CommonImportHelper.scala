@@ -53,6 +53,7 @@ object CommonImportHelper {
       case "ServiceAuthController" => c.systemPackage :+ "controllers"
       case "ServiceController" => c.systemPackage :+ "controllers"
       case "SlickQueryService" => c.systemPackage ++ Seq("services", "database", "slick")
+      case "StringUtils" => c.utilitiesPackage
       case "SystemUser" => c.systemPackage ++ Seq("models", "user")
       case "Tag" => c.tagsPackage
       case "TextQuery" => c.resultsPackage

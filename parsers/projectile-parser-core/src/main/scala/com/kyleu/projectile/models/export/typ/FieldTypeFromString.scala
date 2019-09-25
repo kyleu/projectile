@@ -24,12 +24,11 @@ object FieldTypeFromString {
     case UuidType => s"UUID.fromString($s)"
 
     case EnumType(key) => s"${config.getEnum(key, "fromString").className}.withValue($s)"
-    case ListType(_) => s + ".TODO"
-    case SetType(_) => s + ".TODO"
-    case MapType(_, _) => s + ".TODO"
-
+    case ListType(_) => s"""$s.split(",").toList"""
+    case SetType(_) => s"""$s.split(",").toSet"""
+    case MapType(_, _) => s"StringUtils.toMap($s)"
     case JsonType => s"util.JsonSerializers.toJson($s)"
-    case TagsType => s"Tag.seqFromString($s)"
+    case TagsType => s"Tag.fromString($s)"
 
     case ByteArrayType => s + ".split(\",\").map(_.toInt.toByte)"
 

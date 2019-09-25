@@ -1,5 +1,5 @@
 @(
-    selected: Boolean, key: String, title: String, value: Option[io.circe.Json], nullable: Boolean, dataType: String = "string"
-)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType) {
-  <textarea id="input-@key" name="@key" class="materialize-textarea@if(nullable) { nullable}" style="font-family: monospace, monospace;">@value.map(_.spaces2).getOrElse(com.kyleu.projectile.util.NullUtils.str)</textarea>
+    selected: Boolean, key: String, title: String, value: Option[io.circe.Json], nullable: Boolean, dataType: String = "string", isPk: Boolean = false, isFk: Boolean = false
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType) {
+  <textarea id="input-@key" name="@key" class="materialize-textarea@if(nullable) { nullable} @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" style="font-family: monospace, monospace;">@value.map(_.spaces2).getOrElse(com.kyleu.projectile.util.NullUtils.str)</textarea>
 }

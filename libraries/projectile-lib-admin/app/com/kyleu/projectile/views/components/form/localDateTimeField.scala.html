@@ -1,16 +1,16 @@
 @(
-    selected: Boolean, key: String, title: String, value: Option[java.time.LocalDateTime], nullable: Boolean
-)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = "timestamp") {
+    selected: Boolean, key: String, title: String, value: Option[java.time.LocalDateTime], nullable: Boolean, isPk: Boolean = false, isFk: Boolean = false
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType = "timestamp") {
   <div style="width: 50%; float: left;">
     <div class="input-field">
       <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.date</i>
-      <input id="input-@{key}-date" data-original="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" class="datepicker" autocomplete="off" type="text" name="@{key}-date" value="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
+      <input id="input-@{key}-date" data-original="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" class="datepicker @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" autocomplete="off" type="text" name="@{key}-date" value="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
     </div>
   </div>
   <div style="width: 50%; float: right;">
     <div class="input-field">
       <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.time</i>
-      <input id="input-@{key}-time" data-original="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" type="text" name="@{key}-time" value="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
+      <input id="input-@{key}-time" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" data-original="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" type="text" name="@{key}-time" value="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
     </div>
   </div>
 }

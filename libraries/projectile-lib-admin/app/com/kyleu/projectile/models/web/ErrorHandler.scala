@@ -36,7 +36,7 @@ class ErrorHandler @javax.inject.Inject() (
     td.tag("error.type", ex.getClass.getSimpleName)
     td.tag("error.message", ex.getMessage)
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
-    errorLoggingService.record(None, "unknown", ex)(TraceData.noop)
+    errorLoggingService.record(None, request.uri.take(2048), ex)(TraceData.noop)
     render.async {
       case Accepts.Json() => jsonError(request, ex)
       case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.flash)))
@@ -48,7 +48,7 @@ class ErrorHandler @javax.inject.Inject() (
     td.tag("error.type", ex.getClass.getSimpleName)
     td.tag("error.message", ex.getMessage)
     td.tag("error.stack", ex.getStackTrace.mkString("\n"))
-    errorLoggingService.record(None, "unknown", ex)(TraceData.noop)
+    errorLoggingService.record(None, request.uri.take(2048), ex)(TraceData.noop)
     render.async {
       case Accepts.Json() => jsonError(request, ex)
       case _ => Future.successful(Results.InternalServerError(actions.serverError(request.path, Some(ex))(request.flash)))

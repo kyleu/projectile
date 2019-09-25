@@ -1,6 +1,6 @@
 @(
-    selected: Boolean, key: String, title: String, value: Option[String], nullable: Boolean, options: Seq[(String, String)], dataType: String = "enum"
-)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = dataType) {
+    selected: Boolean, key: String, title: String, value: Option[String], nullable: Boolean, options: Seq[(String, String)], dataType: String = "enum", isPk: Boolean = false, isFk: Boolean = false
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType = dataType) {
   <div class="input-field">
     <select id="input-@key" name="@key">
       @if(nullable) {<option value="@com.kyleu.projectile.util.NullUtils.str" @if(value.isEmpty) { selected="selected" }>@com.kyleu.projectile.util.NullUtils.str (null)</option>}

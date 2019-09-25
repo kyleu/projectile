@@ -1,0 +1,5 @@
+@(
+    selected: Boolean, key: String, title: String, value: Option[Double], nullable: Boolean, isPk: Boolean = false, isFk: Boolean = false
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType = "double") {
+  @inputField(selected, key, title, value.map(_.toString), nullable, isPk = isPk, isFk = isFk)
+}

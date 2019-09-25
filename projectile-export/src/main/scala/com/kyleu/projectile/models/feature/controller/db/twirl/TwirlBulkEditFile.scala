@@ -8,13 +8,10 @@ import com.kyleu.projectile.models.output.file.TwirlFile
 object TwirlBulkEditFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "BulkForm")
-
     val systemViewPkg = (config.systemViewPackage :+ "html").mkString(".")
-
     val uc = CommonImportHelper.getString(config, "UiConfig")
     file.add(s"@(cfg: $uc, modelSeq: Seq[${model.fullClassPath(config)}], act: Call, debug: Boolean)(")
-    file.add(s"    implicit flash: Flash")
-
+    file.add(s"    implicit request: Request[AnyContent], flash: Flash")
     file.add(s""")@$systemViewPkg.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(${model.iconRef(config)})) {""", 1)
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     val pkString = model.pkFields.map("m." + _.propertyName).mkString(""" + "||" + """)
@@ -37,7 +34,6 @@ object TwirlBulkEditFile {
     file.add(s"""<div class="right"><button type="submit" class="btn @cfg.user.buttonColor">$saveTitle</button></div>""")
     file.add("""<div class="right"><a href="" onclick="window.history.go(-1);return false;" class="btn-flat cancel-link">Cancel</a></div>""")
     file.add("""<div class="clear"></div>""")
-
     file.add("<table>", 1)
     file.add("<thead>", 1)
     file.add("<tr>", 1)

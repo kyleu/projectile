@@ -8,7 +8,7 @@
       <div class="clear"></div>
       <table>
         <tbody>
-          @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "id", title = "Id", value = Some(model.id.toString), nullable = false, dataType = "uuid")
+          @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "id", title = "Id", value = Some(model.id.toString), nullable = false, dataType = "uuid", isPk = true)
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "task", title = "Task", value = Some(model.task), nullable = false)
           @com.kyleu.projectile.views.html.components.form.collectionField(selected = isNew, key = "arguments", title = "Arguments", value = Some(model.arguments), nullable = false)
           @com.kyleu.projectile.views.html.components.form.textField(selected = isNew, key = "status", title = "Status", value = Some(model.status), nullable = false)

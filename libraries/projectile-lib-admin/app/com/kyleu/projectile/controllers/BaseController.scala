@@ -45,7 +45,7 @@ abstract class BaseController(val name: String) extends InjectedController with 
 
   protected implicit val contentTypeOfJson: ContentTypeOf[Json] = ContentTypeOf(Some("application/json"))
   protected implicit def writableOfJson(implicit codec: Codec, printer: Printer = Printer.spaces2): Writeable[Json] = {
-    Writeable(a => codec.encode(a.pretty(printer)))
+    Writeable(a => codec.encode(a.printWith(printer)))
   }
 
   protected def modelForm(body: AnyContent) = body.asFormUrlEncoded match {

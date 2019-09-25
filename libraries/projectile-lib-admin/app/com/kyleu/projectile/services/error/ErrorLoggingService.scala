@@ -11,6 +11,7 @@ import com.kyleu.projectile.util.{ExceptionUtils, Logging}
 import javax.inject.Named
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
 class ErrorLoggingService @javax.inject.Inject() (@Named("system") db: JdbcDatabase)(implicit ec: ExecutionContext) extends Logging {
@@ -18,6 +19,10 @@ class ErrorLoggingService @javax.inject.Inject() (@Named("system") db: JdbcDatab
     val e = SystemError.empty(context = ctx, userId = userId, cls = x.getClass.getName, message = x.getMessage, stacktrace = Some(ExceptionUtils.print(x)))
     db.executeF(SystemErrorQueries.insert(e)).map(_ => ()).recover {
       case ex => log.warn("Error logging exception", ex)
+    }.recover {
+      case NonFatal(x) =>
+        log.error("Error logging exception", x)
+        ()
     }
   } else {
     Future.successful(())

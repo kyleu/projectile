@@ -1,8 +1,8 @@
 @(
-    selected: Boolean, key: String, title: String, value: Option[java.time.LocalTime], nullable: Boolean
-)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, dataType = "time") {
+    selected: Boolean, key: String, title: String, value: Option[java.time.LocalTime], nullable: Boolean, isPk: Boolean = false, isFk: Boolean = false
+)@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType = "time") {
   <div class="input-field">
     <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.time</i>
-    <input id="input-@key" data-original="@value.getOrElse(com.kyleu.projectile.util.NullUtils.str)" class="@if(nullable) {nullable}" autocomplete="off" type="text" name="@key" value="@value.getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
+    <input id="input-@key" data-original="@value.getOrElse(com.kyleu.projectile.util.NullUtils.str)" class="@if(nullable) {nullable} @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" autocomplete="off" type="text" name="@key" value="@value.getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
   </div>
 }

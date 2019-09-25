@@ -1,6 +1,6 @@
 @* Generated File *@
 @(cfg: com.kyleu.projectile.models.config.UiConfig, modelSeq: Seq[models.b.BottomRow], act: Call, debug: Boolean)(
-    implicit flash: Flash
+    implicit request: Request[AnyContent], flash: Flash
 )@com.kyleu.projectile.views.html.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(models.template.Icons.bottomRow)) {
   <form id="form-edit-bottomRow" action="@act" method="post">
     <input type="hidden" class="primaryKeys" name="primaryKeys" value="@modelSeq.map(m => m.id).mkString("//")" />
@@ -26,10 +26,11 @@
       <table>
         <tbody>
           @com.kyleu.projectile.views.html.components.form.autocompleteField(
-            selected = false, key = "topId", title = "Top Id", value = None, nullable = false, dataType = "uuid",
-            call = controllers.admin.t.routes.TopRowController.autocomplete(), acType = ("topRow", "Top"), icon = models.template.Icons.topRow
+            selected = request.queryString.isDefinedAt("topId"), key = "topId", title = "Top Id", value = request.queryString.get("topId").flatMap(_.headOption).orElse(None), nullable = false, dataType = "uuid",
+            call = controllers.admin.t.routes.TopRowController.autocomplete(), acType = ("topRow", "Top"), icon = models.template.Icons.topRow,
+            inputType = "text", isPk = false
           )
-          @com.kyleu.projectile.views.html.components.form.textField(selected = false, key = "t", title = "T", value = None, nullable = true)
+          @com.kyleu.projectile.views.html.components.form.textField(selected = request.queryString.isDefinedAt("t"), key = "t", title = "T", value = request.queryString.get("t").flatMap(_.headOption).orElse(None), nullable = true)
         </tbody>
       </table>
     }
