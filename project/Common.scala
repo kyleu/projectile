@@ -10,7 +10,7 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.27.3"
+    val app = "1.27.4"
     val scala212 = "2.12.10"
     val scala213 = "2.13.1"
     val scala = if(useLatest) { scala213 } else { scala212 }
@@ -46,7 +46,8 @@ object Common {
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false),
 
     publishMavenStyle := true,
-    publishTo := Some(MavenRepository("sonatype-staging", "https://oss.sonatype.org/service/local/staging/deploy/maven2"))
+    // publishTo := Some(MavenRepository("sonatype-staging", "https://oss.sonatype.org/service/local/staging/deploy/maven2"))
+    publishTo := xerial.sbt.Sonatype.autoImport.sonatypePublishToBundle.value
   ) ++ (if(profilingEnabled) { Seq(addCompilerPlugin("ch.epfl.scala" %% "scalac-profiling" % "1.0.0")) } else { Nil })
 
   def silencerOptions(path: String, pathFilters: Seq[String] = Nil, messageFilters: Seq[String] = Nil) = {
