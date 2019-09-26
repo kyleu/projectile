@@ -5,6 +5,7 @@ import com.kyleu.projectile.models.result.data.DataField
 import com.kyleu.projectile.models.result.filter.Filter
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.services.ModelServiceHelper
+import com.kyleu.projectile.services.audit.AuditHelper
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.util.{Credentials, CsvUtils}
 import com.kyleu.projectile.util.tracing.{TraceData, TracingService}
@@ -104,7 +105,10 @@ class BottomRowService @javax.inject.Inject() (val db: JdbcDatabase, override va
   // Mutations
   def insert(creds: Credentials, model: BottomRow, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("insert")(td => db.executeF(BottomRowQueries.insert(model), conn)(td).flatMap {
-      case 1 => getByPrimaryKey(creds, model.id, conn)(td)
+      case 1 => getByPrimaryKey(creds, model.id, conn)(td).map(_.map { n =>
+        AuditHelper.onInsert("BottomRow", Seq(n.id.toString), n.toDataFields, creds)
+        n
+      })
       case _ => throw new IllegalStateException("Unable to find newly-inserted Bottom")
     })
   }
@@ -117,6 +121,7 @@ class BottomRowService @javax.inject.Inject() (val db: JdbcDatabase, override va
   }
   def create(creds: Credentials, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("create")(td => db.executeF(BottomRowQueries.create(fields), conn)(td).flatMap { _ =>
+      AuditHelper.onInsert("BottomRow", Seq(fieldVal(fields, "id")), fields, creds)
       getByPrimaryKey(creds, UUID.fromString(fieldVal(fields, "id")), conn)
     })
   }
@@ -124,6 +129,7 @@ class BottomRowService @javax.inject.Inject() (val db: JdbcDatabase, override va
   def remove(creds: Credentials, id: UUID, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("remove")(td => getByPrimaryKey(creds, id, conn)(td).flatMap {
       case Some(current) =>
+        AuditHelper.onRemove("BottomRow", Seq(id.toString), current.toDataFields, creds)
         db.executeF(BottomRowQueries.removeByPrimaryKey(id), conn)(td).map(_ => current)
       case None => throw new IllegalStateException(s"Cannot find BottomRow matching [$id]")
     })
@@ -132,9 +138,10 @@ class BottomRowService @javax.inject.Inject() (val db: JdbcDatabase, override va
   def update(creds: Credentials, id: UUID, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("update")(td => getByPrimaryKey(creds, id, conn)(td).flatMap {
       case Some(current) if fields.isEmpty => Future.successful(current -> s"No changes required for Bottom [$id]")
-      case Some(_) => db.executeF(BottomRowQueries.update(id, fields), conn)(td).flatMap { _ =>
+      case Some(current) => db.executeF(BottomRowQueries.update(id, fields), conn)(td).flatMap { _ =>
         getByPrimaryKey(creds, fields.find(_.k == "id").flatMap(_.v).map(s => UUID.fromString(s)).getOrElse(id), conn)(td).map {
           case Some(newModel) =>
+            AuditHelper.onUpdate("BottomRow", Seq(id.toString), current.toDataFields, fields, creds)
             newModel -> s"Updated [${fields.size}] fields of Bottom [$id]"
           case None => throw new IllegalStateException(s"Cannot find BottomRow matching [$id]")
         }
@@ -143,9 +150,9 @@ class BottomRowService @javax.inject.Inject() (val db: JdbcDatabase, override va
     })
   }
 
-  def updateBulk(creds: Credentials, pks: Seq[Seq[Any]], fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
-    db.executeF(BottomRowQueries.updateBulk(pks, fields), conn)(trace).map { x =>
-      s"Updated [${fields.size}] fields for [$x of ${pks.size}] Bottoms"
+  def updateBulk(creds: Credentials, pks: Seq[UUID], fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
+    Future.sequence(pks.map(pk => update(creds, pk, fields, conn))).map { x =>
+      s"Updated [${fields.size}] fields for [${x.size} of ${pks.size}] BottomRow"
     }
   }
 

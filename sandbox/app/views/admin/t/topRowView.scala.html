@@ -1,5 +1,5 @@
 @* Generated File *@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.t.TopRow, notes: Seq[com.kyleu.projectile.models.note.Note], debug: Boolean)(
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.t.TopRow, notes: Seq[com.kyleu.projectile.models.note.Note], auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord], debug: Boolean)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.views.html.layout.page(title = s"Top", cfg = cfg, icon = Some(models.template.Icons.topRow)) {
   @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
@@ -21,6 +21,7 @@
   }
   @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "TopRow", "Top", model.id)
+  @com.kyleu.projectile.views.html.admin.audit.auditRecords(auditRecords, "TopRow", "Top", model.id)
 
   <ul id="model-relations" class="collapsible" data-collapsible="expandable">
     <li id="relation-bottomRow-topId" data-table="bottomRow" data-field="topId" data-singular="Bottom" data-plural="Bottoms" data-url="@controllers.admin.b.routes.BottomRowController.byTopId(model.id, limit = Some(5), embedded = true)">

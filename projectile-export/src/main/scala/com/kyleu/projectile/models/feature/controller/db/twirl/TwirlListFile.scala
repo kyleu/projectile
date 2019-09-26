@@ -30,7 +30,7 @@ object TwirlListFile {
       listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")
     }
     listFile.add("cols = Seq(", 1)
-    (model.pkFields ++ model.summaryFields).foreach {
+    (model.pkFields ++ model.summaryFields).distinct.foreach {
       case c if model.summaryFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
       case c => listFile.add(s""""${c.propertyName}" -> "${c.title}",""")
     }
@@ -53,6 +53,10 @@ object TwirlListFile {
     listFile.add("q = q,")
     val augArgs = s"cls = classOf[${model.fullClassPath(config)}], args = request.queryString, cfg = cfg"
     listFile.add(s"additionalHeader = $imp.AugmentService.listHeaders.augment($augArgs),")
+    if (model.pkFields.nonEmpty) {
+      val act = model.routesPackage(config).mkString(".") + "." + model.className + "Controller.bulkEditForm()"
+      listFile.add(s"""additionalAction = Some(Html(s"<a href='$${$act}' class='btn-flat'>Bulk Edit</a>")),""")
+    }
     listFile.add("additionalColumns = aug._1")
     listFile.add(")", -1)
     listFile.add("}", -1)

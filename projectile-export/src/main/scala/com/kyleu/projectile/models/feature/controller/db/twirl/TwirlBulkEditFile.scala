@@ -12,7 +12,15 @@ object TwirlBulkEditFile {
     val uc = CommonImportHelper.getString(config, "UiConfig")
     file.add(s"@(cfg: $uc, modelSeq: Seq[${model.fullClassPath(config)}], act: Call, debug: Boolean)(")
     file.add(s"    implicit request: Request[AnyContent], flash: Flash")
-    file.add(s""")@$systemViewPkg.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(${model.iconRef(config)})) {""", 1)
+    file.add(s")")
+
+    file.add("@add() = {", 1)
+    file.add("""<div class="right"><button type="submit" class="btn @cfg.user.buttonColor" form="pks">Add</button></div>""")
+    file.add("""<div class="right"><input id="new-pks" name="new-pks" type="text" placeholder="Primary keys" form="pks" /></div>""")
+    file.add("}", -1)
+
+    file.add(s"""@$systemViewPkg.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(${model.iconRef(config)})) {""", 1)
+    file.add("""<form id="pks" onsubmit="bulk.addPk($('#new-pks').val());return false;"></form>""")
     file.add(s"""<form id="form-edit-${model.propertyName}" action="@act" method="post">""", 1)
     val pkString = model.pkFields.map("m." + _.propertyName).mkString(""" + "||" + """)
     file.add(s"""<input type="hidden" class="primaryKeys" name="primaryKeys" value="@modelSeq.map(m => $pkString).mkString("//")" />""")
@@ -23,21 +31,20 @@ object TwirlBulkEditFile {
     TwirlFormFile.addScripts(config, file, model, systemViewPkg)
     file.add(s"<script>", 1)
     file.add(s"""$$(function() { new FormService('form-edit-${model.propertyName}'); });""")
-    file.add(s"""$$(function() { new BulkEditService('form-edit-${model.propertyName}'); });""")
+    file.add(s"""var bulk;""")
+    val size = (model.pkFields ++ model.summaryFields).distinct.size
+    file.add(s"""$$(function() { bulk = new BulkEditService('form-edit-${model.propertyName}', $size); });""")
     file.add(s"</script>", -1)
     file
   }
 
   def addSelections(config: ExportConfiguration, file: TwirlFile, model: ExportModel) = {
-    file.add(s"""@com.kyleu.projectile.views.html.layout.card(Some("Selected ${model.plural}")) {""", 1)
-    val saveTitle = s"Save <span>@modelSeq.size</span> ${model.plural}"
-    file.add(s"""<div class="right"><button type="submit" class="btn @cfg.user.buttonColor">$saveTitle</button></div>""")
-    file.add("""<div class="right"><a href="" onclick="window.history.go(-1);return false;" class="btn-flat cancel-link">Cancel</a></div>""")
-    file.add("""<div class="clear"></div>""")
-    file.add("<table>", 1)
+    file.add(s"""@com.kyleu.projectile.views.html.layout.card(Some("Selected ${model.plural}"), right = Some(add())) {""", 1)
+    file.add("""<table id="bulk-rows">""", 1)
     file.add("<thead>", 1)
     file.add("<tr>", 1)
-    model.summaryFields.foreach(f => file.add(s"<th>${f.title}</th>"))
+    (model.pkFields ++ model.summaryFields).distinct.foreach(f => file.add(s"<th>${f.title}</th>"))
+    file.add("<th></th>")
     file.add("</tr>", -1)
     file.add("</thead>", -1)
     file.add("<tbody>", 1)
@@ -49,7 +56,6 @@ object TwirlBulkEditFile {
     file.add("}", -1)
     file.add("</tbody>", -1)
     file.add("</table>", -1)
-
     file.add("}", -1)
   }
 
@@ -66,8 +72,12 @@ object TwirlBulkEditFile {
       }
       file.add("</tbody>", -1)
       file.add("</table>", -1)
-
     }
+    val saveTitle = s"Save <span>@modelSeq.size</span> ${model.plural}"
+    file.add("<br />")
+    file.add(s"""<div class="right"><button type="submit" class="btn @cfg.user.buttonColor">$saveTitle</button></div>""")
+    file.add("""<div class="right"><a href="" onclick="window.history.go(-1);return false;" class="btn-flat cancel-link">Cancel</a></div>""")
+    file.add("""<div class="clear"></div>""")
     file.add("}", -1)
   }
 }

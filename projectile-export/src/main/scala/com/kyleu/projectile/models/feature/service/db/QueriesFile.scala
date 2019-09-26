@@ -75,7 +75,7 @@ object QueriesFile {
       file.add(s"def removeByPrimaryKey($sig) = new RemoveByPrimaryKey(Seq[Any]($call))")
       file.add()
       file.add(s"def update($sig, fields: Seq[DataField]) = new UpdateFields(Seq[Any]($call), fields)")
-      if (model.foreignKeys.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
+      if (model.pkFields.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
         file.add(s"def updateBulk(pks: Seq[Seq[Any]], fields: Seq[DataField]) = new UpdateFieldsBulk(pks, fields)")
       }
     }

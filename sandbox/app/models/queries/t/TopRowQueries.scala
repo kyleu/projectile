@@ -53,6 +53,7 @@ object TopRowQueries extends BaseQueries[TopRow]("topRow", "top") {
   def removeByPrimaryKey(id: UUID) = new RemoveByPrimaryKey(Seq[Any](id))
 
   def update(id: UUID, fields: Seq[DataField]) = new UpdateFields(Seq[Any](id), fields)
+  def updateBulk(pks: Seq[Seq[Any]], fields: Seq[DataField]) = new UpdateFieldsBulk(pks, fields)
 
   override def fromRow(row: Row) = TopRow(
     id = UuidType(row, "id"),

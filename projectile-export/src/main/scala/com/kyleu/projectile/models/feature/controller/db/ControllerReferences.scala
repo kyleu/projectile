@@ -3,6 +3,7 @@ package com.kyleu.projectile.models.feature.controller.db
 import com.kyleu.projectile.models.export.{ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.output.file.ScalaFile
+import com.kyleu.projectile.models.project.ProjectFlag
 
 object ControllerReferences {
   val relArgs = "orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false"
@@ -74,15 +75,18 @@ object ControllerReferences {
         file.add("})", -1)
         file.add("}", -1)
         file.add("}", -1)
-        file.add()
-        file.add(s"""def by${propCls}BulkForm($propId: ${col.scalaType(config)}) = {""", 1)
-        file.add(s"""withSession("get.by.$propId", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
-        file.add(s"svc.getBy$propCls(request, $propId).map { modelSeq =>", 1)
-        file.add(s"val act = ${model.routesPackage(config).mkString(".")}.${model.className}Controller.bulkEdit()")
-        file.add(s"Ok($viewHtmlPackage.${model.propertyName}BulkForm(${cfgArg("Bulk Edit")}, modelSeq, act, debug = app.config.debug))")
-        file.add("}", -1)
-        file.add("}", -1)
-        file.add("}", -1)
+
+        if (!config.project.flags(ProjectFlag.NoBulk)) {
+          file.add()
+          file.add(s"""def by${propCls}BulkForm($propId: ${col.scalaType(config)}) = {""", 1)
+          file.add(s"""withSession("get.by.$propId", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
+          file.add(s"svc.getBy$propCls(request, $propId).map { modelSeq =>", 1)
+          file.add(s"val act = ${model.routesPackage(config).mkString(".")}.${model.className}Controller.bulkEdit()")
+          file.add(s"Ok($viewHtmlPackage.${model.propertyName}BulkForm(${cfgArg("Bulk Edit")}, modelSeq, act, debug = app.config.debug))")
+          file.add("}", -1)
+          file.add("}", -1)
+          file.add("}", -1)
+        }
       case _ => // noop
     }
   }

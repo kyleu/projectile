@@ -5,6 +5,7 @@ import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.models.web.ControllerUtils
+import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
@@ -18,7 +19,7 @@ import services.b.BottomRowService
 
 @javax.inject.Singleton
 class BottomRowController @javax.inject.Inject() (
-    override val app: Application, svc: BottomRowService, noteSvc: NoteService
+    override val app: Application, svc: BottomRowService, noteSvc: NoteService, auditSvc: AuditService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("b", "BottomRow", "Bottom", Some(models.template.Icons.bottomRow), "view", "edit")
   private[this] val defaultOrderBy = Some("t" -> true)
@@ -47,15 +48,16 @@ class BottomRowController @javax.inject.Inject() (
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", ("b", "BottomRow", "view")) { implicit request => implicit td =>
     val modelF = svc.getByPrimaryKey(request, id)
+    val auditsF = auditSvc.getByModel(request, "BottomRow", id)
     val notesF = noteSvc.getFor(request, "BottomRow", id)
 
-    notesF.flatMap(notes => modelF.map {
+    notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
       case Some(model) => renderChoice(t) {
-        case MimeTypes.HTML => Ok(views.html.admin.b.bottomRowView(app.cfg(u = Some(request.identity), "b", "bottom", model.id.toString), model, notes, app.config.debug))
+        case MimeTypes.HTML => Ok(views.html.admin.b.bottomRowView(app.cfg(u = Some(request.identity), "b", "bottom", model.id.toString), model, notes, audits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
       }
       case None => NotFound(s"No BottomRow found with id [$id]")
-    })
+    }))
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("b", "BottomRow", "edit")) { implicit request => implicit td =>
@@ -97,11 +99,16 @@ class BottomRowController @javax.inject.Inject() (
     }
   }
 
+  def bulkEditForm = withSession("bulk.edit.form", ("b", "BottomRow", "edit")) { implicit request => implicit td =>
+    val act = controllers.admin.b.routes.BottomRowController.bulkEdit()
+    Future.successful(Ok(views.html.admin.b.bottomRowBulkForm(app.cfg(Some(request.identity), "b", "bottom", "Bulk Edit"), Nil, act, debug = app.config.debug)))
+  }
   def bulkEdit = withSession("bulk.edit", ("b", "BottomRow", "edit")) { implicit request => implicit td =>
     val form = ControllerUtils.getForm(request.body)
     val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map(_.split("---").map(_.trim).filter(_.nonEmpty).toList).toList
+    val typed = pks.map(pk => UUID.fromString(pk.head))
     val changes = modelForm(request.body)
-    svc.updateBulk(request, pks, changes).map(msg => Ok("OK: " + msg))
+    svc.updateBulk(request, typed, changes).map(msg => Ok("OK: " + msg))
   }
 
   def byTopId(topId: UUID, orderBy: Option[String], orderAsc: Boolean, limit: Option[Int], offset: Option[Int], t: Option[String] = None, embedded: Boolean = false) = {

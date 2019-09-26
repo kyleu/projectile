@@ -3,20 +3,43 @@ package com.kyleu.projectile.models.feature.controller.db
 
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
+import com.kyleu.projectile.models.export.typ.FieldTypeFromString
 import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.file.ScalaFile
 import com.kyleu.projectile.models.project.ProjectFlag
 
 object ControllerMutations {
   def addBulkEdit(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
-    if (model.foreignKeys.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
-      file.add(s"""def bulkEdit = withSession("bulk.edit", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
+    if (model.pkFields.nonEmpty && (!config.project.flags(ProjectFlag.NoBulk))) {
       config.addCommonImport(file, "ControllerUtils")
+
+      file.add(s"""def bulkEditForm = withSession("bulk.edit.form", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
+      val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
+      def cfgArg(s: String) = s"""app.cfg(Some(request.identity), "${model.firstPackage}", "${model.key}", "$s")"""
+      file.add(s"val act = ${model.routesPackage(config).mkString(".")}.${model.className}Controller.bulkEdit()")
+      file.add(s"Future.successful(Ok($viewHtmlPackage.${model.propertyName}BulkForm(${cfgArg("Bulk Edit")}, Nil, act, debug = app.config.debug)))")
+      file.add("}", -1)
+
+      file.add(s"""def bulkEdit = withSession("bulk.edit", ${model.perm("edit")}) { implicit request => implicit td =>""", 1)
       file.add("""val form = ControllerUtils.getForm(request.body)""")
       val split = """_.split("---").map(_.trim).filter(_.nonEmpty).toList"""
       file.add(s"""val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map($split).toList""")
+      model.pkFields match {
+        case h :: Nil =>
+          file.add(s"""val typed = pks.map(pk => ${FieldTypeFromString.fromString(config, h.t, "pk.head")})""")
+        case pks =>
+          val pkString = pks.zipWithIndex.map { pk =>
+            val ref = pk._2 match {
+              case 0 => "pk.head"
+              case i => s"pk($i)"
+            }
+            FieldTypeFromString.fromString(config, pk._1.t, ref)
+          }
+          file.add(s"""val typed = pks.map(pk => (${pkString.mkString(", ")}))""")
+
+      }
       file.add("""val changes = modelForm(request.body)""")
-      file.add("""svc.updateBulk(request, pks, changes).map(msg => Ok("OK: " + msg))""")
+      file.add("""svc.updateBulk(request, typed, changes).map(msg => Ok("OK: " + msg))""")
       file.add("}", -1)
     }
   }

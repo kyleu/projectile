@@ -1,5 +1,7 @@
 /.projectile
 /.idea
+/.bloop
+/.metals
 
 /out
 /tmp

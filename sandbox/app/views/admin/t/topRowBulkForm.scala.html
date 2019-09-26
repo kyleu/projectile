@@ -1,0 +1,47 @@
+@* Generated File *@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, modelSeq: Seq[models.t.TopRow], act: Call, debug: Boolean)(
+    implicit request: Request[AnyContent], flash: Flash
+)
+@add() = {
+  <div class="right"><button type="submit" class="btn @cfg.user.buttonColor" form="pks">Add</button></div>
+  <div class="right"><input id="new-pks" name="new-pks" type="text" placeholder="Primary keys" form="pks" /></div>
+}
+@com.kyleu.projectile.views.html.layout.page(title = "Bulk Edit", cfg = cfg, icon = Some(models.template.Icons.topRow)) {
+  <form id="pks" onsubmit="bulk.addPk($('#new-pks').val());return false;"></form>
+  <form id="form-edit-topRow" action="@act" method="post">
+    <input type="hidden" class="primaryKeys" name="primaryKeys" value="@modelSeq.map(m => m.id).mkString("//")" />
+    @com.kyleu.projectile.views.html.layout.card(Some("Selected Tops"), right = Some(add())) {
+      <table id="bulk-rows">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>T</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @modelSeq.map { model =>
+            @topRowDataRow(model, Some(Html(s"<td style='text-align: right;'><a class='remove-pk' data-pk='${model.id}' href='' title='Remove from editing'><i class='material-icons'>close</i></a></td>")))
+          }
+        </tbody>
+      </table>
+    }
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <table>
+        <tbody>
+          @com.kyleu.projectile.views.html.components.form.textField(selected = request.queryString.isDefinedAt("t"), key = "t", title = "T", value = request.queryString.get("t").flatMap(_.headOption).orElse(None), nullable = true)
+        </tbody>
+      </table>
+      <br />
+      <div class="right"><button type="submit" class="btn @cfg.user.buttonColor">Save <span>@modelSeq.size</span> Tops</button></div>
+      <div class="right"><a href="" onclick="window.history.go(-1);return false;" class="btn-flat cancel-link">Cancel</a></div>
+      <div class="clear"></div>
+    }
+  </form>
+}
+@com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+<script>
+  $(function() { new FormService('form-edit-topRow'); });
+  var bulk;
+  $(function() { bulk = new BulkEditService('form-edit-topRow', 2); });
+</script>

@@ -2,9 +2,11 @@
 
 # Top Routes
 GET         /                                                         controllers.admin.t.TopRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
-GET         /autocomplete                                            controllers.admin.t.TopRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
-GET         /form                                                    controllers.admin.t.TopRowController.createForm
+GET         /autocomplete                                             controllers.admin.t.TopRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /form                                                     controllers.admin.t.TopRowController.createForm
 POST        /                                                         controllers.admin.t.TopRowController.create
+GET         /bulk                                                     controllers.admin.t.TopRowController.bulkEditForm
+POST        /bulk                                                     controllers.admin.t.TopRowController.bulkEdit
 GET         /:id                                                      controllers.admin.t.TopRowController.view(id: java.util.UUID, t: Option[String] ?= None)
 GET         /:id/counts                                               controllers.admin.t.TopRowController.relationCounts(id: java.util.UUID)
 GET         /:id/form                                                 controllers.admin.t.TopRowController.editForm(id: java.util.UUID)

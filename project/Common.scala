@@ -10,7 +10,7 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.27.4"
+    val app = "1.27.6"
     val scala212 = "2.12.10"
     val scala213 = "2.13.1"
     val scala = if(useLatest) { scala213 } else { scala212 }

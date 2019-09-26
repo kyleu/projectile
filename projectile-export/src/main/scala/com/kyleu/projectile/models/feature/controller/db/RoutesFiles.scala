@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.{ExportEnum, ExportModel, ExportModelReference}
 import com.kyleu.projectile.models.feature.{EnumFeature, ModelFeature, ProjectFeature}
 import com.kyleu.projectile.models.output.file.RoutesFile
+import com.kyleu.projectile.models.project.ProjectFlag
 
 object RoutesFiles {
   private[this] val limitArgs = "limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None"
@@ -58,13 +59,16 @@ object RoutesFiles {
     val comment = s"# ${model.title} Routes"
     val listWs = (0 until (wsLength - root.length)).map(_ => " ").mkString
     val list = s"GET         $root $listWs $controllerClass.list($listArgs)"
-    val autocomplete = s"GET         $prefix/autocomplete ${listWs.drop(13)} $controllerClass.autocomplete($autocompleteArgs)"
-    val createForm = s"GET         $prefix/form ${listWs.drop(5)} $controllerClass.createForm"
+    val autocomplete = s"GET         $prefix/autocomplete ${listWs.drop(12)} $controllerClass.autocomplete($autocompleteArgs)"
+    val createForm = s"GET         $prefix/form ${listWs.drop(4)} $controllerClass.createForm"
     val createAct = s"POST        $root $listWs $controllerClass.create"
-    val bulkEditAct = if (model.foreignKeys.isEmpty || model.pkFields.isEmpty) {
+    val bulkEditAct = if (model.pkFields.isEmpty || config.project.flags(ProjectFlag.NoBulk)) {
       Nil
     } else {
-      Seq(s"POST        $root/bulk ${listWs.drop(5)} $controllerClass.bulkEdit")
+      Seq(
+        s"GET         $prefix/bulk ${listWs.drop(4)} $controllerClass.bulkEditForm",
+        s"POST        $prefix/bulk ${listWs.drop(4)} $controllerClass.bulkEdit"
+      )
     }
     val detail = if (model.pkFields.isEmpty) {
       Nil

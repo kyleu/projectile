@@ -5,6 +5,8 @@ import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.RelationCount
 import com.kyleu.projectile.models.result.orderBy.OrderBy
+import com.kyleu.projectile.models.web.ControllerUtils
+import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.DateUtils
@@ -18,7 +20,7 @@ import services.t.TopRowService
 
 @javax.inject.Singleton
 class TopRowController @javax.inject.Inject() (
-    override val app: Application, svc: TopRowService, noteSvc: NoteService,
+    override val app: Application, svc: TopRowService, noteSvc: NoteService, auditSvc: AuditService,
     bottomRowS: BottomRowService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("t", "TopRow", "Top", Some(models.template.Icons.topRow), "view", "edit")
@@ -48,15 +50,16 @@ class TopRowController @javax.inject.Inject() (
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", ("t", "TopRow", "view")) { implicit request => implicit td =>
     val modelF = svc.getByPrimaryKey(request, id)
+    val auditsF = auditSvc.getByModel(request, "TopRow", id)
     val notesF = noteSvc.getFor(request, "TopRow", id)
 
-    notesF.flatMap(notes => modelF.map {
+    notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
       case Some(model) => renderChoice(t) {
-        case MimeTypes.HTML => Ok(views.html.admin.t.topRowView(app.cfg(u = Some(request.identity), "t", "top", model.id.toString), model, notes, app.config.debug))
+        case MimeTypes.HTML => Ok(views.html.admin.t.topRowView(app.cfg(u = Some(request.identity), "t", "top", model.id.toString), model, notes, audits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
       }
       case None => NotFound(s"No TopRow found with id [$id]")
-    })
+    }))
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("t", "TopRow", "edit")) { implicit request => implicit td =>
@@ -98,6 +101,17 @@ class TopRowController @javax.inject.Inject() (
     }
   }
 
+  def bulkEditForm = withSession("bulk.edit.form", ("t", "TopRow", "edit")) { implicit request => implicit td =>
+    val act = controllers.admin.t.routes.TopRowController.bulkEdit()
+    Future.successful(Ok(views.html.admin.t.topRowBulkForm(app.cfg(Some(request.identity), "t", "top", "Bulk Edit"), Nil, act, debug = app.config.debug)))
+  }
+  def bulkEdit = withSession("bulk.edit", ("t", "TopRow", "edit")) { implicit request => implicit td =>
+    val form = ControllerUtils.getForm(request.body)
+    val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map(_.split("---").map(_.trim).filter(_.nonEmpty).toList).toList
+    val typed = pks.map(pk => UUID.fromString(pk.head))
+    val changes = modelForm(request.body)
+    svc.updateBulk(request, typed, changes).map(msg => Ok("OK: " + msg))
+  }
   def relationCounts(id: UUID) = withSession("relation.counts", ("t", "TopRow", "view")) { implicit request => implicit td =>
     val bottomRowByTopIdF = bottomRowS.countByTopId(request, id)
     for (bottomRowByTopIdC <- bottomRowByTopIdF) yield {

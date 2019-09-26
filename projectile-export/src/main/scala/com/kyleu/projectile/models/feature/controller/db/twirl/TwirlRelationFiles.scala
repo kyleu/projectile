@@ -30,7 +30,7 @@ object TwirlRelationFiles {
     listFile.add(s"""modelPlural = "${model.plural}",""")
     listFile.add(s"icon = $modelPkg.template.Icons.${model.propertyName},")
     listFile.add("cols = Seq(", 1)
-    (model.pkFields ++ model.summaryFields).foreach {
+    (model.pkFields ++ model.summaryFields).distinct.foreach {
       case c if model.summaryFields.lastOption.contains(c) => listFile.add(s""""${c.propertyName}" -> "${c.title}"""")
       case c => listFile.add(s""""${c.propertyName}" -> "${c.title}",""")
     }
