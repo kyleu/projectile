@@ -1,5 +1,5 @@
 @(
     selected: Boolean, key: String, title: String, value: Option[Seq[String]], nullable: Boolean, dataType: String = "collection", isPk: Boolean = false, isFk: Boolean = false
 )@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType = dataType) {
-  @inputField(selected, key, title, value.map(_.toString), nullable, inputType = "number", cls = Some("tag-editor"), attrs = Some(s"""data-t="$dataType""""), isPk = isPk, isFk = isFk)
+  @inputField(selected, key, title, value.map(_.mkString(",")), nullable, cls = Some("tag-editor"), attrs = Some(s"""data-t="$dataType""""), isPk = isPk, isFk = isFk)
 }

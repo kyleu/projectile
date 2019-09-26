@@ -1,4 +1,4 @@
 @(
     selected: Boolean, key: String, title: String, value: Option[String], nullable: Boolean,
     inputType: String = "text", cls: Option[String] = None, attrs: Option[String] = None, isPk: Boolean = false, isFk: Boolean = false
-)<input id="input-@key" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)@cls.map(" " + _).getOrElse("")@if(nullable) { nullable}" @attrs type="@inputType" name="@key" value="@value.getOrElse("")" />
+)<input id="input-@key" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)@cls.map(" " + _).getOrElse("")@if(nullable) { nullable}" @Html(attrs.getOrElse("")) type="@inputType" name="@key" value="@value.getOrElse("")" />
