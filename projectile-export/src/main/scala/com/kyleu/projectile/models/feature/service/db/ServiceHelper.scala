@@ -64,6 +64,7 @@ object ServiceHelper {
         val tupleTyp = "(" + fields.map(_.scalaType(config)).mkString(", ") + ")"
         val colArgs = fields.map(f => f.propertyName + ": " + f.scalaType(config)).mkString(", ")
         val queryArgs = fields.map(_.propertyName).mkString(", ")
+        val debugArgs = fields.map(f => s"${f.propertyName} [$$${f.propertyName}}]").mkString(", ")
 
         file.add(s"""def getByPrimaryKey(creds: Credentials, $colArgs, $conn)$td = $viewCheck{""", 1)
         file.add(s"""traceF("get.by.primary.key")(td => db.queryF(${model.className}Queries.getByPrimaryKey($queryArgs), conn)(td))""")
@@ -76,6 +77,10 @@ object ServiceHelper {
         file.indent()
         file.add(s"""traceF("get.by.primary.key.seq")(td => db.queryF(${model.className}Queries.getByPrimaryKeySeq(pkSeq), conn)(td))""")
         file.add("}", -1)
+        file.add("}", -1)
+        val call = s"getByPrimaryKey(creds, $queryArgs, conn)"
+        file.add(s"""def getByPrimaryKeyRequired(creds: Credentials, $colArgs, $conn)$td = $call.map { opt =>""", 1)
+        file.add(s"""opt.getOrElse(throw new IllegalStateException(s"Cannot load ${model.title} with $debugArgs"))""")
         file.add("}", -1)
     }
     file.add()

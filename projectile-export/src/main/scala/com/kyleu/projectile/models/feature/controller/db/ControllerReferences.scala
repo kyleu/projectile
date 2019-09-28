@@ -36,10 +36,12 @@ object ControllerReferences {
     }
   }
 
-  def refServiceArgs(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
+  def serviceArgs(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
     val refServices = ExportModelReference.validReferences(config, model).map(_.srcTable).distinct.map(m => config.getModel(m, "reference args"))
-    refServices.foreach(s => file.addImport(s.servicePackage(config), s.className + "Service"))
-    refServices.map(s => s.propertyName + "S: " + s.className + "Service").mkString(", ")
+    val fkServices = model.foreignKeys.map(_.targetTable).map(m => config.getModel(m, "fk args"))
+    val services = (refServices ++ fkServices).distinct
+    services.foreach(s => file.addImport(s.servicePackage(config), s.className + "Service"))
+    services.map(s => s.propertyName + "S: " + s.className + "Service")
   }
 
   def writeForeignKeys(config: ExportConfiguration, model: ExportModel, file: ScalaFile, viewHtmlPackage: String) = model.foreignKeys.foreach { fk =>

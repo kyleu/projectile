@@ -13,32 +13,50 @@ object ControllerHelper {
 
     val viewArgs = model.pkFields.map(f => s"${f.propertyName}: ${f.scalaType(config)}").mkString(", ")
     val getArgs = model.pkFields.map(_.propertyName).mkString(", ")
-    val logArgs = model.pkFields.map(f => "$" + f.propertyName).mkString(", ")
+
+    config.addCommonImport(file, "Credentials")
 
     file.add(s"""def view($viewArgs, t: Option[String] = None) = withSession("view", ${model.perm("view")}) { implicit request => implicit td =>""", 1)
-    file.add(s"""val modelF = svc.getByPrimaryKey(request, $getArgs)""")
+    file.add("""val creds: Credentials = request""")
+    file.add(s"""val modelF = svc.getByPrimaryKeyRequired(creds, $getArgs)""")
     if (audited) {
-      file.add(s"""val auditsF = auditSvc.getByModel(request, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+      file.add(s"""val auditsF = auditSvc.getByModel(creds, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
     }
     if (withNotes) {
-      file.add(s"""val notesF = noteSvc.getFor(request, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+      file.add(s"""val notesF = noteSvc.getFor(creds, "${model.className}", ${model.pkFields.map(_.propertyName).mkString(", ")})""")
+    }
+    val fkConnections = getFkConnections(config, model)
+    fkConnections.foreach {
+      case (srcProp, tgtModel) if srcProp.required =>
+        file.add(s"val ${srcProp.propertyName}F = modelF.flatMap(m => ${tgtModel.propertyName}S.getByPrimaryKey(creds, m.${srcProp.propertyName}))")
+      case (srcProp, tgtModel) =>
+        file.add(s"val ${srcProp.propertyName}F = modelF.flatMap(m => m.${srcProp.propertyName}.map(v => ${tgtModel.propertyName}S.getByPrimaryKey(creds, v)).getOrElse(Future.successful(None)))")
     }
     file.add()
-
+    if (fkConnections.nonEmpty) {
+      file.add(fkConnections.map(x => s"${x._1.propertyName}F.flatMap(${x._1.propertyName}R => ").mkString.trim, 1)
+    }
     val audMap = if (audited) { "auditsF.flatMap(audits => " } else { "" }
     val notesMap = if (withNotes) { "notesF.flatMap(notes => " } else { "" }
-    file.add(s"""$notesMap${audMap}modelF.map {""", 1)
-    file.add("case Some(model) => renderChoice(t) {", 1)
+    file.add(s"""$notesMap${audMap}modelF.map { model =>""", 1)
+    file.add("renderChoice(t) {", 1)
 
-    val viewArg = getViewArg(config, model, audited, withNotes)
+    val viewExtra = fkConnections.map(x => s"${x._1.propertyName}R, ").mkString
+    val viewArg = getViewArg(config, model, audited, withNotes, Some(viewExtra))
 
     file.add(s"case MimeTypes.HTML => $viewArg")
     file.add("case MimeTypes.JSON => Ok(model.asJson)")
 
     file.add("}", -1)
-    file.add(s"""case None => NotFound(s"No ${model.className} found with $getArgs [$logArgs]")""")
-    file.add(s"}${if (withNotes) { ")" } else { "" }}${if (audited) { ")" } else { "" }}", -1)
-    file.add("}", -1)
+    file.add(s"}${if (withNotes) { ")" } else { "" }}${if (audited) { ")" } else { "" }}${fkConnections.map(_ => ")").mkString}", -1)
+    file.add("}", if (fkConnections.isEmpty) { -1 } else { -2 })
+  }
+
+  def getFkConnections(config: ExportConfiguration, model: ExportModel) = {
+    model.foreignKeys.filter(_.references.size == 1).map { fk =>
+      val ref = fk.references.head
+      (model.getField(ref.source), config.getModel(fk.targetTable, "fk lookup"))
+    }
   }
 
   def writePks(config: ExportConfiguration, model: ExportModel, file: ScalaFile, viewPkg: String, routesClass: String) = if (model.pkFields.nonEmpty) {
@@ -80,7 +98,7 @@ object ControllerHelper {
     file.add("}", -1)
   }
 
-  private[this] def getViewArg(config: ExportConfiguration, model: ExportModel, audited: Boolean, withNotes: Boolean) = {
+  private[this] def getViewArg(config: ExportConfiguration, model: ExportModel, audited: Boolean, withNotes: Boolean, viewExtra: Option[String]) = {
     val viewHtmlPackage = model.viewHtmlPackage(config).mkString(".")
     val auditHelp = if (audited) { "audits, " } else { "" }
     val notesHelp = if (withNotes) { "notes, " } else { "" }
@@ -91,7 +109,7 @@ object ControllerHelper {
       case _ => ", s\"" + model.pkFields.map(f => "${model." + f.propertyName + "}").mkString(", ") + "\""
     }
     val cfgArg = s"""app.cfg(u = Some(request.identity), "${model.firstPackage}", "${model.key}"$keyString)"""
-    val extraViewArgs = s"$cfgArg, model, $notesHelp${auditHelp}app.config.debug"
+    val extraViewArgs = s"$cfgArg, model, $notesHelp$auditHelp${viewExtra.getOrElse("")}app.config.debug"
     s"Ok($viewHtmlPackage.${model.propertyName}View($extraViewArgs))"
   }
 }

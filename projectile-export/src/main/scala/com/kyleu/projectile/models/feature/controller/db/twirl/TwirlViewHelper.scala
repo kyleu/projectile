@@ -1,6 +1,7 @@
 // scalastyle:off file.size.limit
 package com.kyleu.projectile.models.feature.controller.db.twirl
 
+import com.kyleu.projectile.models.database.schema.ForeignKey
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
 import com.kyleu.projectile.models.export.{ExportField, ExportModel}
@@ -31,31 +32,45 @@ object TwirlViewHelper {
         s"""@model.${field.propertyName}.map(_.toString.replaceAllLiterally("'", ""))"""
       }
       val thContent = s"""<div title="Click to copy" onclick="ClipboardUtils.writeClipboard('$clipboard')" style="cursor: pointer;">${field.title}</div>"""
-      file.add(s"<th>$thContent</th>")
-      model.foreignKeys.find(_.references.forall(_.source == field.key)) match {
-        case Some(fk) if config.getModelOpt(fk.targetTable).isDefined =>
-          file.add("<td>", 1)
-          val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
-          if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
-            throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
-          }
-          file.add(forField(config, field))
-          val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName, provided = tgt.provided)
-          if (field.required) {
-            file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">$icon</a>""")
-          } else {
-            file.add(s"@model.${field.propertyName}.map { v =>", 1)
-            val rc = TwirlHelper.routesClass(config, tgt)
-            file.add(s"""<a href="@$rc.view(v)">$icon</a>""")
-            file.add("}", -1)
-          }
-          file.add("</td>", -1)
+      file.add(s"""<th style="vertical-align: top;">$thContent</th>""")
+      val fkOpt = model.foreignKeys.find(_.references.forall(_.source == field.key)).filter(fk => config.getModelOpt(fk.targetTable).isDefined)
+      fkOpt match {
+        case Some(fk) => refRow(config, file, field, fk)
         case _ => file.add(s"<td>${forField(config, field)}</td>")
       }
       file.add("</tr>", -1)
     }
     file.add("</tbody>", -1)
     file.add("</table>", -1)
+  }
+
+  private[this] def refRow(config: ExportConfiguration, file: TwirlFile, field: ExportField, fk: ForeignKey) = {
+    file.add("<td>", 1)
+    file.add("<div>", 1)
+    val tgt = config.getModel(fk.targetTable, s"foreign key ${fk.name}")
+    if (!tgt.pkFields.forall(f => fk.references.map(_.target).contains(f.key))) {
+      throw new IllegalStateException(s"FK [$fk] does not match PK [${tgt.pkFields.map(_.key).mkString(", ")}]...")
+    }
+    file.add(forField(config, field))
+    val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName, provided = tgt.provided)
+    file.add("</div>", -1)
+    file.add("""<div class="card-panel grey lighten-5" style="padding: 12px; margin: 12px 0 0 0;">""", 1)
+    file.add("""<div>""", 1)
+    if (field.required) {
+      file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(model.${field.propertyName})">""", 1)
+    } else {
+      file.add(s"@model.${field.propertyName}.map { v =>", 1)
+      file.add(s"""<a href="@${TwirlHelper.routesClass(config, tgt)}.view(v)">""", 1)
+    }
+    file.add(s"$icon <strong>${tgt.title}</string>")
+    file.add("</a>", -1)
+    if (!field.required) {
+      file.add("}", -1)
+    }
+    file.add("</div>", -1)
+    file.add(s"@${field.propertyName}R.map(_.toSummary.title)")
+    file.add("</div>", -1)
+    file.add("</td>", -1)
   }
 
   private[this] def forField(config: ExportConfiguration, field: ExportField) = field.t match {

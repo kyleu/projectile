@@ -3,17 +3,28 @@ package com.kyleu.projectile.models.feature.controller.db.twirl
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.feature.ModelFeature
+import com.kyleu.projectile.models.feature.controller.db.ControllerHelper
 import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.TwirlFile
 
 object TwirlViewFile {
   def export(config: ExportConfiguration, model: ExportModel) = {
     val file = TwirlFile(model.viewPackage(config), model.propertyName + "View")
-    val finalArgs = s"cfg: ${CommonImportHelper.getString(config, "UiConfig")}"
-    val modelPath = (config.systemPackage :+ "models" :+ "audit").mkString(".")
-    val audits = if (model.features(ModelFeature.Audit)) { s", auditRecords: Seq[$modelPath.AuditRecord]" } else { "" }
-    val notes = if (model.features(ModelFeature.Notes)) { s", notes: Seq[${CommonImportHelper.getString(config, "Note")}]" } else { "" }
-    file.add(s"@($finalArgs, model: ${model.fullClassPath(config)}$notes$audits, debug: Boolean)(")
+    file.add(s"@(", 2)
+    file.add(s"cfg: ${CommonImportHelper.getString(config, "UiConfig")},")
+    file.add(s"model: ${model.fullClassPath(config)},")
+    if (model.features(ModelFeature.Notes)) {
+      file.add(s"notes: Seq[${CommonImportHelper.getString(config, "Note")}],")
+    }
+    if (model.features(ModelFeature.Audit)) {
+      val modelPath = (config.systemPackage :+ "models" :+ "audit").mkString(".")
+      file.add(s"auditRecords: Seq[$modelPath.AuditRecord],")
+    }
+    ControllerHelper.getFkConnections(config, model).foreach { fk =>
+      file.add(s"${fk._1.propertyName}R: Option[${fk._2.modelPackage(config).mkString(".")}.${fk._2.className}],")
+    }
+    file.add("debug: Boolean")
+    file.add(s")(", -2)
     val tdi = CommonImportHelper.get(config, "TraceData")._1.mkString(".")
     file.add(s"    implicit request: Request[AnyContent], session: Session, flash: Flash, td: $tdi.TraceData")
     addContent(config, model, file)

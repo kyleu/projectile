@@ -9,7 +9,7 @@ import com.kyleu.projectile.models.web.ControllerUtils
 import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.note.NoteService
-import com.kyleu.projectile.util.DateUtils
+import com.kyleu.projectile.util.{Credentials, DateUtils}
 import com.kyleu.projectile.util.JsonSerializers._
 import java.util.UUID
 import models.t.{TopRow, TopRowResult}
@@ -49,16 +49,16 @@ class TopRowController @javax.inject.Inject() (
   }
 
   def view(id: UUID, t: Option[String] = None) = withSession("view", ("t", "TopRow", "view")) { implicit request => implicit td =>
-    val modelF = svc.getByPrimaryKey(request, id)
-    val auditsF = auditSvc.getByModel(request, "TopRow", id)
-    val notesF = noteSvc.getFor(request, "TopRow", id)
+    val creds: Credentials = request
+    val modelF = svc.getByPrimaryKeyRequired(creds, id)
+    val auditsF = auditSvc.getByModel(creds, "TopRow", id)
+    val notesF = noteSvc.getFor(creds, "TopRow", id)
 
-    notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map {
-      case Some(model) => renderChoice(t) {
+    notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map { model =>
+      renderChoice(t) {
         case MimeTypes.HTML => Ok(views.html.admin.t.topRowView(app.cfg(u = Some(request.identity), "t", "top", model.id.toString), model, notes, audits, app.config.debug))
         case MimeTypes.JSON => Ok(model.asJson)
       }
-      case None => NotFound(s"No TopRow found with id [$id]")
     }))
   }
 

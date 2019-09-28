@@ -31,14 +31,15 @@ object ControllerFile {
     val extraSvcs = {
       val n = if (model.features(ModelFeature.Notes)) { ", noteSvc: NoteService" } else { "" }
       val a = if (model.features(ModelFeature.Audit)) { ", auditSvc: AuditService" } else { "" }
-      n + a
+      val r = ""
+      n + a + r
     }
 
-    ControllerReferences.refServiceArgs(config, model, file) match {
-      case ref if ref.trim.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs")
-      case ref =>
+    ControllerReferences.serviceArgs(config, model, file) match {
+      case svcs if svcs.isEmpty => file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs")
+      case svcs =>
         file.add(s"override val app: Application, svc: ${model.className}Service$extraSvcs,")
-        file.add(ref)
+        file.add(svcs.mkString(", "))
     }
     val controller = if (model.features(ModelFeature.Auth)) { "ServiceAuthController" } else { "ServiceController" }
     file.add(s")(implicit ec: ExecutionContext) extends $controller(svc) {", -2)

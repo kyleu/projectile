@@ -1,5 +1,12 @@
 @* Generated File *@
-@(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.b.BottomRow, notes: Seq[com.kyleu.projectile.models.note.Note], auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord], debug: Boolean)(
+@(
+    cfg: com.kyleu.projectile.models.config.UiConfig,
+    model: models.b.BottomRow,
+    notes: Seq[com.kyleu.projectile.models.note.Note],
+    auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord],
+    topIdR: Option[models.t.TopRow],
+    debug: Boolean
+)(
     implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
 )@com.kyleu.projectile.views.html.layout.page(title = s"Bottom", cfg = cfg, icon = Some(models.template.Icons.bottomRow)) {
   @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
@@ -9,18 +16,27 @@
     <table class="highlight responsive-table">
       <tbody>
         <tr>
-          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
+          <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
           <td>@model.id</td>
         </tr>
         <tr>
-          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.topId.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Top Id</div></th>
+          <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.topId.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Top Id</div></th>
           <td>
-            @model.topId
-            <a href="@controllers.admin.t.routes.TopRowController.view(model.topId)"><i class="material-icons small">@models.template.Icons.topRow</i></a>
+            <div>
+              @model.topId
+            </div>
+            <div class="card-panel grey lighten-5" style="padding: 12px; margin: 12px 0 0 0;">
+              <div>
+                <a href="@controllers.admin.t.routes.TopRowController.view(model.topId)">
+                  <i class="material-icons small">@models.template.Icons.topRow</i> <strong>Top</string>
+                </a>
+              </div>
+              @topIdR.map(_.toSummary.title)
+            </div>
           </td>
         </tr>
         <tr>
-          <th><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">T</div></th>
+          <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">T</div></th>
           <td>@model.t.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
         </tr>
       </tbody>
