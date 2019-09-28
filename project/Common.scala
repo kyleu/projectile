@@ -28,7 +28,7 @@ object Common {
   lazy val settings = Seq(
     version := Common.Versions.app,
     scalaVersion := Common.Versions.scala212,
-    crossScalaVersions := Seq(Common.Versions.scala212, Common.Versions.scala213),
+    crossScalaVersions := Seq(Common.Versions.scala213, Common.Versions.scala212),
     organization := "com.kyleu",
 
     licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0")),
