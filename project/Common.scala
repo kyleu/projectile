@@ -10,10 +10,9 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.27.6"
+    val app = "1.27.8"
     val scala212 = "2.12.10"
-    val scala213 = "2.13.1"
-    val scala = if(useLatest) { scala213 } else { scala212 }
+    val scala213 = "2.13.0"
   }
 
   private[this] val profilingEnabled = false
@@ -24,13 +23,11 @@ object Common {
   val compileOptions = Seq(
     "-target:jvm-1.8", "-encoding", "UTF-8", "-feature", "-deprecation", "-explaintypes", "-feature", "-unchecked",
     "–Xcheck-null", "-Xlint", "-Xcheckinit", "-Yrangepos", "-Ywarn-dead-code", "-Ywarn-numeric-widen"
-  ) ++ (if(useLatest) { Nil } else { Seq(
-    "-Xfatal-warnings", "-Xfuture", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-infer-any"
-  ) }) ++ profileOptions
+  ) ++ profileOptions
 
   lazy val settings = Seq(
     version := Common.Versions.app,
-    scalaVersion := Common.Versions.scala,
+    scalaVersion := Common.Versions.scala212,
     crossScalaVersions := Seq(Common.Versions.scala212, Common.Versions.scala213),
     organization := "com.kyleu",
 
@@ -39,7 +36,13 @@ object Common {
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "scm:git@github.com:KyleU/projectile.git")),
     developers := List(Developer(id = "kyleu", name = "Kyle Unverferth", email = "opensource@kyleu.com", url = url("http://kyleu.com"))),
 
-    scalacOptions ++= compileOptions,
+    scalacOptions ++= {
+      compileOptions ++ (if (scalaVersion.value.startsWith("2.13")) {
+        Nil
+      } else {
+        Seq("-Xfatal-warnings", "-Xfuture", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-infer-any")
+      })
+    },
     scalacOptions in (Compile, console) ~= (_.filterNot(Set("-Ywarn-unused:imports", "-Xfatal-warnings"))),
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 

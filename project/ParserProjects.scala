@@ -6,7 +6,7 @@ import sbtassembly.AssemblyPlugin
 object ParserProjects {
   lazy val `projectile-parser-core` = (project in file("parsers/projectile-parser-core")).settings(Common.settings: _*).settings(
     libraryDependencies ++= Seq(
-      Serialization.jackson, Utils.betterFiles, Utils.chimney, Utils.commonsIo, Utils.commonsLang, Utils.enumeratum, Utils.guava, Utils.thriftParser
+      Serialization.jackson, Utils.betterFiles(scalaVersion.value.startsWith("2.13")), Utils.chimney, Utils.commonsIo, Utils.commonsLang, Utils.enumeratum, Utils.guava, Utils.thriftParser
     ) ++ Logging.all
   ).disablePlugins(AssemblyPlugin).dependsOn(LibraryProjects.`projectile-lib-scala`)
 

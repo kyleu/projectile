@@ -3,8 +3,9 @@ import sbt._
 import sbt.plugins.SbtPlugin
 
 object SbtExportPlugin {
-  lazy val `projectile-sbt` = (project in file("projectile-sbt")).settings(Common.settings: _*).enablePlugins(
-    SbtPlugin
+  lazy val `projectile-sbt` = (project in file("projectile-sbt")).settings(Common.settings: _*).enablePlugins(SbtPlugin).settings(
+    scalaVersion := Common.Versions.scala212,
+    crossScalaVersions := Seq(Common.Versions.scala212)
   ).dependsOn(ProjectileExport.`projectile-export`).disablePlugins(sbtassembly.AssemblyPlugin)
 
   lazy val `projectile-sbt-admin` = (project in file("projectile-sbt-admin")).settings(Common.settings: _*).settings(
@@ -22,10 +23,13 @@ object SbtExportPlugin {
       projectName = Common.projectName + " SBT Plugin",
       projectPort = 0,
       pkg = "com.kyleu.projectile.sbt.util"
-    ).taskValue
+    ).taskValue,
+
+    scalaVersion := Common.Versions.scala212,
+    crossScalaVersions := Seq(Common.Versions.scala212)
   ).enablePlugins(SbtPlugin).dependsOn(`projectile-sbt`).disablePlugins(sbtassembly.AssemblyPlugin)
 
-  lazy val all = if(Common.useLatest) { Nil } else { Seq(`projectile-sbt`, `projectile-sbt-admin`) }
+  lazy val all = Seq(`projectile-sbt`, `projectile-sbt-admin`)
 
   lazy val allReferences = all.map(_.project)
 }

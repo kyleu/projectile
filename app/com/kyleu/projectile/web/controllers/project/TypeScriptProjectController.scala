@@ -9,13 +9,14 @@ import com.kyleu.projectile.services.project.ProjectExampleService
 import com.kyleu.projectile.services.typescript.{AstExportService, FileService}
 import com.kyleu.projectile.util.{Logging, NumberUtils}
 import com.kyleu.projectile.web.controllers.ProjectileController
-import com.kyleu.projectile.web.util.{AuditUtils, CollectionUtils, TypeScriptProjectHelper}
+import com.kyleu.projectile.web.util.{AuditUtils, TypeScriptProjectHelper}
 import com.kyleu.projectile.web.views.html.input.ts._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 @javax.inject.Singleton
-class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileController with Logging {
+class TypeScriptProjectController @javax.inject.Inject() (implicit ec: ExecutionContext) extends ProjectileController with Logging {
   private[this] def root = projectile.rootCfg.workingDirectory
   private[this] val srcDir = "tmp/typescript"
   private[this] def cache = projectile.rootCfg.configDirectory / ".cache" / "typescript"
@@ -50,17 +51,17 @@ class TypeScriptProjectController @javax.inject.Inject() () extends ProjectileCo
     val startMs = System.currentTimeMillis
     val candidates = FileService.kids(root, root / srcDir / k)
     log.info(s"Exporting [${candidates.size}] projects...")
-    def statusLog(i: Int, inProgress: Set[(String, String, File)]) = if (i % 10 == 0) {
-      val progress = if (inProgress.isEmpty) { "" } else { s". In progress: [${inProgress.map(x => x._1).toSeq.sorted.mkString(", ")}]" }
-      log.info(s"Completed exporting [$i / ${candidates.size}] projects" + progress)
-    }
     def iter(x: (String, String, File)) = x._1 -> Right(exportProject(k = k, f = x._1, v = false)._1)
-    val files = CollectionUtils.parLoop(candidates, iter, statusLog, Some((x: (String, String, File), ex: Throwable) => {
-      x._1 -> Left(ex)
-    }))
+    val files = Future.sequence(candidates.map { f =>
+      Future.apply(iter(f)).recover {
+        case NonFatal(ex) => f._1 -> Left(ex)
+      }
+    })
     val status = s"Completed exporting [${candidates.size}] projects in [${NumberUtils.withCommas(System.currentTimeMillis - startMs)}ms]"
     log.info(status)
-    Future.successful(Ok(tsBatchExport(projectile, k, status, files)))
+    files.map { results =>
+      Ok(tsBatchExport(projectile, k, status, results))
+    }
   }
 
   private[this] def exportProject(k: String, f: String, v: Boolean) = {

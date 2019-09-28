@@ -7,11 +7,11 @@ import com.kyleu.projectile.services.input.TypeScriptInputService
 import com.kyleu.projectile.services.typescript.{AstExportService, FileService}
 import com.kyleu.projectile.util.{Logging, NumberUtils}
 import com.kyleu.projectile.web.controllers.ProjectileController
-import com.kyleu.projectile.web.util.CollectionUtils
 import com.kyleu.projectile.web.views.html.input.ts._
 import play.twirl.api.Html
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 object TypeScriptController {
   def viewNode(node: TypeScriptNode, depth: Int): Html = tsNode(node = node, content = Html(asString(node)), depth = depth)
@@ -29,7 +29,7 @@ object TypeScriptController {
 }
 
 @javax.inject.Singleton
-class TypeScriptController @javax.inject.Inject() () extends ProjectileController with Logging {
+class TypeScriptController @javax.inject.Inject() (implicit ec: ExecutionContext) extends ProjectileController with Logging {
   private[this] def root = projectile.rootCfg.workingDirectory
   private[this] val dir = "tmp/typescript"
   private[this] def cache = projectile.rootCfg.configDirectory / ".cache" / "typescript"
@@ -48,21 +48,22 @@ class TypeScriptController @javax.inject.Inject() () extends ProjectileControlle
     val startMs = System.currentTimeMillis
     val candidates = FileService.kids(root, root / dir / k)
     log.info(s"Parsing [${candidates.size}] projects...")
-    def statusLog(i: Int, inProgress: Set[(String, String, File)]) = if (i % 100 == 0) {
-      val progress = if (inProgress.isEmpty) { "" } else { s". In progress: [${inProgress.map(x => x._1).toSeq.sorted.mkString(", ")}]" }
-      log.info(s"Completed parsing [$i / ${candidates.size}] projects" + progress)
-    }
     def iter(x: (String, String, File)) = {
       val n = FileService.parseFile(root = root, cache = cache, path = x._2)
       result(k = x._1, msgs = n._1, node = n._2)
     }
-    val files = CollectionUtils.parLoop(candidates, iter, statusLog, Some((f: (String, String, File), ex: Throwable) => {
-      ex.printStackTrace()
-      result(f._1, Nil, TypeScriptNode.Error(kind = f._2, cls = f._3.pathAsString, msg = ex.toString))
-    }))
+    val files = Future.sequence(candidates.map { f =>
+      Future.apply(iter(f)).recover {
+        case NonFatal(ex) =>
+          ex.printStackTrace()
+          result(f._1, Nil, TypeScriptNode.Error(kind = f._2, cls = f._3.pathAsString, msg = ex.toString))
+      }
+    })
     val status = s"Completed parsing [${candidates.size}] projects in [${NumberUtils.withCommas(System.currentTimeMillis - startMs)}ms]"
     log.info(status)
-    Future.successful(Ok(tsBatchParse(projectile, k, status, files)))
+    files.map { results =>
+      Ok(tsBatchParse(projectile, k, status, results))
+    }
   }
 
   private[this] def getInput(k: String, f: String, compile: Boolean) = {
