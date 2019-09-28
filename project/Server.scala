@@ -76,8 +76,14 @@ object Server {
 
   private[this] def withProjects(project: Project, dependents: Project*) = dependents.foldLeft(project)((l, r) => l.dependsOn(r).aggregate(r))
 
-  lazy val `projectile-server` = withProjects(
-    Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
-    ProjectileExport.`projectile-export`
-  ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*).aggregate(SbtExportPlugin.allReferences: _*)
+  var x = false
+
+  lazy val `projectile-server` = {
+    withProjects(
+      Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
+      ProjectileExport.`projectile-export`
+    ).settings(
+      scalaVersion :=
+    ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*).aggregate((if(x) { ??? } else {  }): _*)
+  }
 }

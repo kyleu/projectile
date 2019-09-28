@@ -6,14 +6,7 @@ object SbtExportPlugin {
   lazy val `projectile-sbt` = (project in file("projectile-sbt")).settings(Common.settings: _*).enablePlugins(SbtPlugin).settings(
     scalaVersion := Common.Versions.scala212,
     crossScalaVersions := Seq(Common.Versions.scala212),
-    compile / skip := scalaVersion.value.startsWith("2.13"),
-    publish := {
-      if(scalaVersion.value.startsWith("2.13")) {
-        publish.value
-      } else {
-        ()
-      }
-    }
+    compile / skip := scalaVersion.value.startsWith("2.13")
   ).dependsOn(ProjectileExport.`projectile-export`).disablePlugins(sbtassembly.AssemblyPlugin)
 
   lazy val `projectile-sbt-admin` = (project in file("projectile-sbt-admin")).settings(Common.settings: _*).settings(
@@ -35,14 +28,7 @@ object SbtExportPlugin {
 
     scalaVersion := Common.Versions.scala212,
     crossScalaVersions := Seq(Common.Versions.scala212),
-    compile / skip := scalaVersion.value.startsWith("2.13"),
-    publish := {
-      if (scalaVersion.value.startsWith("2.13")) {
-        publish.value
-      } else {
-        ()
-      }
-    }
+    compile / skip := scalaVersion.value.startsWith("2.13")
   ).enablePlugins(SbtPlugin).dependsOn(`projectile-sbt`).disablePlugins(sbtassembly.AssemblyPlugin)
 
   lazy val all = Seq(`projectile-sbt`, `projectile-sbt-admin`)
