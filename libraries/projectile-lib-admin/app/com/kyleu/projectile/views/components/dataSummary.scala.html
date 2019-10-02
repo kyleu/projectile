@@ -1,0 +1,12 @@
+@(summ: com.kyleu.projectile.models.result.data.DataSummary)<table>
+  <thead>
+    @summ.entries.map { e =>
+      <th>@e._1</th>
+    }
+  </thead>
+  <tbody>
+    @summ.entries.map { e =>
+      <td>@e._2.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+    }
+  </tbody>
+</table>

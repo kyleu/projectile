@@ -36,5 +36,9 @@ final case class Note(
     DataField("created", Some(created.toString))
   )
 
-  def toSummary = DataSummary(model = "note", pk = id.toString, title = s"Relation: $relPk-$relType, Author: $author, Created: $created")
+  def toSummary = DataSummary(model = "note", pk = id.toString, entries = Map(
+    "Relation" -> Some(s"$relPk-$relType"),
+    "Author" -> Some(author.toString),
+    "Created" -> Some(created.toString))
+  )
 }

@@ -54,5 +54,5 @@ final case class Feedback(
     DataField("status", Some(status))
   )
 
-  def toSummary = DataSummary(model = "feedback", pk = id.toString, title = s"authorId: $authorId, created: $created")
+  def toSummary = DataSummary(model = "feedback", pk = id.toString, entries = Map("AuthorId" -> Some(authorId.toString), "Created" -> Some(created.toString)))
 }

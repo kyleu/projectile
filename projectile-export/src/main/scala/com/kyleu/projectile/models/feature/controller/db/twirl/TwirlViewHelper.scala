@@ -54,6 +54,7 @@ object TwirlViewHelper {
     file.add(forField(config, field))
     val icon = TwirlHelper.iconHtml(config = config, propertyName = tgt.propertyName, provided = tgt.provided)
     file.add("</div>", -1)
+    file.add(s"@${field.propertyName}R.map { r =>", 1)
     file.add("""<div class="card-panel grey lighten-5" style="padding: 12px; margin: 12px 0 0 0;">""", 1)
     file.add("""<div>""", 1)
     if (field.required) {
@@ -68,8 +69,9 @@ object TwirlViewHelper {
       file.add("}", -1)
     }
     file.add("</div>", -1)
-    file.add(s"@${field.propertyName}R.map(_.toSummary.title)")
+    file.add(s"@${(config.systemViewPackage :+ "html").mkString(".")}.components.dataSummary(r.toSummary)")
     file.add("</div>", -1)
+    file.add("}", -1)
     file.add("</td>", -1)
   }
 

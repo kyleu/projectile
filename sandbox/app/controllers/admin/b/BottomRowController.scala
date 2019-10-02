@@ -61,8 +61,7 @@ class BottomRowController @javax.inject.Inject() (
           case MimeTypes.HTML => Ok(views.html.admin.b.bottomRowView(app.cfg(u = Some(request.identity), "b", "bottom", model.id.toString), model, notes, audits, topIdR, app.config.debug))
           case MimeTypes.JSON => Ok(model.asJson)
         }
-      }))
-    )
+      })))
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("b", "BottomRow", "edit")) { implicit request => implicit td =>

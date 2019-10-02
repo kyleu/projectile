@@ -60,5 +60,12 @@ final case class SystemError(
     DataField("occurred", Some(occurred.toString))
   )
 
-  def toSummary = DataSummary(model = "systemError", pk = id.toString, title = s"id: $id, context: $context, userId: ${userId.map(_.toString).getOrElse("∅")}, cls: $cls, message: $message, occurred: $occurred")
+  def toSummary = DataSummary(model = "systemError", pk = id.toString, entries = Map(
+    "Id" -> Some(id.toString),
+    "Context" -> Some(context),
+    "UserId" -> userId.map(_.toString),
+    "Cls" -> Some(cls),
+    "Message" -> Some(message),
+    "Occurred" -> Some(occurred.toString)
+  ))
 }

@@ -8,7 +8,6 @@ import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.feature.core.ModelHelper
 import com.kyleu.projectile.models.output.OutputPath
 import com.kyleu.projectile.models.output.file.ScalaFile
-import com.kyleu.projectile.util.NullUtils
 
 object ModelFile {
   val includeDefaults = false
@@ -58,7 +57,16 @@ object ModelFile {
       file.add()
       val pk = if (model.pkFields.isEmpty) { "\"no-pk\"" } else { model.pkFields.map(f => f.propertyName + ".toString").mkString(" + \"/\" + ") }
 
-      file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = $pk, title = s"${getTitle(model)}")""")
+      file.add(s"""def toSummary = DataSummary(model = "${model.propertyName}", pk = $pk, entries = Map(""", 1)
+      val fields = (model.pkFields ++ model.summaryFields).distinct
+      val mapped = fields.map {
+        case f if f.required && f.t == FieldType.StringType => s""""${f.title}" -> Some(${f.propertyName})"""
+        case f if f.required => s""""${f.title}" -> Some(${f.propertyName}.toString)"""
+        case f if f.t == FieldType.StringType => s""""${f.title}" -> ${f.propertyName}"""
+        case f => s""""${f.title}" -> ${f.propertyName}.map(_.toString)"""
+      }
+      mapped.foreach(x => file.add(x + (if (mapped.lastOption.contains(x)) { "" } else { "," })))
+      file.add("))", -1)
 
       file.add("}", -1)
     } else {
@@ -68,14 +76,6 @@ object ModelFile {
       }
     }
     file
-  }
-
-  private[this] def getTitle(model: ExportModel) = {
-    val fields = model.pkFields ++ model.summaryFields
-    fields.map {
-      case f if f.required => s"""${f.propertyName}: $$${f.propertyName}"""
-      case f => s"""${f.propertyName}: $${${f.propertyName}.map(_.toString).getOrElse("${NullUtils.str}")}"""
-    }.mkString(", ")
   }
 
   private[this] def process(file: ScalaFile, field: ExportField, last: Boolean) = {

@@ -1,0 +1,39 @@
+@(title: String, cfg: com.kyleu.projectile.models.config.UiConfig, tools: Seq[(com.kyleu.projectile.models.task.TaskTool[_], Call)])
+
+@com.kyleu.projectile.views.html.layout.card(Some(title)) {
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>Title</th>
+        <th>Arguments</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    @tools.map { t =>
+      <form action="@t._2" method="get">
+        <tr>
+          <td style="width: 32px; vertical-align: top;">
+            <i style="cursor: default;" class="material-icons" title="@t._1.desc.replaceAllLiterally("\"", "")">@com.kyleu.projectile.models.web.InternalIcons.help</i>
+          </td>
+          <td style="width: 32px; vertical-align: top;">
+            <i style="cursor: default;" class="material-icons" title="Tasks:@t._1.tasks.map("\n  - " + _).mkString">@com.kyleu.projectile.models.web.InternalIcons.audit</i>
+          </td>
+          <td style="vertical-align: top;">@t._1.title</td>
+          <td style="vertical-align: top;">
+            @if(t._1.args.isEmpty) {
+              <em>No arguments</em>
+            }
+            @t._1.args.map { a =>
+              <div><input type="text" name="@a._1" placeholder="@a._2" /></div>
+            }
+          </td>
+          <td style="width: 92px; vertical-align: top;"><button type="submit" class="btn @cfg.user.buttonColor">Go</button></td>
+        </tr>
+      </form>
+    }
+    </tbody>
+  </table>
+}

@@ -25,6 +25,16 @@ object TwirlFormFields {
     lazy val argsMapped = getArgs(config, model, field, isNew, vOverride, Some(".map(_.toString)"))
 
     field.t match {
+      case _ if autocomplete.isDefined =>
+        val ac = autocomplete.getOrElse(throw new IllegalStateException())
+        val acArgs = getArgs(config, model, field, isNew, vOverride, Some(".toString"), ac = true)
+        val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
+        file.add(s"@$formPkg.autocompleteField(", 1)
+        file.add(s"""$acArgs, dataType = "${field.t}",""")
+        val url = s"${TwirlHelper.routesClass(config, ac._2)}.autocomplete()"
+        file.add(s"""call = $url, acType = ("${ac._2.propertyName}", "${ac._2.title}"), icon = ${ac._2.iconRef(config)}, inputType = "text"""")
+        file.add(")", -1)
+
       case FieldType.StringType => file.add(s"@$formPkg.textField($args)")
 
       case FieldType.EnumType(key) =>
@@ -43,17 +53,6 @@ object TwirlFormFields {
 
       case FieldType.MapType(_, _) => file.add(s"@$formPkg.mapField($args)")
       case FieldType.TagsType => file.add(s"@$formPkg.tagsField($args)")
-
-      case _ if autocomplete.isDefined =>
-        val ac = autocomplete.getOrElse(throw new IllegalStateException())
-        val acArgs = getArgs(config, model, field, isNew, vOverride, Some(".toString"), ac = true)
-        val formPkg = (config.systemViewPackage ++ Seq("html", "components", "form")).mkString(".")
-        file.add(s"@$formPkg.autocompleteField(", 1)
-        file.add(s"""$acArgs, dataType = "${field.t}",""")
-        val url = s"${TwirlHelper.routesClass(config, ac._2)}.autocomplete()"
-        file.add(s"""call = $url, acType = ("${ac._2.propertyName}", "${ac._2.title}"), icon = ${ac._2.iconRef(config)},""")
-        file.add(s"""inputType = "${inputType(field.t)}"""")
-        file.add(")", -1)
 
       case FieldType.ByteType => file.add(s"@$formPkg.byteField($args)")
       case FieldType.ByteArrayType => file.add(s"@$formPkg.byteArrayField($args)")
@@ -105,10 +104,5 @@ object TwirlFormFields {
     val selected = s"""request.queryString.isDefinedAt("$prop") || $isNew""".stripSuffix(" || false")
     val pk = if (model.pkFields.contains(field)) { ", isPk = true" } else { "" }
     s"""selected = $selected, key = "$prop", title = "${field.title}", value = $value, nullable = ${field.optional}$pk"""
-  }
-
-  private[this] def inputType(t: FieldType) = t match {
-    case FieldType.IntegerType | FieldType.LongType => "number"
-    case _ => "text"
   }
 }

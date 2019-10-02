@@ -68,5 +68,5 @@ final case class SystemUser(
     DataField("created", Some(created.toString))
   )
 
-  def toSummary = DataSummary(model = "systemUser", pk = id.toString, title = s"$username: $role")
+  def toSummary = DataSummary(model = "systemUser", pk = id.toString, entries = Map("Username" -> Some(username), "Role" -> Some(role.toString)))
 }

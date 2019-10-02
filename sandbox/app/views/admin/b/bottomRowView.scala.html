@@ -31,7 +31,7 @@
                   <i class="material-icons small">@models.template.Icons.topRow</i> <strong>Top</string>
                 </a>
               </div>
-              @topIdR.map(_.toSummary.title)
+              @topIdR.map(x => com.kyleu.projectile.views.html.components.dataSummary(x.toSummary))
             </div>
           </td>
         </tr>

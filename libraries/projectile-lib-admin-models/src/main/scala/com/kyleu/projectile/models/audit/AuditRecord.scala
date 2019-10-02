@@ -24,5 +24,5 @@ final case class AuditRecord(
     DataField("changes", Some(changes.asJson.noSpaces))
   )
 
-  def toSummary = DataSummary(model = "AuditRecord", pk = id.toString, title = s"t: $t, pk: $pk")
+  def toSummary = DataSummary(model = "AuditRecord", pk = id.toString, entries = Map("T" -> Some(t), "PK" -> Some(pk.mkString(", "))))
 }

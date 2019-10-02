@@ -66,6 +66,12 @@ final case class ScheduledTaskRun(
   def toSummary = DataSummary(
     model = "scheduledTaskRunRow",
     pk = id.toString,
-    title = s"task: $task, arguments: $arguments, status: $status, started: $started, completed: ${completed.getOrElse("-")}"
+    entries = Map(
+      "Task" -> Some(task),
+      "Arguments" -> Some(arguments.mkString(", ")),
+      "Status" -> Some(status),
+      "Started" -> Some(started.toString),
+      "Completed" -> completed.map(_.toString)
+    )
   )
 }

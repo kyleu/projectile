@@ -61,6 +61,11 @@ final case class DatabaseMigration(
   def toSummary = DataSummary(
     model = "databaseMigration",
     pk = installedRank.toString,
-    title = s"version: ${version.map(_.toString).getOrElse("∅")}, description: $description, typ: $typ, installedOn: $installedOn, success: $success"
+    entries = Map(
+      "Version" -> version.map(_.toString),
+      "Description" -> Some(description),
+      "Typ" -> Some(typ),
+      "InstalledOn" -> Some(installedOn.toString),
+      "Success" -> Some(success.toString))
   )
 }
