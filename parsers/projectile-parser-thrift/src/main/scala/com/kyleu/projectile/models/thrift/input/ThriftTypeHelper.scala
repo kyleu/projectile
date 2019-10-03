@@ -17,6 +17,7 @@ object ThriftTypeHelper {
     case FieldType.StringType => "\"\""
     case FieldType.IntegerType => "0"
     case FieldType.LongType => "0L"
+    case FieldType.SerialType => "0L"
     case FieldType.FloatType | FieldType.DoubleType => "0.0"
     case FieldType.EnumType(k) => config.getEnumOpt(k) match {
       case Some(e) => e.className + "." + e.firstVal.className

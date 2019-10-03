@@ -16,7 +16,7 @@ object ThriftControllerArgumentHelper {
     case FieldType.UnitType => "null"
     case FieldType.ByteArrayType => "null"
     case FieldType.BooleanType => "false"
-    case FieldType.ByteType | FieldType.IntegerType | FieldType.LongType => "0"
+    case FieldType.ByteType | FieldType.IntegerType | FieldType.LongType | FieldType.SerialType => "0"
     case FieldType.FloatType | FieldType.DoubleType => "0.0"
     case FieldType.StringType => "\"\""
 

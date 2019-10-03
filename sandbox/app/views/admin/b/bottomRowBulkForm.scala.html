@@ -32,8 +32,7 @@
         <tbody>
           @com.kyleu.projectile.views.html.components.form.autocompleteField(
             selected = request.queryString.isDefinedAt("topId"), key = "topId", title = "Top Id", value = request.queryString.get("topId").flatMap(_.headOption).orElse(None), nullable = false, dataType = "uuid",
-            call = controllers.admin.t.routes.TopRowController.autocomplete(), acType = ("topRow", "Top"), icon = models.template.Icons.topRow,
-            inputType = "text"
+            call = controllers.admin.t.routes.TopRowController.autocomplete(), acType = ("topRow", "Top"), icon = models.template.Icons.topRow, inputType = "text"
           )
           @com.kyleu.projectile.views.html.components.form.textField(selected = request.queryString.isDefinedAt("t"), key = "t", title = "T", value = request.queryString.get("t").flatMap(_.headOption).orElse(None), nullable = true)
         </tbody>

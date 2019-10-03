@@ -18,7 +18,7 @@ object OAuth2InfoQueries extends BaseQueries[OAuth2Info]("oauth2.info", "oauth2_
     DatabaseField(title = "Parameters", prop = "params", col = "params", typ = TagsType),
     DatabaseField("Created", "created", TimestampType)
   )
-  override protected val pkColumns = Seq("provider", "key")
+  override val pkColumns = Seq("provider", "key")
   override protected val searchColumns = Seq("key")
 
   def getByPrimaryKey(provider: String, key: String) = new GetByPrimaryKey(Seq(provider, key))

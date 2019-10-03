@@ -22,7 +22,7 @@ object SystemUserQueries extends BaseQueries[SystemUser]("systemUser", "system_u
     DatabaseField(title = "Settings", prop = "settings", col = "settings", typ = JsonType),
     DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "username", "provider", "key")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

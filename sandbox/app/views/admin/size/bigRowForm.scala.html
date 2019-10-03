@@ -1,0 +1,20 @@
+@* Generated File *@
+@(cfg: com.kyleu.projectile.models.config.UiConfig, model: models.size.BigRow, title: String, cancel: Call, act: Call, isNew: Boolean = false, debug: Boolean = false)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash
+)@com.kyleu.projectile.views.html.layout.page(title = title, cfg = cfg, icon = Some(models.template.Icons.bigRow)) {
+  <form id="form-edit-bigRow" action="@act" method="post">
+    @com.kyleu.projectile.views.html.layout.card(None) {
+      <div class="right"><button type="submit" class="btn @cfg.user.buttonColor">@if(isNew) {Create} else {Save} Big</button></div>
+      <div class="right"><a href="@cancel" class="btn-flat cancel-link">Cancel</a></div>
+      <div class="clear"></div>
+      <table>
+        <tbody>
+          @com.kyleu.projectile.views.html.components.form.serialField(selected = request.queryString.isDefinedAt("id") || isNew, key = "id", title = "Id", value = request.queryString.get("id").flatMap(_.headOption).map(s => s.toLong).orElse(Some(model.id)), nullable = false, isPk = true)
+          @com.kyleu.projectile.views.html.components.form.textField(selected = request.queryString.isDefinedAt("t"), key = "t", title = "T", value = request.queryString.get("t").flatMap(_.headOption).orElse(model.t), nullable = true)
+        </tbody>
+      </table>
+    }
+  </form>
+}
+@com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+<script>$(function() { new FormService('form-edit-bigRow'); })</script>

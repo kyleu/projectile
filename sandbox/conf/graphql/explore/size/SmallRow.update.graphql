@@ -1,0 +1,11 @@
+# Generated File
+# Updates a single SmallRow entity using the provided fields
+mutation SmallRowUpdate {
+  smallRow {
+    update(id: 0, fields: [{k: "", v: ""}]) {
+      id
+      bigId
+      t
+    }
+  }
+}

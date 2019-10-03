@@ -1,0 +1,48 @@
+@* Generated File *@
+@(
+    cfg: com.kyleu.projectile.models.config.UiConfig,
+    model: models.size.BigRow,
+    notes: Seq[com.kyleu.projectile.models.note.Note],
+    auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord],
+    debug: Boolean
+)(
+    implicit request: Request[AnyContent], session: Session, flash: Flash, td: com.kyleu.projectile.util.tracing.TraceData
+)@com.kyleu.projectile.views.html.layout.page(title = s"Big", cfg = cfg, icon = Some(models.template.Icons.bigRow)) {
+  @com.kyleu.projectile.services.augment.AugmentService.viewHeaders.augment(model, request.queryString, cfg)
+  @com.kyleu.projectile.views.html.layout.card(None) {
+    <div class="right"><a class="btn @cfg.user.buttonColor" href="@controllers.admin.size.routes.BigRowController.editForm(model.id)">Edit</a></div>
+    <div class="right"><a class="btn-flat remove-link" onclick="return confirm('Are you sure you want to remove this Big?')" href="@controllers.admin.size.routes.BigRowController.remove(model.id)">Remove</a></div>
+    <table class="highlight responsive-table">
+      <tbody>
+        <tr>
+          <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.id.toString.replaceAllLiterally("'", "")')" style="cursor: pointer;">Id</div></th>
+          <td>@model.id</td>
+        </tr>
+        <tr>
+          <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">T</div></th>
+          <td>@model.t.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+        </tr>
+      </tbody>
+    </table>
+  }
+  @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
+  @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "BigRow", "Big", model.id)
+  @com.kyleu.projectile.views.html.admin.audit.auditRecords(auditRecords, "BigRow", "Big", model.id)
+
+  <ul id="model-relations" class="collapsible" data-collapsible="expandable">
+    <li id="relation-smallRow-bigId" data-table="smallRow" data-field="bigId" data-singular="Small" data-plural="Smalls" data-url="@controllers.admin.size.routes.SmallRowController.byBigId(model.id, limit = Some(5), embedded = true)">
+      <div class="collapsible-header">
+        <i class="material-icons small">@models.template.Icons.smallRow</i>
+        <span class="title">Smalls</span>&nbsp;by Big Id
+        <span class="badge" style="display: none;">
+          <a class="bulk-edit-link" title="Bulk edit" href="@controllers.admin.size.routes.SmallRowController.byBigIdBulkForm(model.id)"><i class="material-icons" style="margin-right: 0;">edit</i></a>
+          <a class="view-relation-link" title="View these Smalls" href="@controllers.admin.size.routes.SmallRowController.byBigId(model.id)"><i class="material-icons" style="margin-right: 0;">insert_link</i></a>
+        </span>
+      </div>
+      <div class="collapsible-body"><span>Loading...</span></div>
+    </li>
+  </ul>
+  <script>$(function() { new RelationService('@controllers.admin.size.routes.BigRowController.relationCounts(model.id)') });</script>
+
+  @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
+}

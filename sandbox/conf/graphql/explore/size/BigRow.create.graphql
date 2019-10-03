@@ -1,0 +1,10 @@
+# Generated File
+# Creates a new BigRow entity
+mutation BigRowCreate {
+  bigRow {
+    create(fields: [{k: "", v: ""}]) {
+      id
+      t
+    }
+  }
+}

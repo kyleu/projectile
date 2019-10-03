@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.queries
 
-import com.kyleu.projectile.models.database.Statement
+import com.kyleu.projectile.models.database.{FlatSingleRowQuery, Row, Statement}
 import com.kyleu.projectile.models.result.data.DataField
 
 trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
@@ -10,6 +10,13 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     override val name = s"$key.insert"
     override val sql = insertSql
     override val values: Seq[Any] = toDataSeq(model)
+  }
+
+  protected class InsertNoPk(model: T) extends FlatSingleRowQuery[Seq[Any]] {
+    override val name = s"$key.insert.nopk"
+    override val sql = insertSqlNoPk
+    override val values: Seq[Any] = toDataSeqNoPk(model)
+    override def flatMap(row: Row) = Some(row.toSeq.flatten)
   }
 
   protected class InsertBatch(models: Seq[T]) extends Statement {
@@ -29,6 +36,15 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     private[this] val cols = dataFields.map(f => ResultFieldHelper.sqlForField("insert", f.k, fields))
     override val sql = s"""insert into ${quote(tableName)} (${cols.mkString(", ")}) values (${cols.map(_ => "?").mkString(", ")})"""
     override val values = dataFields.map(f => ResultFieldHelper.valueForField("create", f.k, f.v, fields))
+  }
+
+  protected class InsertFieldsNoPk(dataFields: Seq[DataField]) extends FlatSingleRowQuery[Seq[Any]] {
+    private[this] val noPk = dataFields.filterNot(f => pkColumns.contains(f.k))
+    override val name = s"$key.insert.fields"
+    private[this] val cols = noPk.map(f => ResultFieldHelper.sqlForField("insert", f.k, fields))
+    override val sql = s"""insert into ${quote(tableName)} (${cols.mkString(", ")}) values (${cols.map(_ => "?").mkString(", ")}) $returnClause"""
+    override val values = noPk.map(f => ResultFieldHelper.valueForField("create", f.k, f.v, fields))
+    override def flatMap(row: Row) = Some(row.toSeq.flatten)
   }
 
   protected class UpdateFields(pks: Seq[Any], dataFields: Seq[DataField]) extends Statement {

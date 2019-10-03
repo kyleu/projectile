@@ -21,7 +21,7 @@ object NoteQueries extends BaseQueries[Note]("Note", "note") {
     DatabaseField(title = "Author", prop = "author", col = "author", typ = UuidType),
     DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "rel_type", "rel_pk", "text", "author", "created")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

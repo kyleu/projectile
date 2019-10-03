@@ -20,6 +20,7 @@ object QueriesHelper {
       case _ => throw new IllegalStateException(s"Arrays of [$t] are not currently supported")
     }
     case FieldType.EnumType(k) => s"EnumType(${config.getEnum(k, "sql class name").className})"
+    case FieldType.SerialType => "LongType"
     case _ => t.className
   }
 

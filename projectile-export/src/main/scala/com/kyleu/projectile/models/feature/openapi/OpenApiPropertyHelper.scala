@@ -6,7 +6,7 @@ import com.kyleu.projectile.models.output.file.JsonFile
 
 object OpenApiPropertyHelper {
   def contentFor(t: FieldType, file: JsonFile, enums: Seq[ExportEnum]): Unit = t match {
-    case FieldType.IntegerType | FieldType.LongType => file.add("\"type\": \"integer\"")
+    case FieldType.IntegerType | FieldType.LongType | FieldType.SerialType => file.add("\"type\": \"integer\"")
     case FieldType.BigDecimalType | FieldType.DoubleType | FieldType.FloatType => file.add("\"type\": \"number\"")
     case FieldType.UuidType =>
       file.add("\"type\": \"string\",")

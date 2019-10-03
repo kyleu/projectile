@@ -66,6 +66,7 @@ object FieldTypeDecoder {
       case ByteType.value => Right(ByteType)
       case ShortType.value => Right(ShortType)
       case IntegerType.value => Right(IntegerType)
+      case SerialType.value => Right(SerialType)
       case LongType.value => Right(LongType)
       case FloatType.value => Right(FloatType)
       case DoubleType.value => Right(DoubleType)

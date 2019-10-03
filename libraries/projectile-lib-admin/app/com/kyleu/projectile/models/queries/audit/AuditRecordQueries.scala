@@ -19,7 +19,7 @@ object AuditRecordQueries extends BaseQueries[AuditRecord]("auditRecordRow", "au
     DatabaseField(title = "Pk", prop = "pk", col = "pk", typ = StringArrayType),
     DatabaseField(title = "Changes", prop = "changes", col = "changes", typ = JsonType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "t", "pk")
 
   override protected def cleanData(any: Any, field: DatabaseField) = any match {

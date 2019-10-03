@@ -23,6 +23,7 @@ object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.Server
     val newLines = config.models.filter(_.features(ModelFeature.Service)).filterNot(_.propertyName == "audit").filter(_.pkFields.nonEmpty).map { model =>
       val svc = model.injectedService(config)
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
+        case FieldType.SerialType => s"longArg(arg(${pkf._2}))"
         case FieldType.EnumType(key) =>
           val e = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum"))
           s"enumArg(${e.fullClassPath(config)})(arg(${pkf._2}))"
@@ -39,6 +40,7 @@ object InjectAuditCallbacks extends FeatureLogic.Inject(path = OutputPath.Server
   private[this] def routesLogic(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], original: Seq[String]) = {
     val newLines = config.models.filter(_.features(ModelFeature.Controller)).filter(_.pkFields.nonEmpty).map { model =>
       val pkArgs = model.pkFields.zipWithIndex.map(pkf => pkf._1.t match {
+        case FieldType.SerialType => s"longArg(arg(${pkf._2}))"
         case FieldType.EnumType(key) =>
           val cn = config.getEnumOpt(key).getOrElse(throw new IllegalStateException("Cannot load enum")).className
           s"enumArg($cn)(arg(${pkf._2}))"

@@ -1,0 +1,31 @@
+{
+  "key" : "big",
+  "pkg" : [ "size" ],
+  "features" : [ "audit", "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core", "tests" ],
+  "ignored" : [ ],
+  "overrides" : [ {
+    "k" : "className",
+    "v" : "BigRow"
+  }, {
+    "k" : "title",
+    "v" : "Big"
+  }, {
+    "k" : "plural",
+    "v" : "Bigs"
+  }, {
+    "k" : "t.summary",
+    "v" : "true"
+  }, {
+    "k" : "t.globalSearch",
+    "v" : "true"
+  }, {
+    "k" : "t.localSearch",
+    "v" : "true"
+  }, {
+    "k" : "reference.smallBigIdFkey.propertyName",
+    "v" : "smalls"
+  }, {
+    "k" : "defaultOrder",
+    "v" : "none"
+  } ]
+}

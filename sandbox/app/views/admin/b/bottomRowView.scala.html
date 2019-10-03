@@ -3,7 +3,6 @@
     cfg: com.kyleu.projectile.models.config.UiConfig,
     model: models.b.BottomRow,
     notes: Seq[com.kyleu.projectile.models.note.Note],
-    auditRecords: Seq[com.kyleu.projectile.models.audit.AuditRecord],
     topIdR: Option[models.t.TopRow],
     debug: Boolean
 )(
@@ -25,14 +24,16 @@
             <div>
               @model.topId
             </div>
-            <div class="card-panel grey lighten-5" style="padding: 12px; margin: 12px 0 0 0;">
-              <div>
-                <a href="@controllers.admin.t.routes.TopRowController.view(model.topId)">
-                  <i class="material-icons small">@models.template.Icons.topRow</i> <strong>Top</string>
-                </a>
+            @topIdR.map { r =>
+              <div class="card-panel grey lighten-5" style="padding: 12px; margin: 12px 0 0 0;">
+                <div>
+                  <a href="@controllers.admin.t.routes.TopRowController.view(model.topId)">
+                    <i class="material-icons small">@models.template.Icons.topRow</i> <strong>Top</string>
+                  </a>
+                </div>
+                @com.kyleu.projectile.views.html.components.dataSummary(r.toSummary)
               </div>
-              @topIdR.map(x => com.kyleu.projectile.views.html.components.dataSummary(x.toSummary))
-            </div>
+            }
           </td>
         </tr>
         <tr>
@@ -44,7 +45,6 @@
   }
   @com.kyleu.projectile.services.augment.AugmentService.viewDetails.augment(model, request.queryString, cfg)
   @com.kyleu.projectile.views.html.admin.note.notes(cfg, notes, "BottomRow", "Bottom", model.id)
-  @com.kyleu.projectile.views.html.admin.audit.auditRecords(auditRecords, "BottomRow", "Bottom", model.id)
 
   @com.kyleu.projectile.views.html.components.includeScalaJs(debug)
 }

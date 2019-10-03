@@ -53,6 +53,7 @@ object FieldType extends StringEnum[FieldType] {
   case class MapType(k: FieldType, v: FieldType) extends FieldType("set")
 
   case class ExoticType(key: String) extends FieldType("exotic")
+  case object SerialType extends FieldType("serial", isScalar = true)
 
   case object JsonType extends FieldType("json")
   case object CodeType extends FieldType("code")

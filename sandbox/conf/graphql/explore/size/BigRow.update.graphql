@@ -1,0 +1,10 @@
+# Generated File
+# Updates a single BigRow entity using the provided fields
+mutation BigRowUpdate {
+  bigRow {
+    update(id: 0, fields: [{k: "", v: ""}]) {
+      id
+      t
+    }
+  }
+}

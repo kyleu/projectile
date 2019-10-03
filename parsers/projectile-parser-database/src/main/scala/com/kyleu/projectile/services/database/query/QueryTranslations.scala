@@ -18,9 +18,12 @@ object QueryTranslations extends Logging {
     case BIT | BOOLEAN => BooleanType
     case TINYINT => ByteType
     case SMALLINT => IntegerType // TODO ShortType
-    case INTEGER | DISTINCT | ROWID => colSize match {
-      case Some(x) if x >= 10 => LongType
-      case _ => IntegerType
+    case INTEGER | DISTINCT | ROWID => n match {
+      case "serial" => SerialType
+      case _ => colSize match {
+        case Some(x) if x >= 10 => LongType
+        case _ => IntegerType
+      }
     }
     case BIGINT => LongType
     case REAL | FLOAT => FloatType

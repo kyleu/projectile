@@ -39,6 +39,7 @@ GET        /testbed                                 controllers.HomeController.t
 # Start model route files
 # Projectile export section [sandbox]
 ->          /admin/b                                 b.Routes
+->          /admin/size                              size.Routes
 ->          /admin/t                                 t.Routes
 ->          /admin/test                              test.Routes
 # End model route files

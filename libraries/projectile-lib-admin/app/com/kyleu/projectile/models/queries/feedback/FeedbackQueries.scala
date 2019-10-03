@@ -19,7 +19,7 @@ object FeedbackQueries extends BaseQueries[Feedback]("feedback", "feedback") {
     DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType),
     DatabaseField(title = "Status", prop = "status", col = "status", typ = StringType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "text", "author_id", "author_email", "created", "status")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

@@ -21,7 +21,7 @@ object ScheduledTaskRunQueries extends BaseQueries[ScheduledTaskRun]("scheduledT
     DatabaseField(title = "Started", prop = "started", col = "started", typ = TimestampType),
     DatabaseField(title = "Completed", prop = "completed", col = "completed", typ = TimestampType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "task", "arguments", "status", "started")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

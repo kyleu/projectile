@@ -87,5 +87,8 @@ class PermissionController @javax.inject.Inject() (
     Future.successful(rsp.flashing((if (success) { "success" } else { "error" }, msg)))
   }
 
-  private[this] def reload(td: TraceData) = PermissionService.initialize(db.query(PermissionQueries.getAll())(td))(td)
+  private[this] def reload(td: TraceData) = {
+    val perms = db.query(PermissionQueries.getAll())(td)
+    PermissionService.initialize(perms)(td)
+  }
 }

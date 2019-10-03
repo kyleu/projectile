@@ -1,0 +1,37 @@
+{
+  "key" : "small",
+  "pkg" : [ "size" ],
+  "features" : [ "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core", "tests" ],
+  "ignored" : [ ],
+  "overrides" : [ {
+    "k" : "className",
+    "v" : "SmallRow"
+  }, {
+    "k" : "title",
+    "v" : "Small"
+  }, {
+    "k" : "plural",
+    "v" : "Smalls"
+  }, {
+    "k" : "big_id.summary",
+    "v" : "true"
+  }, {
+    "k" : "big_id.localSearch",
+    "v" : "true"
+  }, {
+    "k" : "t.summary",
+    "v" : "true"
+  }, {
+    "k" : "t.globalSearch",
+    "v" : "true"
+  }, {
+    "k" : "t.localSearch",
+    "v" : "true"
+  }, {
+    "k" : "fk.small_big_id_fkey.propertyName",
+    "v" : "big"
+  }, {
+    "k" : "defaultOrder",
+    "v" : "none"
+  } ]
+}

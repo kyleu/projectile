@@ -8,6 +8,7 @@ object ThriftSchemaHelper {
   def graphQlTypeFor(t: FieldType, config: ExportConfiguration, req: Boolean = true): String = t match {
     case _ if !req => s"OptionType(${graphQlTypeFor(t, config)})"
     case FieldType.LongType => "LongType"
+    case FieldType.SerialType => "LongType"
     case FieldType.DoubleType => "FloatType"
     case FieldType.FloatType => "FloatType"
     case FieldType.IntegerType => "IntType"

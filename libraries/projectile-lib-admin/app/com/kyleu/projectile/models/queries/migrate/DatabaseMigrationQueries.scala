@@ -24,7 +24,7 @@ object DatabaseMigrationQueries extends BaseQueries[DatabaseMigration]("database
     DatabaseField(title = "Execution Time", prop = "executionTime", col = "execution_time", typ = LongType),
     DatabaseField(title = "Success", prop = "success", col = "success", typ = BooleanType)
   )
-  override protected val pkColumns = Seq("installed_rank")
+  override val pkColumns = Seq("installed_rank")
   override protected val searchColumns = Seq("installed_rank", "version", "description", "type", "installed_on", "success")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

@@ -16,6 +16,7 @@ object ExportFieldThrift {
     case ShortType => "common.int"
     case IntegerType => "common.int"
     case LongType => "common.long"
+    case SerialType => "common.long"
     case FloatType => "double"
     case DoubleType => "double"
     case BigDecimalType => "common.BigDecimal"

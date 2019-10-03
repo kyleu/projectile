@@ -17,7 +17,7 @@ object PasswordInfoQueries extends BaseQueries[PasswordInfo]("password.info", "p
     DatabaseField("Salt", "salt", StringType),
     DatabaseField("Created", "created", TimestampType)
   )
-  override protected val pkColumns = Seq("provider", "key")
+  override val pkColumns = Seq("provider", "key")
   override protected val searchColumns = Seq("key")
 
   def getByPrimaryKey(provider: String, key: String) = new GetByPrimaryKey(Seq(provider, key))

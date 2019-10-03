@@ -1,0 +1,11 @@
+# Generated File
+# Remove a single SmallRow entity from the system
+mutation SmallRowRemove {
+  smallRow {
+    remove(id: 0) {
+      id
+      bigId
+      t
+    }
+  }
+}

@@ -47,7 +47,6 @@ trait Database[Conn] extends Logging {
   }
 }
 
-
 /*
 
 Tl;DR: We were using ExecutionContext.global for our database, which blocks on all requests. Switching to a bespoke ExecutionContext solved the issue.

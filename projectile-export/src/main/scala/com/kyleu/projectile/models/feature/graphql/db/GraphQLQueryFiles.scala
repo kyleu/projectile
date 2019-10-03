@@ -25,7 +25,7 @@ object GraphQLQueryFiles {
 
   private[this] def argValFor(t: FieldType) = t match {
     case FieldType.UuidType => "\"00000000-0000-0000-0000-000000000000\""
-    case FieldType.IntegerType | FieldType.LongType => "0"
+    case FieldType.IntegerType | FieldType.LongType | FieldType.SerialType => "0"
     case FieldType.FloatType | FieldType.DoubleType => "0.0"
     case _ => "\"\""
   }

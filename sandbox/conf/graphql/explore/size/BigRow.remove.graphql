@@ -1,0 +1,10 @@
+# Generated File
+# Remove a single BigRow entity from the system
+mutation BigRowRemove {
+  bigRow {
+    remove(id: 0) {
+      id
+      t
+    }
+  }
+}

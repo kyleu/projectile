@@ -25,7 +25,7 @@ object AuditQueries extends BaseQueries[Audit]("audit", "audit") {
     DatabaseField(title = "Started", prop = "started", col = "started", typ = TimestampType),
     DatabaseField(title = "Completed", prop = "completed", col = "completed", typ = TimestampType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "act", "app", "client", "server", "user_id")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

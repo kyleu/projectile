@@ -15,7 +15,7 @@ object TopRowQueries extends BaseQueries[TopRow]("topRow", "top") {
     DatabaseField(title = "Id", prop = "id", col = "id", typ = UuidType),
     DatabaseField(title = "T", prop = "t", col = "t", typ = StringType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "t")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

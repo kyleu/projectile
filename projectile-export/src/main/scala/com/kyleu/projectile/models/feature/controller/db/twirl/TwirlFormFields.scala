@@ -60,6 +60,7 @@ object TwirlFormFields {
       case FieldType.BigDecimalType => file.add(s"@$formPkg.decimalField($args)")
       case FieldType.DoubleType => file.add(s"@$formPkg.doubleField($args)")
       case FieldType.LongType => file.add(s"@$formPkg.longField($args)")
+      case FieldType.SerialType => file.add(s"@$formPkg.serialField($args)")
       case FieldType.IntegerType => file.add(s"@$formPkg.intField($args)")
       case FieldType.UuidType => file.add(s"@$formPkg.uuidField($args)")
 

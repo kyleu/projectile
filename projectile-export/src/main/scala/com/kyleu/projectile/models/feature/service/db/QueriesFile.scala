@@ -35,7 +35,7 @@ object QueriesFile {
     file.add(")", -1)
 
     if (model.pkFields.nonEmpty) {
-      file.add("override protected val pkColumns = Seq(" + model.pkFields.map("\"" + _.key + "\"").mkString(", ") + ")")
+      file.add("override val pkColumns = Seq(" + model.pkFields.map("\"" + _.key + "\"").mkString(", ") + ")")
       file.add(s"override protected val searchColumns = Seq(${model.localSearchFields.map("\"" + _.key + "\"").mkString(", ")})")
     }
     file.add()
@@ -63,9 +63,15 @@ object QueriesFile {
 
     if (!model.readOnly) {
       config.addCommonImport(file, "DataField")
-      file.add(s"def insert(model: ${model.className}) = new Insert(model)")
-      file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
-      file.add("def create(dataFields: Seq[DataField]) = new InsertFields(dataFields)")
+      if (model.isSerial) {
+        file.add(s"def insert(model: ${model.className}) = new InsertNoPk(model)")
+        file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
+        file.add("def create(dataFields: Seq[DataField]) = new InsertFieldsNoPk(dataFields)")
+      } else {
+        file.add(s"def insert(model: ${model.className}) = new Insert(model)")
+        file.add(s"def insertBatch(models: Seq[${model.className}]) = new InsertBatch(models)")
+        file.add("def create(dataFields: Seq[DataField]) = new InsertFields(dataFields)")
+      }
     }
 
     if (model.pkFields.nonEmpty) {

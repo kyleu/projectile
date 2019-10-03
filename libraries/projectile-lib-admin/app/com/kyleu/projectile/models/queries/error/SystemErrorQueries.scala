@@ -21,7 +21,7 @@ object SystemErrorQueries extends BaseQueries[SystemError]("systemError", "syste
     DatabaseField(title = "Stacktrace", prop = "stacktrace", col = "stacktrace", typ = StringType),
     DatabaseField(title = "Occurred", prop = "occurred", col = "occurred", typ = TimestampType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "context", "user_id", "cls", "message")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

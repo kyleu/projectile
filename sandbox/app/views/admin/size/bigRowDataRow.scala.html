@@ -1,0 +1,10 @@
+@* Generated File *@
+@(model: models.size.BigRow, additional: Option[Html] = None)<tr>
+  <td>
+    <a href="@controllers.admin.size.routes.BigRowController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.t
+  </td>
+  @additional
+</tr>

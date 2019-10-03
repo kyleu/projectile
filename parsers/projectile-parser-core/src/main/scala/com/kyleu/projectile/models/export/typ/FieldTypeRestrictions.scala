@@ -9,7 +9,7 @@ object FieldTypeRestrictions {
   }
 
   def isNumeric(t: FieldType) = t match {
-    case ShortType | IntegerType | LongType | FloatType | DoubleType | BigDecimalType => true
+    case ShortType | IntegerType | LongType | SerialType | FloatType | DoubleType | BigDecimalType => true
     case _ => false
   }
 }

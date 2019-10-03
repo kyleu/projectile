@@ -24,11 +24,16 @@ abstract class BaseQueries[T <: Product](val key: String, val tableName: String)
   }
 
   protected def toDataSeq(t: T): Seq[Any] = t.productIterator.toSeq.zip(fields).map(x => cleanData(x._1, x._2))
+  protected def toDataSeqNoPk(t: T): Seq[Any] = t.productIterator.toSeq.zip(fields).filterNot(x => pkColumns.contains(x._2.col)).map(x => cleanData(x._1, x._2))
 
   lazy val quotedColumns = fields.map(f => quote(f.col)).mkString(", ")
+  lazy val quotedColumnsNoPk = fields.filterNot(f => pkColumns.contains(f.col)).map(f => quote(f.col)).mkString(", ")
   protected def placeholdersFor(seq: Seq[_]) = seq.map(_ => "?").mkString(", ")
   protected lazy val columnPlaceholders = placeholdersFor(fields)
+  protected lazy val columnPlaceholdersNoPk = placeholdersFor(fields.filterNot(f => pkColumns.contains(f.col)))
   protected lazy val insertSql = s"""insert into ${quote(tableName)} ($quotedColumns) values ($columnPlaceholders)"""
+  protected lazy val returnClause = s"returning (${pkColumns.map(quote).mkString(", ")})"
+  protected lazy val insertSqlNoPk = s"""insert into ${quote(tableName)} ($quotedColumnsNoPk) values ($columnPlaceholdersNoPk) $returnClause"""
   protected def quote(n: String) = EngineHelper.quote(n)
 
   protected def updateSql(updateColumns: Seq[String], additionalUpdates: Option[String] = None) = s"""update ${quote(tableName)}

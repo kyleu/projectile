@@ -12,6 +12,7 @@ object FieldTypeFromString {
     case ShortType => s + ".toInt.toShort"
     case IntegerType => s + ".toInt"
     case LongType => s + ".toLong"
+    case SerialType => s + ".toLong"
     case FloatType => s + ".toFloat"
     case DoubleType => s + ".toDouble"
     case BigDecimalType => s"BigDecimal($s)"

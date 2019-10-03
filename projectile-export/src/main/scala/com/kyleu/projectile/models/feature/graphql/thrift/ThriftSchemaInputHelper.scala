@@ -17,6 +17,7 @@ object ThriftSchemaInputHelper {
     case ShortType => "shortType"
     case IntegerType => "IntType"
     case LongType => "LongType"
+    case SerialType => "LongType"
     case FloatType => "FloatType"
     case DoubleType => "FloatType"
     case BigDecimalType => "BigDecimalType"

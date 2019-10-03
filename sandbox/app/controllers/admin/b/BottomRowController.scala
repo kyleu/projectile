@@ -5,7 +5,6 @@ import com.kyleu.projectile.controllers.{BaseController, ServiceAuthController}
 import com.kyleu.projectile.models.module.Application
 import com.kyleu.projectile.models.result.orderBy.OrderBy
 import com.kyleu.projectile.models.web.ControllerUtils
-import com.kyleu.projectile.services.audit.AuditService
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.note.NoteService
 import com.kyleu.projectile.util.{Credentials, DateUtils}
@@ -20,7 +19,7 @@ import services.t.TopRowService
 
 @javax.inject.Singleton
 class BottomRowController @javax.inject.Inject() (
-    override val app: Application, svc: BottomRowService, noteSvc: NoteService, auditSvc: AuditService,
+    override val app: Application, svc: BottomRowService, noteSvc: NoteService,
     topRowS: TopRowService
 )(implicit ec: ExecutionContext) extends ServiceAuthController(svc) {
   PermissionService.registerModel("b", "BottomRow", "Bottom", Some(models.template.Icons.bottomRow), "view", "edit")
@@ -51,17 +50,16 @@ class BottomRowController @javax.inject.Inject() (
   def view(id: UUID, t: Option[String] = None) = withSession("view", ("b", "BottomRow", "view")) { implicit request => implicit td =>
     val creds: Credentials = request
     val modelF = svc.getByPrimaryKeyRequired(creds, id)
-    val auditsF = auditSvc.getByModel(creds, "BottomRow", id)
     val notesF = noteSvc.getFor(creds, "BottomRow", id)
     val topIdF = modelF.flatMap(m => topRowS.getByPrimaryKey(creds, m.topId))
 
     topIdF.flatMap(topIdR =>
-      notesF.flatMap(notes => auditsF.flatMap(audits => modelF.map { model =>
+      notesF.flatMap(notes => modelF.map { model =>
         renderChoice(t) {
-          case MimeTypes.HTML => Ok(views.html.admin.b.bottomRowView(app.cfg(u = Some(request.identity), "b", "bottom", model.id.toString), model, notes, audits, topIdR, app.config.debug))
+          case MimeTypes.HTML => Ok(views.html.admin.b.bottomRowView(app.cfg(u = Some(request.identity), "b", "bottom", model.id.toString), model, notes, topIdR, app.config.debug))
           case MimeTypes.JSON => Ok(model.asJson)
         }
-      })))
+      }))
   }
 
   def editForm(id: UUID) = withSession("edit.form", ("b", "BottomRow", "edit")) { implicit request => implicit td =>

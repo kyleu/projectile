@@ -21,7 +21,7 @@ object PermissionQueries extends BaseQueries[Permission]("Permission", "system_p
     DatabaseField(title = "Created", prop = "created", col = "created", typ = TimestampType),
     DatabaseField(title = "Created By", prop = "createdBy", col = "created_by", typ = UuidType)
   )
-  override protected val pkColumns = Seq("role", "pkg", "model", "action")
+  override val pkColumns = Seq("role", "pkg", "model", "action")
   override protected val searchColumns = Seq("role", "pkg", "model", "action", "created_by")
 
   override protected def toDataSeq(t: Permission) = {

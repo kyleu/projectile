@@ -37,6 +37,7 @@ class ProjectileModule extends AdminModule() {
     /* Start injected startup code */
     /* Projectile export section [sandbox] */
     com.kyleu.projectile.services.auth.PermissionService.registerPackage("b", "B", models.template.Icons.pkg_b)
+    com.kyleu.projectile.services.auth.PermissionService.registerPackage("size", "Size", models.template.Icons.pkg_size)
     com.kyleu.projectile.services.auth.PermissionService.registerPackage("t", "T", models.template.Icons.pkg_t)
     /* End injected startup code */
   }

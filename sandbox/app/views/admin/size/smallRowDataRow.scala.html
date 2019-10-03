@@ -1,0 +1,16 @@
+@* Generated File *@
+@(model: models.size.SmallRow, additional: Option[Html] = None)<tr>
+  <td>
+    <a href="@controllers.admin.size.routes.SmallRowController.view(model.id)">@model.id</a>
+  </td>
+  <td>
+    @model.bigId
+    <a href="@controllers.admin.size.routes.BigRowController.view(model.bigId)">
+      <i class="material-icons small">@models.template.Icons.bigRow</i>
+    </a>
+  </td>
+  <td>
+    @model.t
+  </td>
+  @additional
+</tr>

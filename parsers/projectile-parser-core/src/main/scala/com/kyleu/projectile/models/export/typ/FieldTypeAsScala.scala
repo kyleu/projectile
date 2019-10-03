@@ -15,6 +15,7 @@ object FieldTypeAsScala {
     case ShortType => "Short"
     case IntegerType => "Int"
     case LongType => "Long"
+    case SerialType => "Long"
     case FloatType => "Float"
     case DoubleType => "Double"
     case BigDecimalType => "BigDecimal"

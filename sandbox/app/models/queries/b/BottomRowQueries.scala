@@ -16,7 +16,7 @@ object BottomRowQueries extends BaseQueries[BottomRow]("bottomRow", "bottom") {
     DatabaseField(title = "Top Id", prop = "topId", col = "top_id", typ = UuidType),
     DatabaseField(title = "T", prop = "t", col = "t", typ = StringType)
   )
-  override protected val pkColumns = Seq("id")
+  override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "top_id", "t")
 
   def countAll(filters: Seq[Filter] = Nil) = onCountAll(filters)

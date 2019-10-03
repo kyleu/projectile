@@ -15,6 +15,7 @@ object ExportField {
     case BooleanType => defaultValue.map(v => if (v == "1" || v == "true") { "true" } else { "false" }).getOrElse("false")
     case ByteType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
     case IntegerType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0")
+    case SerialType => "0L"
     case LongType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + "L"
     case ShortType => defaultValue.filter(_.matches("[0-9]+")).getOrElse("0") + ".toShort"
     case FloatType => defaultValue.filter(_.matches("[0-9\\.]+")).getOrElse("0.0") + "f"

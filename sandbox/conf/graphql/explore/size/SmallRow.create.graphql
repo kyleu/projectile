@@ -1,0 +1,11 @@
+# Generated File
+# Creates a new SmallRow entity
+mutation SmallRowCreate {
+  smallRow {
+    create(fields: [{k: "", v: ""}]) {
+      id
+      bigId
+      t
+    }
+  }
+}

@@ -10,6 +10,8 @@ object TestServices {
   lazy val db = new JdbcDatabase("application", "database.application") {}
   lazy val slick = new SlickQueryService("test", db.source, 30, trace)
 
+  lazy val bigRowService = new services.size.BigRowService(db, trace)
   lazy val bottomRowService = new services.b.BottomRowService(db, trace)
+  lazy val smallRowService = new services.size.SmallRowService(db, trace)
   lazy val topRowService = new services.t.TopRowService(db, trace)
 }

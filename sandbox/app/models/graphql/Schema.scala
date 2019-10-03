@@ -14,7 +14,9 @@ object Schema extends BaseGraphQLSchema {
     Seq(
       models.graphql.b.BottomRowSchema.bottomRowByPrimaryKeyFetcher,
       models.graphql.b.BottomRowSchema.bottomRowByTopIdFetcher,
-      models.graphql.t.TopRowSchema.topRowByPrimaryKeyFetcher
+      models.graphql.size.BigRowSchema.bigRowByPrimaryKeyFetcher,
+      models.graphql.size.SmallRowSchema.smallRowByBigIdFetcher,
+      models.graphql.size.SmallRowSchema.smallRowByPrimaryKeyFetcher
     ) ++
       /* End model fetchers */
       Nil
@@ -26,7 +28,8 @@ object Schema extends BaseGraphQLSchema {
     /* Start query fields */
     /* Projectile export section [sandbox] */
     models.graphql.b.BottomRowSchema.queryFields ++
-    models.graphql.t.TopRowSchema.queryFields ++
+    models.graphql.size.BigRowSchema.queryFields ++
+    models.graphql.size.SmallRowSchema.queryFields ++
     /* End query fields */
     Nil
 
@@ -34,7 +37,8 @@ object Schema extends BaseGraphQLSchema {
     /* Start mutation fields */
     /* Projectile export section [sandbox] */
     models.graphql.b.BottomRowSchema.mutationFields ++
-    models.graphql.t.TopRowSchema.mutationFields ++
+    models.graphql.size.BigRowSchema.mutationFields ++
+    models.graphql.size.SmallRowSchema.mutationFields ++
     /* End mutation fields */
     Nil
 }

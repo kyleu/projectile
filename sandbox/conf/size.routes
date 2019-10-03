@@ -1,0 +1,28 @@
+# Generated File
+
+# Big Routes
+GET         /bigRow                                                   controllers.admin.size.BigRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /bigRow/autocomplete                                       controllers.admin.size.BigRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /bigRow/form                                               controllers.admin.size.BigRowController.createForm
+POST        /bigRow                                                   controllers.admin.size.BigRowController.create
+GET         /bigRow/bulk                                               controllers.admin.size.BigRowController.bulkEditForm
+POST        /bigRow/bulk                                               controllers.admin.size.BigRowController.bulkEdit
+GET         /bigRow/:id                                               controllers.admin.size.BigRowController.view(id: Long, t: Option[String] ?= None)
+GET         /bigRow/:id/counts                                        controllers.admin.size.BigRowController.relationCounts(id: Long)
+GET         /bigRow/:id/form                                          controllers.admin.size.BigRowController.editForm(id: Long)
+POST        /bigRow/:id                                               controllers.admin.size.BigRowController.edit(id: Long)
+GET         /bigRow/:id/remove                                        controllers.admin.size.BigRowController.remove(id: Long)
+
+# Small Routes
+GET         /smallRow                                                 controllers.admin.size.SmallRowController.list(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None)
+GET         /smallRow/autocomplete                                     controllers.admin.size.SmallRowController.autocomplete(q: Option[String] ?= None, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None)
+GET         /smallRow/form                                             controllers.admin.size.SmallRowController.createForm
+POST        /smallRow                                                 controllers.admin.size.SmallRowController.create
+GET         /smallRow/bulk                                             controllers.admin.size.SmallRowController.bulkEditForm
+POST        /smallRow/bulk                                             controllers.admin.size.SmallRowController.bulkEdit
+GET         /smallRow/byBigId/:bigId                                  controllers.admin.size.SmallRowController.byBigId(bigId: Long, orderBy: Option[String] ?= None, orderAsc: Boolean ?= true, limit: Option[Int] ?= None, offset: Option[Int] ?= None, t: Option[String] ?= None, embedded: Boolean ?= false)
+GET         /smallRow/byBigId/:bigId/bulk                             controllers.admin.size.SmallRowController.byBigIdBulkForm(bigId: Long)
+GET         /smallRow/:id                                             controllers.admin.size.SmallRowController.view(id: Long, t: Option[String] ?= None)
+GET         /smallRow/:id/form                                        controllers.admin.size.SmallRowController.editForm(id: Long)
+POST        /smallRow/:id                                             controllers.admin.size.SmallRowController.edit(id: Long)
+GET         /smallRow/:id/remove                                      controllers.admin.size.SmallRowController.remove(id: Long)

@@ -1,7 +1,7 @@
 {
   "key" : "bottom",
   "pkg" : [ "b" ],
-  "features" : [ "audit", "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core", "tests" ],
+  "features" : [ "shared", "datamodel", "auth", "graphql", "service", "controller", "notes", "json", "core", "tests" ],
   "ignored" : [ ],
   "overrides" : [ {
     "k" : "title",

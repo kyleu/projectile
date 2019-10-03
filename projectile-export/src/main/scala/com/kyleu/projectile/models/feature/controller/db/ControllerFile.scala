@@ -21,6 +21,7 @@ object ControllerFile {
         case FieldType.UuidType => file.addMarkers("uuid-search", m)
         case FieldType.IntegerType => file.addMarkers("int-search", m)
         case FieldType.LongType => file.addMarkers("long-search", m)
+        case FieldType.SerialType => file.addMarkers("long-search", m)
         case _ => // noop
       }
     }
