@@ -2,12 +2,14 @@ package com.kyleu.projectile.controllers.admin.sql
 
 import com.kyleu.projectile.controllers.AuthController
 import com.kyleu.projectile.controllers.admin.sql.routes.SqlBackdoorController
+import com.kyleu.projectile.models.audit.AuditField
 import com.kyleu.projectile.models.database.{Query, Row}
 import com.kyleu.projectile.models.menu.SystemMenu
 import com.kyleu.projectile.models.module.ApplicationFeature.Sql.value
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
 import com.kyleu.projectile.models.queries.SqlParser
 import com.kyleu.projectile.models.web.InternalIcons
+import com.kyleu.projectile.services.audit.AuditHelper
 import com.kyleu.projectile.services.auth.PermissionService
 import com.kyleu.projectile.services.database.JdbcDatabase
 import com.kyleu.projectile.services.sql.SqlExecutionHelper
@@ -39,6 +41,7 @@ class SqlBackdoorController @javax.inject.Inject() (
 
     db.transaction { (_, conn) =>
       val results = statements.map { s =>
+        AuditHelper.onAction(act = "sql", t = "statement", pk = Seq(), changes = Seq(AuditField("sql", None, Some(s))), creds = request)
         val q: Query[Seq[Seq[Option[String]]]] = new Query[Seq[Seq[Option[String]]]] {
           override def name = "adhoc"
           override def sql = s

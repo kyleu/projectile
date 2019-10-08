@@ -7,6 +7,7 @@ import com.kyleu.projectile.models.notification.Notification
 
 case class UiConfig(
     projectName: String,
+    projectVersion: String,
     userId: Option[UUID] = None,
     username: Option[String] = None,
     menu: Seq[NavMenu] = Nil,

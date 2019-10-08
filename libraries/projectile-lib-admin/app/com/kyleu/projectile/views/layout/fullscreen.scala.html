@@ -5,23 +5,24 @@
   stylesheets = com.kyleu.projectile.models.web.ControllerUtils.commonStylesheets ++ stylesheets ++ cfg.html.additionalStylesheets,
   additionalContent = cfg.content.head
 ) {
-  @defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
-    <body class="@theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
-      @com.kyleu.projectile.views.html.layout.pageHeader(cfg, theme)
-      @com.kyleu.projectile.views.html.layout.pageNav(cfg, theme)
-      @cfg.content.header
-      <div id="main" @if(cfg.user.menuCollapsed) { class="main-full" }>
-        @content
-      </div>
-    </body>
-    @if(cfg.user.menuCollapsed) {
-      <script>
-        $(function() {
-          $(".sidenav-main.nav-collapsible, .navbar .brand-sidebar").trigger("mouseleave");
-        });
-      </script>
-    }
-    @cfg.content.footer
-    @com.kyleu.projectile.controllers.admin.analytics.AnalyticsController.injectHtml(cfg)
-  }
+@defining(com.kyleu.projectile.models.user.Theme.withValue(cfg.user.theme)) { theme =>
+<body class="@theme.bodyClass vertical-layout vertical-menu-collapsible 2-columns">
+@com.kyleu.projectile.views.html.layout.pageHeader(cfg, theme)
+@com.kyleu.projectile.views.html.layout.pageNav(cfg, theme)
+@cfg.content.header
+<div id="main" @if(cfg.user.menuCollapsed) { class="main-full" }>
+@content
+</div>
+</body>
+@if(cfg.user.menuCollapsed) {
+<script>
+  $(function() {
+    $(".sidenav-main.nav-collapsible, .navbar .brand-sidebar").trigger("mouseleave");
+  });
+</script>
+}
+@cfg.content.footer
+@com.kyleu.projectile.controllers.admin.analytics.AnalyticsController.injectHtml(cfg)
+<!-- version: @cfg.projectVersion -->
+}
 }

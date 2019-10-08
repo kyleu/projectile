@@ -28,6 +28,7 @@ import scala.concurrent.ExecutionContext
 
 abstract class AdminModule() extends AbstractModule with ScalaModule {
   def projectName: String
+  def projectVersion: String
   def allowSignup: Boolean
   def initialRole: String
   def initialSettings: Json = JsonObject.empty.asJson
@@ -68,12 +69,13 @@ abstract class AdminModule() extends AbstractModule with ScalaModule {
     override def defaultSettings = initialSettings
 
     override def configForUser(su: Option[SystemUser], notifications: Seq[Notification], breadcrumbs: String*) = su match {
-      case None => UiConfig(projectName = projectName, menu = menuProvider.guestMenu, urls = navUrls, content = navContent)
+      case None => UiConfig(projectName = projectName, projectVersion = projectVersion, menu = menuProvider.guestMenu, urls = navUrls, content = navContent)
       case Some(u) =>
         val menu = menuProvider.menuFor(Some(u))
         val user = u.settingsObj.copy(avatarUrl = Some(GravatarUrl(u.email)))
         UiConfig(
           projectName = projectName,
+          projectVersion = projectVersion,
           userId = Some(u.id),
           username = Some(u.username),
           menu = menu,
