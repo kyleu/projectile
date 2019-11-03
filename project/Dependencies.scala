@@ -32,7 +32,7 @@ object Dependencies {
     }
 
     object Doobie {
-      val version = "0.8.2"
+      val version = "0.8.4"
 
       val core = "org.tpolecat" %% "doobie-core" % version
       val hikariCp = "org.tpolecat" %% "doobie-hikari" % version
@@ -49,9 +49,9 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.12.1"
+    val version = "0.12.2"
 
-    val enumeratumCirceVersion = "1.5.21"
+    val enumeratumCirceVersion = "1.5.22"
     val booPickleVersion = "1.3.1"
 
     val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser")
@@ -67,7 +67,7 @@ object Dependencies {
     }
 
     object Finagle {
-      val version = "19.9.0"
+      val version = "19.10.0"
 
       val core = "com.twitter" %% "finagle-core" % version
       val thrift = "com.twitter" %% "finagle-thrift" % version
@@ -80,7 +80,7 @@ object Dependencies {
   }
 
   object Metrics {
-    val version = "1.2.1"
+    val version = "1.2.2"
     val micrometerCore = "io.micrometer" % "micrometer-core" % version
     val micrometerPrometheus = "io.micrometer" % "micrometer-registry-prometheus" % version
     val micrometerStatsd = "io.micrometer" % "micrometer-registry-statsd" % version
@@ -137,7 +137,7 @@ object Dependencies {
     val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
 
     def betterFiles(useLatest: Boolean) = "com.github.pathikrit" %% "better-files" % (if(useLatest) { "3.8.0" } else { "3.7.1" })
-    val chimney = "io.scalaland" %% "chimney" % "0.3.2"
+    val chimney = "io.scalaland" %% "chimney" % "0.3.3"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"
     val commonsCodec = "commons-codec" % "commons-codec" % "1.13"
