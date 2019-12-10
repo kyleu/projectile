@@ -6,6 +6,7 @@ mutation BottomRowUpdate {
       id
       topId
       t
+      dt
     }
   }
 }

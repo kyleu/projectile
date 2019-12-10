@@ -39,9 +39,7 @@ class FormService(id: String) extends Entrypoint("form") {
     }
     t match {
       case "boolean" => // noop
-      case "timestamp" =>
-        FieldDefault.onDefault(t, name + "-date", formEl, checkbox)
-        FieldDefault.onDefault(t, name + "-time", formEl, checkbox)
+      case "timestamp" => FieldDefault.onDatetimeDefault(t, name, formEl, checkbox)
       case _ => FieldDefault.onDefault(t, name, formEl, checkbox)
     }
     name -> t

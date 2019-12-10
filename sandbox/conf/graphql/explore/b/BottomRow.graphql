@@ -18,6 +18,7 @@ query BottomRow {
       id
       topId
       t
+      dt
     }
     durationMs
     occurred

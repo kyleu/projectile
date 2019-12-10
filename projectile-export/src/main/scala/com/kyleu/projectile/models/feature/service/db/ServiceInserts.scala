@@ -9,7 +9,6 @@ import com.kyleu.projectile.models.output.CommonImportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
 
 object ServiceInserts {
-
   def insertsFor(config: ExportConfiguration, model: ExportModel, queriesFilename: String, file: ScalaFile) = {
     val editCheck = if (model.features(ModelFeature.Auth)) { """checkPerm(creds, "edit") """ } else { "" }
     file.add("// Mutations")
@@ -20,9 +19,12 @@ object ServiceInserts {
     file.add(s"""def insertBatch(creds: Credentials, models: Seq[${model.className}], $conn)(implicit trace: TraceData) = $editCheck{""", 1)
     file.add(s"""traceF("insertBatch")(td => if (models.isEmpty) {""")
     file.add(s"  Future.successful(0)")
-    file.add(s"} else {")
-    file.add(s"  db.executeF($queriesFilename.insertBatch(models), conn)(td)")
-    file.add("})")
+    file.add(s"} else {", 1)
+    file.add(s"Future.sequence(models.grouped(100).zipWithIndex.map { batch =>", 1)
+    file.add(s"""log.info(s"Processing batch [$${batch._2}]...")""")
+    file.add(s"db.executeF($queriesFilename.insertBatch(batch._1), conn)(td)")
+    file.add(s"}).map(_.sum)", -1)
+    file.add("})", -1)
     file.add("}", -1)
 
     file.add(s"""def create(creds: Credentials, fields: Seq[DataField], $conn)(implicit trace: TraceData) = $editCheck{""", 1)

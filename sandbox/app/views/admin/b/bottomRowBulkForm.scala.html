@@ -35,6 +35,7 @@
             call = controllers.admin.t.routes.TopRowController.autocomplete(), acType = ("topRow", "Top"), icon = models.template.Icons.topRow, inputType = "text"
           )
           @com.kyleu.projectile.views.html.components.form.textField(selected = request.queryString.isDefinedAt("t"), key = "t", title = "T", value = request.queryString.get("t").flatMap(_.headOption).orElse(None), nullable = true)
+          @com.kyleu.projectile.views.html.components.form.localDateTimeField(selected = request.queryString.isDefinedAt("dt"), key = "dt", title = "Dt", value = request.queryString.get("dt").flatMap(_.headOption).map(s => com.kyleu.projectile.util.DateUtils.fromIsoString(s)).orElse(None), nullable = true)
         </tbody>
       </table>
       <br />

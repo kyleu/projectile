@@ -6,6 +6,7 @@ mutation BottomRowRemove {
       id
       topId
       t
+      dt
     }
   }
 }

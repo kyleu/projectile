@@ -4,13 +4,13 @@
   <div style="width: 50%; float: left;">
     <div class="input-field">
       <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.date</i>
-      <input id="input-@{key}-date" data-original="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" class="datepicker @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" autocomplete="off" type="text" name="@{key}-date" value="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
+      <input id="input-@{key}-date" data-original="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" class="datepicker@if(nullable) { nullable} @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" autocomplete="off" type="text" name="@{key}-date" value="@value.map(_.toLocalDate).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
     </div>
   </div>
   <div style="width: 50%; float: right;">
     <div class="input-field">
       <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.time</i>
-      <input id="input-@{key}-time" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" data-original="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" type="text" name="@{key}-time" value="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
+      <input id="input-@{key}-time" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)@if(nullable) { nullable}" data-original="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" type="text" name="@{key}-time" value="@value.map(_.toLocalTime).getOrElse(com.kyleu.projectile.util.NullUtils.str)" />
     </div>
   </div>
 }

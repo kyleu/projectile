@@ -58,4 +58,58 @@ object FieldDefault {
       checkbox.prop("checked", originalValue != input.value().toString)
     })
   }
+
+  def onDatetimeDefault(t: String, name: String, formEl: JQuery, checkbox: JQuery) = {
+    val dateInput = $(s"#input-$name-date", formEl)
+    if (dateInput.length != 1) {
+      throw new IllegalStateException(s"Found [${dateInput.length}] $t date input elements with id [input-$name]")
+    }
+
+    val timeInput = $(s"#input-$name-date", formEl)
+    if (timeInput.length != 1) {
+      throw new IllegalStateException(s"Found [${timeInput.length}] $t time input elements with id [input-$name]")
+    }
+
+    if (dateInput.hasClass("nullable")) {
+      val nullable = $(s"#nullable-$name", formEl)
+      if (nullable.length != 1) {
+        throw new IllegalStateException(s"Found [${nullable.length}] $t nullable elements with id [nullable-$name]")
+      }
+      var lastDateVal: Option[String] = None
+      var lastTimeVal: Option[String] = None
+      nullable.click { _: JQueryEventObject =>
+        lastDateVal match {
+          case Some(v) =>
+            lastDateVal = None
+            dateInput.value(v)
+          case None =>
+            lastDateVal = Some(dateInput.value().toString)
+            dateInput.value("∅")
+        }
+        lastTimeVal match {
+          case Some(v) =>
+            lastTimeVal = None
+            timeInput.value(v)
+          case None =>
+            lastTimeVal = Some(timeInput.value().toString)
+            timeInput.value("∅")
+        }
+        checkbox.prop("checked", true)
+      }
+    }
+    val originalTimeValue = timeInput.value().toString
+    timeInput.keyup((_: JQueryEventObject) => {
+      checkbox.prop("checked", originalTimeValue != timeInput.value().toString)
+    })
+    timeInput.on("change", (_: JQueryEventObject) => {
+      checkbox.prop("checked", originalTimeValue != timeInput.value().toString)
+    })
+    val originalDateValue = dateInput.value().toString
+    dateInput.keyup((_: JQueryEventObject) => {
+      checkbox.prop("checked", originalDateValue != dateInput.value().toString)
+    })
+    dateInput.on("change", (_: JQueryEventObject) => {
+      checkbox.prop("checked", originalDateValue != dateInput.value().toString)
+    })
+  }
 }

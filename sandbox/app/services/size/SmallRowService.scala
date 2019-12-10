@@ -112,7 +112,10 @@ class SmallRowService @javax.inject.Inject() (val db: JdbcDatabase, override val
     traceF("insertBatch")(td => if (models.isEmpty) {
       Future.successful(0)
     } else {
-      db.executeF(SmallRowQueries.insertBatch(models), conn)(td)
+      Future.sequence(models.grouped(100).zipWithIndex.map { batch =>
+        log.info(s"Processing batch [${batch._2}]...")
+        db.executeF(SmallRowQueries.insertBatch(batch._1), conn)(td)
+      }).map(_.sum)
     })
   }
   def create(creds: Credentials, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {

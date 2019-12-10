@@ -77,7 +77,7 @@ object LibraryProjects {
       import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
       val jQuery = "be.doeraene" %%% "scalajs-jquery" % "0.9.5"
       val javaTime = "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC3"
-      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.7"
+      val jsDom = "org.scala-js" %%% "scalajs-dom" % "0.9.8"
       Seq(jQuery, javaTime, jsDom)
     }
   ).dependsOn(`projectile-lib-core-js`).enablePlugins(org.scalajs.sbtplugin.ScalaJSPlugin, webscalajs.ScalaJSWeb)

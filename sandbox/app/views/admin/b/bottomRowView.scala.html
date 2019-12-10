@@ -40,6 +40,10 @@
           <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.t.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">T</div></th>
           <td>@model.t.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
         </tr>
+        <tr>
+          <th style="vertical-align: top;"><div title="Click to copy" onclick="ClipboardUtils.writeClipboard('@model.dt.map(_.toString.replaceAllLiterally("'", ""))')" style="cursor: pointer;">Dt</div></th>
+          <td>@model.dt.getOrElse(com.kyleu.projectile.util.NullUtils.str)</td>
+        </tr>
       </tbody>
     </table>
   }

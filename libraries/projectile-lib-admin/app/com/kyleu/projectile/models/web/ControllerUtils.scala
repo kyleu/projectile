@@ -44,8 +44,9 @@ object ControllerUtils {
       case Some(x) if x == NullUtils.str => None
       case Some(x) => Some(x)
       case None => form.get(f + "-date") match {
-        case Some(d) => Some(s"$d${form.get(f + "-time").map(" " + _).getOrElse("")}")
-        case None => Some(form.getOrElse(f + "-time", throw new IllegalStateException(s"Cannot find value for included field [$f]")))
+        case Some(d) if d == "∅" => None
+        case Some(d) => Some(s"$d${form.get(f + "-time").filter(_ != "∅").map(" " + _).getOrElse(" 00:00:00")}")
+        case None => Some(form.getOrElse(f + "-time", throw new IllegalStateException(s"Cannot find value for included field [$f]"))).filter(_ != "∅")
       }
     }
     fields.map(f => DataField(f, valFor(f).map { x =>

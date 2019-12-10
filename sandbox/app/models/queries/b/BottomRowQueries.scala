@@ -14,7 +14,8 @@ object BottomRowQueries extends BaseQueries[BottomRow]("bottomRow", "bottom") {
   override val fields = Seq(
     DatabaseField(title = "Id", prop = "id", col = "id", typ = UuidType),
     DatabaseField(title = "Top Id", prop = "topId", col = "top_id", typ = UuidType),
-    DatabaseField(title = "T", prop = "t", col = "t", typ = StringType)
+    DatabaseField(title = "T", prop = "t", col = "t", typ = StringType),
+    DatabaseField(title = "Dt", prop = "dt", col = "dt", typ = TimestampType)
   )
   override val pkColumns = Seq("id")
   override protected val searchColumns = Seq("id", "top_id", "t")
@@ -66,6 +67,7 @@ object BottomRowQueries extends BaseQueries[BottomRow]("bottomRow", "bottom") {
   override def fromRow(row: Row) = BottomRow(
     id = UuidType(row, "id"),
     topId = UuidType(row, "top_id"),
-    t = StringType.opt(row, "t")
+    t = StringType.opt(row, "t"),
+    dt = TimestampType.opt(row, "dt")
   )
 }

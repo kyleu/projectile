@@ -2,15 +2,15 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false)
 
 // Web
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.3")
-addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.4.2")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.4")
+addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.5.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.4")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.13")
 
 // Scala.js
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.1")
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.29")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.31")
 addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.9-0.6" exclude("org.scala-js", "sbt-scalajs"))
 
 // Source Control

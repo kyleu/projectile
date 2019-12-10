@@ -3,10 +3,10 @@
 )@com.kyleu.projectile.views.html.components.form.fieldWrapper(selected = selected, key = key, title = title, nullable = nullable, isPk = isPk, dataType = "timestamp") {
   <div class="input-field" style="width: 50%; float: left; margin-left: 0;">
     <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.date</i>
-    <input id="input-@{key}-date" class="datepicker @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" autocomplete="off" type="text" name="@{key}-date" value="@value.map(_.toLocalDate).getOrElse("")" />
+    <input id="input-@{key}-date" class="datepicker@if(nullable) { nullable} @com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" autocomplete="off" type="text" name="@{key}-date" value="@value.map(_.toLocalDate).getOrElse("")" />
   </div>
   <div class="input-field" style="width: 50%; float: right; margin-left: 0;">
     <i class="material-icons prefix">@com.kyleu.projectile.models.web.InternalIcons.time</i>
-    <input id="input-@{key}-time" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)" type="text" name="@{key}-time" value="@value.map(_.toLocalTime).getOrElse("")" />
+    <input id="input-@{key}-time" class="@com.kyleu.projectile.util.FormUtils.inputClass(isPk, isFk)@if(nullable) { nullable}" type="text" name="@{key}-time" value="@value.map(_.toLocalTime).getOrElse("")" />
   </div>
 }
