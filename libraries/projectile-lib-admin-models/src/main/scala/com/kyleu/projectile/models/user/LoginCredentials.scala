@@ -7,4 +7,4 @@ object LoginCredentials {
   implicit val jsonDecoder: Decoder[LoginCredentials] = deriveDecoder
 }
 
-case class LoginCredentials(providerID: String, providerKey: String)
+final case class LoginCredentials(providerID: String, providerKey: String)

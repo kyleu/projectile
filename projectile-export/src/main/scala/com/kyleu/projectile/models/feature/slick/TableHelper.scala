@@ -83,7 +83,9 @@ object TableHelper {
 
       fk._2 match {
         case solo :: Nil => proc(solo, target.className)
-        case multiple => multiple.foreach(m => proc(m, s"${target.className}By${ExportHelper.toClassName(m.references.head.source)}"))
+        case multiple => multiple.foreach { m =>
+          proc(m, s"${target.className}By${ExportHelper.toClassName(m.references.headOption.getOrElse(throw new IllegalStateException()).source)}")
+        }
       }
     }
     file.add("}", -1)

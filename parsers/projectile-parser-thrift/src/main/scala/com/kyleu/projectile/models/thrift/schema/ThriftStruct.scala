@@ -10,7 +10,7 @@ object ThriftStruct {
   }
 }
 
-case class ThriftStruct(
+final case class ThriftStruct(
     key: String,
     pkg: Seq[String],
     fields: Seq[ThriftStructField]

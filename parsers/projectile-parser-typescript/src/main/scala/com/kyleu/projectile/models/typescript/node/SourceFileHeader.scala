@@ -7,7 +7,7 @@ object SourceFileHeader {
   implicit val jsonDecoder: Decoder[SourceFileHeader] = deriveDecoder
 }
 
-case class SourceFileHeader(
+final case class SourceFileHeader(
     projectName: Option[String] = None,
     projectUrl: Option[String] = None,
     authors: Seq[String] = Nil,

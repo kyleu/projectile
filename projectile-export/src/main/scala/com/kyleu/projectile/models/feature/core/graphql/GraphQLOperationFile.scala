@@ -30,7 +30,7 @@ object GraphQLOperationFile {
     file.add("object Data {", 1)
     file.add("implicit val jsonDecoder: Decoder[Data] = deriveDecoder")
     file.add("}", -1)
-    file.add("case class Data(", 2)
+    file.add("final case class Data(", 2)
     GraphQLObjectHelper.addFields(config, file, model.fields)
     file.add(")", -2)
     file.add()

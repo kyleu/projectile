@@ -68,9 +68,9 @@ object AuditRecordQueries extends BaseQueries[AuditRecord]("auditRecordRow", "au
   )
   final case class GetByTSeq(tSeq: Seq[String]) extends ColSeqQuery(column = "t", values = tSeq)
 
-  final case class CountByRelation(t: String, pk: List[String]) extends Count("relation", s"where t = ? and pk = ?::text[]", Seq(t, pk))
+  final case class CountByRelation(t: String, pk: List[String]) extends Count("relation", s"where t = ? and pk = ?::text[]", Seq[Any](t, pk))
   final case class GetByRelation(t: String, pk: List[String]) extends SeqQuery(Some("t = ? and pk = ?::character varying[]")) {
-    override val values = Seq(t, pk)
+    override val values = Seq[Any](t, pk)
   }
 
   def insert(model: AuditRecord) = new Insert(model)

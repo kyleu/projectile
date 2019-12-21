@@ -7,4 +7,4 @@ object ObjectMethod {
   implicit val jsonDecoder: Decoder[ObjectMethod] = deriveDecoder
 }
 
-case class ObjectMethod(k: String, params: Seq[ObjectField], ret: FieldType)
+final case class ObjectMethod(k: String, params: Seq[ObjectField], ret: FieldType)

@@ -22,7 +22,7 @@ object GraphQLObjectHelper {
 
   def addObjectFields(config: ExportConfiguration, file: ScalaFile, fields: Seq[ObjectField]) = {
     fields.foreach { f =>
-      FieldTypeImports.imports(config, f.t).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
+      FieldTypeImports.imports(config, f.t).foreach(pkg => file.addImport(pkg.dropRight(1), pkg.lastOption.getOrElse(throw new IllegalStateException())))
       val t = if (f.req) {
         FieldTypeAsScala.asScala(config, f.t)
       } else {

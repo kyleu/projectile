@@ -30,9 +30,11 @@ object MemberHelper {
   }
 }
 
-case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: ScalaFile) {
+final case class MemberHelper(ctx: ParseContext, config: ExportConfiguration, file: ScalaFile) {
   def addImports(types: FieldType*) = types.foreach { t =>
-    FieldTypeImports.imports(config = config, t = t, isJs = true).foreach(pkg => file.addImport(p = pkg.init, c = pkg.last))
+    FieldTypeImports.imports(config = config, t = t, isJs = true).foreach { pkg =>
+      file.addImport(p = pkg.dropRight(1), c = pkg.lastOption.getOrElse(throw new IllegalStateException()))
+    }
   }
 
   def forType(typ: FieldTypeRequired) = {

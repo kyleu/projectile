@@ -22,7 +22,7 @@ trait Queryable extends Logging {
       case None => stmt.setNull(index, Types.NULL)
       case v => stmt.setObject(index, Conversions.convert(v.asInstanceOf[AnyRef]))
     }
-    prepare(stmt, values.tail, index + 1)
+    prepare(stmt, values.drop(1), index + 1)
   }
 
   def valForJdbc(conn: Connection, v: Any): Any = v match {

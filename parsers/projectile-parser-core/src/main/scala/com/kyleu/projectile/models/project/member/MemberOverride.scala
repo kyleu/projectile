@@ -7,7 +7,7 @@ object MemberOverride {
   implicit val jsonDecoder: Decoder[MemberOverride] = deriveDecoder
 }
 
-case class MemberOverride(
+final case class MemberOverride(
     k: String,
     v: String
 )

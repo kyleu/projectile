@@ -50,6 +50,6 @@ object ReportService {
   }
 
   private[this] def trimCacheIfNeeded() = while (resultCache.size > resultCacheSize) {
-    resultCache = resultCache - getCachedResults.last.id
+    resultCache = resultCache - getCachedResults.lastOption.getOrElse(throw new IllegalStateException()).id
   }
 }

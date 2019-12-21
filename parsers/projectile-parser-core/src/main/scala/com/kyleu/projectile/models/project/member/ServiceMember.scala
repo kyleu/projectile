@@ -8,7 +8,7 @@ object ServiceMember {
   implicit val jsonDecoder: Decoder[ServiceMember] = deriveDecoder
 }
 
-case class ServiceMember(
+final case class ServiceMember(
     key: String,
     pkg: Seq[String] = Nil,
 

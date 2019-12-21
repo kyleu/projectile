@@ -4,7 +4,7 @@ import java.io.OutputStream
 
 import scala.sys.process._
 
-case class Proc(cmd: Seq[String], out: String => Unit, err: String => Unit, log: String => Unit) {
+final case class Proc(cmd: Seq[String], out: String => Unit, err: String => Unit, log: String => Unit) {
   private[this] var inputStream: Option[OutputStream] = None
 
   def run() = {

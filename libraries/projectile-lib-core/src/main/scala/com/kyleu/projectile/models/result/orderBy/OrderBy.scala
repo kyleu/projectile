@@ -13,7 +13,7 @@ object OrderBy {
     case object Ascending extends Direction("asc", true)
     case object Descending extends Direction("desc", false)
 
-    def fromBoolAsc(b: Boolean) = if (b) { Ascending } else { Descending }
+    def fromBoolAsc(b: Boolean): Direction = if (b) { Ascending } else { Descending }
     override val values = findValues
   }
 
@@ -24,7 +24,7 @@ object OrderBy {
   }
 }
 
-case class OrderBy(
+final case class OrderBy(
     col: String = "?",
     dir: OrderBy.Direction = OrderBy.Direction.Ascending
 )

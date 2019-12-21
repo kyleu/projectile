@@ -9,7 +9,7 @@ object ThriftInput {
   def fromSummary(is: InputSummary, files: Seq[String]) = ThriftInput(key = is.key, description = is.description, files = files)
 }
 
-case class ThriftInput(
+final case class ThriftInput(
     override val key: String = "new",
     override val description: String = "...",
     files: Seq[String] = Nil,

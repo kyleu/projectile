@@ -7,6 +7,6 @@ object ObjectField {
   implicit val jsonDecoder: Decoder[ObjectField] = deriveDecoder
 }
 
-case class ObjectField(k: String, t: FieldType, req: Boolean = false, readonly: Boolean = false) {
+final case class ObjectField(k: String, t: FieldType, req: Boolean = false, readonly: Boolean = false) {
   override def toString = s"$k${if (req) { "" } else { "?" }}: $t"
 }

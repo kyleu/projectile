@@ -8,7 +8,7 @@ object JsDocNode {
     implicit val jsonDecoder: Decoder[Parameter] = deriveDecoder
   }
 
-  case class Parameter(name: String, comment: Seq[String])
+  final case class Parameter(name: String, comment: Seq[String])
 
   implicit val jsonEncoder: Encoder[JsDocNode] = deriveEncoder
   implicit val jsonDecoder: Decoder[JsDocNode] = deriveDecoder
@@ -16,7 +16,7 @@ object JsDocNode {
   val empty = JsDocNode()
 }
 
-case class JsDocNode(
+final case class JsDocNode(
     comment: Seq[String] = Nil,
     params: Seq[JsDocNode.Parameter] = Nil,
     ret: Seq[String] = Nil,

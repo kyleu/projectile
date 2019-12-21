@@ -5,7 +5,7 @@ import com.kyleu.projectile.models.output.file.{OutputFile, ScalaFile}
 import com.kyleu.projectile.models.output.{CommonImportHelper, OutputPackage}
 import com.kyleu.projectile.models.project.Project
 
-case class ExportConfiguration(
+final case class ExportConfiguration(
     project: Project,
     enums: Seq[ExportEnum] = Nil,
     models: Seq[ExportModel] = Nil,
@@ -68,7 +68,7 @@ case class ExportConfiguration(
 
   def addCommonImport(f: ScalaFile, s: String, additional: String*) = CommonImportHelper.get(this, s) match {
     case (p, c) if additional.isEmpty => f.addImport(p, c)
-    case (p, c) => f.addImport((p :+ c) ++ additional.init, additional.lastOption.getOrElse(throw new IllegalStateException()))
+    case (p, c) => f.addImport((p :+ c) ++ additional.dropRight(1), additional.lastOption.getOrElse(throw new IllegalStateException()))
   }
 
   def merge(o: ExportConfiguration) = ExportConfiguration(

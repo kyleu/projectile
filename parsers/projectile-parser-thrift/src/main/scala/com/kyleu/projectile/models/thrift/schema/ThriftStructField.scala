@@ -16,4 +16,4 @@ object ThriftStructField {
   }
 }
 
-case class ThriftStructField(key: String, name: String, required: Boolean, t: ThriftType, value: Option[ConstValue])
+final case class ThriftStructField(key: String, name: String, required: Boolean, t: ThriftType, value: Option[ConstValue])

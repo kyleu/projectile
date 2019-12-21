@@ -12,7 +12,7 @@ object GraphQLInput {
   }
 }
 
-case class GraphQLInput(
+final case class GraphQLInput(
     override val key: String = "new",
     override val description: String = "...",
     schema: Seq[SchemaQueries] = Nil,

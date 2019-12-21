@@ -7,7 +7,7 @@ object InputSummary {
   implicit val jsonDecoder: Decoder[InputSummary] = deriveDecoder
 }
 
-case class InputSummary(
+final case class InputSummary(
     template: InputTemplate = InputTemplate.Postgres,
     key: String = "new",
     description: String = "..."

@@ -11,7 +11,7 @@ object ExportUnion {
   implicit val jsonDecoder: Decoder[ExportUnion] = deriveDecoder
 }
 
-case class ExportUnion(
+final case class ExportUnion(
     inputType: InputType.Union,
     pkg: List[String] = Nil,
     key: String,

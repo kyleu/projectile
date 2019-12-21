@@ -24,8 +24,8 @@ object ThriftParseService {
   private[this] def clean[T](seq: Seq[(String, T)]) = {
     val grouped = seq.groupBy(_._1)
     grouped.values.map { group =>
-      val ret = group.head
-      val conflicts = group.tail.collect { case i if i._2.toString != ret._2.toString => i }
+      val ret = group.headOption.getOrElse(throw new IllegalStateException())
+      val conflicts = group.drop(1).collect { case i if i._2.toString != ret._2.toString => i }
       val errs = conflicts.map { c => s" - ${c._2}" }
       if (errs.nonEmpty) {
         val msgs = s"Conflicts found for object [${ret._1}]" +: s" - ${ret._2}" +: errs

@@ -16,7 +16,7 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     override val name = s"$key.insert.nopk"
     override val sql = insertSqlNoPk
     override val values: Seq[Any] = toDataSeqNoPk(model)
-    override def flatMap(row: Row) = Some(row.toSeq.flatten)
+    override def flatMap(row: Row) = Some(row.toSeq.flatMap(_.toList))
   }
 
   protected class InsertBatch(models: Seq[T]) extends Statement {
@@ -44,7 +44,7 @@ trait MutationQueries[T <: Product] { this: BaseQueries[T] =>
     private[this] val cols = noPk.map(f => ResultFieldHelper.sqlForField("insert", f.k, fields))
     override val sql = s"""insert into ${quote(tableName)} (${cols.mkString(", ")}) values (${cols.map(_ => "?").mkString(", ")}) $returnClause"""
     override val values = noPk.map(f => ResultFieldHelper.valueForField("create", f.k, f.v, fields))
-    override def flatMap(row: Row) = Some(row.toSeq.flatten)
+    override def flatMap(row: Row) = Some(row.toSeq.flatMap(_.toList))
   }
 
   protected class UpdateFields(pks: Seq[Any], dataFields: Seq[DataField]) extends Statement {

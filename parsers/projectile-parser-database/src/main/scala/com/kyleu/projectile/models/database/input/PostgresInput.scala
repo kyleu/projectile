@@ -17,7 +17,7 @@ object PostgresInput {
   def typeName(s: String) = if (s.endsWith("Type")) { s } else { s + "Type" }
 }
 
-case class PostgresInput(
+final case class PostgresInput(
     override val key: String = "new",
     override val description: String = "...",
     host: String = "localhost",

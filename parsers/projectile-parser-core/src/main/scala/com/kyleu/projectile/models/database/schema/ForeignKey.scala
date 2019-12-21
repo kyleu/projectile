@@ -7,7 +7,7 @@ object ForeignKey {
   implicit val jsonDecoder: Decoder[ForeignKey] = deriveDecoder
 }
 
-case class ForeignKey(
+final case class ForeignKey(
     name: String,
     propertyName: String,
     targetTable: String,

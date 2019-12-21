@@ -10,7 +10,7 @@ object CodegenResult {
   implicit val jsonDecoder: Decoder[CodegenResult] = deriveDecoder
 }
 
-case class CodegenResult(
+final case class CodegenResult(
     updates: Seq[String],
     exportResults: Seq[(ProjectOutput, Seq[OutputWriteResult])],
     auditResults: Option[AuditResult],

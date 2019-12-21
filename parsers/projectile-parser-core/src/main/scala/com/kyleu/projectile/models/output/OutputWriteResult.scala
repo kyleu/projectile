@@ -7,4 +7,4 @@ object OutputWriteResult {
   implicit val jsonDecoder: Decoder[OutputWriteResult] = deriveDecoder
 }
 
-case class OutputWriteResult(file: String, path: String, logs: Seq[String])
+final case class OutputWriteResult(file: String, path: String, logs: Seq[String])

@@ -13,7 +13,7 @@ object ExportEnum {
     implicit val jsonDecoder: Decoder[EnumVal] = deriveDecoder
   }
 
-  case class EnumVal(k: String, i: Option[Int] = None, s: Option[String] = None) {
+  final case class EnumVal(k: String, i: Option[Int] = None, s: Option[String] = None) {
     def className = ExportHelper.toClassName(k)
     def v = s.orElse(i.map(_.toString)).getOrElse(k)
     override val toString = k + i.map(":" + _).getOrElse("") + s.map(":" + _).getOrElse("")
@@ -23,7 +23,7 @@ object ExportEnum {
   implicit val jsonDecoder: Decoder[ExportEnum] = deriveDecoder
 }
 
-case class ExportEnum(
+final case class ExportEnum(
     inputType: InputType.Enum,
     pkg: List[String],
     key: String,

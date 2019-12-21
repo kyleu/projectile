@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.output.file
 import com.kyleu.projectile.models.output.{ExportHelper, OutputPath}
 import com.kyleu.projectile.models.template.Icons
 
-case class ScalaFile(
+final case class ScalaFile(
     override val path: OutputPath, override val dir: Seq[String], override val key: String
 ) extends OutputFile(path = path, dir = dir, key = key, filename = key + ".scala") {
 

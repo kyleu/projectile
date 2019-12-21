@@ -94,7 +94,7 @@ abstract class AuthController(name: String) extends com.kyleu.projectile.control
       if (r.queryString.get("errors").exists(_.headOption.contains("reset"))) {
         reload(td)
       } else {
-        r.queryString.get("fix").map(_.head) match {
+        r.queryString.get("fix").map(_.headOption.getOrElse(throw new IllegalStateException())) match {
           case Some(fix) =>
             StartupErrorFixes.fix(app, fix)
             reload(td)

@@ -7,7 +7,7 @@ import com.kyleu.projectile.models.typescript.node.{NodeContext, NodeHelper, Syn
 import com.kyleu.projectile.models.typescript.output.OutputHelper
 
 object MemberParser {
-  case class Result(globalScoped: Boolean, members: Seq[TypeScriptNode], extraClasses: Seq[(String, FieldType.ObjectType, Boolean, NodeContext)])
+  final case class Result(globalScoped: Boolean, members: Seq[TypeScriptNode], extraClasses: Seq[(String, FieldType.ObjectType, Boolean, NodeContext)])
 
   def filter(tsns: Seq[TypeScriptNode]): Result = {
     val members = tsns.filterNot(_.ctx.isPrivate)
@@ -75,7 +75,7 @@ object MemberParser {
     }
 
     typs.flatMap(t => FieldTypeImports.imports(config = config, t = t, isJs = true)).foreach { pkg =>
-      file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException()))
+      file.addImport(pkg.dropRight(1), pkg.lastOption.getOrElse(throw new IllegalStateException()))
     }
   }
 }

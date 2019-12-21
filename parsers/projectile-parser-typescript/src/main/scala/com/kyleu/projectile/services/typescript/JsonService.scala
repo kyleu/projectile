@@ -14,7 +14,7 @@ object JsonService {
 
   def nodeContext(json: Json, params: ServiceParams) = {
     val obj = json match {
-      case _ if json.isObject => json.asObject.get
+      case _ if json.isObject => json.asObject.getOrElse(throw new IllegalStateException())
       case _ => throw new IllegalStateException(s"Json [${json.noSpaces}] is not an object")
     }
     def ext[T: Decoder](k: String) = extractObj[T](obj = obj, key = k)
@@ -45,7 +45,7 @@ object JsonService {
 
   def parseJson(json: Json, params: ServiceParams): (Seq[String], TypeScriptNode) = {
     val obj = json match {
-      case _ if json.isObject => json.asObject.get
+      case _ if json.isObject => json.asObject.getOrElse(throw new IllegalStateException())
       case _ => throw new IllegalStateException(s"Json [${json.noSpaces}] is not an object")
     }
     val ctx = nodeContext(json, params)

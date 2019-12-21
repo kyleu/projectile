@@ -9,7 +9,7 @@ object OutputFile {
     implicit val jsonDecoder: Decoder[Rendered] = deriveDecoder
   }
 
-  case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String, markers: Map[String, Seq[(String, String)]]) {
+  final case class Rendered(path: OutputPath, dir: Seq[String], key: String, filename: String, content: String, icon: String, markers: Map[String, Seq[(String, String)]]) {
     val filePath = s"${dir.map(_ + "/").mkString}$filename"
     override val toString = s"$path:$filePath"
   }

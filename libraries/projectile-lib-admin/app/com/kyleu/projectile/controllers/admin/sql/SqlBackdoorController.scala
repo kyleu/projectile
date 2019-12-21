@@ -32,8 +32,8 @@ class SqlBackdoorController @javax.inject.Inject() (
   }
 
   def sqlPost = withSession("post", ("tools", "SQL", "prompt")) { implicit request => implicit td =>
-    val form = request.body.asFormUrlEncoded.get
-    val sql = form("sql").head
+    val form = request.body.asFormUrlEncoded.getOrElse(throw new IllegalStateException())
+    val sql = form("sql").headOption.getOrElse(throw new IllegalStateException())
     val format = form.get("format").flatMap(_.headOption).getOrElse("html")
     val commit = form.get("commit").flatMap(_.headOption).contains("true")
     log.error(s"CUSTOM SQL EXECUTION: User [${request.identity.id}/${request.identity.username}] ran sql [$sql]")
@@ -64,9 +64,9 @@ class SqlBackdoorController @javax.inject.Inject() (
           val cfg = app.cfg(u = Some(request.identity), "system", "tools", "sql")
           Ok(com.kyleu.projectile.views.html.admin.sql.sqlForm(cfg, sql, Some(results)))
         case "csv" if results.size > 1 => throw new IllegalStateException("Cannot export CSV for multiple statements")
-        case "csv" => Ok(SqlExecutionHelper.csvFor(
-          records = results.head._4, fields = results.head._3
-        ).toString).withHeaders(CONTENT_DISPOSITION -> "attachment; filename=fuchu-export.csv")
+        case "csv" =>
+          val r = results.headOption.getOrElse(throw new IllegalStateException())
+          Ok(SqlExecutionHelper.csvFor(records = r._4, fields = r._3).toString).withHeaders(CONTENT_DISPOSITION -> "attachment; filename=fuchu-export.csv")
         case _ => throw new IllegalStateException("Can only handle \"html\" and \"csv\" formats")
       }
       if ((!commit) || (!PermissionService.check(request.identity.role, "tools", "SQL", "commit")._1)) { conn.rollback() }

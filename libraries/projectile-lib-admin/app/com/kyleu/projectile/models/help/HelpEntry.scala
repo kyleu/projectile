@@ -7,7 +7,7 @@ object HelpEntry {
   implicit val jsonDecoder: Decoder[HelpEntry] = deriveDecoder
 }
 
-case class HelpEntry(
+final case class HelpEntry(
     path: List[String],
     title: String,
     description: Option[String],

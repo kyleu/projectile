@@ -39,7 +39,7 @@ object InjectSearch extends FeatureLogic.Inject(path = OutputPath.ServerSource, 
   private[this] def searchStringFieldsForOriginal(config: ExportConfiguration, markers: Map[String, Seq[(String, String)]], s: Seq[String]) = {
     val stringModels = markers.getOrElse("string-search", Nil).map { s =>
       InjectSearchParams(config, config.getModel(s._1, "search strings"), s._2)
-    }.groupBy(_.model.key).map(x => x._2.head).toSeq.sortBy(x => x.model.className)
+    }.groupBy(_.model.key).map(x => x._2.headOption.getOrElse(throw new IllegalStateException())).toSeq.sortBy(x => x.model.className)
     val newLines = if (stringModels.isEmpty) { Nil } else {
       "Seq(" +: stringModels.map { m =>
         val comma = if (stringModels.lastOption.contains(m)) { "" } else { "," }

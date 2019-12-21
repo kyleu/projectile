@@ -8,7 +8,7 @@ object EnumMember {
   implicit val jsonDecoder: Decoder[EnumMember] = deriveDecoder
 }
 
-case class EnumMember(
+final case class EnumMember(
     key: String,
     pkg: Seq[String] = Nil,
     features: Set[EnumFeature] = Set.empty,

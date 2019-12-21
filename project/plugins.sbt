@@ -2,7 +2,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation")
 evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false)
 
 // Web
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.4")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.5.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.4.4")
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.2")
@@ -29,6 +29,7 @@ addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0")
 // Code Quality
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0") // scalastyle
 addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.1") // scalariformFormat
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.4.3")
 
 // Documentation
 addSbtPlugin("com.lightbend.paradox" % "sbt-paradox" % "0.6.4")

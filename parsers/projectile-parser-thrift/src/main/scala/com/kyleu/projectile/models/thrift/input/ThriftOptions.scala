@@ -7,4 +7,4 @@ object ThriftOptions {
   implicit val jsonDecoder: Decoder[ThriftOptions] = deriveDecoder
 }
 
-case class ThriftOptions(files: Seq[String] = Nil)
+final case class ThriftOptions(files: Seq[String] = Nil)

@@ -7,6 +7,6 @@ object IndexColumn {
   implicit val jsonDecoder: Decoder[IndexColumn] = deriveDecoder
 }
 
-case class IndexColumn(name: String, ascending: Boolean) {
+final case class IndexColumn(name: String, ascending: Boolean) {
   override def toString = name + (if (ascending) { "" } else { " (desc)" })
 }

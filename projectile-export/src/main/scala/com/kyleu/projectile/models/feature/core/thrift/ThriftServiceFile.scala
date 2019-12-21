@@ -35,7 +35,7 @@ object ThriftServiceFile {
     file.add("}", -1)
     file.add(s"""def from(svc: $thriftReqRepServicePerEndpointCanonicalName) = new ${svc.className}(svc)""")
     val tds = s"traceDataSerializer: Option[TraceData => Map[String, String]]"
-    file.add(s"""case class Options(tracingService: Option[TracingService], $tds, thriftSpanNamePrefix: String)""")
+    file.add(s"""final case class Options(tracingService: Option[TracingService], $tds, thriftSpanNamePrefix: String)""")
     file.add(s"""object Options {""", 1)
     file.add(s"""val default = Options(tracingService = None, traceDataSerializer = None, thriftSpanNamePrefix = s"thrift.${svc.className}.")""")
     file.add("}", -1)
@@ -57,7 +57,7 @@ object ThriftServiceFile {
       val argsMapped = method.args.map(arg => ThriftMethodHelper.getArgCall(arg)).mkString(", ")
       val argImps = method.args.flatMap(a => FieldTypeImports.imports(config, a.t, isThrift = true))
       val retImps = FieldTypeImports.imports(config, method.returnType, isThrift = true)
-      (argImps ++ retImps).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
+      (argImps ++ retImps).foreach(pkg => file.addImport(pkg.dropRight(1), pkg.lastOption.getOrElse(throw new IllegalStateException())))
 
       file.add(s"val _request = Request($thriftServiceCanonicalName.${method.name.capitalize}.Args($argsMapped))")
       file.add(s"val _requestWithHeaders = injectTraceDataToHeaders(options)(headers, td).foldLeft(_request)((acc, kv) => acc.setHeader(kv._1, kv._2))")

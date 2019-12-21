@@ -7,7 +7,7 @@ object NavMenu {
   implicit val jsonDecoder: Decoder[NavMenu] = deriveDecoder
 }
 
-case class NavMenu(
+final case class NavMenu(
     key: String,
     title: String,
     description: Option[String] = None,

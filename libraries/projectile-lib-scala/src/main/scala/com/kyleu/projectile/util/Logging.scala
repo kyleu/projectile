@@ -34,11 +34,11 @@ object Logging {
     def error(message: => String)(implicit td: TraceData) = logCtx(logger.error(message))
     def error(message: => String, e: => Throwable)(implicit td: TraceData) = logCtx(logger.error(message, e))
 
-    def errorThenThrow(message: => String)(implicit td: TraceData) = {
+    def errorThenThrow(message: => String)(implicit td: TraceData): Nothing = {
       error(message)
       throw new IllegalStateException(message)
     }
-    def errorThenThrow(message: => String, e: => Throwable)(implicit td: TraceData) = {
+    def errorThenThrow(message: => String, e: => Throwable)(implicit td: TraceData): Nothing = {
       error(message, e)
       throw e
     }

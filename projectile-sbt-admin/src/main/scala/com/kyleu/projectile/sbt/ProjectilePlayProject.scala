@@ -56,7 +56,7 @@ object ProjectilePlayProject extends AutoPlugin {
       case PathList("javax", "activation", _@ _*) => MergeStrategy.first
       case PathList("javax", "servlet", _@ _*) => MergeStrategy.first
       case PathList("javax", "xml", _@ _*) => MergeStrategy.first
-      case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
+      case PathList(p @ _*) if p.lastOption.exists(_.contains("about_jetty-")) => MergeStrategy.discard
       case PathList("org", "apache", "commons", "logging", _@ _*) => MergeStrategy.first
       case PathList("org", "w3c", "dom", _@ _*) => MergeStrategy.first
       case PathList("org", "w3c", "dom", "events", _@ _*) => MergeStrategy.first

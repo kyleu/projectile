@@ -10,7 +10,7 @@ object ThriftIntEnum {
   }
 }
 
-case class ThriftIntEnum(
+final case class ThriftIntEnum(
     key: String,
     pkg: Seq[String],
     values: Seq[(String, Int)]

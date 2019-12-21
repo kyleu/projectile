@@ -5,7 +5,7 @@ import com.kyleu.projectile.util.NumberUtils
 object TextSectionHelper {
   private[this] val sectionKey = "Projectile export section ["
 
-  case class Params(commentProvider: CommentProvider, key: String) {
+  final case class Params(commentProvider: CommentProvider, key: String) {
     val start = commentProvider.comment(s"Start $key")
     val end = commentProvider.comment(s"End $key")
   }
@@ -44,7 +44,7 @@ object TextSectionHelper {
 
   private[this] def getSections(p: Params, lines: IndexedSeq[String]) = {
     lines.foldLeft(List.empty[(String, Seq[String])]) { (l, r) =>
-      val prior = if (l.isEmpty) { Nil } else { l.init }
+      val prior = if (l.isEmpty) { Nil } else { l.dropRight(1) }
       val current = l match {
         case Nil => "_prelude" -> Nil
         case _ => l.lastOption.getOrElse(throw new IllegalStateException())

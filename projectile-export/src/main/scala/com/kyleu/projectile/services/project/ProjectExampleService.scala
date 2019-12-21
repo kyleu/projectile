@@ -6,7 +6,7 @@ import com.kyleu.projectile.util.Version
 import org.apache.commons.io.IOUtils
 
 object ProjectExampleService {
-  case class ExampleProject(key: String, name: String, description: String)
+  final case class ExampleProject(key: String, name: String, description: String)
 
   val dir = "com/kyleu/projectile/example"
 

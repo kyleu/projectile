@@ -20,7 +20,7 @@ object DoobieFile {
     config.addCommonImport(file, "DoobieQueryService", "Imports", "_")
 
     model.fields.foreach { field =>
-      DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException())))
+      DoobieImports.imports(config, field.t).foreach(pkg => file.addImport(pkg.dropRight(1), pkg.lastOption.getOrElse(throw new IllegalStateException())))
     }
 
     file.add(s"""object ${model.className}Doobie extends DoobieQueries[${model.className}]("${model.key}") {""", 1)

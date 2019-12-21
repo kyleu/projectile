@@ -45,7 +45,9 @@ class SandboxController @javax.inject.Inject() (
   }
 
   def upload(key: String) = withSession(key, ("tools", "Sandbox", "run")) { implicit request => implicit td =>
-    val f = request.body.asMultipartFormData.map(_.file("arg").getOrElse(throw new IllegalStateException("No file available in [arg]"))).get.ref
+    val f = request.body.asMultipartFormData.map(_.file("arg").getOrElse {
+      throw new IllegalStateException("No file available in [arg]")
+    }).getOrElse(throw new IllegalStateException()).ref
     val s = Source.fromFile(f.path.toFile)
     val arg = Some(s.getLines.mkString("\n"))
     s.close()

@@ -9,7 +9,7 @@ object Filter {
   def strEq(k: String, v: String) = Filter(k = k, v = Seq(v))
 }
 
-case class Filter(
+final case class Filter(
     k: String = "?",
     o: FilterOp = FilterOp.Equal,
     v: Seq[String] = Nil

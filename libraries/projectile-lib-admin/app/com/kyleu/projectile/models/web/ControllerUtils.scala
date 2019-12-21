@@ -72,7 +72,12 @@ object ControllerUtils {
   lazy val nestableScripts = Seq(Assets.path("vendor/nestable/nestable.js"))
   lazy val nestableStylesheets = Seq(Assets.path("vendor/nestable/nestable.css"))
   lazy val nestableIncludeSnippet = snippet(nestableScripts, nestableStylesheets)
-  def nestableData(json: Json) = json.asArray.get.map(_.asObject.get.apply("id").get.asString.get)
+  def nestableData(json: Json) = {
+    json.asArray.getOrElse(throw new IllegalStateException()).map { x =>
+      val y = x.asObject.getOrElse(throw new IllegalStateException()).apply("id")
+      y.getOrElse(throw new IllegalStateException()).asString.getOrElse(throw new IllegalStateException())
+    }
+  }
 
   private[this] def snippet(scripts: Seq[String], stylesheets: Seq[String]) = {
     Html((scripts.map(s => s"""<script src="$s"></script>""") ++ stylesheets.map { s =>

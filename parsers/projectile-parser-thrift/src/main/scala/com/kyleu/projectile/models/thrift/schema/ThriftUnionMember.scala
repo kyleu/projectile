@@ -11,7 +11,7 @@ object ThriftUnionMember {
   }
 }
 
-case class ThriftUnionMember(key: String, t: ThriftType) {
+final case class ThriftUnionMember(key: String, t: ThriftType) {
   def asField(input: ThriftInput) = {
     val typ = ThriftFileHelper.columnTypeFor(t, input)
     ExportField(key = key, propertyName = ExportHelper.toIdentifier(key), title = ExportHelper.toClassName(key), description = None, t = typ)

@@ -2,7 +2,7 @@ package com.kyleu.projectile.services.typescript
 
 import better.files.File
 
-case class ServiceParams(
+final case class ServiceParams(
     root: File,
     cache: File,
     path: String,

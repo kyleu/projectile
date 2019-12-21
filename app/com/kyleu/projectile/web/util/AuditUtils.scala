@@ -5,8 +5,8 @@ import better.files.File
 object AuditUtils {
   private[this] val root = File("./tmp/audit")
 
-  case class FileResult(fn: String, l: Int, o: String, n: String)
-  case class AuditResult(k: String, f: String, r: Seq[FileResult])
+  final case class FileResult(fn: String, l: Int, o: String, n: String)
+  final case class AuditResult(k: String, f: String, r: Seq[FileResult])
 
   def saveAudit(k: String, f: String): Unit = {
     val auditResults = root / k / f

@@ -25,7 +25,7 @@ object TypeScriptController {
     (trimmed, ctx, ast)
   }
 
-  case class Result(key: String, res: Seq[String], errors: Seq[TypeScriptNode.Error], unknowns: Seq[TypeScriptNode.Unknown])
+  final case class Result(key: String, res: Seq[String], errors: Seq[TypeScriptNode.Error], unknowns: Seq[TypeScriptNode.Unknown])
 }
 
 @javax.inject.Singleton

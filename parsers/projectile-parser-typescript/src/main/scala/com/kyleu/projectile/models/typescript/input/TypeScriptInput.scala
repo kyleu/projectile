@@ -15,7 +15,7 @@ object TypeScriptInput {
   def stripName(n: String) = n.stripSuffix(".ts").stripSuffix(".d")
 }
 
-case class TypeScriptInput(
+final case class TypeScriptInput(
     override val key: String = "new",
     override val description: String = "...",
     files: Seq[String] = Nil,

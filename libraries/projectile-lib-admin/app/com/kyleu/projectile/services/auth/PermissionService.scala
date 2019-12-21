@@ -5,8 +5,8 @@ import com.kyleu.projectile.util.Logging
 import com.kyleu.projectile.util.tracing.TraceData
 
 object PermissionService extends Logging {
-  case class ModelInfo(key: String, title: String, icon: Option[String], actions: Seq[String])
-  case class PackageInfo(key: String, title: String, icon: String, models: Seq[ModelInfo] = Nil)
+  final case class ModelInfo(key: String, title: String, icon: Option[String], actions: Seq[String])
+  final case class PackageInfo(key: String, title: String, icon: String, models: Seq[ModelInfo] = Nil)
 
   def initialize(perms: Seq[Permission])(implicit td: TraceData) = {
     registerRole("admin", "Administrator", "A superuser that can do anything")
@@ -59,7 +59,7 @@ object PermissionService extends Logging {
   private[this] def getPackage(key: String, model: String) = packageInfo.getOrElseUpdate(key, PackageInfo(key, key, key))
 }
 
-case class PermissionService(perms: Set[Permission]) {
+final case class PermissionService(perms: Set[Permission]) {
   val keys = perms.map(p => (p.pkg, p.model, p.action) -> p).toMap
   def check(pkg: String, model: String, action: String) = {
     keys.get((Some(pkg), Some(model), Some(action))).map(_ -> "action").orElse(keys.get((Some(pkg), Some(model), None)).map(_ -> "model")).orElse {

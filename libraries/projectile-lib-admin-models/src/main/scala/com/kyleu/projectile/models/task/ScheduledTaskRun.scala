@@ -32,7 +32,7 @@ object ScheduledTaskRun {
   def empty(
     id: UUID = UUID.randomUUID,
     task: String = "",
-    arguments: List[String] = List.empty,
+    arguments: List[String] = Nil,
     status: String = "",
     output: Json = Json.obj(),
     started: LocalDateTime = DateUtils.now,

@@ -7,7 +7,7 @@ object EnumType {
   implicit val jsonDecoder: Decoder[EnumType] = deriveDecoder
 }
 
-case class EnumType(
+final case class EnumType(
     key: String,
     values: Seq[String]
 )

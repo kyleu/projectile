@@ -28,7 +28,7 @@ object MarkdownFile {
   }
 }
 
-case class MarkdownFile(override val path: OutputPath, override val dir: Seq[String], override val key: String) extends OutputFile(
+final case class MarkdownFile(override val path: OutputPath, override val dir: Seq[String], override val key: String) extends OutputFile(
   path = path, dir = dir, key = key, filename = key + ".md"
 ) {
   override def prefix = "<!-- Generated File -->\n"

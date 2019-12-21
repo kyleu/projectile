@@ -7,7 +7,7 @@ object View {
   implicit val jsonDecoder: Decoder[View] = deriveDecoder
 }
 
-case class View(
+final case class View(
     name: String,
     catalog: Option[String],
     schema: Option[String],

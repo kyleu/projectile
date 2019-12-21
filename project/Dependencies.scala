@@ -20,7 +20,7 @@ object Dependencies {
 
     object Slick {
       val version = "3.3.2"
-      val pgVersion = "0.18.0"
+      val pgVersion = "0.18.1"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
@@ -32,7 +32,7 @@ object Dependencies {
     }
 
     object Doobie {
-      val version = "0.8.6"
+      val version = "0.8.7"
 
       val core = "org.tpolecat" %% "doobie-core" % version
       val hikariCp = "org.tpolecat" %% "doobie-hikari" % version
@@ -49,13 +49,13 @@ object Dependencies {
   }
 
   object Serialization {
-    val version = "0.12.2"
+    val version = "0.12.3"
 
     val enumeratumCirceVersion = "1.5.22"
     val booPickleVersion = "1.3.1"
 
-    val projects = Seq("circe-core", "circe-generic", "circe-generic-extras", "circe-parser")
-    val jackson = "io.circe" %% "circe-jackson29" % "0.12.0"
+    val projects = Seq("circe-core", "circe-generic", "circe-parser")
+    val jackson = "io.circe" %% "circe-jackson29" % "0.12.1"
   }
 
   object Thrift {
@@ -67,7 +67,7 @@ object Dependencies {
     }
 
     object Finagle {
-      val version = "19.10.0"
+      val version = "19.12.0"
 
       val core = "com.twitter" %% "finagle-core" % version
       val thrift = "com.twitter" %% "finagle-thrift" % version
@@ -87,11 +87,11 @@ object Dependencies {
   }
 
   object Tracing {
-    val version = "1.0.0"
+    val version = "1.1.0"
     val jaegerCore = "io.jaegertracing" % "jaeger-core" % version
     val jaegerThrift = "io.jaegertracing" % "jaeger-thrift" % version
     val jaegerMetrics = "io.jaegertracing" % "jaeger-micrometer" % version
-    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.31.2"
+    val datadogTracing = "com.datadoghq" % "dd-trace-ot" % "0.39.0"
   }
 
   object Authentication {

@@ -11,7 +11,7 @@ object ExportService {
   implicit val jsonDecoder: Decoder[ExportService] = deriveDecoder
 }
 
-case class ExportService(
+final case class ExportService(
     inputType: InputType.Service,
     pkg: List[String] = Nil,
     key: String,

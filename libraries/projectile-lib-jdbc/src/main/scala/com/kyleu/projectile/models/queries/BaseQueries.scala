@@ -8,7 +8,9 @@ abstract class BaseQueries[T <: Product](val key: String, val tableName: String)
 
   protected def pkColumns = Seq.empty[String]
   protected def searchColumns: Seq[String] = Nil
-  protected def stringSearchColumns = searchColumns.flatMap(c => fields.find(_.col == c).filter(_.typ == DatabaseFieldType.StringType)).map(_.col)
+  protected def stringSearchColumns = searchColumns.flatMap { c =>
+    fields.find(_.col == c).toList.filter(_.typ == DatabaseFieldType.StringType)
+  }.map(_.col)
   protected def fromRow(row: Row): T
 
   protected def cleanData(any: Any, field: DatabaseField) = any match {
@@ -40,13 +42,15 @@ abstract class BaseQueries[T <: Product](val key: String, val tableName: String)
     |set ${updateColumns.map(x => s"${quote(x)} = ?").mkString(", ")}${additionalUpdates.map(x => s", $x").getOrElse("")}
     |where $pkWhereClause""".stripMargin.trim
 
-  protected def getSql(whereClause: Option[String] = None, orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None) = Seq(
-    Some(s"select $quotedColumns from ${quote(tableName)}"),
-    whereClause.map(x => s" where $x"),
-    orderBy.map(x => s" order by $x"),
-    limit.filter(_ != 0).map(x => s" limit $x"),
-    offset.map(x => s" offset $x")
-  ).flatten.mkString(" ")
+  protected def getSql(whereClause: Option[String] = None, orderBy: Option[String] = None, limit: Option[Int] = None, offset: Option[Int] = None) = {
+    Seq(
+      Some(s"select $quotedColumns from ${quote(tableName)}").toList,
+      whereClause.map(x => s" where $x").toList,
+      orderBy.map(x => s" order by $x").toList,
+      limit.filter(_ != 0).map(x => s" limit $x").toList,
+      offset.map(x => s" offset $x").toList
+    ).flatten.mkString(" ")
+  }
 
   protected class GetByPrimaryKey(override val values: Seq[Any]) extends FlatSingleRowQuery[T] {
     override val name = s"$key.get.by.primary.key"

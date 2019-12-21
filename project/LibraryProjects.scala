@@ -19,7 +19,8 @@ object LibraryProjects {
       val enumeratum = "com.beachape" %%% "enumeratum-circe" % Serialization.enumeratumCirceVersion
       val boopickle = "io.suzaku" %%% "boopickle" % Serialization.booPickleVersion
       val collectionCompat = "org.scala-lang.modules" %%% "scala-collection-compat" % "2.1.2"
-      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ enumeratum :+ boopickle :+ collectionCompat
+      val circeGenericExtras = "io.circe" %%% "circe-generic-extras" % "0.12.2"
+      Serialization.projects.map(c => "io.circe" %%% c % Serialization.version) :+ circeGenericExtras :+ enumeratum :+ boopickle :+ collectionCompat
     },
     (sourceGenerators in Compile) += ProjectVersion.writeConfig(
       projectId = Common.projectId, projectName = Common.projectName, projectPort = Common.projectPort, pkg = "com.kyleu.projectile.util"

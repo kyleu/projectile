@@ -20,7 +20,7 @@ object ProjectileReport {
     )
   }
 
-  case class Argument(key: String, t: String, optional: Boolean = false)
+  final case class Argument(key: String, t: String, optional: Boolean = false)
 
   implicit val jsonEncoder: Encoder[ProjectileReport] = (r: ProjectileReport) => io.circe.Json.obj(
     ("key", r.key.asJson),

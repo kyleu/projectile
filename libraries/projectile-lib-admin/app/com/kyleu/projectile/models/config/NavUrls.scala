@@ -1,6 +1,6 @@
 package com.kyleu.projectile.models.config
 
-case class NavUrls(
+final case class NavUrls(
     home: String = "/",
 
     search: String = "/admin/search",

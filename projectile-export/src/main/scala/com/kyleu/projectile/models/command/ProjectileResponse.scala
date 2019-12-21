@@ -11,23 +11,23 @@ import com.kyleu.projectile.models.project.{Project, ProjectOutput, ProjectSumma
 sealed trait ProjectileResponse extends EnumEntry
 
 object ProjectileResponse extends Enum[ProjectileResponse] {
-  case class OK(msg: String) extends ProjectileResponse
-  case class Error(msg: String) extends ProjectileResponse
-  case class JsonResponse(json: Json) extends ProjectileResponse
+  final case class OK(msg: String) extends ProjectileResponse
+  final case class Error(msg: String) extends ProjectileResponse
+  final case class JsonResponse(json: Json) extends ProjectileResponse
 
-  case class InputList(inputs: Seq[InputSummary]) extends ProjectileResponse
-  case class InputDetail(input: Input) extends ProjectileResponse
-  case class InputResults(results: Seq[InputDetail]) extends ProjectileResponse
+  final case class InputList(inputs: Seq[InputSummary]) extends ProjectileResponse
+  final case class InputDetail(input: Input) extends ProjectileResponse
+  final case class InputResults(results: Seq[InputDetail]) extends ProjectileResponse
 
-  case class ProjectList(projects: Seq[ProjectSummary]) extends ProjectileResponse
-  case class ProjectDetail(project: Project) extends ProjectileResponse
+  final case class ProjectList(projects: Seq[ProjectSummary]) extends ProjectileResponse
+  final case class ProjectDetail(project: Project) extends ProjectileResponse
 
-  case class ProjectUpdateResult(key: String, log: Seq[String]) extends ProjectileResponse
-  case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputWriteResult]) extends ProjectileResponse
-  case class ProjectAuditResult(result: AuditResult, fixed: Seq[String]) extends ProjectileResponse
-  case class ProjectCodegenResult(result: CodegenResult) extends ProjectileResponse
+  final case class ProjectUpdateResult(key: String, log: Seq[String]) extends ProjectileResponse
+  final case class ProjectExportResult(output: ProjectOutput, files: Seq[OutputWriteResult]) extends ProjectileResponse
+  final case class ProjectAuditResult(result: AuditResult, fixed: Seq[String]) extends ProjectileResponse
+  final case class ProjectCodegenResult(result: CodegenResult) extends ProjectileResponse
 
-  case class CompositeResult(results: Seq[ProjectileResponse]) extends ProjectileResponse
+  final case class CompositeResult(results: Seq[ProjectileResponse]) extends ProjectileResponse
 
   override val values = findValues
 }

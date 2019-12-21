@@ -16,7 +16,7 @@ object ExportModel {
   implicit val jsonDecoder: Decoder[ExportModel] = deriveDecoder
 }
 
-case class ExportModel(
+final case class ExportModel(
     inputType: InputType.Model,
     key: String,
     pkg: List[String] = Nil,
@@ -77,7 +77,7 @@ case class ExportModel(
   val firstPackage = pkg.headOption.getOrElse("system")
   val propertyPlural = ExportHelper.toIdentifier(plural)
 
-  val pkFields = pkColumns.flatMap(c => getFieldOpt(c.name))
+  val pkFields = pkColumns.flatMap(c => getFieldOpt(c.name).toList)
   val nonPkFields = fields.filterNot(pkFields.contains)
   def pkType(config: ExportConfiguration) = pkFields match {
     case Nil => "???"
@@ -91,8 +91,8 @@ case class ExportModel(
   val summaryFields = fields.filter(_.inSummary).filterNot(x => pkFields.exists(_.key == x.key))
 
   def searchCols = (foreignKeys.flatMap(_.references match {
-    case ref :: Nil => Some(ref.source)
-    case _ => None
+    case ref :: Nil => List(ref.source)
+    case _ => Nil
   }) ++ localSearchFields.map(_.key)).distinct.sorted
 
   private[this] def p(cfg: ExportConfiguration) = if (provided) { cfg.systemPackage } else { cfg.applicationPackage }

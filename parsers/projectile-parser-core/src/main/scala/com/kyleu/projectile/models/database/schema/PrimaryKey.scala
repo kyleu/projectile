@@ -7,7 +7,7 @@ object PrimaryKey {
   implicit val jsonDecoder: Decoder[PrimaryKey] = deriveDecoder
 }
 
-case class PrimaryKey(
+final case class PrimaryKey(
     name: String,
     columns: List[String]
 )

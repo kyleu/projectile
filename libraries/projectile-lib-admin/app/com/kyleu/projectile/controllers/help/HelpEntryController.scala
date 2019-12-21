@@ -18,7 +18,7 @@ class HelpEntryController @javax.inject.Inject() (override val app: Application)
   def root() = entry("")
 
   def entry(path: String) = withoutSession("testbed") { implicit request => implicit td =>
-    val segments = path.split("/").map(_.trim).filter(_.nonEmpty).toList
+    val segments = path.split('/').map(_.trim).filter(_.nonEmpty).toList
     val cfg = app.cfg(request.identity, (if (segments.isEmpty) { Seq("system", "help") } else { segments }): _*)
     val root = NavMenu(key = "_root", title = cfg.projectName, description = Some("The home page of this application"), url = Some("/"), children = cfg.menu)
     def calc(s: Seq[String]): (Seq[String], NavMenu) = s.foldLeft((Seq.empty[String], root)) { (l, r) =>

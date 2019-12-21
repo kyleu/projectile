@@ -5,7 +5,7 @@ import java.util.UUID
 import com.kyleu.projectile.models.menu.NavMenu
 import com.kyleu.projectile.models.notification.Notification
 
-case class UiConfig(
+final case class UiConfig(
     projectName: String,
     projectVersion: String,
     userId: Option[UUID] = None,

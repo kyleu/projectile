@@ -11,67 +11,67 @@ object TypeScriptNode {
   implicit val jsonEncoder: Encoder[TypeScriptNode] = deriveEncoder
   implicit val jsonDecoder: Decoder[TypeScriptNode] = deriveDecoder
 
-  case class SourceFile(
+  final case class SourceFile(
       path: String, header: SourceFileHeader, statements: Seq[TypeScriptNode], ctx: NodeContext
   ) extends TypeScriptNode(children = statements)
-  case class SourceFileReference(path: String, ctx: NodeContext) extends TypeScriptNode
-  case class TypesReference(ref: String, ctx: NodeContext) extends TypeScriptNode
+  final case class SourceFileReference(path: String, ctx: NodeContext) extends TypeScriptNode
+  final case class TypesReference(ref: String, ctx: NodeContext) extends TypeScriptNode
 
-  case class ImportDecl(ctx: NodeContext) extends TypeScriptNode
+  final case class ImportDecl(ctx: NodeContext) extends TypeScriptNode
 
-  case class ExportDecl(ctx: NodeContext) extends TypeScriptNode
+  final case class ExportDecl(ctx: NodeContext) extends TypeScriptNode
 
-  case class ExportNamespaceDecl(name: String, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name))
+  final case class ExportNamespaceDecl(name: String, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name))
 
-  case class InterfaceDecl(
+  final case class InterfaceDecl(
       name: String, tParams: Seq[TypeParam], members: Seq[TypeScriptNode], ctx: NodeContext
   ) extends TypeScriptNode(nameOpt = Some(name), types = tParams.flatMap(_.types), children = members)
 
-  case class ModuleDecl(name: String, statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), children = statements)
+  final case class ModuleDecl(name: String, statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), children = statements)
 
-  case class ClassDecl(
+  final case class ClassDecl(
       name: String, tParams: Seq[TypeParam], members: Seq[TypeScriptNode], ctx: NodeContext
   ) extends TypeScriptNode(nameOpt = Some(name), types = tParams.flatMap(_.types), children = members)
 
-  case class MethodDecl(
+  final case class MethodDecl(
       name: String, tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext
   ) extends TypeScriptNode(nameOpt = Some(name), types = tParams.flatMap(_.types) ++ params.map(_.t) :+ ret.t)
 
-  case class VariableDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ.t))
+  final case class VariableDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ.t))
 
-  case class TypeAliasDecl(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ))
+  final case class TypeAliasDecl(name: String, typ: FieldType, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ))
 
-  case class PropertyDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ.t))
+  final case class PropertyDecl(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ.t))
 
-  case class EnumDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), children = members)
+  final case class EnumDecl(name: String, members: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), children = members)
 
-  case class ModuleBlock(statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(children = statements)
+  final case class ModuleBlock(statements: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(children = statements)
 
-  case class Constructor(params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode(types = params.map(_.t))
+  final case class Constructor(params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode(types = params.map(_.t))
 
-  case class ConstructSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode(types = params.map(_.t) :+ typ)
+  final case class ConstructSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode(types = params.map(_.t) :+ typ)
 
-  case class IndexSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode(types = params.map(_.t) :+ typ)
+  final case class IndexSig(typ: FieldType, params: Seq[ObjectField], ctx: NodeContext) extends TypeScriptNode(types = params.map(_.t) :+ typ)
 
-  case class PropertySig(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ.t))
+  final case class PropertySig(name: String, typ: FieldTypeRequired, ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name), types = Seq(typ.t))
 
-  case class CallSig(
+  final case class CallSig(
       tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext
   ) extends TypeScriptNode(types = tParams.flatMap(_.types) ++ params.map(_.t) :+ ret.t)
 
-  case class MethodSig(
+  final case class MethodSig(
       name: String, tParams: Seq[TypeParam], params: Seq[ObjectField], ret: FieldTypeRequired, ctx: NodeContext
   ) extends TypeScriptNode(nameOpt = Some(name), types = tParams.flatMap(_.types) ++ params.map(_.t) :+ ret.t)
 
-  case class ExportAssignment(exp: String, ctx: NodeContext) extends TypeScriptNode
+  final case class ExportAssignment(exp: String, ctx: NodeContext) extends TypeScriptNode
 
-  case class VariableStmt(declarations: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(children = declarations)
+  final case class VariableStmt(declarations: Seq[TypeScriptNode], ctx: NodeContext) extends TypeScriptNode(children = declarations)
 
-  case class EnumMember(name: String, initial: Option[Json], ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name))
+  final case class EnumMember(name: String, initial: Option[Json], ctx: NodeContext) extends TypeScriptNode(nameOpt = Some(name))
 
-  case class LogMessage(msg: String, json: Json = io.circe.Json.Null, ctx: NodeContext = NodeContext.empty) extends TypeScriptNode
+  final case class LogMessage(msg: String, json: Json = io.circe.Json.Null, ctx: NodeContext = NodeContext.empty) extends TypeScriptNode
 
-  case class Unknown(kind: String, json: Json = io.circe.Json.Null, ctx: NodeContext = NodeContext.empty) extends TypeScriptNode
+  final case class Unknown(kind: String, json: Json = io.circe.Json.Null, ctx: NodeContext = NodeContext.empty) extends TypeScriptNode
 
-  case class Error(kind: String, cls: String, msg: String, json: Json = io.circe.Json.Null, ctx: NodeContext = NodeContext.empty) extends TypeScriptNode
+  final case class Error(kind: String, cls: String, msg: String, json: Json = io.circe.Json.Null, ctx: NodeContext = NodeContext.empty) extends TypeScriptNode
 }

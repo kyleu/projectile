@@ -11,7 +11,7 @@ object ProjectSummary {
   def newObj(key: String) = ProjectSummary(key = key, features = Set(ProjectFeature.Core, ProjectFeature.DataModel))
 }
 
-case class ProjectSummary(
+final case class ProjectSummary(
     key: String,
     template: ProjectTemplate = ProjectTemplate.Custom,
     input: String = "invalid",

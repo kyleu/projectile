@@ -41,7 +41,7 @@ object ExportField {
   }
 }
 
-case class ExportField(
+final case class ExportField(
     key: String,
     propertyName: String,
     title: String,
@@ -68,7 +68,7 @@ case class ExportField(
 
   def addImport(config: ExportConfiguration, file: ScalaFile, pkg: Seq[String], isJs: Boolean = false, isThrift: Boolean = false) = {
     FieldTypeImports.imports(config = config, t = t, isJs = isJs, isThrift = isThrift).foreach { pkg =>
-      file.addImport(pkg.init, pkg.lastOption.getOrElse(throw new IllegalStateException()))
+      file.addImport(pkg.dropRight(1), pkg.lastOption.getOrElse(throw new IllegalStateException()))
     }
   }
 

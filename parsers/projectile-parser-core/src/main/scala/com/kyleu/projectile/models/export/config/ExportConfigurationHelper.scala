@@ -37,7 +37,7 @@ object ExportConfigurationHelper {
             Seq(ExportModelReference(
               name = name, propertyName = propertyName, srcTable = refTable.name, srcCol = ref.source, tgt = ref.target, notNull = tgtCol.notNull
             ))
-          case _ => None // multiple refs
+          case _ => Nil // multiple refs
         }
       }
     }

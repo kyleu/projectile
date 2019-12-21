@@ -54,7 +54,7 @@ object GraphQLObjectWriter {
       file.add(s"} yield $cn($props)", -1)
 
       file.add("}", -1)
-      file.add(s"case class $cn(", 2)
+      file.add(s"final case class $cn(", 2)
       GraphQLObjectHelper.addObjectFields(config, file, o._2.fields)
       file.add(")", -2)
       file.add()

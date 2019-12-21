@@ -10,7 +10,7 @@ object ThriftUnion {
   }
 }
 
-case class ThriftUnion(
+final case class ThriftUnion(
     key: String,
     pkg: Seq[String],
     types: Seq[ThriftUnionMember]

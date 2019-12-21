@@ -7,7 +7,7 @@ import better.files.Resource
 import scala.io.Source
 
 object AppVersions {
-  case class Version(on: LocalDate, v: (Int, Int, Int), title: String, desc: Option[String], features: Seq[(String, String, () => Option[String])])
+  final case class Version(on: LocalDate, v: (Int, Int, Int), title: String, desc: Option[String], features: Seq[(String, String, () => Option[String])])
 
   private[this] var versions = List.empty[Version]
   def getVersions = versions
@@ -43,7 +43,7 @@ object AppVersions {
     }
     val finished = sections.map {
       case h :: t =>
-        val (v, on, title) = h.split("/").map(_.trim).filter(_.nonEmpty).toList match {
+        val (v, on, title) = h.split('/').map(_.trim).filter(_.nonEmpty).toList match {
           case ver :: onStr :: title :: Nil => (ver.stripPrefix("#").trim(), onStr, title)
           case _ => throw new IllegalStateException(s"Cannot parse [$h] from [$path}]")
         }

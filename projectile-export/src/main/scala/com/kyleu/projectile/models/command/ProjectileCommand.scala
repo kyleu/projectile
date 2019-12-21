@@ -15,49 +15,49 @@ object ProjectileCommand extends Enum[ProjectileCommand] {
   case object Testbed extends ProjectileCommand
 
   // Server
-  case class ServerStart(port: Int = Version.projectPort) extends ProjectileCommand
+  final case class ServerStart(port: Int = Version.projectPort) extends ProjectileCommand
   case object ServerStop extends ProjectileCommand
 
   // Inputs
-  case class Inputs(key: Option[String]) extends ProjectileCommand
+  final case class Inputs(key: Option[String]) extends ProjectileCommand
 
-  case class InputRefresh(key: Option[String]) extends ProjectileCommand
+  final case class InputRefresh(key: Option[String]) extends ProjectileCommand
 
-  case class InputAdd(input: InputSummary) extends ProjectileCommand
-  case class InputRemove(key: String) extends ProjectileCommand
+  final case class InputAdd(input: InputSummary) extends ProjectileCommand
+  final case class InputRemove(key: String) extends ProjectileCommand
 
-  case class InputPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
-  case class InputThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
+  final case class InputPostgresOptions(key: String, conn: PostgresConnection) extends ProjectileCommand
+  final case class InputThriftOptions(key: String, opts: ThriftOptions) extends ProjectileCommand
 
   // Audit
-  case class Audit(fix: Boolean) extends ProjectileCommand
+  final case class Audit(fix: Boolean) extends ProjectileCommand
 
   // Examples
-  case class CreateExample(key: String, template: String, force: Boolean) extends ProjectileCommand
+  final case class CreateExample(key: String, template: String, force: Boolean) extends ProjectileCommand
 
   // Projects
-  case class Projects(key: Option[String]) extends ProjectileCommand
+  final case class Projects(key: Option[String]) extends ProjectileCommand
 
-  case class ProjectUpdate(key: Option[String]) extends ProjectileCommand
-  case class ProjectExport(key: Option[String]) extends ProjectileCommand
+  final case class ProjectUpdate(key: Option[String]) extends ProjectileCommand
+  final case class ProjectExport(key: Option[String]) extends ProjectileCommand
 
-  case class Codegen(keys: Seq[String]) extends ProjectileCommand
+  final case class Codegen(keys: Seq[String]) extends ProjectileCommand
 
-  case class ProjectAdd(project: ProjectSummary) extends ProjectileCommand
-  case class ProjectSave(project: Project) extends ProjectileCommand
-  case class ProjectRemove(key: String) extends ProjectileCommand
+  final case class ProjectAdd(project: ProjectSummary) extends ProjectileCommand
+  final case class ProjectSave(project: Project) extends ProjectileCommand
+  final case class ProjectRemove(key: String) extends ProjectileCommand
 
-  case class SetFeature(project: String, feature: String) extends ProjectileCommand
-  case class SetPackage(project: String, item: String, pkg: String) extends ProjectileCommand
+  final case class SetFeature(project: String, feature: String) extends ProjectileCommand
+  final case class SetPackage(project: String, item: String, pkg: String) extends ProjectileCommand
 
-  case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
-  case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand
+  final case class SaveEnumMembers(project: String, members: Seq[EnumMember]) extends ProjectileCommand
+  final case class RemoveEnumMember(key: String, member: String) extends ProjectileCommand
 
-  case class SaveModelMembers(project: String, members: Seq[ModelMember]) extends ProjectileCommand
-  case class RemoveModelMember(key: String, member: String) extends ProjectileCommand
+  final case class SaveModelMembers(project: String, members: Seq[ModelMember]) extends ProjectileCommand
+  final case class RemoveModelMember(key: String, member: String) extends ProjectileCommand
 
-  case class SaveServiceMembers(project: String, members: Seq[ServiceMember]) extends ProjectileCommand
-  case class RemoveServiceMember(key: String, member: String) extends ProjectileCommand
+  final case class SaveServiceMembers(project: String, members: Seq[ServiceMember]) extends ProjectileCommand
+  final case class RemoveServiceMember(key: String, member: String) extends ProjectileCommand
 
   override val values = findValues
 }

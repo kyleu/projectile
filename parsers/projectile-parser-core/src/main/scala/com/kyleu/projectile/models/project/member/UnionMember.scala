@@ -7,7 +7,7 @@ object UnionMember {
   implicit val jsonDecoder: Decoder[UnionMember] = deriveDecoder
 }
 
-case class UnionMember(
+final case class UnionMember(
     key: String,
     pkg: Seq[String] = Nil,
     ignored: Set[String] = Set.empty,

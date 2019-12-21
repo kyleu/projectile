@@ -1,6 +1,9 @@
 import Dependencies._
 import com.typesafe.sbt.GitPlugin.autoImport.git
 import com.typesafe.sbt.gzip.Import._
+import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
+import com.typesafe.sbt.packager.docker.DockerPlugin
+import com.typesafe.sbt.packager.universal.UniversalPlugin
 import com.typesafe.sbt.web.Import._
 import com.typesafe.sbt.web.SbtWeb
 import play.routes.compiler.InjectedRoutesGenerator
@@ -43,7 +46,7 @@ object Server {
 
     // Source Control
     scmInfo := Some(ScmInfo(url("https://github.com/KyleU/projectile"), "git@github.com:KyleU/projectile.git")),
-    git.remoteRepo := scmInfo.value.get.connection,
+    git.remoteRepo := scmInfo.value.map(_.connection).getOrElse(throw new IllegalStateException("No SCM info available for project!")),
 
     // Fat-Jar Assembly
     test in assembly := {},
@@ -52,7 +55,7 @@ object Server {
       case "play/reference-overrides.conf" => MergeStrategy.concat
       case PathList("javax", "servlet", _ @ _*) => MergeStrategy.first
       case PathList("javax", "xml", _ @ _*) => MergeStrategy.first
-      case PathList(p @ _*) if p.last.contains("about_jetty-") => MergeStrategy.discard
+      case PathList(p @ _*) if p.lastOption.exists(_.contains("about_jetty-")) => MergeStrategy.discard
       case PathList("org", "apache", "commons", "logging", _ @ _*) => MergeStrategy.first
       case PathList("org", "w3c", "dom", _ @ _*) => MergeStrategy.first
       case PathList("org", "w3c", "dom", "events", _ @ _*) => MergeStrategy.first
@@ -78,7 +81,9 @@ object Server {
 
   lazy val `projectile-server` = {
     withProjects(
-      Project(id = Common.projectId, base = file(".")).enablePlugins(SbtWeb, PlayScala).disablePlugins(PlayFilters).settings(serverSettings: _*),
+      Project(id = Common.projectId, base = file(".")).enablePlugins(
+        SbtWeb, PlayScala, JavaAppPackaging && UniversalPlugin && DockerPlugin
+      ).disablePlugins(PlayFilters).settings(serverSettings: _*),
       ProjectileExport.`projectile-export`
     ).aggregate(ParserProjects.allReferences: _*).aggregate(LibraryProjects.allReferences: _*)
   }

@@ -9,7 +9,7 @@ object UserSettings {
   val empty = UserSettings()
 }
 
-case class UserSettings(
+final case class UserSettings(
     theme: String = "default",
 
     menuColor: Option[String] = Some("gradient-45deg-indigo-blue"),

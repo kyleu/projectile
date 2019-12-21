@@ -6,7 +6,7 @@ object SystemUserIdentity {
   def from(su: SystemUser) = SystemUserIdentity(su)
 }
 
-case class SystemUserIdentity(user: SystemUser) extends Identity {
+final case class SystemUserIdentity(user: SystemUser) extends Identity {
   def id = user.id
   def username = user.username
   def email = user.email

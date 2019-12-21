@@ -2,7 +2,7 @@ package com.kyleu.projectile.models.typescript.output.parse
 
 import better.files.File
 
-case class ParseContext(
+final case class ParseContext(
     key: String,
     pkg: List[String],
     root: File

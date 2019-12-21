@@ -7,6 +7,6 @@ object FieldTypeRequired {
   implicit val jsonDecoder: Decoder[FieldTypeRequired] = deriveDecoder
 }
 
-case class FieldTypeRequired(t: FieldType, r: Boolean = false) {
+final case class FieldTypeRequired(t: FieldType, r: Boolean = false) {
   override def toString = if (r) { t.toString } else { s"Option[$t]" }
 }

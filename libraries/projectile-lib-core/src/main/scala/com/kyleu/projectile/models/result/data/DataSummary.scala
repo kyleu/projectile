@@ -12,6 +12,6 @@ object DataSummary {
   implicit val jsonDecoder: Decoder[DataSummary] = deriveDecoder
 }
 
-case class DataSummary(model: String, pk: String, entries: Map[String, Option[String]]) {
+final case class DataSummary(model: String, pk: String, entries: Map[String, Option[String]]) {
   lazy val title = entries.map(e => s"${e._1}: ${e._2.getOrElse("∅")}").mkString(", ")
 }

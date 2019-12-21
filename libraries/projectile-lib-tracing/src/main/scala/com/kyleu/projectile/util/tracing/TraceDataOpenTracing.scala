@@ -16,7 +16,7 @@ final case class TraceDataOpenTracing(span: Span) extends TraceData {
 
   override val (traceId, spanId) = span.context match {
     case j: JaegerSpanContext => j.getTraceId -> j.getSpanId.toString
-    case d: DDSpanContext => d.getTraceId -> d.getSpanId
+    case d: DDSpanContext => d.getTraceId.toString -> d.getSpanId.toString
     case _: NoopSpanContext => "noop" -> "noop"
     case x => x.getClass.getSimpleName -> "none"
   }

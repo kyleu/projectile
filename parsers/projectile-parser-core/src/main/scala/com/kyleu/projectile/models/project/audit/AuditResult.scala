@@ -7,7 +7,7 @@ object AuditResult {
   implicit val jsonDecoder: Decoder[AuditResult] = deriveDecoder
 }
 
-case class AuditResult(
+final case class AuditResult(
     configMessages: Seq[AuditMessage],
     outputMessages: Seq[AuditMessage]
 )

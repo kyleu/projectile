@@ -39,20 +39,20 @@ object FieldType extends StringEnum[FieldType] {
   case object XmlType extends FieldType("xml")
   case object UuidType extends FieldType("uuid")
 
-  case class EnumType(key: String) extends FieldType("enum")
-  case class StructType(key: String, tParams: Seq[TypeParam] = Nil) extends FieldType("struct")
-  case class ObjectType(key: String, fields: Seq[ObjectField], tParams: Seq[TypeParam] = Nil) extends FieldType("object")
+  final case class EnumType(key: String) extends FieldType("enum")
+  final case class StructType(key: String, tParams: Seq[TypeParam] = Nil) extends FieldType("struct")
+  final case class ObjectType(key: String, fields: Seq[ObjectField], tParams: Seq[TypeParam] = Nil) extends FieldType("object")
 
-  case class IntersectionType(key: String, types: Seq[FieldType]) extends FieldType("intersection")
-  case class UnionType(key: String, types: Seq[FieldType]) extends FieldType("union")
+  final case class IntersectionType(key: String, types: Seq[FieldType]) extends FieldType("intersection")
+  final case class UnionType(key: String, types: Seq[FieldType]) extends FieldType("union")
 
-  case class MethodType(params: Seq[ObjectField], ret: FieldType) extends FieldType("method")
+  final case class MethodType(params: Seq[ObjectField], ret: FieldType) extends FieldType("method")
 
-  case class ListType(typ: FieldType) extends FieldType("list")
-  case class SetType(typ: FieldType) extends FieldType("set")
-  case class MapType(k: FieldType, v: FieldType) extends FieldType("set")
+  final case class ListType(typ: FieldType) extends FieldType("list")
+  final case class SetType(typ: FieldType) extends FieldType("set")
+  final case class MapType(k: FieldType, v: FieldType) extends FieldType("set")
 
-  case class ExoticType(key: String) extends FieldType("exotic")
+  final case class ExoticType(key: String) extends FieldType("exotic")
   case object SerialType extends FieldType("serial", isScalar = true)
 
   case object JsonType extends FieldType("json")

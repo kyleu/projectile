@@ -6,13 +6,13 @@ import java.util.UUID
 import com.kyleu.projectile.util.DateUtils
 
 object CachedProc {
-  case class Output(level: String, line: String, occurred: LocalDateTime) {
+  final case class Output(level: String, line: String, occurred: LocalDateTime) {
     override def toString = s"[$level] $occurred - $line"
   }
-  case class Status(cmd: Seq[String], outLines: Int, errLines: Int, logLines: Int, started: LocalDateTime, lastActivity: LocalDateTime, exitCode: Option[Int])
+  final case class Status(cmd: Seq[String], outLines: Int, errLines: Int, logLines: Int, started: LocalDateTime, lastActivity: LocalDateTime, exitCode: Option[Int])
 }
 
-case class CachedProc(cmd: Seq[String], onOutput: CachedProc.Output => Unit, onComplete: (Int, Long) => Unit) {
+final case class CachedProc(cmd: Seq[String], onOutput: CachedProc.Output => Unit, onComplete: (Int, Long) => Unit) {
   val id = UUID.randomUUID
 
   private[this] var startMs: Option[Long] = None

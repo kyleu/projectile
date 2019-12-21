@@ -22,7 +22,7 @@ object GraphQLInputFile {
     file.add("}", -1)
 
     file.add()
-    file.add(s"case class ${model.className}(", 2)
+    file.add(s"final case class ${model.className}(", 2)
     addInputFields(config, file, model.fields)
     file.add(")", -2)
 

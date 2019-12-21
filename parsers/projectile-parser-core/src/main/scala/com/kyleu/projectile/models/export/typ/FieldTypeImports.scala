@@ -15,16 +15,16 @@ object FieldTypeImports {
     case DateType | TimeType | TimestampType | TimestampZonedType => Seq(Seq("java", "time") :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift))
     case JsonType => Seq(Seq("io", "circe") :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift))
     case TagsType => Seq(CommonImportHelper.get(config, "Tag")._1 :+ CommonImportHelper.get(config, "Tag")._2)
-    case EnumType(key) => config.getEnumOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift)).toSeq
+    case EnumType(key) => config.getEnumOpt(key).toList.map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift))
     case StructType(key, tp) =>
-      config.getModelOpt(key).map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift)).toSeq ++ tp.flatMap { x =>
-        x.constraint.toSeq.flatMap(x => imports(config, x, isJs, isThrift))
+      config.getModelOpt(key).toList.map(_.modelPackage(config) :+ FieldTypeAsScala.asScala(config, t, isJs, isThrift)) ++ tp.flatMap { x =>
+        x.constraint.toList.flatMap(x => imports(config, x, isJs, isThrift))
       }
     case ListType(typ) => imports(config, typ, isJs, isThrift)
     case SetType(typ) => imports(config, typ, isJs, isThrift)
     case MapType(k, v) => importTypes(config, isJs, isThrift)(k, v)
     case UnionType(_, v) if isJs => Seq("scala", "scalajs", "js", "|") +: v.flatMap(imports(config, _, isJs, isThrift))
-    case UnionType(k, _) if isThrift => config.getUnionOpt(k).map(u => u.pkg :+ u.className).toSeq
+    case UnionType(k, _) if isThrift => config.getUnionOpt(k).toList.map(u => u.pkg :+ u.className).toSeq
 
     case IntersectionType(_, v) if isJs => Seq("scala", "scalajs", "js", "|") +: v.flatMap(imports(config, _, isJs, isThrift))
     case MethodType(params, ret) => importTypes(config, isJs, isThrift)(params.map(_.t): _*) ++ imports(config, ret, isJs, isThrift)

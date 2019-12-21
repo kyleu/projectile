@@ -9,7 +9,7 @@ object FeatureOutput {
   implicit val jsonDecoder: Decoder[FeatureOutput] = deriveDecoder
 }
 
-case class FeatureOutput(
+final case class FeatureOutput(
     feature: ProjectFeature,
     files: Seq[OutputFile.Rendered],
     injections: Seq[InjectResult],

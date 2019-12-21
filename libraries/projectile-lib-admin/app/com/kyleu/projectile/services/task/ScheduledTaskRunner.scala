@@ -29,7 +29,7 @@ class ScheduledTaskRunner(runService: ScheduledTaskRunService, tracingService: T
       f.flatMap { runs =>
         if (args.contains("persist") || args.contains("force")) {
           Future.sequence(runs.map { run =>
-            runService.insert(creds, run).map(_.get).recover {
+            runService.insert(creds, run).map(_.getOrElse(throw new IllegalStateException())).recover {
               case NonFatal(_) => run.copy(status = "SaveError")
             }
           })

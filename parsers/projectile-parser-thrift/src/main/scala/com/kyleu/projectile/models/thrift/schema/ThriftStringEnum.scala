@@ -8,7 +8,7 @@ object ThriftStringEnum {
   def fromStringEnum(e: StringEnum, pkg: Seq[String]) = ThriftStringEnum(e.getName, pkg, e.getValues.asScala.toIndexedSeq)
 }
 
-case class ThriftStringEnum(
+final case class ThriftStringEnum(
     key: String,
     pkg: Seq[String],
     values: Seq[String]

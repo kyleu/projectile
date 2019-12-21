@@ -12,7 +12,7 @@ object Project {
   implicit val jsonDecoder: Decoder[Project] = deriveDecoder
 }
 
-case class Project(
+final case class Project(
     template: ProjectTemplate = ProjectTemplate.Custom,
     key: String,
     input: String,

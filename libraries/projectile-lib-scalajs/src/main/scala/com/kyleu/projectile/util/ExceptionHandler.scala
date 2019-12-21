@@ -7,6 +7,7 @@ import scala.util.control.NonFatal
 object ExceptionHandler {
   private[this] var handlers = Seq.empty[(String, (Int, Int)) => Unit]
 
+  @SuppressWarnings(Array("org.wartremover.warts.Nothing"))
   def install() = dom.window.addEventListener("error", (e: dom.ErrorEvent) => {
     try {
       onError(e.message, e.filename, e.lineno, e.colno)

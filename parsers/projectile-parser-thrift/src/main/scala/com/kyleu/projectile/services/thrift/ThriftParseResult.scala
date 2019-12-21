@@ -3,7 +3,7 @@ package com.kyleu.projectile.services.thrift
 import com.facebook.swift.parser.model._
 import com.kyleu.projectile.models.thrift.schema._
 
-case class ThriftParseResult(
+final case class ThriftParseResult(
     filename: String,
     reference: Boolean,
     pkg: Seq[String],

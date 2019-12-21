@@ -21,7 +21,7 @@ trait Queryable extends Logging {
 
         case v => stmt.setObject(index, Conversions.convert(v.asInstanceOf[AnyRef]))
       }
-      prepare(stmt, values.tail, index + 1)
+      prepare(stmt, values.drop(1), index + 1)
     }
   }
 

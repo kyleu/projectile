@@ -7,7 +7,7 @@ object Schema {
   implicit val jsonDecoder: Decoder[Schema] = deriveDecoder
 }
 
-case class Schema(
+final case class Schema(
     schemaName: Option[String],
     catalog: Option[String],
     url: String,

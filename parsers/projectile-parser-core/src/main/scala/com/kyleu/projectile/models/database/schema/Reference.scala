@@ -7,4 +7,4 @@ object Reference {
   implicit val jsonDecoder: Decoder[Reference] = deriveDecoder
 }
 
-case class Reference(source: String, target: String)
+final case class Reference(source: String, target: String)

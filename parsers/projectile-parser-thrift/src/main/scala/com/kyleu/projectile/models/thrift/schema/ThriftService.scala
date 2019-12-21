@@ -11,7 +11,7 @@ object ThriftService {
   }
 }
 
-case class ThriftService(
+final case class ThriftService(
     key: String,
     pkg: Seq[String],
     methods: Seq[ThriftServiceMethod]

@@ -31,7 +31,7 @@ object SandboxSchema {
     Field(
       name = "sandbox",
       fieldType = sandboxResultType,
-      arguments = sandboxTaskArg :: sandboxArgumentArg :: Nil,
+      arguments = List[Argument[_]](sandboxTaskArg, sandboxArgumentArg),
       resolve = c => SandboxTask.get(c.arg(sandboxTaskArg)).run(SandboxTask.Config(c.ctx.tracing, c.ctx.injector, c.arg(sandboxArgumentArg)))(c.ctx.trace)
     )
   )

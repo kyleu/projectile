@@ -6,7 +6,7 @@ import com.kyleu.projectile.util.tracing.TraceData
 import scala.util.control.NonFatal
 
 object ApplicationErrors {
-  case class Err(key: String, msg: String, params: Map[String, String] = Map.empty, ex: Option[Throwable] = None)
+  final case class Err(key: String, msg: String, params: Map[String, String] = Map.empty, ex: Option[Throwable] = None)
 }
 
 class ApplicationErrors(app: Application) {

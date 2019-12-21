@@ -10,7 +10,7 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.28.2"
+    val app = "1.29.3"
     val scala212 = "2.12.10"
     val scala213 = "2.13.1"
   }
@@ -27,7 +27,7 @@ object Common {
 
   lazy val settings = Seq(
     version := Common.Versions.app,
-    scalaVersion := Common.Versions.scala212,
+    scalaVersion := (if (useLatest) { Common.Versions.scala213 } else { Common.Versions.scala212 }),
     crossScalaVersions := Seq(Common.Versions.scala213, Common.Versions.scala212),
     organization := "com.kyleu",
 
@@ -47,6 +47,13 @@ object Common {
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false),
+    wartremover.wartremoverWarnings ++= {
+      import wartremover.Wart._
+      Seq(
+        ArrayEquals, EitherProjectionPartial, Enumeration, ExplicitImplicitTypes, FinalCaseClass,
+        JavaConversions, JavaSerializable, LeakingSealed, OptionPartial,  Return, TraversableOps, TryPartial
+      )
+    },
 
     publishMavenStyle := true,
     // publishTo := Some(MavenRepository("sonatype-staging", "https://oss.sonatype.org/service/local/staging/deploy/maven2"))

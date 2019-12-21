@@ -7,7 +7,7 @@ object Index {
   implicit val jsonDecoder: Decoder[Index] = deriveDecoder
 }
 
-case class Index(
+final case class Index(
     name: String,
     unique: Boolean,
     indexType: String,

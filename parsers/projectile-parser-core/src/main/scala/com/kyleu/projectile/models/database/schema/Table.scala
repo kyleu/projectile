@@ -7,7 +7,7 @@ object Table {
   implicit val jsonDecoder: Decoder[Table] = deriveDecoder
 }
 
-case class Table(
+final case class Table(
     name: String,
     catalog: Option[String],
     schema: Option[String],

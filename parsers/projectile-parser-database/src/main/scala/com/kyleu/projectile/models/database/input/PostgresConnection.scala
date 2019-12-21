@@ -9,7 +9,7 @@ object PostgresConnection {
   implicit val jsonDecoder: Decoder[PostgresConnection] = deriveDecoder
 }
 
-case class PostgresConnection(
+final case class PostgresConnection(
     host: String = "localhost",
     port: Int = 5432,
     username: String = "",

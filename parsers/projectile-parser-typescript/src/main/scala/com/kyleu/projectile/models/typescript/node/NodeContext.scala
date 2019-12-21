@@ -16,7 +16,7 @@ object NodeContext {
   val empty = NodeContext()
 }
 
-case class NodeContext(
+final case class NodeContext(
     pos: Int = 0,
     end: Int = 0,
     kind: SyntaxKind = SyntaxKind.Unknown,

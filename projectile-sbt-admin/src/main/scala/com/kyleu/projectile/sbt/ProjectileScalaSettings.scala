@@ -15,7 +15,7 @@ object ProjectileScalaSettings {
   )
 
   private[this] val compileOptionsScala212 = compileOptionsScala213 ++ Seq(
-    "-Xfatal-warnings", "-Xfuture", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-infer-any"
+    /* "-Xfatal-warnings", */ "-Xfuture", "-Ypartial-unification", "-Yno-adapted-args", "-Ywarn-inaccessible", "-Ywarn-nullary-override", "-Ywarn-infer-any"
   )
 
   private[this] val profileOptions = {

@@ -11,13 +11,13 @@ object AppStatus {
     implicit val jsonDecoder: Decoder[Timing] = deriveDecoder
   }
 
-  case class Timing(msg: String, dur: Int)
+  final case class Timing(msg: String, dur: Int)
 
   implicit val jsonEncoder: Encoder[AppStatus] = deriveEncoder
   implicit val jsonDecoder: Decoder[AppStatus] = deriveDecoder
 }
 
-case class AppStatus(
+final case class AppStatus(
     name: String,
     version: String = "0.0.0",
     status: String = "OK",

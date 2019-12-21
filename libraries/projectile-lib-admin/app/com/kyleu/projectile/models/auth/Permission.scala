@@ -12,10 +12,10 @@ object Permission {
     implicit val jsonDecoder: Decoder[Path] = deriveDecoder
   }
 
-  case class Path(pkg: String, model: String, act: String)
+  final case class Path(pkg: String, model: String, act: String)
 }
 
-case class Permission(
+final case class Permission(
     role: String,
     pkg: Option[String],
     model: Option[String],

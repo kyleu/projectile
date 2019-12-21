@@ -8,7 +8,7 @@ object ModelMember {
   implicit val jsonDecoder: Decoder[ModelMember] = deriveDecoder
 }
 
-case class ModelMember(
+final case class ModelMember(
     key: String,
     pkg: Seq[String] = Nil,
 

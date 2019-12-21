@@ -64,7 +64,7 @@ object SourceFileParser {
 
   def parse(ctx: ParseContext, config: ExportConfiguration, node: SourceFile) = {
     val path = node.path.split('/').reverse.dropWhile(x => x == "index" || x == "index.ts" || x == "index.d.ts").reverse.toList
-    val fn = ExportHelper.escapeKeyword(TypeScriptInput.stripName(path.last))
+    val fn = ExportHelper.escapeKeyword(TypeScriptInput.stripName(path.lastOption.getOrElse(throw new IllegalStateException())))
     val cn = ExportHelper.toClassName(fn)
 
     val filterResult = MemberParser.filter(filter(node.statements))

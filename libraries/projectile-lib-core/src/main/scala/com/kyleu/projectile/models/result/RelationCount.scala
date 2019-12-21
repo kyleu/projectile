@@ -7,4 +7,4 @@ object RelationCount {
   implicit val jsonDecoder: Decoder[RelationCount] = deriveDecoder
 }
 
-case class RelationCount(model: String, field: String, count: Int)
+final case class RelationCount(model: String, field: String, count: Int)

@@ -27,4 +27,4 @@ object Tag {
 }
 
 /** A simple key and value case class, used where unordered maps aren't appropriate */
-case class Tag(k: String, v: String)
+final case class Tag(k: String, v: String)

@@ -3,7 +3,7 @@ package com.kyleu.projectile.models.result.paging
 import com.kyleu.projectile.util.JsonSerializers._
 
 object PagingOptions {
-  case class Range(start: Int, end: Int)
+  final case class Range(start: Int, end: Int)
 
   implicit val jsonRangeEncoder: Encoder[Range] = deriveEncoder
   implicit val jsonRangeDecoder: Decoder[Range] = deriveDecoder
@@ -35,7 +35,7 @@ object PagingOptions {
   }
 }
 
-case class PagingOptions(
+final case class PagingOptions(
     current: Int = 1,
     limit: Option[Int] = None,
 

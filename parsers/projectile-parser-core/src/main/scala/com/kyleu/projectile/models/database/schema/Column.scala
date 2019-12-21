@@ -8,7 +8,7 @@ object Column {
   implicit val jsonDecoder: Decoder[Column] = deriveDecoder
 }
 
-case class Column(
+final case class Column(
     name: String,
     description: Option[String] = None,
     definition: Option[String] = None,

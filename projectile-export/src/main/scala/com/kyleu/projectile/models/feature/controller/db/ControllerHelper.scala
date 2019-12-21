@@ -54,7 +54,7 @@ object ControllerHelper {
 
   def getFkConnections(config: ExportConfiguration, model: ExportModel) = {
     model.foreignKeys.filter(_.references.size == 1).map { fk =>
-      val ref = fk.references.head
+      val ref = fk.references.headOption.getOrElse(throw new IllegalStateException())
       (model.getField(ref.source), config.getModel(fk.targetTable, "fk lookup"))
     }
   }

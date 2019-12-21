@@ -7,4 +7,4 @@ object TypeScriptOptions {
   implicit val jsonDecoder: Decoder[TypeScriptOptions] = deriveDecoder
 }
 
-case class TypeScriptOptions(files: Seq[String] = Nil)
+final case class TypeScriptOptions(files: Seq[String] = Nil)

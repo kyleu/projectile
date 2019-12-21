@@ -32,7 +32,7 @@ class ScheduledTaskService @javax.inject.Inject() (
       import scala.concurrent.duration._
       log.info(s"Scheduling task to run every [$intervalSecs] seconds, after an initial [$delaySecs] second delay")
       scheduled.foreach(_ => stopSchedule())
-      scheduled = Some(system.scheduler.schedule(delaySecs.seconds, intervalSecs.seconds, (() => tick(creds, injector, args)): Runnable))
+      scheduled = Some(system.scheduler.scheduleWithFixedDelay(delaySecs.seconds, intervalSecs.seconds)((() => tick(creds, injector, args)): Runnable))
     } else {
       log.info("Scheduled task is disabled, skipping timed schedule")
       log.info("To enable, set [scheduled.task.enabled] in application.conf")
@@ -46,7 +46,7 @@ class ScheduledTaskService @javax.inject.Inject() (
   }
 
   def latestRuns()(implicit td: TraceData) = {
-    db.queryF(statusQuery).map(_.groupBy(_.task).map(x => x._1 -> x._2.head))
+    db.queryF(statusQuery).map(_.groupBy(_.task).map(x => x._1 -> x._2.headOption.getOrElse(throw new IllegalStateException())))
   }
 
   def runAll(creds: Credentials = Credentials.system, injector: Injector, args: Seq[String] = Nil)(implicit td: TraceData) = {

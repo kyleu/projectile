@@ -35,7 +35,7 @@ class SearchController @javax.inject.Inject() (
       }
     }
     results.map {
-      case r if r.size == 1 => Redirect(r.head._1)
+      case r if r.size == 1 => Redirect(r.headOption.getOrElse(throw new IllegalStateException())._1)
       case r =>
         val cfg = app.cfg(u = Some(request.identity), "Search", q)
         Ok(com.kyleu.projectile.views.html.admin.explore.searchResults(q, r.map(_._2), cfg))

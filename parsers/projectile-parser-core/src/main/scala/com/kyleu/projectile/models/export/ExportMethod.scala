@@ -9,7 +9,7 @@ object ExportMethod {
   implicit val jsonDecoder: Decoder[ExportMethod] = deriveDecoder
 }
 
-case class ExportMethod(key: String, args: Seq[ExportField], returnType: FieldType) {
+final case class ExportMethod(key: String, args: Seq[ExportField], returnType: FieldType) {
   val name = ExportHelper.toIdentifier(key)
   lazy val signature = s"$name(${args.map(a => s"${a.key}: ${a.t}").mkString(", ")})"
 }

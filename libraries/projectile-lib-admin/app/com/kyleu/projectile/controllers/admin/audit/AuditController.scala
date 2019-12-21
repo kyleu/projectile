@@ -8,7 +8,7 @@ import com.kyleu.projectile.util.DateUtils
 import com.kyleu.projectile.util.JsonSerializers._
 import java.util.UUID
 
-import com.kyleu.projectile.controllers.admin.audit.routes.AuditController
+import com.kyleu.projectile.controllers.admin.audit.routes.{AuditController, AuditRecordController}
 import com.kyleu.projectile.models.audit.{Audit, AuditResult}
 import com.kyleu.projectile.models.menu.SystemMenu
 import com.kyleu.projectile.models.module.{Application, ApplicationFeature}
@@ -31,6 +31,7 @@ class AuditController @javax.inject.Inject() (
   PermissionService.registerModel("models", "Audit", "Audit", Some(InternalIcons.audit), "view", "edit")
   val desc = "System audits provide detailed change logging"
   SystemMenu.addModelMenu("audit", "Audits", Some(desc), AuditController.list(), InternalIcons.audit, ("models", "Audit", "view"))
+  SystemMenu.addModelMenu("auditRecord", "Audit Records", Some(desc), AuditRecordController.list(), InternalIcons.auditRecord, ("models", "AuditRecord", "view"))
   AuditHelper.init(appName = app.config.projectName, service = svc)
   private[this] val defaultOrderBy = Some("started" -> false)
 

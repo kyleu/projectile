@@ -10,7 +10,7 @@ object ProjectOutput {
   implicit val jsonDecoder: Decoder[ProjectOutput] = deriveDecoder
 }
 
-case class ProjectOutput(
+final case class ProjectOutput(
     project: ProjectSummary,
     rootLogs: Seq[OutputLog] = Nil,
     featureOutput: Seq[FeatureOutput] = Nil,

@@ -25,7 +25,7 @@ object OutputHelper {
         jsDoc.params.foreach { p =>
           file.add(s" * @param ${p.name}${p.comment.headOption.map(" " + _).getOrElse("")}")
           if (p.comment.nonEmpty) {
-            p.comment.tail.foreach(c => file.add(" * " + (0 until (p.name.length + 8)).map(_ => " ").mkString + c))
+            p.comment.dropRight(1).foreach(c => file.add(" * " + (0 until (p.name.length + 8)).map(_ => " ").mkString + c))
           }
         }
       }

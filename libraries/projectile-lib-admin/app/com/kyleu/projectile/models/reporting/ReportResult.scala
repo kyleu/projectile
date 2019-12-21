@@ -21,7 +21,7 @@ object ReportResult {
   )
 }
 
-case class ReportResult(
+final case class ReportResult(
     id: UUID = UUID.randomUUID,
     report: ProjectileReport,
     args: Map[String, String],

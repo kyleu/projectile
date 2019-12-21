@@ -35,7 +35,7 @@ object GraphQLFragmentFile {
       file.add()
     }
 
-    file.add(s"case class ${model.className}(", 2)
+    file.add(s"final case class ${model.className}(", 2)
     GraphQLObjectHelper.addFields(config, file, model.fields)
     file.add(")", -2)
 
