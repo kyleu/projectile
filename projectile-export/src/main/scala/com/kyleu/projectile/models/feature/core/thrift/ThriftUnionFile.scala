@@ -18,8 +18,10 @@ object ThriftUnionFile {
 
     file.add(s"object ${union.className} {", 1)
     addFields(config, union, file)
+    file.add(s"case object UnknownVariant extends ${union.className} {", 1)
+    file.add(s"override def asThrift = throw new IllegalStateException()")
+    file.add("}", -1)
     file.add()
-
     config.addCommonImport(file, "JsonSerializers", "_")
     file.add(s"implicit val jsonEncoder: Encoder[${union.className}] = deriveEncoder")
     file.add(s"implicit val jsonDecoder: Decoder[${union.className}] = deriveDecoder")
@@ -32,7 +34,7 @@ object ThriftUnionFile {
       }
       file.add(s"case $tc.${t.className}(x) => ${t.className}($cn.fromThrift(x))")
     }
-    file.add(s"""case $tc.UnknownUnionField(_) => throw new IllegalStateException("Unknown union field")""")
+    file.add(s"""case $tc.UnknownUnionField(_) => UnknownVariant""")
     file.add("}", -1)
     file.add("}", -1)
 

@@ -4,6 +4,7 @@ import com.kyleu.projectile.models.database.schema.ForeignKey
 import com.kyleu.projectile.models.export.ExportModel
 import com.kyleu.projectile.models.export.config.ExportConfiguration
 import com.kyleu.projectile.models.export.typ.FieldType
+import com.kyleu.projectile.models.feature.ModelFeature
 import com.kyleu.projectile.models.output.ExportHelper
 import com.kyleu.projectile.models.output.file.ScalaFile
 
@@ -64,30 +65,33 @@ object TableHelper {
     }
   }
 
-  def addExtensions(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = if (model.foreignKeys.nonEmpty) {
-    file.addImport(Seq("scala", "language"), "higherKinds")
-    file.add()
-    file.add(s"implicit class ${model.className}TableExtensions[C[_]](q: Query[${model.className}Table, ${model.className}, C]) {", 1)
-    model.foreignKeys.groupBy(_.targetTable).toList.foreach { fk =>
-      val target = config.getModel(fk._1, "tableExtensions")
-      file.addImport(target.slickPackage(config), target.className + "Table")
+  def addExtensions(config: ExportConfiguration, file: ScalaFile, model: ExportModel) = {
+    val keys = model.foreignKeys.filter(fk => config.models.exists(m => m.key == fk.targetTable && m.features(ModelFeature.Slick)))
+    if (keys.nonEmpty) {
+      file.addImport(Seq("scala", "language"), "higherKinds")
+      file.add()
+      file.add(s"implicit class ${model.className}TableExtensions[C[_]](q: Query[${model.className}Table, ${model.className}, C]) {", 1)
+      keys.groupBy(_.targetTable).toList.foreach { fk =>
+        val target = config.getModel(fk._1, "tableExtensions")
+        file.addImport(target.slickPackage(config), target.className + "Table")
 
-      def proc(fk: ForeignKey, key: String) = fk.references match {
-        case ref :: Nil =>
-          val srcCol = model.getField(ref.source)
-          val tgtCol = target.getField(ref.target)
-          file.add(s"def with$key = q.join(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
-          file.add(s"def with${key}Opt = q.joinLeft(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
-        case _ => // noop
-      }
+        def proc(fk: ForeignKey, key: String) = fk.references match {
+          case ref :: Nil =>
+            val srcCol = model.getField(ref.source)
+            val tgtCol = target.getField(ref.target)
+            file.add(s"def with$key = q.join(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
+            file.add(s"def with${key}Opt = q.joinLeft(${target.className}Table.query).on(_.${srcCol.propertyName} === _.${tgtCol.propertyName})")
+          case _ => // noop
+        }
 
-      fk._2 match {
-        case solo :: Nil => proc(solo, target.className)
-        case multiple => multiple.foreach { m =>
-          proc(m, s"${target.className}By${ExportHelper.toClassName(m.references.headOption.getOrElse(throw new IllegalStateException()).source)}")
+        fk._2 match {
+          case solo :: Nil => proc(solo, target.className)
+          case multiple => multiple.foreach { m =>
+            proc(m, s"${target.className}By${ExportHelper.toClassName(m.references.headOption.getOrElse(throw new IllegalStateException()).source)}")
+          }
         }
       }
+      file.add("}", -1)
     }
-    file.add("}", -1)
   }
 }

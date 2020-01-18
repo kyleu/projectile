@@ -26,11 +26,11 @@ object ControllerMutations {
       file.add(s"""val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map($split).toList""")
       model.pkFields match {
         case h :: Nil =>
-          file.add(s"""val typed = pks.map(pk => ${FieldTypeFromString.fromString(config, h.t, "pk.head")})""")
+          file.add(s"""val typed = pks.map(pk => ${FieldTypeFromString.fromString(config, h.t, "pk.headOption.getOrElse(throw new IllegalStateException())")})""")
         case pks =>
           val pkString = pks.zipWithIndex.map { pk =>
             val ref = pk._2 match {
-              case 0 => "pk.head"
+              case 0 => "pk.headOption.getOrElse(throw new IllegalStateException())"
               case i => s"pk($i)"
             }
             FieldTypeFromString.fromString(config, pk._1.t, ref)

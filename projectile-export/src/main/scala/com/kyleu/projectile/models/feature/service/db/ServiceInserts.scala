@@ -56,7 +56,7 @@ object ServiceInserts {
     file.add(s"""traceF("insert")(td => db.queryF($queriesFilename.insert(model), conn)(td).flatMap {""", 1)
     config.addCommonImport(file, "DatabaseFieldType")
     val coerced = model.pkFields.zipWithIndex.map { pk =>
-      val ref = if (pk._2 == 0) { "pks.head" } else { s"pks(${pk._2}" }
+      val ref = if (pk._2 == 0) { "pks.headOption.getOrElse(throw new IllegalStateException())" } else { s"pks(${pk._2}" }
       s"DatabaseFieldType.${QueriesHelper.classNameForSqlType(pk._1.t, config)}.coerce($ref)"
     }.mkString(", ")
     if (model.features(ModelFeature.Audit)) {
@@ -94,7 +94,7 @@ object ServiceInserts {
   def createSerial(config: ExportConfiguration, file: ScalaFile, model: ExportModel, queriesFilename: String) = {
     file.add(s"""traceF("create")(td => db.queryF($queriesFilename.create(fields), conn)(td).flatMap {""", 1)
     val coerced = model.pkFields.zipWithIndex.map { pk =>
-      val ref = if (pk._2 == 0) { "pks.head" } else { s"pks(${pk._2}" }
+      val ref = if (pk._2 == 0) { "pks.headOption.getOrElse(throw new IllegalStateException())" } else { s"pks(${pk._2}" }
       s"DatabaseFieldType.${QueriesHelper.classNameForSqlType(pk._1.t, config)}.coerce($ref)"
     }.mkString(", ")
     model.pkFields match {

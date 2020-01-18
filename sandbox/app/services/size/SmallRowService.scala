@@ -104,7 +104,7 @@ class SmallRowService @javax.inject.Inject() (val db: JdbcDatabase, override val
   // Mutations
   def insert(creds: Credentials, model: SmallRow, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("insert")(td => db.queryF(SmallRowQueries.insert(model), conn)(td).flatMap {
-      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.head), conn)(td)
+      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.headOption.getOrElse(throw new IllegalStateException())), conn)(td)
       case _ => throw new IllegalStateException("Unable to find newly-inserted Small")
     })
   }
@@ -120,7 +120,7 @@ class SmallRowService @javax.inject.Inject() (val db: JdbcDatabase, override val
   }
   def create(creds: Credentials, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("create")(td => db.queryF(SmallRowQueries.create(fields), conn)(td).flatMap {
-      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.head), conn)(td)
+      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.headOption.getOrElse(throw new IllegalStateException())), conn)(td)
       case _ => throw new IllegalStateException("Unable to find newly-inserted Small")
     })
   }

@@ -16,7 +16,7 @@ object TestbedTask extends SandboxTask("testbed", "Testbed", "Just new boot goof
       if (csv.isEmpty) {
         Future.successful(Json.fromString("No rows available"))
       } else {
-        val (cols, data) = csv.head -> csv.tail
+        val (cols, data) = csv.headOption.getOrElse(throw new IllegalStateException()) -> csv.drop(1)
         val result = process(cols, data)
         Future.successful(Json.fromString(s"$result: Processed [${csv.size}] rows..."))
       }

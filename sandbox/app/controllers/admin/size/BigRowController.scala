@@ -106,7 +106,7 @@ class BigRowController @javax.inject.Inject() (
   def bulkEdit = withSession("bulk.edit", ("size", "BigRow", "edit")) { implicit request => implicit td =>
     val form = ControllerUtils.getForm(request.body)
     val pks = form("primaryKeys").split("//").map(_.trim).filter(_.nonEmpty).map(_.split("---").map(_.trim).filter(_.nonEmpty).toList).toList
-    val typed = pks.map(pk => pk.head.toLong)
+    val typed = pks.map(pk => pk.headOption.getOrElse(throw new IllegalStateException()).toLong)
     val changes = modelForm(request.body)
     svc.updateBulk(request, typed, changes).map(msg => Ok("OK: " + msg))
   }

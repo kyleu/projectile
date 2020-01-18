@@ -89,7 +89,7 @@ class BigRowService @javax.inject.Inject() (val db: JdbcDatabase, override val t
   // Mutations
   def insert(creds: Credentials, model: BigRow, conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("insert")(td => db.queryF(BigRowQueries.insert(model), conn)(td).flatMap {
-      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.head), conn)(td).map(_.map { n =>
+      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.headOption.getOrElse(throw new IllegalStateException())), conn)(td).map(_.map { n =>
         AuditHelper.onInsert("BigRow", Seq(n.id.toString), n.toDataFields, creds)
         n
       })
@@ -108,7 +108,7 @@ class BigRowService @javax.inject.Inject() (val db: JdbcDatabase, override val t
   }
   def create(creds: Credentials, fields: Seq[DataField], conn: Option[Connection] = None)(implicit trace: TraceData) = checkPerm(creds, "edit") {
     traceF("create")(td => db.queryF(BigRowQueries.create(fields), conn)(td).flatMap {
-      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.head), conn)(td).map(_.map { n =>
+      case Some(pks) => getByPrimaryKey(creds, DatabaseFieldType.LongType.coerce(pks.headOption.getOrElse(throw new IllegalStateException())), conn)(td).map(_.map { n =>
         AuditHelper.onInsert("BigRow", Seq(n.id.toString), n.toDataFields, creds)
         n
       })

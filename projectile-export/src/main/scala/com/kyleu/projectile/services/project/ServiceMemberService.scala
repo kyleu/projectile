@@ -25,12 +25,10 @@ class ServiceMemberService(val svc: ProjectileService) {
   private[this] def saveMember(p: String, i: Input, member: ServiceMember) = {
     val o = i.service(member.key)
     val m = o.apply(member)
-    if (o != m) {
-      val dir = svc.configForProject(p).projectDir(p)
-      val f = fileFor(dir, member.key)
-      f.createFileIfNotExists(createParents = true)
-      f.overwrite(JacksonUtils.printJackson(member.asJson))
-    }
+    val dir = svc.configForProject(p).projectDir(p)
+    val f = fileFor(dir, member.key)
+    f.createFileIfNotExists(createParents = true)
+    f.overwrite(JacksonUtils.printJackson(member.asJson))
     m
   }
 }
