@@ -30,9 +30,9 @@ object ThriftServiceFile {
     val thriftReqRepServicePerEndpointCanonicalName = getThriftReqRepServicePerEndpointCanonicalName(svc)
     val rt = s"""route = "/admin/thrift/${svc.propertyName.stripSuffix("Service")}""""
     file.add(s"""object ${svc.className} extends ThriftService(key = "${svc.key}", pkg = "${svc.pkg.mkString(".")}", $rt) {""", 1)
-    file.add(s"""def mkServicePerEndpoint(url: String): $thriftReqRepServicePerEndpointCanonicalName = {""", 1)
+    file.add(s"""def mkServicePerEndpoint(url: String, tlsPort: Int = 15443): $thriftReqRepServicePerEndpointCanonicalName = {""", 1)
     file.add(s"""val client = url.split(":").toList match {""", 1)
-    file.add(s"""case host :: "15443" :: Nil => ThriftMux.client.withTransport.tls(host)""")
+    file.add(s"""case host :: port :: Nil if port == tlsPort.toString => ThriftMux.client.withTransport.tls(host)""")
     file.add(s"""case _ => ThriftMux.client""")
     file.add("}", -1)
     file.add(s"""client.servicePerEndpoint[$thriftReqRepServicePerEndpointCanonicalName](url, "${svc.className}")""")
