@@ -82,6 +82,6 @@ object GraphQLTypeParser {
     case "String" => FieldType.StringType
     case "UUID" => FieldType.UuidType
     case "Var" => FieldType.StringType
-    case _ => throw new IllegalStateException(s"Unhandled scalar type [$name]")
+    case _ => FieldType.StringType
   }
 }

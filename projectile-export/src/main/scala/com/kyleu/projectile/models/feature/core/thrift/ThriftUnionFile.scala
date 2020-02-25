@@ -19,7 +19,7 @@ object ThriftUnionFile {
     file.add(s"object ${union.className} {", 1)
     addFields(config, union, file)
     file.add(s"case object UnknownVariant extends ${union.className} {", 1)
-    file.add(s"override def asThrift = throw new IllegalStateException()")
+    file.add("override def asThrift = throw new IllegalStateException(\"Unknown [" + union.className + "] variant\")")
     file.add("}", -1)
     file.add()
     config.addCommonImport(file, "JsonSerializers", "_")

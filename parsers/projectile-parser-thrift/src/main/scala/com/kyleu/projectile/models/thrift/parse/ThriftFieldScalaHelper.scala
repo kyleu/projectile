@@ -71,10 +71,10 @@ object ThriftFieldScalaHelper {
       case x => s".$key(_$x.toList)"
     }
     case FieldType.SetType(typ) => parseMapped(typ, ctx + ".set") match {
-      case x if x.isEmpty => s".$key(_$x.toSet)"
+      case x if x.isEmpty => s".$key(_.toSet)"
       case x => s".$key(_$x.toSet)"
     }
-    case FieldType.UnionType(_, _) => ""
+    case FieldType.UnionType(t, _) => s".$key($t.fromThrift)"
     case _ if t.isScalar => ""
     case FieldType.EnumType(k) => s".$key($k.fromThrift)"
     case FieldType.StructType(k, _) => s".$key($k.fromThrift)"
