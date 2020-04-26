@@ -10,7 +10,7 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.30.3"
+    val app = "1.31.4"
     val scala212 = "2.12.10"
     val scala213 = "2.13.1"
   }

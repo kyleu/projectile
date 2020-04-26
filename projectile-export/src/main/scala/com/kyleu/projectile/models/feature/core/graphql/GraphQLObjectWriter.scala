@@ -24,6 +24,8 @@ object GraphQLObjectWriter {
     }
 
     val objs = fields.map(_.t).collect {
+      case FieldType.ListType(t) => forObj(t)
+      case FieldType.SetType(t) => forObj(t)
       case o: FieldType.ObjectType => getObjects(o)
     }.flatten.groupBy(_._1).map(x => x._1 -> x._2.map(_._2))
 

@@ -20,8 +20,10 @@ class JdbcDatabase(override val key: String, configPrefix: String)(implicit val 
   def open(cfg: com.typesafe.config.Config, tracing: TracingService) = {
     ds.foreach(_ => close())
 
-    Class.forName("org.postgresql.Driver")
     val config = DatabaseConfig.fromConfig(cfg, configPrefix)
+
+    Class.forName(config.driver)
+
     val properties = new Properties
     val maxPoolSize = 32
 
@@ -29,7 +31,7 @@ class JdbcDatabase(override val key: String, configPrefix: String)(implicit val 
       setPoolName(key)
       setJdbcUrl(config.url)
       setUsername(config.username)
-      setPassword(config.password.getOrElse(""))
+      setPassword(config.password.orNull)
       setConnectionTimeout(10000)
       setMinimumIdle(1)
       setMaximumPoolSize(maxPoolSize)

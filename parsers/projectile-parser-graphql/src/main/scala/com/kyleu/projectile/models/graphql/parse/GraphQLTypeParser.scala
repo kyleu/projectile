@@ -51,13 +51,15 @@ object GraphQLTypeParser {
 
   def getOutputType(ctx: String, schema: Schema[_, _], doc: Document, t: OutputType[_], selections: Seq[Selection]): (Boolean, FieldType) = t match {
     case o: OptionType[_] => false -> getOutputType(ctx + "." + o.ofType, schema, doc, o.ofType, selections)._2
-    case l: sangria.schema.ListType[_] => true -> FieldType.ListType(getOutputType(ctx + "." + l.ofType, schema, doc, l.ofType, selections)._2)
+    case l: sangria.schema.ListType[_] =>
+      val child = getOutputType(ctx + "." + l.ofType, schema, doc, l.ofType, selections)
+      true -> FieldType.ListType(child._2)
 
     case o: ObjectType[_, _] => GraphQLSelectionParser.fieldsForSelections(ctx, schema, doc, o, selections) match {
       case Left(name) => true -> FieldType.StructType(key = name, Nil)
-      case Right(fields) => true -> FieldType.ObjectType(
-        key = o.name + "Wrapper", fields = fields.map(f => com.kyleu.projectile.models.export.typ.ObjectField(k = f.key, t = f.t, req = f.required))
-      )
+      case Right(fields) =>
+        val newFields = fields.map(f => com.kyleu.projectile.models.export.typ.ObjectField(k = f.key, t = f.t, req = f.required))
+        true -> FieldType.ObjectType(key = o.name + "Wrapper", fields = newFields)
     }
 
     case _: InterfaceType[_, _] => true -> FieldType.JsonType
