@@ -45,7 +45,8 @@ abstract class ModelServiceHelper[T](val key: String, val perm: (String, String)
     count.flatMap(c => result.map(x => c -> x))
   }
 
-  protected def fieldVal(fields: Seq[DataField], k: String) = fields.find(_.k == k).flatMap(_.v).getOrElse(NullUtils.str)
+  protected def fieldValOpt(fields: Seq[DataField], k: String) = fields.find(_.k == k).flatMap(_.v)
+  protected def fieldVal(fields: Seq[DataField], k: String) = fieldValOpt(fields, k).getOrElse(NullUtils.str)
 
   def checkPerm[Ret](creds: Credentials, key: String)(f: => Ret): Ret = PermissionService.check(creds.role, perm._1, perm._2, key) match {
     case (false, msg) => throw new IllegalStateException(s"Insufficent permissions to access [${perm._1}, ${perm._2}, $key]: $msg")

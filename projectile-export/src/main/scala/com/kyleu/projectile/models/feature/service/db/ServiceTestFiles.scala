@@ -18,14 +18,12 @@ object ServiceTestFiles {
 
     config.addCommonImport(file, "TracingService")
     config.addCommonImport(file, "JdbcDatabase")
-    config.addCommonImport(file, "SlickQueryService")
     config.addCommonImport(file, "ExecutionContext")
 
     file.add(s"object TestServices {", 1)
     file.add("private[this] implicit val ec: ExecutionContext = ExecutionContext.global")
     file.add("val trace = TracingService.noop")
     file.add("""lazy val db = new JdbcDatabase("application", "database.application") {}""")
-    file.add("""lazy val slick = new SlickQueryService("test", db.source, 30, trace)""")
 
     file.add()
     models.foreach { model =>

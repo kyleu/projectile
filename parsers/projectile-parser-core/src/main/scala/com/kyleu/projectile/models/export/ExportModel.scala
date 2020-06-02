@@ -84,7 +84,7 @@ final case class ExportModel(
     case h :: Nil => h.scalaType(config)
     case cols => "(" + cols.map(_.scalaType(config)).mkString(", ") + ")"
   }
-  val isSerial = pkFields.nonEmpty && pkFields.forall(_.t == FieldType.SerialType)
+  val isSerial = pkFields.nonEmpty && pkFields.forall(x => x.t == FieldType.SerialType || x.t == FieldType.IntegerType)
 
   val globalSearchFields = fields.filter(_.inGlobalSearch)
   val localSearchFields = fields.filter(_.inLocalSearch)

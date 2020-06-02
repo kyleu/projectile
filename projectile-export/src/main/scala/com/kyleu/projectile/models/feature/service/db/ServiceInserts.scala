@@ -81,12 +81,20 @@ object ServiceInserts {
         if (pk.exists(x => x.t.isDate)) {
           file.addImport(CommonImportHelper.get(config, "DateUtils")._1, "DateUtils")
         }
-        val lookup = pk.map(k => FieldTypeFromString.fromString(config, k.t, s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
+        val fieldVals = pk.map(k => FieldTypeFromString.fromString(config, k.t, s"""fieldVal(fields, "${k.propertyName}")""")).mkString(", ")
+        val fieldLookups = pk.map(k => s"""fields.exists(_.k == "${k.propertyName}")""")
+
+        file.add(s"if (${fieldLookups.mkString(" && ")}) {", 1)
         if (model.features(ModelFeature.Audit)) {
           val audit = pk.map(k => s"""fieldVal(fields, "${k.propertyName}")""").mkString(", ")
           file.add(s"""AuditHelper.onInsert("${model.className}", Seq($audit), fields, creds)""")
         }
-        file.add(s"getByPrimaryKey(creds, $lookup, conn)")
+        file.add(s"getByPrimaryKey(creds, $fieldVals, conn)")
+        file.add("} else {", -1)
+        file.indent()
+        file.add(s"Future.successful(None)")
+        file.add("}", -1)
+
     }
     file.add("})", -1)
   }

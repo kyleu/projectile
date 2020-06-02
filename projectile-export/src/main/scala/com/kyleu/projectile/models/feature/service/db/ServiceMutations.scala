@@ -15,6 +15,7 @@ object ServiceMutations {
   def mutations(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = if (model.pkFields.nonEmpty) {
     model.pkFields.foreach(_.addImport(config, file, Nil))
     val sig = model.pkFields.map(f => f.propertyName + ": " + f.scalaType(config)).mkString(", ")
+    val modelCall = model.pkFields.map("model." + _.propertyName).mkString(", ")
     val call = model.pkFields.map(_.propertyName).mkString(", ")
     val interp = model.pkFields.map("$" + _.propertyName).mkString(", ")
     val editCheck = if (model.features(ModelFeature.Auth)) { """checkPerm(creds, "edit") """ } else { "" }
@@ -35,6 +36,15 @@ object ServiceMutations {
     file.add("})", -1)
     file.add("}", -1)
     file.add()
+
+    model.pkFields match {
+      case h :: Nil =>
+        file.add(s"""def removeBulk(creds: Credentials, pks: Seq[${h.scalaType(config)}], $conn)$trace = $editCheck{""", 1)
+        file.add(s"""traceF("removeBulk")(td => Future.sequence(pks.map(remove(creds, _))))""")
+        file.add("}", -1)
+        file.add()
+      case _ =>
+    }
 
     file.add(s"""def update(creds: Credentials, $sig, fields: Seq[DataField], $conn)$trace = $editCheck{""", 1)
     file.add(s"""traceF("update")(td => getByPrimaryKey(creds, $call, conn)(td).flatMap {""", 1)
@@ -84,5 +94,12 @@ object ServiceMutations {
           file.add("}", -1)
       }
     }
+
+    file.add(s"""def upsert(creds: Credentials, model: ${model.className}, $conn)$trace = $editCheck{""", 1)
+    file.add(s"""traceF("upsert")(td => getByPrimaryKey(creds, $modelCall, conn)(td).flatMap {""", 1)
+    file.add(s"""case Some(_) => update(creds, $modelCall, model.toDataFields, conn).map(x => Some(x._1))""")
+    file.add("""case None => insert(creds, model)""")
+    file.add("})", -1)
+    file.add("}", -1)
   }
 }
