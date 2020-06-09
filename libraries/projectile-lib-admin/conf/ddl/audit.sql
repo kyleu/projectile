@@ -1,9 +1,9 @@
 ﻿create table if not exists "audit" (
   "id" uuid not null,
-  "act" character varying(32) not null,
-  "app" character varying(64) not null,
-  "client" character varying(32) not null,
-  "server" character varying(32) not null,
+  "act" character varying(512) not null,
+  "app" character varying(512) not null,
+  "client" character varying(512) not null,
+  "server" character varying(1024) not null,
   "user_id" uuid not null,
   "tags" json not null,
   "msg" text not null,
