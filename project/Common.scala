@@ -10,8 +10,8 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.32.1"
-    val scala212 = "2.12.10"
+    val app = "1.32.2"
+    val scala212 = "2.12.11"
     val scala213 = "2.13.1"
   }
 
@@ -47,7 +47,7 @@ object Common {
     scalacOptions in (Compile, doc) := Seq("-encoding", "UTF-8"),
 
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnTransitiveEvictions(false),
-    wartremover.wartremoverWarnings ++= {
+    wartremover.WartRemover.autoImport.wartremoverWarnings ++= {
       import wartremover.Wart._
       Seq(
         ArrayEquals, EitherProjectionPartial, Enumeration, ExplicitImplicitTypes, FinalCaseClass,

@@ -14,13 +14,13 @@ object Dependencies {
   }
 
   object Database {
-    val postgres = "org.postgresql" % "postgresql" % "42.2.9"
-    val hikariCp = "com.zaxxer" % "HikariCP" % "3.4.1"
+    val postgres = "org.postgresql" % "postgresql" % "42.2.14"
+    val hikariCp = "com.zaxxer" % "HikariCP" % "3.4.5"
     val flyway = "org.flywaydb" % "flyway-core" % "5.2.4"
 
     object Slick {
       val version = "3.3.2"
-      val pgVersion = "0.18.1"
+      val pgVersion = "0.19.0"
 
       val core = "com.typesafe.slick" %% "slick" % version
       val hikariCp = "com.typesafe.slick" %% "slick-hikaricp" % version
@@ -51,8 +51,8 @@ object Dependencies {
   object Serialization {
     val version = "0.12.3"
 
-    val enumeratumCirceVersion = "1.5.22"
-    val booPickleVersion = "1.3.1"
+    val enumeratumCirceVersion = "1.6.0"
+    val booPickleVersion = "1.3.3"
 
     val projects = Seq("circe-core", "circe-generic", "circe-parser")
     val jackson = "io.circe" %% "circe-jackson29" % "0.12.1"
@@ -134,18 +134,18 @@ object Dependencies {
   object Utils {
     val logback = "ch.qos.logback" % "logback-core" % "1.2.3"
     val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
-    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.26"
+    val slf4j = "org.slf4j" % "slf4j-api" % "1.7.30"
 
-    def betterFiles(useLatest: Boolean) = "com.github.pathikrit" %% "better-files" % (if(useLatest) { "3.8.0" } else { "3.7.1" })
-    val chimney = "io.scalaland" %% "chimney" % "0.3.5"
+    def betterFiles(useLatest: Boolean) = "com.github.pathikrit" %% "better-files" % (if(useLatest) { "3.9.1" } else { "3.7.1" })
+    val chimney = "io.scalaland" %% "chimney" % "0.5.2"
     val clist = "org.backuity.clist" %% "clist-core"   % "3.5.1"
     val clistMacros = "org.backuity.clist" %% "clist-macros" % "3.5.1" % "provided"
     val commonsCodec = "commons-codec" % "commons-codec" % "1.13"
-    val commonsIo = "commons-io" % "commons-io" % "2.6"
-    val commonsLang = "org.apache.commons" % "commons-lang3" % "3.9"
+    val commonsIo = "commons-io" % "commons-io" % "2.7"
+    val commonsLang = "org.apache.commons" % "commons-lang3" % "3.10"
     val csv = "com.github.tototoshi" %% "scala-csv" % "1.3.6"
     val enumeratum = "com.beachape" %% "enumeratum-circe" % Serialization.enumeratumCirceVersion
-    val guava = "com.google.guava" % "guava" % "28.1-jre"
+    val guava = "com.google.guava" % "guava" % "29.0-jre"
     val javaxInject = "javax.inject" % "javax.inject" % "1"
     val scalaGuice = "net.codingwell" %% "scala-guice" % "4.2.6"
     val thriftParser = "com.facebook.swift" % "swift-idl-parser" % "0.23.1"
