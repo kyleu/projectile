@@ -10,9 +10,9 @@ object Common {
   val useLatest = false
 
   object Versions {
-    val app = "1.32.2"
-    val scala212 = "2.12.11"
-    val scala213 = "2.13.1"
+    val app = "1.32.5"
+    val scala212 = "2.12.12"
+    val scala213 = "2.13.3"
   }
 
   private[this] val profilingEnabled = false

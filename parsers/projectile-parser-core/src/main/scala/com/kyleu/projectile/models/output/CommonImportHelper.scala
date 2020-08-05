@@ -58,6 +58,7 @@ object CommonImportHelper {
       case "Tag" => c.tagsPackage
       case "TextQuery" => c.resultsPackage
       case "ThriftFutureUtils" => c.utilitiesPackage :+ "thrift"
+      case "ThriftLogger" => c.utilitiesPackage :+ "thrift"
       case "ThriftService" => c.utilitiesPackage :+ "thrift"
       case "ThriftServiceHelper" => c.utilitiesPackage :+ "thrift"
       case "ThriftServiceRegistry" => c.applicationPackage :+ "models" :+ "thrift"

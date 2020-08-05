@@ -66,7 +66,21 @@ object ThriftServiceFile {
       file.add(s"val _request = Request($thriftServiceCanonicalName.${method.name.capitalize}.Args($argsMapped))")
       file.add(s"val _requestWithHeaders = injectTraceDataToHeaders(options)(headers, td).foldLeft(_request)((acc, kv) => acc.setHeader(kv._1, kv._2))")
       file.add(s"val _response = svc.${method.name}(_requestWithHeaders)")
-      file.add(s"_response.map(_.value)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
+      file.add(s"val _ret = _response.map(_.value)${ThriftMethodHelper.getReturnMapping(method.returnType)}")
+
+      config.addCommonImport(file, "ThriftLogger")
+      // file.add(s"ThriftLogger.logCall(_requestWithHeaders, _response)")
+
+      val req = method.args.length match {
+        case 0 => "true"
+        case 1 => method.args.headOption.getOrElse(throw new IllegalStateException()).propertyName
+        case _ =>
+          config.addCommonImport(file, "JsonSerializers", "_")
+          s"Map(${method.args.map(a => "\"" + a.propertyName + "\" -> " + a.propertyName + ".asJson").mkString(", ")})"
+      }
+      file.add(s"""_ret.map(_rsp => ThriftLogger.logCall("${svc.key}", "${method.name}", ${req}, _rsp))""")
+      file.add("_ret")
+
       file.add("}", -1)
     }
   }
