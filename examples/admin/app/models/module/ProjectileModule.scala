@@ -12,6 +12,7 @@ import models.template.UserMenu
 import util.Version
 
 class ProjectileModule extends AdminModule {
+  override def projectVersion = Version.version
   override def projectName = Version.projectName
   override def allowSignup = true
   override def initialRole = "admin"

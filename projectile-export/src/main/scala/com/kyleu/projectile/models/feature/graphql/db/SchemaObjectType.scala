@@ -7,6 +7,7 @@ import com.kyleu.projectile.models.output.file.ScalaFile
 
 object SchemaObjectType {
   def addObjectType(config: ExportConfiguration, model: ExportModel, file: ScalaFile) = {
+    file.addImport(Seq("sangria", "macros", "derive"), "DocumentField")
     val columnsDescriptions = model.fields.flatMap(col => col.description.map(d => s"""DocumentField("${col.propertyName}", "$d")"""))
     val references = ExportModelReference.validReferences(config, model)
     val withNotes = ( /* TODO */ 1 == 2) && model.pkColumns.nonEmpty && model.features(ModelFeature.Notes)
