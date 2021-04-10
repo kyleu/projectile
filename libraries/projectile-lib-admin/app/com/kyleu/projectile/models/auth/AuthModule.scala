@@ -1,6 +1,7 @@
 package com.kyleu.projectile.models.auth
 
 import com.google.inject.{AbstractModule, Provides}
+import com.kyleu.projectile.models.auth.microsoft.MicrosoftProvider
 import com.kyleu.projectile.models.config.Configuration
 import com.kyleu.projectile.services.user.{OAuth2InfoService, PasswordInfoService, SystemUserSearchService}
 import com.mohiva.play.silhouette.api.crypto.{Crypter, CrypterAuthenticatorEncoder, Signer}
@@ -90,11 +91,16 @@ class AuthModule extends AbstractModule with ScalaModule {
 
   @Provides
   def provideGoogleProvider(httpLayer: HTTPLayer, socialStateHandler: SocialStateHandler, config: Configuration): GoogleProvider = {
-    new GoogleProvider(httpLayer, socialStateHandler, config.authGoogleSettings)
+    new GoogleProvider(httpLayer, socialStateHandler, config.authMicrosoftSettings)
   }
 
   @Provides
-  def provideSocialProviderRegistry(googleProvider: GoogleProvider) = {
-    SocialProviderRegistry(Seq(googleProvider))
+  def provideMicrosoftProvider(httpLayer: HTTPLayer, socialStateHandler: SocialStateHandler, config: Configuration): MicrosoftProvider = {
+    new MicrosoftProvider(httpLayer, socialStateHandler, config.authMicrosoftSettings)
+  }
+
+  @Provides
+  def provideSocialProviderRegistry(microsoftProvider: MicrosoftProvider): SocialProviderRegistry = {
+    SocialProviderRegistry(Seq(microsoftProvider))
   }
 }

@@ -43,7 +43,11 @@
       </div>
       @if(cfg.urls.oauthProviders.nonEmpty) {
         <div class="input-field col s6 m6 l6">
-          <p class="margin right-align medium-small"><a href="@cfg.urls.oauth@cfg.urls.oauthProviders.head">Sign in with Google</a></p>
+          <p class="margin right-align medium-small">
+            @for(p <- cfg.urls.oauthProviders) {
+              <a href="@cfg.urls.oauth@p">Sign in with @p</a>
+            }
+          </p>
         </div>
       }
     </div>
