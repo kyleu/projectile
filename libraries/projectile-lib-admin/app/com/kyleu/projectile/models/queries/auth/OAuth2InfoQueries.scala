@@ -49,6 +49,10 @@ object OAuth2InfoQueries extends BaseQueries[OAuth2Info]("oauth2.info", "oauth2_
   )
 
   override protected def toDataSeq(i: OAuth2Info) = {
-    Seq[Any](i.accessToken.substring(0, 2048), i.tokenType, i.expiresIn, i.refreshToken, i.params, DateUtils.now)
+    var t = i.accessToken
+    if (i.accessToken.length > 2048) {
+      t = i.accessToken.substring(0, 2048)
+    }
+    Seq[Any](t, i.tokenType, i.expiresIn, i.refreshToken, i.params, DateUtils.now)
   }
 }
